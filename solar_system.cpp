@@ -67,9 +67,9 @@ int main()
       SolarSystem[i].speed.y += delta.y * dt;
       SolarSystem[i].speed.z += delta.z * dt;
 
-      SolarSystem[i].position.x += SolarSystem[i].speed.x * dt + delta.x * dt * dt;
-      SolarSystem[i].position.y += SolarSystem[i].speed.y * dt + delta.y * dt * dt;
-      SolarSystem[i].position.z += SolarSystem[i].speed.z * dt + delta.z * dt * dt;
+      SolarSystem[i].position.x += SolarSystem[i].speed.x * dt - delta.x * dt * dt;
+      SolarSystem[i].position.y += SolarSystem[i].speed.y * dt - delta.y * dt * dt;
+      SolarSystem[i].position.z += SolarSystem[i].speed.z * dt - delta.z * dt * dt;
 
       if (counter == 0)
       {
