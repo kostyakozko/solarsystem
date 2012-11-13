@@ -2,8 +2,9 @@
 #include <iomanip>
 #include <cmath>
 #include <cstdlib>
+#include <omp.h>
 
-const double dt = 30.0;
+const double dt = 30;
 
 const double G = 6.673848E-11;
 struct coord
@@ -42,9 +43,14 @@ planet SolarSystem [] = { {1.9891E30, {-2.378294701483334E+08, -3.55494085477824
                           {1.4819E23, { 2.667199483411734E+11,  7.067757735666245E+11, -8.893483481040863E+09}, {-2.203337223020963E+04,  2.759948965816665E+02, -5.601755456611733E+01}, "Ganymede/JIII"    },
                           {1.0759E23, { 2.672127658971256E+11,  7.039418464483191E+11, -8.982867468030199E+09}, {-4.176170687280964E+03,  5.312513883900098E+03,  3.673643302101794E+02}, "Callisto/JIV"     },
                           {5.6846E26, {-1.229866547680459E+12, -7.904683052447389E+11,  6.268969749973371E+10}, { 4.699489217425667E+03, -8.149587596664846E+03, -4.475565267559236E+01}, "Saturn"           },
+                          {1.3452E23, {-1.228736767495807E+12, -7.901838688123780E+11,  6.243121204950869E+10}, { 3.022064614905482E+03, -3.238838562129838E+03, -2.412534836857662E+03}, "Titan"            },
                           {8.6810E25, { 2.979208970334734E+12,  3.567811645222515E+11, -3.727175043882546E+10}, {-8.597282987579890E+02,  6.444261662580991E+03,  3.509724280159456E+01}, "Uranus"           },
+                          {3.5270E21, { 2.979625496882171E+12,  3.567045152588338E+11, -3.716661167034535E+10}, {-1.038880034753202E+02,  5.787303327480080E+03, -3.468273446585802E+03}, "Titania"          },
+                          {3.0140E21, { 2.978657507403148E+12,  3.568770343463793E+11, -3.744094325345516E+10}, {-1.670013924684646E+03,  7.043353791017030E+03,  3.013401501003834E+03}, "Oberon"           },
                           {1.0243E26, { 3.962453395594141E+12, -2.104152802357125E+12, -4.798646790232673E+10}, { 2.513631552931607E+03,  4.833306675848008E+03, -1.572465381335225E+02}, "Neptune"          },
-                          {1.3050E22, { 7.404713835027376E+11, -4.770829352954782E+12,  2.963178894495413E+11}, { 5.467423910048135E+03, -2.437018535334458E+02, -1.534466044015474E+03}, "Pluto"            }
+                          {2.1400E22, { 3.962664302473026E+12, -2.104262140454177E+12, -4.824994225683799E+10}, {-2.957241494962224E+02,  1.582296756677590E+03, -1.056970065576720E+03}, "Triton"           },
+                          {1.3050E22, { 7.404713835027376E+11, -4.770829352954782E+12,  2.963178894495413E+11}, { 5.467423910048135E+03, -2.437018535334458E+02, -1.534466044015474E+03}, "Pluto"            },
+                          {1.5200E21, { 7.404846913697069E+11, -4.770815001878529E+12,  2.963176954215181E+11}, { 5.529414536801672E+03, -3.039764510273687E+02, -1.739915922456388E+03}, "Charon"           }
 };
 
 inline void attractTo(coord& this_position, acceleration& delta, int j)
@@ -64,12 +70,15 @@ int main()
   int count = sizeof(SolarSystem)/sizeof(planet);
   double yearStep = 86400*365/dt;
   int counter = yearStep;
- while(1)
+  #pragma omp parallel
+  while(1)
   {
+    #pragma omp for
     for (int i = 0; i < count; ++i)
     {
       acceleration delta = {0, 0, 0};
       coord& this_position = SolarSystem[i].position;
+      //our method
       for (int j = 0; j < i; ++j)
       {
         attractTo(this_position, delta, j);
@@ -86,8 +95,48 @@ int main()
       this_position.x += (this_speed.x - delta.x * dt / 2) * dt;
       this_position.y += (this_speed.y - delta.y * dt / 2) * dt;
       this_position.z += (this_speed.z - delta.z * dt / 2) * dt;
+      
+      //other method
+      /*for (int j = 0; j < i; j++)
+      {
+        attractTo(this_position, delta, j);
+      }
+      
+      for (int j = i + 1; j < count; ++j)
+      {
+        attractTo(this_position, delta, j);
+      }
+      
+      coord expect = {0, 0, 0};
+      acceleration expect_delta = {0, 0, 0};
+      velocity& this_speed = SolarSystem[i].speed;
+      expect.x = this_position.x + this_speed.x * dt;
+      expect.y = this_position.y + this_speed.y * dt;
+      expect.z = this_position.z + this_speed.z * dt;
+      
+      for (int j = 0; j < i; j++)
+      {
+        attractTo(expect, expect_delta, j);
+      }
+
+      for (int j = i + 1; j < count; ++j)
+      {
+        attractTo(expect, expect_delta, j);
+      }
+     
+      velocity old_speed = {this_speed.x, this_speed.y, this_speed.z};
+
+      this_speed.x += (delta.x + expect_delta.x) / 2 * dt;
+      this_speed.y += (delta.y + expect_delta.y) / 2 * dt;
+      this_speed.z += (delta.z + expect_delta.z) / 2 * dt;
+
+      this_position.x += (this_speed.x + old_speed.x) / 2 * dt;
+      this_position.y += (this_speed.y + old_speed.y) / 2 * dt;
+      this_position.z += (this_speed.z + old_speed.z) / 2 * dt;*/
+
 
     }
+    #pragma omp master
     if (counter>=yearStep)
     { 
       counter = 0;
