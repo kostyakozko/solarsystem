@@ -3,7 +3,7 @@
 
 #include "types.h"
 
-extern const long double dt;
+extern const int dt;
 
 extern const long double G;
 

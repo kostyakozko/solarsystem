@@ -1,8 +1,9 @@
 CXX     = g++
-CFLAGS  = -march=corei7 -O3 -fopenmp
+CFLAGS  = -march=corei7-avx -O3 -fopenmp -flto -pg -std=c++0x
 LD	= $(CXX)
-LDFLAGS	= -fopenmp
-OBJS    = solar_system.o model.o constants.o
+LDFLAGS	= -fopenmp -flto -fwhole-program -pg 
+SOURCES = solar_system.cpp model.cpp constants.cpp
+OBJS    = ${SOURCES:.cpp=.o}
 BINARY  = solar_system
 RM      = rm
 # clear out all suffixes
@@ -18,6 +19,9 @@ all : solar_system
 
 solar_system : $(OBJS)
 	$(CXX) -o $(BINARY) $(LDFLAGS) $(OBJS)
+
+assembly :
+	$(CXX) $(CFLAGS) -fverbose-asm -S $(SOURCES)
 
 clean :
 	$(RM) -f $(BINARY) $(OBJS)

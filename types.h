@@ -1,13 +1,14 @@
 #ifndef __TYPES_H__
 #define __TYPES_H__
+#include <valarray>
 struct coord
 {
   long double x, y, z;
 };
 
-typedef struct coord velocity;
+typedef coord velocity;
 
-typedef struct coord acceleration;
+typedef coord acceleration;
 
 struct planet
 {

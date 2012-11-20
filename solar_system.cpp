@@ -2,6 +2,7 @@
 #include <iomanip>
 #include <cmath>
 #include <cstdlib>
+#include <ctime>
 #include <omp.h>
 #include "types.h"
 #include "constants.h"
@@ -11,16 +12,18 @@ int main()
 {
   std::cout.precision(12);
   int year = 2012;
-  long double yearStep = 86400*365/dt;
-  int counter = yearStep;
+  struct tm timeinfo = {0, 0, 0, 12, 10, 2012 - 1900};
+  time_t origin;
+  time_t current = origin = mktime(&timeinfo);
+  time_t step = 86400*15;
   printBarycenter(getBarycenter());
-  #pragma omp parallel
+  //#pragma omp parallel shared (SolarSystem)
   while(1)
   {
-    #pragma omp for
+    //#pragma omp for
     for (int i = 0; i < count; ++i)
     {
-      acceleration delta = {0, 0, 0};
+      acceleration delta{0.0, 0.0, 0.0};
       coord& this_position = SolarSystem[i].position;
       //our method
       for (int j = 0; j < i; ++j)
@@ -41,32 +44,15 @@ int main()
       this_position.z += (this_speed.z - delta.z * dt / 2) * dt;
       
     }
-    #pragma omp master
-    if (counter>=yearStep)
-    { 
-      counter = 0;
-      coord barycenter = getBarycenter();
-      printBarycenter (barycenter);
-      for (int i = 0; i < count; i++)
-      {
-        std::cout << std::setw(12) << "Year " << year
-                  << std::setw(15) << SolarSystem[i].name
-                  << std::setw(21) << std::scientific << (SolarSystem[i].position.x - barycenter.x)
-                  << std::setw(21) << std::scientific << (SolarSystem[i].position.y - barycenter.y)
-                  << std::setw(21) << std::scientific << (SolarSystem[i].position.z - barycenter.z)
-                  << std::setw(21) << std::scientific << dist(SolarSystem[i].position, barycenter)
-                  << std::endl;
-      }      
-      ++year;
-
-    }
-    else
+    //#pragma omp master
     {
-      ++counter;
-    }
-    if (year>2080)
-    {
-      exit(0);
+      if ( (current - origin) >=  step)
+      { 
+        printCurrentData(current);
+        origin = current;
+        exit(0);
+      }
+      current += dt;
     }
   }
   return 0;
