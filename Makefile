@@ -1,7 +1,7 @@
 CXX     = g++
-CFLAGS  = -march=corei7-avx -O3 -fopenmp -flto -pg -std=c++0x
+CFLAGS  = -march=native -mtune=native -O3 -flto -pg -std=c++0x
 LD	= $(CXX)
-LDFLAGS	= -fopenmp -flto -fwhole-program -pg 
+LDFLAGS	= -flto -fwhole-program -pg 
 SOURCES = solar_system.cpp model.cpp constants.cpp
 OBJS    = ${SOURCES:.cpp=.o}
 BINARY  = solar_system
