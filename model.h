@@ -4,6 +4,13 @@
 #include <ctime>
 #include <memory>
 
+#ifndef MAC
+#include <CL/cl.h>
+#include <CL/cl_ext.h>
+#else
+#error We do not support inferior platforms.
+#endif
+
 #include "types.h"
 
 class Model
@@ -28,6 +35,17 @@ public:
   ~OpenCLModel();
 
   void nextStep();
+  void print();
+
+private:
+  char* readProgram(const char* filename, size_t &size);
+
+  cl_context context;
+  cl_command_queue queue;
+  cl_program program;
+  cl_kernel kernel;
+  cl_mem deviceBuffer;
+  cl_event kernelRun;
 };
 
 class FallbackModel : public Model

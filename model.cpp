@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cmath>
+#include <cstdio>
 #include <iomanip>
 
 #include "model.h"
@@ -60,9 +61,14 @@ std::shared_ptr<Model> Model::getBestModel(time_t _step)
   {
     return std::shared_ptr<Model>(new OpenCLModel(_step));
   }
+  catch (std::string e)
+  {
+    std::cout << "Failed to initialize OpenCL model:\n" << e;
+    return std::shared_ptr<Model>(new FallbackModel(_step));
+  }
   catch (...)
   {
-    return std::shared_ptr<Model>(new FallbackModel(_step));
+    std::cout << "Unrecoverable error has occured! Terminating...\n";
   }
 }
 
@@ -122,13 +128,157 @@ void FallbackModel::nextStep()
 OpenCLModel::OpenCLModel(time_t _step, bool useAllDevices)
 : Model(_step)
 {
-  throw std::string("Not implemented yet!\n");
+  // throw std::string("Not implemented yet!\n");
+
+  cl_int error;
+
+  cl_platform_id platform;
+  cl_uint numPlatforms = 0;
+
+  // TODO: add support for scanning for multiple installed OpenCL implementations
+  error = clGetPlatformIDs(1, &platform, &numPlatforms);
+  if ( (error != CL_SUCCESS) || (numPlatforms < 1) )
+  {
+    throw std::string("Could not find any installed OpenCL implementations!\n");
+  }
+
+  cl_device_type device_type;
+  if (useAllDevices == true)
+  {
+    device_type = CL_DEVICE_TYPE_ALL;
+  }
+  else
+  { // Default behavior is to use GPUs only
+    device_type = CL_DEVICE_TYPE_GPU;
+  }
+
+  // TODO: add support for multiple devices
+  const cl_uint maxDevices = 1;
+  cl_uint numDevices = 0;
+  cl_device_id devices[maxDevices];
+  error = clGetDeviceIDs(platform, device_type, maxDevices, devices, &numDevices);
+  if ( (error != CL_SUCCESS) || (numDevices < 1) )
+  {
+    throw std::string("Could not find any OpenCL devices!\n");
+  }
+  cl_device_fp_config fpConfig;
+  for ( int i = 0; i < numDevices; ++i )
+  {
+    error = clGetDeviceInfo(devices[i], CL_DEVICE_DOUBLE_FP_CONFIG, sizeof(fpConfig), &fpConfig, NULL);
+    if ( (error != CL_SUCCESS) || (fpConfig == 0) )
+    {
+      throw std::string("Detected OpenCL device does not support double-precision!\n");
+    }
+  }
+
+  context = clCreateContext(NULL, numDevices, devices, NULL, NULL, &error);
+  if ( error != CL_SUCCESS )
+  {
+    throw std::string("Could not create an OpenCL context!\n");
+  }
+
+  queue = clCreateCommandQueue(context, devices[0], 0, &error);
+  if ( error != CL_SUCCESS )
+  {
+    clReleaseContext(context);
+    throw std::string("Could not create device command queue!\n");
+  }
+
+  size_t size = 0;
+  char* buffer = readProgram("model_kernel.cl", size);
+  if ( buffer == NULL )
+  {
+    clReleaseCommandQueue(queue);
+    clReleaseContext(context);
+    throw std::string("Could not open OpenCL program file for reading!\n");
+  }
+
+  program = clCreateProgramWithSource(context, 1, (const char**)&buffer, &size, &error);
+  free(buffer);
+  if ( error != CL_SUCCESS )
+  {
+    clReleaseCommandQueue(queue);
+    clReleaseContext(context);
+    throw std::string("Could not create OpenCL program!\n");
+  }
+
+  error = clBuildProgram(program, numDevices, devices, NULL, NULL, NULL);
+  if ( error != CL_SUCCESS )
+  {
+    const int logSize = 2000;
+    char buildLog[logSize];
+    clGetProgramBuildInfo(program, devices[0], CL_PROGRAM_BUILD_LOG, logSize, buildLog, NULL);
+    std::string errorMsg(buildLog);
+    errorMsg.append("OpenCL program build failed!\n");
+
+    clReleaseProgram(program);
+    clReleaseCommandQueue(queue);
+    clReleaseContext(context);
+    throw errorMsg;
+  }
+
+  kernel = clCreateKernel(program, "eulerModel", &error);
+  if ( error != CL_SUCCESS )
+  {
+    clReleaseProgram(program);
+    clReleaseCommandQueue(queue);
+    clReleaseContext(context);
+    throw std::string("Could not create kernel to run on the device!\n");
+  }
+
+  deviceBuffer = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR,
+                                sizeof(planet)*count, SolarSystem, &error);
+  if ( error != CL_SUCCESS )
+  {
+    clReleaseKernel(kernel);
+    clReleaseProgram(program);
+    clReleaseCommandQueue(queue);
+    clReleaseContext(context);
+    throw std::string("Could not transfer data buffer to the device!\n");
+  }
+  clSetKernelArg(kernel, 0, sizeof(cl_mem), &deviceBuffer);
+  clSetKernelArg(kernel, 1, sizeof(count), &count);
+  clSetKernelArg(kernel, 2, sizeof(origin), &origin);
+  clSetKernelArg(kernel, 3, sizeof(step), &step);
+  clSetKernelArg(kernel, 4, sizeof(dt), &dt);
 }
 
 OpenCLModel::~OpenCLModel()
 {
+  clReleaseMemObject(deviceBuffer);
+  clReleaseKernel(kernel);
+  clReleaseProgram(program);
+  clReleaseCommandQueue(queue);
+  clReleaseContext(context);
 }
 
 void OpenCLModel::nextStep()
 {
+  clSetKernelArg(kernel, 2, sizeof(origin), &origin);
+  clEnqueueTask(queue, kernel, 0, NULL, &kernelRun);
+  origin += step;
+}
+
+void OpenCLModel::print()
+{
+  clEnqueueReadBuffer(queue, deviceBuffer, CL_TRUE, 0, sizeof(planet)*count, SolarSystem, 1, &kernelRun, NULL);
+  Model::print();
+}
+
+char* OpenCLModel::readProgram(const char* filename, size_t& size)
+{
+  FILE *file = fopen(filename, "r");
+  if (file == NULL)
+  {
+    return NULL;
+  }
+  fseek(file, 0, SEEK_END);
+  size = ftell(file);
+  rewind(file);
+  char* buffer = (char*)malloc(size + 1);
+  buffer[size] = '\0';
+  fread(buffer, sizeof(char), size, file);
+  fclose(file);
+
+  return buffer;
 }
