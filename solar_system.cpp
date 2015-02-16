@@ -16,6 +16,7 @@ int main()
   time_t origin;
   time_t current = origin = mktime(&timeinfo);
   time_t step = 86400*15;
+  time_t now = time(NULL);
   printBarycenter(getBarycenter());
   //#pragma omp parallel shared (SolarSystem)
   while(1)
@@ -46,7 +47,7 @@ int main()
     }
     //#pragma omp master
     {
-      if ( (current - origin) >=  step)
+      if (current >= now)//( (current - origin) >=  step)
       { 
         printCurrentData(current);
         origin = current;
