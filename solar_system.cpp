@@ -11,8 +11,8 @@
 int main()
 {
   std::cout.precision(12);
-  int year = 2012;
-  struct tm timeinfo = {0, 0, 0, 12, 10, 2012 - 1900};
+  int year = 2018;
+  struct tm timeinfo = {0, 0, 0, 11, 2, 2018 - 1900};
   time_t origin;
   time_t current = origin = mktime(&timeinfo);
   time_t step = 86400*15;
@@ -40,9 +40,9 @@ int main()
       this_speed.y += delta.y * dt;
       this_speed.z += delta.z * dt;
 
-      this_position.x += (this_speed.x - delta.x * dt / 2) * dt;
-      this_position.y += (this_speed.y - delta.y * dt / 2) * dt;
-      this_position.z += (this_speed.z - delta.z * dt / 2) * dt;
+      this_position.x += (this_speed.x - delta.x * dt * 0.5) * dt;
+      this_position.y += (this_speed.y - delta.y * dt * 0.5) * dt;
+      this_position.z += (this_speed.z - delta.z * dt * 0.5) * dt;
       
     }
     //#pragma omp master

@@ -27,15 +27,16 @@ coord getBarycenter ()
     massSum += SolarSystem[i].mass;
   }
   coord retVal = {0, 0, 0};
+  long double invMassSum = 1 / massSum;
   for (int i = 0; i < count; i++)
   {
     retVal.x += SolarSystem[i].mass * SolarSystem[i].position.x;
     retVal.y += SolarSystem[i].mass * SolarSystem[i].position.y;
     retVal.z += SolarSystem[i].mass * SolarSystem[i].position.z;
   }
-    retVal.x /= massSum;
-    retVal.y /= massSum;
-    retVal.z /= massSum;
+    retVal.x *= invMassSum;
+    retVal.y *= invMassSum;
+    retVal.z *= invMassSum;
   return retVal;
 }
 
