@@ -1,3 +1,4 @@
 *.o
 *.s
 solar_system
+gmon.out

@@ -12,7 +12,7 @@ int main()
 {
   std::cout.precision(12);
   int year = 2018;
-  struct tm timeinfo = {0, 0, 0, 11, 2, 2018 - 1900};
+  struct tm timeinfo = {0, 0, 0, 11, 1, 2018 - 1900};
   time_t origin;
   time_t current = origin = mktime(&timeinfo);
   time_t step = 86400*15;

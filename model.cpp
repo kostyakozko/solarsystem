@@ -42,7 +42,7 @@ coord getBarycenter ()
 
 void printBarycenter (const coord& barycenter)
 {
-  std::cout<<"Barycenter: ("<<barycenter.x<<";"<<barycenter.y<<";"<<barycenter.z<<")\n";
+  std::cout<<"Barycenter: ("<<barycenter.x<<";"<<barycenter.y<<";"<<barycenter.z<<";"<<dist(barycenter, {0, 0, 0})<<")\n";
 }
 
 void printCurrentData(time_t current)
