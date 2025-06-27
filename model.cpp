@@ -9,16 +9,6 @@ long double dist (coord a, coord b)
   return sqrt ( (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y) + (a.z - b.z) * (a.z - b.z) );
 }
 
-void attractTo(coord& this_position, acceleration& delta, int j)
-{
-  coord& other_position = SolarSystem[j].position;
-  long double distance = dist (this_position, other_position);
-  long double normal_acc = G * SolarSystem[j].mass / (distance * distance * distance); // division takes a lot of time so we fuck the physics laws to boost speed
-  delta.x += normal_acc * (other_position.x - this_position.x);
-  delta.y += normal_acc * (other_position.y - this_position.y);
-  delta.z += normal_acc * (other_position.z - this_position.z);
-}
-
 coord getBarycenter ()
 {
   long double massSum = 0;

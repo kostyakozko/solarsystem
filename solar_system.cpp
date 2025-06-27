@@ -3,7 +3,6 @@
 #include <cmath>
 #include <cstdlib>
 #include <ctime>
-#include <omp.h>
 #include "types.h"
 #include "constants.h"
 #include "model.h"
@@ -18,10 +17,8 @@ int main()
   time_t step = 86400*15;
   time_t now = time(NULL);
   printBarycenter(getBarycenter());
-  //#pragma omp parallel shared (SolarSystem)
   while(1)
   {
-    //#pragma omp for
     for (int i = 0; i < count; ++i)
     {
       acceleration delta{0.0, 0.0, 0.0};
@@ -45,16 +42,13 @@ int main()
       this_position.z += (this_speed.z - delta.z * dt * 0.5) * dt;
       
     }
-    //#pragma omp master
-    {
-      if (current >= now)//( (current - origin) >=  step)
-      { 
-        printCurrentData(current);
-        origin = current;
-        exit(0);
-      }
-      current += dt;
+    if (current >= now)
+    { 
+      printCurrentData(current);
+      origin = current;
+      exit(0);
     }
+    current += dt;
   }
   return 0;
 }
