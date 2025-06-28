@@ -1,17 +1,26 @@
 #ifndef __JPL_DATA_H__
 #define __JPL_DATA_H__
 
-#include <ctime>
 #include <cstdint>
+#include <ctime>
+
+// Constants
+#define JPL_BINARY_MAGIC 0x4A504C45  // "JPLE"
+#define JPL_FORMAT_VERSION 1
+#define BODY_COUNT 27
+
+// File paths
+#define JPL_JSON_FILE "ephemeris_data.json"
+#define JPL_BINARY_FILE "ephemeris_cache.bin"
 
 // Binary cache file header
 struct EphemerisHeader {
-    uint32_t magic_number;      // 0x4A504C45 ("JPLE")
-    uint32_t version;           // Format version
-    uint32_t body_count;        // Number of bodies
-    time_t epoch;               // Data epoch (Jan 1st of year)
-    char source[32];            // "JPL_HORIZONS_2025" etc.
-    uint64_t json_checksum;     // To detect JSON changes
+  uint32_t magic_number;   // 0x4A504C45 ("JPLE")
+  uint32_t version;        // Format version
+  uint32_t body_count;     // Number of bodies
+  time_t epoch;            // Data epoch (Jan 1st of year)
+  char source[32];         // "JPL_HORIZONS_2025" etc.
+  uint64_t json_checksum;  // To detect JSON changes
 };
 
 // JPL data management functions
@@ -45,19 +54,17 @@ bool apply_ephemeris_to_solar_system();
 
 // Test function to save current data (for testing storage system)
 bool save_current_data_for_testing();
+bool test_storage_system();
 
 // Internal functions
-bool fetch_jpl_horizons_data(const char* date);
+bool fetch_jpl_horizons_data(const char* date, int jpl_id);
 bool parse_jpl_response(const char* response);
 bool save_ephemeris_to_json();
 bool load_ephemeris_from_json();
 bool save_ephemeris_to_binary();
 bool load_ephemeris_from_binary();
 bool validate_ephemeris_data();
+bool apply_ephemeris_data();
 uint64_t calculate_json_checksum();
 
-// File paths
-#define JPL_JSON_FILE "ephemeris_data.json"
-#define JPL_BINARY_FILE "ephemeris_cache.bin"
-
-#endif //__JPL_DATA_H__
+#endif  //__JPL_DATA_H__

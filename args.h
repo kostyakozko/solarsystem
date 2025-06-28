@@ -1,16 +1,16 @@
 #ifndef __ARGS_H__
 #define __ARGS_H__
 
-#include <string>
 #include <ctime>
+#include <string>
 
 struct SimulationArgs {
-    time_t target_date;
-    bool use_current_date;
-    std::string date_string;
-    bool update_data;           // -u, --update-data
-    bool rebuild_cache;         // --rebuild
-    bool test_storage;          // --test-storage
+  time_t target_date;
+  bool use_current_date;
+  std::string date_string;
+  bool update_data;    // -u, --update-data
+  bool rebuild_cache;  // --rebuild
+  bool test_storage;   // --test-storage
 };
 
 // Parse command line arguments
@@ -22,4 +22,4 @@ time_t parse_iso_date(const std::string& date_str);
 // Print usage information
 void print_usage(const char* program_name);
 
-#endif //__ARGS_H__
+#endif  //__ARGS_H__

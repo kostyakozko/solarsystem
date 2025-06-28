@@ -9,8 +9,7 @@ extern const long double G;
 
 extern const coord center;
 
-extern 
-planet SolarSystem [] ; 
+extern planet SolarSystem[];
 
 extern const int count;
-#endif //__CONSTANTS_H__
+#endif  //__CONSTANTS_H__

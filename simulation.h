@@ -2,6 +2,7 @@
 #define __SIMULATION_H__
 
 #include <ctime>
+
 #include "args.h"
 
 // Print simulation information
@@ -16,4 +17,4 @@ void run_backward_simulation(time_t start_date, time_t target_date);
 // Perform one simulation step (physics calculations)
 void perform_simulation_step(long double time_step);
 
-#endif //__SIMULATION_H__
+#endif  //__SIMULATION_H__
