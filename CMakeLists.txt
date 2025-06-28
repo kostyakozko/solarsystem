@@ -16,6 +16,27 @@ if(CMAKE_BUILD_TYPE STREQUAL "Release")
     set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
 endif()
 
+# Installation configuration
+# Check for environment variable first, then CMake option, then default
+if(DEFINED ENV{SOLAR_SYSTEM_INSTALL_DIR})
+    set(CMAKE_INSTALL_PREFIX "$ENV{SOLAR_SYSTEM_INSTALL_DIR}" CACHE PATH "Install directory" FORCE)
+    message(STATUS "Using install directory from environment: ${CMAKE_INSTALL_PREFIX}")
+elseif(SOLAR_SYSTEM_INSTALL_DIR)
+    set(CMAKE_INSTALL_PREFIX "${SOLAR_SYSTEM_INSTALL_DIR}" CACHE PATH "Install directory" FORCE)
+    message(STATUS "Using install directory from CMake option: ${CMAKE_INSTALL_PREFIX}")
+else()
+    # Default installation directory
+    if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+        set(CMAKE_INSTALL_PREFIX "${CMAKE_CURRENT_SOURCE_DIR}/install" CACHE PATH "Install directory" FORCE)
+        message(STATUS "Using default install directory: ${CMAKE_INSTALL_PREFIX}")
+    endif()
+endif()
+
+# Installation directories
+set(CMAKE_INSTALL_BINDIR "bin")
+set(CMAKE_INSTALL_LIBDIR "lib")
+set(CMAKE_INSTALL_DATADIR "share/solar_system")
+
 # Compiler-specific optimizations
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     # Release optimizations (matching current performance)
@@ -44,9 +65,25 @@ endif()
 add_subdirectory(lib)
 add_subdirectory(apps)
 
-# Installation
-install(TARGETS solar_system solar_system_fetch
-        RUNTIME DESTINATION bin)
+# Installation targets
+install(TARGETS solar_system solar_system_fetch solar_system_launcher
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+# Install launcher as main entry point in root directory
+install(TARGETS solar_system_launcher
+        RUNTIME DESTINATION "."
+        RENAME "solar_system_launcher")
+
+# Install documentation
+install(FILES README.md
+        DESTINATION ${CMAKE_INSTALL_DATADIR})
+
+# Create a post-install script to set up the launcher
+configure_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/post_install.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/post_install.cmake"
+    @ONLY
+)
 
 # Custom target for formatting (equivalent to format-code.sh)
 find_program(CLANG_FORMAT_EXECUTABLE clang-format)
@@ -76,6 +113,14 @@ add_custom_target(clean-cache
 add_custom_target(all-libraries DEPENDS libraries)
 add_custom_target(all-applications DEPENDS applications)
 
+# Custom install target with post-processing
+add_custom_target(install-suite
+    COMMAND ${CMAKE_COMMAND} --build . --target install
+    COMMAND ${CMAKE_COMMAND} -P "${CMAKE_CURRENT_BINARY_DIR}/post_install.cmake"
+    COMMENT "Installing Solar System Suite with post-processing"
+    VERBATIM
+)
+
 # Print build information
 message(STATUS "Solar System Suite Configuration:")
 message(STATUS "  Version: ${PROJECT_VERSION}")
@@ -87,4 +132,10 @@ if(CMAKE_BUILD_TYPE STREQUAL "Release")
     message(STATUS "  Optimization flags: ${CMAKE_CXX_FLAGS_RELEASE}")
 endif()
 message(STATUS "  Libraries: solar_core, solar_jpl, solar_utils")
-message(STATUS "  Applications: solar_system, solar_system_fetch")
+message(STATUS "  Applications: solar_system, solar_system_fetch, solar_system_launcher")
+message(STATUS "  Install prefix: ${CMAKE_INSTALL_PREFIX}")
+message(STATUS "  Install layout:")
+message(STATUS "    Launcher: ${CMAKE_INSTALL_PREFIX}/solar_system_launcher")
+message(STATUS "    Binaries: ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR}/")
+message(STATUS "    Libraries: ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/")
+message(STATUS "    Data: ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATADIR}/")
