@@ -1,54 +1,33 @@
 #include <iostream>
 #include <iomanip>
-#include <cmath>
-#include <cstdlib>
 #include <ctime>
 #include "types.h"
 #include "constants.h"
 #include "model.h"
+#include "args.h"
+#include "simulation.h"
 
-int main()
+int main(int argc, char* argv[])
 {
-  std::cout.precision(12);
-  int year = 2018;
-  struct tm timeinfo = {0, 0, 0, 11, 1, 2018 - 1900};
-  time_t origin;
-  time_t current = origin = mktime(&timeinfo);
-  time_t step = 86400*15;
-  time_t now = time(NULL);
-  printBarycenter(getBarycenter());
+  // Parse command line arguments
+  SimulationArgs args = parse_arguments(argc, argv);
   
-  while(1)
-  {
-    for (int i = 0; i < count; ++i)
-    {
-      acceleration delta{0.0, 0.0, 0.0};
-      coord& this_position = SolarSystem[i].position;
-      //our method
-      for (int j = 0; j < i; ++j)
-      {
-        attractTo(this_position, delta, j);
-      }
-      for (int j = i + 1; j < count; ++j)
-      {
-        attractTo(this_position, delta, j);
-      }
-      velocity& this_speed = SolarSystem[i].speed;
-      this_speed.x += delta.x * dt;
-      this_speed.y += delta.y * dt;
-      this_speed.z += delta.z * dt;
-
-      this_position.x += (this_speed.x - delta.x * dt * 0.5) * dt;
-      this_position.y += (this_speed.y - delta.y * dt * 0.5) * dt;
-      this_position.z += (this_speed.z - delta.z * dt * 0.5) * dt;
-    }
-    
-    if (current >= now) { 
-      printCurrentData(current);
-      origin = current;
-      exit(0);
-    }
-    current += dt;
+  // Set output precision
+  std::cout.precision(12);
+  
+  // Define starting date (your original data point)
+  struct tm start_timeinfo = {0, 0, 0, 11, 1, 2018 - 1900};
+  time_t start_date = mktime(&start_timeinfo);
+  
+  // Print simulation information
+  print_simulation_info(args, start_date);
+  
+  // Run appropriate simulation based on date direction
+  if (args.target_date < start_date) {
+    run_backward_simulation(start_date, args.target_date);
+  } else {
+    run_forward_simulation(start_date, args.target_date);
   }
+  
   return 0;
 }
