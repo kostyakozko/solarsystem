@@ -66,7 +66,7 @@ add_subdirectory(lib)
 add_subdirectory(apps)
 
 # Installation targets
-install(TARGETS solar_system solar_system_fetch solar_system_launcher solar_system_realtime
+install(TARGETS solar_system solar_system_fetch solar_system_launcher solar_system_realtime solar_system_web
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 
 # Install launcher as main entry point in root directory
@@ -132,7 +132,7 @@ if(CMAKE_BUILD_TYPE STREQUAL "Release")
     message(STATUS "  Optimization flags: ${CMAKE_CXX_FLAGS_RELEASE}")
 endif()
 message(STATUS "  Libraries: solar_core, solar_jpl, solar_utils")
-message(STATUS "  Applications: solar_system, solar_system_fetch, solar_system_launcher, solar_system_realtime")
+message(STATUS "  Applications: solar_system, solar_system_fetch, solar_system_launcher, solar_system_realtime, solar_system_web")
 message(STATUS "  Install prefix: ${CMAKE_INSTALL_PREFIX}")
 message(STATUS "  Install layout:")
 message(STATUS "    Launcher: ${CMAKE_INSTALL_PREFIX}/solar_system_launcher")
