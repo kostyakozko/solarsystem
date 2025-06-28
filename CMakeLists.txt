@@ -45,7 +45,7 @@ add_subdirectory(lib)
 add_subdirectory(apps)
 
 # Installation
-install(TARGETS solar_system
+install(TARGETS solar_system solar_system_fetch
         RUNTIME DESTINATION bin)
 
 # Custom target for formatting (equivalent to format-code.sh)
@@ -87,4 +87,4 @@ if(CMAKE_BUILD_TYPE STREQUAL "Release")
     message(STATUS "  Optimization flags: ${CMAKE_CXX_FLAGS_RELEASE}")
 endif()
 message(STATUS "  Libraries: solar_core, solar_jpl, solar_utils")
-message(STATUS "  Applications: solar_system")
+message(STATUS "  Applications: solar_system, solar_system_fetch")

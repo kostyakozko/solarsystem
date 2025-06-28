@@ -181,6 +181,118 @@ bool update_ephemeris_data() {
   return false;
 }
 
+bool force_update_ephemeris_data() {
+  std::cout << "Force updating ephemeris data (bypassing smart caching)..." << std::endl;
+
+  // Get current year
+  time_t now = time(NULL);
+  struct tm* tm_now = localtime(&now);
+  int current_year = tm_now->tm_year + 1900;
+
+  std::cout << "Updating ephemeris data from NASA JPL for " << current_year << "..." << std::endl;
+
+  // Format date string for JPL query
+  char date_str[32];
+  snprintf(date_str, sizeof(date_str), "%d-01-01", current_year);
+
+  std::cout << "Fetching data for: " << date_str << std::endl;
+
+  // Collect all bodies to fetch
+  std::vector<FetchTask> tasks;
+  for (int i = 0; i < BODY_COUNT; i++) {
+    int jpl_id = get_jpl_id_for_body(i);
+    if (jpl_id != 0) {
+      FetchTask task;
+      task.body_index = i;
+      task.jpl_id = jpl_id;
+      task.date_str = std::string(date_str);
+      task.success = false;
+      tasks.push_back(task);
+    }
+  }
+
+  std::cout << "Fetching data for " << tasks.size() << " celestial bodies..." << std::endl;
+
+  // Reset counters
+  completed_fetches = 0;
+  successful_fetches = 0;
+
+  // Determine optimal number of threads (2-3 concurrent requests to minimize rate limiting)
+  const int max_threads = std::min(3, std::max(2, (int)std::thread::hardware_concurrency()));
+  const int num_threads = std::min(max_threads, (int)tasks.size());
+
+  std::cout << "Using " << num_threads << " parallel connections..." << std::endl;
+
+  // Launch parallel fetch operations
+  std::vector<std::future<void>> futures;
+
+  for (int t = 0; t < num_threads; t++) {
+    futures.push_back(std::async(std::launch::async, [&tasks, t, num_threads]() {
+      // Each thread processes every nth task
+      for (size_t i = t; i < tasks.size(); i += num_threads) {
+        fetch_body_data_parallel(tasks[i]);
+      }
+    }));
+  }
+
+  // Wait for all threads to complete
+  for (auto& future : futures) {
+    future.wait();
+  }
+
+  std::cout << "Parallel phase: " << successful_fetches.load() << "/" << tasks.size()
+            << " bodies fetched" << std::endl;
+
+  // Sequential retry for failed bodies
+  if (successful_fetches.load() < (int)tasks.size()) {
+    std::cout << "Retrying failed bodies sequentially..." << std::endl;
+
+    for (auto& task : tasks) {
+      if (!task.success) {
+        std::cout << "Sequential retry for " << SolarSystem[task.body_index].name << "..."
+                  << std::endl;
+
+        // Try up to MAX_RETRIES times with longer delays
+        bool success = false;
+        for (int attempt = 1; attempt <= MAX_RETRIES && !success; attempt++) {
+          if (attempt > 1) {
+            std::cout << "  Sequential attempt " << attempt << "/" << MAX_RETRIES << " for "
+                      << SolarSystem[task.body_index].name << "..." << std::endl;
+            std::this_thread::sleep_for(
+                std::chrono::milliseconds(RETRY_DELAY_MS * 2));  // Longer delay
+          }
+
+          success = fetch_jpl_horizons_data(task.date_str.c_str(), task.jpl_id, task.body_index);
+        }
+
+        if (success) {
+          successful_fetches++;
+          task.success = true;
+          std::cout << "✓ Sequential retry successful for " << SolarSystem[task.body_index].name
+                    << std::endl;
+        } else {
+          std::cerr << "✗ Sequential retry failed for " << SolarSystem[task.body_index].name
+                    << std::endl;
+        }
+      }
+    }
+  }
+
+  std::cout << "Successfully fetched " << successful_fetches.load() << "/" << tasks.size()
+            << " bodies" << std::endl;
+
+  // Save to cache if we got some data
+  if (successful_fetches.load() > 0) {
+    if (save_ephemeris_to_json() && save_ephemeris_to_binary()) {
+      std::cout << "Data saved to cache files" << std::endl;
+      return true;
+    }
+  }
+
+  std::cerr << "Failed to force update ephemeris data" << std::endl;
+  return false;
+}
+
 bool load_cached_ephemeris_data() {
   // Try binary cache first (faster)
   if (load_ephemeris_from_binary()) {

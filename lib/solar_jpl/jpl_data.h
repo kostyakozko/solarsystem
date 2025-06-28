@@ -38,6 +38,9 @@ struct EphemerisHeader {
 // Main update function - fetches data for January 1st of current year
 bool update_ephemeris_data();
 
+// Force update function - bypasses smart caching
+bool force_update_ephemeris_data();
+
 // Load data from cache (binary first, then JSON fallback)
 bool load_cached_ephemeris_data();
 
