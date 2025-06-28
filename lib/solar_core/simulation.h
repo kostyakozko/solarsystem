@@ -17,4 +17,9 @@ void run_backward_simulation(time_t start_date, time_t target_date);
 // Perform one simulation step (physics calculations)
 void perform_simulation_step(long double time_step);
 
+// Real-time simulation functions
+void initialize_simulation_to_current_time();
+void update_simulation_to_current_time();
+time_t get_simulation_time();
+
 #endif  //__SIMULATION_H__

@@ -29,4 +29,9 @@ inline void attractTo(coord& this_position, acceleration& delta, int j) {
 coord getBarycenter();
 void printBarycenter(const coord& barycenter);
 void printCurrentData(time_t current);
+
+// Functions for accessing celestial bodies
+int get_body_count();
+const planet& get_body(int index);
+
 #endif  //__MODEL_REAL_OPT_H__

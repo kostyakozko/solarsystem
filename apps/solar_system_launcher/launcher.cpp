@@ -258,6 +258,7 @@ void print_system_status() {
   std::cout << "  • solar_system (High-performance simulation)\n";
   std::cout << "  • solar_system_fetch (Data management)\n";
   std::cout << "  • solar_system_launcher (This unified interface)\n";
+  std::cout << "  • solar_system_realtime (Live real-time tracking)\n";
   std::cout << "\n";
 }
 

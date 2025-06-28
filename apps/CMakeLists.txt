@@ -9,12 +9,14 @@ add_subdirectory(solar_system_fetch)
 # Add unified launcher
 add_subdirectory(solar_system_launcher)
 
+# Add real-time simulation
+add_subdirectory(solar_system_realtime)
+
 # Future applications will be added here:
-# add_subdirectory(solar_system_realtime)
 # add_subdirectory(solar_system_web)
 
 # Create convenience target for all applications
 add_custom_target(applications
-    DEPENDS solar_system solar_system_fetch solar_system_launcher
+    DEPENDS solar_system solar_system_fetch solar_system_launcher solar_system_realtime
     COMMENT "Building all Solar System applications"
 )

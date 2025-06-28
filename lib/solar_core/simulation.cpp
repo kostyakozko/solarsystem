@@ -81,3 +81,35 @@ void run_backward_simulation(time_t start_date, time_t target_date) {
     }
   }
 }
+
+// Global variable to track current simulation time
+static time_t current_simulation_time = 0;
+
+void initialize_simulation_to_current_time() {
+  current_simulation_time = time(NULL);
+  // The simulation state is already initialized with current ephemeris data
+}
+
+void update_simulation_to_current_time() {
+  time_t now = time(NULL);
+
+  if (now > current_simulation_time) {
+    // Run simulation forward to catch up to current time
+    time_t time_diff = now - current_simulation_time;
+
+    // Use appropriate time step based on time difference
+    long double time_step = (time_diff > 3600) ? 3600.0 : 60.0;  // 1 hour or 1 minute steps
+
+    while (current_simulation_time < now) {
+      perform_simulation_step(time_step);
+      current_simulation_time += (time_t)time_step;
+
+      if (current_simulation_time > now) {
+        current_simulation_time = now;
+        break;
+      }
+    }
+  }
+}
+
+time_t get_simulation_time() { return current_simulation_time; }

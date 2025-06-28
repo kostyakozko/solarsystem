@@ -49,3 +49,13 @@ void printCurrentData(time_t current) {
               << SolarSystem[i].speed.z << std::endl;
   }
 }
+// Functions for accessing celestial bodies
+int get_body_count() { return count; }
+
+const planet& get_body(int index) {
+  if (index < 0 || index >= count) {
+    static planet empty_body = {0, {0, 0, 0}, {0, 0, 0}, "Invalid"};
+    return empty_body;
+  }
+  return SolarSystem[index];
+}
