@@ -1,11 +1,16 @@
 #include "jpl_data.h"
 
+#include <atomic>
+#include <chrono>
 #include <cstdlib>
 #include <cstring>
 #include <fstream>
+#include <future>
 #include <iomanip>
 #include <iostream>
+#include <mutex>
 #include <sstream>
+#include <thread>
 #include <vector>
 
 #include "constants.h"
@@ -16,6 +21,16 @@
 static time_t current_epoch = 0;
 static char current_source[32] = "ORIGINAL_DATA";
 static bool data_initialized = false;
+
+// Thread-safe data structures for parallel fetching with retry logic
+static std::mutex fetch_mutex;
+static std::atomic<int> completed_fetches(0);
+static std::atomic<int> successful_fetches(0);
+
+// Retry configuration
+static const int MAX_RETRIES = 3;
+static const int RETRY_DELAY_MS = 500;    // 500ms between retries
+static const int REQUEST_DELAY_MS = 200;  // 200ms between requests
 
 bool initialize_jpl_data() {
   if (data_initialized) {
@@ -56,38 +71,92 @@ bool update_ephemeris_data() {
 
   std::cout << "Fetching data for: " << date_str << std::endl;
 
-  // Count bodies to fetch
-  int count = 0;
-  for (int i = 0; i < BODY_COUNT; i++) {
-    if (get_jpl_id_for_body(i) != 0) {
-      count++;
-    }
-  }
-
-  // Fetch JPL data for all bodies
-  std::cout << "Fetching data for " << count << " celestial bodies..." << std::endl;
-
-  int successful_fetches = 0;
+  // Collect all bodies to fetch
+  std::vector<FetchTask> tasks;
   for (int i = 0; i < BODY_COUNT; i++) {
     int jpl_id = get_jpl_id_for_body(i);
     if (jpl_id != 0) {
-      std::cout << "Fetching " << SolarSystem[i].name << " (JPL ID: " << jpl_id << ")..."
-                << std::endl;
+      FetchTask task;
+      task.body_index = i;
+      task.jpl_id = jpl_id;
+      task.date_str = std::string(date_str);
+      task.success = false;
+      tasks.push_back(task);
+    }
+  }
 
-      if (fetch_jpl_horizons_data(date_str, jpl_id)) {
-        successful_fetches++;
-        std::cout << "✓ Successfully fetched " << SolarSystem[i].name << std::endl;
-      } else {
-        std::cerr << "✗ Failed to fetch " << SolarSystem[i].name << std::endl;
+  std::cout << "Fetching data for " << tasks.size() << " celestial bodies..." << std::endl;
+
+  // Reset counters
+  completed_fetches = 0;
+  successful_fetches = 0;
+
+  // Determine optimal number of threads (2-3 concurrent requests to minimize rate limiting)
+  const int max_threads = std::min(3, std::max(2, (int)std::thread::hardware_concurrency()));
+  const int num_threads = std::min(max_threads, (int)tasks.size());
+
+  std::cout << "Using " << num_threads << " parallel connections..." << std::endl;
+
+  // Launch parallel fetch operations
+  std::vector<std::future<void>> futures;
+
+  for (int t = 0; t < num_threads; t++) {
+    futures.push_back(std::async(std::launch::async, [&tasks, t, num_threads]() {
+      // Each thread processes every nth task
+      for (size_t i = t; i < tasks.size(); i += num_threads) {
+        fetch_body_data_parallel(tasks[i]);
+      }
+    }));
+  }
+
+  // Wait for all threads to complete
+  for (auto& future : futures) {
+    future.wait();
+  }
+
+  std::cout << "Parallel phase: " << successful_fetches.load() << "/" << tasks.size()
+            << " bodies fetched" << std::endl;
+
+  // Sequential retry for failed bodies
+  if (successful_fetches.load() < (int)tasks.size()) {
+    std::cout << "Retrying failed bodies sequentially..." << std::endl;
+
+    for (auto& task : tasks) {
+      if (!task.success) {
+        std::cout << "Sequential retry for " << SolarSystem[task.body_index].name << "..."
+                  << std::endl;
+
+        // Try up to MAX_RETRIES times with longer delays
+        bool success = false;
+        for (int attempt = 1; attempt <= MAX_RETRIES && !success; attempt++) {
+          if (attempt > 1) {
+            std::cout << "  Sequential attempt " << attempt << "/" << MAX_RETRIES << " for "
+                      << SolarSystem[task.body_index].name << "..." << std::endl;
+            std::this_thread::sleep_for(
+                std::chrono::milliseconds(RETRY_DELAY_MS * 2));  // Longer delay
+          }
+
+          success = fetch_jpl_horizons_data(task.date_str.c_str(), task.jpl_id, task.body_index);
+        }
+
+        if (success) {
+          successful_fetches++;
+          task.success = true;
+          std::cout << "✓ Sequential retry successful for " << SolarSystem[task.body_index].name
+                    << std::endl;
+        } else {
+          std::cerr << "✗ Sequential retry failed for " << SolarSystem[task.body_index].name
+                    << std::endl;
+        }
       }
     }
   }
 
-  std::cout << "Successfully fetched " << successful_fetches << "/" << count << " bodies"
-            << std::endl;
+  std::cout << "Successfully fetched " << successful_fetches.load() << "/" << tasks.size()
+            << " bodies" << std::endl;
 
   // Save to cache if we got some data
-  if (successful_fetches > 0) {
+  if (successful_fetches.load() > 0) {
     if (save_ephemeris_to_json() && save_ephemeris_to_binary()) {
       std::cout << "Data saved to cache files" << std::endl;
       return true;
@@ -133,8 +202,69 @@ static size_t WriteCallback(void* contents, size_t size, size_t nmemb, std::stri
   return total_size;
 }
 
+// Thread-safe parallel fetch function
+void fetch_body_data_parallel(FetchTask& task) {
+  // Small delay to be respectful to JPL servers
+  std::this_thread::sleep_for(std::chrono::milliseconds(REQUEST_DELAY_MS));
+
+  // Thread-safe progress reporting
+  {
+    std::lock_guard<std::mutex> lock(fetch_mutex);
+    std::cout << "Fetching " << SolarSystem[task.body_index].name << " (JPL ID: " << task.jpl_id
+              << ")..." << std::endl;
+  }
+
+  // Retry logic
+  bool success = false;
+  int attempt = 0;
+
+  while (!success && attempt < MAX_RETRIES) {
+    attempt++;
+
+    if (attempt > 1) {
+      // Thread-safe retry notification
+      {
+        std::lock_guard<std::mutex> lock(fetch_mutex);
+        std::cout << "  Retry " << (attempt - 1) << "/" << (MAX_RETRIES - 1) << " for "
+                  << SolarSystem[task.body_index].name << "..." << std::endl;
+      }
+
+      // Wait before retry
+      std::this_thread::sleep_for(std::chrono::milliseconds(RETRY_DELAY_MS));
+    }
+
+    // Perform the actual fetch
+    success = fetch_jpl_horizons_data(task.date_str.c_str(), task.jpl_id, task.body_index);
+  }
+
+  // Update task result
+  task.success = success;
+
+  // Thread-safe result reporting and counter updates
+  {
+    std::lock_guard<std::mutex> lock(fetch_mutex);
+    completed_fetches++;
+
+    if (success) {
+      successful_fetches++;
+      if (attempt > 1) {
+        std::cout << "✓ Successfully fetched " << SolarSystem[task.body_index].name << " after "
+                  << attempt << " attempts (" << completed_fetches.load() << "/" << BODY_COUNT
+                  << ")" << std::endl;
+      } else {
+        std::cout << "✓ Successfully fetched " << SolarSystem[task.body_index].name << " ("
+                  << completed_fetches.load() << "/" << BODY_COUNT << ")" << std::endl;
+      }
+    } else {
+      std::cerr << "✗ Failed to fetch " << SolarSystem[task.body_index].name << " after "
+                << MAX_RETRIES << " attempts (" << completed_fetches.load() << "/" << BODY_COUNT
+                << ")" << std::endl;
+    }
+  }
+}
+
 // Fetch JPL HORIZONS data for a specific body
-bool fetch_jpl_horizons_data(const char* date, int jpl_id) {
+bool fetch_jpl_horizons_data(const char* date, int jpl_id, int body_index) {
   // Calculate next day for date range
   struct tm tm = {};
   if (sscanf(date, "%d-%d-%d", &tm.tm_year, &tm.tm_mon, &tm.tm_mday) != 3) {
@@ -162,8 +292,8 @@ bool fetch_jpl_horizons_data(const char* date, int jpl_id) {
 
   std::string url = base_url + params;
 
-  // Use curl to fetch data
-  std::string curl_command = "curl -s \"" + url + "\"";
+  // Use curl to fetch data with better error handling
+  std::string curl_command = "curl -s --max-time 30 --retry 2 --retry-delay 1 \"" + url + "\"";
 
   // Execute curl command
   FILE* pipe = popen(curl_command.c_str(), "r");
@@ -186,7 +316,7 @@ bool fetch_jpl_horizons_data(const char* date, int jpl_id) {
   }
 
   // Parse the response
-  if (parse_jpl_response(response.c_str())) {
+  if (parse_jpl_response(response.c_str(), body_index)) {
     return true;
   }
 
@@ -194,7 +324,7 @@ bool fetch_jpl_horizons_data(const char* date, int jpl_id) {
   return false;
 }
 
-bool parse_jpl_response(const char* response) {
+bool parse_jpl_response(const char* response, int body_index) {
   std::string response_str(response);
 
   // Find data section markers
@@ -202,7 +332,7 @@ bool parse_jpl_response(const char* response) {
   size_t data_end = response_str.find("$$EOE");
 
   if (data_start == std::string::npos || data_end == std::string::npos) {
-    std::cerr << "Could not find data markers in JPL response" << std::endl;
+    std::cerr << "Could not find data markers in JPL response for body " << body_index << std::endl;
     return false;
   }
 
@@ -244,13 +374,18 @@ bool parse_jpl_response(const char* response) {
         double vy = std::stod(fields[6]);  // VY velocity
         double vz = std::stod(fields[7]);  // VZ velocity
 
-        // Update Sun data (for now, we only update the Sun)
-        SolarSystem[0].position.x = x;
-        SolarSystem[0].position.y = y;
-        SolarSystem[0].position.z = z;
-        SolarSystem[0].speed.x = vx;
-        SolarSystem[0].speed.y = vy;
-        SolarSystem[0].speed.z = vz;
+        // Thread-safe update of the correct body
+        {
+          std::lock_guard<std::mutex> lock(fetch_mutex);
+          if (body_index >= 0 && body_index < BODY_COUNT) {
+            SolarSystem[body_index].position.x = x;
+            SolarSystem[body_index].position.y = y;
+            SolarSystem[body_index].position.z = z;
+            SolarSystem[body_index].speed.x = vx;
+            SolarSystem[body_index].speed.y = vy;
+            SolarSystem[body_index].speed.z = vz;
+          }
+        }
 
         // For now, we only process the first data line
         break;

@@ -3,6 +3,16 @@
 
 #include <cstdint>
 #include <ctime>
+#include <string>
+
+// Forward declarations for parallel fetching
+struct FetchTask {
+  int body_index;
+  int jpl_id;
+  std::string date_str;
+  bool success;
+  std::string error_message;
+};
 
 // Constants
 #define JPL_BINARY_MAGIC 0x4A504C45  // "JPLE"
@@ -57,8 +67,9 @@ bool save_current_data_for_testing();
 bool test_storage_system();
 
 // Internal functions
-bool fetch_jpl_horizons_data(const char* date, int jpl_id);
-bool parse_jpl_response(const char* response);
+bool fetch_jpl_horizons_data(const char* date, int jpl_id, int body_index);
+void fetch_body_data_parallel(FetchTask& task);
+bool parse_jpl_response(const char* response, int body_index);
 bool save_ephemeris_to_json();
 bool load_ephemeris_from_json();
 bool save_ephemeris_to_binary();
