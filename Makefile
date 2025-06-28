@@ -2,7 +2,7 @@ CXX     = g++
 CFLAGS  = -march=native -mtune=native -O3 -flto -ffast-math -funroll-loops -pg -std=c++0x
 LD	= $(CXX)
 LDFLAGS	= -flto -fwhole-program -pg 
-SOURCES = solar_system.cpp model.cpp constants.cpp args.cpp simulation.cpp
+SOURCES = solar_system.cpp model.cpp constants.cpp args.cpp simulation.cpp jpl_data.cpp jpl_bodies.cpp
 OBJS    = ${SOURCES:.cpp=.o}
 BINARY  = solar_system
 RM      = rm

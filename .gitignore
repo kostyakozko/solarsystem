@@ -1,4 +1,6 @@
 *.o
 *.s
+*.json
+*.bin
 solar_system
 gmon.out

@@ -10,11 +10,17 @@ void print_usage(const char* program_name) {
               << "Options:\n"
               << "  -d, --date DATE    Specify target date in ISO format (YYYY-MM-DD)\n"
               << "                     If not specified, uses current date\n"
+              << "  -u, --update-data  Update ephemeris data from NASA JPL for current year\n"
+              << "      --rebuild      Rebuild binary cache from JSON data\n"
+              << "      --test-storage Test JSON/binary storage system\n"
               << "  -h, --help         Show this help message\n\n"
               << "Examples:\n"
               << "  " << program_name << "                    # Use current date\n"
               << "  " << program_name << " -d 2025-12-31      # Simulate to Dec 31, 2025\n"
-              << "  " << program_name << " --date 2020-01-01  # Simulate to Jan 1, 2020\n";
+              << "  " << program_name << " --date 2020-01-01  # Simulate to Jan 1, 2020\n"
+              << "  " << program_name << " -u                 # Update JPL data\n"
+              << "  " << program_name << " --rebuild          # Rebuild binary cache\n"
+              << "  " << program_name << " --test-storage     # Test storage system\n";
 }
 
 time_t parse_iso_date(const std::string& date_str) {
@@ -65,11 +71,23 @@ SimulationArgs parse_arguments(int argc, char* argv[]) {
     SimulationArgs args;
     args.use_current_date = true;  // Default to current date
     args.target_date = time(NULL);
+    args.update_data = false;
+    args.rebuild_cache = false;
+    args.test_storage = false;
     
     for (int i = 1; i < argc; i++) {
         if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0) {
             print_usage(argv[0]);
             exit(0);
+        }
+        else if (strcmp(argv[i], "-u") == 0 || strcmp(argv[i], "--update-data") == 0) {
+            args.update_data = true;
+        }
+        else if (strcmp(argv[i], "--rebuild") == 0) {
+            args.rebuild_cache = true;
+        }
+        else if (strcmp(argv[i], "--test-storage") == 0) {
+            args.test_storage = true;
         }
         else if (strcmp(argv[i], "-d") == 0 || strcmp(argv[i], "--date") == 0) {
             if (i + 1 >= argc) {

@@ -8,6 +8,9 @@ struct SimulationArgs {
     time_t target_date;
     bool use_current_date;
     std::string date_string;
+    bool update_data;           // -u, --update-data
+    bool rebuild_cache;         // --rebuild
+    bool test_storage;          // --test-storage
 };
 
 // Parse command line arguments
