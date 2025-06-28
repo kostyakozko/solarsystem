@@ -27,22 +27,54 @@ A high-performance N-body gravitational simulation of the solar system with real
 
 ### Prerequisites
 - **C++ compiler** with C++11 support (GCC/Clang)
+- **CMake** 3.15 or higher
 - **curl** for HTTP requests to JPL HORIZONS API
-- **make** for building
+
+### Installing CMake
+```bash
+# macOS with Homebrew
+brew install cmake
+
+# Ubuntu/Debian
+sudo apt-get install cmake
+
+# CentOS/RHEL
+sudo yum install cmake
+```
 
 ### Build
 ```bash
 git clone <repository-url>
 cd solarsystem
-make
+
+# Create build directory
+mkdir build
+cd build
+
+# Configure and build
+cmake ..
+make -j$(nproc)
+
+# Or use CMake's cross-platform build command
+cmake --build . --parallel
+```
+
+### Alternative: Legacy Makefile
+The original Makefile is still available for compatibility:
+```bash
+make clean && make
 ```
 
 ## Usage
 
 ### Basic Simulation
 ```bash
-# Run simulation with current JPL data (if cached)
+# From build directory
 ./solar_system
+
+# Or install system-wide
+make install
+solar_system
 
 # Simulate to specific date
 ./solar_system -d 2025-12-31
@@ -73,6 +105,21 @@ make
 
 # Custom simulation parameters
 ./solar_system -d 2026-01-01 -t 30 -v
+```
+
+### Development Commands
+```bash
+# Format code (from build directory)
+make format
+
+# Clean cache files
+make clean-cache
+
+# Clean build files
+make clean
+
+# Reconfigure build
+cd .. && rm -rf build && mkdir build && cd build && cmake ..
 ```
 
 ## Data Sources
@@ -119,6 +166,13 @@ The simulation automatically fetches real ephemeris data from NASA's JPL HORIZON
 
 ## Architecture
 
+### Build System
+- **CMake 3.15+**: Modern cross-platform build system
+- **Out-of-source builds**: Clean separation in `build/` directory
+- **Automatic dependency tracking**: Efficient incremental builds
+- **Cross-platform support**: macOS, Linux, Windows
+- **IDE integration**: Generate Xcode, VS Code, CLion projects
+
 ### Core Components
 - **`solar_system.cpp`**: Main simulation loop and user interface
 - **`jpl_data.cpp`**: JPL HORIZONS API integration and caching
@@ -164,10 +218,14 @@ JPL HORIZONS API → HTTP Client → Parser → Binary Cache → Simulation
 ### Building with Debug Info
 ```bash
 # Debug build
-make debug
+mkdir build-debug
+cd build-debug
+cmake -DCMAKE_BUILD_TYPE=Debug ..
+make
 
 # With profiling
-make profile
+cmake -DCMAKE_BUILD_TYPE=Release -DENABLE_PROFILING=ON ..
+make
 ```
 
 ### Code Style
