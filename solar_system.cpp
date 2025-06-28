@@ -17,6 +17,7 @@ int main()
   time_t step = 86400*15;
   time_t now = time(NULL);
   printBarycenter(getBarycenter());
+  
   while(1)
   {
     for (int i = 0; i < count; ++i)
@@ -40,10 +41,9 @@ int main()
       this_position.x += (this_speed.x - delta.x * dt * 0.5) * dt;
       this_position.y += (this_speed.y - delta.y * dt * 0.5) * dt;
       this_position.z += (this_speed.z - delta.z * dt * 0.5) * dt;
-      
     }
-    if (current >= now)
-    { 
+    
+    if (current >= now) { 
       printCurrentData(current);
       origin = current;
       exit(0);
