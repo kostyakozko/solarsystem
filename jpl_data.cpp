@@ -58,12 +58,26 @@ bool initialize_jpl_data() {
 }
 
 bool update_ephemeris_data() {
-  std::cout << "Updating ephemeris data from NASA JPL..." << std::endl;
+  std::cout << "Checking ephemeris data currency..." << std::endl;
 
-  // Get current year for data fetching
+  // Get current year
   time_t now = time(NULL);
   struct tm* tm_now = localtime(&now);
   int current_year = tm_now->tm_year + 1900;
+
+  // Check if we already have current year's data
+  if (has_current_year_ephemeris_data()) {
+    struct tm* tm_epoch = localtime(&current_epoch);
+    int cached_year = tm_epoch->tm_year + 1900;
+
+    std::cout << "✓ Ephemeris data is already up to date for " << cached_year << std::endl;
+    std::cout << "  Source: " << current_source << std::endl;
+    std::cout << "  Last updated: " << ctime(&current_epoch);
+    std::cout << "No update needed." << std::endl;
+    return true;
+  }
+
+  std::cout << "Updating ephemeris data from NASA JPL for " << current_year << "..." << std::endl;
 
   // Format date string for JPL query
   char date_str[32];
