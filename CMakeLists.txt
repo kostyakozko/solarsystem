@@ -11,9 +11,14 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
 endif()
 
+# Enable LTO for Release builds
+if(CMAKE_BUILD_TYPE STREQUAL "Release")
+    set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
+endif()
+
 # Compiler-specific optimizations
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-    # Release optimizations (matching current Makefile)
+    # Release optimizations (matching current performance)
     set(CMAKE_CXX_FLAGS_RELEASE "-O3 -march=native -mtune=native -flto -ffast-math -funroll-loops")
     
     # Debug flags
@@ -35,25 +40,9 @@ if(NOT CURL_EXECUTABLE)
     message(FATAL_ERROR "curl is required for JPL HORIZONS data fetching")
 endif()
 
-# Source files for the main executable
-set(SOLAR_SYSTEM_SOURCES
-    solar_system.cpp
-    model.cpp
-    constants.cpp
-    args.cpp
-    simulation.cpp
-    jpl_data.cpp
-    jpl_bodies.cpp
-)
-
-# Create the main executable
-add_executable(solar_system ${SOLAR_SYSTEM_SOURCES})
-
-# Link threading library
-target_link_libraries(solar_system PRIVATE Threads::Threads)
-
-# Include current directory for headers
-target_include_directories(solar_system PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+# Add subdirectories for modular build
+add_subdirectory(lib)
+add_subdirectory(apps)
 
 # Installation
 install(TARGETS solar_system
@@ -63,8 +52,10 @@ install(TARGETS solar_system
 find_program(CLANG_FORMAT_EXECUTABLE clang-format)
 if(CLANG_FORMAT_EXECUTABLE)
     file(GLOB_RECURSE ALL_CXX_SOURCE_FILES
-        ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/*.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/lib/**/*.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/lib/**/*.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/apps/**/*.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/apps/**/*.h
     )
     
     add_custom_target(format
@@ -81,12 +72,19 @@ add_custom_target(clean-cache
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
+# Convenience targets
+add_custom_target(all-libraries DEPENDS libraries)
+add_custom_target(all-applications DEPENDS applications)
+
 # Print build information
 message(STATUS "Solar System Suite Configuration:")
 message(STATUS "  Version: ${PROJECT_VERSION}")
 message(STATUS "  Build type: ${CMAKE_BUILD_TYPE}")
 message(STATUS "  C++ standard: ${CMAKE_CXX_STANDARD}")
 message(STATUS "  Compiler: ${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION}")
+message(STATUS "  LTO enabled: ${CMAKE_INTERPROCEDURAL_OPTIMIZATION}")
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
     message(STATUS "  Optimization flags: ${CMAKE_CXX_FLAGS_RELEASE}")
 endif()
+message(STATUS "  Libraries: solar_core, solar_jpl, solar_utils")
+message(STATUS "  Applications: solar_system")

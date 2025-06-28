@@ -1,0 +1,30 @@
+# Solar Utils Library - Common Utilities
+# Static library for now, shared library option can be added later
+
+add_library(solar_utils STATIC
+    args.cpp
+)
+
+# Public headers for other libraries and applications
+target_include_directories(solar_utils PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}
+)
+
+# Standard optimization flags
+target_compile_options(solar_utils PRIVATE
+    $<$<CONFIG:Release>:-O3 -march=native -mtune=native>
+    $<$<CONFIG:Debug>:-g -O0 -Wall -Wextra>
+)
+
+# Enable profiling if requested
+if(ENABLE_PROFILING)
+    target_compile_options(solar_utils PRIVATE -pg)
+    target_link_options(solar_utils PRIVATE -pg)
+endif()
+
+# Set library properties
+set_target_properties(solar_utils PROPERTIES
+    CXX_STANDARD 11
+    CXX_STANDARD_REQUIRED ON
+    CXX_EXTENSIONS OFF
+)
