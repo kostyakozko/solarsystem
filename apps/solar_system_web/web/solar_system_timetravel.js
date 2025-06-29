@@ -201,8 +201,11 @@ class SolarSystemTimeTravel {
         
         this.canvas.addEventListener('wheel', (e) => {
             e.preventDefault();
-            this.camera.zoom *= (1 + e.deltaY * 0.001);
-            this.camera.zoom = Math.max(0.1, Math.min(5.0, this.camera.zoom));
+            // Improved zoom with much wider range
+            const zoomFactor = 1 + e.deltaY * 0.001;
+            this.camera.zoom *= zoomFactor;
+            // Allow much closer zoom (0.01x) and farther zoom (100x)
+            this.camera.zoom = Math.max(0.01, Math.min(100.0, this.camera.zoom));
         });
         
         // Time control buttons
@@ -496,8 +499,8 @@ class SolarSystemTimeTravel {
             
             this.updateTimeDisplay();
             
-            // Update planet positions based on simulation time
-            this.simulateOrbitalPositions();
+            // Request updated positions from C++ backend for the current simulation time
+            this.requestSimulationData(this.timeControl.currentTime);
             
             // Update orbit trails if enabled
             if (this.settings.showTrails) {
@@ -517,58 +520,27 @@ class SolarSystemTimeTravel {
         }
     }
     
-    simulateOrbitalPositions() {
-        // Simple orbital simulation for visual movement
-        // This creates the visual effect while we work on C++ backend integration
-        const referenceDate = new Date('2025-01-01');
-        const timeDiff = (this.timeControl.currentTime - referenceDate) / (1000 * 60 * 60 * 24); // days
-        
-        // Store original positions if not already stored
-        if (!this.originalPositions) {
-            this.originalPositions = {};
-            this.bodies.forEach(body => {
-                this.originalPositions[body.name] = {
-                    x: body.position.x,
-                    y: body.position.y,
-                    z: body.position.z
-                };
-            });
+    async requestSimulationData(targetDate) {
+        try {
+            // Format date for API request (YYYY-MM-DD)
+            const dateStr = targetDate.toISOString().split('T')[0];
+            
+            // Request simulation data for specific date
+            const response = await fetch(`/api/solar_system?date=${dateStr}`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const data = await response.json();
+            
+            // Update bodies with new positions
+            if (data.bodies && Array.isArray(data.bodies)) {
+                this.updateBodies(data);
+            }
+        } catch (error) {
+            console.warn('Failed to fetch simulation data for date:', targetDate, error);
+            // Continue with current positions if request fails
         }
-        
-        // Orbital periods in days
-        const orbitalPeriods = {
-            'Mercury': 88, 'Venus': 225, 'Earth': 365, 'Mars': 687,
-            'Jupiter': 4333, 'Saturn': 10759, 'Uranus': 30687, 'Neptune': 60190,
-            'Moon': 27.3, 'Io': 1.77, 'Europa': 3.55, 'Ganymede': 7.15, 'Callisto': 16.7,
-            'Titan': 16, 'Rhea': 4.5, 'Iapetus': 79, 'Titania': 8.7, 'Oberon': 13.5,
-            'Triton': 5.9, 'Charon': 6.4
-        };
-        
-        // Update positions for each body
-        this.bodies.forEach(body => {
-            if (body.name === 'Sun') return; // Sun stays stationary
-            
-            const originalPos = this.originalPositions[body.name];
-            if (!originalPos) return;
-            
-            const period = orbitalPeriods[body.name] || 365;
-            const angle = (timeDiff / period) * 2 * Math.PI;
-            
-            // Calculate orbital motion
-            const distance = Math.sqrt(originalPos.x * originalPos.x + originalPos.y * originalPos.y);
-            const originalAngle = Math.atan2(originalPos.y, originalPos.x);
-            const newAngle = originalAngle + angle;
-            
-            // Update position (create new object to avoid reference issues)
-            const newPosition = {
-                x: distance * Math.cos(newAngle),
-                y: distance * Math.sin(newAngle),
-                z: originalPos.z
-            };
-            
-            // Update the body's position
-            body.position = newPosition;
-        });
     }
     
     updateOrbitTrails() {
@@ -701,21 +673,24 @@ class SolarSystemTimeTravel {
         const positions = [];
         const colors = [];
         
-        // Find max distance for scaling
+        // Find max distance for scaling - but use a more reasonable approach
         let maxDist = 0;
         this.bodies.forEach(body => {
             const dist = Math.sqrt(body.position.x*body.position.x + body.position.y*body.position.y + body.position.z*body.position.z);
             maxDist = Math.max(maxDist, dist);
         });
         
-        const scale = maxDist > 0 ? 40.0 / maxDist : 1.0;
+        // Improved scaling that works better for inner solar system
+        // Use a logarithmic-like scaling to better show both inner and outer planets
+        const baseScale = maxDist > 0 ? 50.0 / maxDist : 1.0;
         
         this.bodies.forEach(body => {
-            positions.push(
-                body.position.x * scale,
-                body.position.y * scale,
-                body.position.z * scale
-            );
+            // Apply scaling
+            const scaledX = body.position.x * baseScale;
+            const scaledY = body.position.y * baseScale;
+            const scaledZ = body.position.z * baseScale;
+            
+            positions.push(scaledX, scaledY, scaledZ);
             
             const color = this.getBodyColor(body.name);
             colors.push(color.r, color.g, color.b);
@@ -801,9 +776,23 @@ class SolarSystemTimeTravel {
         this.bodies.slice(0, 10).forEach(body => {
             const div = document.createElement('div');
             div.className = 'body-item';
+            
+            // Convert from meters to kilometers for display
+            // body.position values are now correctly in meters (SI units)
+            const distance_km = Math.sqrt(body.position.x*body.position.x + body.position.y*body.position.y) / 1000;
+            
+            let distance_display;
+            if (distance_km < 1000) {
+                distance_display = `${distance_km.toFixed(0)} km`;
+            } else if (distance_km < 1000000) {
+                distance_display = `${(distance_km/1000).toFixed(1)}K km`;
+            } else {
+                distance_display = `${(distance_km/1000000).toFixed(1)}M km`;
+            }
+            
             div.innerHTML = `
                 <div class="body-name">${body.name}</div>
-                <div class="body-coords">${(Math.sqrt(body.position.x*body.position.x + body.position.y*body.position.y)/1000000).toFixed(1)}M km</div>
+                <div class="body-coords">${distance_display}</div>
             `;
             listEl.appendChild(div);
         });
@@ -843,7 +832,11 @@ class SolarSystemTimeTravel {
         const matrix = new Float32Array(16);
         matrix[0] = matrix[5] = matrix[10] = matrix[15] = 1;
         
-        matrix[14] = -80 * this.camera.zoom;
+        // Improved camera distance calculation for better inner solar system viewing
+        // Allow much closer viewing with zoom
+        const baseDistance = 80.0;
+        const zoomDistance = baseDistance * this.camera.zoom;
+        matrix[14] = -zoomDistance;
         
         this.rotateX(matrix, this.camera.rotX);
         this.rotateY(matrix, this.camera.rotY);

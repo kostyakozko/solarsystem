@@ -504,12 +504,14 @@ bool parse_jpl_response(const char* response, int body_index) {
         {
           std::lock_guard<std::mutex> lock(fetch_mutex);
           if (body_index >= 0 && body_index < BODY_COUNT) {
-            SolarSystem[body_index].position.x = x;
-            SolarSystem[body_index].position.y = y;
-            SolarSystem[body_index].position.z = z;
-            SolarSystem[body_index].speed.x = vx;
-            SolarSystem[body_index].speed.y = vy;
-            SolarSystem[body_index].speed.z = vz;
+            // Convert JPL data from kilometers to meters (SI units)
+            SolarSystem[body_index].position.x = x * 1000.0;
+            SolarSystem[body_index].position.y = y * 1000.0;
+            SolarSystem[body_index].position.z = z * 1000.0;
+            // Convert JPL velocity from km/s to m/s
+            SolarSystem[body_index].speed.x = vx * 1000.0;
+            SolarSystem[body_index].speed.y = vy * 1000.0;
+            SolarSystem[body_index].speed.z = vz * 1000.0;
           }
         }
 
@@ -668,19 +670,25 @@ bool load_ephemeris_from_json() {
       in_position = false;
     } else if (in_position && current_body_index >= 0 && current_body_index < BODY_COUNT) {
       if (line.find("\"x\":") != std::string::npos) {
-        SolarSystem[current_body_index].position.x = extract_json_number(line);
+        // Convert from kilometers to meters
+        SolarSystem[current_body_index].position.x = extract_json_number(line) * 1000.0;
       } else if (line.find("\"y\":") != std::string::npos) {
-        SolarSystem[current_body_index].position.y = extract_json_number(line);
+        // Convert from kilometers to meters
+        SolarSystem[current_body_index].position.y = extract_json_number(line) * 1000.0;
       } else if (line.find("\"z\":") != std::string::npos) {
-        SolarSystem[current_body_index].position.z = extract_json_number(line);
+        // Convert from kilometers to meters
+        SolarSystem[current_body_index].position.z = extract_json_number(line) * 1000.0;
       }
     } else if (in_velocity && current_body_index >= 0 && current_body_index < BODY_COUNT) {
       if (line.find("\"x\":") != std::string::npos) {
-        SolarSystem[current_body_index].speed.x = extract_json_number(line);
+        // Convert from km/s to m/s
+        SolarSystem[current_body_index].speed.x = extract_json_number(line) * 1000.0;
       } else if (line.find("\"y\":") != std::string::npos) {
-        SolarSystem[current_body_index].speed.y = extract_json_number(line);
+        // Convert from km/s to m/s
+        SolarSystem[current_body_index].speed.y = extract_json_number(line) * 1000.0;
       } else if (line.find("\"z\":") != std::string::npos) {
-        SolarSystem[current_body_index].speed.z = extract_json_number(line);
+        // Convert from km/s to m/s
+        SolarSystem[current_body_index].speed.z = extract_json_number(line) * 1000.0;
       }
     } else if (line.find("\"mass\":") != std::string::npos && current_body_index >= 0 &&
                current_body_index < BODY_COUNT) {

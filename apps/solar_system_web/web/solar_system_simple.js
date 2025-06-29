@@ -326,9 +326,23 @@ class SimpleSolarSystem {
         this.bodies.slice(0, 10).forEach(body => { // Show first 10 bodies
             const div = document.createElement('div');
             div.className = 'body-item';
+            
+            // Convert from meters to kilometers for display
+            // body.position values are now correctly in meters (SI units)
+            const distance_km = Math.sqrt(body.position.x*body.position.x + body.position.y*body.position.y) / 1000;
+            
+            let distance_display;
+            if (distance_km < 1000) {
+                distance_display = `${distance_km.toFixed(0)} km`;
+            } else if (distance_km < 1000000) {
+                distance_display = `${(distance_km/1000).toFixed(1)}K km`;
+            } else {
+                distance_display = `${(distance_km/1000000).toFixed(1)}M km`;
+            }
+            
             div.innerHTML = `
                 <div class="body-name">${body.name}</div>
-                <div class="body-coords">${(Math.sqrt(body.position.x*body.position.x + body.position.y*body.position.y)/1000000).toFixed(1)}M km</div>
+                <div class="body-coords">${distance_display}</div>
             `;
             listEl.appendChild(div);
         });
