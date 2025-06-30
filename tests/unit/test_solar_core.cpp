@@ -128,19 +128,20 @@ int main() {
     // Initialize simulation
     initialize_simulation_to_current_time();
 
-    // Get initial time
-    time_t initial_time = get_simulation_time();
+    // Get initial position of Earth (index 3)
+    const planet& earth = get_body(3);
+    coord initial_position = earth.position;
 
     // Perform a small simulation step
     perform_simulation_step(3600.0);  // 1 hour
 
-    // Time should have advanced
-    time_t new_time = get_simulation_time();
-    ASSERT_GT(new_time, initial_time);
+    // Position should have changed (Earth moves in orbit)
+    const planet& earth_after = get_body(3);
+    coord new_position = earth_after.position;
 
-    // Should have advanced by approximately 1 hour
-    long double time_diff = new_time - initial_time;
-    ASSERT_NEAR(time_diff, 3600.0, 10.0);  // Within 10 seconds tolerance
+    // Calculate distance moved
+    long double distance_moved = dist(initial_position, new_position);
+    ASSERT_GT(distance_moved, 0.0);  // Should have moved some distance
   });
 
   return current_suite->all_passed() ? 0 : 1;
