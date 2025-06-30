@@ -159,6 +159,7 @@ jobs:
         VALIDATE_YAML: false
         VALIDATE_JSCPD: false
         VALIDATE_NATURAL_LANGUAGE: false
+        VALIDATE_CLANG_FORMAT: false  # We have our own clang-format in code-quality job
 
   # Performance regression detection
   performance-regression:
