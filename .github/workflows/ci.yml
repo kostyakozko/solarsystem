@@ -163,6 +163,7 @@ jobs:
         VALIDATE_CHECKOV: false       # Infrastructure as code scanning not needed
         VALIDATE_DOCKERFILE: false    # No Dockerfiles in this project
         VALIDATE_GITLEAKS: false      # Secrets scanning might be too aggressive
+        VALIDATE_CPP: false           # cpplint has outdated rules (80 char limit, copyright requirements)
 
   # Performance regression detection
   performance-regression:
