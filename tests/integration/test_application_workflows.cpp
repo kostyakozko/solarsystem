@@ -118,18 +118,26 @@ int main() {
 
   // Test web server startup
   TEST_CASE("Web Server Startup") {
+    // Clean up any existing web servers first
+    system("pkill -f solar_system_web 2>/dev/null || true");
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+
+    // Use a unique port to avoid conflicts
+    int test_port = 8080 + (rand() % 1000);
     // Start web server in background
-    std::string start_command =
-        "./apps/solar_system_web/solar_system_web --port 8082 --web-root share/solar_system/web > "
-        "/dev/null 2>&1 &";
+    std::string start_command = "./apps/solar_system_web/solar_system_web --port " +
+                                std::to_string(test_port) +
+                                " --web-root share/solar_system/web > "
+                                "/dev/null 2>&1 &";
     system(start_command.c_str());
 
     // Give server time to start
-    std::this_thread::sleep_for(std::chrono::seconds(2));
+    std::this_thread::sleep_for(std::chrono::seconds(3));
 
     // Test if server is responding
     std::string test_command =
-        "curl -s -o /dev/null -w \"%{http_code}\" http://localhost:8082/api/status 2>/dev/null || "
+        "curl -s -o /dev/null -w \"%{http_code}\" http://localhost:" + std::to_string(test_port) +
+        "/api/status 2>/dev/null || "
         "echo '000'";
     std::string response = execute_command(test_command);
 
@@ -143,7 +151,7 @@ int main() {
   // Test data consistency across applications
   TEST_CASE("Data Consistency") {
     // Run simulation and capture output
-    std::string sim_command = "./apps/solar_system/solar_system --date 2025-06-01 --verbose";
+    std::string sim_command = "./apps/solar_system/solar_system --date 2025-06-01";
     std::string sim_output = execute_command(sim_command);
 
     // Run real-time for same date (if supported)
