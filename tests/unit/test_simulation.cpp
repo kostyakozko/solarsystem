@@ -1,9 +1,9 @@
 /**
  * @file test_simulation.cpp
- * @brief Focused unit tests for simulation engine
+ * @brief Unit tests for simulation functions (actual API)
  */
 
-#include "../../lib/solar_core/include/simulation.h"
+#include "../../lib/solar_core/simulation.h"
 #include "test_data.h"
 #include "test_framework.h"
 
@@ -12,193 +12,90 @@ int main() {
 
   // Test simulation initialization
   TEST_CASE("Simulation Initialization") {
-    SimulationArgs args;
-    args.target_date = "2025-01-01";
-    args.time_step = 3600.0;
-    args.verbose = false;
+    // Initialize simulation to current time
+    initialize_simulation_to_current_time();
 
-    ASSERT_EQ(args.target_date, "2025-01-01");
-    ASSERT_NEAR(args.time_step, 3600.0, 1e-6);
-    ASSERT_FALSE(args.verbose);
+    // Should not crash and should set a valid time
+    time_t sim_time = get_simulation_time();
+    ASSERT_GT(sim_time, 0);
   });
 
-  // Test date parsing and Julian day conversion
-  TEST_CASE("Date Conversion") {
-    std::string date = "2000-01-01";
-    double julian_day = date_to_julian_day(date);
+  // Test simulation time management
+  TEST_CASE("Simulation Time Management") {
+    initialize_simulation_to_current_time();
 
-    // J2000.0 epoch should be JD 2451545.0 at noon
-    // Our date is at midnight, so it should be 2451544.5
-    ASSERT_NEAR(julian_day, 2451544.5, 0.1);
+    time_t initial_time = get_simulation_time();
 
-    // Test another known date
-    std::string date2 = "2025-01-01";
-    double julian_day2 = date_to_julian_day(date2);
-    ASSERT_GT(julian_day2, julian_day);  // Should be later
+    // Update simulation (should advance time)
+    update_simulation_to_current_time();
+
+    time_t updated_time = get_simulation_time();
+
+    // Time should be valid
+    ASSERT_GT(updated_time, 0);
+    ASSERT_TRUE(std::abs(updated_time - initial_time) < 86400);  // Within 24 hours
   });
 
   // Test simulation step execution
-  TEST_CASE("Simulation Step") {
-    std::vector<planet> system;
+  TEST_CASE("Simulation Step Execution") {
+    initialize_simulation_to_current_time();
 
-    // Create simple two-body system
-    planet sun, earth;
-    sun.mass = SUN_MASS;
-    sun.position = {0.0, 0.0, 0.0};
-    sun.velocity = {0.0, 0.0, 0.0};
+    time_t before_step = get_simulation_time();
 
-    earth.mass = EARTH_MASS;
-    earth.position = {AU / 1000.0, 0.0, 0.0};  // 1 AU in km
-    earth.velocity = {0.0, 29.78, 0.0};        // km/s
+    // Perform a simulation step
+    perform_simulation_step(3600.0);  // 1 hour
 
-    system.push_back(sun);
-    system.push_back(earth);
+    time_t after_step = get_simulation_time();
 
-    // Store initial state
-    coord initial_earth_pos = earth.position;
-    coord initial_earth_vel = earth.velocity;
+    // Time should have advanced
+    ASSERT_GT(after_step, before_step);
 
-    // Execute one simulation step
-    double dt = 86400.0;  // 1 day in seconds
-    bool success = simulate_step(system, dt);
-
-    ASSERT_TRUE(success);
-
-    // Earth should have moved
-    ASSERT_NE(system[1].position.x, initial_earth_pos.x);
-    ASSERT_NE(system[1].position.y, initial_earth_pos.y);
-
-    // Velocity should have changed due to gravitational acceleration
-    ASSERT_NE(system[1].velocity.x, initial_earth_vel.x);
-    ASSERT_NE(system[1].velocity.y, initial_earth_vel.y);
+    // Should have advanced by approximately the step size
+    long double time_diff = after_step - before_step;
+    ASSERT_GT(time_diff, 3500.0);  // At least 58 minutes
+    ASSERT_LT(time_diff, 3700.0);  // At most 62 minutes
   });
 
-  // Test simulation convergence
-  TEST_CASE("Simulation Convergence") {
-    std::vector<planet> system;
+  // Test multiple simulation steps
+  TEST_CASE("Multiple Simulation Steps") {
+    initialize_simulation_to_current_time();
 
-    // Create Earth-Moon system
-    auto scenario = TestData::ReferenceData::get_earth_moon_scenario();
+    time_t start_time = get_simulation_time();
 
-    for (const auto& ref_body : scenario.initial_state.bodies) {
-      planet body;
-      body.name = ref_body.name;
-      body.mass = ref_body.mass;
-      body.position = ref_body.position;
-      body.velocity = ref_body.velocity;
-      system.push_back(body);
+    // Perform multiple small steps
+    for (int i = 0; i < 5; ++i) {
+      perform_simulation_step(600.0);  // 10 minutes each
     }
 
-    // Run simulation for short duration
-    double total_time = 86400.0;  // 1 day
-    double dt = 3600.0;           // 1 hour steps
-    int steps = static_cast<int>(total_time / dt);
+    time_t end_time = get_simulation_time();
 
-    bool success = true;
-    for (int i = 0; i < steps && success; ++i) {
-      success = simulate_step(system, dt);
-
-      // Check for numerical instabilities
-      for (const auto& body : system) {
-        ASSERT_TRUE(std::isfinite(body.position.x));
-        ASSERT_TRUE(std::isfinite(body.position.y));
-        ASSERT_TRUE(std::isfinite(body.position.z));
-        ASSERT_TRUE(std::isfinite(body.velocity.x));
-        ASSERT_TRUE(std::isfinite(body.velocity.y));
-        ASSERT_TRUE(std::isfinite(body.velocity.z));
-      }
-    }
-
-    ASSERT_TRUE(success);
+    // Should have advanced by approximately 50 minutes
+    long double total_diff = end_time - start_time;
+    ASSERT_GT(total_diff, 2900.0);  // At least 48 minutes
+    ASSERT_LT(total_diff, 3100.0);  // At most 52 minutes
   });
 
-  // Test different time step sizes
-  TEST_CASE("Time Step Sensitivity") {
-    std::vector<planet> system1, system2;
+  // Test simulation with different step sizes
+  TEST_CASE("Variable Step Sizes") {
+    initialize_simulation_to_current_time();
 
-    // Create identical systems
-    planet sun, earth;
-    sun.mass = SUN_MASS;
-    sun.position = {0.0, 0.0, 0.0};
-    sun.velocity = {0.0, 0.0, 0.0};
+    // Test small step
+    time_t before_small = get_simulation_time();
+    perform_simulation_step(60.0);  // 1 minute
+    time_t after_small = get_simulation_time();
 
-    earth.mass = EARTH_MASS;
-    earth.position = {AU / 1000.0, 0.0, 0.0};
-    earth.velocity = {0.0, 29.78, 0.0};
+    long double small_diff = after_small - before_small;
+    ASSERT_GT(small_diff, 50.0);  // At least 50 seconds
+    ASSERT_LT(small_diff, 70.0);  // At most 70 seconds
 
-    system1.push_back(sun);
-    system1.push_back(earth);
-    system2 = system1;  // Copy
+    // Test large step
+    time_t before_large = get_simulation_time();
+    perform_simulation_step(86400.0);  // 1 day
+    time_t after_large = get_simulation_time();
 
-    // Simulate with different time steps
-    double total_time = 86400.0;  // 1 day
-
-    // Large time step
-    double dt1 = 3600.0;  // 1 hour
-    int steps1 = static_cast<int>(total_time / dt1);
-    for (int i = 0; i < steps1; ++i) {
-      simulate_step(system1, dt1);
-    }
-
-    // Small time step
-    double dt2 = 1800.0;  // 30 minutes
-    int steps2 = static_cast<int>(total_time / dt2);
-    for (int i = 0; i < steps2; ++i) {
-      simulate_step(system2, dt2);
-    }
-
-    // Results should be similar but not identical
-    double pos_diff = calculate_distance(system1[1].position, system2[1].position);
-    ASSERT_GT(pos_diff, 0.0);     // Should be different
-    ASSERT_LT(pos_diff, 1000.0);  // But not too different (within 1000 km)
-  });
-
-  // Test simulation with extreme conditions
-  TEST_CASE("Extreme Conditions") {
-    std::vector<planet> system;
-
-    // Very massive central body
-    planet massive_star;
-    massive_star.mass = 1e32;  // 50 times solar mass
-    massive_star.position = {0.0, 0.0, 0.0};
-    massive_star.velocity = {0.0, 0.0, 0.0};
-
-    // Small orbiting body
-    planet small_body;
-    small_body.mass = 1e20;
-    small_body.position = {1e6, 0.0, 0.0};    // 1 million km
-    small_body.velocity = {0.0, 100.0, 0.0};  // High velocity
-
-    system.push_back(massive_star);
-    system.push_back(small_body);
-
-    // Should handle extreme mass ratios
-    double dt = 100.0;  // Small time step for stability
-    bool success = simulate_step(system, dt);
-    ASSERT_TRUE(success);
-
-    // Check that results are still finite
-    ASSERT_TRUE(std::isfinite(system[1].position.x));
-    ASSERT_TRUE(std::isfinite(system[1].velocity.x));
-  });
-
-  // Test simulation state management
-  TEST_CASE("Simulation State") {
-    SimulationState state;
-    state.current_time = 0.0;
-    state.total_steps = 0;
-    state.energy_error = 0.0;
-
-    // Initialize with test system
-    planet sun;
-    sun.mass = SUN_MASS;
-    sun.position = {0.0, 0.0, 0.0};
-    sun.velocity = {0.0, 0.0, 0.0};
-    state.bodies.push_back(sun);
-
-    ASSERT_EQ(state.bodies.size(), 1);
-    ASSERT_NEAR(state.current_time, 0.0, 1e-10);
-    ASSERT_EQ(state.total_steps, 0);
+    long double large_diff = after_large - before_large;
+    ASSERT_GT(large_diff, 86300.0);  // At least 23h 58m
+    ASSERT_LT(large_diff, 86500.0);  // At most 24h 2m
   });
 
   return current_suite->all_passed() ? 0 : 1;

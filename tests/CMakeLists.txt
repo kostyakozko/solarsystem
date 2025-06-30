@@ -14,9 +14,9 @@ set(TEST_TIMEOUT 30 CACHE STRING "Test timeout in seconds")
 set(BENCHMARK_ITERATIONS 1000 CACHE STRING "Number of benchmark iterations")
 
 # Include directories for tests
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../lib/solar_core/include)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../lib/solar_jpl/include)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../lib/solar_utils/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../lib/solar_core)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../lib/solar_jpl)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../lib/solar_utils)
 
 # Test utilities library
 add_library(test_utils STATIC
