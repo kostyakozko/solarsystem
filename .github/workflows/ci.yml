@@ -43,7 +43,7 @@ jobs:
     - name: Install dependencies (macOS)
       if: matrix.os == 'macos-latest'
       run: |
-        brew install cmake curl doxygen graphviz
+        brew install cmake curl doxygen graphviz coreutils
         
     - name: Configure CMake
       env:

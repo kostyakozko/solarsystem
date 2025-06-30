@@ -205,8 +205,15 @@ std::string get_executable_path() {
     if (access(test_file.c_str(), F_OK) == 0) {
       return bin_dir;  // Use installed bin/ directory
     } else {
-      // Development environment - use relative paths
-      return exe_dir + "../";
+      // Development environment - check if we're in build directory
+      std::string build_apps_dir = exe_dir + "../apps/";
+      std::string build_test_file = build_apps_dir + "solar_system/solar_system";
+      if (access(build_test_file.c_str(), F_OK) == 0) {
+        return build_apps_dir;  // Use build apps/ directory
+      } else {
+        // Fallback to relative paths
+        return exe_dir + "../";
+      }
     }
   }
 
@@ -298,7 +305,14 @@ int main(int argc, char* argv[]) {
     }
 
     // Build fetch command
-    std::string fetch_cmd = exe_dir + "solar_system_fetch";
+    std::string fetch_cmd = exe_dir;
+    if (exe_dir.find("apps/") != std::string::npos) {
+      // Build environment
+      fetch_cmd += "solar_system_fetch/solar_system_fetch";
+    } else {
+      // Installed environment
+      fetch_cmd += "solar_system_fetch";
+    }
 
     if (args.clean_cache) {
       fetch_cmd += " --clean";
@@ -349,7 +363,14 @@ int main(int argc, char* argv[]) {
         if (!args.quiet) {
           std::cout << "Auto-fetching current year data...\n";
         }
-        std::string auto_fetch_cmd = exe_dir + "solar_system_fetch --update";
+        std::string auto_fetch_cmd = exe_dir;
+        if (exe_dir.find("apps/") != std::string::npos) {
+          // Build environment
+          auto_fetch_cmd += "solar_system_fetch/solar_system_fetch --update";
+        } else {
+          // Installed environment
+          auto_fetch_cmd += "solar_system_fetch --update";
+        }
         int fetch_result = execute_command(auto_fetch_cmd, args.quiet);
         if (fetch_result != 0) {
           std::cerr << "Auto-fetch failed, continuing with available data\n";
@@ -358,7 +379,14 @@ int main(int argc, char* argv[]) {
     }
 
     // Build simulation command
-    std::string sim_cmd = exe_dir + "solar_system";
+    std::string sim_cmd = exe_dir;
+    if (exe_dir.find("apps/") != std::string::npos) {
+      // Build environment
+      sim_cmd += "solar_system/solar_system";
+    } else {
+      // Installed environment
+      sim_cmd += "solar_system";
+    }
 
     if (!args.use_current_date && !args.target_date.empty()) {
       sim_cmd += " --date " + args.target_date;

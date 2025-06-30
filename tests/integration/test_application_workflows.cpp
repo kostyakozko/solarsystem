@@ -87,7 +87,7 @@ int main() {
   TEST_CASE("Real-time Application") {
     // Test real-time application with no-continuous mode
     std::string command =
-        "timeout 10s ./apps/solar_system_realtime/solar_system_realtime --no-continuous";
+        "gtimeout 10s ./apps/solar_system_realtime/solar_system_realtime --no-continuous";
     std::string output = execute_command(command);
 
     // Should provide real-time data snapshot
