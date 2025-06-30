@@ -2,9 +2,9 @@ name: Solar System Suite CI/CD
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ CPU, develop ]
   pull_request:
-    branches: [ main ]
+    branches: [ CPU ]
   schedule:
     # Run nightly builds at 2 AM UTC
     - cron: '0 2 * * *'
@@ -143,7 +143,7 @@ jobs:
     - name: Run security scan
       uses: github/super-linter@v4
       env:
-        DEFAULT_BRANCH: main
+        DEFAULT_BRANCH: CPU
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         VALIDATE_CPP: true
         VALIDATE_CMAKE: true
@@ -185,7 +185,7 @@ jobs:
   prepare-release:
     runs-on: ubuntu-latest
     needs: [build-and-test, code-quality, security-scan]
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/CPU'
     
     steps:
     - name: Checkout code
@@ -231,7 +231,7 @@ jobs:
   deploy-docs:
     runs-on: ubuntu-latest
     needs: build-and-test
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/CPU'
     
     steps:
     - name: Download documentation
