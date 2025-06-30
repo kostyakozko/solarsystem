@@ -65,6 +65,14 @@ endif()
 add_subdirectory(lib)
 add_subdirectory(apps)
 
+# Testing framework (optional)
+option(ENABLE_TESTING "Enable comprehensive testing framework" OFF)
+if(ENABLE_TESTING)
+    enable_testing()
+    add_subdirectory(tests)
+    message(STATUS "Testing framework enabled")
+endif()
+
 # Installation targets
 install(TARGETS solar_system solar_system_fetch solar_system_launcher solar_system_realtime solar_system_web
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
