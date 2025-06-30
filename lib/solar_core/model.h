@@ -7,11 +7,11 @@
 #include "constants.h"
 #include "types.h"
 
-long double dist(coord a, coord b);
+long double dist(const coord& a, const coord& b);
 
 // Now use sqrtl to match the corrected original precision
-inline void attractTo(coord& this_position, acceleration& delta, int j) {
-  coord& other_position = SolarSystem[j].position;
+inline void attractTo(const coord& this_position, acceleration& delta, int j) {
+  const coord& other_position = SolarSystem[j].position;
 
   // Calculate difference vector once to eliminate redundant calculations
   long double dx = other_position.x - this_position.x;

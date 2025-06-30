@@ -6,7 +6,7 @@
 
 #include "constants.h"
 
-long double dist(coord a, coord b) {
+long double dist(const coord& a, const coord& b) {
   return sqrtl((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y) + (a.z - b.z) * (a.z - b.z));
 }
 
@@ -36,8 +36,10 @@ void printBarycenter(const coord& barycenter) {
 void printCurrentData(time_t current) {
   coord barycenter = getBarycenter();
   printBarycenter(barycenter);
-  struct tm* timeinfo = localtime(&current);
-  std::cout << asctime(timeinfo) << std::endl;
+  const struct tm* timeinfo = localtime(&current);
+  char time_buffer[100];
+  strftime(time_buffer, sizeof(time_buffer), "%a %b %d %H:%M:%S %Y\n", timeinfo);
+  std::cout << time_buffer;
   for (int i = 0; i < count; i++) {
     std::cout << std::setw(15) << SolarSystem[i].name << std::setw(21) << std::scientific
               << (SolarSystem[i].position.x - barycenter.x) << std::setw(21) << std::scientific

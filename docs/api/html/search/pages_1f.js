@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['📄_20license_0',['📄 License',['../md__r_e_a_d_m_e.html#autotoc_md75',1,'']]]
+  ['📄_20license_0',['📄 License',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md78',1,'']]]
 ];

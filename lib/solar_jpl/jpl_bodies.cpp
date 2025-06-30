@@ -39,7 +39,7 @@ const JPLBodyInfo JPL_BODY_MAP[] = {
 const int JPL_BODY_COUNT = sizeof(JPL_BODY_MAP) / sizeof(JPL_BODY_MAP[0]);
 
 int get_jpl_id_by_index(int body_index) {
-  if (body_index < 0 || body_index >= BODY_COUNT || body_index >= JPL_BODY_COUNT) {
+  if (body_index < 0 || body_index >= BODY_COUNT) {
     return 0;  // Invalid index, return 0 to skip
   }
   return JPL_BODY_MAP[body_index].horizons_id;
@@ -50,7 +50,7 @@ int get_jpl_id_for_body(int body_index) {
 }
 
 const char* get_jpl_name_by_index(int body_index) {
-  if (body_index < 0 || body_index >= BODY_COUNT || body_index >= JPL_BODY_COUNT) {
+  if (body_index < 0 || body_index >= BODY_COUNT) {
     return "Unknown";
   }
   return JPL_BODY_MAP[body_index].horizons_name;

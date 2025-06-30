@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['guide_0',['📱 Applications Guide',['../md__r_e_a_d_m_e.html#autotoc_md21',1,'']]]
+  ['guide_0',['📱 Applications Guide',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md24',1,'']]]
 ];

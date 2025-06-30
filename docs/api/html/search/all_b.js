@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['jpl_20data_0',['&lt;b&gt;&quot;Failed to fetch JPL data&quot;&lt;/b&gt;',['../md__r_e_a_d_m_e.html#autotoc_md60',1,'']]],
-  ['jpl_20horizons_20integration_1',['&lt;b&gt;JPL HORIZONS Integration&lt;/b&gt;',['../md__r_e_a_d_m_e.html#autotoc_md29',1,'']]],
+  ['jpl_20data_0',['&lt;b&gt;&quot;Failed to fetch JPL data&quot;&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md63',1,'']]],
+  ['jpl_20horizons_20integration_1',['&lt;b&gt;JPL HORIZONS Integration&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md32',1,'']]],
   ['jpl_5fbinary_5ffile_2',['JPL_BINARY_FILE',['../jpl__data_8h.html#accf2d7781a2cd91d4529e24c9cf55785',1,'jpl_data.h']]],
   ['jpl_5fbinary_5fmagic_3',['JPL_BINARY_MAGIC',['../jpl__data_8h.html#ad1a386a91c291ef404384469626db0d8',1,'jpl_data.h']]],
   ['jpl_5fbodies_2ecpp_4',['jpl_bodies.cpp',['../jpl__bodies_8cpp.html',1,'']]],

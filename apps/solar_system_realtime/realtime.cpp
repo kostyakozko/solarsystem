@@ -195,8 +195,8 @@ void print_system_summary(bool verbose) {
 
     // Check data currency
     time_t now = time(NULL);
-    struct tm* tm_now = localtime(&now);
-    struct tm* tm_epoch = localtime(&epoch);
+    const struct tm* tm_now = localtime(&now);
+    const struct tm* tm_epoch = localtime(&epoch);
     int current_year = tm_now->tm_year + 1900;
     int cached_year = tm_epoch->tm_year + 1900;
 

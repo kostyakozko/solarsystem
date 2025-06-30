@@ -62,12 +62,12 @@ bool update_ephemeris_data() {
 
   // Get current year
   time_t now = time(NULL);
-  struct tm* tm_now = localtime(&now);
+  const struct tm* tm_now = localtime(&now);
   int current_year = tm_now->tm_year + 1900;
 
   // Check if we already have current year's data
   if (has_current_year_ephemeris_data()) {
-    struct tm* tm_epoch = localtime(&current_epoch);
+    const struct tm* tm_epoch = localtime(&current_epoch);
     int cached_year = tm_epoch->tm_year + 1900;
 
     std::cout << "✓ Ephemeris data is already up to date for " << cached_year << std::endl;
@@ -248,7 +248,7 @@ bool force_update_ephemeris_data() {
 
   // Get current year
   time_t now = time(NULL);
-  struct tm* tm_now = localtime(&now);
+  const struct tm* tm_now = localtime(&now);
   int current_year = tm_now->tm_year + 1900;
 
   std::cout << "Updating ephemeris data from NASA JPL for " << current_year << "..." << std::endl;
@@ -449,7 +449,7 @@ bool rebuild_binary_cache() {
 // HTTP response callback for curl (legacy - currently unused)
 static size_t WriteCallback(void* contents, size_t size, size_t nmemb, std::string* response) {
   size_t total_size = size * nmemb;
-  response->append((char*)contents, total_size);
+  response->append(static_cast<char*>(contents), total_size);
   return total_size;
 }
 
@@ -732,7 +732,7 @@ static double extract_json_number(const std::string& line) {
   // Remove trailing comma if present
   size_t comma_pos = value_part.find(',');
   if (comma_pos != std::string::npos) {
-    value_part = value_part.substr(0, comma_pos);
+    value_part.resize(comma_pos);
   }
 
   value_part = trim_line(value_part);
@@ -747,7 +747,7 @@ static std::string extract_json_string(const std::string& line) {
   // Remove trailing comma if present
   size_t comma_pos = value_part.find(',');
   if (comma_pos != std::string::npos) {
-    value_part = value_part.substr(0, comma_pos);
+    value_part.resize(comma_pos);
   }
 
   value_part = trim_line(value_part);
@@ -1181,8 +1181,8 @@ bool has_current_year_ephemeris_data() {
   }
 
   time_t now = time(NULL);
-  struct tm* tm_now = localtime(&now);
-  struct tm* tm_epoch = localtime(&current_epoch);
+  const struct tm* tm_now = localtime(&now);
+  const struct tm* tm_epoch = localtime(&current_epoch);
 
   return tm_now->tm_year == tm_epoch->tm_year;
 }

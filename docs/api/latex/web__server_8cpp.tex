@@ -1,10 +1,13 @@
-\doxysection{apps/solar\+\_\+system\+\_\+web/src/web\+\_\+server.cpp File Reference}
-\hypertarget{web__server_8cpp}{}\label{web__server_8cpp}\index{apps/solar\_system\_web/src/web\_server.cpp@{apps/solar\_system\_web/src/web\_server.cpp}}
+\doxysection{/\+Users/kostiantyn.kozko/tmp/solarsystem/apps/solar\+\_\+system\+\_\+web/src/web\+\_\+server.cpp File Reference}
+\hypertarget{web__server_8cpp}{}\label{web__server_8cpp}\index{/Users/kostiantyn.kozko/tmp/solarsystem/apps/solar\_system\_web/src/web\_server.cpp@{/Users/kostiantyn.kozko/tmp/solarsystem/apps/solar\_system\_web/src/web\_server.cpp}}
+{\ttfamily \#include $<$errno.\+h$>$}\newline
+{\ttfamily \#include $<$fcntl.\+h$>$}\newline
 {\ttfamily \#include $<$libgen.\+h$>$}\newline
 {\ttfamily \#include $<$limits.\+h$>$}\newline
 {\ttfamily \#include $<$signal.\+h$>$}\newline
 {\ttfamily \#include $<$unistd.\+h$>$}\newline
 {\ttfamily \#include $<$chrono$>$}\newline
+{\ttfamily \#include $<$cstring$>$}\newline
 {\ttfamily \#include $<$ctime$>$}\newline
 {\ttfamily \#include $<$fstream$>$}\newline
 {\ttfamily \#include $<$iostream$>$}\newline
@@ -15,7 +18,6 @@
 {\ttfamily \#include $<$thread$>$}\newline
 {\ttfamily \#include $<$vector$>$}\newline
 {\ttfamily \#include $<$arpa/inet.\+h$>$}\newline
-{\ttfamily \#include $<$fcntl.\+h$>$}\newline
 {\ttfamily \#include $<$netinet/in.\+h$>$}\newline
 {\ttfamily \#include $<$sys/socket.\+h$>$}\newline
 {\ttfamily \#include "{}args.\+h"{}}\newline
@@ -100,8 +102,7 @@ volatile bool \mbox{\hyperlink{web__server_8cpp_ac85f1ad487d50b6f33a6556a790db42
 {\footnotesize\ttfamily \label{web__server_8cpp_a22758eaa805586817c5e7b6a761385e7} 
 std\+::string generate\+\_\+http\+\_\+response (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_http_response}{Http\+Response}} \&}]{response}{}\end{DoxyParamCaption})}
 
-Here is the caller graph for this function\+:
-\nopagebreak
+Here is the caller graph for this function\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -114,16 +115,14 @@ Here is the caller graph for this function\+:
 {\footnotesize\ttfamily \label{web__server_8cpp_ad463ea82527d26cb7610a491f6742afd} 
 std\+::string generate\+\_\+solar\+\_\+system\+\_\+json (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{date\+\_\+param}{ = {\ttfamily "{}"{}}, }\item[{bool}]{is\+\_\+manual\+\_\+request}{ = {\ttfamily false}, }\item[{bool}]{verbose}{ = {\ttfamily false}}\end{DoxyParamCaption})}
 
-Here is the call graph for this function\+:
-\nopagebreak
+Here is the call graph for this function\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
 \includegraphics[width=350pt]{web__server_8cpp_ad463ea82527d26cb7610a491f6742afd_cgraph}
 \end{center}
 \end{figure}
-Here is the caller graph for this function\+:
-\nopagebreak
+Here is the caller graph for this function\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -136,16 +135,14 @@ Here is the caller graph for this function\+:
 {\footnotesize\ttfamily \label{web__server_8cpp_a3ad4b1f1bde5cb5316734c54135dc170} 
 std\+::string generate\+\_\+status\+\_\+json (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
 
-Here is the call graph for this function\+:
-\nopagebreak
+Here is the call graph for this function\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
 \includegraphics[width=350pt]{web__server_8cpp_a3ad4b1f1bde5cb5316734c54135dc170_cgraph}
 \end{center}
 \end{figure}
-Here is the caller graph for this function\+:
-\nopagebreak
+Here is the caller graph for this function\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -160,8 +157,7 @@ std\+::string get\+\_\+default\+\_\+web\+\_\+root (\begin{DoxyParamCaption}{}{}\
 
 Solar System Web Server
 
-Lightweight HTTP server providing REST API and Web\+Socket support for browser-\/based solar system visualization and control. Built using only standard libraries -\/ no external dependencies. Here is the caller graph for this function\+:
-\nopagebreak
+Lightweight HTTP server providing REST API and Web\+Socket support for browser-\/based solar system visualization and control. Built using only standard libraries -\/ no external dependencies. Here is the caller graph for this function\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -174,8 +170,7 @@ Lightweight HTTP server providing REST API and Web\+Socket support for browser-\
 {\footnotesize\ttfamily \label{web__server_8cpp_a20b170da558b0eed772c9f86d9728564} 
 std\+::string get\+\_\+mime\+\_\+type (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{filepath}{}\end{DoxyParamCaption})}
 
-Here is the caller graph for this function\+:
-\nopagebreak
+Here is the caller graph for this function\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -188,16 +183,14 @@ Here is the caller graph for this function\+:
 {\footnotesize\ttfamily \label{web__server_8cpp_aaa738c1fc8b6cc71982dd7f6f6ac22b6} 
 void handle\+\_\+client (\begin{DoxyParamCaption}\item[{int}]{client\+\_\+socket}{, }\item[{const \mbox{\hyperlink{struct_web_server_config}{Web\+Server\+Config}} \&}]{config}{}\end{DoxyParamCaption})}
 
-Here is the call graph for this function\+:
-\nopagebreak
+Here is the call graph for this function\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
 \includegraphics[width=350pt]{web__server_8cpp_aaa738c1fc8b6cc71982dd7f6f6ac22b6_cgraph}
 \end{center}
 \end{figure}
-Here is the caller graph for this function\+:
-\nopagebreak
+Here is the caller graph for this function\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -210,16 +203,14 @@ Here is the caller graph for this function\+:
 {\footnotesize\ttfamily \label{web__server_8cpp_ae320d270c885fa3439530357f61689eb} 
 \mbox{\hyperlink{struct_http_response}{Http\+Response}} handle\+\_\+request (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_http_request}{Http\+Request}} \&}]{request}{, }\item[{const \mbox{\hyperlink{struct_web_server_config}{Web\+Server\+Config}} \&}]{config}{}\end{DoxyParamCaption})}
 
-Here is the call graph for this function\+:
-\nopagebreak
+Here is the call graph for this function\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
 \includegraphics[width=350pt]{web__server_8cpp_ae320d270c885fa3439530357f61689eb_cgraph}
 \end{center}
 \end{figure}
-Here is the caller graph for this function\+:
-\nopagebreak
+Here is the caller graph for this function\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -232,16 +223,14 @@ Here is the caller graph for this function\+:
 {\footnotesize\ttfamily \label{web__server_8cpp_aa5b130bed9b8f20a3bcb4a92fbb9ef94} 
 void initialize\+\_\+simulation\+\_\+state (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
 
-Here is the call graph for this function\+:
-\nopagebreak
+Here is the call graph for this function\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
 \includegraphics[width=328pt]{web__server_8cpp_aa5b130bed9b8f20a3bcb4a92fbb9ef94_cgraph}
 \end{center}
 \end{figure}
-Here is the caller graph for this function\+:
-\nopagebreak
+Here is the caller graph for this function\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -254,8 +243,7 @@ Here is the caller graph for this function\+:
 {\footnotesize\ttfamily \label{web__server_8cpp_a0ddf1224851353fc92bfbff6f499fa97} 
 int main (\begin{DoxyParamCaption}\item[{int}]{argc}{, }\item[{char \texorpdfstring{$\ast$}{*}}]{argv}{\mbox{[}$\,$\mbox{]}}\end{DoxyParamCaption})}
 
-Here is the call graph for this function\+:
-\nopagebreak
+Here is the call graph for this function\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -268,8 +256,7 @@ Here is the call graph for this function\+:
 {\footnotesize\ttfamily \label{web__server_8cpp_a149327b95324f74d35d9e8f55f066d5e} 
 \mbox{\hyperlink{struct_http_request}{Http\+Request}} parse\+\_\+http\+\_\+request (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{request\+\_\+data}{}\end{DoxyParamCaption})}
 
-Here is the caller graph for this function\+:
-\nopagebreak
+Here is the caller graph for this function\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -282,16 +269,14 @@ Here is the caller graph for this function\+:
 {\footnotesize\ttfamily \label{web__server_8cpp_a3e44761a9c18be13cf9763641d6f449e} 
 bool parse\+\_\+web\+\_\+args (\begin{DoxyParamCaption}\item[{int}]{argc}{, }\item[{char \texorpdfstring{$\ast$}{*}}]{argv}{\mbox{[}$\,$\mbox{]}, }\item[{\mbox{\hyperlink{struct_web_server_config}{Web\+Server\+Config}} \&}]{config}{}\end{DoxyParamCaption})}
 
-Here is the call graph for this function\+:
-\nopagebreak
+Here is the call graph for this function\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
 \includegraphics[width=293pt]{web__server_8cpp_a3e44761a9c18be13cf9763641d6f449e_cgraph}
 \end{center}
 \end{figure}
-Here is the caller graph for this function\+:
-\nopagebreak
+Here is the caller graph for this function\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -304,8 +289,7 @@ Here is the caller graph for this function\+:
 {\footnotesize\ttfamily \label{web__server_8cpp_a491d68ff3188c2fb45882a568ed1ad79} 
 void print\+\_\+web\+\_\+usage (\begin{DoxyParamCaption}\item[{const char \texorpdfstring{$\ast$}{*}}]{program\+\_\+name}{}\end{DoxyParamCaption})}
 
-Here is the caller graph for this function\+:
-\nopagebreak
+Here is the caller graph for this function\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -318,8 +302,7 @@ Here is the caller graph for this function\+:
 {\footnotesize\ttfamily \label{web__server_8cpp_a4894d19b243a5d7433f61ac292d3b6a2} 
 std\+::string read\+\_\+file (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{filepath}{}\end{DoxyParamCaption})}
 
-Here is the caller graph for this function\+:
-\nopagebreak
+Here is the caller graph for this function\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -332,16 +315,14 @@ Here is the caller graph for this function\+:
 {\footnotesize\ttfamily \label{web__server_8cpp_ab73530e5fd1d2bcf0307344f8e7a63c6} 
 void restore\+\_\+system\+\_\+state (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
 
-Here is the call graph for this function\+:
-\nopagebreak
+Here is the call graph for this function\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
 \includegraphics[width=312pt]{web__server_8cpp_ab73530e5fd1d2bcf0307344f8e7a63c6_cgraph}
 \end{center}
 \end{figure}
-Here is the caller graph for this function\+:
-\nopagebreak
+Here is the caller graph for this function\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -354,16 +335,14 @@ Here is the caller graph for this function\+:
 {\footnotesize\ttfamily \label{web__server_8cpp_a346f165a97797e8411a435149d6789b2} 
 void save\+\_\+system\+\_\+state (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
 
-Here is the call graph for this function\+:
-\nopagebreak
+Here is the call graph for this function\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
 \includegraphics[width=329pt]{web__server_8cpp_a346f165a97797e8411a435149d6789b2_cgraph}
 \end{center}
 \end{figure}
-Here is the caller graph for this function\+:
-\nopagebreak
+Here is the caller graph for this function\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['🔧_20advanced_20configuration_0',['🔧 Advanced Configuration',['../md__r_e_a_d_m_e.html#autotoc_md31',1,'']]]
+  ['🔍_20troubleshooting_0',['🔍 Troubleshooting',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md61',1,'']]]
 ];

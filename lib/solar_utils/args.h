@@ -35,7 +35,8 @@ struct Args {
 
   // Constructor with defaults
   Args()
-      : use_current_date(true),
+      : target_date(""),
+        use_current_date(true),
         update_data(false),
         force_update(false),
         target_year(0),

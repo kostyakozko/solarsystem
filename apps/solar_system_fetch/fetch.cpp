@@ -43,7 +43,7 @@ void print_status() {
   if (has_current_ephemeris_data()) {
     time_t epoch = get_ephemeris_epoch();
     const char* source = get_ephemeris_source();
-    struct tm* tm_epoch = localtime(&epoch);
+    const struct tm* tm_epoch = localtime(&epoch);
     int cached_year = tm_epoch->tm_year + 1900;
 
     std::cout << "✓ Cache Status: ACTIVE\n";
@@ -53,7 +53,7 @@ void print_status() {
 
     // Check if current year
     time_t now = time(NULL);
-    struct tm* tm_now = localtime(&now);
+    const struct tm* tm_now = localtime(&now);
     int current_year = tm_now->tm_year + 1900;
 
     if (cached_year == current_year) {

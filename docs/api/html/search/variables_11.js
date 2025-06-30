@@ -15,5 +15,6 @@ var searchData=
   ['status_12',['status',['../struct_launcher_args.html#a0f59164d6c6485ebb127cf39a524bf00',1,'LauncherArgs']]],
   ['status_5fcode_13',['status_code',['../struct_http_response.html#a08a2a1b268cf4a38b530d08117369b5e',1,'HttpResponse']]],
   ['status_5ftext_14',['status_text',['../struct_http_response.html#aa414897bda5d37c79f2815d7a6b76957',1,'HttpResponse']]],
-  ['success_15',['success',['../struct_fetch_task.html#a54e9a9673539436aa79cd85b0677ec2e',1,'FetchTask']]]
+  ['success_15',['success',['../struct_fetch_task.html#a54e9a9673539436aa79cd85b0677ec2e',1,'FetchTask']]],
+  ['sun_5fmass_16',['SUN_MASS',['../constants_8cpp.html#af72c14955ed9dad01058255da93c1876',1,'SUN_MASS:&#160;constants.cpp'],['../constants_8h.html#af72c14955ed9dad01058255da93c1876',1,'SUN_MASS:&#160;constants.cpp']]]
 ];

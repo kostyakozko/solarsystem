@@ -159,7 +159,7 @@ struct HttpResponse {
   std::map<std::string, std::string> headers;
   std::string body;
 
-  HttpResponse(int code = 200, const std::string& text = "OK")
+  explicit HttpResponse(int code = 200, const std::string& text = "OK")
       : status_code(code), status_text(text) {
     headers["Content-Type"] = "text/html";
     headers["Server"] = "SolarSystemSuite/2.1.0";
@@ -563,8 +563,8 @@ std::string generate_status_json() {
 
     // Check data currency
     time_t now = time(NULL);
-    struct tm* tm_now = localtime(&now);
-    struct tm* tm_epoch = localtime(&epoch);
+    const struct tm* tm_now = localtime(&now);
+    const struct tm* tm_epoch = localtime(&epoch);
     int current_year = tm_now->tm_year + 1900;
     int cached_year = tm_epoch->tm_year + 1900;
 
@@ -607,7 +607,8 @@ HttpResponse handle_request(const HttpRequest& request, const WebServerConfig& c
     return response;
   }
 
-  if (request.path == "/api/solar_system" || request.path.find("/api/solar_system?") == 0) {
+  if (request.path == "/api/solar_system" ||
+      (request.path.length() >= 19 && request.path.substr(0, 19) == "/api/solar_system?")) {
     response.headers["Content-Type"] = "application/json";
 
     // Extract date parameter if present
@@ -702,7 +703,7 @@ void handle_client(int client_socket, const WebServerConfig& config) {
       std::cout << "Request: " << request.method << " " << request.path << std::endl;
 
       // Add detailed logging for API requests
-      if (request.path.find("/api/solar_system") == 0) {
+      if (request.path.length() >= 17 && request.path.substr(0, 17) == "/api/solar_system") {
         std::cout << "🔍 API REQUEST DETAILS:" << std::endl;
         std::cout << "  📡 Full path: " << request.path << std::endl;
         std::cout << "  🕐 Server time: " << time(NULL) << std::endl;
@@ -843,7 +844,8 @@ int main(int argc, char* argv[]) {
   server_addr.sin_addr.s_addr = INADDR_ANY;
   server_addr.sin_port = htons(config.port);
 
-  if (bind(server_socket, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0) {
+  if (bind(server_socket, reinterpret_cast<struct sockaddr*>(&server_addr), sizeof(server_addr)) <
+      0) {
     std::cerr << "Failed to bind socket to port " << config.port << "\n";
     close(server_socket);
     return 1;
@@ -902,7 +904,8 @@ int main(int argc, char* argv[]) {
     struct sockaddr_in client_addr;
     socklen_t client_len = sizeof(client_addr);
 
-    int client_socket = accept(server_socket, (struct sockaddr*)&client_addr, &client_len);
+    int client_socket =
+        accept(server_socket, reinterpret_cast<struct sockaddr*>(&client_addr), &client_len);
     if (client_socket < 0) {
       if (errno == EINTR || errno == EAGAIN || errno == EWOULDBLOCK) {
         // Interrupted by signal or would block, continue
