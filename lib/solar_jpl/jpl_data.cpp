@@ -447,7 +447,8 @@ bool rebuild_binary_cache() {
 }
 
 // HTTP response callback for curl
-static size_t WriteCallback(void* contents, size_t size, size_t nmemb, std::string* response) {
+[[maybe_unused]] static size_t WriteCallback(void* contents, size_t size, size_t nmemb,
+                                             std::string* response) {
   size_t total_size = size * nmemb;
   response->append((char*)contents, total_size);
   return total_size;

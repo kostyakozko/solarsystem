@@ -7,6 +7,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <iomanip>
 #include <random>
 #include <sstream>
 
@@ -289,7 +290,7 @@ double DataValidator::calculate_velocity_error(const ReferenceState& computed,
 // Mock JPL data generation for testing
 std::string JPLDataValidator::generate_mock_jpl_response(const ReferenceBody& body,
                                                          const std::string& start_date,
-                                                         const std::string& end_date) {
+                                                         const std::string&) {
   std::ostringstream response;
 
   response << "API VERSION: 1.2\n";
