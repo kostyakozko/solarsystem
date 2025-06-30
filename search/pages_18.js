@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['✅_0',['&lt;b&gt;Completed Features&lt;/b&gt; ✅',['../md__r_e_a_d_m_e.html#autotoc_md72',1,'']]]
+  ['✅_0',['&lt;b&gt;Completed Features&lt;/b&gt; ✅',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md75',1,'']]]
 ];

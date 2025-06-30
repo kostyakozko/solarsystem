@@ -15,7 +15,7 @@ var searchData=
   ['development_20commands_20strong_12',['&lt;strong&gt;Development Commands&lt;/strong&gt;',['../md__2home_2runner_2work_2solarsystem_2solarsystem_2README.html#autotoc_md51',1,'']]],
   ['development_20setup_20strong_13',['&lt;strong&gt;Development Setup&lt;/strong&gt;',['../md__2home_2runner_2work_2solarsystem_2solarsystem_2README.html#autotoc_md72',1,'']]],
   ['display_5finterval_5fseconds_14',['display_interval_seconds',['../structRealtimeArgs.html#a9a3918b37cac051ada50d3e92ee4686d',1,'RealtimeArgs']]],
-  ['dist_15',['dist',['../model_8h.html#a73d7e86535b1f32f514fb6e48e598198',1,'dist(coord a, coord b):&#160;model.cpp'],['../model_8cpp.html#a73d7e86535b1f32f514fb6e48e598198',1,'dist(coord a, coord b):&#160;model.cpp']]],
+  ['dist_15',['dist',['../model_8h.html#a949e3b824108f9b4bd59dd2191756e4c',1,'dist(const coord &amp;a, const coord &amp;b):&#160;model.cpp'],['../model_8cpp.html#a949e3b824108f9b4bd59dd2191756e4c',1,'dist(const coord &amp;a, const coord &amp;b):&#160;model.cpp']]],
   ['docker_20deployment_20strong_16',['&lt;strong&gt;Docker Deployment&lt;/strong&gt;',['../md__2home_2runner_2work_2solarsystem_2solarsystem_2README.html#autotoc_md60',1,'']]],
   ['documentation_17',['📖 Documentation',['../md__2home_2runner_2work_2solarsystem_2solarsystem_2README.html#autotoc_md2',1,'']]],
   ['documentation_20suite_20strong_18',['&lt;strong&gt;Complete Documentation Suite&lt;/strong&gt;',['../md__2home_2runner_2work_2solarsystem_2solarsystem_2README.html#autotoc_md3',1,'']]],
