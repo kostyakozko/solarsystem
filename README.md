@@ -33,6 +33,22 @@ A comprehensive, high-performance N-body gravitational simulation suite with rea
 - [🙏 Acknowledgments](#-acknowledgments)
 - [📚 References](#-references)
 
+## 📖 Documentation
+
+### **Complete Documentation Suite**
+- **📚 [User Guide](docs/user-guide/USER_GUIDE.md)**: Comprehensive usage instructions and tutorials
+- **🏗️ [Architecture Guide](docs/architecture/ARCHITECTURE.md)**: System design and technical architecture
+- **👨‍💻 [Developer Guide](docs/developer/DEVELOPER_GUIDE.md)**: Development setup, coding standards, and contribution guidelines
+- **🔧 [Installation Guide](docs/INSTALLATION.md)**: Detailed installation instructions for all platforms
+- **📋 [API Documentation](docs/api/html/index.html)**: Complete API reference with call graphs (generated with Doxygen)
+- **💡 [Examples](docs/examples/EXAMPLES.md)**: Practical usage examples and integration patterns
+
+### **Quick Links**
+- **🚀 [Quick Start](#-quick-start)**: Get up and running in minutes
+- **🌐 [Web Interface](#-solar_system_web---interactive-time-travel-visualization)**: Interactive time travel visualization
+- **🔍 [Troubleshooting](#-troubleshooting)**: Common issues and solutions
+- **📊 [Performance](#-performance--scalability)**: Benchmarks and optimization tips
+
 ## 🌟 Features Overview
 
 ### **Recent Improvements (v3.1)**
@@ -97,7 +113,7 @@ A comprehensive, high-performance N-body gravitational simulation suite with rea
 ### **Installation**
 
 #### **Prerequisites**
-- **C++ compiler** with C++11 support (GCC/Clang)
+- **C++ compiler** with C++17 support (GCC 7+/Clang 5+)
 - **CMake** 3.15 or higher
 - **curl** for JPL HORIZONS API access
 
@@ -572,7 +588,7 @@ CMD ["./build/apps/solar_system_web/solar_system_web", "--web-root", "apps/solar
   ```
 
 #### **"Compilation errors"**
-- **Check**: C++11 compiler support and dependencies
+- **Check**: C++17 compiler support and dependencies
 - **Install**: `cmake`, `curl`, `make`
 - **Verify**: `g++ --version` and `cmake --version`
 
@@ -624,7 +640,7 @@ ls -la ephemeris_*.*
 6. Submit pull request
 
 ### **Code Standards**
-- **C++11 Standard**: Modern C++ features
+- **C++17 Standard**: Modern C++ features
 - **Auto-formatting**: Pre-commit hooks with clang-format
 - **Modular Design**: Clean separation of concerns
 - **Comprehensive Testing**: Validate all applications

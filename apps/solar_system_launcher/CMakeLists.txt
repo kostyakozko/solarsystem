@@ -26,7 +26,7 @@ endif()
 
 # Set executable properties
 set_target_properties(solar_system_launcher PROPERTIES
-    CXX_STANDARD 11
+    CXX_STANDARD 17
     CXX_STANDARD_REQUIRED ON
     CXX_EXTENSIONS OFF
 )
