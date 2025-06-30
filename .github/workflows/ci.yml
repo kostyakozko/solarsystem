@@ -160,6 +160,9 @@ jobs:
         VALIDATE_JSCPD: false
         VALIDATE_NATURAL_LANGUAGE: false
         VALIDATE_CLANG_FORMAT: false  # We have our own clang-format in code-quality job
+        VALIDATE_CHECKOV: false       # Infrastructure as code scanning not needed
+        VALIDATE_DOCKERFILE: false    # No Dockerfiles in this project
+        VALIDATE_GITLEAKS: false      # Secrets scanning might be too aggressive
 
   # Performance regression detection
   performance-regression:
