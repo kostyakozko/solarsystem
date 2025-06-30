@@ -6,12 +6,15 @@
  * Built using only standard libraries - no external dependencies.
  */
 
+#include <errno.h>   // For errno
+#include <fcntl.h>   // For fcntl()
 #include <libgen.h>  // For dirname()
 #include <limits.h>  // For PATH_MAX
 #include <signal.h>
 #include <unistd.h>  // For readlink()
 
 #include <chrono>
+#include <cstring>  // For strerror()
 #include <ctime>
 #include <fstream>
 #include <iostream>
@@ -862,15 +865,51 @@ int main(int argc, char* argv[]) {
   }
   std::cout << "🛑 Press Ctrl+C to stop\n\n";
 
+  // Set socket to non-blocking mode for better signal handling
+  int flags = fcntl(server_socket, F_GETFL, 0);
+  fcntl(server_socket, F_SETFL, flags | O_NONBLOCK);
+
   // Main server loop
   while (server_running) {
+    // Use select() to wait for connections with timeout
+    fd_set read_fds;
+    FD_ZERO(&read_fds);
+    FD_SET(server_socket, &read_fds);
+
+    struct timeval timeout;
+    timeout.tv_sec = 1;  // 1 second timeout
+    timeout.tv_usec = 0;
+
+    int select_result = select(server_socket + 1, &read_fds, nullptr, nullptr, &timeout);
+
+    if (select_result < 0) {
+      if (errno == EINTR) {
+        // Interrupted by signal, check if we should continue
+        continue;
+      }
+      if (server_running) {
+        std::cerr << "Select error: " << strerror(errno) << "\n";
+      }
+      break;
+    }
+
+    if (select_result == 0) {
+      // Timeout, continue loop to check server_running
+      continue;
+    }
+
+    // Accept connection
     struct sockaddr_in client_addr;
     socklen_t client_len = sizeof(client_addr);
 
     int client_socket = accept(server_socket, (struct sockaddr*)&client_addr, &client_len);
     if (client_socket < 0) {
+      if (errno == EINTR || errno == EAGAIN || errno == EWOULDBLOCK) {
+        // Interrupted by signal or would block, continue
+        continue;
+      }
       if (server_running) {
-        std::cerr << "Failed to accept client connection\n";
+        std::cerr << "Failed to accept client connection: " << strerror(errno) << "\n";
       }
       continue;
     }

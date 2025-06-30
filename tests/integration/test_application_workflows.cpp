@@ -40,7 +40,7 @@ int main() {
   // Test launcher application workflow
   TEST_CASE("Launcher Status Check") {
     // Test that launcher can check system status
-    std::string command = "./solar_system_launcher --status";
+    std::string command = "./apps/solar_system_launcher/solar_system_launcher --status";
     std::string output = execute_command(command);
 
     // Should contain status information
@@ -51,7 +51,7 @@ int main() {
   // Test data fetching workflow
   TEST_CASE("Data Fetch Workflow") {
     // Test that fetch application can validate storage
-    std::string command = "./solar_system_fetch --test-storage";
+    std::string command = "./apps/solar_system_fetch/solar_system_fetch --test-storage";
     std::string output = execute_command(command);
 
     // Should complete without errors
@@ -63,7 +63,7 @@ int main() {
   // Test simulation workflow
   TEST_CASE("Basic Simulation Workflow") {
     // Test that simulation can run with a future date
-    std::string command = "./solar_system --date 2025-07-01";
+    std::string command = "./apps/solar_system/solar_system --date 2025-07-01";
     std::string output = execute_command(command);
 
     // Should complete simulation
@@ -75,7 +75,8 @@ int main() {
   // Test launcher coordinated workflow
   TEST_CASE("Launcher Coordinated Simulation") {
     // Test launcher's ability to coordinate fetch and simulate
-    std::string command = "./solar_system_launcher --simulate --date 2025-08-01";
+    std::string command =
+        "./apps/solar_system_launcher/solar_system_launcher --simulate --date 2025-08-01";
     std::string output = execute_command(command);
 
     // Should show coordination between components
@@ -85,7 +86,8 @@ int main() {
   // Test real-time application
   TEST_CASE("Real-time Application") {
     // Test real-time application with no-continuous mode
-    std::string command = "timeout 10s ./solar_system_realtime --no-continuous";
+    std::string command =
+        "timeout 10s ./apps/solar_system_realtime/solar_system_realtime --no-continuous";
     std::string output = execute_command(command);
 
     // Should provide real-time data snapshot
@@ -98,7 +100,8 @@ int main() {
   TEST_CASE("Web Server Startup") {
     // Start web server in background
     std::string start_command =
-        "./solar_system_web --port 8081 --web-root share/solar_system/web &";
+        "./apps/solar_system_web/solar_system_web --port 8082 --web-root share/solar_system/web > "
+        "/dev/null 2>&1 &";
     system(start_command.c_str());
 
     // Give server time to start
@@ -106,24 +109,25 @@ int main() {
 
     // Test if server is responding
     std::string test_command =
-        "curl -s -o /dev/null -w \"%{http_code}\" http://localhost:8081/api/status";
+        "curl -s -o /dev/null -w \"%{http_code}\" http://localhost:8082/api/status 2>/dev/null || "
+        "echo '000'";
     std::string response = execute_command(test_command);
 
     // Should get HTTP 200 response
     ASSERT_TRUE(response.find("200") != std::string::npos);
 
     // Clean up - kill the web server
-    system("pkill -f solar_system_web");
+    system("pkill -f solar_system_web 2>/dev/null || true");
   });
 
   // Test data consistency across applications
   TEST_CASE("Data Consistency") {
     // Run simulation and capture output
-    std::string sim_command = "./solar_system --date 2025-06-01 --verbose";
+    std::string sim_command = "./apps/solar_system/solar_system --date 2025-06-01 --verbose";
     std::string sim_output = execute_command(sim_command);
 
     // Run real-time for same date (if supported)
-    std::string rt_command = "./solar_system_realtime --no-continuous";
+    std::string rt_command = "./apps/solar_system_realtime/solar_system_realtime --no-continuous";
     std::string rt_output = execute_command(rt_command);
 
     // Both should reference the same solar system data
@@ -135,7 +139,7 @@ int main() {
   // Test error handling across applications
   TEST_CASE("Error Handling") {
     // Test invalid date handling
-    std::string invalid_date_command = "./solar_system --date invalid-date 2>&1";
+    std::string invalid_date_command = "./apps/solar_system/solar_system --date invalid-date 2>&1";
     std::string output = execute_command(invalid_date_command);
 
     // Should handle error gracefully
@@ -147,7 +151,7 @@ int main() {
   // Test cache file interactions
   TEST_CASE("Cache File Workflow") {
     // Check if cache files are created/used properly
-    std::string cache_command = "./solar_system_fetch --validate";
+    std::string cache_command = "./apps/solar_system_fetch/solar_system_fetch --validate";
     std::string output = execute_command(cache_command);
 
     // Should validate or create cache
@@ -159,8 +163,11 @@ int main() {
   // Test application help systems
   TEST_CASE("Help System Consistency") {
     std::vector<std::string> applications = {
-        "./solar_system_launcher --help", "./solar_system --help", "./solar_system_fetch --help",
-        "./solar_system_realtime --help", "./solar_system_web --help"};
+        "./apps/solar_system_launcher/solar_system_launcher --help",
+        "./apps/solar_system/solar_system --help",
+        "./apps/solar_system_fetch/solar_system_fetch --help",
+        "./apps/solar_system_realtime/solar_system_realtime --help",
+        "./apps/solar_system_web/solar_system_web --help"};
 
     for (const auto& app_command : applications) {
       std::string output = execute_command(app_command);
@@ -175,9 +182,11 @@ int main() {
   // Test installation verification
   TEST_CASE("Installation Verification") {
     // Check that all expected files are present
-    std::vector<std::string> expected_files = {"./solar_system_launcher", "./solar_system",
-                                               "./solar_system_fetch", "./solar_system_realtime",
-                                               "./solar_system_web"};
+    std::vector<std::string> expected_files = {"./apps/solar_system_launcher/solar_system_launcher",
+                                               "./apps/solar_system/solar_system",
+                                               "./apps/solar_system_fetch/solar_system_fetch",
+                                               "./apps/solar_system_realtime/solar_system_realtime",
+                                               "./apps/solar_system_web/solar_system_web"};
 
     for (const auto& file : expected_files) {
       ASSERT_TRUE(file_exists(file));

@@ -51,7 +51,9 @@ target_link_libraries(test_end_to_end
 )
 
 # Add integration tests to CTest
-add_test(NAME IntegrationTest_ApplicationWorkflows COMMAND test_application_workflows)
+add_test(NAME IntegrationTest_ApplicationWorkflows 
+         COMMAND tests/integration/test_application_workflows
+         WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
 add_test(NAME IntegrationTest_DataPipeline COMMAND test_data_pipeline)
 add_test(NAME IntegrationTest_WebInterface COMMAND test_web_interface)
 add_test(NAME IntegrationTest_EndToEnd COMMAND test_end_to_end)
@@ -59,7 +61,7 @@ add_test(NAME IntegrationTest_EndToEnd COMMAND test_end_to_end)
 # Set test properties
 set_tests_properties(IntegrationTest_ApplicationWorkflows PROPERTIES
     LABELS "integration;workflows"
-    TIMEOUT 120
+    TIMEOUT 30
 )
 
 set_tests_properties(IntegrationTest_DataPipeline PROPERTIES
