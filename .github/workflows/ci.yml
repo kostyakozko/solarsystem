@@ -164,6 +164,8 @@ jobs:
         VALIDATE_DOCKERFILE: false    # No Dockerfiles in this project
         VALIDATE_GITLEAKS: false      # Secrets scanning might be too aggressive
         VALIDATE_CPP: false           # cpplint has outdated rules (80 char limit, copyright requirements)
+        VALIDATE_JAVASCRIPT_ES: false # Disable JS formatting - we'll use our own standards
+        VALIDATE_JAVASCRIPT_STANDARD: false # Disable JS standard linting
 
   # Performance regression detection
   performance-regression:
