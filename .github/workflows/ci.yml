@@ -86,6 +86,7 @@ jobs:
       if: matrix.os == 'ubuntu-latest' && matrix.build_type == 'Release'
       run: |
         cd docs
+        mkdir -p api
         doxygen Doxyfile
         
     - name: Upload Test Results
