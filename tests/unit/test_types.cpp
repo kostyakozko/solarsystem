@@ -3,8 +3,8 @@
  * @brief Unit tests for type definitions
  */
 
-#include "../../lib/solar_core/types.h"
 #include "test_framework.h"
+#include "types.h"
 
 int main() {
   TEST_SUITE("Types Tests");

@@ -3,9 +3,9 @@
  * @brief Performance benchmarks for simulation engine (actual API)
  */
 
-#include "../../lib/solar_core/model.h"
-#include "../../lib/solar_core/simulation.h"
 #include "benchmark_utils.h"
+#include "model.h"
+#include "simulation.h"
 #include "test_data.h"
 #include "test_framework.h"
 

@@ -58,7 +58,14 @@ int main(int argc, char* argv[]) {
     std::cout << "Using JPL ephemeris data: " << get_ephemeris_source() << std::endl;
   } else {
     // Fallback to original hardcoded date
-    struct tm start_timeinfo = {0, 0, 0, 11, 1, 2018 - 1900};
+    struct tm start_timeinfo = {};
+    start_timeinfo.tm_sec = 0;
+    start_timeinfo.tm_min = 0;
+    start_timeinfo.tm_hour = 0;
+    start_timeinfo.tm_mday = 11;
+    start_timeinfo.tm_mon = 1;
+    start_timeinfo.tm_year = 2018 - 1900;
+    start_timeinfo.tm_isdst = -1;  // Let system determine DST
     start_date = mktime(&start_timeinfo);
     std::cout << "Using original ephemeris data: " << get_ephemeris_source() << std::endl;
   }

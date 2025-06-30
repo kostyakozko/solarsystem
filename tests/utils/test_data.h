@@ -13,7 +13,7 @@
 #include <string>
 #include <vector>
 
-#include "../../lib/solar_core/include/types.h"
+#include "types.h"
 
 namespace TestData {
 

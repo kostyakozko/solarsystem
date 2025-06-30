@@ -3,7 +3,7 @@
  * @brief Unit tests for simulation functions (actual API)
  */
 
-#include "../../lib/solar_core/simulation.h"
+#include "simulation.h"
 #include "test_data.h"
 #include "test_framework.h"
 

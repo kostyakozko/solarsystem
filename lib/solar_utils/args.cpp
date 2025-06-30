@@ -25,7 +25,7 @@ void print_usage(const char* program_name) {
 }
 
 time_t parse_iso_date(const std::string& date_str) {
-  struct tm tm_date = {0};
+  struct tm tm_date = {};  // Initialize all fields to zero
 
   // Parse YYYY-MM-DD format
   std::istringstream ss(date_str);

@@ -3,7 +3,7 @@
  * @brief Unit tests for model functions
  */
 
-#include "../../lib/solar_core/model.h"
+#include "model.h"
 #include "test_framework.h"
 
 int main() {

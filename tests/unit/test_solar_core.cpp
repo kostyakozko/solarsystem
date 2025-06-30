@@ -5,12 +5,12 @@
  * Tests the real functions available in the solar_core library
  */
 
-#include "../../lib/solar_core/constants.h"
-#include "../../lib/solar_core/model.h"
-#include "../../lib/solar_core/simulation.h"
-#include "../../lib/solar_core/types.h"
+#include "constants.h"
+#include "model.h"
+#include "simulation.h"
 #include "test_data.h"
 #include "test_framework.h"
+#include "types.h"
 
 int main() {
   TEST_SUITE("Solar Core Library Tests");

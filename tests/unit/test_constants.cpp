@@ -3,7 +3,7 @@
  * @brief Unit tests for physical constants
  */
 
-#include "../../lib/solar_core/constants.h"
+#include "constants.h"
 #include "test_framework.h"
 
 int main() {
