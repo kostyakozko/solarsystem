@@ -114,7 +114,7 @@ void print_launcher_usage(const char* program_name) {
   std::cout << "  " << program_name << " --fetch --clean --update\n\n";
 }
 
-bool parse_launcher_args(int argc, char* argv[], LauncherArgs& args) {
+bool parse_launcher_args(int argc, const char* const argv[], LauncherArgs& args) {
   for (int i = 1; i < argc; i++) {
     std::string arg = argv[i];
 
@@ -270,7 +270,7 @@ void print_system_status() {
   std::cout << "\n";
 }
 
-int main(int argc, char* argv[]) {
+int main(int argc, const char* const argv[]) {
   LauncherArgs args;
 
   // Parse arguments

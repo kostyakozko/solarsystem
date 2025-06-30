@@ -58,7 +58,7 @@ time_t parse_iso_date(const std::string& date_str) {
 }
 
 // Extended argument parsing for specialized applications
-bool parse_args(int argc, char* argv[], Args& args) {
+bool parse_args(int argc, const char* const argv[], Args& args) {
   for (int i = 1; i < argc; i++) {
     std::string arg = argv[i];
 
@@ -112,6 +112,7 @@ bool parse_args(int argc, char* argv[], Args& args) {
 
 SimulationArgs parse_arguments(int argc, char* argv[]) {
   SimulationArgs args;
+  args.target_date = 0;  // Initialize to 0 (will be set if date is provided)
   args.use_current_date = true;
   args.update_data = false;
   args.rebuild_cache = false;

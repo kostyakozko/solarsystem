@@ -107,7 +107,7 @@ void print_realtime_usage(const char* program_name) {
   std::cout << "  SIGTERM            Graceful shutdown\n\n";
 }
 
-bool parse_realtime_args(int argc, char* argv[], RealtimeArgs& args) {
+bool parse_realtime_args(int argc, const char* const argv[], RealtimeArgs& args) {
   for (int i = 1; i < argc; i++) {
     std::string arg = argv[i];
 
@@ -255,7 +255,7 @@ void clear_screen() {
   std::cout << "\033[2J\033[H";
 }
 
-int main(int argc, char* argv[]) {
+int main(int argc, const char* const argv[]) {
   RealtimeArgs args;
 
   // Parse arguments

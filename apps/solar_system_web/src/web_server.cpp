@@ -608,7 +608,7 @@ HttpResponse handle_request(const HttpRequest& request, const WebServerConfig& c
   }
 
   if (request.path == "/api/solar_system" ||
-      (request.path.length() >= 19 && request.path.substr(0, 19) == "/api/solar_system?")) {
+      (request.path.length() >= 18 && request.path.substr(0, 18) == "/api/solar_system?")) {
     response.headers["Content-Type"] = "application/json";
 
     // Extract date parameter if present

@@ -53,7 +53,7 @@ struct Args {
 SimulationArgs parse_arguments(int argc, char* argv[]);
 
 // Parse command line arguments (extended function for specialized apps)
-bool parse_args(int argc, char* argv[], Args& args);
+bool parse_args(int argc, const char* const argv[], Args& args);
 
 // Parse ISO date string (YYYY-MM-DD) to time_t
 time_t parse_iso_date(const std::string& date_str);
