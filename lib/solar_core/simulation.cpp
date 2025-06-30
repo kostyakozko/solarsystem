@@ -113,3 +113,104 @@ void update_simulation_to_current_time() {
 }
 
 time_t get_simulation_time() { return current_simulation_time; }
+
+// Web server specific simulation functions (non-blocking, no exit)
+bool run_web_forward_simulation(time_t start_date, time_t target_date) {
+  std::cout << "Running web forward simulation from " << start_date << " to " << target_date
+            << std::endl;
+
+  time_t current = start_date;
+  time_t time_diff = target_date - start_date;
+
+  // Adaptive time step based on simulation length
+  long double web_time_step;
+  if (time_diff <= 86400) {              // <= 1 day: use small steps for accuracy
+    web_time_step = dt;                  // 30 seconds
+  } else if (time_diff <= 86400 * 7) {   // <= 1 week: medium steps
+    web_time_step = dt * 10;             // 5 minutes (300 seconds)
+  } else if (time_diff <= 86400 * 30) {  // <= 1 month: larger steps
+    web_time_step = dt * 60;             // 30 minutes (1800 seconds)
+  } else {                               // > 1 month: use optimal step for accuracy
+    web_time_step = dt;                  // 30 seconds (optimal for accuracy)
+  }
+
+  // Safety check: maximum iterations based on time step
+  const int max_iterations = std::min(1000000, (int)(time_diff / web_time_step) + 1000);
+  int iterations = 0;
+
+  std::cout << "Using adaptive web time step: " << web_time_step << " seconds ("
+            << (web_time_step / 86400.0) << " days)" << std::endl;
+  std::cout << "Expected iterations: " << (time_diff / web_time_step)
+            << ", Max allowed: " << max_iterations << std::endl;
+
+  while (current < target_date && iterations < max_iterations) {
+    perform_simulation_step(web_time_step);
+    current += web_time_step;
+    iterations++;
+
+    // Progress logging every 1000 iterations
+    if (iterations % 1000 == 0) {
+      std::cout << "Web simulation progress: " << iterations << " steps, "
+                << ((double)(current - start_date) / time_diff * 100.0) << "% complete"
+                << std::endl;
+    }
+  }
+
+  if (iterations >= max_iterations) {
+    std::cout << "Warning: Web simulation reached maximum iterations limit" << std::endl;
+    return false;
+  }
+
+  std::cout << "Web forward simulation completed in " << iterations << " steps" << std::endl;
+  return true;
+}
+
+bool run_web_backward_simulation(time_t start_date, time_t target_date) {
+  std::cout << "Running web backward simulation from " << start_date << " to " << target_date
+            << std::endl;
+
+  time_t current = start_date;
+  time_t time_diff = start_date - target_date;
+
+  // Adaptive time step based on simulation length
+  long double web_time_step;
+  if (time_diff <= 86400) {              // <= 1 day: use small steps for accuracy
+    web_time_step = -dt;                 // -30 seconds
+  } else if (time_diff <= 86400 * 7) {   // <= 1 week: medium steps
+    web_time_step = -dt * 10;            // -5 minutes (-300 seconds)
+  } else if (time_diff <= 86400 * 30) {  // <= 1 month: larger steps
+    web_time_step = -dt * 60;            // -30 minutes (-1800 seconds)
+  } else {                               // > 1 month: use optimal step for accuracy
+    web_time_step = -dt;                 // -30 seconds (optimal for accuracy)
+  }
+
+  // Safety check: maximum iterations based on time step
+  const int max_iterations = std::min(1000000, (int)(time_diff / (-web_time_step)) + 1000);
+  int iterations = 0;
+
+  std::cout << "Using adaptive web time step: " << web_time_step << " seconds ("
+            << (web_time_step / 86400.0) << " days)" << std::endl;
+  std::cout << "Expected iterations: " << (time_diff / (-web_time_step))
+            << ", Max allowed: " << max_iterations << std::endl;
+
+  while (current > target_date && iterations < max_iterations) {
+    perform_simulation_step(web_time_step);
+    current += web_time_step;
+    iterations++;
+
+    // Progress logging every 1000 iterations
+    if (iterations % 1000 == 0) {
+      std::cout << "Web simulation progress: " << iterations << " steps, "
+                << ((double)(start_date - current) / time_diff * 100.0) << "% complete"
+                << std::endl;
+    }
+  }
+
+  if (iterations >= max_iterations) {
+    std::cout << "Warning: Web simulation reached maximum iterations limit" << std::endl;
+    return false;
+  }
+
+  std::cout << "Web backward simulation completed in " << iterations << " steps" << std::endl;
+  return true;
+}

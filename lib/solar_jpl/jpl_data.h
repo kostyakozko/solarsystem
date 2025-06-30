@@ -5,6 +5,8 @@
 #include <ctime>
 #include <string>
 
+#include "jpl_bodies.h"  // For BodyType enum
+
 // Forward declarations for parallel fetching
 struct FetchTask {
   int body_index;
@@ -52,6 +54,15 @@ bool has_current_year_ephemeris_data();
 
 // Check if we have any JPL ephemeris data (vs original hardcoded data)
 bool has_current_ephemeris_data();
+
+// Fetch JPL data for all bodies for a specific date (for web server)
+bool fetch_jpl_data_for_date(const char* date);
+
+// Fetch JPL data for console applications (stricter requirements)
+bool fetch_jpl_data_for_console(const char* date);
+
+// Get body type classification for error handling
+BodyType get_body_type(int body_index);
 
 // Get the epoch of currently loaded data
 time_t get_ephemeris_epoch();

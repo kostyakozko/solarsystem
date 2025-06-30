@@ -2,7 +2,45 @@
 
 A comprehensive, high-performance N-body gravitational simulation suite with real-time JPL HORIZONS ephemeris data integration, modular architecture, professional installation system, and **interactive web-based time travel visualization**.
 
+## 📋 Table of Contents
+
+- [🌟 Features Overview](#-features-overview)
+- [🏗️ Architecture](#️-architecture)
+- [🚀 Quick Start](#-quick-start)
+  - [Prerequisites](#prerequisites)
+  - [Build and Install](#build-and-install)
+  - [Basic Usage](#basic-usage)
+- [📱 Applications Guide](#-applications-guide)
+  - [🎛️ solar_system_launcher - Unified Interface](#️-solar_system_launcher---unified-interface)
+  - [📡 solar_system_fetch - Data Management](#-solar_system_fetch---data-management)
+  - [🌌 solar_system - High-Performance Simulation](#-solar_system---high-performance-simulation)
+  - [🌍 solar_system_realtime - Live Tracking](#-solar_system_realtime---live-tracking)
+  - [🌐 solar_system_web - Interactive Time Travel Visualization](#-solar_system_web---interactive-time-travel-visualization)
+- [🌌 Celestial Bodies Coverage](#-celestial-bodies-coverage)
+- [🔧 Advanced Configuration](#-advanced-configuration)
+  - [Installation Options](#installation-options)
+  - [Web Server Configuration](#web-server-configuration)
+  - [Cache System](#cache-system)
+  - [Performance Optimization](#performance-optimization)
+- [🛠️ Development](#️-development)
+- [🧪 Testing & Validation](#-testing--validation)
+- [🌐 Integration & Deployment](#-integration--deployment)
+- [🔍 Troubleshooting](#-troubleshooting)
+- [📊 Performance & Scalability](#-performance--scalability)
+- [🤝 Contributing](#-contributing)
+- [📈 Roadmap](#-roadmap)
+- [📄 License](#-license)
+- [🙏 Acknowledgments](#-acknowledgments)
+- [📚 References](#-references)
+
 ## 🌟 Features Overview
+
+### **Recent Improvements (v3.1)**
+- **🎯 Smart Time Travel**: Manual requests use JPL data fetching, automatic requests use simulation
+- **🏷️ Body Classification**: Essential (planets), Important (moons), Optional (spacecraft) with proper error handling
+- **🔧 Clean Logging**: Verbose mode (`--verbose`) for detailed debugging, clean output by default
+- **📡 Historical Accuracy**: Proper handling of spacecraft that didn't exist in historical dates
+- **⚡ Performance**: Optimized request handling and reduced debug overhead
 
 ### 🚀 **Complete Solar System Suite**
 - **5 Specialized Applications**: Each optimized for specific tasks
@@ -250,32 +288,38 @@ cd /path/to/install
 **Purpose**: Web-based interactive visualization with time travel capabilities
 
 **Key Features**:
-- Interactive 3D WebGL visualization
-- Time travel simulation from any historical date
+- Interactive 3D WebGL visualization with smooth rendering
+- **Intelligent Time Travel**: Automatic JPL data fetching for historical dates
+- **Dual Request System**: Manual JPL fetching for large jumps, simulation for smooth animation
+- **Smart Body Classification**: Essential (planets), Important (moons), Optional (spacecraft)
 - Variable speed control (0.1x to 1 year per second)
 - Orbit trails with beautiful fading effects
 - Planet labels and real-time information
 - Mouse controls for rotation and zoom
-- Professional web interface
+- Professional web interface with clean output
 
 **Examples**:
 ```bash
-# Start web server (default port 8080)
+# Start web server (clean output)
 ./solar_system_web --web-root share/solar_system/web
 
-# Custom port and verbose mode
+# Verbose mode for debugging
 ./solar_system_web --port 3000 --verbose --web-root share/solar_system/web
 
 # Then open browser to: http://localhost:8080
 ```
 
 **Web Interface Features**:
-- **Time Travel Mode**: Start simulation from 1990, 2000, 2010, or 2020
+- **Time Travel Mode**: Jump to any historical date (1990, 2000, 2010, 2020+)
+- **Intelligent Data Handling**: 
+  - Manual time travel → JPL HORIZONS data fetching
+  - Animation playback → Real-time simulation
+  - Automatic fallback for missing spacecraft in historical dates
 - **Speed Control**: Watch 35 years pass in 35 seconds at 1 year/sec
 - **Orbit Trails**: Enable beautiful orbital path visualization
 - **Interactive Controls**: Mouse drag to rotate, scroll to zoom
 - **View Modes**: 3D perspective or top-down orbital view
-- **Real-time Sync**: Seamlessly transition to live tracking
+- **Real-time Sync**: Seamlessly transition between modes
 
 ## 🌌 Celestial Bodies Coverage
 

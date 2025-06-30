@@ -38,6 +38,11 @@ class SolarSystemTimeTravel {
         
         // Animation
         this.animationId = null;
+        
+        // Request throttling for simulation data
+        this.lastRequestTime = 0;
+        this.lastRequestedDate = '';
+        this.requestThrottleMs = 100; // Reduced to 100ms for smoother time travel
         this.fps = 0;
         this.lastFrameTime = 0;
         
@@ -250,6 +255,9 @@ class SolarSystemTimeTravel {
         this.updateModeDisplay();
         this.updateTimeDisplay();
         console.log('Switched to simulation mode');
+        
+        // Make manual request to fetch JPL data for the selected date
+        this.requestSimulationData(this.timeControl.currentTime, true); // true = manual request
     }
     
     startTimeTravel() {
@@ -268,9 +276,8 @@ class SolarSystemTimeTravel {
         document.getElementById('btn-play').classList.add('active');
         document.getElementById('btn-pause').classList.remove('active');
         
-        console.log(`Starting time travel from ${startDateStr}`);
-        console.log(`Current simulation time: ${this.timeControl.currentTime}`);
-        console.log(`Speed: ${this.timeControl.speed}x`);
+        // Make initial manual request to set up the time travel
+        this.requestSimulationData(this.timeControl.currentTime, true); // true = manual request
     }
     
     syncToRealtime() {
@@ -281,15 +288,19 @@ class SolarSystemTimeTravel {
     }
     
     setSpeed(speedIndex) {
-        // More accurate speed values that account for actual time advancement
+        // Better intermediate speed values for observing planetary motion
         const speeds = [
-            0.1,        // 0.1x (slow motion)
-            0.5,        // 0.5x (half speed)
-            1,          // 1x (real-time)
-            60,         // 1 minute per second
-            3600,       // 1 hour per second
-            86400,      // 1 day per second
-            365 * 86400 // 1 year per second
+            0.1,            // 0: 0.1x (slow motion)
+            1,              // 1: 1x (real-time)
+            60,             // 2: 1 minute per second
+            3600,           // 3: 1 hour per second
+            86400,          // 4: 1 day per second
+            86400 * 7,      // 5: 1 week per second
+            86400 * 30,     // 6: 1 month per second
+            86400 * 90,     // 7: 3 months per second
+            86400 * 180,    // 8: 6 months per second
+            86400 * 365,    // 9: 1 year per second
+            86400 * 365 * 5 // 10: 5 years per second
         ];
         
         this.timeControl.speed = speeds[parseInt(speedIndex)];
@@ -375,12 +386,18 @@ class SolarSystemTimeTravel {
         } else if (speed < 86400) {
             const hours = Math.round(speed / 3600);
             return `${hours} hr/sec`;
-        } else if (speed < 365 * 86400) {
+        } else if (speed < 86400 * 7) {
             const days = Math.round(speed / 86400);
-            return `${days} days/sec`;
+            return `${days} day/sec`;
+        } else if (speed < 86400 * 30) {
+            const weeks = Math.round(speed / (86400 * 7));
+            return `${weeks} week/sec`;
+        } else if (speed < 86400 * 365) {
+            const months = Math.round(speed / (86400 * 30));
+            return `${months} month/sec`;
         } else {
-            const years = Math.round(speed / (365 * 86400));
-            return `${years} years/sec`;
+            const years = Math.round(speed / (86400 * 365));
+            return `${years} year/sec`;
         }
     }
     
@@ -494,10 +511,24 @@ class SolarSystemTimeTravel {
                 simulationDeltaMs = targetAdvancePerFrame;
             }
             
+            const oldTime = new Date(this.timeControl.currentTime);
             this.timeControl.currentTime = new Date(this.timeControl.currentTime.getTime() + simulationDeltaMs);
             this.timeControl.lastUpdateTime = now;
             
             this.updateTimeDisplay();
+            
+            // Enhanced debug: Log time advancement every few seconds
+            const timeDiff = Math.abs(this.timeControl.currentTime - oldTime);
+            if (timeDiff > 3600000) { // If more than 1 hour advanced
+                console.log(`⏰ Time advanced: ${oldTime.toISOString().split('T')[0]} → ${this.timeControl.currentTime.toISOString().split('T')[0]}`);
+                console.log(`🚀 Speed: ${this.timeControl.speed}x, Delta: ${(simulationDeltaMs/86400000).toFixed(3)} days, Real delta: ${deltaMs}ms`);
+            }
+            
+            // Debug: Log current time every few frames
+            if (Math.random() < 0.01) { // 1% of frames
+                console.log(`🕐 Current simulation time: ${this.timeControl.currentTime.toISOString()}`);
+                console.log(`🎯 Speed: ${this.timeControl.speed}x, Playing: ${this.timeControl.isPlaying}`);
+            }
             
             // Request updated positions from C++ backend for the current simulation time
             this.requestSimulationData(this.timeControl.currentTime);
@@ -506,8 +537,6 @@ class SolarSystemTimeTravel {
             if (this.settings.showTrails) {
                 this.updateOrbitTrails();
             }
-            
-            console.log(`Simulation time: ${this.timeControl.currentTime.toISOString()}`);
             
             // Only auto-sync if we're more than 50 years in the future
             const now_real = new Date();
@@ -520,26 +549,165 @@ class SolarSystemTimeTravel {
         }
     }
     
-    async requestSimulationData(targetDate) {
+    async requestSimulationData(targetDate, isManualRequest = false) {
         try {
             // Format date for API request (YYYY-MM-DD)
             const dateStr = targetDate.toISOString().split('T')[0];
             
+            // Only make request if the date has actually changed
+            if (dateStr === this.lastRequestedDate) {
+                return; // Skip - same date as last request
+            }
+            
+            // Additional throttle to prevent rapid-fire requests
+            const now = Date.now();
+            if (now - this.lastRequestTime < 50) { // Minimum 50ms between requests
+                return;
+            }
+            
+            // Build URL with manual flag if needed
+            let url = `/api/solar_system?date=${dateStr}`;
+            if (isManualRequest) {
+                url += '&manual=true';
+            }
+            
+            // Show loading indicator
+            this.showLoadingIndicator(`Loading ${dateStr}...`);
+            
+            this.lastRequestTime = now;
+            this.lastRequestedDate = dateStr;
+            
             // Request simulation data for specific date
-            const response = await fetch(`/api/solar_system?date=${dateStr}`);
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            });
+            
+            console.log(`📨 Response status: ${response.status} ${response.statusText}`);
+            
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             
             const data = await response.json();
             
+            console.log(`✅ Received simulation data for: ${data.simulated_date || dateStr}`);
+            console.log(`📊 Bodies count: ${data.bodies ? data.bodies.length : 0}`);
+            console.log(`🔧 Simulation mode: ${data.simulation_mode}`);
+            
+            // Detailed data inspection
+            if (data.bodies && Array.isArray(data.bodies) && data.bodies.length > 0) {
+                console.log(`🔍 DETAILED DATA INSPECTION:`);
+                console.log(`  📦 First body:`, data.bodies[0]);
+                console.log(`  🌍 Earth data:`, data.bodies.find(b => b.name === 'Earth'));
+                console.log(`  🌙 Moon data:`, data.bodies.find(b => b.name === 'Moon'));
+            }
+            
+            // Check for errors or issues
+            if (data.error) {
+                console.warn(`⚠️ Server returned error: ${data.error}`);
+            }
+            if (!data.simulation_mode) {
+                console.warn(`⚠️ Simulation mode is false - using cached/static data`);
+            }
+            
+            // Hide loading indicator
+            this.hideLoadingIndicator();
+            
             // Update bodies with new positions
             if (data.bodies && Array.isArray(data.bodies)) {
-                this.updateBodies(data);
+                // Store previous positions for comparison
+                const previousPositions = {};
+                if (this.bodies && this.bodies.length > 0) {
+                    this.bodies.forEach(body => {
+                        previousPositions[body.name] = {
+                            x: body.position.x,
+                            y: body.position.y,
+                            z: body.position.z
+                        };
+                    });
+                }
+                
+                // Update the bodies array with new simulation data
+                this.bodies = data.bodies;
+                console.log(`🔄 Updated ${data.bodies.length} body positions`);
+                
+                // Store position history for visual trails (simple approach)
+                if (!this.positionHistory) {
+                    this.positionHistory = new Map();
+                }
+                
+                // Add current positions to history
+                data.bodies.forEach(body => {
+                    if (!this.positionHistory.has(body.name)) {
+                        this.positionHistory.set(body.name, []);
+                    }
+                    const history = this.positionHistory.get(body.name);
+                    history.push({
+                        x: body.position.x,
+                        y: body.position.y,
+                        z: body.position.z,
+                        time: Date.now()
+                    });
+                    
+                    // Keep only last 10 positions
+                    if (history.length > 10) {
+                        history.shift();
+                    }
+                });
+                
+                // Check for position changes
+                let positionsChanged = false;
+                data.bodies.forEach(body => {
+                    if (previousPositions[body.name]) {
+                        const prev = previousPositions[body.name];
+                        const curr = body.position;
+                        const distance = Math.sqrt(
+                            Math.pow(curr.x - prev.x, 2) + 
+                            Math.pow(curr.y - prev.y, 2) + 
+                            Math.pow(curr.z - prev.z, 2)
+                        );
+                        if (distance > 1000000) { // More than 1000 km movement (1M meters)
+                            positionsChanged = true;
+                        }
+                    }
+                });
+                
+                // Position change debugging removed for cleaner output
+            } else {
+                console.warn(`⚠️ No bodies data received or invalid format`);
+            }
+            
+            // Check for initial simulation status
+            if (data.status && data.status.includes('initial simulation')) {
+                this.showLoadingIndicator('⏳ Running initial simulation (30-60 seconds)...');
+                // Don't hide loading indicator yet, let it continue
+                return;
             }
         } catch (error) {
-            console.warn('Failed to fetch simulation data for date:', targetDate, error);
+            this.hideLoadingIndicator();
+            console.error('❌ Failed to fetch simulation data for date:', targetDate);
+            console.error('❌ Error details:', error);
+            console.error('❌ Error stack:', error.stack);
             // Continue with current positions if request fails
+        }
+    }
+    
+    showLoadingIndicator(message) {
+        const indicator = document.getElementById('loading-indicator');
+        if (indicator) {
+            indicator.textContent = message;
+            indicator.style.display = 'block';
+        }
+    }
+    
+    hideLoadingIndicator() {
+        const indicator = document.getElementById('loading-indicator');
+        if (indicator) {
+            indicator.style.display = 'none';
         }
     }
     
@@ -596,11 +764,19 @@ class SolarSystemTimeTravel {
         
         this.gl.uniformMatrix4fv(this.projectionLocation, false, projection);
         this.gl.uniformMatrix4fv(this.modelViewLocation, false, modelView);
-        this.gl.uniform1f(this.pointSizeLocation, 15.0);
+        
+        // Make points slightly larger during time travel to show movement
+        const pointSize = this.timeControl.mode === 'simulation' && this.timeControl.isPlaying ? 20.0 : 15.0;
+        this.gl.uniform1f(this.pointSizeLocation, pointSize);
         
         // Render orbit trails first (behind bodies)
         if (this.settings.showTrails && this.orbitTrails) {
             this.renderOrbitTrails(projection, modelView);
+        }
+        
+        // Render orbital paths (static ellipses)
+        if (this.settings.showOrbits) {
+            this.renderOrbitalPaths(projection, modelView);
         }
         
         // Render celestial bodies
@@ -669,6 +845,73 @@ class SolarSystemTimeTravel {
         });
     }
     
+    renderOrbitalPaths(projection, modelView) {
+        // Render static orbital ellipses for major planets
+        const orbitalData = [
+            { name: 'Mercury', radius: 0.39, color: [0.7, 0.7, 0.7] },
+            { name: 'Venus', radius: 0.72, color: [1.0, 0.8, 0.4] },
+            { name: 'Earth', radius: 1.0, color: [0.4, 0.6, 1.0] },
+            { name: 'Mars', radius: 1.52, color: [1.0, 0.4, 0.4] },
+            { name: 'Jupiter', radius: 5.2, color: [1.0, 0.6, 0.2] },
+            { name: 'Saturn', radius: 9.5, color: [1.0, 1.0, 0.6] },
+            { name: 'Uranus', radius: 19.2, color: [0.4, 0.8, 1.0] },
+            { name: 'Neptune', radius: 30.1, color: [0.2, 0.4, 1.0] }
+        ];
+        
+        // Find max distance for scaling (same as bodies)
+        let maxDist = 0;
+        this.bodies.forEach(body => {
+            const dist = Math.sqrt(body.position.x*body.position.x + body.position.y*body.position.y + body.position.z*body.position.z);
+            maxDist = Math.max(maxDist, dist);
+        });
+        
+        if (maxDist === 0) return;
+        
+        const baseScale = maxDist > 0 ? 50.0 / maxDist : 1.0;
+        
+        // Generate orbital ellipse points
+        const orbitPositions = [];
+        const orbitColors = [];
+        
+        orbitalData.forEach(orbit => {
+            const numPoints = 64; // Points per orbit
+            const scaledRadius = orbit.radius * 1.496e8 * baseScale; // AU to km, then scale
+            
+            for (let i = 0; i < numPoints; i++) {
+                const angle = (i / numPoints) * 2 * Math.PI;
+                const x = Math.cos(angle) * scaledRadius;
+                const y = Math.sin(angle) * scaledRadius;
+                const z = 0; // Simplified to ecliptic plane
+                
+                orbitPositions.push(x, y, z);
+                orbitColors.push(orbit.color[0], orbit.color[1], orbit.color[2]);
+            }
+        });
+        
+        if (orbitPositions.length === 0) return;
+        
+        // Create and bind buffers
+        const posBuffer = this.gl.createBuffer();
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, posBuffer);
+        this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(orbitPositions), this.gl.STATIC_DRAW);
+        this.gl.vertexAttribPointer(this.positionLocation, 3, this.gl.FLOAT, false, 0, 0);
+        
+        const colorBuffer = this.gl.createBuffer();
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, colorBuffer);
+        this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(orbitColors), this.gl.STATIC_DRAW);
+        this.gl.vertexAttribPointer(this.colorLocation, 3, this.gl.FLOAT, false, 0, 0);
+        
+        // Set smaller point size for orbital paths
+        this.gl.uniform1f(this.pointSizeLocation, 2.0);
+        
+        // Draw orbital paths as points
+        this.gl.drawArrays(this.gl.POINTS, 0, orbitPositions.length / 3);
+        
+        // Clean up
+        this.gl.deleteBuffer(posBuffer);
+        this.gl.deleteBuffer(colorBuffer);
+    }
+    
     renderBodies() {
         const positions = [];
         const colors = [];
@@ -693,7 +936,10 @@ class SolarSystemTimeTravel {
             positions.push(scaledX, scaledY, scaledZ);
             
             const color = this.getBodyColor(body.name);
-            colors.push(color.r, color.g, color.b);
+            
+            // Add slight brightness boost during time travel to show activity
+            const brightness = this.timeControl.mode === 'simulation' && this.timeControl.isPlaying ? 1.2 : 1.0;
+            colors.push(color.r * brightness, color.g * brightness, color.b * brightness);
         });
         
         const posBuffer = this.gl.createBuffer();

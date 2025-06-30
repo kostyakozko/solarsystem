@@ -169,16 +169,78 @@ bool update_ephemeris_data() {
   std::cout << "Successfully fetched " << successful_fetches.load() << "/" << tasks.size()
             << " bodies" << std::endl;
 
-  // Save to cache if we got some data
-  if (successful_fetches.load() > 0) {
-    if (save_ephemeris_to_json() && save_ephemeris_to_binary()) {
-      std::cout << "Data saved to cache files" << std::endl;
-      return true;
+  // Apply proper success criteria based on body classification
+  int essential_success = 0;
+  int essential_total = 0;
+  int important_success = 0;
+  int important_total = 0;
+  int optional_success = 0;
+  int optional_total = 0;
+
+  for (const auto& task : tasks) {
+    BodyType body_type = get_body_type(task.body_index);
+
+    switch (body_type) {
+      case BODY_ESSENTIAL:
+        essential_total++;
+        if (task.success) essential_success++;
+        break;
+      case BODY_IMPORTANT:
+        important_total++;
+        if (task.success) important_success++;
+        break;
+      case BODY_OPTIONAL:
+        optional_total++;
+        if (task.success) optional_success++;
+        break;
+      default:
+        important_total++;
+        if (task.success) important_success++;
+        break;
     }
   }
 
-  std::cerr << "Failed to update ephemeris data" << std::endl;
-  return false;
+  std::cout << "📊 Console update summary:" << std::endl;
+  std::cout << "  🌟 Essential: " << essential_success << "/" << essential_total
+            << " (Sun, major planets)" << std::endl;
+  std::cout << "  🌙 Important: " << important_success << "/" << important_total
+            << " (moons, dwarf planets)" << std::endl;
+  std::cout << "  🚀 Optional: " << optional_success << "/" << optional_total << " (spacecraft)"
+            << std::endl;
+
+  // Console success criteria: ALL essential + MOST important bodies must succeed
+  bool essential_ok = (essential_success == essential_total) && (essential_total > 0);
+  bool important_mostly_ok =
+      (important_total == 0) ||
+      (important_success >= (important_total * 0.8));  // 80% of important bodies
+
+  if (!essential_ok) {
+    std::cerr << "💥 CRITICAL: Failed to fetch essential bodies (Sun/planets)" << std::endl;
+    std::cerr << "Cannot proceed with incomplete planetary data" << std::endl;
+    return false;
+  }
+
+  if (!important_mostly_ok) {
+    std::cerr << "💥 CRITICAL: Too many important bodies failed (need 80% success rate)"
+              << std::endl;
+    std::cerr << "Insufficient data for precise simulation" << std::endl;
+    return false;
+  }
+
+  // Warn about optional body failures but continue
+  if (optional_success < optional_total) {
+    std::cout << "⚠️ WARNING: Some spacecraft failed to fetch (may slightly affect precision)"
+              << std::endl;
+  }
+
+  // Save to cache if we have sufficient data
+  if (save_ephemeris_to_json() && save_ephemeris_to_binary()) {
+    std::cout << "✅ Console update successful - data saved to cache files" << std::endl;
+    return true;
+  } else {
+    std::cerr << "❌ Failed to save ephemeris data to cache" << std::endl;
+    return false;
+  }
 }
 
 bool force_update_ephemeris_data() {
@@ -281,15 +343,78 @@ bool force_update_ephemeris_data() {
   std::cout << "Successfully fetched " << successful_fetches.load() << "/" << tasks.size()
             << " bodies" << std::endl;
 
-  // Save to cache if we got some data
-  if (successful_fetches.load() > 0) {
-    if (save_ephemeris_to_json() && save_ephemeris_to_binary()) {
-      std::cout << "Data saved to cache files" << std::endl;
-      return true;
+  // Apply proper success criteria based on body classification
+  int essential_success = 0;
+  int essential_total = 0;
+  int important_success = 0;
+  int important_total = 0;
+  int optional_success = 0;
+  int optional_total = 0;
+
+  for (const auto& task : tasks) {
+    BodyType body_type = get_body_type(task.body_index);
+
+    switch (body_type) {
+      case BODY_ESSENTIAL:
+        essential_total++;
+        if (task.success) essential_success++;
+        break;
+      case BODY_IMPORTANT:
+        important_total++;
+        if (task.success) important_success++;
+        break;
+      case BODY_OPTIONAL:
+        optional_total++;
+        if (task.success) optional_success++;
+        break;
+      default:
+        important_total++;
+        if (task.success) important_success++;
+        break;
     }
   }
 
-  std::cerr << "Failed to force update ephemeris data" << std::endl;
+  std::cout << "📊 Force update summary:" << std::endl;
+  std::cout << "  🌟 Essential: " << essential_success << "/" << essential_total
+            << " (Sun, major planets)" << std::endl;
+  std::cout << "  🌙 Important: " << important_success << "/" << important_total
+            << " (moons, dwarf planets)" << std::endl;
+  std::cout << "  🚀 Optional: " << optional_success << "/" << optional_total << " (spacecraft)"
+            << std::endl;
+
+  // Console success criteria: ALL essential + MOST important bodies must succeed
+  bool essential_ok = (essential_success == essential_total) && (essential_total > 0);
+  bool important_mostly_ok =
+      (important_total == 0) ||
+      (important_success >= (important_total * 0.8));  // 80% of important bodies
+
+  if (!essential_ok) {
+    std::cerr << "💥 CRITICAL: Failed to fetch essential bodies (Sun/planets)" << std::endl;
+    std::cerr << "Cannot proceed with incomplete planetary data" << std::endl;
+    return false;
+  }
+
+  if (!important_mostly_ok) {
+    std::cerr << "💥 CRITICAL: Too many important bodies failed (need 80% success rate)"
+              << std::endl;
+    std::cerr << "Insufficient data for precise simulation" << std::endl;
+    return false;
+  }
+
+  // Warn about optional body failures but continue
+  if (optional_success < optional_total) {
+    std::cout << "⚠️ WARNING: Some spacecraft failed to fetch (may slightly affect precision)"
+              << std::endl;
+  }
+
+  // Save to cache if we have sufficient data
+  if (save_ephemeris_to_json() && save_ephemeris_to_binary()) {
+    std::cout << "✅ Force update successful - data saved to cache files" << std::endl;
+    return true;
+  } else {
+    std::cerr << "❌ Failed to save ephemeris data to cache" << std::endl;
+    return false;
+  }
   return false;
 }
 
@@ -857,6 +982,198 @@ time_t get_ephemeris_epoch() { return current_epoch; }
 const char* get_ephemeris_source() { return current_source; }
 
 bool has_current_ephemeris_data() { return strcmp(current_source, "ORIGINAL_DATA") != 0; }
+
+// Get body type classification for error handling
+BodyType get_body_type(int body_index) {
+  if (body_index < 0 || body_index >= JPL_BODY_COUNT) {
+    return BODY_UNKNOWN;
+  }
+
+  return JPL_BODY_MAP[body_index].body_type;
+}
+
+// Fetch JPL data for all bodies for a specific date (for web server)
+bool fetch_jpl_data_for_date(const char* date) {
+  std::cout << "🌐 Fetching JPL data for all bodies on date: " << date << std::endl;
+
+  int essential_success = 0;
+  int essential_total = 0;
+  int important_success = 0;
+  int important_total = 0;
+  int optional_success = 0;
+  int optional_total = 0;
+  int total_failed = 0;
+
+  // Fetch data for each body
+  for (int i = 0; i < BODY_COUNT; i++) {
+    int jpl_id = get_jpl_id_for_body(i);
+    if (jpl_id != 0) {
+      BodyType body_type = get_body_type(i);
+      const char* type_str = (body_type == BODY_ESSENTIAL)   ? "ESSENTIAL"
+                             : (body_type == BODY_IMPORTANT) ? "IMPORTANT"
+                             : (body_type == BODY_OPTIONAL)  ? "OPTIONAL"
+                                                             : "UNKNOWN";
+
+      std::cout << "📡 Fetching " << SolarSystem[i].name << " (ID: " << jpl_id
+                << ", Type: " << type_str << ")..." << std::endl;
+
+      bool success = fetch_jpl_horizons_data(date, jpl_id, i);
+
+      // Count by category
+      switch (body_type) {
+        case BODY_ESSENTIAL:
+          essential_total++;
+          if (success) essential_success++;
+          break;
+        case BODY_IMPORTANT:
+          important_total++;
+          if (success) important_success++;
+          break;
+        case BODY_OPTIONAL:
+          optional_total++;
+          if (success) optional_success++;
+          break;
+        default:
+          important_total++;
+          if (success) important_success++;
+          break;
+      }
+
+      if (success) {
+        std::cout << "✅ " << SolarSystem[i].name << " data fetched successfully" << std::endl;
+      } else {
+        total_failed++;
+        if (body_type == BODY_OPTIONAL) {
+          std::cout << "⚠️ " << SolarSystem[i].name << " data failed (expected for historical dates)"
+                    << std::endl;
+        } else {
+          std::cout << "❌ Failed to fetch " << SolarSystem[i].name << " data" << std::endl;
+        }
+      }
+    } else {
+      std::cout << "⚠️ Skipping " << SolarSystem[i].name << " (no JPL ID)" << std::endl;
+    }
+  }
+
+  std::cout << "📊 JPL fetch summary:" << std::endl;
+  std::cout << "  🌟 Essential: " << essential_success << "/" << essential_total
+            << " (Sun, major planets)" << std::endl;
+  std::cout << "  🌙 Important: " << important_success << "/" << important_total
+            << " (moons, dwarf planets)" << std::endl;
+  std::cout << "  🚀 Optional: " << optional_success << "/" << optional_total << " (spacecraft)"
+            << std::endl;
+  std::cout << "  ❌ Total failed: " << total_failed << std::endl;
+
+  // Success criteria: ALL essential bodies must succeed
+  bool essential_ok = (essential_success == essential_total) && (essential_total > 0);
+
+  if (!essential_ok) {
+    std::cout << "💥 CRITICAL: Failed to fetch essential bodies (Sun/planets)" << std::endl;
+    return false;
+  }
+
+  // Warn about important body failures but don't fail completely
+  if (important_success < important_total) {
+    std::cout << "⚠️ WARNING: Some moons/dwarf planets failed to fetch" << std::endl;
+  }
+
+  std::cout << "✅ JPL fetch successful - all essential bodies retrieved" << std::endl;
+  return true;
+}
+
+// Fetch JPL data for console applications (stricter requirements)
+bool fetch_jpl_data_for_console(const char* date) {
+  std::cout << "🖥️ Fetching JPL data for console simulation on date: " << date << std::endl;
+
+  int essential_success = 0;
+  int essential_total = 0;
+  int important_success = 0;
+  int important_total = 0;
+  int optional_success = 0;
+  int optional_total = 0;
+  int total_failed = 0;
+
+  // Fetch data for each body
+  for (int i = 0; i < BODY_COUNT; i++) {
+    int jpl_id = get_jpl_id_for_body(i);
+    if (jpl_id != 0) {
+      BodyType body_type = get_body_type(i);
+      const char* type_str = (body_type == BODY_ESSENTIAL)   ? "ESSENTIAL"
+                             : (body_type == BODY_IMPORTANT) ? "IMPORTANT"
+                             : (body_type == BODY_OPTIONAL)  ? "OPTIONAL"
+                                                             : "UNKNOWN";
+
+      std::cout << "📡 Fetching " << SolarSystem[i].name << " (ID: " << jpl_id
+                << ", Type: " << type_str << ")..." << std::endl;
+
+      bool success = fetch_jpl_horizons_data(date, jpl_id, i);
+
+      // Count by category
+      switch (body_type) {
+        case BODY_ESSENTIAL:
+          essential_total++;
+          if (success) essential_success++;
+          break;
+        case BODY_IMPORTANT:
+          important_total++;
+          if (success) important_success++;
+          break;
+        case BODY_OPTIONAL:
+          optional_total++;
+          if (success) optional_success++;
+          break;
+        default:
+          important_total++;
+          if (success) important_success++;
+          break;
+      }
+
+      if (success) {
+        std::cout << "✅ " << SolarSystem[i].name << " data fetched successfully" << std::endl;
+      } else {
+        total_failed++;
+        std::cout << "❌ Failed to fetch " << SolarSystem[i].name << " data" << std::endl;
+      }
+    } else {
+      std::cout << "⚠️ Skipping " << SolarSystem[i].name << " (no JPL ID)" << std::endl;
+    }
+  }
+
+  std::cout << "📊 Console JPL fetch summary:" << std::endl;
+  std::cout << "  🌟 Essential: " << essential_success << "/" << essential_total
+            << " (Sun, major planets)" << std::endl;
+  std::cout << "  🌙 Important: " << important_success << "/" << important_total
+            << " (moons, dwarf planets)" << std::endl;
+  std::cout << "  🚀 Optional: " << optional_success << "/" << optional_total << " (spacecraft)"
+            << std::endl;
+  std::cout << "  ❌ Total failed: " << total_failed << std::endl;
+
+  // Console success criteria: ALL essential bodies + MOST important bodies must succeed
+  bool essential_ok = (essential_success == essential_total) && (essential_total > 0);
+  bool important_mostly_ok =
+      (important_total == 0) ||
+      (important_success >= (important_total * 0.8));  // 80% of important bodies
+
+  if (!essential_ok) {
+    std::cout << "💥 CRITICAL: Failed to fetch essential bodies (Sun/planets)" << std::endl;
+    return false;
+  }
+
+  if (!important_mostly_ok) {
+    std::cout << "💥 CRITICAL: Too many important bodies failed (need 80% success rate)"
+              << std::endl;
+    return false;
+  }
+
+  // Warn about optional body failures but don't fail completely
+  if (optional_success < optional_total) {
+    std::cout << "⚠️ WARNING: Some spacecraft failed to fetch (may affect precision)" << std::endl;
+  }
+
+  std::cout << "✅ Console JPL fetch successful - sufficient bodies for precise simulation"
+            << std::endl;
+  return true;
+}
 
 bool has_current_year_ephemeris_data() {
   if (!has_current_ephemeris_data()) {

@@ -6,13 +6,17 @@
  * Built using only standard libraries - no external dependencies.
  */
 
+#include <libgen.h>  // For dirname()
+#include <limits.h>  // For PATH_MAX
 #include <signal.h>
+#include <unistd.h>  // For readlink()
 
 #include <chrono>
 #include <ctime>
 #include <fstream>
 #include <iostream>
 #include <map>
+#include <mutex>
 #include <sstream>
 #include <string>
 #include <thread>
@@ -28,6 +32,98 @@
 // Include our modular libraries
 #include "args.h"
 #include "jpl_data.h"
+#include "model.h"
+#include "simulation.h"
+
+// Function to get the default web root path
+std::string get_default_web_root() {
+  // Try the standard installation layout: ../share/solar_system/web
+  std::string web_root = "../share/solar_system/web";
+
+  std::cout << "🔍 Trying web root: " << web_root << std::endl;
+
+  std::ifstream test_file(web_root + "/index.html");
+  if (test_file.good()) {
+    std::cout << "✅ Found web files at: " << web_root << std::endl;
+    return web_root;
+  }
+
+  // Try alternative: ./share/solar_system/web (if we're in install root)
+  web_root = "./share/solar_system/web";
+  std::cout << "🔍 Trying alternative web root: " << web_root << std::endl;
+
+  std::ifstream test_file2(web_root + "/index.html");
+  if (test_file2.good()) {
+    std::cout << "✅ Found web files at: " << web_root << std::endl;
+    return web_root;
+  }
+
+  // Fallback to current directory
+  std::cout << "⚠️ Could not find web files, falling back to ./web" << std::endl;
+  return "./web";
+}
+
+// Store current simulation state
+struct SimulationState {
+  time_t current_simulation_time;
+  bool is_initialized;
+  std::string last_simulated_date;
+};
+
+SimulationState current_sim_state = {0, false, ""};
+
+// Initialize simulation state with current JPL epoch
+void initialize_simulation_state() {
+  if (!current_sim_state.is_initialized) {
+    current_sim_state.current_simulation_time = get_ephemeris_epoch();
+    current_sim_state.is_initialized = true;
+    current_sim_state.last_simulated_date = "";  // Will be set after first simulation
+    std::cout << "🔧 Initialized simulation state with JPL epoch: "
+              << current_sim_state.current_simulation_time << std::endl;
+  }
+}
+
+// Thread safety for simulation requests
+std::mutex simulation_mutex;
+
+// Store original JPL data state
+struct SystemState {
+  planet bodies[BODY_COUNT];
+  time_t epoch;
+  bool saved;
+};
+
+SystemState original_state = {{}, 0, false};
+
+// Save current system state (assumes mutex is already held by caller)
+void save_system_state() {
+  if (!original_state.saved) {
+    std::cout << "💾 Copying system state..." << std::endl;
+    for (int i = 0; i < get_body_count(); i++) {
+      original_state.bodies[i] = get_body(i);
+    }
+    original_state.epoch = get_ephemeris_epoch();
+    original_state.saved = true;
+    std::cout << "✅ System state copied successfully" << std::endl;
+  } else {
+    std::cout << "ℹ️ System state already saved, skipping" << std::endl;
+  }
+}
+
+// Restore original system state (assumes mutex is already held by caller)
+void restore_system_state() {
+  if (original_state.saved) {
+    std::cout << "🔄 Restoring system state..." << std::endl;
+    for (int i = 0; i < get_body_count(); i++) {
+      SolarSystem[i] = original_state.bodies[i];
+    }
+    std::cout << "✅ System state restored successfully" << std::endl;
+    // Note: We can't easily restore the epoch, but that's OK for our use case
+    // The simulation will work from the restored positions
+  } else {
+    std::cout << "⚠️ No saved state to restore" << std::endl;
+  }
+}
 #include "model.h"
 #include "simulation.h"
 
@@ -49,7 +145,8 @@ struct WebServerConfig {
   bool enable_cors;
   bool verbose;
 
-  WebServerConfig() : port(8080), web_root("./web"), enable_cors(true), verbose(false) {}
+  WebServerConfig()
+      : port(8080), web_root(get_default_web_root()), enable_cors(true), verbose(false) {}
 };
 
 // HTTP Response structure
@@ -63,6 +160,14 @@ struct HttpResponse {
       : status_code(code), status_text(text) {
     headers["Content-Type"] = "text/html";
     headers["Server"] = "SolarSystemSuite/2.1.0";
+    // Permissive CSP for local development - allows all JavaScript execution
+    headers["Content-Security-Policy"] =
+        "default-src 'self' 'unsafe-inline' 'unsafe-eval'; script-src 'self' 'unsafe-inline' "
+        "'unsafe-eval'; style-src 'self' 'unsafe-inline';";
+    // CORS headers for API requests
+    headers["Access-Control-Allow-Origin"] = "*";
+    headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS";
+    headers["Access-Control-Allow-Headers"] = "Content-Type";
   }
 };
 
@@ -168,48 +273,273 @@ std::string get_mime_type(const std::string& filepath) {
 }
 
 // Generate JSON response for solar system data with optional date parameter
-std::string generate_solar_system_json(const std::string& date_param = "") {
+std::string generate_solar_system_json(const std::string& date_param = "",
+                                       bool is_manual_request = false, bool verbose = false) {
+  if (verbose) {
+    std::cout << "🔧 Starting JSON generation for date: "
+              << (date_param.empty() ? "current" : date_param) << std::endl;
+  }
+
   std::ostringstream json;
   json << "{\n";
   json << "  \"timestamp\": " << time(NULL) << ",\n";
 
-  // If date parameter is provided, simulate to that date
+  // If date parameter is provided, run simulation to that date
   if (!date_param.empty()) {
-    // Parse the date and simulate to that time
-    // For now, we'll use the current positions but this is where
-    // we would integrate with the C++ simulation engine
-    json << "  \"simulated_date\": \"" << date_param << "\",\n";
+    std::cout << "📅 Parsing date parameter: " << date_param << std::endl;
+
+    // Parse the date and run simulation
+    struct tm tm = {};
+    if (sscanf(date_param.c_str(), "%d-%d-%d", &tm.tm_year, &tm.tm_mon, &tm.tm_mday) == 3) {
+      std::cout << "✅ Date parsed successfully: " << tm.tm_year << "-" << tm.tm_mon << "-"
+                << tm.tm_mday << std::endl;
+
+      tm.tm_year -= 1900;  // tm_year is years since 1900
+      tm.tm_mon -= 1;      // tm_mon is 0-based
+      tm.tm_hour = 12;     // Noon
+      time_t target_date = mktime(&tm);
+
+      std::cout << "🎯 Target date timestamp: " << target_date << std::endl;
+
+      // Thread-safe simulation with timeout protection
+      {
+        std::cout << "🔒 Attempting to acquire simulation lock (non-blocking)..." << std::endl;
+
+        // Try to acquire lock with timeout instead of blocking indefinitely
+        std::unique_lock<std::mutex> lock(simulation_mutex, std::defer_lock);
+
+        // Initialize simulation state if needed
+        initialize_simulation_state();
+
+        if (!lock.try_lock()) {
+          std::cout << "⚠️ Simulation already in progress, returning cached data" << std::endl;
+          json << "  \"error\": \"Simulation busy, using cached data\",\n";
+          json << "  \"simulation_mode\": false,\n";
+        } else {
+          std::cout << "✅ Simulation lock acquired" << std::endl;
+
+          try {
+            std::cout << "💾 Saving system state..." << std::endl;
+            // Save original state if not already saved
+            save_system_state();
+            std::cout << "✅ System state saved" << std::endl;
+
+            // DON'T automatically restore - let smart logic decide
+            // std::cout << "🔄 Restoring system state..." << std::endl;
+            // restore_system_state();
+            // std::cout << "✅ System state restored" << std::endl;
+
+            // Run simulation to target date with smart starting point selection
+            time_t jpl_epoch = get_ephemeris_epoch();
+
+            // Initialize simulation state if not done yet
+            if (!current_sim_state.is_initialized) {
+              current_sim_state.current_simulation_time = jpl_epoch;
+              current_sim_state.is_initialized = true;
+              std::cout << "🎯 Initialized simulation state to JPL epoch: " << jpl_epoch
+                        << std::endl;
+            }
+
+            // Smart starting point: use cached data if it's closer to target than JPL epoch
+            time_t smart_start_time;
+            time_t jpl_to_target = abs(target_date - jpl_epoch);
+            time_t cached_to_target = abs(target_date - current_sim_state.current_simulation_time);
+
+            std::cout << "🔍 CACHE DEBUG:" << std::endl;
+            std::cout << "    last_simulated_date: '" << current_sim_state.last_simulated_date
+                      << "'" << std::endl;
+            std::cout << "    current_simulation_time: "
+                      << current_sim_state.current_simulation_time << std::endl;
+            std::cout << "    is_initialized: " << current_sim_state.is_initialized << std::endl;
+            std::cout << "    jpl_epoch: " << jpl_epoch << std::endl;
+            std::cout << "    target_date: " << target_date << std::endl;
+            std::cout << "    jpl_to_target: " << jpl_to_target << " seconds ("
+                      << (jpl_to_target / 86400) << " days)" << std::endl;
+            std::cout << "    cached_to_target: " << cached_to_target << " seconds ("
+                      << (cached_to_target / 86400) << " days)" << std::endl;
+
+            if (current_sim_state.last_simulated_date.empty()) {
+              // No cached data, must start from JPL epoch
+              smart_start_time = jpl_epoch;
+              std::cout << "📍 No cached data, starting from JPL epoch" << std::endl;
+            } else if (cached_to_target < jpl_to_target) {
+              // Cached data is closer to target - DON'T RESTORE, keep current state
+              smart_start_time = current_sim_state.current_simulation_time;
+              std::cout << "📍 Using cached simulation state (closer to target) - NO RESTORE"
+                        << std::endl;
+              std::cout << "    Cached date: " << current_sim_state.last_simulated_date
+                        << ", distance to target: " << (cached_to_target / 86400) << " days"
+                        << std::endl;
+            } else {
+              // JPL epoch is closer to target - restore to JPL state
+              smart_start_time = jpl_epoch;
+              std::cout << "📍 Using JPL epoch as starting point (closer to target)" << std::endl;
+              std::cout << "    JPL distance: " << (jpl_to_target / 86400)
+                        << " days, Cached distance: " << (cached_to_target / 86400) << " days"
+                        << std::endl;
+              std::cout << "🔄 Restoring to JPL state..." << std::endl;
+              restore_system_state();
+              std::cout << "✅ Restored to JPL state" << std::endl;
+            }
+
+            time_t time_diff = abs(target_date - smart_start_time);
+
+            if (verbose) {
+              std::cout << "📊 Smart start: " << smart_start_time << ", Target: " << target_date
+                        << ", Diff: " << time_diff << " seconds (" << (time_diff / 86400)
+                        << " days)" << std::endl;
+            }
+
+            if (is_manual_request) {
+              // Manual requests: Use JPL data fetching for any date
+              if (verbose) {
+                std::cout << "📡 Manual request: Fetching JPL data for date: " << date_param
+                          << std::endl;
+              }
+
+              // Try to fetch JPL data for the specific date
+              bool jpl_success = fetch_jpl_data_for_date(date_param.c_str());
+
+              if (jpl_success) {
+                if (verbose) {
+                  std::cout << "✅ JPL data fetched successfully for " << date_param << std::endl;
+                }
+                current_sim_state.current_simulation_time = target_date;
+                current_sim_state.last_simulated_date = date_param;
+                json << "  \"simulated_date\": \"" << date_param << "\",\n";
+                json << "  \"simulation_mode\": true,\n";
+                json << "  \"data_source\": \"JPL_HORIZONS\",\n";
+              } else {
+                if (verbose) {
+                  std::cout << "❌ Failed to fetch JPL data for " << date_param << std::endl;
+                }
+                json << "  \"error\": \"Failed to fetch JPL data for requested date\",\n";
+                json << "  \"simulation_mode\": false,\n";
+                json << "  \"current_sim_date\": \"" << current_sim_state.last_simulated_date
+                     << "\",\n";
+              }
+            } else {
+              // Automatic requests: Use simulation with reasonable limits
+              const time_t max_auto_simulation_days = 30;  // 30 days max for automatic requests
+              const time_t max_auto_simulation_seconds = max_auto_simulation_days * 24 * 3600;
+
+              if (time_diff > max_auto_simulation_seconds) {
+                if (verbose) {
+                  std::cout << "⚠️ Automatic request range too large (" << (time_diff / 86400)
+                            << " days), exceeds 30 day limit. Using cached data." << std::endl;
+                }
+
+                json << "  \"error\": \"Time jump too large for automatic simulation (>"
+                     << (time_diff / 86400) << " days)\",\n";
+                json << "  \"simulation_mode\": false,\n";
+                json << "  \"current_sim_date\": \"" << current_sim_state.last_simulated_date
+                     << "\",\n";
+                json << "  \"suggested_action\": \"Use 'Start Time Travel' button for large "
+                        "jumps\",\n";
+              } else {
+                if (verbose) {
+                  std::cout << "🚀 Automatic request: Running simulation for "
+                            << (time_diff / 86400) << " days..." << std::endl;
+                }
+
+                // Run the simulation
+                bool success = false;
+                if (target_date > smart_start_time) {
+                  if (verbose) {
+                    std::cout << "⏩ Running forward simulation..." << std::endl;
+                  }
+                  success = run_web_forward_simulation(smart_start_time, target_date);
+                } else {
+                  if (verbose) {
+                    std::cout << "⏪ Running backward simulation..." << std::endl;
+                  }
+                  success = run_web_backward_simulation(smart_start_time, target_date);
+                }
+
+                if (success) {
+                  if (verbose) {
+                    std::cout << "✅ Simulation completed successfully" << std::endl;
+                  }
+                  current_sim_state.current_simulation_time = target_date;
+                  current_sim_state.last_simulated_date = date_param;
+                  json << "  \"simulated_date\": \"" << date_param << "\",\n";
+                  json << "  \"simulation_mode\": true,\n";
+                  json << "  \"data_source\": \"SIMULATION\",\n";
+                } else {
+                  if (verbose) {
+                    std::cout << "❌ Simulation failed" << std::endl;
+                  }
+                  json << "  \"error\": \"Simulation failed or timed out\",\n";
+                  json << "  \"simulation_mode\": false,\n";
+                }
+              }
+            }
+          } catch (const std::exception& e) {
+            std::cout << "❌ Exception during simulation: " << e.what() << std::endl;
+            json << "  \"error\": \"Simulation failed: " << e.what() << "\",\n";
+            json << "  \"simulation_mode\": false,\n";
+          } catch (...) {
+            std::cout << "❌ Unknown exception during simulation" << std::endl;
+            json << "  \"error\": \"Unknown simulation error\",\n";
+            json << "  \"simulation_mode\": false,\n";
+          }
+          std::cout << "🔓 Releasing simulation lock..." << std::endl;
+        }
+      }
+      std::cout << "✅ Simulation section completed" << std::endl;
+    } else {
+      std::cout << "❌ Failed to parse date: " << date_param << std::endl;
+      json << "  \"error\": \"Invalid date format\",\n";
+      json << "  \"simulation_mode\": false,\n";
+    }
+  } else {
+    json << "  \"simulation_mode\": false,\n";
   }
 
+  std::cout << "📊 Generating bodies data..." << std::endl;
   json << "  \"bodies\": [\n";
 
-  for (int i = 0; i < get_body_count(); i++) {
-    const planet& body = get_body(i);
+  // Thread-safe body data access with detailed logging
+  {
+    std::lock_guard<std::mutex> lock(simulation_mutex);
+    int body_count = get_body_count();
+    std::cout << "🌍 Total bodies available: " << body_count << std::endl;
 
-    json << "    {\n";
-    json << "      \"name\": \"" << body.name << "\",\n";
-    json << "      \"mass\": " << body.mass << ",\n";
-    json << "      \"position\": {\n";
-    json << "        \"x\": " << body.position.x << ",\n";
-    json << "        \"y\": " << body.position.y << ",\n";
-    json << "        \"z\": " << body.position.z << "\n";
-    json << "      },\n";
-    json << "      \"velocity\": {\n";
-    json << "        \"x\": " << body.speed.x << ",\n";
-    json << "        \"y\": " << body.speed.y << ",\n";
-    json << "        \"z\": " << body.speed.z << "\n";
-    json << "      }\n";
-    json << "    }";
+    for (int i = 0; i < body_count; i++) {
+      const planet& body = get_body(i);
 
-    if (i < get_body_count() - 1) {
-      json << ",";
+      // Log first few bodies for debugging
+      if (i < 3) {
+        std::cout << "  🪐 Body " << i << " (" << body.name << "): pos=(" << body.position.x << ", "
+                  << body.position.y << ", " << body.position.z << ")" << std::endl;
+      }
+
+      json << "    {\n";
+      json << "      \"name\": \"" << body.name << "\",\n";
+      json << "      \"mass\": " << body.mass << ",\n";
+      json << "      \"position\": {\n";
+      json << "        \"x\": " << body.position.x << ",\n";
+      json << "        \"y\": " << body.position.y << ",\n";
+      json << "        \"z\": " << body.position.z << "\n";
+      json << "      },\n";
+      json << "      \"velocity\": {\n";
+      json << "        \"x\": " << body.speed.x << ",\n";
+      json << "        \"y\": " << body.speed.y << ",\n";
+      json << "        \"z\": " << body.speed.z << "\n";
+      json << "      }\n";
+      json << "    }";
+
+      if (i < body_count - 1) {
+        json << ",";
+      }
+      json << "\n";
     }
-    json << "\n";
   }
 
   json << "  ]\n";
   json << "}\n";
 
+  std::cout << "✅ JSON generation completed" << std::endl;
   return json.str();
 }
 
@@ -279,15 +609,51 @@ HttpResponse handle_request(const HttpRequest& request, const WebServerConfig& c
 
     // Extract date parameter if present
     std::string date_param = "";
+    bool is_manual_request = false;  // Flag for manual time travel requests
     size_t date_pos = request.path.find("date=");
     if (date_pos != std::string::npos) {
       size_t start = date_pos + 5;  // Skip "date="
       size_t end = request.path.find("&", start);
       if (end == std::string::npos) end = request.path.length();
       date_param = request.path.substr(start, end - start);
+      if (config.verbose) {
+        std::cout << "📅 Processing simulation request for date: " << date_param << std::endl;
+      }
+
+      // Check for manual request flag
+      if (request.path.find("manual=true") != std::string::npos) {
+        is_manual_request = true;
+        if (config.verbose) {
+          std::cout << "🎯 Manual time travel request detected - will use JPL data" << std::endl;
+        }
+      }
+    } else {
+      if (config.verbose) {
+        std::cout << "📊 Processing current solar system data request" << std::endl;
+      }
     }
 
-    response.body = generate_solar_system_json(date_param);
+    try {
+      if (config.verbose) {
+        std::cout << "🔄 Starting JSON generation..." << std::endl;
+      }
+      response.body = generate_solar_system_json(date_param, is_manual_request, config.verbose);
+      if (config.verbose) {
+        std::cout << "✅ Successfully generated response for date: "
+                  << (date_param.empty() ? "current" : date_param) << std::endl;
+      }
+    } catch (const std::exception& e) {
+      std::cout << "❌ Error generating response: " << e.what() << std::endl;
+      response.status_code = 500;
+      response.status_text = "Internal Server Error";
+      response.body = "{\"error\": \"Server error during simulation\"}";
+    } catch (...) {
+      std::cout << "❌ Unknown error generating response" << std::endl;
+      response.status_code = 500;
+      response.status_text = "Internal Server Error";
+      response.body = "{\"error\": \"Unknown server error\"}";
+    }
+
     return response;
   }
 
@@ -310,6 +676,10 @@ HttpResponse handle_request(const HttpRequest& request, const WebServerConfig& c
   }
 
   response.headers["Content-Type"] = get_mime_type(filepath);
+  // Add CSP headers for all responses to fix JavaScript execution issues
+  response.headers["Content-Security-Policy"] =
+      "default-src 'self' 'unsafe-inline' 'unsafe-eval'; script-src 'self' 'unsafe-inline' "
+      "'unsafe-eval'; style-src 'self' 'unsafe-inline';";
   response.body = content;
 
   return response;
@@ -327,6 +697,13 @@ void handle_client(int client_socket, const WebServerConfig& config) {
 
     if (config.verbose) {
       std::cout << "Request: " << request.method << " " << request.path << std::endl;
+
+      // Add detailed logging for API requests
+      if (request.path.find("/api/solar_system") == 0) {
+        std::cout << "🔍 API REQUEST DETAILS:" << std::endl;
+        std::cout << "  📡 Full path: " << request.path << std::endl;
+        std::cout << "  🕐 Server time: " << time(NULL) << std::endl;
+      }
     }
 
     HttpResponse response = handle_request(request, config);
@@ -345,7 +722,8 @@ void print_web_usage(const char* program_name) {
 
   std::cout << "SERVER OPTIONS:\n";
   std::cout << "  -p, --port PORT        Server port (default: 8080)\n";
-  std::cout << "  -w, --web-root DIR     Web root directory (default: ./web)\n";
+  std::cout << "  -w, --web-root DIR     Web root directory (default: auto-detect "
+               "../share/solar_system/web)\n";
   std::cout << "  --no-cors              Disable CORS headers\n\n";
 
   std::cout << "OUTPUT OPTIONS:\n";
@@ -435,6 +813,12 @@ int main(int argc, char* argv[]) {
   // Initialize simulation to current time
   initialize_simulation_to_current_time();
 
+  // Save initial system state for simulation requests
+  {
+    std::lock_guard<std::mutex> lock(simulation_mutex);
+    save_system_state();
+  }
+
   // Create server socket
   int server_socket = socket(AF_INET, SOCK_STREAM, 0);
   if (server_socket == -1) {
@@ -472,7 +856,10 @@ int main(int argc, char* argv[]) {
   std::cout << "🌐 Solar System Web Server Started\n";
   std::cout << "📡 Server: http://localhost:" << config.port << "\n";
   std::cout << "📁 Web root: " << config.web_root << "\n";
-  std::cout << "🔄 CORS: " << (config.enable_cors ? "enabled" : "disabled") << "\n";
+  if (config.verbose) {
+    std::cout << "🔄 CORS: " << (config.enable_cors ? "enabled" : "disabled") << "\n";
+    std::cout << "📊 Verbose logging: enabled\n";
+  }
   std::cout << "🛑 Press Ctrl+C to stop\n\n";
 
   // Main server loop

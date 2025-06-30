@@ -312,8 +312,8 @@
             </div>
             
             <label style="margin-top: 15px;">Simulation Speed</label>
-            <input type="range" id="speed-slider" min="0" max="6" value="2" step="1">
-            <div class="speed-display" id="speed-display">10x Speed</div>
+            <input type="range" id="speed-slider" min="0" max="10" value="3" step="1">
+            <div class="speed-display" id="speed-display">1 week/sec</div>
             
             <button id="btn-start-simulation">🚀 Start Time Travel</button>
             <button id="btn-sync-realtime">📡 Sync to Real-time</button>
@@ -334,9 +334,9 @@
         
         <div class="control-group">
             <label>Visual Options</label>
-            <button id="btn-orbits">🌀 Show Orbits</button>
-            <button id="btn-labels">🏷️ Labels</button>
-            <button id="btn-trails">✨ Orbit Trails</button>
+            <button id="btn-orbits">🌀 Orbital Paths</button>
+            <button id="btn-labels">🏷️ Planet Labels</button>
+            <button id="btn-trails">✨ Motion Trails</button>
         </div>
         
         <div class="control-group">
@@ -371,7 +371,7 @@
         </div>
         
         <div class="status-item">
-            <span class="status-label">Orbits:</span>
+            <span class="status-label">Trail Points:</span>
             <span class="status-value" id="orbit-points">0</span>
         </div>
         
