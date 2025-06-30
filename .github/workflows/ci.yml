@@ -154,6 +154,8 @@ jobs:
       env:
         DEFAULT_BRANCH: CPU
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # Exclude auto-generated documentation folder
+        FILTER_REGEX_EXCLUDE: docs/.*
         # Disable problematic linters that conflict with our standards
         VALIDATE_MARKDOWN: false
         VALIDATE_YAML: false
