@@ -1,7 +1,7 @@
 # Compiled object files and executables
 *.o
 *.s
-solar_system
+/solar_system
 gmon.out
 
 # Ephemeris cache files
