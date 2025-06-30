@@ -8,6 +8,10 @@ gmon.out
 *.json
 *.bin
 
+# Exception: Allow test data files
+!tests/**/test_*.json
+!tests/**/*_test.json
+
 # CMake build files and directories
 build/
 install/

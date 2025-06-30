@@ -73,14 +73,30 @@ if(ENABLE_TESTING)
     message(STATUS "Testing framework enabled")
 endif()
 
-# Installation targets
-install(TARGETS solar_system solar_system_fetch solar_system_launcher solar_system_realtime solar_system_web
-        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+# Installation targets (conditional on target existence)
+if(TARGET solar_system)
+    install(TARGETS solar_system RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+endif()
 
-# Install launcher as main entry point in root directory
-install(TARGETS solar_system_launcher
-        RUNTIME DESTINATION "."
-        RENAME "solar_system_launcher")
+if(TARGET solar_system_fetch)
+    install(TARGETS solar_system_fetch RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+endif()
+
+if(TARGET solar_system_launcher)
+    install(TARGETS solar_system_launcher RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+    # Install launcher as main entry point in root directory
+    install(TARGETS solar_system_launcher
+            RUNTIME DESTINATION "."
+            RENAME "solar_system_launcher")
+endif()
+
+if(TARGET solar_system_realtime)
+    install(TARGETS solar_system_realtime RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+endif()
+
+if(TARGET solar_system_web)
+    install(TARGETS solar_system_web RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+endif()
 
 # Install documentation
 install(FILES README.md

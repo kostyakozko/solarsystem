@@ -45,9 +45,6 @@ add_subdirectory(integration)
 # Performance Benchmarks
 add_subdirectory(benchmarks)
 
-# Test data generation
-add_subdirectory(data)
-
 # Custom targets for different test categories
 add_custom_target(test-unit
     COMMAND ${CMAKE_CTEST_COMMAND} -L "unit" --output-on-failure

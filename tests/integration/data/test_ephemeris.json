@@ -1,0 +1,107 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "description": "Test ephemeris data for Solar System Suite testing",
+    "created": "2025-06-30",
+    "coordinate_system": "J2000 Ecliptic",
+    "units": {
+      "position": "km",
+      "velocity": "km/s",
+      "mass": "kg",
+      "time": "Julian Day"
+    }
+  },
+  "reference_epoch": {
+    "julian_day": 2451545.0,
+    "date": "2000-01-01 12:00:00 TT",
+    "description": "J2000.0 epoch"
+  },
+  "bodies": [
+    {
+      "name": "Sun",
+      "id": 10,
+      "mass": 1.98847e30,
+      "radius": 695700.0,
+      "ephemeris": [
+        {
+          "julian_day": 2451545.0,
+          "position": [0.0, 0.0, 0.0],
+          "velocity": [0.0, 0.0, 0.0]
+        }
+      ]
+    },
+    {
+      "name": "Earth",
+      "id": 399,
+      "mass": 5.9722e24,
+      "radius": 6371.0,
+      "ephemeris": [
+        {
+          "julian_day": 2451545.0,
+          "position": [-26499893.0, 144692618.0, 62789.0],
+          "velocity": [-29.7847, -5.5175, -0.0008]
+        },
+        {
+          "julian_day": 2451546.0,
+          "position": [-29073234.0, 142134567.0, 62721.0],
+          "velocity": [-29.2156, -6.0234, -0.0012]
+        }
+      ]
+    },
+    {
+      "name": "Moon",
+      "id": 301,
+      "mass": 7.342e22,
+      "radius": 1737.4,
+      "ephemeris": [
+        {
+          "julian_day": 2451545.0,
+          "position": [-26791501.0, 144426902.0, 61643.0],
+          "velocity": [-29.1417, -6.1841, -0.1378]
+        },
+        {
+          "julian_day": 2451546.0,
+          "position": [-29365042.0, 141868234.0, 61575.0],
+          "velocity": [-28.5726, -6.6900, -0.1382]
+        }
+      ]
+    }
+  ],
+  "test_scenarios": [
+    {
+      "name": "Earth-Moon System",
+      "description": "Two-body gravitational test case",
+      "duration_days": 27.32,
+      "time_step_seconds": 3600.0,
+      "expected_accuracy": {
+        "position_tolerance_km": 1000.0,
+        "velocity_tolerance_kms": 0.1
+      }
+    },
+    {
+      "name": "Solar System Short",
+      "description": "Full system simulation for 1 week",
+      "duration_days": 7.0,
+      "time_step_seconds": 3600.0,
+      "expected_accuracy": {
+        "position_tolerance_km": 50000.0,
+        "velocity_tolerance_kms": 1.0
+      }
+    }
+  ],
+  "validation_data": {
+    "physical_constants": {
+      "gravitational_constant": 6.67430e-11,
+      "astronomical_unit_km": 149597870.7,
+      "speed_of_light_kms": 299792.458
+    },
+    "orbital_periods_days": {
+      "Earth": 365.25636,
+      "Moon": 27.321661
+    },
+    "orbital_radii_km": {
+      "Earth": 149597870.7,
+      "Moon": 384400.0
+    }
+  }
+}
