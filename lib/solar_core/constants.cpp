@@ -6,7 +6,9 @@ const int dt = 30;
 // Physical constants for testing and calculations
 const double AU = 1.495978707e11;     // Astronomical Unit (meters)
 const double EARTH_MASS = 5.9722e24;  // Earth mass (kg)
-const double SUN_MASS = 1.9885e30;    // Sun mass (kg)const long double G = 6.673848E-11;
+const double SUN_MASS = 1.9885e30;    // Sun mass (kg)
+
+const long double G = 6.673848E-11;
 
 const coord center{0, 0, 0};
 planet SolarSystem[] = {{1.9885E30,
