@@ -1,0 +1,135 @@
+\doxysection{lib/solar\+\_\+core/model.cpp File Reference}
+\hypertarget{model_8cpp}{}\label{model_8cpp}\index{lib/solar\_core/model.cpp@{lib/solar\_core/model.cpp}}
+{\ttfamily \#include "{}model.\+h"{}}\newline
+{\ttfamily \#include $<$cmath$>$}\newline
+{\ttfamily \#include $<$iomanip$>$}\newline
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include "{}constants.\+h"{}}\newline
+Include dependency graph for model.\+cpp\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{model_8cpp__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+long double \mbox{\hyperlink{model_8cpp_a73d7e86535b1f32f514fb6e48e598198}{dist}} (\mbox{\hyperlink{structcoord}{coord}} a, \mbox{\hyperlink{structcoord}{coord}} b)
+\item 
+\mbox{\hyperlink{structcoord}{coord}} \mbox{\hyperlink{model_8cpp_a6a60b98d3449edbdd151c187012fdbe6}{get\+Barycenter}} ()
+\item 
+void \mbox{\hyperlink{model_8cpp_a7f3d9fb33b1f39a73fff5cd5c5041147}{print\+Barycenter}} (const \mbox{\hyperlink{structcoord}{coord}} \&barycenter)
+\item 
+void \mbox{\hyperlink{model_8cpp_a401e5363475c5ccde17ccde0629989ad}{print\+Current\+Data}} (time\+\_\+t current)
+\item 
+int \mbox{\hyperlink{model_8cpp_a524063ecd9d2eeda438c1e6d7cfe170e}{get\+\_\+body\+\_\+count}} ()
+\item 
+const \mbox{\hyperlink{structplanet}{planet}} \& \mbox{\hyperlink{model_8cpp_afd242324fd0dcc462ab2cb2969def5f9}{get\+\_\+body}} (int index)
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{model_8cpp_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{model_8cpp_a73d7e86535b1f32f514fb6e48e598198}\index{model.cpp@{model.cpp}!dist@{dist}}
+\index{dist@{dist}!model.cpp@{model.cpp}}
+\doxysubsubsection{\texorpdfstring{dist()}{dist()}}
+{\footnotesize\ttfamily \label{model_8cpp_a73d7e86535b1f32f514fb6e48e598198} 
+long double dist (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structcoord}{coord}}}]{a}{, }\item[{\mbox{\hyperlink{structcoord}{coord}}}]{b}{}\end{DoxyParamCaption})}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{model_8cpp_a73d7e86535b1f32f514fb6e48e598198_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{model_8cpp_afd242324fd0dcc462ab2cb2969def5f9}\index{model.cpp@{model.cpp}!get\_body@{get\_body}}
+\index{get\_body@{get\_body}!model.cpp@{model.cpp}}
+\doxysubsubsection{\texorpdfstring{get\_body()}{get\_body()}}
+{\footnotesize\ttfamily \label{model_8cpp_afd242324fd0dcc462ab2cb2969def5f9} 
+const \mbox{\hyperlink{structplanet}{planet}} \& get\+\_\+body (\begin{DoxyParamCaption}\item[{int}]{index}{}\end{DoxyParamCaption})}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{model_8cpp_afd242324fd0dcc462ab2cb2969def5f9_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{model_8cpp_a524063ecd9d2eeda438c1e6d7cfe170e}\index{model.cpp@{model.cpp}!get\_body\_count@{get\_body\_count}}
+\index{get\_body\_count@{get\_body\_count}!model.cpp@{model.cpp}}
+\doxysubsubsection{\texorpdfstring{get\_body\_count()}{get\_body\_count()}}
+{\footnotesize\ttfamily \label{model_8cpp_a524063ecd9d2eeda438c1e6d7cfe170e} 
+int get\+\_\+body\+\_\+count (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{model_8cpp_a524063ecd9d2eeda438c1e6d7cfe170e_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{model_8cpp_a6a60b98d3449edbdd151c187012fdbe6}\index{model.cpp@{model.cpp}!getBarycenter@{getBarycenter}}
+\index{getBarycenter@{getBarycenter}!model.cpp@{model.cpp}}
+\doxysubsubsection{\texorpdfstring{getBarycenter()}{getBarycenter()}}
+{\footnotesize\ttfamily \label{model_8cpp_a6a60b98d3449edbdd151c187012fdbe6} 
+\mbox{\hyperlink{structcoord}{coord}} get\+Barycenter (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{model_8cpp_a6a60b98d3449edbdd151c187012fdbe6_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{model_8cpp_a7f3d9fb33b1f39a73fff5cd5c5041147}\index{model.cpp@{model.cpp}!printBarycenter@{printBarycenter}}
+\index{printBarycenter@{printBarycenter}!model.cpp@{model.cpp}}
+\doxysubsubsection{\texorpdfstring{printBarycenter()}{printBarycenter()}}
+{\footnotesize\ttfamily \label{model_8cpp_a7f3d9fb33b1f39a73fff5cd5c5041147} 
+void print\+Barycenter (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structcoord}{coord}} \&}]{barycenter}{}\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=230pt]{model_8cpp_a7f3d9fb33b1f39a73fff5cd5c5041147_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{model_8cpp_a7f3d9fb33b1f39a73fff5cd5c5041147_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{model_8cpp_a401e5363475c5ccde17ccde0629989ad}\index{model.cpp@{model.cpp}!printCurrentData@{printCurrentData}}
+\index{printCurrentData@{printCurrentData}!model.cpp@{model.cpp}}
+\doxysubsubsection{\texorpdfstring{printCurrentData()}{printCurrentData()}}
+{\footnotesize\ttfamily \label{model_8cpp_a401e5363475c5ccde17ccde0629989ad} 
+void print\+Current\+Data (\begin{DoxyParamCaption}\item[{time\+\_\+t}]{current}{}\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{model_8cpp_a401e5363475c5ccde17ccde0629989ad_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{model_8cpp_a401e5363475c5ccde17ccde0629989ad_icgraph}
+\end{center}
+\end{figure}

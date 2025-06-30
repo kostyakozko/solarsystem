@@ -1,0 +1,28 @@
+var web__server_8cpp =
+[
+    [ "SimulationState", "struct_simulation_state.html", "struct_simulation_state" ],
+    [ "SystemState", "struct_system_state.html", "struct_system_state" ],
+    [ "WebServerConfig", "struct_web_server_config.html", "struct_web_server_config" ],
+    [ "HttpResponse", "struct_http_response.html", "struct_http_response" ],
+    [ "HttpRequest", "struct_http_request.html", "struct_http_request" ],
+    [ "generate_http_response", "web__server_8cpp.html#a22758eaa805586817c5e7b6a761385e7", null ],
+    [ "generate_solar_system_json", "web__server_8cpp.html#ad463ea82527d26cb7610a491f6742afd", null ],
+    [ "generate_status_json", "web__server_8cpp.html#a3ad4b1f1bde5cb5316734c54135dc170", null ],
+    [ "get_default_web_root", "web__server_8cpp.html#ace2eeea0e8bbb3b04ee320a79fa2d180", null ],
+    [ "get_mime_type", "web__server_8cpp.html#a20b170da558b0eed772c9f86d9728564", null ],
+    [ "handle_client", "web__server_8cpp.html#aaa738c1fc8b6cc71982dd7f6f6ac22b6", null ],
+    [ "handle_request", "web__server_8cpp.html#ae320d270c885fa3439530357f61689eb", null ],
+    [ "initialize_simulation_state", "web__server_8cpp.html#aa5b130bed9b8f20a3bcb4a92fbb9ef94", null ],
+    [ "main", "web__server_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97", null ],
+    [ "parse_http_request", "web__server_8cpp.html#a149327b95324f74d35d9e8f55f066d5e", null ],
+    [ "parse_web_args", "web__server_8cpp.html#a3e44761a9c18be13cf9763641d6f449e", null ],
+    [ "print_web_usage", "web__server_8cpp.html#a491d68ff3188c2fb45882a568ed1ad79", null ],
+    [ "read_file", "web__server_8cpp.html#a4894d19b243a5d7433f61ac292d3b6a2", null ],
+    [ "restore_system_state", "web__server_8cpp.html#ab73530e5fd1d2bcf0307344f8e7a63c6", null ],
+    [ "save_system_state", "web__server_8cpp.html#a346f165a97797e8411a435149d6789b2", null ],
+    [ "signal_handler", "web__server_8cpp.html#a3b527c56ed133ee6815bfbc625e757af", null ],
+    [ "current_sim_state", "web__server_8cpp.html#a0288b4ea8b9a55595e5ab2b53c9ae34d", null ],
+    [ "original_state", "web__server_8cpp.html#a718948cf549dd5e00ae9e201aabf4777", null ],
+    [ "server_running", "web__server_8cpp.html#ac85f1ad487d50b6f33a6556a790db42f", null ],
+    [ "simulation_mutex", "web__server_8cpp.html#a18a73c56549168452234ddbc99562da0", null ]
+];

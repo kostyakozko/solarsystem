@@ -1,0 +1,549 @@
+\doxysection{lib/solar\+\_\+jpl/jpl\+\_\+data.h File Reference}
+\hypertarget{jpl__data_8h}{}\label{jpl__data_8h}\index{lib/solar\_jpl/jpl\_data.h@{lib/solar\_jpl/jpl\_data.h}}
+{\ttfamily \#include $<$cstdint$>$}\newline
+{\ttfamily \#include $<$ctime$>$}\newline
+{\ttfamily \#include $<$string$>$}\newline
+{\ttfamily \#include "{}jpl\+\_\+bodies.\+h"{}}\newline
+Include dependency graph for jpl\+\_\+data.\+h\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=328pt]{jpl__data_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{jpl__data_8h__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_fetch_task}{Fetch\+Task}}
+\item 
+struct \mbox{\hyperlink{struct_ephemeris_header}{Ephemeris\+Header}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{jpl__data_8h_ad1a386a91c291ef404384469626db0d8}{JPL\+\_\+\+BINARY\+\_\+\+MAGIC}}~0x4\+A504\+C45
+\item 
+\#define \mbox{\hyperlink{jpl__data_8h_a4062858c6f64afedb24ca6adec9d3871}{JPL\+\_\+\+FORMAT\+\_\+\+VERSION}}~1
+\item 
+\#define \mbox{\hyperlink{jpl__data_8h_a67f55f1250321f3848d7805795b0aa92}{BODY\+\_\+\+COUNT}}~27
+\item 
+\#define \mbox{\hyperlink{jpl__data_8h_a04b7afe54d94ce8cf7ceedc2f063281e}{JPL\+\_\+\+JSON\+\_\+\+FILE}}~"{}ephemeris\+\_\+data.\+json"{}
+\item 
+\#define \mbox{\hyperlink{jpl__data_8h_accf2d7781a2cd91d4529e24c9cf55785}{JPL\+\_\+\+BINARY\+\_\+\+FILE}}~"{}ephemeris\+\_\+cache.\+bin"{}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{jpl__data_8h_a30edf33d36cc635363249c8a5131752e}{update\+\_\+ephemeris\+\_\+data}} ()
+\item 
+bool \mbox{\hyperlink{jpl__data_8h_a43172e1fe148d3962a3e41240152591f}{force\+\_\+update\+\_\+ephemeris\+\_\+data}} ()
+\item 
+bool \mbox{\hyperlink{jpl__data_8h_ac5ffbb532a5be75e313500d1e6921975}{load\+\_\+cached\+\_\+ephemeris\+\_\+data}} ()
+\item 
+bool \mbox{\hyperlink{jpl__data_8h_a82c04200c0b3e931271740cf1be9e4bb}{rebuild\+\_\+binary\+\_\+cache}} ()
+\item 
+bool \mbox{\hyperlink{jpl__data_8h_aaad3b3c333c2cad513974e0702a27c5d}{has\+\_\+current\+\_\+year\+\_\+ephemeris\+\_\+data}} ()
+\item 
+bool \mbox{\hyperlink{jpl__data_8h_a59f69cf29c0ec41bae3cb8030f8e78b3}{has\+\_\+current\+\_\+ephemeris\+\_\+data}} ()
+\item 
+bool \mbox{\hyperlink{jpl__data_8h_a178389cceb6199fdc8906aeeb440fbf0}{fetch\+\_\+jpl\+\_\+data\+\_\+for\+\_\+date}} (const char \texorpdfstring{$\ast$}{*}date)
+\item 
+bool \mbox{\hyperlink{jpl__data_8h_adaee806f87338c88d12a9e11e9bc50c7}{fetch\+\_\+jpl\+\_\+data\+\_\+for\+\_\+console}} (const char \texorpdfstring{$\ast$}{*}date)
+\item 
+\mbox{\hyperlink{jpl__bodies_8h_acf0ce63e34327e5bc336f9fe3d2d47a2}{Body\+Type}} \mbox{\hyperlink{jpl__data_8h_afd54a44cabb601544728583ccc5b5c68}{get\+\_\+body\+\_\+type}} (int body\+\_\+index)
+\item 
+time\+\_\+t \mbox{\hyperlink{jpl__data_8h_a7a063f0c8b7d1c3c8ccb8f4454278bee}{get\+\_\+ephemeris\+\_\+epoch}} ()
+\item 
+const char \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{jpl__data_8h_a086604a991756be3769cb70a063aa17f}{get\+\_\+ephemeris\+\_\+source}} ()
+\item 
+bool \mbox{\hyperlink{jpl__data_8h_a4089bff84229849353c05d77c7bd04b2}{initialize\+\_\+jpl\+\_\+data}} ()
+\item 
+bool \mbox{\hyperlink{jpl__data_8h_afd141130679c4358f5e5fbf1eadb4b36}{apply\+\_\+ephemeris\+\_\+to\+\_\+solar\+\_\+system}} ()
+\item 
+bool \mbox{\hyperlink{jpl__data_8h_a75974d8710a63afb06a4df82b85f50f1}{save\+\_\+current\+\_\+data\+\_\+for\+\_\+testing}} ()
+\item 
+bool \mbox{\hyperlink{jpl__data_8h_aed1d0991a03843a07774d2f772d54ced}{test\+\_\+storage\+\_\+system}} ()
+\item 
+bool \mbox{\hyperlink{jpl__data_8h_af825dd9f1521c4b5b44f221b7e4ae93e}{fetch\+\_\+jpl\+\_\+horizons\+\_\+data}} (const char \texorpdfstring{$\ast$}{*}date, int jpl\+\_\+id, int body\+\_\+index)
+\item 
+void \mbox{\hyperlink{jpl__data_8h_a1aa96a286f744c8f2fd325a9ae229a74}{fetch\+\_\+body\+\_\+data\+\_\+parallel}} (\mbox{\hyperlink{struct_fetch_task}{Fetch\+Task}} \&task)
+\item 
+bool \mbox{\hyperlink{jpl__data_8h_a24536f2f879b940d800413ce2de003ab}{parse\+\_\+jpl\+\_\+response}} (const char \texorpdfstring{$\ast$}{*}response, int body\+\_\+index)
+\item 
+bool \mbox{\hyperlink{jpl__data_8h_a5ba5f9d1761cc31952b6e2171f62aad0}{save\+\_\+ephemeris\+\_\+to\+\_\+json}} ()
+\item 
+bool \mbox{\hyperlink{jpl__data_8h_aae6b771e02cb0c97771d15cc0423e974}{load\+\_\+ephemeris\+\_\+from\+\_\+json}} ()
+\item 
+bool \mbox{\hyperlink{jpl__data_8h_a7224072a5ff059844819f585a3fd6b25}{save\+\_\+ephemeris\+\_\+to\+\_\+binary}} ()
+\item 
+bool \mbox{\hyperlink{jpl__data_8h_aa44785369b15ee6d759ad853f85b378f}{load\+\_\+ephemeris\+\_\+from\+\_\+binary}} ()
+\item 
+bool \mbox{\hyperlink{jpl__data_8h_afcd0110206c59a8ac20ee69ae289a422}{validate\+\_\+ephemeris\+\_\+data}} ()
+\item 
+bool \mbox{\hyperlink{jpl__data_8h_af19b035ab6be282c223c3a0fcb616599}{apply\+\_\+ephemeris\+\_\+data}} ()
+\item 
+uint64\+\_\+t \mbox{\hyperlink{jpl__data_8h_adcb300f8f47ac0f889df1a3ffd06dbb7}{calculate\+\_\+json\+\_\+checksum}} ()
+\end{DoxyCompactItemize}
+
+
+\label{doc-define-members}
+\Hypertarget{jpl__data_8h_doc-define-members}
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{jpl__data_8h_a67f55f1250321f3848d7805795b0aa92}\index{jpl\_data.h@{jpl\_data.h}!BODY\_COUNT@{BODY\_COUNT}}
+\index{BODY\_COUNT@{BODY\_COUNT}!jpl\_data.h@{jpl\_data.h}}
+\doxysubsubsection{\texorpdfstring{BODY\_COUNT}{BODY\_COUNT}}
+{\footnotesize\ttfamily \label{jpl__data_8h_a67f55f1250321f3848d7805795b0aa92} 
+\#define BODY\+\_\+\+COUNT~27}
+
+\Hypertarget{jpl__data_8h_accf2d7781a2cd91d4529e24c9cf55785}\index{jpl\_data.h@{jpl\_data.h}!JPL\_BINARY\_FILE@{JPL\_BINARY\_FILE}}
+\index{JPL\_BINARY\_FILE@{JPL\_BINARY\_FILE}!jpl\_data.h@{jpl\_data.h}}
+\doxysubsubsection{\texorpdfstring{JPL\_BINARY\_FILE}{JPL\_BINARY\_FILE}}
+{\footnotesize\ttfamily \label{jpl__data_8h_accf2d7781a2cd91d4529e24c9cf55785} 
+\#define JPL\+\_\+\+BINARY\+\_\+\+FILE~"{}ephemeris\+\_\+cache.\+bin"{}}
+
+\Hypertarget{jpl__data_8h_ad1a386a91c291ef404384469626db0d8}\index{jpl\_data.h@{jpl\_data.h}!JPL\_BINARY\_MAGIC@{JPL\_BINARY\_MAGIC}}
+\index{JPL\_BINARY\_MAGIC@{JPL\_BINARY\_MAGIC}!jpl\_data.h@{jpl\_data.h}}
+\doxysubsubsection{\texorpdfstring{JPL\_BINARY\_MAGIC}{JPL\_BINARY\_MAGIC}}
+{\footnotesize\ttfamily \label{jpl__data_8h_ad1a386a91c291ef404384469626db0d8} 
+\#define JPL\+\_\+\+BINARY\+\_\+\+MAGIC~0x4\+A504\+C45}
+
+\Hypertarget{jpl__data_8h_a4062858c6f64afedb24ca6adec9d3871}\index{jpl\_data.h@{jpl\_data.h}!JPL\_FORMAT\_VERSION@{JPL\_FORMAT\_VERSION}}
+\index{JPL\_FORMAT\_VERSION@{JPL\_FORMAT\_VERSION}!jpl\_data.h@{jpl\_data.h}}
+\doxysubsubsection{\texorpdfstring{JPL\_FORMAT\_VERSION}{JPL\_FORMAT\_VERSION}}
+{\footnotesize\ttfamily \label{jpl__data_8h_a4062858c6f64afedb24ca6adec9d3871} 
+\#define JPL\+\_\+\+FORMAT\+\_\+\+VERSION~1}
+
+\Hypertarget{jpl__data_8h_a04b7afe54d94ce8cf7ceedc2f063281e}\index{jpl\_data.h@{jpl\_data.h}!JPL\_JSON\_FILE@{JPL\_JSON\_FILE}}
+\index{JPL\_JSON\_FILE@{JPL\_JSON\_FILE}!jpl\_data.h@{jpl\_data.h}}
+\doxysubsubsection{\texorpdfstring{JPL\_JSON\_FILE}{JPL\_JSON\_FILE}}
+{\footnotesize\ttfamily \label{jpl__data_8h_a04b7afe54d94ce8cf7ceedc2f063281e} 
+\#define JPL\+\_\+\+JSON\+\_\+\+FILE~"{}ephemeris\+\_\+data.\+json"{}}
+
+
+
+\label{doc-func-members}
+\Hypertarget{jpl__data_8h_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{jpl__data_8h_af19b035ab6be282c223c3a0fcb616599}\index{jpl\_data.h@{jpl\_data.h}!apply\_ephemeris\_data@{apply\_ephemeris\_data}}
+\index{apply\_ephemeris\_data@{apply\_ephemeris\_data}!jpl\_data.h@{jpl\_data.h}}
+\doxysubsubsection{\texorpdfstring{apply\_ephemeris\_data()}{apply\_ephemeris\_data()}}
+{\footnotesize\ttfamily \label{jpl__data_8h_af19b035ab6be282c223c3a0fcb616599} 
+bool apply\+\_\+ephemeris\+\_\+data (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{jpl__data_8h_af19b035ab6be282c223c3a0fcb616599_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{jpl__data_8h_afd141130679c4358f5e5fbf1eadb4b36}\index{jpl\_data.h@{jpl\_data.h}!apply\_ephemeris\_to\_solar\_system@{apply\_ephemeris\_to\_solar\_system}}
+\index{apply\_ephemeris\_to\_solar\_system@{apply\_ephemeris\_to\_solar\_system}!jpl\_data.h@{jpl\_data.h}}
+\doxysubsubsection{\texorpdfstring{apply\_ephemeris\_to\_solar\_system()}{apply\_ephemeris\_to\_solar\_system()}}
+{\footnotesize\ttfamily \label{jpl__data_8h_afd141130679c4358f5e5fbf1eadb4b36} 
+bool apply\+\_\+ephemeris\+\_\+to\+\_\+solar\+\_\+system (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+\Hypertarget{jpl__data_8h_adcb300f8f47ac0f889df1a3ffd06dbb7}\index{jpl\_data.h@{jpl\_data.h}!calculate\_json\_checksum@{calculate\_json\_checksum}}
+\index{calculate\_json\_checksum@{calculate\_json\_checksum}!jpl\_data.h@{jpl\_data.h}}
+\doxysubsubsection{\texorpdfstring{calculate\_json\_checksum()}{calculate\_json\_checksum()}}
+{\footnotesize\ttfamily \label{jpl__data_8h_adcb300f8f47ac0f889df1a3ffd06dbb7} 
+uint64\+\_\+t calculate\+\_\+json\+\_\+checksum (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+\Hypertarget{jpl__data_8h_a1aa96a286f744c8f2fd325a9ae229a74}\index{jpl\_data.h@{jpl\_data.h}!fetch\_body\_data\_parallel@{fetch\_body\_data\_parallel}}
+\index{fetch\_body\_data\_parallel@{fetch\_body\_data\_parallel}!jpl\_data.h@{jpl\_data.h}}
+\doxysubsubsection{\texorpdfstring{fetch\_body\_data\_parallel()}{fetch\_body\_data\_parallel()}}
+{\footnotesize\ttfamily \label{jpl__data_8h_a1aa96a286f744c8f2fd325a9ae229a74} 
+void fetch\+\_\+body\+\_\+data\+\_\+parallel (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_fetch_task}{Fetch\+Task}} \&}]{task}{}\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{jpl__data_8h_a1aa96a286f744c8f2fd325a9ae229a74_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{jpl__data_8h_a1aa96a286f744c8f2fd325a9ae229a74_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{jpl__data_8h_adaee806f87338c88d12a9e11e9bc50c7}\index{jpl\_data.h@{jpl\_data.h}!fetch\_jpl\_data\_for\_console@{fetch\_jpl\_data\_for\_console}}
+\index{fetch\_jpl\_data\_for\_console@{fetch\_jpl\_data\_for\_console}!jpl\_data.h@{jpl\_data.h}}
+\doxysubsubsection{\texorpdfstring{fetch\_jpl\_data\_for\_console()}{fetch\_jpl\_data\_for\_console()}}
+{\footnotesize\ttfamily \label{jpl__data_8h_adaee806f87338c88d12a9e11e9bc50c7} 
+bool fetch\+\_\+jpl\+\_\+data\+\_\+for\+\_\+console (\begin{DoxyParamCaption}\item[{const char \texorpdfstring{$\ast$}{*}}]{date}{}\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{jpl__data_8h_adaee806f87338c88d12a9e11e9bc50c7_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{jpl__data_8h_a178389cceb6199fdc8906aeeb440fbf0}\index{jpl\_data.h@{jpl\_data.h}!fetch\_jpl\_data\_for\_date@{fetch\_jpl\_data\_for\_date}}
+\index{fetch\_jpl\_data\_for\_date@{fetch\_jpl\_data\_for\_date}!jpl\_data.h@{jpl\_data.h}}
+\doxysubsubsection{\texorpdfstring{fetch\_jpl\_data\_for\_date()}{fetch\_jpl\_data\_for\_date()}}
+{\footnotesize\ttfamily \label{jpl__data_8h_a178389cceb6199fdc8906aeeb440fbf0} 
+bool fetch\+\_\+jpl\+\_\+data\+\_\+for\+\_\+date (\begin{DoxyParamCaption}\item[{const char \texorpdfstring{$\ast$}{*}}]{date}{}\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{jpl__data_8h_a178389cceb6199fdc8906aeeb440fbf0_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{jpl__data_8h_a178389cceb6199fdc8906aeeb440fbf0_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{jpl__data_8h_af825dd9f1521c4b5b44f221b7e4ae93e}\index{jpl\_data.h@{jpl\_data.h}!fetch\_jpl\_horizons\_data@{fetch\_jpl\_horizons\_data}}
+\index{fetch\_jpl\_horizons\_data@{fetch\_jpl\_horizons\_data}!jpl\_data.h@{jpl\_data.h}}
+\doxysubsubsection{\texorpdfstring{fetch\_jpl\_horizons\_data()}{fetch\_jpl\_horizons\_data()}}
+{\footnotesize\ttfamily \label{jpl__data_8h_af825dd9f1521c4b5b44f221b7e4ae93e} 
+bool fetch\+\_\+jpl\+\_\+horizons\+\_\+data (\begin{DoxyParamCaption}\item[{const char \texorpdfstring{$\ast$}{*}}]{date}{, }\item[{int}]{jpl\+\_\+id}{, }\item[{int}]{body\+\_\+index}{}\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=335pt]{jpl__data_8h_af825dd9f1521c4b5b44f221b7e4ae93e_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{jpl__data_8h_af825dd9f1521c4b5b44f221b7e4ae93e_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{jpl__data_8h_a43172e1fe148d3962a3e41240152591f}\index{jpl\_data.h@{jpl\_data.h}!force\_update\_ephemeris\_data@{force\_update\_ephemeris\_data}}
+\index{force\_update\_ephemeris\_data@{force\_update\_ephemeris\_data}!jpl\_data.h@{jpl\_data.h}}
+\doxysubsubsection{\texorpdfstring{force\_update\_ephemeris\_data()}{force\_update\_ephemeris\_data()}}
+{\footnotesize\ttfamily \label{jpl__data_8h_a43172e1fe148d3962a3e41240152591f} 
+bool force\+\_\+update\+\_\+ephemeris\+\_\+data (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{jpl__data_8h_a43172e1fe148d3962a3e41240152591f_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=300pt]{jpl__data_8h_a43172e1fe148d3962a3e41240152591f_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{jpl__data_8h_afd54a44cabb601544728583ccc5b5c68}\index{jpl\_data.h@{jpl\_data.h}!get\_body\_type@{get\_body\_type}}
+\index{get\_body\_type@{get\_body\_type}!jpl\_data.h@{jpl\_data.h}}
+\doxysubsubsection{\texorpdfstring{get\_body\_type()}{get\_body\_type()}}
+{\footnotesize\ttfamily \label{jpl__data_8h_afd54a44cabb601544728583ccc5b5c68} 
+\mbox{\hyperlink{jpl__bodies_8h_acf0ce63e34327e5bc336f9fe3d2d47a2}{Body\+Type}} get\+\_\+body\+\_\+type (\begin{DoxyParamCaption}\item[{int}]{body\+\_\+index}{}\end{DoxyParamCaption})}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{jpl__data_8h_afd54a44cabb601544728583ccc5b5c68_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{jpl__data_8h_a7a063f0c8b7d1c3c8ccb8f4454278bee}\index{jpl\_data.h@{jpl\_data.h}!get\_ephemeris\_epoch@{get\_ephemeris\_epoch}}
+\index{get\_ephemeris\_epoch@{get\_ephemeris\_epoch}!jpl\_data.h@{jpl\_data.h}}
+\doxysubsubsection{\texorpdfstring{get\_ephemeris\_epoch()}{get\_ephemeris\_epoch()}}
+{\footnotesize\ttfamily \label{jpl__data_8h_a7a063f0c8b7d1c3c8ccb8f4454278bee} 
+time\+\_\+t get\+\_\+ephemeris\+\_\+epoch (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{jpl__data_8h_a7a063f0c8b7d1c3c8ccb8f4454278bee_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{jpl__data_8h_a086604a991756be3769cb70a063aa17f}\index{jpl\_data.h@{jpl\_data.h}!get\_ephemeris\_source@{get\_ephemeris\_source}}
+\index{get\_ephemeris\_source@{get\_ephemeris\_source}!jpl\_data.h@{jpl\_data.h}}
+\doxysubsubsection{\texorpdfstring{get\_ephemeris\_source()}{get\_ephemeris\_source()}}
+{\footnotesize\ttfamily \label{jpl__data_8h_a086604a991756be3769cb70a063aa17f} 
+const char \texorpdfstring{$\ast$}{*} get\+\_\+ephemeris\+\_\+source (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{jpl__data_8h_a086604a991756be3769cb70a063aa17f_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{jpl__data_8h_a59f69cf29c0ec41bae3cb8030f8e78b3}\index{jpl\_data.h@{jpl\_data.h}!has\_current\_ephemeris\_data@{has\_current\_ephemeris\_data}}
+\index{has\_current\_ephemeris\_data@{has\_current\_ephemeris\_data}!jpl\_data.h@{jpl\_data.h}}
+\doxysubsubsection{\texorpdfstring{has\_current\_ephemeris\_data()}{has\_current\_ephemeris\_data()}}
+{\footnotesize\ttfamily \label{jpl__data_8h_a59f69cf29c0ec41bae3cb8030f8e78b3} 
+bool has\+\_\+current\+\_\+ephemeris\+\_\+data (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{jpl__data_8h_a59f69cf29c0ec41bae3cb8030f8e78b3_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{jpl__data_8h_aaad3b3c333c2cad513974e0702a27c5d}\index{jpl\_data.h@{jpl\_data.h}!has\_current\_year\_ephemeris\_data@{has\_current\_year\_ephemeris\_data}}
+\index{has\_current\_year\_ephemeris\_data@{has\_current\_year\_ephemeris\_data}!jpl\_data.h@{jpl\_data.h}}
+\doxysubsubsection{\texorpdfstring{has\_current\_year\_ephemeris\_data()}{has\_current\_year\_ephemeris\_data()}}
+{\footnotesize\ttfamily \label{jpl__data_8h_aaad3b3c333c2cad513974e0702a27c5d} 
+bool has\+\_\+current\+\_\+year\+\_\+ephemeris\+\_\+data (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{jpl__data_8h_aaad3b3c333c2cad513974e0702a27c5d_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{jpl__data_8h_aaad3b3c333c2cad513974e0702a27c5d_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{jpl__data_8h_a4089bff84229849353c05d77c7bd04b2}\index{jpl\_data.h@{jpl\_data.h}!initialize\_jpl\_data@{initialize\_jpl\_data}}
+\index{initialize\_jpl\_data@{initialize\_jpl\_data}!jpl\_data.h@{jpl\_data.h}}
+\doxysubsubsection{\texorpdfstring{initialize\_jpl\_data()}{initialize\_jpl\_data()}}
+{\footnotesize\ttfamily \label{jpl__data_8h_a4089bff84229849353c05d77c7bd04b2} 
+bool initialize\+\_\+jpl\+\_\+data (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{jpl__data_8h_a4089bff84229849353c05d77c7bd04b2_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{jpl__data_8h_a4089bff84229849353c05d77c7bd04b2_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{jpl__data_8h_ac5ffbb532a5be75e313500d1e6921975}\index{jpl\_data.h@{jpl\_data.h}!load\_cached\_ephemeris\_data@{load\_cached\_ephemeris\_data}}
+\index{load\_cached\_ephemeris\_data@{load\_cached\_ephemeris\_data}!jpl\_data.h@{jpl\_data.h}}
+\doxysubsubsection{\texorpdfstring{load\_cached\_ephemeris\_data()}{load\_cached\_ephemeris\_data()}}
+{\footnotesize\ttfamily \label{jpl__data_8h_ac5ffbb532a5be75e313500d1e6921975} 
+bool load\+\_\+cached\+\_\+ephemeris\+\_\+data (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{jpl__data_8h_ac5ffbb532a5be75e313500d1e6921975_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{jpl__data_8h_ac5ffbb532a5be75e313500d1e6921975_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{jpl__data_8h_aa44785369b15ee6d759ad853f85b378f}\index{jpl\_data.h@{jpl\_data.h}!load\_ephemeris\_from\_binary@{load\_ephemeris\_from\_binary}}
+\index{load\_ephemeris\_from\_binary@{load\_ephemeris\_from\_binary}!jpl\_data.h@{jpl\_data.h}}
+\doxysubsubsection{\texorpdfstring{load\_ephemeris\_from\_binary()}{load\_ephemeris\_from\_binary()}}
+{\footnotesize\ttfamily \label{jpl__data_8h_aa44785369b15ee6d759ad853f85b378f} 
+bool load\+\_\+ephemeris\+\_\+from\+\_\+binary (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{jpl__data_8h_aa44785369b15ee6d759ad853f85b378f_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{jpl__data_8h_aae6b771e02cb0c97771d15cc0423e974}\index{jpl\_data.h@{jpl\_data.h}!load\_ephemeris\_from\_json@{load\_ephemeris\_from\_json}}
+\index{load\_ephemeris\_from\_json@{load\_ephemeris\_from\_json}!jpl\_data.h@{jpl\_data.h}}
+\doxysubsubsection{\texorpdfstring{load\_ephemeris\_from\_json()}{load\_ephemeris\_from\_json()}}
+{\footnotesize\ttfamily \label{jpl__data_8h_aae6b771e02cb0c97771d15cc0423e974} 
+bool load\+\_\+ephemeris\+\_\+from\+\_\+json (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{jpl__data_8h_aae6b771e02cb0c97771d15cc0423e974_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{jpl__data_8h_a24536f2f879b940d800413ce2de003ab}\index{jpl\_data.h@{jpl\_data.h}!parse\_jpl\_response@{parse\_jpl\_response}}
+\index{parse\_jpl\_response@{parse\_jpl\_response}!jpl\_data.h@{jpl\_data.h}}
+\doxysubsubsection{\texorpdfstring{parse\_jpl\_response()}{parse\_jpl\_response()}}
+{\footnotesize\ttfamily \label{jpl__data_8h_a24536f2f879b940d800413ce2de003ab} 
+bool parse\+\_\+jpl\+\_\+response (\begin{DoxyParamCaption}\item[{const char \texorpdfstring{$\ast$}{*}}]{response}{, }\item[{int}]{body\+\_\+index}{}\end{DoxyParamCaption})}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{jpl__data_8h_a24536f2f879b940d800413ce2de003ab_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{jpl__data_8h_a82c04200c0b3e931271740cf1be9e4bb}\index{jpl\_data.h@{jpl\_data.h}!rebuild\_binary\_cache@{rebuild\_binary\_cache}}
+\index{rebuild\_binary\_cache@{rebuild\_binary\_cache}!jpl\_data.h@{jpl\_data.h}}
+\doxysubsubsection{\texorpdfstring{rebuild\_binary\_cache()}{rebuild\_binary\_cache()}}
+{\footnotesize\ttfamily \label{jpl__data_8h_a82c04200c0b3e931271740cf1be9e4bb} 
+bool rebuild\+\_\+binary\+\_\+cache (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{jpl__data_8h_a82c04200c0b3e931271740cf1be9e4bb_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=261pt]{jpl__data_8h_a82c04200c0b3e931271740cf1be9e4bb_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{jpl__data_8h_a75974d8710a63afb06a4df82b85f50f1}\index{jpl\_data.h@{jpl\_data.h}!save\_current\_data\_for\_testing@{save\_current\_data\_for\_testing}}
+\index{save\_current\_data\_for\_testing@{save\_current\_data\_for\_testing}!jpl\_data.h@{jpl\_data.h}}
+\doxysubsubsection{\texorpdfstring{save\_current\_data\_for\_testing()}{save\_current\_data\_for\_testing()}}
+{\footnotesize\ttfamily \label{jpl__data_8h_a75974d8710a63afb06a4df82b85f50f1} 
+bool save\+\_\+current\+\_\+data\+\_\+for\+\_\+testing (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{jpl__data_8h_a75974d8710a63afb06a4df82b85f50f1_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{jpl__data_8h_a75974d8710a63afb06a4df82b85f50f1_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{jpl__data_8h_a7224072a5ff059844819f585a3fd6b25}\index{jpl\_data.h@{jpl\_data.h}!save\_ephemeris\_to\_binary@{save\_ephemeris\_to\_binary}}
+\index{save\_ephemeris\_to\_binary@{save\_ephemeris\_to\_binary}!jpl\_data.h@{jpl\_data.h}}
+\doxysubsubsection{\texorpdfstring{save\_ephemeris\_to\_binary()}{save\_ephemeris\_to\_binary()}}
+{\footnotesize\ttfamily \label{jpl__data_8h_a7224072a5ff059844819f585a3fd6b25} 
+bool save\+\_\+ephemeris\+\_\+to\+\_\+binary (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{jpl__data_8h_a7224072a5ff059844819f585a3fd6b25_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{jpl__data_8h_a5ba5f9d1761cc31952b6e2171f62aad0}\index{jpl\_data.h@{jpl\_data.h}!save\_ephemeris\_to\_json@{save\_ephemeris\_to\_json}}
+\index{save\_ephemeris\_to\_json@{save\_ephemeris\_to\_json}!jpl\_data.h@{jpl\_data.h}}
+\doxysubsubsection{\texorpdfstring{save\_ephemeris\_to\_json()}{save\_ephemeris\_to\_json()}}
+{\footnotesize\ttfamily \label{jpl__data_8h_a5ba5f9d1761cc31952b6e2171f62aad0} 
+bool save\+\_\+ephemeris\+\_\+to\+\_\+json (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{jpl__data_8h_a5ba5f9d1761cc31952b6e2171f62aad0_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{jpl__data_8h_aed1d0991a03843a07774d2f772d54ced}\index{jpl\_data.h@{jpl\_data.h}!test\_storage\_system@{test\_storage\_system}}
+\index{test\_storage\_system@{test\_storage\_system}!jpl\_data.h@{jpl\_data.h}}
+\doxysubsubsection{\texorpdfstring{test\_storage\_system()}{test\_storage\_system()}}
+{\footnotesize\ttfamily \label{jpl__data_8h_aed1d0991a03843a07774d2f772d54ced} 
+bool test\+\_\+storage\+\_\+system (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{jpl__data_8h_aed1d0991a03843a07774d2f772d54ced_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=261pt]{jpl__data_8h_aed1d0991a03843a07774d2f772d54ced_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{jpl__data_8h_a30edf33d36cc635363249c8a5131752e}\index{jpl\_data.h@{jpl\_data.h}!update\_ephemeris\_data@{update\_ephemeris\_data}}
+\index{update\_ephemeris\_data@{update\_ephemeris\_data}!jpl\_data.h@{jpl\_data.h}}
+\doxysubsubsection{\texorpdfstring{update\_ephemeris\_data()}{update\_ephemeris\_data()}}
+{\footnotesize\ttfamily \label{jpl__data_8h_a30edf33d36cc635363249c8a5131752e} 
+bool update\+\_\+ephemeris\+\_\+data (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{jpl__data_8h_a30edf33d36cc635363249c8a5131752e_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=273pt]{jpl__data_8h_a30edf33d36cc635363249c8a5131752e_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{jpl__data_8h_afcd0110206c59a8ac20ee69ae289a422}\index{jpl\_data.h@{jpl\_data.h}!validate\_ephemeris\_data@{validate\_ephemeris\_data}}
+\index{validate\_ephemeris\_data@{validate\_ephemeris\_data}!jpl\_data.h@{jpl\_data.h}}
+\doxysubsubsection{\texorpdfstring{validate\_ephemeris\_data()}{validate\_ephemeris\_data()}}
+{\footnotesize\ttfamily \label{jpl__data_8h_afcd0110206c59a8ac20ee69ae289a422} 
+bool validate\+\_\+ephemeris\+\_\+data (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+

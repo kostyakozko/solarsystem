@@ -1,0 +1,746 @@
+\chapter{Solar System Suite }
+\hypertarget{md__r_e_a_d_m_e}{}\label{md__r_e_a_d_m_e}\index{Solar System Suite@{Solar System Suite}}
+\label{md__r_e_a_d_m_e_autotoc_md0}%
+\Hypertarget{md__r_e_a_d_m_e_autotoc_md0}%
+
+
+A comprehensive, high-\/performance N-\/body gravitational simulation suite with real-\/time JPL HORIZONS ephemeris data integration, modular architecture, professional installation system, and {\bfseries{interactive web-\/based time travel visualization}}.\hypertarget{md__r_e_a_d_m_e_autotoc_md1}{}\doxysection{\texorpdfstring{📋 Table of Contents}{📋 Table of Contents}}\label{md__r_e_a_d_m_e_autotoc_md1}
+
+\begin{DoxyItemize}
+\item 🌟 Features Overview
+\item 🏗️ Architecture
+\item 🚀 Quick Start
+\begin{DoxyItemize}
+\item Prerequisites
+\item Build and Install
+\item Basic Usage
+\end{DoxyItemize}
+\item 📱 Applications Guide
+\begin{DoxyItemize}
+\item 🎛️ solar\+\_\+system\+\_\+launcher -\/ Unified Interface
+\item 📡 solar\+\_\+system\+\_\+fetch -\/ Data Management
+\item 🌌 solar\+\_\+system -\/ High-\/\+Performance Simulation
+\item 🌍 solar\+\_\+system\+\_\+realtime -\/ Live Tracking
+\item 🌐 solar\+\_\+system\+\_\+web -\/ Interactive Time Travel Visualization
+\end{DoxyItemize}
+\item 🌌 Celestial Bodies Coverage
+\item 🔧 Advanced Configuration
+\begin{DoxyItemize}
+\item Installation Options
+\item Web Server Configuration
+\item Cache System
+\item Performance Optimization
+\end{DoxyItemize}
+\item 🛠️ Development
+\item 🧪 Testing \& Validation
+\item 🌐 Integration \& Deployment
+\item 🔍 Troubleshooting
+\item 📊 Performance \& Scalability
+\item 🤝 Contributing
+\item 📈 Roadmap
+\item 📄 License
+\item 🙏 Acknowledgments
+\item 📚 References
+\end{DoxyItemize}\hypertarget{md__r_e_a_d_m_e_autotoc_md2}{}\doxysection{\texorpdfstring{🌟 Features Overview}{🌟 Features Overview}}\label{md__r_e_a_d_m_e_autotoc_md2}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md3}{}\doxysubsection{\texorpdfstring{{\bfseries{Recent Improvements (v3.\+1)}}}{{\bfseries{Recent Improvements (v3.\+1)}}}}\label{md__r_e_a_d_m_e_autotoc_md3}
+
+\begin{DoxyItemize}
+\item {\bfseries{🎯 Smart Time Travel}}\+: Manual requests use JPL data fetching, automatic requests use simulation
+\item {\bfseries{🏷️ Body Classification}}\+: Essential (planets), Important (moons), Optional (spacecraft) with proper error handling
+\item {\bfseries{🔧 Clean Logging}}\+: Verbose mode ({\ttfamily -\/-\/verbose}) for detailed debugging, clean output by default
+\item {\bfseries{📡 Historical Accuracy}}\+: Proper handling of spacecraft that didn\textquotesingle{}t exist in historical dates
+\item {\bfseries{⚡ Performance}}\+: Optimized request handling and reduced debug overhead
+\end{DoxyItemize}\hypertarget{md__r_e_a_d_m_e_autotoc_md4}{}\doxysubsection{\texorpdfstring{🚀 {\bfseries{Complete Solar System Suite}}}{🚀 {\bfseries{Complete Solar System Suite}}}}\label{md__r_e_a_d_m_e_autotoc_md4}
+
+\begin{DoxyItemize}
+\item {\bfseries{5 Specialized Applications}}\+: Each optimized for specific tasks
+\item {\bfseries{Unified Interface}}\+: Single entry point for all operations
+\item {\bfseries{Real-\/\+Time Tracking}}\+: Live solar system monitoring
+\item {\bfseries{Time Travel Visualization}}\+: Interactive web-\/based orbital simulation
+\item {\bfseries{Professional Installation}}\+: Enterprise-\/grade deployment system
+\end{DoxyItemize}\hypertarget{md__r_e_a_d_m_e_autotoc_md5}{}\doxysubsection{\texorpdfstring{🌌 {\bfseries{Comprehensive Solar System Coverage}}}{🌌 {\bfseries{Comprehensive Solar System Coverage}}}}\label{md__r_e_a_d_m_e_autotoc_md5}
+
+\begin{DoxyItemize}
+\item {\bfseries{27 Celestial Bodies}}\+: Planets, moons, dwarf planets, and spacecraft
+\item {\bfseries{Real-\/\+Time JPL Data}}\+: Automatic integration with NASA JPL HORIZONS API
+\item {\bfseries{Smart Caching}}\+: Binary and JSON cache system for optimal performance
+\item {\bfseries{Offline Capability}}\+: Graceful fallback to hardcoded data
+\end{DoxyItemize}\hypertarget{md__r_e_a_d_m_e_autotoc_md6}{}\doxysubsection{\texorpdfstring{⚡ {\bfseries{High-\/\+Performance Architecture}}}{⚡ {\bfseries{High-\/\+Performance Architecture}}}}\label{md__r_e_a_d_m_e_autotoc_md6}
+
+\begin{DoxyItemize}
+\item {\bfseries{Modular Design}}\+: Clean separation with static libraries
+\item {\bfseries{Optimized Compilation}}\+: Native CPU instructions and LTO
+\item {\bfseries{Configurable Parameters}}\+: Flexible simulation settings
+\item {\bfseries{Cross-\/\+Platform}}\+: mac\+OS, Linux, Windows support
+\item {\bfseries{Zero Dependencies}}\+: Built entirely with standard libraries
+\end{DoxyItemize}\hypertarget{md__r_e_a_d_m_e_autotoc_md7}{}\doxysubsection{\texorpdfstring{🌐 {\bfseries{Interactive Web Visualization}}}{🌐 {\bfseries{Interactive Web Visualization}}}}\label{md__r_e_a_d_m_e_autotoc_md7}
+
+\begin{DoxyItemize}
+\item {\bfseries{Time Travel Interface}}\+: Simulate from any historical date
+\item {\bfseries{Variable Speed Control}}\+: 0.\+1x to 1 year per second
+\item {\bfseries{Orbit Trails}}\+: Beautiful visual orbital paths
+\item {\bfseries{3D Web\+GL Rendering}}\+: Smooth, interactive visualization
+\item {\bfseries{Real-\/\+Time Integration}}\+: Seamless connection to simulation engine
+\end{DoxyItemize}\hypertarget{md__r_e_a_d_m_e_autotoc_md8}{}\doxysection{\texorpdfstring{🏗️ Architecture}{🏗️ Architecture}}\label{md__r_e_a_d_m_e_autotoc_md8}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md9}{}\doxysubsection{\texorpdfstring{{\bfseries{Applications}}}{{\bfseries{Applications}}}}\label{md__r_e_a_d_m_e_autotoc_md9}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{🎛️\ solar\_system\_launcher\ \ \ \ \#\ Unified\ interface\ and\ workflow\ coordinator}
+\DoxyCodeLine{📡\ solar\_system\_fetch\ \ \ \ \ \ \ \ \#\ JPL\ data\ management\ and\ caching}
+\DoxyCodeLine{🌌\ solar\_system\ \ \ \ \ \ \ \ \ \ \ \ \ \#\ High-\/performance\ batch\ simulation}
+\DoxyCodeLine{🌍\ solar\_system\_realtime\ \ \ \ \#\ Live\ real-\/time\ solar\ system\ tracking}
+\DoxyCodeLine{🌐\ solar\_system\_web\ \ \ \ \ \ \ \ \ \#\ Interactive\ web-\/based\ time\ travel\ visualization}
+
+\end{DoxyCode}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md10}{}\doxysubsection{\texorpdfstring{{\bfseries{Libraries}}}{{\bfseries{Libraries}}}}\label{md__r_e_a_d_m_e_autotoc_md10}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{📚\ solar\_core\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ Simulation\ engine\ and\ physics\ models}
+\DoxyCodeLine{📡\ solar\_jpl\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ JPL\ HORIZONS\ API\ integration}
+\DoxyCodeLine{🔧\ solar\_utils\ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ Shared\ utilities\ and\ argument\ parsing}
+
+\end{DoxyCode}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md11}{}\doxysubsection{\texorpdfstring{{\bfseries{Data Sources}}}{{\bfseries{Data Sources}}}}\label{md__r_e_a_d_m_e_autotoc_md11}
+
+\begin{DoxyItemize}
+\item {\bfseries{Primary}}\+: NASA JPL HORIZONS API (real-\/time ephemeris data)
+\item {\bfseries{Cache}}\+: Binary and JSON formats for fast loading
+\item {\bfseries{Fallback}}\+: Hardcoded ephemeris data for offline operation
+\end{DoxyItemize}\hypertarget{md__r_e_a_d_m_e_autotoc_md12}{}\doxysection{\texorpdfstring{🚀 Quick Start}{🚀 Quick Start}}\label{md__r_e_a_d_m_e_autotoc_md12}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md13}{}\doxysubsection{\texorpdfstring{{\bfseries{Installation}}}{{\bfseries{Installation}}}}\label{md__r_e_a_d_m_e_autotoc_md13}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md14}{}\doxysubsubsection{\texorpdfstring{{\bfseries{Prerequisites}}}{{\bfseries{Prerequisites}}}}\label{md__r_e_a_d_m_e_autotoc_md14}
+
+\begin{DoxyItemize}
+\item {\bfseries{C++ compiler}} with C++11 support (GCC/\+Clang)
+\item {\bfseries{CMake}} 3.\+15 or higher
+\item {\bfseries{curl}} for JPL HORIZONS API access
+\end{DoxyItemize}\hypertarget{md__r_e_a_d_m_e_autotoc_md15}{}\doxysubsubsection{\texorpdfstring{{\bfseries{Build and Install}}}{{\bfseries{Build and Install}}}}\label{md__r_e_a_d_m_e_autotoc_md15}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ Clone\ and\ build}
+\DoxyCodeLine{git\ clone\ <repository-\/url>}
+\DoxyCodeLine{cd\ solarsystem}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Default\ installation\ (./install/)}
+\DoxyCodeLine{mkdir\ build\ \&\&\ cd\ build}
+\DoxyCodeLine{cmake\ ..}
+\DoxyCodeLine{make\ -\/j\$(nproc)}
+\DoxyCodeLine{make\ install}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Custom\ installation\ directory}
+\DoxyCodeLine{export\ SOLAR\_SYSTEM\_INSTALL\_DIR=/opt/solar\_system}
+\DoxyCodeLine{mkdir\ build\ \&\&\ cd\ build}
+\DoxyCodeLine{cmake\ ..}
+\DoxyCodeLine{make\ -\/j\$(nproc)\ \&\&\ make\ install}
+
+\end{DoxyCode}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md16}{}\doxysubsubsection{\texorpdfstring{{\bfseries{Installation Layout}}}{{\bfseries{Installation Layout}}}}\label{md__r_e_a_d_m_e_autotoc_md16}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{📁\ \$\{INSTALL\_PREFIX\}/}
+\DoxyCodeLine{├──\ 🎛️\ solar\_system\_launcher\ \ \ \ \ \ \ \ \ \ \#\ Main\ entry\ point}
+\DoxyCodeLine{├──\ 📁\ bin/\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ All\ executables}
+\DoxyCodeLine{│\ \ \ ├──\ solar\_system\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ Batch\ simulation}
+\DoxyCodeLine{│\ \ \ ├──\ solar\_system\_fetch\ \ \ \ \ \ \ \ \ \ \ \ \#\ Data\ management}
+\DoxyCodeLine{│\ \ \ ├──\ solar\_system\_launcher\ \ \ \ \ \ \ \ \ \#\ Unified\ interface}
+\DoxyCodeLine{│\ \ \ ├──\ solar\_system\_realtime\ \ \ \ \ \ \ \ \ \#\ Live\ tracking}
+\DoxyCodeLine{│\ \ \ └──\ solar\_system\_web\ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ Web\ server}
+\DoxyCodeLine{├──\ 📁\ share/solar\_system/\ \ \ \ \ \ \ \ \ \ \ \ \#\ Documentation\ and\ web\ files}
+\DoxyCodeLine{│\ \ \ └──\ web/\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ Web\ interface\ files}
+\DoxyCodeLine{└──\ 📄\ USAGE.txt\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ Installation\ guide}
+
+\end{DoxyCode}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md17}{}\doxysubsection{\texorpdfstring{{\bfseries{Basic Usage}}}{{\bfseries{Basic Usage}}}}\label{md__r_e_a_d_m_e_autotoc_md17}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md18}{}\doxysubsubsection{\texorpdfstring{{\bfseries{Unified Interface (Recommended)}}}{{\bfseries{Unified Interface (Recommended)}}}}\label{md__r_e_a_d_m_e_autotoc_md18}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ Navigate\ to\ install\ directory}
+\DoxyCodeLine{cd\ /path/to/install}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Check\ system\ status}
+\DoxyCodeLine{./solar\_system\_launcher\ -\/-\/status}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Update\ JPL\ data}
+\DoxyCodeLine{./solar\_system\_launcher\ -\/-\/fetch\ -\/-\/update}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Run\ simulation\ to\ specific\ date}
+\DoxyCodeLine{./solar\_system\_launcher\ -\/-\/simulate\ -\/-\/date\ 2025-\/07-\/01}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Auto-\/fetch\ data\ and\ simulate}
+\DoxyCodeLine{./solar\_system\_launcher\ -\/-\/simulate\ -\/-\/auto-\/fetch\ -\/-\/date\ 2025-\/12-\/31}
+
+\end{DoxyCode}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md19}{}\doxysubsubsection{\texorpdfstring{{\bfseries{Web Interface (Interactive Time Travel)}}}{{\bfseries{Web Interface (Interactive Time Travel)}}}}\label{md__r_e_a_d_m_e_autotoc_md19}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ Start\ web\ server}
+\DoxyCodeLine{./bin/solar\_system\_web\ -\/-\/web-\/root\ share/solar\_system/web}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Open\ browser\ to:\ http://localhost:8080}
+\DoxyCodeLine{\#\ Features:}
+\DoxyCodeLine{\#\ \ \ •\ Time\ travel\ from\ any\ historical\ date}
+\DoxyCodeLine{\#\ \ \ •\ Variable\ speed\ simulation\ (0.1x\ to\ 1\ year/sec)}
+\DoxyCodeLine{\#\ \ \ •\ Interactive\ 3D\ visualization}
+\DoxyCodeLine{\#\ \ \ •\ Orbit\ trails\ and\ planet\ labels}
+\DoxyCodeLine{\#\ \ \ •\ Real-\/time\ orbital\ mechanics}
+
+\end{DoxyCode}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md20}{}\doxysubsubsection{\texorpdfstring{{\bfseries{Individual Applications}}}{{\bfseries{Individual Applications}}}}\label{md__r_e_a_d_m_e_autotoc_md20}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ Real-\/time\ solar\ system\ tracking}
+\DoxyCodeLine{./bin/solar\_system\_realtime}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Direct\ data\ management}
+\DoxyCodeLine{./bin/solar\_system\_fetch\ -\/-\/update}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Direct\ simulation}
+\DoxyCodeLine{./bin/solar\_system\ -\/-\/date\ 2025-\/07-\/01}
+
+\end{DoxyCode}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md21}{}\doxysection{\texorpdfstring{📱 Applications Guide}{📱 Applications Guide}}\label{md__r_e_a_d_m_e_autotoc_md21}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md22}{}\doxysubsection{\texorpdfstring{🎛️ {\bfseries{solar\+\_\+system\+\_\+launcher -\/ Unified Interface}}}{🎛️ {\bfseries{solar\+\_\+system\+\_\+launcher -\/ Unified Interface}}}}\label{md__r_e_a_d_m_e_autotoc_md22}
+{\bfseries{Purpose}}\+: Single entry point for all Solar System Suite operations
+
+{\bfseries{Key Features}}\+:
+\begin{DoxyItemize}
+\item Workflow coordination (fetch → simulate in one command)
+\item System status monitoring
+\item Auto-\/fetch capabilities
+\item Unified command interface
+\end{DoxyItemize}
+
+{\bfseries{Examples}}\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ System\ overview}
+\DoxyCodeLine{./solar\_system\_launcher\ -\/-\/status}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Complete\ workflow:\ update\ data\ then\ simulate}
+\DoxyCodeLine{./solar\_system\_launcher\ -\/-\/fetch\ -\/-\/update\ -\/-\/simulate\ -\/-\/date\ 2025-\/07-\/01}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Force\ data\ update}
+\DoxyCodeLine{./solar\_system\_launcher\ -\/-\/fetch\ -\/-\/force}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Auto-\/fetch\ and\ simulate}
+\DoxyCodeLine{./solar\_system\_launcher\ -\/-\/simulate\ -\/-\/auto-\/fetch\ -\/-\/date\ 2025-\/12-\/31}
+
+\end{DoxyCode}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md23}{}\doxysubsection{\texorpdfstring{📡 {\bfseries{solar\+\_\+system\+\_\+fetch -\/ Data Management}}}{📡 {\bfseries{solar\+\_\+system\+\_\+fetch -\/ Data Management}}}}\label{md__r_e_a_d_m_e_autotoc_md23}
+{\bfseries{Purpose}}\+: JPL HORIZONS data fetching, caching, and validation
+
+{\bfseries{Key Features}}\+:
+\begin{DoxyItemize}
+\item Smart year-\/based caching (1000-\/2000x performance improvement)
+\item Parallel data fetching (3 concurrent connections)
+\item Cache validation and integrity checking
+\item Force update capabilities
+\end{DoxyItemize}
+
+{\bfseries{Examples}}\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ Update\ current\ year\ data}
+\DoxyCodeLine{./solar\_system\_fetch\ -\/-\/update}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Force\ update\ (bypass\ smart\ caching)}
+\DoxyCodeLine{./solar\_system\_fetch\ -\/-\/force}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Validate\ cache\ integrity}
+\DoxyCodeLine{./solar\_system\_fetch\ -\/-\/validate}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Test\ storage\ system}
+\DoxyCodeLine{./solar\_system\_fetch\ -\/-\/test-\/storage}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Show\ cache\ status}
+\DoxyCodeLine{./solar\_system\_fetch}
+
+\end{DoxyCode}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md24}{}\doxysubsection{\texorpdfstring{🌌 {\bfseries{solar\+\_\+system -\/ High-\/\+Performance Simulation}}}{🌌 {\bfseries{solar\+\_\+system -\/ High-\/\+Performance Simulation}}}}\label{md__r_e_a_d_m_e_autotoc_md24}
+{\bfseries{Purpose}}\+: Optimized N-\/body gravitational simulation for specific dates
+
+{\bfseries{Key Features}}\+:
+\begin{DoxyItemize}
+\item Maximum performance optimization
+\item Forward/backward time simulation
+\item Precise date targeting
+\item Uses cached JPL data
+\end{DoxyItemize}
+
+{\bfseries{Examples}}\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ Simulate\ to\ specific\ date}
+\DoxyCodeLine{./solar\_system\ -\/-\/date\ 2025-\/07-\/01}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Verbose\ output}
+\DoxyCodeLine{./solar\_system\ -\/-\/date\ 2025-\/12-\/31\ -\/-\/verbose}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Custom\ time\ step}
+\DoxyCodeLine{./solar\_system\ -\/-\/date\ 2025-\/07-\/01\ -\/-\/timestep\ 60}
+
+\end{DoxyCode}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md25}{}\doxysubsection{\texorpdfstring{🌍 {\bfseries{solar\+\_\+system\+\_\+realtime -\/ Live Tracking}}}{🌍 {\bfseries{solar\+\_\+system\+\_\+realtime -\/ Live Tracking}}}}\label{md__r_e_a_d_m_e_autotoc_md25}
+{\bfseries{Purpose}}\+: Real-\/time solar system monitoring and live demonstrations
+
+{\bfseries{Key Features}}\+:
+\begin{DoxyItemize}
+\item Continuous real-\/time updates
+\item Configurable update intervals
+\item Position and velocity tracking
+\item Graceful shutdown (Ctrl+C)
+\end{DoxyItemize}
+
+{\bfseries{Examples}}\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ Basic\ real-\/time\ tracking}
+\DoxyCodeLine{./solar\_system\_realtime}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Show\ velocities\ with\ fast\ updates}
+\DoxyCodeLine{./solar\_system\_realtime\ -\/-\/velocities\ -\/-\/display-\/interval\ 5}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Single\ snapshot\ (no\ continuous\ mode)}
+\DoxyCodeLine{./solar\_system\_realtime\ -\/-\/no-\/continuous}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Quiet\ mode\ for\ data\ logging}
+\DoxyCodeLine{./solar\_system\_realtime\ -\/-\/quiet\ -\/-\/display-\/interval\ 30}
+
+\end{DoxyCode}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md26}{}\doxysubsection{\texorpdfstring{🌐 {\bfseries{solar\+\_\+system\+\_\+web -\/ Interactive Time Travel Visualization}}}{🌐 {\bfseries{solar\+\_\+system\+\_\+web -\/ Interactive Time Travel Visualization}}}}\label{md__r_e_a_d_m_e_autotoc_md26}
+{\bfseries{Purpose}}\+: Web-\/based interactive visualization with time travel capabilities
+
+{\bfseries{Key Features}}\+:
+\begin{DoxyItemize}
+\item Interactive 3D Web\+GL visualization with smooth rendering
+\item {\bfseries{Intelligent Time Travel}}\+: Automatic JPL data fetching for historical dates
+\item {\bfseries{Dual Request System}}\+: Manual JPL fetching for large jumps, simulation for smooth animation
+\item {\bfseries{Smart Body Classification}}\+: Essential (planets), Important (moons), Optional (spacecraft)
+\item Variable speed control (0.\+1x to 1 year per second)
+\item Orbit trails with beautiful fading effects
+\item Planet labels and real-\/time information
+\item Mouse controls for rotation and zoom
+\item Professional web interface with clean output
+\end{DoxyItemize}
+
+{\bfseries{Examples}}\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ Start\ web\ server\ (clean\ output)}
+\DoxyCodeLine{./solar\_system\_web\ -\/-\/web-\/root\ share/solar\_system/web}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Verbose\ mode\ for\ debugging}
+\DoxyCodeLine{./solar\_system\_web\ -\/-\/port\ 3000\ -\/-\/verbose\ -\/-\/web-\/root\ share/solar\_system/web}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Then\ open\ browser\ to:\ http://localhost:8080}
+
+\end{DoxyCode}
+
+
+{\bfseries{Web Interface Features}}\+:
+\begin{DoxyItemize}
+\item {\bfseries{Time Travel Mode}}\+: Jump to any historical date (1990, 2000, 2010, 2020+)
+\item {\bfseries{Intelligent Data Handling}}\+:
+\begin{DoxyItemize}
+\item Manual time travel → JPL HORIZONS data fetching
+\item Animation playback → Real-\/time simulation
+\item Automatic fallback for missing spacecraft in historical dates
+\end{DoxyItemize}
+\item {\bfseries{Speed Control}}\+: Watch 35 years pass in 35 seconds at 1 year/sec
+\item {\bfseries{Orbit Trails}}\+: Enable beautiful orbital path visualization
+\item {\bfseries{Interactive Controls}}\+: Mouse drag to rotate, scroll to zoom
+\item {\bfseries{View Modes}}\+: 3D perspective or top-\/down orbital view
+\item {\bfseries{Real-\/time Sync}}\+: Seamlessly transition between modes
+\end{DoxyItemize}\hypertarget{md__r_e_a_d_m_e_autotoc_md27}{}\doxysection{\texorpdfstring{🌌 Celestial Bodies Coverage}{🌌 Celestial Bodies Coverage}}\label{md__r_e_a_d_m_e_autotoc_md27}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md28}{}\doxysubsection{\texorpdfstring{{\bfseries{Complete Solar System (27 Bodies)}}}{{\bfseries{Complete Solar System (27 Bodies)}}}}\label{md__r_e_a_d_m_e_autotoc_md28}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{3}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Category  }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Bodies  }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Count  }\\\cline{1-3}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Category  }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Bodies  }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Count  }\\\cline{1-3}
+\endhead
+{\bfseries{Sun}}  &Sun  &1  \\\cline{1-3}
+{\bfseries{Inner Planets}}  &Mercury, Venus, Earth, Mars  &4  \\\cline{1-3}
+{\bfseries{Earth System}}  &Moon  &1  \\\cline{1-3}
+{\bfseries{Jupiter System}}  &Jupiter, Io, Europa, Ganymede, Callisto  &5  \\\cline{1-3}
+{\bfseries{Saturn System}}  &Saturn, Titan, Rhea, Iapetus  &4  \\\cline{1-3}
+{\bfseries{Uranus System}}  &Uranus, Titania, Oberon  &3  \\\cline{1-3}
+{\bfseries{Neptune System}}  &Neptune, Triton  &2  \\\cline{1-3}
+{\bfseries{Pluto System}}  &Pluto, Charon  &2  \\\cline{1-3}
+{\bfseries{Dwarf Planets}}  &Quaoar, Haumea, Eris  &3  \\\cline{1-3}
+{\bfseries{Spacecraft}}  &New Horizons, SpaceX Roadster  &2  \\\cline{1-3}
+\end{longtabu}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md29}{}\doxysubsection{\texorpdfstring{{\bfseries{JPL HORIZONS Integration}}}{{\bfseries{JPL HORIZONS Integration}}}}\label{md__r_e_a_d_m_e_autotoc_md29}
+
+\begin{DoxyItemize}
+\item {\bfseries{API Endpoint}}\+: {\ttfamily \href{https://ssd.jpl.nasa.gov/api/horizons.api}{\texttt{https\+://ssd.\+jpl.\+nasa.\+gov/api/horizons.\+api}}}
+\item {\bfseries{Reference Frame}}\+: J2000 Ecliptic
+\item {\bfseries{Units}}\+: Kilometers and seconds
+\item {\bfseries{Precision}}\+: Full double precision
+\item {\bfseries{Update Frequency}}\+: Automatic yearly updates
+\end{DoxyItemize}\hypertarget{md__r_e_a_d_m_e_autotoc_md30}{}\doxysubsection{\texorpdfstring{{\bfseries{Orbital Mechanics in Web Interface}}}{{\bfseries{Orbital Mechanics in Web Interface}}}}\label{md__r_e_a_d_m_e_autotoc_md30}
+
+\begin{DoxyItemize}
+\item {\bfseries{Accurate Periods}}\+: Mercury (88 days), Earth (365 days), Jupiter (12 years)
+\item {\bfseries{Visual Orbital Motion}}\+: Planets move at realistic speeds during time travel
+\item {\bfseries{Orbit Trails}}\+: Beautiful visualization of orbital paths over time
+\item {\bfseries{Interactive Speed Control}}\+: From slow motion to years per second
+\end{DoxyItemize}\hypertarget{md__r_e_a_d_m_e_autotoc_md31}{}\doxysection{\texorpdfstring{🔧 Advanced Configuration}{🔧 Advanced Configuration}}\label{md__r_e_a_d_m_e_autotoc_md31}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md32}{}\doxysubsection{\texorpdfstring{{\bfseries{Installation Options}}}{{\bfseries{Installation Options}}}}\label{md__r_e_a_d_m_e_autotoc_md32}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md33}{}\doxysubsubsection{\texorpdfstring{{\bfseries{Environment Variable}}}{{\bfseries{Environment Variable}}}}\label{md__r_e_a_d_m_e_autotoc_md33}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{export\ SOLAR\_SYSTEM\_INSTALL\_DIR=/custom/path}
+\DoxyCodeLine{cmake\ ..}
+\DoxyCodeLine{make\ install}
+
+\end{DoxyCode}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md34}{}\doxysubsubsection{\texorpdfstring{{\bfseries{CMake Option}}}{{\bfseries{CMake Option}}}}\label{md__r_e_a_d_m_e_autotoc_md34}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cmake\ -\/DSOLAR\_SYSTEM\_INSTALL\_DIR=/custom/path\ ..}
+\DoxyCodeLine{make\ install}
+
+\end{DoxyCode}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md35}{}\doxysubsubsection{\texorpdfstring{{\bfseries{Development Build}}}{{\bfseries{Development Build}}}}\label{md__r_e_a_d_m_e_autotoc_md35}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ Debug\ build\ with\ profiling}
+\DoxyCodeLine{mkdir\ build-\/debug\ \&\&\ cd\ build-\/debug}
+\DoxyCodeLine{cmake\ -\/DCMAKE\_BUILD\_TYPE=Debug\ -\/DENABLE\_PROFILING=ON\ ..}
+\DoxyCodeLine{make}
+
+\end{DoxyCode}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md36}{}\doxysubsection{\texorpdfstring{{\bfseries{Web Server Configuration}}}{{\bfseries{Web Server Configuration}}}}\label{md__r_e_a_d_m_e_autotoc_md36}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md37}{}\doxysubsubsection{\texorpdfstring{{\bfseries{Custom Port and Settings}}}{{\bfseries{Custom Port and Settings}}}}\label{md__r_e_a_d_m_e_autotoc_md37}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ Custom\ port}
+\DoxyCodeLine{./solar\_system\_web\ -\/-\/port\ 3000\ -\/-\/web-\/root\ share/solar\_system/web}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Verbose\ mode\ for\ debugging}
+\DoxyCodeLine{./solar\_system\_web\ -\/-\/verbose}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Disable\ CORS\ (for\ local\ development)}
+\DoxyCodeLine{./solar\_system\_web\ -\/-\/no-\/cors}
+
+\end{DoxyCode}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md38}{}\doxysubsubsection{\texorpdfstring{{\bfseries{Web Interface URLs}}}{{\bfseries{Web Interface URLs}}}}\label{md__r_e_a_d_m_e_autotoc_md38}
+
+\begin{DoxyItemize}
+\item {\bfseries{Full Time Travel Interface}}\+: {\ttfamily \href{http://localhost:8080/}{\texttt{http\+://localhost\+:8080/}}}
+\item {\bfseries{Simple Fast-\/\+Loading View}}\+: {\ttfamily \href{http://localhost:8080/simple.html}{\texttt{http\+://localhost\+:8080/simple.\+html}}}
+\item {\bfseries{API Status}}\+: {\ttfamily \href{http://localhost:8080/api/status}{\texttt{http\+://localhost\+:8080/api/status}}}
+\item {\bfseries{Solar System Data}}\+: {\ttfamily \href{http://localhost:8080/api/solar_system}{\texttt{http\+://localhost\+:8080/api/solar\+\_\+system}}}
+\end{DoxyItemize}\hypertarget{md__r_e_a_d_m_e_autotoc_md39}{}\doxysubsection{\texorpdfstring{{\bfseries{Cache System}}}{{\bfseries{Cache System}}}}\label{md__r_e_a_d_m_e_autotoc_md39}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md40}{}\doxysubsubsection{\texorpdfstring{{\bfseries{Smart Caching Hierarchy}}}{{\bfseries{Smart Caching Hierarchy}}}}\label{md__r_e_a_d_m_e_autotoc_md40}
+
+\begin{DoxyEnumerate}
+\item {\bfseries{Binary Cache}} ({\ttfamily ephemeris\+\_\+cache.\+bin}) -\/ Fastest loading
+\item {\bfseries{JSON Cache}} ({\ttfamily ephemeris\+\_\+data.\+json}) -\/ Human-\/readable backup
+\item {\bfseries{Hardcoded Data}} -\/ Offline fallback
+\end{DoxyEnumerate}\hypertarget{md__r_e_a_d_m_e_autotoc_md41}{}\doxysubsubsection{\texorpdfstring{{\bfseries{Cache Management}}}{{\bfseries{Cache Management}}}}\label{md__r_e_a_d_m_e_autotoc_md41}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ Force\ cache\ rebuild}
+\DoxyCodeLine{./solar\_system\_fetch\ -\/-\/rebuild}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Clean\ all\ cache\ files}
+\DoxyCodeLine{./solar\_system\_fetch\ -\/-\/clean}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Validate\ cache\ integrity}
+\DoxyCodeLine{./solar\_system\_fetch\ -\/-\/validate}
+
+\end{DoxyCode}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md42}{}\doxysubsection{\texorpdfstring{{\bfseries{Performance Optimization}}}{{\bfseries{Performance Optimization}}}}\label{md__r_e_a_d_m_e_autotoc_md42}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md43}{}\doxysubsubsection{\texorpdfstring{{\bfseries{Compilation Flags}}}{{\bfseries{Compilation Flags}}}}\label{md__r_e_a_d_m_e_autotoc_md43}
+
+\begin{DoxyItemize}
+\item {\bfseries{Release}}\+: {\ttfamily -\/O3 -\/march=native -\/mtune=native -\/flto -\/ffast-\/math -\/funroll-\/loops}
+\item {\bfseries{LTO}}\+: Link-\/time optimization enabled
+\item {\bfseries{Native}}\+: CPU-\/specific optimizations
+\end{DoxyItemize}\hypertarget{md__r_e_a_d_m_e_autotoc_md44}{}\doxysubsubsection{\texorpdfstring{{\bfseries{Benchmarks}}}{{\bfseries{Benchmarks}}}}\label{md__r_e_a_d_m_e_autotoc_md44}
+
+\begin{DoxyItemize}
+\item {\bfseries{Cache Loading}}\+: \texorpdfstring{$<$}{<} 1ms for binary cache
+\item {\bfseries{JPL Data Fetch}}\+: \texorpdfstring{$\sim$}{\string~}30-\/60 seconds for all 27 bodies (first time)
+\item {\bfseries{Smart Cache}}\+: 0.\+008s for subsequent updates
+\item {\bfseries{Simulation}}\+: Microseconds per time step
+\item {\bfseries{Web Rendering}}\+: 60 FPS interactive visualization
+\end{DoxyItemize}\hypertarget{md__r_e_a_d_m_e_autotoc_md45}{}\doxysection{\texorpdfstring{🛠️ Development}{🛠️ Development}}\label{md__r_e_a_d_m_e_autotoc_md45}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md46}{}\doxysubsection{\texorpdfstring{{\bfseries{Build System}}}{{\bfseries{Build System}}}}\label{md__r_e_a_d_m_e_autotoc_md46}
+
+\begin{DoxyItemize}
+\item {\bfseries{CMake 3.\+15+}}\+: Modern cross-\/platform build system
+\item {\bfseries{Out-\/of-\/source builds}}\+: Clean separation in {\ttfamily build/} directory
+\item {\bfseries{Cross-\/platform}}\+: mac\+OS, Linux, Windows
+\item {\bfseries{IDE Integration}}\+: Xcode, VS Code, CLion project generation
+\end{DoxyItemize}\hypertarget{md__r_e_a_d_m_e_autotoc_md47}{}\doxysubsection{\texorpdfstring{{\bfseries{Code Organization}}}{{\bfseries{Code Organization}}}}\label{md__r_e_a_d_m_e_autotoc_md47}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{📁\ solarsystem/}
+\DoxyCodeLine{├──\ 📁\ lib/\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ Modular\ libraries}
+\DoxyCodeLine{│\ \ \ ├──\ 📚\ solar\_core/\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ Simulation\ engine}
+\DoxyCodeLine{│\ \ \ ├──\ 📡\ solar\_jpl/\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ JPL\ integration}
+\DoxyCodeLine{│\ \ \ └──\ 🔧\ solar\_utils/\ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ Shared\ utilities}
+\DoxyCodeLine{├──\ 📁\ apps/\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ Specialized\ applications}
+\DoxyCodeLine{│\ \ \ ├──\ 🎛️\ solar\_system\_launcher/\ \ \ \ \#\ Unified\ interface}
+\DoxyCodeLine{│\ \ \ ├──\ 📡\ solar\_system\_fetch/\ \ \ \ \ \ \ \#\ Data\ management}
+\DoxyCodeLine{│\ \ \ ├──\ 🌌\ solar\_system/\ \ \ \ \ \ \ \ \ \ \ \ \ \#\ Batch\ simulation}
+\DoxyCodeLine{│\ \ \ ├──\ 🌍\ solar\_system\_realtime/\ \ \ \ \#\ Live\ tracking}
+\DoxyCodeLine{│\ \ \ └──\ 🌐\ solar\_system\_web/\ \ \ \ \ \ \ \ \ \#\ Web\ visualization}
+\DoxyCodeLine{├──\ 📁\ cmake/\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ Build\ configuration}
+\DoxyCodeLine{└──\ 📁\ install/\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \#\ Default\ installation}
+
+\end{DoxyCode}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md48}{}\doxysubsection{\texorpdfstring{{\bfseries{Development Commands}}}{{\bfseries{Development Commands}}}}\label{md__r_e_a_d_m_e_autotoc_md48}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ Format\ code}
+\DoxyCodeLine{make\ format}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Clean\ cache\ files}
+\DoxyCodeLine{make\ clean-\/cache}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Build\ all\ applications}
+\DoxyCodeLine{make\ applications}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Build\ specific\ library}
+\DoxyCodeLine{make\ solar\_core}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Reconfigure\ build}
+\DoxyCodeLine{rm\ -\/rf\ build\ \&\&\ mkdir\ build\ \&\&\ cd\ build\ \&\&\ cmake\ ..}
+
+\end{DoxyCode}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md49}{}\doxysection{\texorpdfstring{🧪 Testing \& Validation}{🧪 Testing \& Validation}}\label{md__r_e_a_d_m_e_autotoc_md49}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md50}{}\doxysubsection{\texorpdfstring{{\bfseries{Data Validation}}}{{\bfseries{Data Validation}}}}\label{md__r_e_a_d_m_e_autotoc_md50}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ Test\ storage\ system}
+\DoxyCodeLine{./solar\_system\_fetch\ -\/-\/test-\/storage}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Validate\ cache\ integrity}
+\DoxyCodeLine{./solar\_system\_fetch\ -\/-\/validate}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Check\ system\ status}
+\DoxyCodeLine{./solar\_system\_launcher\ -\/-\/status}
+
+\end{DoxyCode}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md51}{}\doxysubsection{\texorpdfstring{{\bfseries{Web Interface Testing}}}{{\bfseries{Web Interface Testing}}}}\label{md__r_e_a_d_m_e_autotoc_md51}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ Test\ web\ server}
+\DoxyCodeLine{./solar\_system\_web\ -\/-\/web-\/root\ share/solar\_system/web\ -\/-\/verbose}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Test\ API\ endpoints}
+\DoxyCodeLine{curl\ http://localhost:8080/api/status}
+\DoxyCodeLine{curl\ http://localhost:8080/api/solar\_system}
+
+\end{DoxyCode}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md52}{}\doxysubsection{\texorpdfstring{{\bfseries{Performance Testing}}}{{\bfseries{Performance Testing}}}}\label{md__r_e_a_d_m_e_autotoc_md52}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ Profile\ simulation\ performance}
+\DoxyCodeLine{cmake\ -\/DENABLE\_PROFILING=ON\ ..}
+\DoxyCodeLine{make}
+\DoxyCodeLine{./solar\_system\ -\/-\/date\ 2025-\/07-\/01}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Benchmark\ cache\ performance}
+\DoxyCodeLine{time\ ./solar\_system\_fetch\ -\/-\/update\ \ \#\ First\ run}
+\DoxyCodeLine{time\ ./solar\_system\_fetch\ -\/-\/update\ \ \#\ Cached\ run\ (should\ be\ \string~0.008s)}
+
+\end{DoxyCode}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md53}{}\doxysection{\texorpdfstring{🌐 Integration \& Deployment}{🌐 Integration \& Deployment}}\label{md__r_e_a_d_m_e_autotoc_md53}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md54}{}\doxysubsection{\texorpdfstring{{\bfseries{System Integration}}}{{\bfseries{System Integration}}}}\label{md__r_e_a_d_m_e_autotoc_md54}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ Add\ to\ PATH\ for\ system-\/wide\ access}
+\DoxyCodeLine{export\ PATH="{}/path/to/install:\$PATH"{}}
+\DoxyCodeLine{solar\_system\_launcher\ -\/-\/help}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Add\ individual\ tools\ to\ PATH}
+\DoxyCodeLine{export\ PATH="{}/path/to/install/bin:\$PATH"{}}
+\DoxyCodeLine{solar\_system\_web\ -\/-\/help}
+
+\end{DoxyCode}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md55}{}\doxysubsection{\texorpdfstring{{\bfseries{Web Server Deployment}}}{{\bfseries{Web Server Deployment}}}}\label{md__r_e_a_d_m_e_autotoc_md55}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ Production\ deployment}
+\DoxyCodeLine{./solar\_system\_web\ -\/-\/port\ 80\ -\/-\/web-\/root\ share/solar\_system/web}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Behind\ reverse\ proxy}
+\DoxyCodeLine{./solar\_system\_web\ -\/-\/port\ 8080\ -\/-\/no-\/cors}
+
+\end{DoxyCode}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md56}{}\doxysubsection{\texorpdfstring{{\bfseries{Automated Deployment}}}{{\bfseries{Automated Deployment}}}}\label{md__r_e_a_d_m_e_autotoc_md56}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ Automated\ installation\ script}
+\DoxyCodeLine{\#!/bin/bash}
+\DoxyCodeLine{export\ SOLAR\_SYSTEM\_INSTALL\_DIR=/opt/solar\_system}
+\DoxyCodeLine{git\ clone\ <repository-\/url>}
+\DoxyCodeLine{cd\ solarsystem}
+\DoxyCodeLine{mkdir\ build\ \&\&\ cd\ build}
+\DoxyCodeLine{cmake\ ..}
+\DoxyCodeLine{make\ -\/j\$(nproc)\ \&\&\ make\ install}
+\DoxyCodeLine{echo\ "{}Solar\ System\ Suite\ installed\ to\ /opt/solar\_system"{}}
+
+\end{DoxyCode}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md57}{}\doxysubsection{\texorpdfstring{{\bfseries{Docker Deployment}}}{{\bfseries{Docker Deployment}}}}\label{md__r_e_a_d_m_e_autotoc_md57}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{FROM\ ubuntu:22.04}
+\DoxyCodeLine{RUN\ apt-\/get\ update\ \&\&\ apt-\/get\ install\ -\/y\ cmake\ g++\ curl}
+\DoxyCodeLine{COPY\ .\ /src}
+\DoxyCodeLine{WORKDIR\ /src}
+\DoxyCodeLine{RUN\ mkdir\ build\ \&\&\ cd\ build\ \&\&\ cmake\ ..\ \&\&\ make\ -\/j\$(nproc)}
+\DoxyCodeLine{EXPOSE\ 8080}
+\DoxyCodeLine{CMD\ [\textcolor{stringliteral}{"{}./build/apps/solar\_system\_web/solar\_system\_web"{}},\ \textcolor{stringliteral}{"{}-\/-\/web-\/root"{}},\ \textcolor{stringliteral}{"{}apps/solar\_system\_web/web"{}}]}
+
+\end{DoxyCode}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md58}{}\doxysection{\texorpdfstring{🔍 Troubleshooting}{🔍 Troubleshooting}}\label{md__r_e_a_d_m_e_autotoc_md58}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md59}{}\doxysubsection{\texorpdfstring{{\bfseries{Common Issues}}}{{\bfseries{Common Issues}}}}\label{md__r_e_a_d_m_e_autotoc_md59}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md60}{}\doxysubsubsection{\texorpdfstring{{\bfseries{"{}\+Failed to fetch JPL data"{}}}}{{\bfseries{"{}\+Failed to fetch JPL data"{}}}}}\label{md__r_e_a_d_m_e_autotoc_md60}
+
+\begin{DoxyItemize}
+\item {\bfseries{Check}}\+: Internet connection and JPL HORIZONS API availability
+\item {\bfseries{Solution}}\+: Use cached data (simulation continues automatically)
+\item {\bfseries{Command}}\+: {\ttfamily ./solar\+\_\+system\+\_\+launcher -\/-\/status} to check data status
+\end{DoxyItemize}\hypertarget{md__r_e_a_d_m_e_autotoc_md61}{}\doxysubsubsection{\texorpdfstring{{\bfseries{"{}\+Binary cache corrupted"{}}}}{{\bfseries{"{}\+Binary cache corrupted"{}}}}}\label{md__r_e_a_d_m_e_autotoc_md61}
+
+\begin{DoxyItemize}
+\item {\bfseries{Solution}}\+: Delete cache files and rebuild
+\item {\bfseries{Commands}}\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{./solar\_system\_fetch\ -\/-\/clean}
+\DoxyCodeLine{./solar\_system\_fetch\ -\/-\/update}
+
+\end{DoxyCode}
+
+\end{DoxyItemize}\hypertarget{md__r_e_a_d_m_e_autotoc_md62}{}\doxysubsubsection{\texorpdfstring{{\bfseries{"{}\+Compilation errors"{}}}}{{\bfseries{"{}\+Compilation errors"{}}}}}\label{md__r_e_a_d_m_e_autotoc_md62}
+
+\begin{DoxyItemize}
+\item {\bfseries{Check}}\+: C++11 compiler support and dependencies
+\item {\bfseries{Install}}\+: {\ttfamily cmake}, {\ttfamily curl}, {\ttfamily make}
+\item {\bfseries{Verify}}\+: {\ttfamily g++ -\/-\/version} and {\ttfamily cmake -\/-\/version}
+\end{DoxyItemize}\hypertarget{md__r_e_a_d_m_e_autotoc_md63}{}\doxysubsubsection{\texorpdfstring{{\bfseries{Web Interface Issues}}}{{\bfseries{Web Interface Issues}}}}\label{md__r_e_a_d_m_e_autotoc_md63}
+
+\begin{DoxyItemize}
+\item {\bfseries{Black Screen}}\+: Check browser console (F12) for Web\+GL errors
+\item {\bfseries{Loading Forever}}\+: Ensure web server is running and accessible
+\item {\bfseries{No Planet Movement}}\+: Check browser console for Java\+Script errors
+\item {\bfseries{Port in Use}}\+: Try different port with {\ttfamily -\/-\/port} option
+\end{DoxyItemize}\hypertarget{md__r_e_a_d_m_e_autotoc_md64}{}\doxysubsection{\texorpdfstring{{\bfseries{Debug Mode}}}{{\bfseries{Debug Mode}}}}\label{md__r_e_a_d_m_e_autotoc_md64}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ Enable\ verbose\ output}
+\DoxyCodeLine{./solar\_system\_launcher\ -\/-\/status\ -\/-\/verbose}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Web\ server\ debugging}
+\DoxyCodeLine{./solar\_system\_web\ -\/-\/verbose\ -\/-\/web-\/root\ share/solar\_system/web}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Check\ cache\ status}
+\DoxyCodeLine{ls\ -\/la\ ephemeris\_*.*}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Validate\ installation}
+\DoxyCodeLine{./solar\_system\_launcher\ -\/-\/status}
+
+\end{DoxyCode}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md65}{}\doxysection{\texorpdfstring{📊 Performance \& Scalability}{📊 Performance \& Scalability}}\label{md__r_e_a_d_m_e_autotoc_md65}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md66}{}\doxysubsection{\texorpdfstring{{\bfseries{Optimization Features}}}{{\bfseries{Optimization Features}}}}\label{md__r_e_a_d_m_e_autotoc_md66}
+
+\begin{DoxyItemize}
+\item {\bfseries{Smart Caching}}\+: 1000-\/2000x performance improvement
+\item {\bfseries{Parallel Fetching}}\+: 3 concurrent JPL connections
+\item {\bfseries{Native Compilation}}\+: CPU-\/specific optimizations
+\item {\bfseries{LTO}}\+: Link-\/time optimization for maximum performance
+\item {\bfseries{Web\+GL Acceleration}}\+: Hardware-\/accelerated 3D rendering
+\end{DoxyItemize}\hypertarget{md__r_e_a_d_m_e_autotoc_md67}{}\doxysubsection{\texorpdfstring{{\bfseries{Scalability}}}{{\bfseries{Scalability}}}}\label{md__r_e_a_d_m_e_autotoc_md67}
+
+\begin{DoxyItemize}
+\item {\bfseries{Memory Efficient}}\+: Optimized data structures
+\item {\bfseries{Fast Startup}}\+: Binary cache loading \texorpdfstring{$<$}{<} 1ms
+\item {\bfseries{Concurrent Safe}}\+: Thread-\/safe data access
+\item {\bfseries{Resource Aware}}\+: Configurable update intervals
+\item {\bfseries{Web Performance}}\+: 60 FPS interactive visualization
+\end{DoxyItemize}\hypertarget{md__r_e_a_d_m_e_autotoc_md68}{}\doxysection{\texorpdfstring{🤝 Contributing}{🤝 Contributing}}\label{md__r_e_a_d_m_e_autotoc_md68}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md69}{}\doxysubsection{\texorpdfstring{{\bfseries{Development Setup}}}{{\bfseries{Development Setup}}}}\label{md__r_e_a_d_m_e_autotoc_md69}
+
+\begin{DoxyEnumerate}
+\item Fork the repository
+\item Create feature branch\+: {\ttfamily git checkout -\/b feature-\/name}
+\item Follow existing code style (auto-\/formatted)
+\item Test thoroughly with all applications
+\item Update documentation as needed
+\item Submit pull request
+\end{DoxyEnumerate}\hypertarget{md__r_e_a_d_m_e_autotoc_md70}{}\doxysubsection{\texorpdfstring{{\bfseries{Code Standards}}}{{\bfseries{Code Standards}}}}\label{md__r_e_a_d_m_e_autotoc_md70}
+
+\begin{DoxyItemize}
+\item {\bfseries{C++11 Standard}}\+: Modern C++ features
+\item {\bfseries{Auto-\/formatting}}\+: Pre-\/commit hooks with clang-\/format
+\item {\bfseries{Modular Design}}\+: Clean separation of concerns
+\item {\bfseries{Comprehensive Testing}}\+: Validate all applications
+\item {\bfseries{Documentation}}\+: Update \doxylink{_r_e_a_d_m_e_8md}{README.\+md} for new features
+\item {\bfseries{Zero Dependencies}}\+: Maintain standard library only approach
+\end{DoxyItemize}\hypertarget{md__r_e_a_d_m_e_autotoc_md71}{}\doxysection{\texorpdfstring{📈 Roadmap}{📈 Roadmap}}\label{md__r_e_a_d_m_e_autotoc_md71}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md72}{}\doxysubsection{\texorpdfstring{{\bfseries{Completed Features}} ✅}{{\bfseries{Completed Features}} ✅}}\label{md__r_e_a_d_m_e_autotoc_md72}
+
+\begin{DoxyItemize}
+\item {\bfseries{Complete 5-\/Application Suite}}\+: All core applications implemented
+\item {\bfseries{Web-\/\+Based Time Travel}}\+: Interactive visualization with orbital motion
+\item {\bfseries{Professional Installation}}\+: Configurable deployment system
+\item {\bfseries{Real-\/\+Time Integration}}\+: Live data streaming and monitoring
+\item {\bfseries{Orbit Visualization}}\+: Beautiful trail effects and interactive controls
+\end{DoxyItemize}\hypertarget{md__r_e_a_d_m_e_autotoc_md73}{}\doxysubsection{\texorpdfstring{{\bfseries{Planned Features}}}{{\bfseries{Planned Features}}}}\label{md__r_e_a_d_m_e_autotoc_md73}
+
+\begin{DoxyItemize}
+\item {\bfseries{Enhanced Physics}}\+: More accurate orbital mechanics integration
+\item {\bfseries{3D Model Rendering}}\+: Realistic planet and spacecraft models
+\item {\bfseries{Plugin System}}\+: Extensible architecture for custom bodies
+\item {\bfseries{REST API Enhancement}}\+: More sophisticated simulation control
+\item {\bfseries{Database Integration}}\+: Historical data storage and analysis
+\item {\bfseries{Mobile Interface}}\+: Responsive design for tablets and phones
+\end{DoxyItemize}\hypertarget{md__r_e_a_d_m_e_autotoc_md74}{}\doxysubsection{\texorpdfstring{{\bfseries{Performance Improvements}}}{{\bfseries{Performance Improvements}}}}\label{md__r_e_a_d_m_e_autotoc_md74}
+
+\begin{DoxyItemize}
+\item {\bfseries{GPU Acceleration}}\+: CUDA/\+Open\+CL support for large-\/scale simulations
+\item {\bfseries{Distributed Computing}}\+: Multi-\/node simulation capabilities
+\item {\bfseries{Advanced Caching}}\+: Predictive data prefetching
+\item {\bfseries{Compression}}\+: Optimized data storage formats
+\item {\bfseries{Web\+Assembly}}\+: High-\/performance web simulation engine
+\end{DoxyItemize}\hypertarget{md__r_e_a_d_m_e_autotoc_md75}{}\doxysection{\texorpdfstring{📄 License}{📄 License}}\label{md__r_e_a_d_m_e_autotoc_md75}
+\mbox{[}Add your license information here\mbox{]}\hypertarget{md__r_e_a_d_m_e_autotoc_md76}{}\doxysection{\texorpdfstring{🙏 Acknowledgments}{🙏 Acknowledgments}}\label{md__r_e_a_d_m_e_autotoc_md76}
+
+\begin{DoxyItemize}
+\item {\bfseries{NASA JPL HORIZONS}}\+: Ephemeris data source and API
+\item {\bfseries{Solar System Dynamics Group}}\+: JPL HORIZONS system development
+\item {\bfseries{Contributors}}\+: \mbox{[}List project contributors\mbox{]}
+\item {\bfseries{Open Source Community}}\+: Libraries and tools that made this possible
+\item {\bfseries{Web\+GL Community}}\+: Graphics programming resources and examples
+\end{DoxyItemize}\hypertarget{md__r_e_a_d_m_e_autotoc_md77}{}\doxysection{\texorpdfstring{📚 References}{📚 References}}\label{md__r_e_a_d_m_e_autotoc_md77}
+
+\begin{DoxyItemize}
+\item \href{https://ssd.jpl.nasa.gov/horizons/}{\texttt{JPL HORIZONS System}}
+\item \href{https://ssd-api.jpl.nasa.gov/doc/horizons.html}{\texttt{HORIZONS API Documentation}}
+\item \href{https://ssd.jpl.nasa.gov/}{\texttt{Solar System Dynamics}}
+\item \href{https://en.wikipedia.org/wiki/N-body_problem}{\texttt{N-\/\+Body Problem}}
+\item \href{https://en.wikipedia.org/wiki/Celestial_mechanics}{\texttt{Celestial Mechanics}}
+\item \href{https://www.khronos.org/webgl/}{\texttt{Web\+GL Specification}}
+\end{DoxyItemize}
+
+\DoxyHorRuler{0}
+
+
+{\bfseries{Solar System Suite}} -\/ Professional N-\/body gravitational simulation with real-\/time JPL data integration and interactive web-\/based time travel visualization ~\newline
+ {\bfseries{Version}}\+: 3.\+0.\+0 (Interactive Web Visualization) ~\newline
+ {\bfseries{Last Updated}}\+: June 2025 ~\newline
+ {\bfseries{Status}}\+: Production Ready with Web Interface 🚀🌐\hypertarget{md__r_e_a_d_m_e_autotoc_md79}{}\doxysection{\texorpdfstring{🌟 {\bfseries{Quick Demo}}}{🌟 {\bfseries{Quick Demo}}}}\label{md__r_e_a_d_m_e_autotoc_md79}
+{\bfseries{Experience the magic in 60 seconds\+:}}
+\begin{DoxyEnumerate}
+\item {\ttfamily ./bin/solar\+\_\+system\+\_\+web -\/-\/web-\/root share/solar\+\_\+system/web}
+\item Open {\ttfamily \href{http://localhost:8080}{\texttt{http\+://localhost\+:8080}}}
+\item Click "{}\+Time Travel"{} → Set date to "{}1990"{} → Speed "{}1 year/sec"{}
+\item Enable "{}\+Orbit Trails"{} and "{}\+Labels"{}
+\item Click "{}\+Start Time Travel"{}
+\item Watch 35 years of solar system evolution in 35 seconds! 🌌✨ 
+\end{DoxyEnumerate}

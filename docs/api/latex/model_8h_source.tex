@@ -1,0 +1,43 @@
+\doxysection{model.\+h}
+\hypertarget{model_8h_source}{}\label{model_8h_source}\index{lib/solar\_core/model.h@{lib/solar\_core/model.h}}
+\mbox{\hyperlink{model_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_\_MODEL\_REAL\_OPT\_H\_\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_\_MODEL\_REAL\_OPT\_H\_\_}}
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <time.h>}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <cmath>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{constants_8h}{constants.h}}"{}}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{types_8h}{types.h}}"{}}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{model_8h_a73d7e86535b1f32f514fb6e48e598198}{dist}}(\mbox{\hyperlink{structcoord}{coord}}\ a,\ \mbox{\hyperlink{structcoord}{coord}}\ b);}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{comment}{//\ Now\ use\ sqrtl\ to\ match\ the\ corrected\ original\ precision}}
+\DoxyCodeLine{00013\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{model_8h_adb1b500adb18d9f5cc88a7b3d030bf1e}{attractTo}}(\mbox{\hyperlink{structcoord}{coord}}\&\ this\_position,\ \mbox{\hyperlink{types_8h_ae12f60774623c89f63a6be20f683b565}{acceleration}}\&\ delta,\ \textcolor{keywordtype}{int}\ j)\ \{}
+\DoxyCodeLine{00014\ \ \ \mbox{\hyperlink{structcoord}{coord}}\&\ other\_position\ =\ \mbox{\hyperlink{constants_8cpp_a125270e7761f26473f91d050c995030c}{SolarSystem}}[j].position;}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \ \ \textcolor{comment}{//\ Calculate\ difference\ vector\ once\ to\ eliminate\ redundant\ calculations}}
+\DoxyCodeLine{00017\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{double}\ dx\ =\ other\_position.\mbox{\hyperlink{structcoord_a96c9fc34e388487639e8f417efcbde34}{x}}\ -\/\ this\_position.\mbox{\hyperlink{structcoord_a96c9fc34e388487639e8f417efcbde34}{x}};}
+\DoxyCodeLine{00018\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{double}\ dy\ =\ other\_position.\mbox{\hyperlink{structcoord_a4f4763a816e51d56b9bed4dcafc1cd4f}{y}}\ -\/\ this\_position.\mbox{\hyperlink{structcoord_a4f4763a816e51d56b9bed4dcafc1cd4f}{y}};}
+\DoxyCodeLine{00019\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{double}\ dz\ =\ other\_position.\mbox{\hyperlink{structcoord_affd07f2803ae16cd216e9887edc4cabb}{z}}\ -\/\ this\_position.\mbox{\hyperlink{structcoord_affd07f2803ae16cd216e9887edc4cabb}{z}};}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{double}\ distance\ =\ sqrtl(dx\ *\ dx\ +\ dy\ *\ dy\ +\ dz\ *\ dz);}
+\DoxyCodeLine{00022\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{double}\ normal\_acc\ =\ \mbox{\hyperlink{constants_8cpp_a977abf14dc0cd94cbd397c08d5ffc1c8}{G}}\ *\ \mbox{\hyperlink{constants_8cpp_a125270e7761f26473f91d050c995030c}{SolarSystem}}[j].mass\ /\ (distance\ *\ distance\ *\ distance);}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \ \ delta.\mbox{\hyperlink{structcoord_a96c9fc34e388487639e8f417efcbde34}{x}}\ +=\ normal\_acc\ *\ dx;}
+\DoxyCodeLine{00025\ \ \ delta.\mbox{\hyperlink{structcoord_a4f4763a816e51d56b9bed4dcafc1cd4f}{y}}\ +=\ normal\_acc\ *\ dy;}
+\DoxyCodeLine{00026\ \ \ delta.\mbox{\hyperlink{structcoord_affd07f2803ae16cd216e9887edc4cabb}{z}}\ +=\ normal\_acc\ *\ dz;}
+\DoxyCodeLine{00027\ \}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \mbox{\hyperlink{structcoord}{coord}}\ \mbox{\hyperlink{model_8h_a6a60b98d3449edbdd151c187012fdbe6}{getBarycenter}}();}
+\DoxyCodeLine{00030\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{model_8h_a7f3d9fb33b1f39a73fff5cd5c5041147}{printBarycenter}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{structcoord}{coord}}\&\ barycenter);}
+\DoxyCodeLine{00031\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{model_8h_a401e5363475c5ccde17ccde0629989ad}{printCurrentData}}(time\_t\ current);}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{comment}{//\ Functions\ for\ accessing\ celestial\ bodies}}
+\DoxyCodeLine{00034\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{model_8h_a524063ecd9d2eeda438c1e6d7cfe170e}{get\_body\_count}}();}
+\DoxyCodeLine{00035\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structplanet}{planet}}\&\ \mbox{\hyperlink{model_8h_afd242324fd0dcc462ab2cb2969def5f9}{get\_body}}(\textcolor{keywordtype}{int}\ index);}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{//\_\_MODEL\_REAL\_OPT\_H\_\_}}
+
+\end{DoxyCode}

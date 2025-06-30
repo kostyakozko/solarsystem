@@ -1,0 +1,14 @@
+<map id="lib/solar_core/model.h" name="lib/solar_core/model.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="89,5,238,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,79,63,105"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="143,34,71,73,68,69,140,29"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="87,79,144,105"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="158,33,134,67,130,64,153,30"/>
+<area shape="rect" id="Node000004" href="$constants_8h.html" title=" " alt="" coords="168,79,257,105"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="174,30,198,65,194,68,169,33"/>
+<area shape="rect" id="Node000005" href="$types_8h.html" title=" " alt="" coords="222,153,286,178"/>
+<area shape="poly" id="edge6_Node000001_Node000005" title=" " alt="" coords="207,29,243,48,259,61,272,78,278,93,278,109,270,139,265,138,273,109,273,94,268,80,256,65,240,52,205,34"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="222,104,242,138,237,141,217,106"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="220,226,288,252"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="257,179,257,211,251,211,251,179"/>
+</map>

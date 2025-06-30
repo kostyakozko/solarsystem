@@ -1,0 +1,101 @@
+\doxysection{lib/solar\+\_\+jpl/jpl\+\_\+bodies.cpp File Reference}
+\hypertarget{jpl__bodies_8cpp}{}\label{jpl__bodies_8cpp}\index{lib/solar\_jpl/jpl\_bodies.cpp@{lib/solar\_jpl/jpl\_bodies.cpp}}
+{\ttfamily \#include "{}jpl\+\_\+bodies.\+h"{}}\newline
+{\ttfamily \#include "{}constants.\+h"{}}\newline
+{\ttfamily \#include "{}jpl\+\_\+data.\+h"{}}\newline
+Include dependency graph for jpl\+\_\+bodies.\+cpp\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{jpl__bodies_8cpp__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{jpl__bodies_8cpp_a48b987d720a8e1eb2956830e7514e94a}{get\+\_\+jpl\+\_\+id\+\_\+by\+\_\+index}} (int body\+\_\+index)
+\item 
+int \mbox{\hyperlink{jpl__bodies_8cpp_a71fdf8ddc109b541f1fbd53a2fe48c3c}{get\+\_\+jpl\+\_\+id\+\_\+for\+\_\+body}} (int body\+\_\+index)
+\item 
+const char \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{jpl__bodies_8cpp_a5aa15d0392a4a7d6bd1cced206b39aec}{get\+\_\+jpl\+\_\+name\+\_\+by\+\_\+index}} (int body\+\_\+index)
+\item 
+bool \mbox{\hyperlink{jpl__bodies_8cpp_a53e9706c16a0a93389cb746ce8aeaa16}{validate\+\_\+all\+\_\+jpl\+\_\+bodies}} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+const \mbox{\hyperlink{struct_j_p_l_body_info}{JPLBody\+Info}} \mbox{\hyperlink{jpl__bodies_8cpp_afb90e69124227117cb04da01afb05d36}{JPL\+\_\+\+BODY\+\_\+\+MAP}} \mbox{[}$\,$\mbox{]}
+\item 
+const int \mbox{\hyperlink{jpl__bodies_8cpp_a4901019a3fadc365aeddcc4f3ddcf906}{JPL\+\_\+\+BODY\+\_\+\+COUNT}} = sizeof(\mbox{\hyperlink{jpl__bodies_8cpp_afb90e69124227117cb04da01afb05d36}{JPL\+\_\+\+BODY\+\_\+\+MAP}}) / sizeof(\mbox{\hyperlink{jpl__bodies_8cpp_afb90e69124227117cb04da01afb05d36}{JPL\+\_\+\+BODY\+\_\+\+MAP}}\mbox{[}0\mbox{]})
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{jpl__bodies_8cpp_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{jpl__bodies_8cpp_a48b987d720a8e1eb2956830e7514e94a}\index{jpl\_bodies.cpp@{jpl\_bodies.cpp}!get\_jpl\_id\_by\_index@{get\_jpl\_id\_by\_index}}
+\index{get\_jpl\_id\_by\_index@{get\_jpl\_id\_by\_index}!jpl\_bodies.cpp@{jpl\_bodies.cpp}}
+\doxysubsubsection{\texorpdfstring{get\_jpl\_id\_by\_index()}{get\_jpl\_id\_by\_index()}}
+{\footnotesize\ttfamily \label{jpl__bodies_8cpp_a48b987d720a8e1eb2956830e7514e94a} 
+int get\+\_\+jpl\+\_\+id\+\_\+by\+\_\+index (\begin{DoxyParamCaption}\item[{int}]{body\+\_\+index}{}\end{DoxyParamCaption})}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{jpl__bodies_8cpp_a48b987d720a8e1eb2956830e7514e94a_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{jpl__bodies_8cpp_a71fdf8ddc109b541f1fbd53a2fe48c3c}\index{jpl\_bodies.cpp@{jpl\_bodies.cpp}!get\_jpl\_id\_for\_body@{get\_jpl\_id\_for\_body}}
+\index{get\_jpl\_id\_for\_body@{get\_jpl\_id\_for\_body}!jpl\_bodies.cpp@{jpl\_bodies.cpp}}
+\doxysubsubsection{\texorpdfstring{get\_jpl\_id\_for\_body()}{get\_jpl\_id\_for\_body()}}
+{\footnotesize\ttfamily \label{jpl__bodies_8cpp_a71fdf8ddc109b541f1fbd53a2fe48c3c} 
+int get\+\_\+jpl\+\_\+id\+\_\+for\+\_\+body (\begin{DoxyParamCaption}\item[{int}]{body\+\_\+index}{}\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=318pt]{jpl__bodies_8cpp_a71fdf8ddc109b541f1fbd53a2fe48c3c_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{jpl__bodies_8cpp_a71fdf8ddc109b541f1fbd53a2fe48c3c_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{jpl__bodies_8cpp_a5aa15d0392a4a7d6bd1cced206b39aec}\index{jpl\_bodies.cpp@{jpl\_bodies.cpp}!get\_jpl\_name\_by\_index@{get\_jpl\_name\_by\_index}}
+\index{get\_jpl\_name\_by\_index@{get\_jpl\_name\_by\_index}!jpl\_bodies.cpp@{jpl\_bodies.cpp}}
+\doxysubsubsection{\texorpdfstring{get\_jpl\_name\_by\_index()}{get\_jpl\_name\_by\_index()}}
+{\footnotesize\ttfamily \label{jpl__bodies_8cpp_a5aa15d0392a4a7d6bd1cced206b39aec} 
+const char \texorpdfstring{$\ast$}{*} get\+\_\+jpl\+\_\+name\+\_\+by\+\_\+index (\begin{DoxyParamCaption}\item[{int}]{body\+\_\+index}{}\end{DoxyParamCaption})}
+
+\Hypertarget{jpl__bodies_8cpp_a53e9706c16a0a93389cb746ce8aeaa16}\index{jpl\_bodies.cpp@{jpl\_bodies.cpp}!validate\_all\_jpl\_bodies@{validate\_all\_jpl\_bodies}}
+\index{validate\_all\_jpl\_bodies@{validate\_all\_jpl\_bodies}!jpl\_bodies.cpp@{jpl\_bodies.cpp}}
+\doxysubsubsection{\texorpdfstring{validate\_all\_jpl\_bodies()}{validate\_all\_jpl\_bodies()}}
+{\footnotesize\ttfamily \label{jpl__bodies_8cpp_a53e9706c16a0a93389cb746ce8aeaa16} 
+bool validate\+\_\+all\+\_\+jpl\+\_\+bodies (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+\label{doc-var-members}
+\Hypertarget{jpl__bodies_8cpp_doc-var-members}
+\doxysubsection{Variable Documentation}
+\Hypertarget{jpl__bodies_8cpp_a4901019a3fadc365aeddcc4f3ddcf906}\index{jpl\_bodies.cpp@{jpl\_bodies.cpp}!JPL\_BODY\_COUNT@{JPL\_BODY\_COUNT}}
+\index{JPL\_BODY\_COUNT@{JPL\_BODY\_COUNT}!jpl\_bodies.cpp@{jpl\_bodies.cpp}}
+\doxysubsubsection{\texorpdfstring{JPL\_BODY\_COUNT}{JPL\_BODY\_COUNT}}
+{\footnotesize\ttfamily \label{jpl__bodies_8cpp_a4901019a3fadc365aeddcc4f3ddcf906} 
+const int JPL\+\_\+\+BODY\+\_\+\+COUNT = sizeof(\mbox{\hyperlink{jpl__bodies_8cpp_afb90e69124227117cb04da01afb05d36}{JPL\+\_\+\+BODY\+\_\+\+MAP}}) / sizeof(\mbox{\hyperlink{jpl__bodies_8cpp_afb90e69124227117cb04da01afb05d36}{JPL\+\_\+\+BODY\+\_\+\+MAP}}\mbox{[}0\mbox{]})}
+
+\Hypertarget{jpl__bodies_8cpp_afb90e69124227117cb04da01afb05d36}\index{jpl\_bodies.cpp@{jpl\_bodies.cpp}!JPL\_BODY\_MAP@{JPL\_BODY\_MAP}}
+\index{JPL\_BODY\_MAP@{JPL\_BODY\_MAP}!jpl\_bodies.cpp@{jpl\_bodies.cpp}}
+\doxysubsubsection{\texorpdfstring{JPL\_BODY\_MAP}{JPL\_BODY\_MAP}}
+{\footnotesize\ttfamily \label{jpl__bodies_8cpp_afb90e69124227117cb04da01afb05d36} 
+const \mbox{\hyperlink{struct_j_p_l_body_info}{JPLBody\+Info}} JPL\+\_\+\+BODY\+\_\+\+MAP\mbox{[}$\,$\mbox{]}}
+
