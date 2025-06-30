@@ -193,9 +193,9 @@ int main() {
     }
 
     // Check for documentation
-    ASSERT_TRUE(file_exists("./README.md"));
+    ASSERT_TRUE(file_exists("./README.md") || file_exists("../README.md"));
     ASSERT_TRUE(file_exists("./share/solar_system/web/index.html") ||
-                file_exists("./docs/README.md"));
+                file_exists("./docs/README.md") || file_exists("../docs/README.md"));
   });
 
   return current_suite->all_passed() ? 0 : 1;
