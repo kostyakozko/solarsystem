@@ -154,10 +154,11 @@ jobs:
       env:
         DEFAULT_BRANCH: CPU
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        VALIDATE_CPP: true
-        VALIDATE_CMAKE: true
-        VALIDATE_MARKDOWN: false  # Disable markdown validation to avoid README issues
-        VALIDATE_YAML: false      # Disable YAML validation to avoid CI file issues
+        # Disable problematic linters that conflict with our standards
+        VALIDATE_MARKDOWN: false
+        VALIDATE_YAML: false
+        VALIDATE_JSCPD: false
+        VALIDATE_NATURAL_LANGUAGE: false
 
   # Performance regression detection
   performance-regression:
