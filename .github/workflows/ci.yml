@@ -124,7 +124,7 @@ jobs:
         
     - name: Run static analysis
       run: |
-        cppcheck --enable=all --error-exitcode=1 --suppress=missingIncludeSystem lib/ apps/
+        cppcheck --enable=all --error-exitcode=1 --suppressions-list=cppcheck-suppressions.txt lib/ apps/
         
     - name: Check for TODO/FIXME comments
       run: |
