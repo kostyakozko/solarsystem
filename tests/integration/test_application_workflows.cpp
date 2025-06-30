@@ -14,6 +14,20 @@
 #include "test_data.h"
 #include "test_framework.h"
 
+// Cross-platform timeout command detection
+std::string get_timeout_command() {
+  // Check if gtimeout is available (macOS with coreutils)
+  if (system("which gtimeout > /dev/null 2>&1") == 0) {
+    return "gtimeout";
+  }
+  // Check if timeout is available (Linux/Ubuntu)
+  if (system("which timeout > /dev/null 2>&1") == 0) {
+    return "timeout";
+  }
+  // Fallback - return empty string to skip timeout
+  return "";
+}
+
 // Helper function to execute system commands and capture output
 std::string execute_command(const std::string& command) {
   std::string result;
@@ -86,8 +100,14 @@ int main() {
   // Test real-time application
   TEST_CASE("Real-time Application") {
     // Test real-time application with no-continuous mode
-    std::string command =
-        "gtimeout 10s ./apps/solar_system_realtime/solar_system_realtime --no-continuous";
+    std::string timeout_cmd = get_timeout_command();
+    std::string command;
+    if (!timeout_cmd.empty()) {
+      command =
+          timeout_cmd + " 10s ./apps/solar_system_realtime/solar_system_realtime --no-continuous";
+    } else {
+      command = "./apps/solar_system_realtime/solar_system_realtime --no-continuous";
+    }
     std::string output = execute_command(command);
 
     // Should provide real-time data snapshot
