@@ -1,0 +1,28 @@
+var searchData=
+[
+  ['improvements_20strong_0',['&lt;strong&gt;Performance Improvements&lt;/strong&gt;',['../md__2home_2runner_2work_2solarsystem_2solarsystem_2README.html#autotoc_md77',1,'']]],
+  ['improvements_20v3_201_20strong_1',['&lt;strong&gt;Recent Improvements (v3.1)&lt;/strong&gt;',['../md__2home_2runner_2work_2solarsystem_2solarsystem_2README.html#autotoc_md6',1,'']]],
+  ['in_20web_20interface_20strong_2',['&lt;strong&gt;Orbital Mechanics in Web Interface&lt;/strong&gt;',['../md__2home_2runner_2work_2solarsystem_2solarsystem_2README.html#autotoc_md33',1,'']]],
+  ['individual_20applications_20strong_3',['&lt;strong&gt;Individual Applications&lt;/strong&gt;',['../md__2home_2runner_2work_2solarsystem_2solarsystem_2README.html#autotoc_md23',1,'']]],
+  ['initialize_5fjpl_5fdata_4',['initialize_jpl_data',['../jpl__data_8h.html#a4089bff84229849353c05d77c7bd04b2',1,'initialize_jpl_data():&#160;jpl_data.cpp'],['../jpl__data_8cpp.html#a4089bff84229849353c05d77c7bd04b2',1,'initialize_jpl_data():&#160;jpl_data.cpp']]],
+  ['initialize_5fsimulation_5fstate_5',['initialize_simulation_state',['../web__server_8cpp.html#aa5b130bed9b8f20a3bcb4a92fbb9ef94',1,'web_server.cpp']]],
+  ['initialize_5fsimulation_5fto_5fcurrent_5ftime_6',['initialize_simulation_to_current_time',['../simulation_8cpp.html#afadc206cce91e2e701eaef2cbbdb820d',1,'initialize_simulation_to_current_time():&#160;simulation.cpp'],['../simulation_8h.html#afadc206cce91e2e701eaef2cbbdb820d',1,'initialize_simulation_to_current_time():&#160;simulation.cpp']]],
+  ['install_20strong_7',['&lt;strong&gt;Build and Install&lt;/strong&gt;',['../md__2home_2runner_2work_2solarsystem_2solarsystem_2README.html#autotoc_md18',1,'']]],
+  ['installation_20layout_20strong_8',['&lt;strong&gt;Installation Layout&lt;/strong&gt;',['../md__2home_2runner_2work_2solarsystem_2solarsystem_2README.html#autotoc_md19',1,'']]],
+  ['installation_20options_20strong_9',['&lt;strong&gt;Installation Options&lt;/strong&gt;',['../md__2home_2runner_2work_2solarsystem_2solarsystem_2README.html#autotoc_md35',1,'']]],
+  ['installation_20strong_10',['&lt;strong&gt;Installation&lt;/strong&gt;',['../md__2home_2runner_2work_2solarsystem_2solarsystem_2README.html#autotoc_md16',1,'']]],
+  ['integration_20deployment_11',['🌐 Integration &amp; Deployment',['../md__2home_2runner_2work_2solarsystem_2solarsystem_2README.html#autotoc_md56',1,'']]],
+  ['integration_20strong_12',['integration strong',['../md__2home_2runner_2work_2solarsystem_2solarsystem_2README.html#autotoc_md32',1,'&lt;strong&gt;JPL HORIZONS Integration&lt;/strong&gt;'],['../md__2home_2runner_2work_2solarsystem_2solarsystem_2README.html#autotoc_md57',1,'&lt;strong&gt;System Integration&lt;/strong&gt;']]],
+  ['interactive_20time_20travel_20strong_13',['&lt;strong&gt;Web Interface (Interactive Time Travel)&lt;/strong&gt;',['../md__2home_2runner_2work_2solarsystem_2solarsystem_2README.html#autotoc_md22',1,'']]],
+  ['interactive_20time_20travel_20visualization_20strong_14',['🌐 &lt;strong&gt;solar_system_web - Interactive Time Travel Visualization&lt;/strong&gt;',['../md__2home_2runner_2work_2solarsystem_2solarsystem_2README.html#autotoc_md29',1,'']]],
+  ['interactive_20web_20visualization_20strong_15',['🌐 &lt;strong&gt;Interactive Web Visualization&lt;/strong&gt;',['../md__2home_2runner_2work_2solarsystem_2solarsystem_2README.html#autotoc_md10',1,'']]],
+  ['interface_20interactive_20time_20travel_20strong_16',['&lt;strong&gt;Web Interface (Interactive Time Travel)&lt;/strong&gt;',['../md__2home_2runner_2work_2solarsystem_2solarsystem_2README.html#autotoc_md22',1,'']]],
+  ['interface_20issues_20strong_17',['&lt;strong&gt;Web Interface Issues&lt;/strong&gt;',['../md__2home_2runner_2work_2solarsystem_2solarsystem_2README.html#autotoc_md66',1,'']]],
+  ['interface_20recommended_20strong_18',['&lt;strong&gt;Unified Interface (Recommended)&lt;/strong&gt;',['../md__2home_2runner_2work_2solarsystem_2solarsystem_2README.html#autotoc_md21',1,'']]],
+  ['interface_20strong_19',['interface strong',['../md__2home_2runner_2work_2solarsystem_2solarsystem_2README.html#autotoc_md25',1,'🎛️ &lt;strong&gt;solar_system_launcher - Unified Interface&lt;/strong&gt;'],['../md__2home_2runner_2work_2solarsystem_2solarsystem_2README.html#autotoc_md33',1,'&lt;strong&gt;Orbital Mechanics in Web Interface&lt;/strong&gt;']]],
+  ['interface_20testing_20strong_20',['&lt;strong&gt;Web Interface Testing&lt;/strong&gt;',['../md__2home_2runner_2work_2solarsystem_2solarsystem_2README.html#autotoc_md54',1,'']]],
+  ['interface_20urls_20strong_21',['&lt;strong&gt;Web Interface URLs&lt;/strong&gt;',['../md__2home_2runner_2work_2solarsystem_2solarsystem_2README.html#autotoc_md41',1,'']]],
+  ['is_5finitialized_22',['is_initialized',['../structSimulationState.html#ab76db4dbd75d26749c808b31a9a403e9',1,'SimulationState']]],
+  ['is_5fmajor_5fbody_23',['is_major_body',['../structJPLBodyInfo.html#a414a9ff199d4e43b0b56c1c6bc5b68fb',1,'JPLBodyInfo']]],
+  ['issues_20strong_24',['issues strong',['../md__2home_2runner_2work_2solarsystem_2solarsystem_2README.html#autotoc_md62',1,'&lt;strong&gt;Common Issues&lt;/strong&gt;'],['../md__2home_2runner_2work_2solarsystem_2solarsystem_2README.html#autotoc_md66',1,'&lt;strong&gt;Web Interface Issues&lt;/strong&gt;']]]
+];
