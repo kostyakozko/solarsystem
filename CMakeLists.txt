@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.15)
-project(SolarSystemSuite VERSION 2.0.0 LANGUAGES CXX)
+project(SolarSystemSuite VERSION 4.0.0 LANGUAGES CXX)
 
-# Modern C++ standard
-set(CMAKE_CXX_STANDARD 17)
+# Modern C++20 standard for Phase 0 architecture refactoring
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 

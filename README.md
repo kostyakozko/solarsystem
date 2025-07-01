@@ -660,6 +660,14 @@ ls -la ephemeris_*.*
 - **GitHub Pages Integration**: Live documentation deployment
 - **Performance Monitoring**: Regression detection and benchmarking
 
+### **Phase 0: Modern C++ Architecture Refactoring (v4.0-alpha)** 🏗️
+- **Modern C++20 Standards**: Upgrade from C99/C++11 to modern C++20
+- **Class-Based Architecture**: Transform procedural code to object-oriented design
+- **RAII and Smart Pointers**: Memory-safe resource management
+- **Type Safety with Concepts**: Template constraints and compile-time validation
+- **Modern Error Handling**: std::expected, std::optional for robust error management
+- **Async JPL Data Fetching**: Coroutines for non-blocking network operations
+
 ### **Phase 1: Data Analysis & Scientific Computing (v4.0)** 🔬
 - **solar_system_analyzer**: Statistical analysis and orbital mechanics calculations
 - **Export Capabilities**: CSV, JSON, binary formats for research
