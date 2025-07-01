@@ -1,0 +1,47 @@
+name: Documentation Update
+
+on:
+  # Manual trigger
+  workflow_dispatch:
+  
+  # Scheduled documentation updates (daily at 6 AM UTC)
+  schedule:
+    - cron: '0 6 * * *'
+    
+  # Trigger on documentation changes
+  push:
+    paths:
+      - 'docs/**'
+      - 'README.md'
+      - 'lib/**/*.h'
+      - 'apps/**/*.h'
+    branches: [ CPU ]
+
+jobs:
+  update-docs:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup build environment
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y cmake g++ curl doxygen graphviz
+        
+    - name: Generate documentation
+      run: |
+        # Create docs directory structure
+        mkdir -p docs/api
+        
+        # Generate Doxygen documentation
+        cd docs
+        doxygen Doxyfile
+        
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: docs/
+        commit_message: '📚 Update documentation [skip ci]'
