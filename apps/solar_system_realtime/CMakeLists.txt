@@ -1,5 +1,5 @@
 # Solar System Real-Time Application
-# Live simulation with continuous time updates
+# Modern C++20 live simulation with continuous time updates
 
 add_executable(solar_system_realtime
     realtime.cpp
@@ -7,15 +7,15 @@ add_executable(solar_system_realtime
 
 # Link required libraries
 target_link_libraries(solar_system_realtime PRIVATE
-    solar_core      # For simulation and model functions
-    solar_jpl       # For JPL data integration
-    solar_utils     # For argument parsing utilities
+    solar_core      # Modern builders and patterns
+    solar_jpl       # JPL data integration
+    solar_utils     # Configuration and logging
     Threads::Threads
 )
 
-# Optimization flags (moderate optimization for real-time responsiveness)
+# Modern C++20 optimization flags
 target_compile_options(solar_system_realtime PRIVATE
-    $<$<CONFIG:Release>:-O2 -march=native -mtune=native>
+    $<$<CONFIG:Release>:-O3 -march=native -mtune=native -flto>
     $<$<CONFIG:Debug>:-g -O0 -Wall -Wextra>
 )
 
@@ -25,9 +25,10 @@ if(ENABLE_PROFILING)
     target_link_options(solar_system_realtime PRIVATE -pg)
 endif()
 
-# Set executable properties
+# Set modern C++20 properties
 set_target_properties(solar_system_realtime PROPERTIES
-    CXX_STANDARD 17
+    CXX_STANDARD 20
     CXX_STANDARD_REQUIRED ON
     CXX_EXTENSIONS OFF
+    INTERPROCEDURAL_OPTIMIZATION_RELEASE TRUE
 )
