@@ -141,8 +141,18 @@ int main() {
         "echo '000'";
     std::string response = execute_command(test_command);
 
-    // Should get HTTP 200 response
-    ASSERT_TRUE(response.find("200") != std::string::npos);
+    // Retry logic for server startup
+    bool server_ready = false;
+    for (int retry = 0; retry < 5 && !server_ready; retry++) {
+      if (retry > 0) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        std::cout << "Retrying server connection (attempt " << (retry + 1) << "/5)..." << std::endl;
+        response = execute_command(test_command);
+      }
+      server_ready = (response.find("200") != std::string::npos);
+    }
+    ASSERT_TRUE(server_ready)
+        << "Web server failed to respond with HTTP 200 after retries. Response: " << response;
 
     // Clean up - kill the web server
     system("pkill -f solar_system_web 2>/dev/null || true");
