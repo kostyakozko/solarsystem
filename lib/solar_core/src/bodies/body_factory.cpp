@@ -12,8 +12,11 @@
 namespace SolarSystem::Bodies {
 
 BodyFactory::BodyFactory(CreationOptions options) : default_options_(std::move(options)) {
-  // Initialize JPL data system if not already done
-  initialize_jpl_data();
+  // Only initialize JPL data system if we're going to use JPL sources
+  if (default_options_.preferred_source == DataSource::JPL_HORIZONS ||
+      default_options_.preferred_source == DataSource::CACHED_DATA) {
+    initialize_jpl_data();
+  }
 }
 
 Utils::Expected<CelestialBody, std::string> BodyFactory::create_body(std::string_view name) const {
@@ -175,13 +178,8 @@ Utils::Expected<CelestialBody, std::string> BodyFactory::create_from_jpl(
                                                        std::string(date_str)};
   }
 
-  // Apply the fetched data to the SolarSystem array
-  if (!apply_ephemeris_to_solar_system()) {
-    return Utils::Expected<CelestialBody, std::string>{
-        "Failed to apply JPL ephemeris data to solar system"};
-  }
-
   // For now, fall back to our modern data since legacy integration is complex
+  // TODO: Implement proper JPL data integration later
   return create_from_fallback(name);
 }
 
@@ -192,12 +190,8 @@ Utils::Expected<CelestialBody, std::string> BodyFactory::create_from_cache(
     return Utils::Expected<CelestialBody, std::string>{"No cached ephemeris data available"};
   }
 
-  // Apply cached data to SolarSystem array
-  if (!apply_ephemeris_to_solar_system()) {
-    return Utils::Expected<CelestialBody, std::string>{"Failed to apply cached ephemeris data"};
-  }
-
   // For now, fall back to our modern data since legacy integration is complex
+  // TODO: Implement proper cached data integration later
   return create_from_fallback(name);
 }
 
