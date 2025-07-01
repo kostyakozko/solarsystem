@@ -15,7 +15,7 @@ This document outlines the transformation from procedural C99/C++11 code to mode
 
 ### **Modern C++ Features Used**
 - **C++20 Concepts**: Type constraints and validation
-- **std::expected**: Error handling without exceptions
+- **Custom Expected Type**: Error handling without exceptions (C++20 compatible)
 - **std::optional**: Nullable values
 - **Ranges and Views**: Elegant data processing
 - **Coroutines**: Async JPL data fetching
@@ -175,7 +175,7 @@ namespace SolarSystem::Simulation {
         // Validation with concepts
         template<typename Duration>
         requires std::chrono::is_duration_v<Duration>
-        [[nodiscard]] auto validate() const -> std::expected<void, std::string>;
+        [[nodiscard]] auto validate() const -> Utils::Expected<void, std::string>;
     };
     
     // Simulation state management
@@ -195,7 +195,7 @@ namespace SolarSystem::Simulation {
         
         // Serialization for web interface
         [[nodiscard]] std::string to_json() const;
-        [[nodiscard]] static std::expected<SimulationState, std::string> from_json(std::string_view json);
+        [[nodiscard]] static Utils::Expected<SimulationState, std::string> from_json(std::string_view json);
         
     private:
         Bodies::BodyCollection bodies_;
@@ -208,10 +208,10 @@ namespace SolarSystem::Simulation {
         explicit Engine(SimulationConfig config);
         
         // Simulation control
-        [[nodiscard]] auto initialize() -> std::expected<void, std::string>;
-        [[nodiscard]] auto step() -> std::expected<void, std::string>;
+        [[nodiscard]] auto initialize() -> Utils::Expected<void, std::string>;
+        [[nodiscard]] auto step() -> Utils::Expected<void, std::string>;
         [[nodiscard]] auto run_to_time(std::chrono::system_clock::time_point target) 
-            -> std::expected<void, std::string>;
+            -> Utils::Expected<void, std::string>;
         
         // State access
         [[nodiscard]] const SimulationState& state() const { return state_; }
@@ -284,7 +284,7 @@ namespace SolarSystem::Data {
             std::string_view body_name,
             std::chrono::system_clock::time_point start,
             std::chrono::system_clock::time_point end
-        ) -> std::expected<EphemerisData, JPLError>;
+        ) -> Utils::Expected<EphemerisData, JPLError>;
         
         // Batch fetching with progress
         [[nodiscard]] auto fetch_multiple_async(
@@ -292,7 +292,7 @@ namespace SolarSystem::Data {
             std::chrono::system_clock::time_point start,
             std::chrono::system_clock::time_point end,
             std::function<void(size_t, size_t)> progress_callback = {}
-        ) -> std::expected<std::vector<EphemerisData>, JPLError>;
+        ) -> Utils::Expected<std::vector<EphemerisData>, JPLError>;
         
         // Cache management
         [[nodiscard]] auto get_cached_data(std::string_view body_name) 
@@ -307,10 +307,10 @@ namespace SolarSystem::Data {
         [[nodiscard]] auto fetch_from_jpl(std::string_view body_name,
                                          std::chrono::system_clock::time_point start,
                                          std::chrono::system_clock::time_point end) 
-            -> std::expected<std::string, JPLError>;
+            -> Utils::Expected<std::string, JPLError>;
         
         [[nodiscard]] auto parse_jpl_response(std::string_view response) 
-            -> std::expected<EphemerisData, JPLError>;
+            -> Utils::Expected<EphemerisData, JPLError>;
     };
     
     // Smart cache with automatic management
@@ -323,12 +323,12 @@ namespace SolarSystem::Data {
             const std::vector<std::string>& body_names,
             std::chrono::system_clock::time_point start,
             std::chrono::system_clock::time_point end
-        ) -> std::expected<void, JPLError>;
+        ) -> Utils::Expected<void, JPLError>;
         
         [[nodiscard]] auto get_body_state_at(
             std::string_view body_name,
             std::chrono::system_clock::time_point time
-        ) -> std::expected<EphemerisPoint, JPLError>;
+        ) -> Utils::Expected<EphemerisPoint, JPLError>;
         
         // Cache statistics
         struct CacheStats {
@@ -353,7 +353,7 @@ namespace SolarSystem::Apps {
     // Modern argument parsing
     template<typename T>
     concept Parseable = requires(const std::string& s) {
-        { T::from_string(s) } -> std::same_as<std::expected<T, std::string>>;
+        { T::from_string(s) } -> std::same_as<Utils::Expected<T, std::string>>;
     };
     
     class ArgumentParser {
@@ -368,7 +368,7 @@ namespace SolarSystem::Apps {
         auto add_typed_option(std::string name, std::string description, T default_value = {}) -> ArgumentParser&;
         
         // Parse with modern error handling
-        [[nodiscard]] auto parse(int argc, char* argv[]) -> std::expected<void, std::string>;
+        [[nodiscard]] auto parse(int argc, char* argv[]) -> Utils::Expected<void, std::string>;
         
         // Value access
         [[nodiscard]] std::optional<std::string> get_option(std::string_view name) const;
@@ -399,7 +399,7 @@ namespace SolarSystem::Apps {
     protected:
         // Override points for derived applications
         virtual void setup_arguments(ArgumentParser& parser) = 0;
-        virtual auto execute() -> std::expected<void, std::string> = 0;
+        virtual auto execute() -> Utils::Expected<void, std::string> = 0;
         
         // Utility methods
         void log_info(std::string_view message) const;
@@ -432,7 +432,7 @@ namespace SolarSystem::Apps {
 ### **Phase 0.3: Data Management (Week 5-6)**
 1. **Implement JPLDataManager with async support**
 2. **Create modern caching system**
-3. **Add error handling with std::expected**
+3. **Add error handling with Utils::Expected**
 4. **Migrate existing data fetching logic**
 
 ### **Phase 0.4: Applications (Week 7-8)**
