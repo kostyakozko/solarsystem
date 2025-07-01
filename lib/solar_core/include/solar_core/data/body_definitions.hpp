@@ -1,7 +1,9 @@
 #pragma once
 
 #include <array>
+#include <optional>
 #include <string_view>
+#include <vector>
 
 #include "solar_core/bodies/celestial_body.hpp"
 #include "solar_core/math/constants.hpp"
