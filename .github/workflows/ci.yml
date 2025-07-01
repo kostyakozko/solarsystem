@@ -283,7 +283,7 @@ jobs:
     - name: Upload to GitHub Pages
       uses: actions/upload-pages-artifact@v3
       with:
-        path: docs/
+        path: docs/api/html/
         
     - name: Deploy to GitHub Pages
       id: deployment

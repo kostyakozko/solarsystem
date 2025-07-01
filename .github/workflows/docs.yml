@@ -21,6 +21,16 @@ jobs:
   update-docs:
     runs-on: ubuntu-latest
     
+    # Required permissions for GitHub Pages deployment
+    permissions:
+      pages: write
+      id-token: write
+    
+    # Deploy to the github-pages environment
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -39,9 +49,14 @@ jobs:
         cd docs
         doxygen Doxyfile
         
-    - name: Deploy to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v3
+    - name: Setup Pages
+      uses: actions/configure-pages@v4
+      
+    - name: Upload to GitHub Pages
+      uses: actions/upload-pages-artifact@v3
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: docs/
-        commit_message: '📚 Update documentation [skip ci]'
+        path: docs/api/html/
+        
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4
