@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <iomanip>
+#include <iostream>
 #include <numeric>
 #include <sstream>
 
@@ -134,20 +135,35 @@ Math::Vector3d BodyCollection::center_of_mass() const {
     return Math::Vector3d{};
   }
 
-  double total_mass_val = 0.0;
-  Math::Vector3d weighted_position{};
+  // Use EXACT same algorithm as legacy getBarycenter() with native long double precision
+  long double massSum = 0.0L;
+  for (const auto& body : bodies_) {
+    massSum += body.mass();  // Now already long double
+  }
+
+  // Accumulate weighted positions using long double precision
+  long double weighted_x = 0.0L;
+  long double weighted_y = 0.0L;
+  long double weighted_z = 0.0L;
+
+  long double invMassSum = 1.0L / massSum;
 
   for (const auto& body : bodies_) {
-    double mass = body.mass();
-    total_mass_val += mass;
-    weighted_position += body.position() * mass;
+    long double mass = body.mass();        // Now already long double
+    Math::Vector3d pos = body.position();  // Now already long double components
+
+    // Accumulate mass-weighted positions (same as legacy)
+    weighted_x += mass * pos.x();
+    weighted_y += mass * pos.y();
+    weighted_z += mass * pos.z();
   }
 
-  if (total_mass_val > 0.0) {
-    return weighted_position / total_mass_val;
-  }
+  // Apply inverse mass sum (same as legacy - multiply instead of divide)
+  long double final_x = weighted_x * invMassSum;
+  long double final_y = weighted_y * invMassSum;
+  long double final_z = weighted_z * invMassSum;
 
-  return Math::Vector3d{};
+  return Math::Vector3d{final_x, final_y, final_z};
 }
 
 bool BodyCollection::validate() const { return get_validation_errors().empty(); }

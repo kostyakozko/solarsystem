@@ -34,7 +34,7 @@ class CelestialBody {
    */
   struct Properties {
     std::string name;
-    double mass;              // kg
+    long double mass;         // kg - CHANGED TO LONG DOUBLE FOR LEGACY COMPATIBILITY
     Math::Vector3d position;  // meters
     Math::Vector3d velocity;  // m/s
     BodyType type;
@@ -60,7 +60,7 @@ class CelestialBody {
 
   // Accessors
   [[nodiscard]] std::string_view name() const noexcept { return name_; }
-  [[nodiscard]] double mass() const noexcept { return mass_; }
+  [[nodiscard]] long double mass() const noexcept { return mass_; }  // CHANGED TO LONG DOUBLE
   [[nodiscard]] const Math::Vector3d& position() const noexcept { return position_; }
   [[nodiscard]] const Math::Vector3d& velocity() const noexcept { return velocity_; }
   [[nodiscard]] const Math::Vector3d& acceleration() const noexcept { return acceleration_; }
@@ -101,7 +101,7 @@ class CelestialBody {
 
  private:
   std::string name_;
-  double mass_;                  // kg
+  long double mass_;             // kg - CHANGED TO LONG DOUBLE FOR LEGACY COMPATIBILITY
   Math::Vector3d position_;      // meters
   Math::Vector3d velocity_;      // m/s
   Math::Vector3d acceleration_;  // m/s²

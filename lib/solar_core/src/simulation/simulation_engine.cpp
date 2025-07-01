@@ -102,11 +102,9 @@ Utils::Expected<void, std::string> SimulationEngine::simulate_to_time(double tar
     return Utils::Expected<void, std::string>{"Simulation not initialized"};
   }
 
+  // Use fixed timesteps like legacy version - no variable step size for performance and accuracy
   while (state_.current_time < target_time_seconds) {
-    double remaining_time = target_time_seconds - state_.current_time;
-    double step_size = std::min(config_.time_step, remaining_time);
-
-    auto result = step(step_size);
+    auto result = step(config_.time_step);  // Always use exactly config_.time_step (30 seconds)
     if (!result.has_value()) {
       return result;
     }

@@ -133,8 +133,9 @@ class Vector3 {
   T z_{};
 };
 
-// Type aliases for common use cases
-using Vector3d = Vector3<double>;
+// Type aliases for common use cases - USING LONG DOUBLE FOR LEGACY COMPATIBILITY
+using Vector3d =
+    Vector3<long double>;  // Changed from double to long double for exact legacy compatibility
 using Vector3f = Vector3<float>;
 
 // Free functions for scalar multiplication (scalar * vector)
