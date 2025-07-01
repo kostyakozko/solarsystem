@@ -1,7 +1,8 @@
 var searchData=
 [
-  ['hierarchy_0',['&lt;b&gt;Smart Caching Hierarchy&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md43',1,'']]],
-  ['high_20performance_20architecture_1',['⚡ &lt;b&gt;High-Performance Architecture&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md9',1,'']]],
-  ['high_20performance_20simulation_2',['🌌 &lt;b&gt;solar_system - High-Performance Simulation&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md27',1,'']]],
-  ['horizons_20integration_3',['&lt;b&gt;JPL HORIZONS Integration&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md32',1,'']]]
+  ['enhancement_20v4_201_20🔧_0',['&lt;b&gt;Phase 2: Architecture Enhancement (v4.1)&lt;/b&gt; 🔧',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md77',1,'']]],
+  ['enhancement_20v4_202_20🎮_1',['&lt;b&gt;Phase 3: User Experience Enhancement (v4.2)&lt;/b&gt; 🎮',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md78',1,'']]],
+  ['environment_20variable_2',['&lt;b&gt;Environment Variable&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md36',1,'']]],
+  ['errors_3',['&lt;b&gt;&quot;Compilation errors&quot;&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md65',1,'']]],
+  ['experience_20enhancement_20v4_202_20🎮_4',['&lt;b&gt;Phase 3: User Experience Enhancement (v4.2)&lt;/b&gt; 🎮',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md78',1,'']]]
 ];

@@ -2,8 +2,8 @@ var realtime_8cpp =
 [
     [ "RealtimeArgs", "struct_realtime_args.html", "struct_realtime_args" ],
     [ "clear_screen", "realtime_8cpp.html#a4953d1edcbbfc7e420c423ded1d5621a", null ],
-    [ "main", "realtime_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97", null ],
-    [ "parse_realtime_args", "realtime_8cpp.html#a1f0781f678fa48bacd1b2d1827e9c5a6", null ],
+    [ "main", "realtime_8cpp.html#a814244b02f6701fd8ead246678bb3dae", null ],
+    [ "parse_realtime_args", "realtime_8cpp.html#a9a941068d2e8ae2b615df9dffbc83075", null ],
     [ "print_body_positions", "realtime_8cpp.html#a2ff41c739cdb12d583c1514fd765a973", null ],
     [ "print_realtime_usage", "realtime_8cpp.html#afa94f8b920cdb49e3baa013c814e04db", null ],
     [ "print_system_summary", "realtime_8cpp.html#ac79ce85355ea086c0f6c60fe0ecf0969", null ],

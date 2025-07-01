@@ -1,6 +1,11 @@
 var searchData=
 [
-  ['🌌_20celestial_20bodies_20coverage_0',['🌌 Celestial Bodies Coverage',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md30',1,'']]],
-  ['🌌_20comprehensive_20solar_20system_20coverage_1',['🌌 &lt;b&gt;Comprehensive Solar System Coverage&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md8',1,'']]],
-  ['🌌_20solar_5fsystem_20high_20performance_20simulation_2',['🌌 &lt;b&gt;solar_system - High-Performance Simulation&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md27',1,'']]]
+  ['web_20interface_0',['&lt;b&gt;Orbital Mechanics in Web Interface&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md33',1,'']]],
+  ['web_20interface_20interactive_20time_20travel_1',['&lt;b&gt;Web Interface (Interactive Time Travel)&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md22',1,'']]],
+  ['web_20interface_20issues_2',['&lt;b&gt;Web Interface Issues&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md66',1,'']]],
+  ['web_20interface_20testing_3',['&lt;b&gt;Web Interface Testing&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md54',1,'']]],
+  ['web_20interface_20urls_4',['&lt;b&gt;Web Interface URLs&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md41',1,'']]],
+  ['web_20server_20configuration_5',['&lt;b&gt;Web Server Configuration&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md39',1,'']]],
+  ['web_20server_20deployment_6',['&lt;b&gt;Web Server Deployment&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md58',1,'']]],
+  ['web_20visualization_7',['🌐 &lt;b&gt;Interactive Web Visualization&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md10',1,'']]]
 ];

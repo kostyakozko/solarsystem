@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['🧪_20testing_20validation_0',['🧪 Testing &amp;amp; Validation',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md52',1,'']]]
+  ['🔬_0',['&lt;b&gt;Phase 1: Data Analysis &amp;amp; Scientific Computing (v4.0)&lt;/b&gt; 🔬',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md76',1,'']]]
 ];

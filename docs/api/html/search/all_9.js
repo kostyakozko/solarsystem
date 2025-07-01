@@ -1,17 +1,14 @@
 var searchData=
 [
-  ['handle_5fclient_0',['handle_client',['../web__server_8cpp.html#aaa738c1fc8b6cc71982dd7f6f6ac22b6',1,'web_server.cpp']]],
-  ['handle_5frequest_1',['handle_request',['../web__server_8cpp.html#ae320d270c885fa3439530357f61689eb',1,'web_server.cpp']]],
-  ['has_5fcurrent_5fephemeris_5fdata_2',['has_current_ephemeris_data',['../jpl__data_8cpp.html#a59f69cf29c0ec41bae3cb8030f8e78b3',1,'has_current_ephemeris_data():&#160;jpl_data.cpp'],['../jpl__data_8h.html#a59f69cf29c0ec41bae3cb8030f8e78b3',1,'has_current_ephemeris_data():&#160;jpl_data.cpp']]],
-  ['has_5fcurrent_5fyear_5fephemeris_5fdata_3',['has_current_year_ephemeris_data',['../jpl__data_8cpp.html#aaad3b3c333c2cad513974e0702a27c5d',1,'has_current_year_ephemeris_data():&#160;jpl_data.cpp'],['../jpl__data_8h.html#aaad3b3c333c2cad513974e0702a27c5d',1,'has_current_year_ephemeris_data():&#160;jpl_data.cpp']]],
-  ['headers_4',['headers',['../struct_http_response.html#ad1375a15cb4041004c534596e57dd354',1,'HttpResponse::headers'],['../struct_http_request.html#aabfd0e24348be7a4948a1bbd598d6f51',1,'HttpRequest::headers']]],
-  ['help_5',['help',['../struct_launcher_args.html#a228c94290dcfe73d0163fdfa5381001c',1,'LauncherArgs::help'],['../struct_realtime_args.html#a2c776be8002303a275774408d98b7f01',1,'RealtimeArgs::help']]],
-  ['hierarchy_6',['&lt;b&gt;Smart Caching Hierarchy&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md43',1,'']]],
-  ['high_20performance_20architecture_7',['⚡ &lt;b&gt;High-Performance Architecture&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md9',1,'']]],
-  ['high_20performance_20simulation_8',['🌌 &lt;b&gt;solar_system - High-Performance Simulation&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md27',1,'']]],
-  ['horizons_20integration_9',['&lt;b&gt;JPL HORIZONS Integration&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md32',1,'']]],
-  ['horizons_5fid_10',['horizons_id',['../struct_j_p_l_body_info.html#a0dc19a081fba27747b02ff34b9553a00',1,'JPLBodyInfo']]],
-  ['horizons_5fname_11',['horizons_name',['../struct_j_p_l_body_info.html#ae238440b496db0c47ea4ed0b624e5ad9',1,'JPLBodyInfo']]],
-  ['httprequest_12',['HttpRequest',['../struct_http_request.html',1,'']]],
-  ['httpresponse_13',['HttpResponse',['../struct_http_response.html',1,'HttpResponse'],['../struct_http_response.html#a874c1f8cd46efed44d146ee826c6b4a8',1,'HttpResponse::HttpResponse()']]]
+  ['earth_5fmass_0',['EARTH_MASS',['../constants_8cpp.html#a6d55697efeddad8e48095f5fb18dc00c',1,'EARTH_MASS:&#160;constants.cpp'],['../constants_8h.html#a6d55697efeddad8e48095f5fb18dc00c',1,'EARTH_MASS:&#160;constants.cpp']]],
+  ['enable_5fcors_1',['enable_cors',['../struct_web_server_config.html#a3ab54a35feb8fd4175b79eb25dea4952',1,'WebServerConfig']]],
+  ['enhancement_20v4_201_20🔧_2',['&lt;b&gt;Phase 2: Architecture Enhancement (v4.1)&lt;/b&gt; 🔧',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md77',1,'']]],
+  ['enhancement_20v4_202_20🎮_3',['&lt;b&gt;Phase 3: User Experience Enhancement (v4.2)&lt;/b&gt; 🎮',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md78',1,'']]],
+  ['environment_20variable_4',['&lt;b&gt;Environment Variable&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md36',1,'']]],
+  ['ephemerisheader_5',['EphemerisHeader',['../struct_ephemeris_header.html',1,'']]],
+  ['epoch_6',['epoch',['../struct_binary_cache_header.html#ada57ab3952f3da592ca22beaa327221e',1,'BinaryCacheHeader::epoch'],['../struct_ephemeris_header.html#ab5e8ab7775e031f5976025105ccccf79',1,'EphemerisHeader::epoch'],['../struct_system_state.html#a5baaff36e5dc996b4b5e21d2127e1f63',1,'SystemState::epoch']]],
+  ['error_5fmessage_7',['error_message',['../struct_fetch_task.html#a85b2e13dc27b11e0e7dde6a89f78f7da',1,'FetchTask']]],
+  ['errors_8',['&lt;b&gt;&quot;Compilation errors&quot;&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md65',1,'']]],
+  ['execute_5fcommand_9',['execute_command',['../launcher_8cpp.html#a0777aaf440764d41242d9f35b302448a',1,'launcher.cpp']]],
+  ['experience_20enhancement_20v4_202_20🎮_10',['&lt;b&gt;Phase 3: User Experience Enhancement (v4.2)&lt;/b&gt; 🎮',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md78',1,'']]]
 ];

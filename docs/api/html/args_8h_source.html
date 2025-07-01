@@ -133,35 +133,36 @@ $(function(){initNavTree('args_8h_source.html','',''); });
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>  <span class="comment">// Constructor with defaults</span></div>
 <div class="foldopen" id="foldopen00037" data-start="{" data-end="}">
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno"><a class="line" href="struct_args.html#a58e32d97b58f0216cc82a527cc89ed73">   37</a></span>  <a class="code hl_function" href="struct_args.html#a58e32d97b58f0216cc82a527cc89ed73">Args</a>()</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>      : <a class="code hl_variable" href="struct_args.html#a370d65e6683c46b55361fd443063618b">use_current_date</a>(true),</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>        <a class="code hl_variable" href="struct_args.html#a75625eca9c7f03309e72d738771e7112">update_data</a>(false),</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>        <a class="code hl_variable" href="struct_args.html#ab07c6df7095b3e7299db6a8785931aa0">force_update</a>(false),</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>        <a class="code hl_variable" href="struct_args.html#ab80d92a4f65b7d903e1c080b9bd66068">target_year</a>(0),</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>        <a class="code hl_variable" href="struct_args.html#acdabe3568e0f4b79daf73106d9c4e6fb">rebuild_cache</a>(false),</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>        <a class="code hl_variable" href="struct_args.html#ad4aa48c9ee5321351cfc549fe6ca4e7b">test_storage</a>(false),</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>        <a class="code hl_variable" href="struct_args.html#ae28fbe71dcfe99aa2315c50a85631f8b">validate_cache</a>(false),</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        <a class="code hl_variable" href="struct_args.html#a7ced16f3effbe9534c41530e983ed4f7">clean_cache</a>(false),</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        <a class="code hl_variable" href="struct_args.html#aa73ceb9443c2ba24dd1dcd67aa84dceb">show_status</a>(false),</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        <a class="code hl_variable" href="struct_args.html#ae82f62b0bf05daf8350b0e70e2d45ce0">verbose</a>(false),</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        <a class="code hl_variable" href="struct_args.html#a0682a177bd10bfa9f9a5937c08a17122">show_help</a>(false) {}</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>      : <a class="code hl_variable" href="struct_args.html#a6d6292300ed9a73de293880ff11fa808">target_date</a>(<span class="stringliteral">&quot;&quot;</span>),</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>        <a class="code hl_variable" href="struct_args.html#a370d65e6683c46b55361fd443063618b">use_current_date</a>(true),</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>        <a class="code hl_variable" href="struct_args.html#a75625eca9c7f03309e72d738771e7112">update_data</a>(false),</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>        <a class="code hl_variable" href="struct_args.html#ab07c6df7095b3e7299db6a8785931aa0">force_update</a>(false),</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>        <a class="code hl_variable" href="struct_args.html#ab80d92a4f65b7d903e1c080b9bd66068">target_year</a>(0),</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>        <a class="code hl_variable" href="struct_args.html#acdabe3568e0f4b79daf73106d9c4e6fb">rebuild_cache</a>(false),</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>        <a class="code hl_variable" href="struct_args.html#ad4aa48c9ee5321351cfc549fe6ca4e7b">test_storage</a>(false),</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        <a class="code hl_variable" href="struct_args.html#ae28fbe71dcfe99aa2315c50a85631f8b">validate_cache</a>(false),</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        <a class="code hl_variable" href="struct_args.html#a7ced16f3effbe9534c41530e983ed4f7">clean_cache</a>(false),</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        <a class="code hl_variable" href="struct_args.html#aa73ceb9443c2ba24dd1dcd67aa84dceb">show_status</a>(false),</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        <a class="code hl_variable" href="struct_args.html#ae82f62b0bf05daf8350b0e70e2d45ce0">verbose</a>(false),</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        <a class="code hl_variable" href="struct_args.html#a0682a177bd10bfa9f9a5937c08a17122">show_help</a>(false) {}</div>
 </div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>};</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>};</div>
 </div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="comment">// Parse command line arguments (original function for main simulation)</span></div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><a class="code hl_struct" href="struct_simulation_args.html">SimulationArgs</a> <a class="code hl_function" href="args_8h.html#ad728004ed1167c7397ee6f64cb3653a8">parse_arguments</a>(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span>* argv[]);</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="comment">// Parse command line arguments (extended function for specialized apps)</span></div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="keywordtype">bool</span> <a class="code hl_function" href="args_8h.html#ab275593df28cf06340d430c038a5de7b">parse_args</a>(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span>* argv[], <a class="code hl_struct" href="struct_args.html">Args</a>&amp; args);</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span><span class="comment">// Parse ISO date string (YYYY-MM-DD) to time_t</span></div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>time_t <a class="code hl_function" href="args_8h.html#ac067a65ac543d055d12990e7efa927db">parse_iso_date</a>(<span class="keyword">const</span> std::string&amp; date_str);</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span><span class="comment">// Print usage information</span></div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="keywordtype">void</span> <a class="code hl_function" href="args_8h.html#ac7608332d002ef2745359f4cada4afc8">print_usage</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* program_name);</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span><span class="preprocessor">#endif  </span><span class="comment">//__ARGS_H__</span></div>
-<div class="ttc" id="aargs_8h_html_ab275593df28cf06340d430c038a5de7b"><div class="ttname"><a href="args_8h.html#ab275593df28cf06340d430c038a5de7b">parse_args</a></div><div class="ttdeci">bool parse_args(int argc, char *argv[], Args &amp;args)</div><div class="ttdef"><b>Definition</b> args.cpp:61</div></div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="comment">// Parse command line arguments (original function for main simulation)</span></div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><a class="code hl_struct" href="struct_simulation_args.html">SimulationArgs</a> <a class="code hl_function" href="args_8h.html#ad728004ed1167c7397ee6f64cb3653a8">parse_arguments</a>(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span>* argv[]);</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="comment">// Parse command line arguments (extended function for specialized apps)</span></div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="keywordtype">bool</span> <a class="code hl_function" href="args_8h.html#a22cc89838e186e4c57150d6248803e07">parse_args</a>(<span class="keywordtype">int</span> argc, <span class="keyword">const</span> <span class="keywordtype">char</span>* <span class="keyword">const</span> argv[], <a class="code hl_struct" href="struct_args.html">Args</a>&amp; args);</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="comment">// Parse ISO date string (YYYY-MM-DD) to time_t</span></div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>time_t <a class="code hl_function" href="args_8h.html#ac067a65ac543d055d12990e7efa927db">parse_iso_date</a>(<span class="keyword">const</span> std::string&amp; date_str);</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="comment">// Print usage information</span></div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span><span class="keywordtype">void</span> <a class="code hl_function" href="args_8h.html#ac7608332d002ef2745359f4cada4afc8">print_usage</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* program_name);</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="preprocessor">#endif  </span><span class="comment">//__ARGS_H__</span></div>
+<div class="ttc" id="aargs_8h_html_a22cc89838e186e4c57150d6248803e07"><div class="ttname"><a href="args_8h.html#a22cc89838e186e4c57150d6248803e07">parse_args</a></div><div class="ttdeci">bool parse_args(int argc, const char *const argv[], Args &amp;args)</div><div class="ttdef"><b>Definition</b> args.cpp:61</div></div>
 <div class="ttc" id="aargs_8h_html_ac067a65ac543d055d12990e7efa927db"><div class="ttname"><a href="args_8h.html#ac067a65ac543d055d12990e7efa927db">parse_iso_date</a></div><div class="ttdeci">time_t parse_iso_date(const std::string &amp;date_str)</div><div class="ttdef"><b>Definition</b> args.cpp:27</div></div>
 <div class="ttc" id="aargs_8h_html_ac7608332d002ef2745359f4cada4afc8"><div class="ttname"><a href="args_8h.html#ac7608332d002ef2745359f4cada4afc8">print_usage</a></div><div class="ttdeci">void print_usage(const char *program_name)</div><div class="ttdef"><b>Definition</b> args.cpp:8</div></div>
 <div class="ttc" id="aargs_8h_html_ad728004ed1167c7397ee6f64cb3653a8"><div class="ttname"><a href="args_8h.html#ad728004ed1167c7397ee6f64cb3653a8">parse_arguments</a></div><div class="ttdeci">SimulationArgs parse_arguments(int argc, char *argv[])</div><div class="ttdef"><b>Definition</b> args.cpp:113</div></div>

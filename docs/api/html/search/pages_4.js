@@ -1,26 +1,4 @@
 var searchData=
 [
-  ['cache_20corrupted_0',['&lt;b&gt;&quot;Binary cache corrupted&quot;&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md64',1,'']]],
-  ['cache_20management_1',['&lt;b&gt;Cache Management&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md44',1,'']]],
-  ['cache_20system_2',['&lt;b&gt;Cache System&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md42',1,'']]],
-  ['caching_20hierarchy_3',['&lt;b&gt;Smart Caching Hierarchy&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md43',1,'']]],
-  ['celestial_20bodies_20coverage_4',['🌌 Celestial Bodies Coverage',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md30',1,'']]],
-  ['cmake_20option_5',['&lt;b&gt;CMake Option&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md37',1,'']]],
-  ['code_20organization_6',['&lt;b&gt;Code Organization&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md50',1,'']]],
-  ['code_20standards_7',['&lt;b&gt;Code Standards&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md73',1,'']]],
-  ['commands_8',['&lt;b&gt;Development Commands&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md51',1,'']]],
-  ['common_20issues_9',['&lt;b&gt;Common Issues&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md62',1,'']]],
-  ['compilation_20errors_10',['&lt;b&gt;&quot;Compilation errors&quot;&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md65',1,'']]],
-  ['compilation_20flags_11',['&lt;b&gt;Compilation Flags&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md46',1,'']]],
-  ['complete_20documentation_20suite_12',['&lt;b&gt;Complete Documentation Suite&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md3',1,'']]],
-  ['complete_20solar_20system_2027_20bodies_13',['&lt;b&gt;Complete Solar System (27 Bodies)&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md31',1,'']]],
-  ['complete_20solar_20system_20suite_14',['🚀 &lt;b&gt;Complete Solar System Suite&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md7',1,'']]],
-  ['completed_20features_20✅_15',['&lt;b&gt;Completed Features&lt;/b&gt; ✅',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md75',1,'']]],
-  ['comprehensive_20solar_20system_20coverage_16',['🌌 &lt;b&gt;Comprehensive Solar System Coverage&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md8',1,'']]],
-  ['configuration_17',['Configuration',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md34',1,'🔧 Advanced Configuration'],['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md39',1,'<b>Web Server Configuration</b>']]],
-  ['contents_18',['📋 Table of Contents',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md1',1,'']]],
-  ['contributing_19',['🤝 Contributing',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md71',1,'']]],
-  ['corrupted_20',['&lt;b&gt;&quot;Binary cache corrupted&quot;&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md64',1,'']]],
-  ['coverage_21',['Coverage',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md8',1,'🌌 <b>Comprehensive Solar System Coverage</b>'],['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md30',1,'🌌 Celestial Bodies Coverage']]],
-  ['custom_20port_20and_20settings_22',['&lt;b&gt;Custom Port and Settings&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md40',1,'']]]
+  ['4_3a_20performance_20scalability_20v5_200_20⚡_0',['&lt;b&gt;Phase 4: Performance &amp;amp; Scalability (v5.0)&lt;/b&gt; ⚡',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md79',1,'']]]
 ];

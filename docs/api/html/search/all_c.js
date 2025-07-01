@@ -1,14 +1,17 @@
 var searchData=
 [
-  ['last_5fsimulated_5fdate_0',['last_simulated_date',['../struct_simulation_state.html#abff3aabf235f8064be6ac07ebd9ccd9a',1,'SimulationState']]],
-  ['launcher_2ecpp_1',['launcher.cpp',['../launcher_8cpp.html',1,'']]],
-  ['launcherargs_2',['LauncherArgs',['../struct_launcher_args.html',1,'LauncherArgs'],['../struct_launcher_args.html#aaddb49a35e78b833e2c78939eb9fcb67',1,'LauncherArgs::LauncherArgs()']]],
-  ['layout_3',['&lt;b&gt;Installation Layout&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md19',1,'']]],
-  ['libraries_4',['&lt;b&gt;Libraries&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md13',1,'']]],
-  ['license_5',['📄 License',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md78',1,'']]],
-  ['links_6',['&lt;b&gt;Quick Links&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md4',1,'']]],
-  ['live_20tracking_7',['🌍 &lt;b&gt;solar_system_realtime - Live Tracking&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md28',1,'']]],
-  ['load_5fcached_5fephemeris_5fdata_8',['load_cached_ephemeris_data',['../jpl__data_8cpp.html#ac5ffbb532a5be75e313500d1e6921975',1,'load_cached_ephemeris_data():&#160;jpl_data.cpp'],['../jpl__data_8h.html#ac5ffbb532a5be75e313500d1e6921975',1,'load_cached_ephemeris_data():&#160;jpl_data.cpp']]],
-  ['load_5fephemeris_5ffrom_5fbinary_9',['load_ephemeris_from_binary',['../jpl__data_8cpp.html#aa44785369b15ee6d759ad853f85b378f',1,'load_ephemeris_from_binary():&#160;jpl_data.cpp'],['../jpl__data_8h.html#aa44785369b15ee6d759ad853f85b378f',1,'load_ephemeris_from_binary():&#160;jpl_data.cpp']]],
-  ['load_5fephemeris_5ffrom_5fjson_10',['load_ephemeris_from_json',['../jpl__data_8cpp.html#aae6b771e02cb0c97771d15cc0423e974',1,'load_ephemeris_from_json():&#160;jpl_data.cpp'],['../jpl__data_8h.html#aae6b771e02cb0c97771d15cc0423e974',1,'load_ephemeris_from_json():&#160;jpl_data.cpp']]]
+  ['handle_5fclient_0',['handle_client',['../web__server_8cpp.html#aaa738c1fc8b6cc71982dd7f6f6ac22b6',1,'web_server.cpp']]],
+  ['handle_5frequest_1',['handle_request',['../web__server_8cpp.html#ae320d270c885fa3439530357f61689eb',1,'web_server.cpp']]],
+  ['has_5fcurrent_5fephemeris_5fdata_2',['has_current_ephemeris_data',['../jpl__data_8cpp.html#a59f69cf29c0ec41bae3cb8030f8e78b3',1,'has_current_ephemeris_data():&#160;jpl_data.cpp'],['../jpl__data_8h.html#a59f69cf29c0ec41bae3cb8030f8e78b3',1,'has_current_ephemeris_data():&#160;jpl_data.cpp']]],
+  ['has_5fcurrent_5fyear_5fephemeris_5fdata_3',['has_current_year_ephemeris_data',['../jpl__data_8cpp.html#aaad3b3c333c2cad513974e0702a27c5d',1,'has_current_year_ephemeris_data():&#160;jpl_data.cpp'],['../jpl__data_8h.html#aaad3b3c333c2cad513974e0702a27c5d',1,'has_current_year_ephemeris_data():&#160;jpl_data.cpp']]],
+  ['headers_4',['headers',['../struct_http_response.html#ad1375a15cb4041004c534596e57dd354',1,'HttpResponse::headers'],['../struct_http_request.html#aabfd0e24348be7a4948a1bbd598d6f51',1,'HttpRequest::headers']]],
+  ['help_5',['help',['../struct_launcher_args.html#a228c94290dcfe73d0163fdfa5381001c',1,'LauncherArgs::help'],['../struct_realtime_args.html#a2c776be8002303a275774408d98b7f01',1,'RealtimeArgs::help']]],
+  ['hierarchy_6',['&lt;b&gt;Smart Caching Hierarchy&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md43',1,'']]],
+  ['high_20performance_20architecture_7',['⚡ &lt;b&gt;High-Performance Architecture&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md9',1,'']]],
+  ['high_20performance_20simulation_8',['🌌 &lt;b&gt;solar_system - High-Performance Simulation&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md27',1,'']]],
+  ['horizons_20integration_9',['&lt;b&gt;JPL HORIZONS Integration&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md32',1,'']]],
+  ['horizons_5fid_10',['horizons_id',['../struct_j_p_l_body_info.html#a0dc19a081fba27747b02ff34b9553a00',1,'JPLBodyInfo']]],
+  ['horizons_5fname_11',['horizons_name',['../struct_j_p_l_body_info.html#ae238440b496db0c47ea4ed0b624e5ad9',1,'JPLBodyInfo']]],
+  ['httprequest_12',['HttpRequest',['../struct_http_request.html',1,'']]],
+  ['httpresponse_13',['HttpResponse',['../struct_http_response.html',1,'HttpResponse'],['../struct_http_response.html#a874c1f8cd46efed44d146ee826c6b4a8',1,'HttpResponse::HttpResponse()']]]
 ];

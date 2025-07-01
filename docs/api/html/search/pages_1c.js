@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['🌟_20features_20overview_0',['🌟 Features Overview',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md5',1,'']]],
-  ['🌟_20quick_20demo_1',['🌟 &lt;b&gt;Quick Demo&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md82',1,'']]]
+  ['🌌_20celestial_20bodies_20coverage_0',['🌌 Celestial Bodies Coverage',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md30',1,'']]],
+  ['🌌_20comprehensive_20solar_20system_20coverage_1',['🌌 &lt;b&gt;Comprehensive Solar System Coverage&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md8',1,'']]],
+  ['🌌_20solar_5fsystem_20high_20performance_20simulation_2',['🌌 &lt;b&gt;solar_system - High-Performance Simulation&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md27',1,'']]]
 ];

@@ -11,11 +11,11 @@
 \DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{constants_8h}{constants.h}}"{}}}
 \DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{types_8h}{types.h}}"{}}}
 \DoxyCodeLine{00009\ }
-\DoxyCodeLine{00010\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{model_8h_a73d7e86535b1f32f514fb6e48e598198}{dist}}(\mbox{\hyperlink{structcoord}{coord}}\ a,\ \mbox{\hyperlink{structcoord}{coord}}\ b);}
+\DoxyCodeLine{00010\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{model_8h_a949e3b824108f9b4bd59dd2191756e4c}{dist}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{structcoord}{coord}}\&\ a,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structcoord}{coord}}\&\ b);}
 \DoxyCodeLine{00011\ }
 \DoxyCodeLine{00012\ \textcolor{comment}{//\ Now\ use\ sqrtl\ to\ match\ the\ corrected\ original\ precision}}
-\DoxyCodeLine{00013\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{model_8h_adb1b500adb18d9f5cc88a7b3d030bf1e}{attractTo}}(\mbox{\hyperlink{structcoord}{coord}}\&\ this\_position,\ \mbox{\hyperlink{types_8h_ae12f60774623c89f63a6be20f683b565}{acceleration}}\&\ delta,\ \textcolor{keywordtype}{int}\ j)\ \{}
-\DoxyCodeLine{00014\ \ \ \mbox{\hyperlink{structcoord}{coord}}\&\ other\_position\ =\ \mbox{\hyperlink{constants_8cpp_a125270e7761f26473f91d050c995030c}{SolarSystem}}[j].position;}
+\DoxyCodeLine{00013\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{model_8h_a356065934bac7972d448ae23fe40b130}{attractTo}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{structcoord}{coord}}\&\ this\_position,\ \mbox{\hyperlink{types_8h_ae12f60774623c89f63a6be20f683b565}{acceleration}}\&\ delta,\ \textcolor{keywordtype}{int}\ j)\ \{}
+\DoxyCodeLine{00014\ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{structcoord}{coord}}\&\ other\_position\ =\ \mbox{\hyperlink{constants_8cpp_a125270e7761f26473f91d050c995030c}{SolarSystem}}[j].position;}
 \DoxyCodeLine{00015\ }
 \DoxyCodeLine{00016\ \ \ \textcolor{comment}{//\ Calculate\ difference\ vector\ once\ to\ eliminate\ redundant\ calculations}}
 \DoxyCodeLine{00017\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{double}\ dx\ =\ other\_position.\mbox{\hyperlink{structcoord_a96c9fc34e388487639e8f417efcbde34}{x}}\ -\/\ this\_position.\mbox{\hyperlink{structcoord_a96c9fc34e388487639e8f417efcbde34}{x}};}

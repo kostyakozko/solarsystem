@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['quick_20demo_0',['🌟 &lt;b&gt;Quick Demo&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md82',1,'']]],
-  ['quick_20links_1',['&lt;b&gt;Quick Links&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md4',1,'']]],
-  ['quick_20start_2',['🚀 Quick Start',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md15',1,'']]]
+  ['management_0',['Management',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md26',1,'📡 <b>solar_system_fetch - Data Management</b>'],['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md44',1,'<b>Cache Management</b>']]],
+  ['mechanics_20in_20web_20interface_1',['&lt;b&gt;Orbital Mechanics in Web Interface&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md33',1,'']]],
+  ['mode_2',['&lt;b&gt;Debug Mode&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md67',1,'']]]
 ];

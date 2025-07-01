@@ -1,7 +1,29 @@
 var searchData=
 [
-  ['v3_201_0',['&lt;b&gt;Recent Improvements (v3.1)&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md6',1,'']]],
-  ['validation_1',['Validation',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md52',1,'🧪 Testing &amp; Validation'],['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md53',1,'<b>Data Validation</b>']]],
-  ['variable_2',['&lt;b&gt;Environment Variable&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md36',1,'']]],
-  ['visualization_3',['Visualization',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md10',1,'🌐 <b>Interactive Web Visualization</b>'],['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md29',1,'🌐 <b>solar_system_web - Interactive Time Travel Visualization</b>']]]
+  ['scalability_0',['Scalability',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md68',1,'📊 Performance &amp; Scalability'],['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md70',1,'<b>Scalability</b>']]],
+  ['scalability_20v5_200_20⚡_1',['&lt;b&gt;Phase 4: Performance &amp;amp; Scalability (v5.0)&lt;/b&gt; ⚡',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md79',1,'']]],
+  ['scientific_20computing_20v4_200_20🔬_2',['&lt;b&gt;Phase 1: Data Analysis &amp;amp; Scientific Computing (v4.0)&lt;/b&gt; 🔬',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md76',1,'']]],
+  ['server_20configuration_3',['&lt;b&gt;Web Server Configuration&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md39',1,'']]],
+  ['server_20deployment_4',['&lt;b&gt;Web Server Deployment&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md58',1,'']]],
+  ['settings_5',['&lt;b&gt;Custom Port and Settings&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md40',1,'']]],
+  ['setup_6',['&lt;b&gt;Development Setup&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md72',1,'']]],
+  ['simulation_7',['🌌 &lt;b&gt;solar_system - High-Performance Simulation&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md27',1,'']]],
+  ['smart_20caching_20hierarchy_8',['&lt;b&gt;Smart Caching Hierarchy&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md43',1,'']]],
+  ['solar_20system_2027_20bodies_9',['&lt;b&gt;Complete Solar System (27 Bodies)&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md31',1,'']]],
+  ['solar_20system_20coverage_10',['🌌 &lt;b&gt;Comprehensive Solar System Coverage&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md8',1,'']]],
+  ['solar_20system_20suite_11',['Solar System Suite',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md7',1,'🚀 <b>Complete Solar System Suite</b>'],['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md0',1,'Solar System Suite']]],
+  ['solar_5fsystem_20high_20performance_20simulation_12',['🌌 &lt;b&gt;solar_system - High-Performance Simulation&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md27',1,'']]],
+  ['solar_5fsystem_5ffetch_20data_20management_13',['📡 &lt;b&gt;solar_system_fetch - Data Management&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md26',1,'']]],
+  ['solar_5fsystem_5flauncher_20unified_20interface_14',['🎛️ &lt;b&gt;solar_system_launcher - Unified Interface&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md25',1,'']]],
+  ['solar_5fsystem_5frealtime_20live_20tracking_15',['🌍 &lt;b&gt;solar_system_realtime - Live Tracking&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md28',1,'']]],
+  ['solar_5fsystem_5fweb_20interactive_20time_20travel_20visualization_16',['🌐 &lt;b&gt;solar_system_web - Interactive Time Travel Visualization&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md29',1,'']]],
+  ['sources_17',['&lt;b&gt;Data Sources&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md14',1,'']]],
+  ['standards_18',['&lt;b&gt;Code Standards&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md73',1,'']]],
+  ['start_19',['🚀 Quick Start',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md15',1,'']]],
+  ['suite_20',['Suite',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md7',1,'🚀 <b>Complete Solar System Suite</b>'],['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md3',1,'<b>Complete Documentation Suite</b>'],['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md0',1,'Solar System Suite']]],
+  ['system_21',['System',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md49',1,'<b>Build System</b>'],['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md42',1,'<b>Cache System</b>']]],
+  ['system_2027_20bodies_22',['&lt;b&gt;Complete Solar System (27 Bodies)&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md31',1,'']]],
+  ['system_20coverage_23',['🌌 &lt;b&gt;Comprehensive Solar System Coverage&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md8',1,'']]],
+  ['system_20integration_24',['&lt;b&gt;System Integration&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md57',1,'']]],
+  ['system_20suite_25',['System Suite',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md7',1,'🚀 <b>Complete Solar System Suite</b>'],['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md0',1,'Solar System Suite']]]
 ];
