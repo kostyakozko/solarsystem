@@ -1,15 +1,21 @@
-# Solar Core Library - High-Performance Physics Engine
+# Solar Core Library - High-Performance Physics Engine with Modern C++20 Architecture
 # Static library only for maximum performance and LTO benefits
 
 add_library(solar_core STATIC
+    # Legacy C-style files (to be migrated)
     model.cpp
     simulation.cpp
     constants.cpp
+    
+    # Modern C++20 classes
+    src/math/vector3.cpp
+    src/bodies/celestial_body.cpp
 )
 
 # Public headers for other libraries and applications
 target_include_directories(solar_core PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
 # Link dependencies

@@ -1,6 +1,17 @@
 # Unit Tests for Solar System Suite Libraries
 
-# Individual test executables (each has its own main function)
+# Modern C++20 class tests
+add_executable(test_modern_vector3 test_modern_vector3.cpp)
+target_link_libraries(test_modern_vector3 test_utils solar_core solar_utils Threads::Threads)
+add_test(NAME UnitTest_ModernVector3 COMMAND test_modern_vector3)
+set_tests_properties(UnitTest_ModernVector3 PROPERTIES LABELS "unit;modern;math;vector3" TIMEOUT ${TEST_TIMEOUT})
+
+add_executable(test_modern_celestial_body test_modern_celestial_body.cpp)
+target_link_libraries(test_modern_celestial_body test_utils solar_core solar_utils Threads::Threads)
+add_test(NAME UnitTest_ModernCelestialBody COMMAND test_modern_celestial_body)
+set_tests_properties(UnitTest_ModernCelestialBody PROPERTIES LABELS "unit;modern;bodies;celestial" TIMEOUT ${TEST_TIMEOUT})
+
+# Legacy tests (to be migrated gradually)
 add_executable(test_solar_core test_solar_core.cpp)
 target_link_libraries(test_solar_core test_utils solar_core solar_utils Threads::Threads)
 add_test(NAME UnitTest_SolarCore COMMAND test_solar_core)
