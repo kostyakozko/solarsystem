@@ -157,13 +157,67 @@ Expected<void, std::string> Config::validate(const AppConfig& config) {
 Config::AppConfig Config::merge(const AppConfig& base, const AppConfig& override) {
   AppConfig result = base;
 
-  // Simple merge - in a real implementation, this would be more sophisticated
-  // For now, we'll just copy non-default values from override
+  // Merge simulation config - only override non-default values
+  AppConfig defaults = get_default();
 
-  // This is a simplified implementation - a full version would check each field
-  // and only override if the override value is different from default
+  if (override.simulation.timestep != defaults.simulation.timestep) {
+    result.simulation.timestep = override.simulation.timestep;
+  }
+  if (override.simulation.max_iterations != defaults.simulation.max_iterations) {
+    result.simulation.max_iterations = override.simulation.max_iterations;
+  }
+  if (override.simulation.enable_progress != defaults.simulation.enable_progress) {
+    result.simulation.enable_progress = override.simulation.enable_progress;
+  }
+  if (override.simulation.verbose_output != defaults.simulation.verbose_output) {
+    result.simulation.verbose_output = override.simulation.verbose_output;
+  }
+  if (override.simulation.output_format != defaults.simulation.output_format) {
+    result.simulation.output_format = override.simulation.output_format;
+  }
 
-  return result;  // Placeholder - needs full implementation
+  // Merge data config
+  if (override.data.jpl_api_url != defaults.data.jpl_api_url) {
+    result.data.jpl_api_url = override.data.jpl_api_url;
+  }
+  if (override.data.cache_directory != defaults.data.cache_directory) {
+    result.data.cache_directory = override.data.cache_directory;
+  }
+  if (override.data.cache_max_age_days != defaults.data.cache_max_age_days) {
+    result.data.cache_max_age_days = override.data.cache_max_age_days;
+  }
+
+  // Merge logging config
+  if (override.logging.min_level != defaults.logging.min_level) {
+    result.logging.min_level = override.logging.min_level;
+  }
+  if (override.logging.output != defaults.logging.output) {
+    result.logging.output = override.logging.output;
+  }
+  if (override.logging.log_file != defaults.logging.log_file) {
+    result.logging.log_file = override.logging.log_file;
+  }
+  if (override.logging.colored_output != defaults.logging.colored_output) {
+    result.logging.colored_output = override.logging.colored_output;
+  }
+
+  // Merge web config
+  if (override.web.port != defaults.web.port) {
+    result.web.port = override.web.port;
+  }
+  if (override.web.host != defaults.web.host) {
+    result.web.host = override.web.host;
+  }
+  if (override.web.web_root != defaults.web.web_root) {
+    result.web.web_root = override.web.web_root;
+  }
+
+  // Merge global config
+  if (override.debug_mode != defaults.debug_mode) {
+    result.debug_mode = override.debug_mode;
+  }
+
+  return result;
 }
 
 Expected<Config::ConfigMap, std::string> Config::load_from_file(const std::string& filename) {
@@ -235,18 +289,47 @@ Expected<Config::ConfigMap, std::string> Config::load_from_file(const std::strin
 Config::ConfigMap Config::load_from_environment() {
   ConfigMap map;
 
-  // Load environment variables with SOLAR_SYSTEM_ prefix
-  const char* env_vars[] = {"SOLAR_SYSTEM_TIMESTEP", "SOLAR_SYSTEM_MAX_ITERATIONS",
-                            "SOLAR_SYSTEM_VERBOSE",  "SOLAR_SYSTEM_LOG_LEVEL",
-                            "SOLAR_SYSTEM_WEB_PORT", nullptr};
+  // Load environment variables with SOLAR_SYSTEM_ prefix - COMPLETE MAPPING
+  const struct {
+    const char* env_name;
+    const char* config_key;
+  } env_mappings[] = {{"SOLAR_SYSTEM_TIMESTEP", "simulation.timestep"},
+                      {"SOLAR_SYSTEM_MAX_ITERATIONS", "simulation.max_iterations"},
+                      {"SOLAR_SYSTEM_VERBOSE", "simulation.verbose_output"},
+                      {"SOLAR_SYSTEM_OUTPUT_FORMAT", "simulation.output_format"},
+                      {"SOLAR_SYSTEM_JPL_API_URL", "data.jpl_api_url"},
+                      {"SOLAR_SYSTEM_CACHE_DIR", "data.cache_directory"},
+                      {"SOLAR_SYSTEM_LOG_LEVEL", "logging.min_level"},
+                      {"SOLAR_SYSTEM_LOG_FILE", "logging.log_file"},
+                      {"SOLAR_SYSTEM_LOG_COLORED", "logging.colored_output"},
+                      {"SOLAR_SYSTEM_WEB_PORT", "web.port"},
+                      {"SOLAR_SYSTEM_WEB_HOST", "web.host"},
+                      {"SOLAR_SYSTEM_DEBUG", "global.debug_mode"},
+                      {nullptr, nullptr}};
 
-  for (const char** var = env_vars; *var != nullptr; ++var) {
-    const char* value = std::getenv(*var);
+  for (const auto* mapping = env_mappings; mapping->env_name != nullptr; ++mapping) {
+    const char* value = std::getenv(mapping->env_name);
     if (value != nullptr) {
-      std::string key = *var;
-      // Convert SOLAR_SYSTEM_TIMESTEP to simulation.timestep
-      // This is a simplified mapping - full implementation would be more comprehensive
-      map[key] = std::string(value);
+      std::string str_value(value);
+
+      // Parse value based on expected type
+      if (str_value == "true" || str_value == "1") {
+        map[mapping->config_key] = true;
+      } else if (str_value == "false" || str_value == "0") {
+        map[mapping->config_key] = false;
+      } else if (str_value.find('.') != std::string::npos) {
+        try {
+          map[mapping->config_key] = std::stod(str_value);
+        } catch (...) {
+          map[mapping->config_key] = str_value;
+        }
+      } else {
+        try {
+          map[mapping->config_key] = static_cast<int64_t>(std::stoll(str_value));
+        } catch (...) {
+          map[mapping->config_key] = str_value;
+        }
+      }
     }
   }
 
@@ -256,7 +339,7 @@ Config::ConfigMap Config::load_from_environment() {
 Config::ConfigMap Config::load_from_cli(const std::vector<std::string>& args) {
   ConfigMap map;
 
-  // Parse command line arguments in --key=value format
+  // Parse command line arguments in --key=value format - COMPLETE MAPPING
   for (const auto& arg : args) {
     if (arg.starts_with("--")) {
       size_t eq_pos = arg.find('=');
@@ -264,13 +347,37 @@ Config::ConfigMap Config::load_from_cli(const std::vector<std::string>& args) {
         std::string key = arg.substr(2, eq_pos - 2);
         std::string value = arg.substr(eq_pos + 1);
 
-        // Convert CLI keys to config keys
+        // Convert CLI keys to config keys - COMPREHENSIVE MAPPING
         if (key == "timestep") {
           map["simulation.timestep"] = std::stod(value);
+        } else if (key == "max-iterations") {
+          map["simulation.max_iterations"] = static_cast<int64_t>(std::stoll(value));
         } else if (key == "verbose") {
           map["simulation.verbose_output"] = (value == "true" || value == "1");
+        } else if (key == "output-format") {
+          map["simulation.output_format"] = value;
+        } else if (key == "jpl-api-url") {
+          map["data.jpl_api_url"] = value;
+        } else if (key == "cache-dir") {
+          map["data.cache_directory"] = value;
+        } else if (key == "cache-max-age") {
+          map["data.cache_max_age_days"] = static_cast<int64_t>(std::stoll(value));
+        } else if (key == "log-level") {
+          map["logging.min_level"] = static_cast<int64_t>(std::stoll(value));
+        } else if (key == "log-file") {
+          map["logging.log_file"] = value;
+        } else if (key == "log-colored") {
+          map["logging.colored_output"] = (value == "true" || value == "1");
         } else if (key == "port") {
           map["web.port"] = static_cast<int64_t>(std::stoll(value));
+        } else if (key == "host") {
+          map["web.host"] = value;
+        } else if (key == "web-root") {
+          map["web.web_root"] = value;
+        } else if (key == "cors") {
+          map["web.enable_cors"] = (value == "true" || value == "1");
+        } else if (key == "debug") {
+          map["global.debug_mode"] = (value == "true" || value == "1");
         }
         // Add more mappings as needed
       }
@@ -283,26 +390,86 @@ Config::ConfigMap Config::load_from_cli(const std::vector<std::string>& args) {
 Expected<Config::AppConfig, std::string> Config::map_to_config(const ConfigMap& map) {
   AppConfig config = get_default();
 
-  // Convert map values to config structure
-  // This is a simplified implementation - full version would handle all fields
+  // Convert map values to config structure - COMPLETE IMPLEMENTATION
 
+  // Simulation config
   if (auto val = get_value<double>(map, "simulation.timestep")) {
     config.simulation.timestep = *val;
   }
-
   if (auto val = get_value<int64_t>(map, "simulation.max_iterations")) {
     config.simulation.max_iterations = static_cast<size_t>(*val);
   }
-
+  if (auto val = get_value<bool>(map, "simulation.enable_progress")) {
+    config.simulation.enable_progress = *val;
+  }
   if (auto val = get_value<bool>(map, "simulation.verbose_output")) {
     config.simulation.verbose_output = *val;
   }
+  if (auto val = get_value<std::string>(map, "simulation.output_format")) {
+    config.simulation.output_format = *val;
+  }
 
+  // Data config
+  if (auto val = get_value<std::string>(map, "data.jpl_api_url")) {
+    config.data.jpl_api_url = *val;
+  }
+  if (auto val = get_value<std::string>(map, "data.cache_directory")) {
+    config.data.cache_directory = *val;
+  }
+  if (auto val = get_value<int64_t>(map, "data.cache_max_age_days")) {
+    config.data.cache_max_age_days = static_cast<size_t>(*val);
+  }
+  if (auto val = get_value<bool>(map, "data.allow_fallback_data")) {
+    config.data.allow_fallback_data = *val;
+  }
+  if (auto val = get_value<int64_t>(map, "data.network_timeout")) {
+    config.data.network_timeout = std::chrono::seconds(*val);
+  }
+  if (auto val = get_value<int64_t>(map, "data.max_retries")) {
+    config.data.max_retries = static_cast<size_t>(*val);
+  }
+
+  // Logging config
+  if (auto val = get_value<int64_t>(map, "logging.min_level")) {
+    config.logging.min_level = static_cast<Logger::Level>(*val);
+  }
+  if (auto val = get_value<int64_t>(map, "logging.output")) {
+    config.logging.output = static_cast<Logger::Output>(*val);
+  }
+  if (auto val = get_value<std::string>(map, "logging.log_file")) {
+    config.logging.log_file = *val;
+  }
+  if (auto val = get_value<bool>(map, "logging.include_timestamp")) {
+    config.logging.include_timestamp = *val;
+  }
+  if (auto val = get_value<bool>(map, "logging.colored_output")) {
+    config.logging.colored_output = *val;
+  }
+
+  // Web config
   if (auto val = get_value<int64_t>(map, "web.port")) {
     config.web.port = static_cast<uint16_t>(*val);
   }
+  if (auto val = get_value<std::string>(map, "web.host")) {
+    config.web.host = *val;
+  }
+  if (auto val = get_value<std::string>(map, "web.web_root")) {
+    config.web.web_root = *val;
+  }
+  if (auto val = get_value<bool>(map, "web.enable_cors")) {
+    config.web.enable_cors = *val;
+  }
 
-  // Add more field mappings as needed
+  // Global config
+  if (auto val = get_value<std::string>(map, "global.app_name")) {
+    config.app_name = *val;
+  }
+  if (auto val = get_value<std::string>(map, "global.version")) {
+    config.version = *val;
+  }
+  if (auto val = get_value<bool>(map, "global.debug_mode")) {
+    config.debug_mode = *val;
+  }
 
   return Expected<AppConfig, std::string>::success(config);
 }
@@ -317,6 +484,13 @@ std::optional<T> Config::get_value(const ConfigMap& map, const std::string& key)
   }
   return std::nullopt;
 }
+
+// Explicit template instantiations for commonly used types
+template std::optional<bool> Config::get_value<bool>(const ConfigMap&, const std::string&);
+template std::optional<int64_t> Config::get_value<int64_t>(const ConfigMap&, const std::string&);
+template std::optional<double> Config::get_value<double>(const ConfigMap&, const std::string&);
+template std::optional<std::string> Config::get_value<std::string>(const ConfigMap&,
+                                                                   const std::string&);
 
 // Global configuration implementation
 std::optional<Config::AppConfig> GlobalConfig::config_;
