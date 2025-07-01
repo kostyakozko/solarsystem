@@ -64,6 +64,7 @@ endif()
 # Add subdirectories for modular build
 add_subdirectory(lib)
 add_subdirectory(apps)
+add_subdirectory(examples)
 
 # Testing framework (optional)
 option(ENABLE_TESTING "Enable comprehensive testing framework" OFF)
