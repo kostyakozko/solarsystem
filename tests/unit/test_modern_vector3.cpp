@@ -209,5 +209,5 @@ int main() {
     ASSERT_TRUE(std::abs(mag - std::sqrt(14.0f)) < 1e-6f);
   });
 
-  return suite.run();
+  return suite.all_passed() ? 0 : suite.get_failed_count();
 }

@@ -28,8 +28,8 @@ int main() {
 
     ASSERT_EQ("Earth", earth.name());
     ASSERT_EQ(5.97219e24, earth.mass());
-    ASSERT_EQ(BodyType::Planet, earth.type());
-    ASSERT_EQ(BodyPriority::Essential, earth.priority());
+    ASSERT_EQ(to_string(BodyType::Planet), to_string(earth.type()));
+    ASSERT_EQ(to_string(BodyPriority::Essential), to_string(earth.priority()));
     ASSERT_TRUE(earth.jpl_id().has_value());
     ASSERT_EQ("399", earth.jpl_id().value());
   });
@@ -295,5 +295,5 @@ int main() {
     ASSERT_EQ("Optional", to_string(BodyPriority::Optional));
   });
 
-  return suite.run();
+  return suite.all_passed() ? 0 : suite.get_failed_count();
 }
