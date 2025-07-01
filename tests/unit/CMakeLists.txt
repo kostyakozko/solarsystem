@@ -16,6 +16,11 @@ target_link_libraries(test_modern_body_collection test_utils solar_core solar_ut
 add_test(NAME UnitTest_ModernBodyCollection COMMAND test_modern_body_collection)
 set_tests_properties(UnitTest_ModernBodyCollection PROPERTIES LABELS "unit;modern;bodies;collection" TIMEOUT ${TEST_TIMEOUT})
 
+add_executable(test_modern_simulation_engine test_modern_simulation_engine.cpp)
+target_link_libraries(test_modern_simulation_engine test_utils solar_core solar_utils Threads::Threads)
+add_test(NAME UnitTest_ModernSimulationEngine COMMAND test_modern_simulation_engine)
+set_tests_properties(UnitTest_ModernSimulationEngine PROPERTIES LABELS "unit;modern;simulation;engine" TIMEOUT ${TEST_TIMEOUT})
+
 # Temporarily disabled due to JPL linking issues - will be fixed in next iteration
 # add_executable(test_modern_body_factory test_modern_body_factory.cpp)
 # target_link_libraries(test_modern_body_factory test_utils solar_core solar_jpl solar_utils Threads::Threads)

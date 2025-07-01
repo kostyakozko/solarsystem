@@ -13,6 +13,7 @@ add_library(solar_core STATIC
     src/bodies/body_collection.cpp
     src/bodies/body_factory.cpp
     src/data/body_definitions.cpp
+    src/simulation/simulation_engine.cpp
 )
 
 # Public headers for other libraries and applications
