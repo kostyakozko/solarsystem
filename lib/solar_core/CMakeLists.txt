@@ -11,6 +11,7 @@ add_library(solar_core STATIC
     src/math/vector3.cpp
     src/bodies/celestial_body.cpp
     src/bodies/body_collection.cpp
+    src/bodies/body_factory.cpp
     src/data/body_definitions.cpp
 )
 
@@ -23,6 +24,7 @@ target_include_directories(solar_core PUBLIC
 # Link dependencies
 target_link_libraries(solar_core PUBLIC
     solar_utils     # Needs args.h for simulation parameters
+    solar_jpl       # Needs JPL data integration for BodyFactory
 )
 
 # Aggressive optimization for core physics calculations

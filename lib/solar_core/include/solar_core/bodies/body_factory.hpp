@@ -36,25 +36,33 @@ class BodyFactory {
   };
 
   // Constructor
-  explicit BodyFactory(CreationOptions options = {});
+  BodyFactory() = default;
+  explicit BodyFactory(CreationOptions options);
 
   // Single body creation
   [[nodiscard]] Utils::Expected<CelestialBody, std::string> create_body(
-      std::string_view name, const CreationOptions& options = {}) const;
+      std::string_view name) const;
+  [[nodiscard]] Utils::Expected<CelestialBody, std::string> create_body(
+      std::string_view name, const CreationOptions& options) const;
 
   // Bulk body creation
   [[nodiscard]] Utils::Expected<BodyCollection, std::string> create_collection(
-      const std::vector<std::string>& body_names, const CreationOptions& options = {}) const;
+      const std::vector<std::string>& body_names) const;
+  [[nodiscard]] Utils::Expected<BodyCollection, std::string> create_collection(
+      const std::vector<std::string>& body_names, const CreationOptions& options) const;
 
   // Predefined collections (using existing JPL/cache system)
+  [[nodiscard]] Utils::Expected<BodyCollection, std::string> create_solar_system() const;
   [[nodiscard]] Utils::Expected<BodyCollection, std::string> create_solar_system(
-      const CreationOptions& options = {}) const;
+      const CreationOptions& options) const;
 
+  [[nodiscard]] Utils::Expected<BodyCollection, std::string> create_inner_planets() const;
   [[nodiscard]] Utils::Expected<BodyCollection, std::string> create_inner_planets(
-      const CreationOptions& options = {}) const;
+      const CreationOptions& options) const;
 
+  [[nodiscard]] Utils::Expected<BodyCollection, std::string> create_essential_bodies() const;
   [[nodiscard]] Utils::Expected<BodyCollection, std::string> create_essential_bodies(
-      const CreationOptions& options = {}) const;
+      const CreationOptions& options) const;
 
   // Integration with existing system
   [[nodiscard]] Utils::Expected<CelestialBody, std::string> create_from_legacy_data(
@@ -82,6 +90,9 @@ class BodyFactory {
   [[nodiscard]] BodyType determine_body_type(std::string_view name) const;
   [[nodiscard]] BodyPriority determine_body_priority(std::string_view name) const;
   [[nodiscard]] std::optional<std::string> get_jpl_id(std::string_view name) const;
+
+  // Legacy integration
+  [[nodiscard]] BodyType convert_legacy_body_type(int legacy_type) const;
 };
 
 }  // namespace SolarSystem::Bodies
