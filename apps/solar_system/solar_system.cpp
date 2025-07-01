@@ -1,241 +1,76 @@
 /**
- * @file solar_system_fixed.cpp
- * @brief Fixed modern C++ version that uses legacy data directly
+ * @file solar_system_optimized.cpp
+ * @brief High-performance optimized version - matching legacy speed
  *
- * This version bypasses the BodyFactory and uses the legacy constants directly
- * to ensure identical physics and barycenter calculations.
+ * This version removes all performance overhead while maintaining modern C++ architecture:
+ * - No progress callbacks during simulation
+ * - Minimal object creation overhead
+ * - Optimized simulation loop
+ * - Direct memory access patterns
  */
 
 #include <chrono>
-#include <cmath>
 #include <iomanip>
 #include <iostream>
 #include <string>
 
+// Modern C++ Solar System classes
+#include "solar_core/bodies/body_factory.hpp"
+#include "solar_core/simulation/simulation_engine.hpp"
+
+// Legacy argument parsing and JPL functions
 #include "args.h"
-#include "constants.h"
 #include "jpl_data.h"
-#include "model.h"
-#include "simulation.h"  // For perform_simulation_step
 
-using namespace std;
+using namespace SolarSystem;
 
 /**
- * @brief Simple Vector3d class for modernization (avoiding namespace conflicts)
+ * @brief Print barycenter information (matching legacy format)
  */
-class Vector3d {
- public:
-  double x_, y_, z_;
-
-  Vector3d(double x, double y, double z) : x_(x), y_(y), z_(z) {}
-
-  double x() const { return x_; }
-  double y() const { return y_; }
-  double z() const { return z_; }
-
-  double magnitude() const { return std::sqrt(x_ * x_ + y_ * y_ + z_ * z_); }
-};
-
-/**
- * @brief Simple Body class for modernization (avoiding namespace conflicts)
- */
-class Body {
- public:
-  std::string name_;
-  double mass_;
-  Vector3d position_;
-  Vector3d velocity_;
-
-  Body(const std::string& name, double mass, const Vector3d& position, const Vector3d& velocity)
-      : name_(name), mass_(mass), position_(position), velocity_(velocity) {}
-
-  const std::string& name() const { return name_; }
-  double mass() const { return mass_; }
-  const Vector3d& position() const { return position_; }
-  const Vector3d& velocity() const { return velocity_; }
-
-  void set_position(const Vector3d& pos) { position_ = pos; }
-  void set_velocity(const Vector3d& vel) { velocity_ = vel; }
-};
-
-/**
- * @brief Simple BodyCollection class for modernization
- */
-class BodyCollection {
- private:
-  std::vector<Body> bodies_;
-
- public:
-  void add_body(const Body& body) { bodies_.push_back(body); }
-
-  size_t size() const { return bodies_.size(); }
-
-  Body& operator[](size_t index) { return bodies_[index]; }
-  const Body& operator[](size_t index) const { return bodies_[index]; }
-
-  auto begin() { return bodies_.begin(); }
-  auto end() { return bodies_.end(); }
-  auto begin() const { return bodies_.begin(); }
-  auto end() const { return bodies_.end(); }
-
-  Vector3d center_of_mass() const {
-    if (bodies_.empty()) {
-      return Vector3d{0.0, 0.0, 0.0};
-    }
-
-    double total_mass = 0.0;
-    Vector3d weighted_position{0.0, 0.0, 0.0};
-
-    for (const auto& body : bodies_) {
-      total_mass += body.mass();
-      weighted_position.x_ += body.mass() * body.position().x();
-      weighted_position.y_ += body.mass() * body.position().y();
-      weighted_position.z_ += body.mass() * body.position().z();
-    }
-
-    if (total_mass > 0.0) {
-      weighted_position.x_ /= total_mass;
-      weighted_position.y_ /= total_mass;
-      weighted_position.z_ /= total_mass;
-    }
-
-    return weighted_position;
-  }
-};
-
-/**
- * @brief Convert legacy coord to modern Vector3d
- */
-Vector3d coord_to_vector3d(const coord& c) {
-  return Vector3d{static_cast<double>(c.x), static_cast<double>(c.y), static_cast<double>(c.z)};
+void print_barycenter(const Math::Vector3d& barycenter) {
+  std::cout << "Barycenter: " << Math::to_string(barycenter) << " m" << std::endl;
 }
 
 /**
- * @brief Convert legacy velocity to modern Vector3d
+ * @brief Print all bodies in exact legacy format
  */
-Vector3d velocity_to_vector3d(const velocity& v) {
-  return Vector3d{static_cast<double>(v.x), static_cast<double>(v.y), static_cast<double>(v.z)};
-}
-
-/**
- * @brief Calculate distance between two Vector3d points
- */
-double distance(const Vector3d& a, const Vector3d& b) {
-  double dx = a.x() - b.x();
-  double dy = a.y() - b.y();
-  double dz = a.z() - b.z();
-  return std::sqrt(dx * dx + dy * dy + dz * dz);
-}
-
-/**
- * @brief Create modern BodyCollection from legacy SolarSystem data
- */
-BodyCollection create_body_collection_from_legacy() {
-  BodyCollection bodies;
-
-  for (int i = 0; i < ::count; i++) {
-    Vector3d position = coord_to_vector3d(SolarSystem[i].position);
-    Vector3d velocity = velocity_to_vector3d(SolarSystem[i].speed);
-
-    Body body(SolarSystem[i].name, SolarSystem[i].mass, position, velocity);
-    bodies.add_body(body);
-  }
-
-  return bodies;
-}
-
-/**
- * @brief Print barycenter using modern types but legacy format
- */
-void print_barycenter(const Vector3d& barycenter) {
-  // Legacy format: (x;y;z;distance)
-  double distance_from_origin = barycenter.magnitude();
-  std::cout << "Barycenter: (" << barycenter.x() << ";" << barycenter.y() << ";" << barycenter.z()
-            << ";" << distance_from_origin << ")" << std::endl;
-}
-
-/**
- * @brief Modern print function using BodyCollection
- */
-void print_all_bodies(const BodyCollection& bodies,
+void print_all_bodies(const Bodies::BodyCollection& bodies,
                       std::chrono::system_clock::time_point target_time) {
-  // Calculate barycenter using modern BodyCollection
-  Vector3d barycenter = bodies.center_of_mass();
+  // Calculate barycenter (center of mass)
+  auto barycenter = bodies.center_of_mass();
   print_barycenter(barycenter);
 
-  // Convert modern time to time_t for legacy formatting
+  // Print target date in legacy format
   auto target_time_t = std::chrono::system_clock::to_time_t(target_time);
   std::cout << std::put_time(std::localtime(&target_time_t), "%a %b %d %H:%M:%S %Y") << std::endl;
 
-  // Print all bodies using modern types and modern data structures
+  // Print all bodies in legacy format: name, x, y, z (relative to barycenter), distance, vx, vy, vz
   for (const auto& body : bodies) {
-    // Calculate relative position (same as legacy: position - barycenter)
-    Vector3d relative_position{body.position().x() - barycenter.x(),
-                               body.position().y() - barycenter.y(),
-                               body.position().z() - barycenter.z()};
+    auto pos_relative = body.position() - barycenter;
+    double distance = pos_relative.magnitude();
 
-    // Calculate distance from barycenter
-    double distance_from_barycenter = relative_position.magnitude();
-
-    // Print in exact legacy format
     std::cout << std::setw(15) << body.name() << std::setw(21) << std::scientific
-              << relative_position.x() << std::setw(21) << std::scientific << relative_position.y()
-              << std::setw(21) << std::scientific << relative_position.z() << std::setw(21)
-              << std::scientific << distance_from_barycenter << std::setw(21) << std::scientific
+              << pos_relative.x() << std::setw(21) << std::scientific << pos_relative.y()
+              << std::setw(21) << std::scientific << pos_relative.z() << std::setw(21)
+              << std::scientific << distance << std::setw(21) << std::scientific
               << body.velocity().x() << std::setw(21) << std::scientific << body.velocity().y()
               << std::setw(21) << std::scientific << body.velocity().z() << std::endl;
   }
 }
-Vector3d calculate_barycenter_modern() {
-  // Same algorithm as legacy getBarycenter() but using Vector3d
-  long double massSum = 0;
-  for (int i = 0; i < ::count; i++) {
-    massSum += SolarSystem[i].mass;
-  }
-
-  Vector3d weighted_position{0.0, 0.0, 0.0};
-  long double invMassSum = 1 / massSum;
-
-  for (int i = 0; i < ::count; i++) {
-    // Convert legacy position to modern Vector3d
-    Vector3d position = coord_to_vector3d(SolarSystem[i].position);
-
-    // Accumulate mass-weighted positions (same as legacy algorithm)
-    weighted_position.x_ += SolarSystem[i].mass * position.x();
-    weighted_position.y_ += SolarSystem[i].mass * position.y();
-    weighted_position.z_ += SolarSystem[i].mass * position.z();
-  }
-
-  // Apply inverse mass sum (same as legacy)
-  weighted_position.x_ *= invMassSum;
-  weighted_position.y_ *= invMassSum;
-  weighted_position.z_ *= invMassSum;
-
-  return weighted_position;
-}
 
 /**
- * @brief Modern simulation using legacy physics exactly
+ * @brief Print simulation information (matching legacy format)
  */
-bool run_fixed_simulation(const SimulationArgs& args,
-                          std::chrono::system_clock::time_point start_time,
-                          std::chrono::system_clock::time_point target_time) {
-  bool forward = target_time > start_time;
-  std::cout << (forward ? "Running forward simulation" : "Running backward simulation (past date)")
-            << std::endl;
-
-  std::cout << "Created " << ::count << " celestial bodies" << std::endl;
-
-  // Print simulation info
+void print_simulation_info(const SimulationArgs& args,
+                           std::chrono::system_clock::time_point start_time,
+                           std::chrono::system_clock::time_point target_time) {
   std::cout << "Solar System Simulation" << std::endl;
 
-  // Convert chrono time points to time_t for legacy formatting
   auto start_time_t = std::chrono::system_clock::to_time_t(start_time);
-  auto target_time_t = std::chrono::system_clock::to_time_t(target_time);
-
   std::cout << "Start date: "
             << std::put_time(std::localtime(&start_time_t), "%a %b %d %H:%M:%S %Y") << std::endl;
 
+  auto target_time_t = std::chrono::system_clock::to_time_t(target_time);
   if (args.use_current_date) {
     std::cout << "Target date: Current time ("
               << std::put_time(std::localtime(&target_time_t), "%a %b %d %H:%M:%S %Y") << ")"
@@ -245,32 +80,78 @@ bool run_fixed_simulation(const SimulationArgs& args,
               << std::put_time(std::localtime(&target_time_t), "%a %b %d %H:%M:%S %Y") << ")"
               << std::endl;
   }
+}
 
-  // Print initial barycenter using modern calculation
-  BodyCollection initial_bodies = create_body_collection_from_legacy();
-  print_barycenter(initial_bodies.center_of_mass());
+/**
+ * @brief Run HIGH-PERFORMANCE simulation matching legacy speed
+ */
+bool run_optimized_simulation(Bodies::BodyFactory& factory, const SimulationArgs& args,
+                              std::chrono::system_clock::time_point start_time,
+                              std::chrono::system_clock::time_point target_time) {
+  // Determine if we're going forward or backward
+  bool forward = target_time > start_time;
+  std::cout << (forward ? "Running forward simulation" : "Running backward simulation (past date)")
+            << std::endl;
 
-  // Run simulation using EXACT legacy method but with modern time types
-  auto current_time = start_time;
-  std::chrono::seconds time_step_duration{forward ? dt : -dt};
+  // OPTIMIZED: Use larger timestep for better performance (matching legacy)
+  Simulation::SimulationConfig config{
+      .time_step = forward ? 86400.0 : -86400.0,  // 1 day timestep (like legacy)
+      .gravitational_constant = 6.67430e-11,
+      .use_adaptive_timestep = false,
+      .enable_collision_detection = false};
 
-  while (forward ? (current_time < target_time) : (current_time > target_time)) {
-    // Still use legacy perform_simulation_step (physics unchanged)
-    perform_simulation_step(forward ? dt : -dt);
+  // Create simulation engine with Leapfrog integration (matching legacy)
+  Simulation::SimulationEngine engine(config);
+  engine.set_integration_method(Simulation::SimulationEngine::IntegrationMethod::LEAPFROG);
 
-    // Advance time using modern chrono
-    current_time += time_step_duration;
+  // OPTIMIZED: NO progress callback to avoid overhead
+  // engine.set_progress_callback(...); // REMOVED FOR PERFORMANCE
+
+  // Create ALL solar system bodies (should be 27, not 9)
+  Bodies::BodyFactory::CreationOptions body_options{
+      .preferred_source = has_current_ephemeris_data()
+                              ? Bodies::BodyFactory::DataSource::CACHED_DATA
+                              : Bodies::BodyFactory::DataSource::FALLBACK_DATA,
+      .allow_fallback = true,
+      .reference_time = start_time};
+
+  auto solar_system_result = factory.create_solar_system(body_options);
+  if (!solar_system_result.has_value()) {
+    std::cerr << "Failed to create solar system: " << solar_system_result.error() << std::endl;
+    return false;
   }
 
-  // Print final results using modern BodyCollection
-  BodyCollection bodies = create_body_collection_from_legacy();
-  print_all_bodies(bodies, target_time);
+  auto bodies = std::move(solar_system_result.value());
+  std::cout << "Created " << bodies.size() << " celestial bodies" << std::endl;
+
+  // Print simulation info
+  print_simulation_info(args, start_time, target_time);
+
+  // Initialize simulation
+  auto init_result = engine.initialize(std::move(bodies), start_time);
+  if (!init_result.has_value()) {
+    std::cerr << "Failed to initialize simulation: " << init_result.error() << std::endl;
+    return false;
+  }
+
+  // Print initial barycenter (matching legacy)
+  print_barycenter(engine.get_bodies().center_of_mass());
+
+  // OPTIMIZED: Run simulation TO the target date with minimal overhead
+  auto sim_result = engine.simulate_to_date(target_time);
+  if (!sim_result.has_value()) {
+    std::cerr << "Simulation failed: " << sim_result.error() << std::endl;
+    return false;
+  }
+
+  // Print final results in legacy format
+  print_all_bodies(engine.get_bodies(), target_time);
 
   return true;
 }
 
 /**
- * @brief Handle JPL data operations
+ * @brief Handle JPL data operations (legacy compatibility)
  */
 bool handle_jpl_operations(const SimulationArgs& args) {
   if (args.update_data) {
@@ -310,16 +191,16 @@ bool handle_jpl_operations(const SimulationArgs& args) {
 }
 
 /**
- * @brief Main application - uses legacy physics directly
+ * @brief Main application entry point - OPTIMIZED FOR PERFORMANCE
  */
 int main(int argc, char* argv[]) {
-  // Parse command line arguments
+  // Parse command line arguments (using legacy parser)
   SimulationArgs args = parse_arguments(argc, argv);
 
-  // Initialize JPL data system
+  // Initialize JPL data system (required for legacy compatibility)
   initialize_jpl_data();
 
-  // Set output precision
+  // Set output precision to match legacy
   std::cout.precision(12);
 
   // Handle JPL data operations
@@ -327,38 +208,45 @@ int main(int argc, char* argv[]) {
     return handle_jpl_operations(args) ? 0 : 1;
   }
 
-  // Determine starting date (same logic as legacy)
-  time_t start_time;
+  // Determine starting date based on available ephemeris data (matching legacy logic)
+  std::chrono::system_clock::time_point start_time;
   if (has_current_ephemeris_data()) {
-    start_time = get_ephemeris_epoch();
+    // Use JPL data epoch as starting point
+    auto epoch = get_ephemeris_epoch();
+    start_time = std::chrono::system_clock::from_time_t(epoch);
     std::cout << "Using JPL ephemeris data: " << get_ephemeris_source() << std::endl;
   } else {
+    // Fallback to original hardcoded date (Feb 11, 2018)
     struct tm start_timeinfo = {};
     start_timeinfo.tm_sec = 0;
     start_timeinfo.tm_min = 0;
     start_timeinfo.tm_hour = 0;
     start_timeinfo.tm_mday = 11;
-    start_timeinfo.tm_mon = 1;
+    start_timeinfo.tm_mon = 1;  // February (0-based)
     start_timeinfo.tm_year = 2018 - 1900;
     start_timeinfo.tm_isdst = -1;
-    start_time = mktime(&start_timeinfo);
+    auto start_time_t = mktime(&start_timeinfo);
+    start_time = std::chrono::system_clock::from_time_t(start_time_t);
     std::cout << "Using original ephemeris data: " << get_ephemeris_source() << std::endl;
   }
 
   // Show ephemeris data status
+  auto start_time_t = std::chrono::system_clock::to_time_t(start_time);
   std::cout << "Ephemeris epoch: "
-            << std::put_time(std::localtime(&start_time), "%a %b %d %H:%M:%S %Y") << std::endl;
+            << std::put_time(std::localtime(&start_time_t), "%a %b %d %H:%M:%S %Y") << std::endl;
 
   if (!has_current_year_ephemeris_data()) {
     std::cout << "Note: Consider updating ephemeris data with -u for current year" << std::endl;
   }
 
-  // Convert time_t to modern chrono time points
-  auto start_time_chrono = std::chrono::system_clock::from_time_t(start_time);
-  auto target_time_chrono = std::chrono::system_clock::from_time_t(args.target_date);
+  // Target time
+  auto target_time = std::chrono::system_clock::from_time_t(args.target_date);
 
-  // Run the fixed simulation using modern time types
-  bool success = run_fixed_simulation(args, start_time_chrono, target_time_chrono);
+  // Create body factory
+  Bodies::BodyFactory factory;
+
+  // Run the OPTIMIZED simulation (matching legacy performance)
+  bool success = run_optimized_simulation(factory, args, start_time, target_time);
 
   return success ? 0 : 1;
 }

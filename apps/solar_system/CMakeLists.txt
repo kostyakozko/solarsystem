@@ -3,7 +3,7 @@
 
 # Main solar_system application (modern C++ version - PRODUCTION)
 add_executable(solar_system
-    solar_system_optimized.cpp
+    solar_system.cpp
 )
 
 # Legacy solar_system application (original C version, kept for reference)

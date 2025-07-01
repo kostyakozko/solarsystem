@@ -3,11 +3,14 @@
 
 add_library(solar_utils STATIC
     args.cpp
+    src/logging.cpp
+    src/config.cpp
 )
 
 # Public headers for other libraries and applications
 target_include_directories(solar_utils PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
 # Standard optimization flags
@@ -24,7 +27,7 @@ endif()
 
 # Set library properties
 set_target_properties(solar_utils PROPERTIES
-    CXX_STANDARD 17
+    CXX_STANDARD 20
     CXX_STANDARD_REQUIRED ON
     CXX_EXTENSIONS OFF
 )
