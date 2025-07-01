@@ -14,6 +14,9 @@ add_library(solar_core STATIC
     src/bodies/body_factory.cpp
     src/data/body_definitions.cpp
     src/simulation/simulation_engine.cpp
+    
+    # Modern API design patterns (Phase 0.3)
+    src/builders/simulation_builder.cpp
 )
 
 # Public headers for other libraries and applications
