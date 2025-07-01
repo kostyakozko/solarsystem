@@ -1,6 +1,3 @@
-# Solar System Main Application
-# High-performance N-body simulation
-
 # Legacy solar_system application
 add_executable(solar_system
     solar_system.cpp
@@ -9,6 +6,11 @@ add_executable(solar_system
 # Modern solar_system application (demonstrates new architecture)
 add_executable(solar_system_modern
     solar_system_modern.cpp
+)
+
+# Fixed modern solar_system application (matches legacy behavior exactly)
+add_executable(solar_system_modern_fixed
+    solar_system_modern_fixed.cpp
 )
 
 # Link all required libraries (static for maximum performance)
@@ -26,6 +28,13 @@ target_link_libraries(solar_system_modern PRIVATE
     Threads::Threads
 )
 
+target_link_libraries(solar_system_modern_fixed PRIVATE
+    solar_core      # Modern physics engine with SimulationEngine
+    solar_jpl       # JPL data integration
+    solar_utils     # Command-line utilities
+    Threads::Threads
+)
+
 # Aggressive optimization for main executables
 target_compile_options(solar_system PRIVATE
     $<$<CONFIG:Release>:-O3 -march=native -mtune=native -flto -ffast-math -funroll-loops>
@@ -33,6 +42,11 @@ target_compile_options(solar_system PRIVATE
 )
 
 target_compile_options(solar_system_modern PRIVATE
+    $<$<CONFIG:Release>:-O3 -march=native -mtune=native -flto -ffast-math -funroll-loops>
+    $<$<CONFIG:Debug>:-g -O0 -Wall -Wextra>
+)
+
+target_compile_options(solar_system_modern_fixed PRIVATE
     $<$<CONFIG:Release>:-O3 -march=native -mtune=native -flto -ffast-math -funroll-loops>
     $<$<CONFIG:Debug>:-g -O0 -Wall -Wextra>
 )

@@ -272,6 +272,11 @@ constexpr std::array<BodyDefinition, 27> FALLBACK_SOLAR_SYSTEM = {
 [[nodiscard]] std::vector<BodyDefinition> get_essential_bodies();
 
 /**
+ * @brief Get ALL bodies from fallback data (all 27 bodies)
+ */
+[[nodiscard]] std::vector<BodyDefinition> get_all_body_definitions();
+
+/**
  * @brief Get all bodies of a specific type from fallback data
  */
 [[nodiscard]] std::vector<BodyDefinition> get_bodies_by_type(Bodies::BodyType type);

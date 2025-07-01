@@ -99,11 +99,11 @@ Utils::Expected<BodyCollection, std::string> BodyFactory::create_solar_system() 
 
 Utils::Expected<BodyCollection, std::string> BodyFactory::create_solar_system(
     const CreationOptions& options) const {
-  // Get essential bodies from our modern definitions
-  auto essential_bodies = Data::get_essential_bodies();
+  // Get ALL bodies from our modern definitions (not just essential)
   std::vector<std::string> body_names;
 
-  for (const auto& body_def : essential_bodies) {
+  // Add all available bodies from our definitions
+  for (const auto& body_def : Data::get_all_body_definitions()) {
     body_names.emplace_back(body_def.name);
   }
 

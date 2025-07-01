@@ -43,6 +43,18 @@ std::vector<BodyDefinition> get_essential_bodies() {
   return get_bodies_by_priority(Bodies::BodyPriority::Essential);
 }
 
+std::vector<BodyDefinition> get_all_body_definitions() {
+  // Return all 27 bodies from our definitions
+  std::vector<BodyDefinition> all_bodies;
+  all_bodies.reserve(FALLBACK_SOLAR_SYSTEM.size());
+
+  for (const auto& body_def : FALLBACK_SOLAR_SYSTEM) {
+    all_bodies.push_back(body_def);
+  }
+
+  return all_bodies;
+}
+
 std::vector<BodyDefinition> get_bodies_by_type(Bodies::BodyType type) {
   std::vector<BodyDefinition> result;
   std::copy_if(FALLBACK_SOLAR_SYSTEM.begin(), FALLBACK_SOLAR_SYSTEM.end(),
