@@ -1,0 +1,205 @@
+\doxysection{/home/runner/work/solarsystem/solarsystem/lib/solar\+\_\+core/simulation.h File Reference}
+\hypertarget{simulation_8h}{}\label{simulation_8h}\index{/home/runner/work/solarsystem/solarsystem/lib/solar\_core/simulation.h@{/home/runner/work/solarsystem/solarsystem/lib/solar\_core/simulation.h}}
+{\ttfamily \#include $<$ctime$>$}\newline
+{\ttfamily \#include "{}args.\+h"{}}\newline
+Include dependency graph for simulation.\+h\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=252pt]{simulation_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{simulation_8h__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{simulation_8h_ab0832ca0052d430595e389420311a52b}{print\+\_\+simulation\+\_\+info}} (const \mbox{\hyperlink{structSimulationArgs}{Simulation\+Args}} \&args, time\+\_\+t start\+\_\+date)
+\item 
+void \mbox{\hyperlink{simulation_8h_a0dd2f68b7c0fdc35a805cab9afce1edc}{run\+\_\+forward\+\_\+simulation}} (time\+\_\+t start\+\_\+date, time\+\_\+t target\+\_\+date)
+\item 
+void \mbox{\hyperlink{simulation_8h_a61e0b0b74a5873ce3c70ec27f6bd3bae}{run\+\_\+backward\+\_\+simulation}} (time\+\_\+t start\+\_\+date, time\+\_\+t target\+\_\+date)
+\item 
+bool \mbox{\hyperlink{simulation_8h_afcdf241650212b877e69ef05396caaa9}{run\+\_\+web\+\_\+forward\+\_\+simulation}} (time\+\_\+t start\+\_\+date, time\+\_\+t target\+\_\+date)
+\item 
+bool \mbox{\hyperlink{simulation_8h_aab20ecd1d9a657506b678d7e03b37acc}{run\+\_\+web\+\_\+backward\+\_\+simulation}} (time\+\_\+t start\+\_\+date, time\+\_\+t target\+\_\+date)
+\item 
+void \mbox{\hyperlink{simulation_8h_a6735aef983e6ec59028524949bb2252f}{perform\+\_\+simulation\+\_\+step}} (long double time\+\_\+step)
+\item 
+void \mbox{\hyperlink{simulation_8h_afadc206cce91e2e701eaef2cbbdb820d}{initialize\+\_\+simulation\+\_\+to\+\_\+current\+\_\+time}} ()
+\item 
+void \mbox{\hyperlink{simulation_8h_a10ae8cd5618cf0a714e8bfd2931f44d6}{update\+\_\+simulation\+\_\+to\+\_\+current\+\_\+time}} ()
+\item 
+time\+\_\+t \mbox{\hyperlink{simulation_8h_ada09bb427fc569b6c76219c88f16680a}{get\+\_\+simulation\+\_\+time}} ()
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{simulation_8h_ada09bb427fc569b6c76219c88f16680a}\label{simulation_8h_ada09bb427fc569b6c76219c88f16680a} 
+\index{simulation.h@{simulation.h}!get\_simulation\_time@{get\_simulation\_time}}
+\index{get\_simulation\_time@{get\_simulation\_time}!simulation.h@{simulation.h}}
+\doxysubsubsection{\texorpdfstring{get\_simulation\_time()}{get\_simulation\_time()}}
+{\footnotesize\ttfamily time\+\_\+t get\+\_\+simulation\+\_\+time (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\Hypertarget{simulation_8h_afadc206cce91e2e701eaef2cbbdb820d}\label{simulation_8h_afadc206cce91e2e701eaef2cbbdb820d} 
+\index{simulation.h@{simulation.h}!initialize\_simulation\_to\_current\_time@{initialize\_simulation\_to\_current\_time}}
+\index{initialize\_simulation\_to\_current\_time@{initialize\_simulation\_to\_current\_time}!simulation.h@{simulation.h}}
+\doxysubsubsection{\texorpdfstring{initialize\_simulation\_to\_current\_time()}{initialize\_simulation\_to\_current\_time()}}
+{\footnotesize\ttfamily void initialize\+\_\+simulation\+\_\+to\+\_\+current\+\_\+time (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=273pt]{simulation_8h_afadc206cce91e2e701eaef2cbbdb820d_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{simulation_8h_a6735aef983e6ec59028524949bb2252f}\label{simulation_8h_a6735aef983e6ec59028524949bb2252f} 
+\index{simulation.h@{simulation.h}!perform\_simulation\_step@{perform\_simulation\_step}}
+\index{perform\_simulation\_step@{perform\_simulation\_step}!simulation.h@{simulation.h}}
+\doxysubsubsection{\texorpdfstring{perform\_simulation\_step()}{perform\_simulation\_step()}}
+{\footnotesize\ttfamily void perform\+\_\+simulation\+\_\+step (\begin{DoxyParamCaption}\item[{long double}]{time\+\_\+step }\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=314pt]{simulation_8h_a6735aef983e6ec59028524949bb2252f_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{simulation_8h_a6735aef983e6ec59028524949bb2252f_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{simulation_8h_ab0832ca0052d430595e389420311a52b}\label{simulation_8h_ab0832ca0052d430595e389420311a52b} 
+\index{simulation.h@{simulation.h}!print\_simulation\_info@{print\_simulation\_info}}
+\index{print\_simulation\_info@{print\_simulation\_info}!simulation.h@{simulation.h}}
+\doxysubsubsection{\texorpdfstring{print\_simulation\_info()}{print\_simulation\_info()}}
+{\footnotesize\ttfamily void print\+\_\+simulation\+\_\+info (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structSimulationArgs}{Simulation\+Args}} \&}]{args,  }\item[{time\+\_\+t}]{start\+\_\+date }\end{DoxyParamCaption})}
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=258pt]{simulation_8h_ab0832ca0052d430595e389420311a52b_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{simulation_8h_a61e0b0b74a5873ce3c70ec27f6bd3bae}\label{simulation_8h_a61e0b0b74a5873ce3c70ec27f6bd3bae} 
+\index{simulation.h@{simulation.h}!run\_backward\_simulation@{run\_backward\_simulation}}
+\index{run\_backward\_simulation@{run\_backward\_simulation}!simulation.h@{simulation.h}}
+\doxysubsubsection{\texorpdfstring{run\_backward\_simulation()}{run\_backward\_simulation()}}
+{\footnotesize\ttfamily void run\+\_\+backward\+\_\+simulation (\begin{DoxyParamCaption}\item[{time\+\_\+t}]{start\+\_\+date,  }\item[{time\+\_\+t}]{target\+\_\+date }\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{simulation_8h_a61e0b0b74a5873ce3c70ec27f6bd3bae_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=279pt]{simulation_8h_a61e0b0b74a5873ce3c70ec27f6bd3bae_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{simulation_8h_a0dd2f68b7c0fdc35a805cab9afce1edc}\label{simulation_8h_a0dd2f68b7c0fdc35a805cab9afce1edc} 
+\index{simulation.h@{simulation.h}!run\_forward\_simulation@{run\_forward\_simulation}}
+\index{run\_forward\_simulation@{run\_forward\_simulation}!simulation.h@{simulation.h}}
+\doxysubsubsection{\texorpdfstring{run\_forward\_simulation()}{run\_forward\_simulation()}}
+{\footnotesize\ttfamily void run\+\_\+forward\+\_\+simulation (\begin{DoxyParamCaption}\item[{time\+\_\+t}]{start\+\_\+date,  }\item[{time\+\_\+t}]{target\+\_\+date }\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{simulation_8h_a0dd2f68b7c0fdc35a805cab9afce1edc_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=270pt]{simulation_8h_a0dd2f68b7c0fdc35a805cab9afce1edc_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{simulation_8h_aab20ecd1d9a657506b678d7e03b37acc}\label{simulation_8h_aab20ecd1d9a657506b678d7e03b37acc} 
+\index{simulation.h@{simulation.h}!run\_web\_backward\_simulation@{run\_web\_backward\_simulation}}
+\index{run\_web\_backward\_simulation@{run\_web\_backward\_simulation}!simulation.h@{simulation.h}}
+\doxysubsubsection{\texorpdfstring{run\_web\_backward\_simulation()}{run\_web\_backward\_simulation()}}
+{\footnotesize\ttfamily bool run\+\_\+web\+\_\+backward\+\_\+simulation (\begin{DoxyParamCaption}\item[{time\+\_\+t}]{start\+\_\+date,  }\item[{time\+\_\+t}]{target\+\_\+date }\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{simulation_8h_aab20ecd1d9a657506b678d7e03b37acc_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{simulation_8h_aab20ecd1d9a657506b678d7e03b37acc_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{simulation_8h_afcdf241650212b877e69ef05396caaa9}\label{simulation_8h_afcdf241650212b877e69ef05396caaa9} 
+\index{simulation.h@{simulation.h}!run\_web\_forward\_simulation@{run\_web\_forward\_simulation}}
+\index{run\_web\_forward\_simulation@{run\_web\_forward\_simulation}!simulation.h@{simulation.h}}
+\doxysubsubsection{\texorpdfstring{run\_web\_forward\_simulation()}{run\_web\_forward\_simulation()}}
+{\footnotesize\ttfamily bool run\+\_\+web\+\_\+forward\+\_\+simulation (\begin{DoxyParamCaption}\item[{time\+\_\+t}]{start\+\_\+date,  }\item[{time\+\_\+t}]{target\+\_\+date }\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{simulation_8h_afcdf241650212b877e69ef05396caaa9_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{simulation_8h_afcdf241650212b877e69ef05396caaa9_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{simulation_8h_a10ae8cd5618cf0a714e8bfd2931f44d6}\label{simulation_8h_a10ae8cd5618cf0a714e8bfd2931f44d6} 
+\index{simulation.h@{simulation.h}!update\_simulation\_to\_current\_time@{update\_simulation\_to\_current\_time}}
+\index{update\_simulation\_to\_current\_time@{update\_simulation\_to\_current\_time}!simulation.h@{simulation.h}}
+\doxysubsubsection{\texorpdfstring{update\_simulation\_to\_current\_time()}{update\_simulation\_to\_current\_time()}}
+{\footnotesize\ttfamily void update\+\_\+simulation\+\_\+to\+\_\+current\+\_\+time (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{simulation_8h_a10ae8cd5618cf0a714e8bfd2931f44d6_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=279pt]{simulation_8h_a10ae8cd5618cf0a714e8bfd2931f44d6_icgraph}
+\end{center}
+\end{figure}

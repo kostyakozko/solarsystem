@@ -1,0 +1,118 @@
+\doxysection{/home/runner/work/solarsystem/solarsystem/lib/solar\+\_\+jpl/jpl\+\_\+bodies.h File Reference}
+\hypertarget{jpl__bodies_8h}{}\label{jpl__bodies_8h}\index{/home/runner/work/solarsystem/solarsystem/lib/solar\_jpl/jpl\_bodies.h@{/home/runner/work/solarsystem/solarsystem/lib/solar\_jpl/jpl\_bodies.h}}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{jpl__bodies_8h__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structJPLBodyInfo}{JPLBody\+Info}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{jpl__bodies_8h_acf0ce63e34327e5bc336f9fe3d2d47a2}{Body\+Type}} \{ \mbox{\hyperlink{jpl__bodies_8h_acf0ce63e34327e5bc336f9fe3d2d47a2ae83855531517ace015f4319d302473b8}{BODY\+\_\+\+ESSENTIAL}}
+, \mbox{\hyperlink{jpl__bodies_8h_acf0ce63e34327e5bc336f9fe3d2d47a2a14a276972dcee168bec2f51e31277704}{BODY\+\_\+\+IMPORTANT}}
+, \mbox{\hyperlink{jpl__bodies_8h_acf0ce63e34327e5bc336f9fe3d2d47a2a3d7f74ac03f79586300de0f4f8792738}{BODY\+\_\+\+OPTIONAL}}
+, \mbox{\hyperlink{jpl__bodies_8h_acf0ce63e34327e5bc336f9fe3d2d47a2afe71601fd30aaea75fe7aea10b58a552}{BODY\+\_\+\+UNKNOWN}}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{jpl__bodies_8h_a48b987d720a8e1eb2956830e7514e94a}{get\+\_\+jpl\+\_\+id\+\_\+by\+\_\+index}} (int body\+\_\+index)
+\item 
+int \mbox{\hyperlink{jpl__bodies_8h_a71fdf8ddc109b541f1fbd53a2fe48c3c}{get\+\_\+jpl\+\_\+id\+\_\+for\+\_\+body}} (int body\+\_\+index)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+const \mbox{\hyperlink{structJPLBodyInfo}{JPLBody\+Info}} \mbox{\hyperlink{jpl__bodies_8h_afb90e69124227117cb04da01afb05d36}{JPL\+\_\+\+BODY\+\_\+\+MAP}} \mbox{[}$\,$\mbox{]}
+\item 
+const int \mbox{\hyperlink{jpl__bodies_8h_a4901019a3fadc365aeddcc4f3ddcf906}{JPL\+\_\+\+BODY\+\_\+\+COUNT}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Enumeration Type Documentation}
+\Hypertarget{jpl__bodies_8h_acf0ce63e34327e5bc336f9fe3d2d47a2}\label{jpl__bodies_8h_acf0ce63e34327e5bc336f9fe3d2d47a2} 
+\index{jpl\_bodies.h@{jpl\_bodies.h}!BodyType@{BodyType}}
+\index{BodyType@{BodyType}!jpl\_bodies.h@{jpl\_bodies.h}}
+\doxysubsubsection{\texorpdfstring{BodyType}{BodyType}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{jpl__bodies_8h_acf0ce63e34327e5bc336f9fe3d2d47a2}{Body\+Type}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{BODY\_ESSENTIAL@{BODY\_ESSENTIAL}!jpl\_bodies.h@{jpl\_bodies.h}}\index{jpl\_bodies.h@{jpl\_bodies.h}!BODY\_ESSENTIAL@{BODY\_ESSENTIAL}}}\Hypertarget{jpl__bodies_8h_acf0ce63e34327e5bc336f9fe3d2d47a2ae83855531517ace015f4319d302473b8}\label{jpl__bodies_8h_acf0ce63e34327e5bc336f9fe3d2d47a2ae83855531517ace015f4319d302473b8} 
+BODY\+\_\+\+ESSENTIAL&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{BODY\_IMPORTANT@{BODY\_IMPORTANT}!jpl\_bodies.h@{jpl\_bodies.h}}\index{jpl\_bodies.h@{jpl\_bodies.h}!BODY\_IMPORTANT@{BODY\_IMPORTANT}}}\Hypertarget{jpl__bodies_8h_acf0ce63e34327e5bc336f9fe3d2d47a2a14a276972dcee168bec2f51e31277704}\label{jpl__bodies_8h_acf0ce63e34327e5bc336f9fe3d2d47a2a14a276972dcee168bec2f51e31277704} 
+BODY\+\_\+\+IMPORTANT&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{BODY\_OPTIONAL@{BODY\_OPTIONAL}!jpl\_bodies.h@{jpl\_bodies.h}}\index{jpl\_bodies.h@{jpl\_bodies.h}!BODY\_OPTIONAL@{BODY\_OPTIONAL}}}\Hypertarget{jpl__bodies_8h_acf0ce63e34327e5bc336f9fe3d2d47a2a3d7f74ac03f79586300de0f4f8792738}\label{jpl__bodies_8h_acf0ce63e34327e5bc336f9fe3d2d47a2a3d7f74ac03f79586300de0f4f8792738} 
+BODY\+\_\+\+OPTIONAL&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{BODY\_UNKNOWN@{BODY\_UNKNOWN}!jpl\_bodies.h@{jpl\_bodies.h}}\index{jpl\_bodies.h@{jpl\_bodies.h}!BODY\_UNKNOWN@{BODY\_UNKNOWN}}}\Hypertarget{jpl__bodies_8h_acf0ce63e34327e5bc336f9fe3d2d47a2afe71601fd30aaea75fe7aea10b58a552}\label{jpl__bodies_8h_acf0ce63e34327e5bc336f9fe3d2d47a2afe71601fd30aaea75fe7aea10b58a552} 
+BODY\+\_\+\+UNKNOWN&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{jpl__bodies_8h_a48b987d720a8e1eb2956830e7514e94a}\label{jpl__bodies_8h_a48b987d720a8e1eb2956830e7514e94a} 
+\index{jpl\_bodies.h@{jpl\_bodies.h}!get\_jpl\_id\_by\_index@{get\_jpl\_id\_by\_index}}
+\index{get\_jpl\_id\_by\_index@{get\_jpl\_id\_by\_index}!jpl\_bodies.h@{jpl\_bodies.h}}
+\doxysubsubsection{\texorpdfstring{get\_jpl\_id\_by\_index()}{get\_jpl\_id\_by\_index()}}
+{\footnotesize\ttfamily int get\+\_\+jpl\+\_\+id\+\_\+by\+\_\+index (\begin{DoxyParamCaption}\item[{int}]{body\+\_\+index }\end{DoxyParamCaption})}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{jpl__bodies_8h_a48b987d720a8e1eb2956830e7514e94a_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{jpl__bodies_8h_a71fdf8ddc109b541f1fbd53a2fe48c3c}\label{jpl__bodies_8h_a71fdf8ddc109b541f1fbd53a2fe48c3c} 
+\index{jpl\_bodies.h@{jpl\_bodies.h}!get\_jpl\_id\_for\_body@{get\_jpl\_id\_for\_body}}
+\index{get\_jpl\_id\_for\_body@{get\_jpl\_id\_for\_body}!jpl\_bodies.h@{jpl\_bodies.h}}
+\doxysubsubsection{\texorpdfstring{get\_jpl\_id\_for\_body()}{get\_jpl\_id\_for\_body()}}
+{\footnotesize\ttfamily int get\+\_\+jpl\+\_\+id\+\_\+for\+\_\+body (\begin{DoxyParamCaption}\item[{int}]{body\+\_\+index }\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=318pt]{jpl__bodies_8h_a71fdf8ddc109b541f1fbd53a2fe48c3c_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{jpl__bodies_8h_a71fdf8ddc109b541f1fbd53a2fe48c3c_icgraph}
+\end{center}
+\end{figure}
+
+
+\doxysubsection{Variable Documentation}
+\Hypertarget{jpl__bodies_8h_a4901019a3fadc365aeddcc4f3ddcf906}\label{jpl__bodies_8h_a4901019a3fadc365aeddcc4f3ddcf906} 
+\index{jpl\_bodies.h@{jpl\_bodies.h}!JPL\_BODY\_COUNT@{JPL\_BODY\_COUNT}}
+\index{JPL\_BODY\_COUNT@{JPL\_BODY\_COUNT}!jpl\_bodies.h@{jpl\_bodies.h}}
+\doxysubsubsection{\texorpdfstring{JPL\_BODY\_COUNT}{JPL\_BODY\_COUNT}}
+{\footnotesize\ttfamily const int JPL\+\_\+\+BODY\+\_\+\+COUNT\hspace{0.3cm}{\ttfamily [extern]}}
+
+\Hypertarget{jpl__bodies_8h_afb90e69124227117cb04da01afb05d36}\label{jpl__bodies_8h_afb90e69124227117cb04da01afb05d36} 
+\index{jpl\_bodies.h@{jpl\_bodies.h}!JPL\_BODY\_MAP@{JPL\_BODY\_MAP}}
+\index{JPL\_BODY\_MAP@{JPL\_BODY\_MAP}!jpl\_bodies.h@{jpl\_bodies.h}}
+\doxysubsubsection{\texorpdfstring{JPL\_BODY\_MAP}{JPL\_BODY\_MAP}}
+{\footnotesize\ttfamily const \mbox{\hyperlink{structJPLBodyInfo}{JPLBody\+Info}} JPL\+\_\+\+BODY\+\_\+\+MAP\mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [extern]}}
+

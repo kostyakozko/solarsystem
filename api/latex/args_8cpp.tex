@@ -1,0 +1,89 @@
+\doxysection{/home/runner/work/solarsystem/solarsystem/lib/solar\+\_\+utils/args.cpp File Reference}
+\hypertarget{args_8cpp}{}\label{args_8cpp}\index{/home/runner/work/solarsystem/solarsystem/lib/solar\_utils/args.cpp@{/home/runner/work/solarsystem/solarsystem/lib/solar\_utils/args.cpp}}
+{\ttfamily \#include "{}args.\+h"{}}\newline
+{\ttfamily \#include $<$cstdlib$>$}\newline
+{\ttfamily \#include $<$cstring$>$}\newline
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$sstream$>$}\newline
+Include dependency graph for args.\+cpp\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{args_8cpp__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{args_8cpp_ac7608332d002ef2745359f4cada4afc8}{print\+\_\+usage}} (const char \texorpdfstring{$\ast$}{*}program\+\_\+name)
+\item 
+time\+\_\+t \mbox{\hyperlink{args_8cpp_ac067a65ac543d055d12990e7efa927db}{parse\+\_\+iso\+\_\+date}} (const std\+::string \&date\+\_\+str)
+\item 
+bool \mbox{\hyperlink{args_8cpp_a22cc89838e186e4c57150d6248803e07}{parse\+\_\+args}} (int argc, const char \texorpdfstring{$\ast$}{*}const argv\mbox{[}$\,$\mbox{]}, \mbox{\hyperlink{structArgs}{Args}} \&args)
+\item 
+\mbox{\hyperlink{structSimulationArgs}{Simulation\+Args}} \mbox{\hyperlink{args_8cpp_ad728004ed1167c7397ee6f64cb3653a8}{parse\+\_\+arguments}} (int argc, char \texorpdfstring{$\ast$}{*}argv\mbox{[}$\,$\mbox{]})
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{args_8cpp_a22cc89838e186e4c57150d6248803e07}\label{args_8cpp_a22cc89838e186e4c57150d6248803e07} 
+\index{args.cpp@{args.cpp}!parse\_args@{parse\_args}}
+\index{parse\_args@{parse\_args}!args.cpp@{args.cpp}}
+\doxysubsubsection{\texorpdfstring{parse\_args()}{parse\_args()}}
+{\footnotesize\ttfamily bool parse\+\_\+args (\begin{DoxyParamCaption}\item[{int}]{argc,  }\item[{const char \texorpdfstring{$\ast$}{*}const}]{argv\mbox{[}$\,$\mbox{]},  }\item[{\mbox{\hyperlink{structArgs}{Args}} \&}]{args }\end{DoxyParamCaption})}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=227pt]{args_8cpp_a22cc89838e186e4c57150d6248803e07_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{args_8cpp_ad728004ed1167c7397ee6f64cb3653a8}\label{args_8cpp_ad728004ed1167c7397ee6f64cb3653a8} 
+\index{args.cpp@{args.cpp}!parse\_arguments@{parse\_arguments}}
+\index{parse\_arguments@{parse\_arguments}!args.cpp@{args.cpp}}
+\doxysubsubsection{\texorpdfstring{parse\_arguments()}{parse\_arguments()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structSimulationArgs}{Simulation\+Args}} parse\+\_\+arguments (\begin{DoxyParamCaption}\item[{int}]{argc,  }\item[{char \texorpdfstring{$\ast$}{*}}]{argv\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=289pt]{args_8cpp_ad728004ed1167c7397ee6f64cb3653a8_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=244pt]{args_8cpp_ad728004ed1167c7397ee6f64cb3653a8_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{args_8cpp_ac067a65ac543d055d12990e7efa927db}\label{args_8cpp_ac067a65ac543d055d12990e7efa927db} 
+\index{args.cpp@{args.cpp}!parse\_iso\_date@{parse\_iso\_date}}
+\index{parse\_iso\_date@{parse\_iso\_date}!args.cpp@{args.cpp}}
+\doxysubsubsection{\texorpdfstring{parse\_iso\_date()}{parse\_iso\_date()}}
+{\footnotesize\ttfamily time\+\_\+t parse\+\_\+iso\+\_\+date (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{date\+\_\+str }\end{DoxyParamCaption})}
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{args_8cpp_ac067a65ac543d055d12990e7efa927db_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{args_8cpp_ac7608332d002ef2745359f4cada4afc8}\label{args_8cpp_ac7608332d002ef2745359f4cada4afc8} 
+\index{args.cpp@{args.cpp}!print\_usage@{print\_usage}}
+\index{print\_usage@{print\_usage}!args.cpp@{args.cpp}}
+\doxysubsubsection{\texorpdfstring{print\_usage()}{print\_usage()}}
+{\footnotesize\ttfamily void print\+\_\+usage (\begin{DoxyParamCaption}\item[{const char \texorpdfstring{$\ast$}{*}}]{program\+\_\+name }\end{DoxyParamCaption})}
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=346pt]{args_8cpp_ac7608332d002ef2745359f4cada4afc8_icgraph}
+\end{center}
+\end{figure}

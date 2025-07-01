@@ -1,0 +1,133 @@
+\doxysection{/home/runner/work/solarsystem/solarsystem/apps/solar\+\_\+system\+\_\+launcher/launcher.cpp File Reference}
+\hypertarget{launcher_8cpp}{}\label{launcher_8cpp}\index{/home/runner/work/solarsystem/solarsystem/apps/solar\_system\_launcher/launcher.cpp@{/home/runner/work/solarsystem/solarsystem/apps/solar\_system\_launcher/launcher.cpp}}
+{\ttfamily \#include $<$unistd.\+h$>$}\newline
+{\ttfamily \#include $<$cstdlib$>$}\newline
+{\ttfamily \#include $<$cstring$>$}\newline
+{\ttfamily \#include $<$ctime$>$}\newline
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$string$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include "{}args.\+h"{}}\newline
+{\ttfamily \#include "{}jpl\+\_\+data.\+h"{}}\newline
+Include dependency graph for launcher.\+cpp\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{launcher_8cpp__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structLauncherArgs}{Launcher\+Args}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{launcher_8cpp_a6e6c36841033a2432d28c44cffa851ed}{print\+\_\+launcher\+\_\+usage}} (const char \texorpdfstring{$\ast$}{*}program\+\_\+name)
+\item 
+bool \mbox{\hyperlink{launcher_8cpp_a93ada52aaf68491a9a32a8ecdb45cf43}{parse\+\_\+launcher\+\_\+args}} (int argc, const char \texorpdfstring{$\ast$}{*}const argv\mbox{[}$\,$\mbox{]}, \mbox{\hyperlink{structLauncherArgs}{Launcher\+Args}} \&args)
+\item 
+std\+::string \mbox{\hyperlink{launcher_8cpp_a306537a9be4f0d2099c1bc99561a9564}{get\+\_\+executable\+\_\+path}} ()
+\item 
+int \mbox{\hyperlink{launcher_8cpp_a0777aaf440764d41242d9f35b302448a}{execute\+\_\+command}} (const std\+::string \&command, bool quiet=false)
+\item 
+void \mbox{\hyperlink{launcher_8cpp_a773847ae9fdde81aa8801edb82aedb4c}{print\+\_\+system\+\_\+status}} ()
+\item 
+int \mbox{\hyperlink{launcher_8cpp_a814244b02f6701fd8ead246678bb3dae}{main}} (int argc, const char \texorpdfstring{$\ast$}{*}const argv\mbox{[}$\,$\mbox{]})
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{launcher_8cpp_a0777aaf440764d41242d9f35b302448a}\label{launcher_8cpp_a0777aaf440764d41242d9f35b302448a} 
+\index{launcher.cpp@{launcher.cpp}!execute\_command@{execute\_command}}
+\index{execute\_command@{execute\_command}!launcher.cpp@{launcher.cpp}}
+\doxysubsubsection{\texorpdfstring{execute\_command()}{execute\_command()}}
+{\footnotesize\ttfamily int execute\+\_\+command (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{command,  }\item[{bool}]{quiet = {\ttfamily false} }\end{DoxyParamCaption})}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=266pt]{launcher_8cpp_a0777aaf440764d41242d9f35b302448a_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{launcher_8cpp_a306537a9be4f0d2099c1bc99561a9564}\label{launcher_8cpp_a306537a9be4f0d2099c1bc99561a9564} 
+\index{launcher.cpp@{launcher.cpp}!get\_executable\_path@{get\_executable\_path}}
+\index{get\_executable\_path@{get\_executable\_path}!launcher.cpp@{launcher.cpp}}
+\doxysubsubsection{\texorpdfstring{get\_executable\_path()}{get\_executable\_path()}}
+{\footnotesize\ttfamily std\+::string get\+\_\+executable\+\_\+path (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=275pt]{launcher_8cpp_a306537a9be4f0d2099c1bc99561a9564_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{launcher_8cpp_a814244b02f6701fd8ead246678bb3dae}\label{launcher_8cpp_a814244b02f6701fd8ead246678bb3dae} 
+\index{launcher.cpp@{launcher.cpp}!main@{main}}
+\index{main@{main}!launcher.cpp@{launcher.cpp}}
+\doxysubsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily int main (\begin{DoxyParamCaption}\item[{int}]{argc,  }\item[{const char \texorpdfstring{$\ast$}{*}const}]{argv\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{launcher_8cpp_a814244b02f6701fd8ead246678bb3dae_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{launcher_8cpp_a93ada52aaf68491a9a32a8ecdb45cf43}\label{launcher_8cpp_a93ada52aaf68491a9a32a8ecdb45cf43} 
+\index{launcher.cpp@{launcher.cpp}!parse\_launcher\_args@{parse\_launcher\_args}}
+\index{parse\_launcher\_args@{parse\_launcher\_args}!launcher.cpp@{launcher.cpp}}
+\doxysubsubsection{\texorpdfstring{parse\_launcher\_args()}{parse\_launcher\_args()}}
+{\footnotesize\ttfamily bool parse\+\_\+launcher\+\_\+args (\begin{DoxyParamCaption}\item[{int}]{argc,  }\item[{const char \texorpdfstring{$\ast$}{*}const}]{argv\mbox{[}$\,$\mbox{]},  }\item[{\mbox{\hyperlink{structLauncherArgs}{Launcher\+Args}} \&}]{args }\end{DoxyParamCaption})}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=274pt]{launcher_8cpp_a93ada52aaf68491a9a32a8ecdb45cf43_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{launcher_8cpp_a6e6c36841033a2432d28c44cffa851ed}\label{launcher_8cpp_a6e6c36841033a2432d28c44cffa851ed} 
+\index{launcher.cpp@{launcher.cpp}!print\_launcher\_usage@{print\_launcher\_usage}}
+\index{print\_launcher\_usage@{print\_launcher\_usage}!launcher.cpp@{launcher.cpp}}
+\doxysubsubsection{\texorpdfstring{print\_launcher\_usage()}{print\_launcher\_usage()}}
+{\footnotesize\ttfamily void print\+\_\+launcher\+\_\+usage (\begin{DoxyParamCaption}\item[{const char \texorpdfstring{$\ast$}{*}}]{program\+\_\+name }\end{DoxyParamCaption})}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=278pt]{launcher_8cpp_a6e6c36841033a2432d28c44cffa851ed_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{launcher_8cpp_a773847ae9fdde81aa8801edb82aedb4c}\label{launcher_8cpp_a773847ae9fdde81aa8801edb82aedb4c} 
+\index{launcher.cpp@{launcher.cpp}!print\_system\_status@{print\_system\_status}}
+\index{print\_system\_status@{print\_system\_status}!launcher.cpp@{launcher.cpp}}
+\doxysubsubsection{\texorpdfstring{print\_system\_status()}{print\_system\_status()}}
+{\footnotesize\ttfamily void print\+\_\+system\+\_\+status (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{launcher_8cpp_a773847ae9fdde81aa8801edb82aedb4c_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=273pt]{launcher_8cpp_a773847ae9fdde81aa8801edb82aedb4c_icgraph}
+\end{center}
+\end{figure}

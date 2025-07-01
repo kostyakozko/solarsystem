@@ -1,0 +1,101 @@
+\doxysection{jpl\+\_\+data.\+h}
+\hypertarget{jpl__data_8h_source}{}\label{jpl__data_8h_source}\index{/home/runner/work/solarsystem/solarsystem/lib/solar\_jpl/jpl\_data.h@{/home/runner/work/solarsystem/solarsystem/lib/solar\_jpl/jpl\_data.h}}
+\mbox{\hyperlink{jpl__data_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_\_JPL\_DATA\_H\_\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_\_JPL\_DATA\_H\_\_}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <cstdint>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <ctime>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{jpl__bodies_8h}{jpl\_bodies.h}}"{}}\ \ \textcolor{comment}{//\ For\ BodyType\ enum}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{comment}{//\ Forward\ declarations\ for\ parallel\ fetching}}
+\DoxyCodeLine{00011\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structFetchTask}{FetchTask}}\ \{}
+\DoxyCodeLine{00012\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structFetchTask_af4c0d71cfeca7f6c09f8e5fdb0b0f1d9}{body\_index}};}
+\DoxyCodeLine{00013\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structFetchTask_a48c1f983209578162756fb14ef25a974}{jpl\_id}};}
+\DoxyCodeLine{00014\ \ \ std::string\ \mbox{\hyperlink{structFetchTask_a16a6acf8bd875520b23d566f8170aa0e}{date\_str}};}
+\DoxyCodeLine{00015\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{structFetchTask_a54e9a9673539436aa79cd85b0677ec2e}{success}};}
+\DoxyCodeLine{00016\ \ \ std::string\ \mbox{\hyperlink{structFetchTask_a85b2e13dc27b11e0e7dde6a89f78f7da}{error\_message}};}
+\DoxyCodeLine{00017\ \};}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{comment}{//\ Constants}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#define\ JPL\_BINARY\_MAGIC\ 0x4A504C45\ \ }\textcolor{comment}{//\ "{}JPLE"{}}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#define\ JPL\_FORMAT\_VERSION\ 1}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#define\ BODY\_COUNT\ 27}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{comment}{//\ File\ paths}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#define\ JPL\_JSON\_FILE\ "{}ephemeris\_data.json"{}}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#define\ JPL\_BINARY\_FILE\ "{}ephemeris\_cache.bin"{}}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{comment}{//\ Binary\ cache\ file\ header}}
+\DoxyCodeLine{00029\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structEphemerisHeader}{EphemerisHeader}}\ \{}
+\DoxyCodeLine{00030\ \ \ uint32\_t\ \mbox{\hyperlink{structEphemerisHeader_a0f798b39f3112de9f5cf115badb1796b}{magic\_number}};\ \ \ \textcolor{comment}{//\ 0x4A504C45\ ("{}JPLE"{})}}
+\DoxyCodeLine{00031\ \ \ uint32\_t\ \mbox{\hyperlink{structEphemerisHeader_acade39810e82252c480a070cc3f236de}{version}};\ \ \ \ \ \ \ \ \textcolor{comment}{//\ Format\ version}}
+\DoxyCodeLine{00032\ \ \ uint32\_t\ \mbox{\hyperlink{structEphemerisHeader_a601b4184845554ddfb7937ef983ca4bd}{body\_count}};\ \ \ \ \ \textcolor{comment}{//\ Number\ of\ bodies}}
+\DoxyCodeLine{00033\ \ \ time\_t\ \mbox{\hyperlink{structEphemerisHeader_ab5e8ab7775e031f5976025105ccccf79}{epoch}};\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Data\ epoch\ (Jan\ 1st\ of\ year)}}
+\DoxyCodeLine{00034\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structEphemerisHeader_a544be824cc881bbffe34675e66d0bc02}{source}}[32];\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ "{}JPL\_HORIZONS\_2025"{}\ etc.}}
+\DoxyCodeLine{00035\ \ \ uint64\_t\ \mbox{\hyperlink{structEphemerisHeader_a8e4142c54cf8805d1bf190719b5ba1ca}{json\_checksum}};\ \ \textcolor{comment}{//\ To\ detect\ JSON\ changes}}
+\DoxyCodeLine{00036\ \};}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{comment}{//\ JPL\ data\ management\ functions}}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \textcolor{comment}{//\ Main\ update\ function\ -\/\ fetches\ data\ for\ January\ 1st\ of\ current\ year}}
+\DoxyCodeLine{00041\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{jpl__data_8h_a30edf33d36cc635363249c8a5131752e}{update\_ephemeris\_data}}();}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \textcolor{comment}{//\ Force\ update\ function\ -\/\ bypasses\ smart\ caching}}
+\DoxyCodeLine{00044\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{jpl__data_8h_a43172e1fe148d3962a3e41240152591f}{force\_update\_ephemeris\_data}}();}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \textcolor{comment}{//\ Load\ data\ from\ cache\ (binary\ first,\ then\ JSON\ fallback)}}
+\DoxyCodeLine{00047\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{jpl__data_8h_ac5ffbb532a5be75e313500d1e6921975}{load\_cached\_ephemeris\_data}}();}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \textcolor{comment}{//\ Rebuild\ binary\ cache\ from\ JSON}}
+\DoxyCodeLine{00050\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{jpl__data_8h_a82c04200c0b3e931271740cf1be9e4bb}{rebuild\_binary\_cache}}();}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \textcolor{comment}{//\ Check\ if\ we\ have\ current\ year's\ data}}
+\DoxyCodeLine{00053\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{jpl__data_8h_aaad3b3c333c2cad513974e0702a27c5d}{has\_current\_year\_ephemeris\_data}}();}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \textcolor{comment}{//\ Check\ if\ we\ have\ any\ JPL\ ephemeris\ data\ (vs\ original\ hardcoded\ data)}}
+\DoxyCodeLine{00056\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{jpl__data_8h_a59f69cf29c0ec41bae3cb8030f8e78b3}{has\_current\_ephemeris\_data}}();}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \textcolor{comment}{//\ Fetch\ JPL\ data\ for\ all\ bodies\ for\ a\ specific\ date\ (for\ web\ server)}}
+\DoxyCodeLine{00059\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{jpl__data_8h_a178389cceb6199fdc8906aeeb440fbf0}{fetch\_jpl\_data\_for\_date}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ date);}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \textcolor{comment}{//\ Fetch\ JPL\ data\ for\ console\ applications\ (stricter\ requirements)}}
+\DoxyCodeLine{00062\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{jpl__data_8h_adaee806f87338c88d12a9e11e9bc50c7}{fetch\_jpl\_data\_for\_console}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ date);}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \textcolor{comment}{//\ Get\ body\ type\ classification\ for\ error\ handling}}
+\DoxyCodeLine{00065\ \mbox{\hyperlink{jpl__bodies_8h_acf0ce63e34327e5bc336f9fe3d2d47a2}{BodyType}}\ \mbox{\hyperlink{jpl__data_8h_afd54a44cabb601544728583ccc5b5c68}{get\_body\_type}}(\textcolor{keywordtype}{int}\ body\_index);}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \textcolor{comment}{//\ Get\ the\ epoch\ of\ currently\ loaded\ data}}
+\DoxyCodeLine{00068\ time\_t\ \mbox{\hyperlink{jpl__data_8h_a7a063f0c8b7d1c3c8ccb8f4454278bee}{get\_ephemeris\_epoch}}();}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \textcolor{comment}{//\ Get\ data\ source\ description}}
+\DoxyCodeLine{00071\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ \mbox{\hyperlink{jpl__data_8h_a086604a991756be3769cb70a063aa17f}{get\_ephemeris\_source}}();}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \textcolor{comment}{//\ Initialize\ JPL\ data\ system}}
+\DoxyCodeLine{00074\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{jpl__data_8h_a4089bff84229849353c05d77c7bd04b2}{initialize\_jpl\_data}}();}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \textcolor{comment}{//\ Update\ SolarSystem\ array\ from\ loaded\ ephemeris\ data}}
+\DoxyCodeLine{00077\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{jpl__data_8h_afd141130679c4358f5e5fbf1eadb4b36}{apply\_ephemeris\_to\_solar\_system}}();}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \textcolor{comment}{//\ Test\ function\ to\ save\ current\ data\ (for\ testing\ storage\ system)}}
+\DoxyCodeLine{00080\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{jpl__data_8h_a75974d8710a63afb06a4df82b85f50f1}{save\_current\_data\_for\_testing}}();}
+\DoxyCodeLine{00081\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{jpl__data_8h_aed1d0991a03843a07774d2f772d54ced}{test\_storage\_system}}();}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \textcolor{comment}{//\ Internal\ functions}}
+\DoxyCodeLine{00084\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{jpl__data_8h_af825dd9f1521c4b5b44f221b7e4ae93e}{fetch\_jpl\_horizons\_data}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ date,\ \textcolor{keywordtype}{int}\ jpl\_id,\ \textcolor{keywordtype}{int}\ body\_index);}
+\DoxyCodeLine{00085\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{jpl__data_8h_a1aa96a286f744c8f2fd325a9ae229a74}{fetch\_body\_data\_parallel}}(\mbox{\hyperlink{structFetchTask}{FetchTask}}\&\ task);}
+\DoxyCodeLine{00086\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{jpl__data_8h_a24536f2f879b940d800413ce2de003ab}{parse\_jpl\_response}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ response,\ \textcolor{keywordtype}{int}\ body\_index);}
+\DoxyCodeLine{00087\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{jpl__data_8h_a5ba5f9d1761cc31952b6e2171f62aad0}{save\_ephemeris\_to\_json}}();}
+\DoxyCodeLine{00088\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{jpl__data_8h_aae6b771e02cb0c97771d15cc0423e974}{load\_ephemeris\_from\_json}}();}
+\DoxyCodeLine{00089\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{jpl__data_8h_a7224072a5ff059844819f585a3fd6b25}{save\_ephemeris\_to\_binary}}();}
+\DoxyCodeLine{00090\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{jpl__data_8h_aa44785369b15ee6d759ad853f85b378f}{load\_ephemeris\_from\_binary}}();}
+\DoxyCodeLine{00091\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{jpl__data_8h_afcd0110206c59a8ac20ee69ae289a422}{validate\_ephemeris\_data}}();}
+\DoxyCodeLine{00092\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{jpl__data_8h_af19b035ab6be282c223c3a0fcb616599}{apply\_ephemeris\_data}}();}
+\DoxyCodeLine{00093\ uint64\_t\ \mbox{\hyperlink{jpl__data_8h_adcb300f8f47ac0f889df1a3ffd06dbb7}{calculate\_json\_checksum}}();}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{//\_\_JPL\_DATA\_H\_\_}}
+
+\end{DoxyCode}

@@ -1,0 +1,70 @@
+\doxysection{args.\+h}
+\hypertarget{args_8h_source}{}\label{args_8h_source}\index{/home/runner/work/solarsystem/solarsystem/lib/solar\_utils/args.h@{/home/runner/work/solarsystem/solarsystem/lib/solar\_utils/args.h}}
+\mbox{\hyperlink{args_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_\_ARGS\_H\_\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_\_ARGS\_H\_\_}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <ctime>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structSimulationArgs}{SimulationArgs}}\ \{}
+\DoxyCodeLine{00008\ \ \ time\_t\ \mbox{\hyperlink{structSimulationArgs_a9e7d333823f979838599a618ea92b6a0}{target\_date}};}
+\DoxyCodeLine{00009\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{structSimulationArgs_a8aec30abf17983188f3fb8818ccfdd22}{use\_current\_date}};}
+\DoxyCodeLine{00010\ \ \ std::string\ \mbox{\hyperlink{structSimulationArgs_a676ecba4b1ee6d712e5deafcd56ec535}{date\_string}};}
+\DoxyCodeLine{00011\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{structSimulationArgs_ade8f09f092c79d2365918f9547254190}{update\_data}};\ \ \ \ \textcolor{comment}{//\ -\/u,\ -\/-\/update-\/data}}
+\DoxyCodeLine{00012\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{structSimulationArgs_ab71cdcd3c2537ee3184eb3e1df60834f}{rebuild\_cache}};\ \ \textcolor{comment}{//\ -\/-\/rebuild}}
+\DoxyCodeLine{00013\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{structSimulationArgs_ae267c88f52b63b47b6ab75b54c93827c}{test\_storage}};\ \ \ \textcolor{comment}{//\ -\/-\/test-\/storage}}
+\DoxyCodeLine{00014\ \};}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{comment}{//\ Extended\ args\ structure\ for\ specialized\ applications}}
+\DoxyCodeLine{00017\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structArgs}{Args}}\ \{}
+\DoxyCodeLine{00018\ \ \ \textcolor{comment}{//\ Simulation\ options}}
+\DoxyCodeLine{00019\ \ \ std::string\ \mbox{\hyperlink{structArgs_a6d6292300ed9a73de293880ff11fa808}{target\_date}};}
+\DoxyCodeLine{00020\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{structArgs_a370d65e6683c46b55361fd443063618b}{use\_current\_date}};}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \ \ \textcolor{comment}{//\ Data\ management\ options}}
+\DoxyCodeLine{00023\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{structArgs_a75625eca9c7f03309e72d738771e7112}{update\_data}};}
+\DoxyCodeLine{00024\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{structArgs_ab07c6df7095b3e7299db6a8785931aa0}{force\_update}};}
+\DoxyCodeLine{00025\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structArgs_ab80d92a4f65b7d903e1c080b9bd66068}{target\_year}};}
+\DoxyCodeLine{00026\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{structArgs_acdabe3568e0f4b79daf73106d9c4e6fb}{rebuild\_cache}};}
+\DoxyCodeLine{00027\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{structArgs_ad4aa48c9ee5321351cfc549fe6ca4e7b}{test\_storage}};}
+\DoxyCodeLine{00028\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{structArgs_ae28fbe71dcfe99aa2315c50a85631f8b}{validate\_cache}};}
+\DoxyCodeLine{00029\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{structArgs_a7ced16f3effbe9534c41530e983ed4f7}{clean\_cache}};}
+\DoxyCodeLine{00030\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{structArgs_aa73ceb9443c2ba24dd1dcd67aa84dceb}{show\_status}};}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \ \ \textcolor{comment}{//\ Output\ options}}
+\DoxyCodeLine{00033\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{structArgs_ae82f62b0bf05daf8350b0e70e2d45ce0}{verbose}};}
+\DoxyCodeLine{00034\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{structArgs_a0682a177bd10bfa9f9a5937c08a17122}{show\_help}};}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \ \ \textcolor{comment}{//\ Constructor\ with\ defaults}}
+\DoxyCodeLine{00037\ \ \ \mbox{\hyperlink{structArgs_a58e32d97b58f0216cc82a527cc89ed73}{Args}}()}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ :\ \mbox{\hyperlink{structArgs_a6d6292300ed9a73de293880ff11fa808}{target\_date}}(\textcolor{stringliteral}{"{}"{}}),}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structArgs_a370d65e6683c46b55361fd443063618b}{use\_current\_date}}(true),}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structArgs_a75625eca9c7f03309e72d738771e7112}{update\_data}}(false),}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structArgs_ab07c6df7095b3e7299db6a8785931aa0}{force\_update}}(false),}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structArgs_ab80d92a4f65b7d903e1c080b9bd66068}{target\_year}}(0),}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structArgs_acdabe3568e0f4b79daf73106d9c4e6fb}{rebuild\_cache}}(false),}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structArgs_ad4aa48c9ee5321351cfc549fe6ca4e7b}{test\_storage}}(false),}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structArgs_ae28fbe71dcfe99aa2315c50a85631f8b}{validate\_cache}}(false),}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structArgs_a7ced16f3effbe9534c41530e983ed4f7}{clean\_cache}}(false),}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structArgs_aa73ceb9443c2ba24dd1dcd67aa84dceb}{show\_status}}(false),}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structArgs_ae82f62b0bf05daf8350b0e70e2d45ce0}{verbose}}(false),}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structArgs_a0682a177bd10bfa9f9a5937c08a17122}{show\_help}}(false)\ \{\}}
+\DoxyCodeLine{00050\ \};}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \textcolor{comment}{//\ Parse\ command\ line\ arguments\ (original\ function\ for\ main\ simulation)}}
+\DoxyCodeLine{00053\ \mbox{\hyperlink{structSimulationArgs}{SimulationArgs}}\ \mbox{\hyperlink{args_8h_ad728004ed1167c7397ee6f64cb3653a8}{parse\_arguments}}(\textcolor{keywordtype}{int}\ argc,\ \textcolor{keywordtype}{char}*\ argv[]);}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \textcolor{comment}{//\ Parse\ command\ line\ arguments\ (extended\ function\ for\ specialized\ apps)}}
+\DoxyCodeLine{00056\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{args_8h_a22cc89838e186e4c57150d6248803e07}{parse\_args}}(\textcolor{keywordtype}{int}\ argc,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ \textcolor{keyword}{const}\ argv[],\ \mbox{\hyperlink{structArgs}{Args}}\&\ args);}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \textcolor{comment}{//\ Parse\ ISO\ date\ string\ (YYYY-\/MM-\/DD)\ to\ time\_t}}
+\DoxyCodeLine{00059\ time\_t\ \mbox{\hyperlink{args_8h_ac067a65ac543d055d12990e7efa927db}{parse\_iso\_date}}(\textcolor{keyword}{const}\ std::string\&\ date\_str);}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \textcolor{comment}{//\ Print\ usage\ information}}
+\DoxyCodeLine{00062\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{args_8h_ac7608332d002ef2745359f4cada4afc8}{print\_usage}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ program\_name);}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{//\_\_ARGS\_H\_\_}}
+
+\end{DoxyCode}
