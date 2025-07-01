@@ -6,11 +6,6 @@ add_executable(solar_system
     solar_system.cpp
 )
 
-# Legacy solar_system application (original C version, kept for reference)
-add_executable(solar_system_legacy
-    solar_system_legacy.cpp
-)
-
 # Link all required libraries (static for maximum performance)
 target_link_libraries(solar_system PRIVATE
     solar_core      # Modern physics engine with SimulationEngine
@@ -19,20 +14,8 @@ target_link_libraries(solar_system PRIVATE
     Threads::Threads
 )
 
-target_link_libraries(solar_system_legacy PRIVATE
-    solar_core      # Legacy physics engine
-    solar_jpl       # JPL data integration
-    solar_utils     # Command-line utilities
-    Threads::Threads
-)
-
 # Aggressive optimization for all executables
 target_compile_options(solar_system PRIVATE
-    $<$<CONFIG:Release>:-O3 -march=native -mtune=native -flto -ffast-math -funroll-loops>
-    $<$<CONFIG:Debug>:-g -O0 -Wall -Wextra>
-)
-
-target_compile_options(solar_system_legacy PRIVATE
     $<$<CONFIG:Release>:-O3 -march=native -mtune=native -flto -ffast-math -funroll-loops>
     $<$<CONFIG:Debug>:-g -O0 -Wall -Wextra>
 )
