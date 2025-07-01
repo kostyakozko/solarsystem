@@ -11,6 +11,11 @@ target_link_libraries(test_modern_celestial_body test_utils solar_core solar_uti
 add_test(NAME UnitTest_ModernCelestialBody COMMAND test_modern_celestial_body)
 set_tests_properties(UnitTest_ModernCelestialBody PROPERTIES LABELS "unit;modern;bodies;celestial" TIMEOUT ${TEST_TIMEOUT})
 
+add_executable(test_modern_body_collection test_modern_body_collection.cpp)
+target_link_libraries(test_modern_body_collection test_utils solar_core solar_utils Threads::Threads)
+add_test(NAME UnitTest_ModernBodyCollection COMMAND test_modern_body_collection)
+set_tests_properties(UnitTest_ModernBodyCollection PROPERTIES LABELS "unit;modern;bodies;collection" TIMEOUT ${TEST_TIMEOUT})
+
 # Legacy tests (to be migrated gradually)
 add_executable(test_solar_core test_solar_core.cpp)
 target_link_libraries(test_solar_core test_utils solar_core solar_utils Threads::Threads)

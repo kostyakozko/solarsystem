@@ -10,6 +10,8 @@ add_library(solar_core STATIC
     # Modern C++20 classes
     src/math/vector3.cpp
     src/bodies/celestial_body.cpp
+    src/bodies/body_collection.cpp
+    src/data/body_definitions.cpp
 )
 
 # Public headers for other libraries and applications
