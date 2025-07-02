@@ -1,5 +1,5 @@
 # Solar System Launcher Application
-# Unified command dispatcher and workflow coordinator
+# Modern C++20 unified command dispatcher and workflow coordinator
 
 add_executable(solar_system_launcher
     launcher.cpp
@@ -7,14 +7,15 @@ add_executable(solar_system_launcher
 
 # Link required libraries
 target_link_libraries(solar_system_launcher PRIVATE
-    solar_jpl       # For status checking and initialization
-    solar_utils     # For argument parsing utilities
+    solar_core      # Modern builders and workflow patterns
+    solar_jpl       # JPL data integration
+    solar_utils     # Configuration and logging
     Threads::Threads
 )
 
-# Optimization flags (moderate optimization for launcher)
+# Modern C++20 optimization flags
 target_compile_options(solar_system_launcher PRIVATE
-    $<$<CONFIG:Release>:-O2 -march=native -mtune=native>
+    $<$<CONFIG:Release>:-O3 -march=native -mtune=native -flto>
     $<$<CONFIG:Debug>:-g -O0 -Wall -Wextra>
 )
 
@@ -24,9 +25,10 @@ if(ENABLE_PROFILING)
     target_link_options(solar_system_launcher PRIVATE -pg)
 endif()
 
-# Set executable properties
+# Set modern C++20 properties
 set_target_properties(solar_system_launcher PROPERTIES
-    CXX_STANDARD 17
+    CXX_STANDARD 20
     CXX_STANDARD_REQUIRED ON
     CXX_EXTENSIONS OFF
+    INTERPROCEDURAL_OPTIMIZATION_RELEASE TRUE
 )
