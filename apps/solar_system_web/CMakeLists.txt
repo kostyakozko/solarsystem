@@ -1,5 +1,5 @@
 # Solar System Web Application
-# HTTP server with REST API and WebGL visualization
+# Modern C++20 HTTP server with REST API and WebGL visualization
 
 add_executable(solar_system_web
     src/web_server.cpp
@@ -7,15 +7,15 @@ add_executable(solar_system_web
 
 # Link required libraries
 target_link_libraries(solar_system_web PRIVATE
-    solar_core      # For simulation and model functions
-    solar_jpl       # For JPL data integration
-    solar_utils     # For argument parsing utilities
+    solar_core      # Modern builders and patterns
+    solar_jpl       # JPL data integration
+    solar_utils     # Configuration and logging
     Threads::Threads
 )
 
-# Optimization flags (moderate optimization for web server responsiveness)
+# Modern C++20 optimization flags
 target_compile_options(solar_system_web PRIVATE
-    $<$<CONFIG:Release>:-O2 -march=native -mtune=native>
+    $<$<CONFIG:Release>:-O3 -march=native -mtune=native -flto>
     $<$<CONFIG:Debug>:-g -O0 -Wall -Wextra>
 )
 
@@ -25,17 +25,10 @@ if(ENABLE_PROFILING)
     target_link_options(solar_system_web PRIVATE -pg)
 endif()
 
-# Set executable properties
+# Set modern C++20 properties
 set_target_properties(solar_system_web PROPERTIES
-    CXX_STANDARD 17
+    CXX_STANDARD 20
     CXX_STANDARD_REQUIRED ON
     CXX_EXTENSIONS OFF
+    INTERPROCEDURAL_OPTIMIZATION_RELEASE TRUE
 )
-
-# Install web files
-install(DIRECTORY web/
-        DESTINATION share/solar_system/web
-        FILES_MATCHING 
-        PATTERN "*.html"
-        PATTERN "*.js"
-        PATTERN "*.css")
