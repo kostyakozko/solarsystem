@@ -37,12 +37,18 @@
 
 // Modern Solar System Suite APIs
 #include "jpl_data.h"    // Legacy JPL interface (to be modernized)
+#include "model.h"       // Legacy model for body data access
 #include "simulation.h"  // Legacy simulation functions
-#include "solar_core/builders/simulation_builder.hpp"
-#include "solar_utils/logging.hpp"
 
-using namespace SolarSystem::Core::Builders;
-using namespace SolarSystem::Utils;
+// Simple logging macros to avoid namespace conflicts
+#define LOG_INFO(tag, msg) \
+  if (verbose_logging) std::cout << "[INFO ] [" << tag << "] " << msg << "\n"
+#define LOG_ERROR(tag, msg) std::cerr << "[ERROR] [" << tag << "] " << msg << "\n"
+#define LOG_DEBUG(tag, msg) \
+  if (verbose_logging) std::cout << "[DEBUG] [" << tag << "] " << msg << "\n"
+
+// Global verbose logging flag
+static bool verbose_logging = false;
 using namespace std::chrono_literals;
 
 /**
@@ -583,18 +589,14 @@ class SolarSystemAPI {
       }
       json << "  },\n";
 
-      // Body information using modern BodySelector
+      // Body information using legacy interface
       json << "  \"bodies\": {\n";
       try {
-        auto all_bodies = BodySelector().all().build();
-        auto essential = BodySelector().essential().build();
-        auto important = BodySelector().important().build();
-        auto optional = BodySelector().optional().build();
-
-        json << "    \"total\": " << (all_bodies.has_value() ? all_bodies->size() : 0) << ",\n";
-        json << "    \"essential\": " << (essential.has_value() ? essential->size() : 0) << ",\n";
-        json << "    \"important\": " << (important.has_value() ? important->size() : 0) << ",\n";
-        json << "    \"optional\": " << (optional.has_value() ? optional->size() : 0) << "\n";
+        auto body_count = get_body_count();
+        json << "    \"total\": " << body_count << ",\n";
+        json << "    \"essential\": " << body_count << ",\n";
+        json << "    \"important\": " << body_count << ",\n";
+        json << "    \"optional\": " << body_count << "\n";
       } catch (const std::exception& e) {
         json << "    \"error\": \"" << e.what() << "\"\n";
       }
@@ -641,27 +643,41 @@ class SolarSystemAPI {
       json << "  \"timestamp\": \"" << std::time(nullptr) << "\",\n";
       json << "  \"bodies\": [\n";
 
-      // Use modern BodySelector to get bodies
+      // Get actual body data from the simulation
       try {
-        auto bodies = BodySelector().essential().important().build();
-        if (bodies.has_value()) {
-          bool first = true;
-          for (const auto& body : *bodies) {
-            if (!first) json << ",\n";
-            first = false;
+        // Use legacy get_bodies() function to get actual positions
+        auto body_count = get_body_count();
+        bool first = true;
 
-            json << "    {\n";
-            json << "      \"name\": \"" << body.name() << "\",\n";
-            json << "      \"type\": \"celestial_body\",\n";
-            // For now, use placeholder positions
-            // TODO: Replace with actual body position data
-            json << "      \"position\": { \"x\": 0, \"y\": 0, \"z\": 0 },\n";
-            json << "      \"velocity\": { \"x\": 0, \"y\": 0, \"z\": 0 }\n";
-            json << "    }";
-          }
+        for (int i = 0; i < body_count; ++i) {
+          const auto& body = get_body(i);
+
+          if (!first) json << ",\n";
+          first = false;
+
+          json << "    {\n";
+          json << "      \"name\": \"" << body.name << "\",\n";
+          json << "      \"type\": \"celestial_body\",\n";
+          json << "      \"position\": { ";
+          json << "\"x\": " << body.position.x << ", ";
+          json << "\"y\": " << body.position.y << ", ";
+          json << "\"z\": " << body.position.z << " },\n";
+          json << "      \"velocity\": { ";
+          json << "\"x\": " << body.speed.x << ", ";
+          json << "\"y\": " << body.speed.y << ", ";
+          json << "\"z\": " << body.speed.z << " }\n";
+          json << "    }";
         }
       } catch (const std::exception& e) {
-        LOG_ERROR("API", "Failed to get bodies: " + std::string(e.what()));
+        LOG_ERROR("API", "Failed to get body data: " + std::string(e.what()));
+
+        // Fallback: return empty array
+        json << "    {\n";
+        json << "      \"name\": \"Error\",\n";
+        json << "      \"type\": \"error\",\n";
+        json << "      \"position\": { \"x\": 0, \"y\": 0, \"z\": 0 },\n";
+        json << "      \"velocity\": { \"x\": 0, \"y\": 0, \"z\": 0 }\n";
+        json << "    }";
       }
 
       json << "\n  ]\n";
@@ -861,13 +877,7 @@ int main(int argc, char* argv[]) {
     }
 
     // Initialize logging system
-    if (config->enable_logging) {
-      Logger::Config log_config;
-      log_config.min_level = config->verbose_output ? Logger::Level::DEBUG : Logger::Level::INFO;
-      log_config.colored_output = true;
-      log_config.include_timestamp = true;
-      Logger::instance().configure(log_config);
-    }
+    verbose_logging = config->verbose_output;
 
     LOG_INFO("Main", "Solar System Web Server (Modern) starting");
 

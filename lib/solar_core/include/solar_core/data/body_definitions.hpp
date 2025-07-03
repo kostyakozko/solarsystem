@@ -36,7 +36,8 @@ struct BodyDefinition {
  * This data is used when JPL HORIZONS is unavailable or for testing.
  * Positions and velocities are approximate values for a reference epoch.
  */
-constexpr std::array<BodyDefinition, 27> FALLBACK_SOLAR_SYSTEM = {
+constexpr int BODY_COUNT = 27;  // Need better approach, but good for now
+constexpr std::array<BodyDefinition, BODY_COUNT> FALLBACK_SOLAR_SYSTEM = {
     {// Sun
      {.name = "Sun",
       .mass = 1.9885E30,

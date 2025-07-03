@@ -6,16 +6,16 @@
 #include <algorithm>
 #include <sstream>
 
-#include "jpl_bodies.h"
-#include "jpl_data.h"
-
 namespace SolarSystem::Bodies {
 
-BodyFactory::BodyFactory(CreationOptions options) : default_options_(std::move(options)) {
+BodyFactory::BodyFactory(CreationOptions options)
+    : data_initialized_(false),
+      current_source_("UNINITIALIZED"),
+      default_options_(std::move(options)) {
   // Only initialize JPL data system if we're going to use JPL sources
   if (default_options_.preferred_source == DataSource::JPL_HORIZONS ||
       default_options_.preferred_source == DataSource::CACHED_DATA) {
-    initialize_jpl_data();
+    initialize_internal_data();
   }
 }
 
@@ -165,28 +165,32 @@ bool BodyFactory::is_body_available(std::string_view name,
 
 Utils::Expected<CelestialBody, std::string> BodyFactory::create_from_jpl(
     std::string_view name, std::chrono::system_clock::time_point time) const {
-  // Convert time to date string for JPL system
-  auto time_t_val = std::chrono::system_clock::to_time_t(time);
-  auto* tm_val = std::gmtime(&time_t_val);
+  auto future = jpl_client_->fetch_all_bodies_async(time);
+  auto result = future.get();
 
-  char date_str[32];
-  std::strftime(date_str, sizeof(date_str), "%Y-%m-%d", tm_val);
-
-  // Try to fetch JPL data for this date
-  if (!fetch_jpl_data_for_date(date_str)) {
-    return Utils::Expected<CelestialBody, std::string>{"Failed to fetch JPL data for date " +
-                                                       std::string(date_str)};
+  if (!SolarSystem::JPL::is_success(result)) {
+    auto error = SolarSystem::JPL::get_error(result);
+    return Utils::Expected<CelestialBody, std::string>{"Failed to fetch JPL data: " +
+                                                       JPL::Utils::to_string(error)};
   }
 
-  // For now, fall back to our modern data since legacy integration is complex
-  // TODO: Implement proper JPL data integration later
+  auto ephemeris_data = SolarSystem::JPL::get_value(result);
+
+  // Find the requested body by name
+  for (const auto& data : ephemeris_data) {
+    if (data.body_name == name) {
+      // Convert EphemerisData to CelestialBody
+      return Utils::Expected<CelestialBody, std::string>{data.to_celestial_body()};
+    }
+  }
+
   return create_from_fallback(name);
 }
 
 Utils::Expected<CelestialBody, std::string> BodyFactory::create_from_cache(
     std::string_view name, std::chrono::system_clock::time_point time) const {
   // Check if we have current ephemeris data
-  if (!has_current_ephemeris_data()) {
+  if (current_source_ == "ORIGINAL_DATA") {
     return Utils::Expected<CelestialBody, std::string>{"No cached ephemeris data available"};
   }
 
@@ -208,69 +212,64 @@ Utils::Expected<CelestialBody, std::string> BodyFactory::create_from_fallback(
 }
 
 BodyType BodyFactory::determine_body_type(std::string_view name) const {
-  // Map to our modern enum based on name patterns
-  if (name == "Sun") return BodyType::Star;
-  if (name.find("Moon") != std::string_view::npos || name == "Io" || name == "Europa" ||
-      name == "Ganymede" || name == "Callisto" || name == "Titan" || name == "Rhea" ||
-      name == "Iapetus" || name == "Titania" || name == "Oberon" || name == "Triton" ||
-      name == "Charon") {
-    return BodyType::Moon;
+  auto jpl_id = get_jpl_id(name);
+  if (jpl_id) {
+    return get_body_type_for_jpl_id(jpl_id.value());
+  } else {
+    return BodyType::Unknown;
   }
-  if (name == "Mercury" || name == "Venus" || name == "Earth" || name == "Mars" ||
-      name == "Jupiter" || name == "Saturn" || name == "Uranus" || name == "Neptune") {
-    return BodyType::Planet;
-  }
-  if (name == "Pluto" || name == "Quaoar" || name == "Haumea" || name == "Eris") {
-    return BodyType::DwarfPlanet;
-  }
-  if (name.find("Horizons") != std::string_view::npos ||
-      name.find("Roadster") != std::string_view::npos) {
-    return BodyType::Spacecraft;
-  }
-
-  return BodyType::Planet;  // Default
 }
 
 BodyPriority BodyFactory::determine_body_priority(std::string_view name) const {
-  // Essential: Sun and major planets
-  if (name == "Sun" || name == "Mercury" || name == "Venus" || name == "Earth" || name == "Mars" ||
-      name == "Jupiter" || name == "Saturn" || name == "Uranus" || name == "Neptune") {
-    return BodyPriority::Essential;
-  }
-
-  // Important: Major moons and dwarf planets
-  if (name == "Moon" || name == "Io" || name == "Europa" || name == "Ganymede" ||
-      name == "Callisto" || name == "Titan" || name == "Pluto") {
-    return BodyPriority::Important;
-  }
-
-  // Optional: Everything else
-  return BodyPriority::Optional;
+  return get_priority_for_body_type(determine_body_type(name));
 }
 
-std::optional<std::string> BodyFactory::get_jpl_id(std::string_view name) const {
+std::optional<int> BodyFactory::get_jpl_id(std::string_view name) const {
   // Find in JPL body map
-  for (int i = 0; i < JPL_BODY_COUNT; ++i) {
-    if (name == JPL_BODY_MAP[i].name) {
-      return std::to_string(JPL_BODY_MAP[i].horizons_id);
+  for (int i = 0; i < SolarSystem::Data::BODY_COUNT; ++i) {
+    if (name == Data::FALLBACK_SOLAR_SYSTEM[i].name) {
+      int jpl_id;
+      auto sv = Data::FALLBACK_SOLAR_SYSTEM[i].jpl_id;
+      auto result = std::from_chars(sv.data(), sv.data() + sv.size(), jpl_id);
+      if (result.ec == std::errc::invalid_argument) {
+        return std::nullopt;
+      }
+      return jpl_id;
     }
   }
   return std::nullopt;
 }
 
-// Helper function to convert legacy BodyType to modern enum
-BodyType BodyFactory::convert_legacy_body_type(int legacy_type) const {
-  switch (legacy_type) {
-    case BODY_ESSENTIAL:
-      return BodyType::Planet;  // Most essential bodies are planets
-    case BODY_IMPORTANT:
-      return BodyType::Moon;  // Most important bodies are moons
-    case BODY_OPTIONAL:
-      return BodyType::Spacecraft;  // Most optional bodies are spacecraft
-    case BODY_UNKNOWN:
-    default:
-      return BodyType::Planet;  // Safe default
+void BodyFactory::initialize_internal_data() {
+  if (data_initialized_) {
+    return;
   }
+
+  using namespace std::chrono;
+  using namespace SolarSystem::JPL;
+
+  // Create JPL client
+  jpl_client_ = JPLClientFactory::create_default();
+
+  // Try to load cached data or use fallback
+  auto result = jpl_client_->load_from_cache();
+
+  if (is_success(result)) {
+    cached_ephemeris_ = get_value(result);
+    if (!cached_ephemeris_.empty()) {
+      current_epoch_ = cached_ephemeris_[0].epoch;
+    } else {
+      current_epoch_ = system_clock::now();  // or from cache metadata
+    }
+    current_source_ = "CACHED_DATA";
+  } else {
+    // Fallback to hardcoded data equivalent
+    year_month_day ymd{year{2018}, month{2}, day{11}};
+    current_epoch_ = sys_days{ymd};
+    current_source_ = "ORIGINAL_DATA";
+  }
+
+  data_initialized_ = true;
 }
 
 }  // namespace SolarSystem::Bodies

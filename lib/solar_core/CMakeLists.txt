@@ -6,7 +6,7 @@ add_library(solar_core STATIC
     model.cpp
     simulation.cpp
     constants.cpp
-    
+
     # Modern C++20 classes
     src/math/vector3.cpp
     src/bodies/celestial_body.cpp
@@ -14,7 +14,7 @@ add_library(solar_core STATIC
     src/bodies/body_factory.cpp
     src/data/body_definitions.cpp
     src/simulation/simulation_engine.cpp
-    
+
     # Modern API design patterns (Phase 0.3)
     src/builders/simulation_builder.cpp
 )
@@ -29,6 +29,7 @@ target_include_directories(solar_core PUBLIC
 target_link_libraries(solar_core PUBLIC
     solar_utils     # Needs args.h for simulation parameters
     solar_jpl       # Needs JPL data integration for BodyFactory
+    Threads::Threads
 )
 
 # Aggressive optimization for core physics calculations
@@ -45,7 +46,7 @@ endif()
 
 # Set library properties
 set_target_properties(solar_core PROPERTIES
-    CXX_STANDARD 17
+    CXX_STANDARD 20
     CXX_STANDARD_REQUIRED ON
     CXX_EXTENSIONS OFF
 )

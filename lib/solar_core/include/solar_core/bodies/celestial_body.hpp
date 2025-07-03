@@ -13,7 +13,7 @@ namespace SolarSystem::Bodies {
 /**
  * @brief Classification of celestial body types
  */
-enum class BodyType { Star, Planet, Moon, DwarfPlanet, Asteroid, Spacecraft };
+enum class BodyType { Star, Planet, Moon, DwarfPlanet, Asteroid, Spacecraft, Unknown };
 
 /**
  * @brief Priority classification for smart body handling

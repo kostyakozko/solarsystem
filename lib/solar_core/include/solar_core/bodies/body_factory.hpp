@@ -7,7 +7,9 @@
 
 #include "solar_core/bodies/body_collection.hpp"
 #include "solar_core/bodies/celestial_body.hpp"
+#include "solar_core/data/body_definitions.hpp"
 #include "solar_core/utils/expected.hpp"
+#include "solar_jpl/jpl_client.hpp"
 
 namespace SolarSystem::Bodies {
 
@@ -20,6 +22,7 @@ namespace SolarSystem::Bodies {
  * - Cached ephemeris data
  * - Hardcoded fallback data (from constants.cpp)
  */
+
 class BodyFactory {
  public:
   enum class DataSource {
@@ -36,7 +39,9 @@ class BodyFactory {
   };
 
   // Constructor
-  BodyFactory() = default;
+  BodyFactory() : data_initialized_(false), current_source_("UNINITIALIZED") {
+    initialize_internal_data();
+  }
   explicit BodyFactory(CreationOptions options);
 
   // Single body creation
@@ -75,6 +80,11 @@ class BodyFactory {
 
  private:
   CreationOptions default_options_;
+  std::unique_ptr<SolarSystem::JPL::JPLClient> jpl_client_;
+  std::chrono::system_clock::time_point current_epoch_;
+  std::string current_source_;
+  bool data_initialized_;
+  std::vector<SolarSystem::JPL::EphemerisData> cached_ephemeris_;
 
   // Integration with existing JPL system
   [[nodiscard]] Utils::Expected<CelestialBody, std::string> create_from_jpl(
@@ -89,10 +99,9 @@ class BodyFactory {
   // Helper functions
   [[nodiscard]] BodyType determine_body_type(std::string_view name) const;
   [[nodiscard]] BodyPriority determine_body_priority(std::string_view name) const;
-  [[nodiscard]] std::optional<std::string> get_jpl_id(std::string_view name) const;
+  [[nodiscard]] std::optional<int> get_jpl_id(std::string_view name) const;
 
-  // Legacy integration
-  [[nodiscard]] BodyType convert_legacy_body_type(int legacy_type) const;
+  void initialize_internal_data();
 };
 
 }  // namespace SolarSystem::Bodies

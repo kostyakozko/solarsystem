@@ -23,7 +23,7 @@ target_compile_options(solar_system PRIVATE
 # Enable LTO for maximum performance
 set_target_properties(solar_system PROPERTIES
     INTERPROCEDURAL_OPTIMIZATION_RELEASE TRUE
-    CXX_STANDARD 17
+    CXX_STANDARD 20
     CXX_STANDARD_REQUIRED ON
     CXX_EXTENSIONS OFF
 )
