@@ -218,10 +218,14 @@ class JPLClient {
    */
   [[nodiscard]] JPLVoidResult clear_cache();
 
+  [[nodiscard]] JPLVoidResult rebuild_cache();
+
   /**
    * @brief Get configuration
    */
   [[nodiscard]] const JPLClientConfig& config() const noexcept { return config_; }
+
+  [[nodiscard]] JPLVoidResult test_storage();
 
  private:
   JPLClientConfig config_;

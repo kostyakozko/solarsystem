@@ -9,6 +9,7 @@
 #include <cstdlib>
 #include <fstream>
 #include <iomanip>
+#include <iostream>
 #include <regex>
 #include <sstream>
 #include <thread>
@@ -339,6 +340,20 @@ JPLVoidResult JPLClient::clear_cache() {
   } catch (const std::exception&) {
     return error(JPLError::CacheError);
   }
+}
+
+JPLVoidResult JPLClient::rebuild_cache() {
+  // TODO: Implement cache rebuilding
+  // For now, just return success
+  std::cout << "Cache rebuilding not yet implemented - using stub" << std::endl;
+  return SolarSystem::JPL::success();
+}
+
+JPLVoidResult JPLClient::test_storage() {
+  // TODO: Implement storage system testing
+  // For now, just return success
+  std::cout << "Storage system testing not yet implemented - using stub" << std::endl;
+  return SolarSystem::JPL::success();
 }
 
 /**

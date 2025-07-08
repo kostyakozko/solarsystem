@@ -36,9 +36,9 @@
 #include <unistd.h>
 
 // Modern Solar System Suite APIs
-#include "jpl_data.h"    // Legacy JPL interface (to be modernized)
 #include "model.h"       // Legacy model for body data access
 #include "simulation.h"  // Legacy simulation functions
+#include "solar_core/bodies/body_factory.hpp"
 
 // Simple logging macros to avoid namespace conflicts
 #define LOG_INFO(tag, msg) \
@@ -228,11 +228,15 @@ class HttpServer {
   /**
    * @brief Construct server with configuration
    */
-  explicit HttpServer(WebServerConfig config) : config_(std::move(config)) {
+  explicit HttpServer(WebServerConfig config,
+                      std::shared_ptr<SolarSystem::Bodies::BodyFactory> factory)
+      : config_(std::move(config)), factory_(std::move(factory)) {
     if (config_.verbose_output) {
       LOG_INFO("HttpServer", "Initialized with verbose output enabled");
     }
   }
+
+  SolarSystem::Bodies::BodyFactory& get_factory() { return *factory_; }
 
   /**
    * @brief Destructor ensures cleanup
@@ -315,6 +319,7 @@ class HttpServer {
 
  private:
   WebServerConfig config_;
+  std::shared_ptr<SolarSystem::Bodies::BodyFactory> factory_;
   int server_socket_ = -1;
   std::map<std::string, RequestHandler> handlers_;
   std::mutex handlers_mutex_;
@@ -557,7 +562,8 @@ class SolarSystemAPI {
   /**
    * @brief Get system status
    */
-  static HttpResponse handle_status(const HttpRequest& request) {
+  static HttpResponse handle_status(const HttpRequest& request,
+                                    SolarSystem::Bodies::BodyFactory& factory) {
     try {
       std::ostringstream json;
       json << "{\n";
@@ -567,19 +573,19 @@ class SolarSystemAPI {
 
       // JPL data status
       json << "  \"data\": {\n";
-      if (has_current_ephemeris_data()) {
-        auto epoch = get_ephemeris_epoch();
-        auto source = get_ephemeris_source();
-        auto tm_epoch = *std::localtime(&epoch);
-        auto cached_year = tm_epoch.tm_year + 1900;
+      if (factory.has_current_ephemeris_data()) {
+        auto epoch = factory.current_epoch();
+        auto source = factory.current_source();
+        std::chrono::year_month_day ymd = std::chrono::floor<std::chrono::days>(epoch);
+        int cached_year = static_cast<int>(ymd.year());
 
         json << "    \"status\": \"active\",\n";
         json << "    \"source\": \"" << source << "\",\n";
         json << "    \"year\": " << cached_year << ",\n";
 
-        auto now = std::time(nullptr);
-        auto current_tm = *std::localtime(&now);
-        auto current_year = current_tm.tm_year + 1900;
+        auto curr_epoch = factory.get_current_year_epoch();
+        std::chrono::year_month_day curr_ymd = std::chrono::floor<std::chrono::days>(curr_epoch);
+        int current_year = static_cast<int>(curr_ymd.year());
 
         json << "    \"current\": " << (cached_year == current_year ? "true" : "false") << "\n";
       } else {
@@ -621,7 +627,8 @@ class SolarSystemAPI {
   /**
    * @brief Get solar system data
    */
-  static HttpResponse handle_solar_system(const HttpRequest& request) {
+  static HttpResponse handle_solar_system(const HttpRequest& request,
+                                          SolarSystem::Bodies::BodyFactory& factory) {
     try {
       // Check for date parameter
       auto date_param = request.get_query_param("date");
@@ -694,7 +701,8 @@ class SolarSystemAPI {
   /**
    * @brief Handle simulation request
    */
-  static HttpResponse handle_simulate(const HttpRequest& request) {
+  static HttpResponse handle_simulate(const HttpRequest& request,
+                                      SolarSystem::Bodies::BodyFactory& factory) {
     try {
       auto date_param = request.get_query_param("date");
       auto speed_param = request.get_query_param("speed");
@@ -869,6 +877,8 @@ int main(int argc, char* argv[]) {
     std::signal(SIGINT, signal_handler);
     std::signal(SIGTERM, signal_handler);
 
+    auto factory = std::make_shared<SolarSystem::Bodies::BodyFactory>();
+
     // Parse command-line arguments
     auto config = ArgumentParser::parse(argc, argv);
     if (!config.has_value()) {
@@ -882,7 +892,7 @@ int main(int argc, char* argv[]) {
     LOG_INFO("Main", "Solar System Web Server (Modern) starting");
 
     // Initialize JPL data system
-    if (!initialize_jpl_data()) {
+    if (!factory->is_initialized()) {
       LOG_ERROR("Main", "Failed to initialize JPL data system");
       std::cerr << "❌ Failed to initialize JPL data system\n";
       return 1;
@@ -898,12 +908,21 @@ int main(int argc, char* argv[]) {
     }
 
     // Create and configure HTTP server
-    HttpServer server(*config);
+    HttpServer server(*config, factory);
 
     // Register API endpoints
-    server.handle("/api/status", SolarSystemAPI::handle_status)
-        .handle("/api/solar_system", SolarSystemAPI::handle_solar_system)
-        .handle("/api/simulate", SolarSystemAPI::handle_simulate);
+    server
+        .handle("/api/status",
+                [factory](const HttpRequest& req) {
+                  return SolarSystemAPI::handle_status(req, *factory);
+                })
+        .handle("/api/solar_system",
+                [factory](const HttpRequest& req) {
+                  return SolarSystemAPI::handle_solar_system(req, *factory);
+                })
+        .handle("/api/simulate", [factory](const HttpRequest& req) {
+          return SolarSystemAPI::handle_solar_system(req, *factory);
+        });
 
     // Start server
     bool success = server.start();

@@ -11,7 +11,7 @@ long double dist(const coord& a, const coord& b);
 
 // Now use sqrtl to match the corrected original precision
 inline void attractTo(const coord& this_position, acceleration& delta, int j) {
-  const coord& other_position = SolarSystem[j].position;
+  const coord& other_position = SolarSystem_[j].position;
 
   // Calculate difference vector once to eliminate redundant calculations
   long double dx = other_position.x - this_position.x;
@@ -19,7 +19,7 @@ inline void attractTo(const coord& this_position, acceleration& delta, int j) {
   long double dz = other_position.z - this_position.z;
 
   long double distance = sqrtl(dx * dx + dy * dy + dz * dz);
-  long double normal_acc = G * SolarSystem[j].mass / (distance * distance * distance);
+  long double normal_acc = G * SolarSystem_[j].mass / (distance * distance * distance);
 
   delta.x += normal_acc * dx;
   delta.y += normal_acc * dy;

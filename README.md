@@ -51,17 +51,17 @@ A comprehensive, high-performance N-body gravitational simulation suite with rea
 
 ## 🌟 Features Overview
 
-### **Recent Improvements (v3.1)**
-- **🎯 Smart Time Travel**: Manual requests use JPL data fetching, automatic requests use simulation
-- **🏷️ Body Classification**: Essential (planets), Important (moons), Optional (spacecraft) with proper error handling
-- **🔧 Clean Logging**: Verbose mode (`--verbose`) for detailed debugging, clean output by default
-- **📡 Historical Accuracy**: Proper handling of spacecraft that didn't exist in historical dates
-- **⚡ Performance**: Optimized request handling and reduced debug overhead
+### **Recent Improvements (v4.0 - Modern C++20 Architecture)**
+- **🎯 Complete Modernization**: All 5 applications modernized with C++20 BodyFactory integration
+- **🏷️ Smart Architecture**: Modern RAII, smart pointers, and structured error handling throughout
+- **🔧 Legacy Removal**: All legacy JPL functions replaced with modern BodyFactory methods
+- **📡 Centralized Operations**: Single source of truth for all JPL data operations
+- **⚡ Type Safety**: Comprehensive compile-time validation with Expected<T, E> pattern
 
 ### 🚀 **Complete Solar System Suite**
-- **5 Specialized Applications**: Each optimized for specific tasks
-- **Unified Interface**: Single entry point for all operations
-- **Real-Time Tracking**: Live solar system monitoring
+- **5 Specialized Applications**: Each optimized for specific tasks with modern C++20 architecture
+- **Unified BodyFactory Interface**: Consistent JPL data operations across all applications
+- **Real-Time Tracking**: Live solar system monitoring with modern error handling
 - **Time Travel Visualization**: Interactive web-based orbital simulation
 - **Professional Installation**: Enterprise-grade deployment system
 

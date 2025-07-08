@@ -19,7 +19,7 @@
 #include <vector>
 
 // Modern Solar System Suite APIs
-#include "jpl_data.h"  // Legacy JPL interface (to be modernized)
+#include "solar_core/bodies/body_factory.hpp"
 #include "solar_core/builders/simulation_builder.hpp"
 #include "solar_utils/logging.hpp"
 
@@ -100,23 +100,23 @@ class DataFetcher {
   /**
    * @brief Show current cache status with modern formatting
    */
-  void show_status() const {
+  void show_status(SolarSystem::Bodies::BodyFactory& factory) const {
     LOG_INFO("Status", "Checking Solar System data cache status...");
 
     std::cout << "╭─────────────────────────────────────────╮\n";
     std::cout << "│     Solar System Data Cache Status      │\n";
     std::cout << "╰─────────────────────────────────────────╯\n\n";
 
-    if (has_current_ephemeris_data()) {
-      auto epoch = get_ephemeris_epoch();
-      auto source = get_ephemeris_source();
-      auto tm_epoch = *std::localtime(&epoch);
-      auto cached_year = tm_epoch.tm_year + 1900;
+    if (factory.has_current_ephemeris_data()) {
+      auto epoch = factory.current_epoch();
+      auto source = factory.current_source();
+      std::chrono::year_month_day ymd = std::chrono::floor<std::chrono::days>(epoch);
+      int current_year = static_cast<int>(ymd.year());
 
       std::cout << "✅ Cache Status: ACTIVE\n";
       std::cout << "📊 Data Source: " << source << "\n";
-      std::cout << "📅 Cached Year: " << cached_year << "\n";
-      std::cout << "🕒 Last Updated: " << std::put_time(&tm_epoch, "%Y-%m-%d %H:%M:%S") << "\n";
+      std::cout << "📅 Cached Year: " << current_year << "\n";
+      std::cout << "🕒 Last Updated: " << epoch << "\n";
 
       // Show body count using modern BodySelector
       auto body_count = BodySelector().all().count();
@@ -134,12 +134,13 @@ class DataFetcher {
   /**
    * @brief Update ephemeris data with progress monitoring
    */
-  [[nodiscard]] bool update_data(bool force = false, std::optional<int> year = std::nullopt) {
+  [[nodiscard]] bool update_data(SolarSystem::Bodies::BodyFactory& factory, bool force = false,
+                                 std::optional<int> year = std::nullopt) {
     auto target_year = year.value_or(get_current_year());
 
     LOG_INFO("Update", "Starting ephemeris data update for year " + std::to_string(target_year));
 
-    if (!force && has_current_ephemeris_data()) {
+    if (!force && factory.has_current_ephemeris_data()) {
       LOG_INFO("Update", "Current data exists, use --force to override");
       return true;
     }
@@ -160,13 +161,13 @@ class DataFetcher {
       }
     };
 
-    // Use legacy function for now (to be modernized)
-    bool success = force ? force_update_ephemeris_data() : update_ephemeris_data();
+    auto result = factory.fetch_current_ephemeris_data();  // Force update
+    bool success = result.has_value();
 
     if (success) {
       LOG_INFO("Update", "Ephemeris data update completed successfully");
       std::cout << "✅ Data update completed successfully!\n";
-      show_status();
+      show_status(factory);
     } else {
       LOG_ERROR("Update", "Ephemeris data update failed");
       std::cout << "❌ Data update failed\n";
@@ -178,12 +179,12 @@ class DataFetcher {
   /**
    * @brief Validate cache integrity with detailed reporting
    */
-  [[nodiscard]] bool validate_cache() const {
+  [[nodiscard]] bool validate_cache(SolarSystem::Bodies::BodyFactory& factory) const {
     LOG_INFO("Validation", "Starting cache integrity validation");
 
     std::cout << "🔍 Validating cache integrity...\n";
 
-    if (!has_current_ephemeris_data()) {
+    if (!factory.has_current_ephemeris_data()) {
       std::cout << "❌ No cache data present\n";
       return false;
     }
@@ -212,14 +213,15 @@ class DataFetcher {
   /**
    * @brief Test storage system with modern error handling
    */
-  [[nodiscard]] bool test_storage() const {
+  [[nodiscard]] bool test_storage(SolarSystem::Bodies::BodyFactory& factory) const {
     LOG_INFO("Storage", "Starting storage system test");
 
     std::cout << "🧪 Testing storage system...\n";
 
     try {
       // Test JSON and binary storage
-      bool success = test_storage_system();
+      auto result = factory.test_storage_system();
+      bool success = result.has_value();
 
       if (success) {
         std::cout << "✅ Storage system test passed\n";
@@ -242,13 +244,14 @@ class DataFetcher {
   /**
    * @brief Rebuild binary cache with progress indication
    */
-  [[nodiscard]] bool rebuild_cache() const {
+  [[nodiscard]] bool rebuild_cache(SolarSystem::Bodies::BodyFactory& factory) const {
     LOG_INFO("Rebuild", "Starting binary cache rebuild");
 
     std::cout << "🔄 Rebuilding binary cache from JSON data...\n";
 
     try {
-      bool success = rebuild_binary_cache();
+      auto result = factory.rebuild_cache();
+      bool success = result.has_value();
 
       if (success) {
         std::cout << "✅ Binary cache rebuilt successfully\n";
@@ -408,6 +411,7 @@ class ArgumentParser {
  */
 int main(int argc, char* argv[]) {
   try {
+    SolarSystem::Bodies::BodyFactory factory;
     // Parse command-line arguments
     auto options = ArgumentParser::parse(argc, argv);
     if (!options.has_value()) {
@@ -431,7 +435,7 @@ int main(int argc, char* argv[]) {
     LOG_INFO("Main", "Solar System Data Fetcher (Modern) starting");
 
     // Initialize JPL data system (legacy)
-    if (!initialize_jpl_data()) {
+    if (!factory.is_initialized()) {
       LOG_ERROR("Main", "Failed to initialize JPL data system");
       std::cerr << "❌ Failed to initialize JPL data system\n";
       return 1;
@@ -448,20 +452,20 @@ int main(int argc, char* argv[]) {
     bool success = true;
 
     if (options->show_status) {
-      fetcher.show_status();
+      fetcher.show_status(factory);
     } else if (options->clean_cache) {
       success = fetcher.clean_cache();
     } else if (options->validate_cache) {
-      success = fetcher.validate_cache();
+      success = fetcher.validate_cache(factory);
     } else if (options->test_storage) {
-      success = fetcher.test_storage();
+      success = fetcher.test_storage(factory);
     } else if (options->rebuild_cache) {
-      success = fetcher.rebuild_cache();
+      success = fetcher.rebuild_cache(factory);
     } else if (options->update_data || options->force_update) {
-      success = fetcher.update_data(options->force_update, options->target_year);
+      success = fetcher.update_data(factory, options->force_update, options->target_year);
     } else {
       // Default action: show status
-      fetcher.show_status();
+      fetcher.show_status(factory);
       std::cout << "💡 Use --help for available options\n";
     }
 

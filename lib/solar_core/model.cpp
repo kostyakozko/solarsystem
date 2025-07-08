@@ -13,14 +13,14 @@ long double dist(const coord& a, const coord& b) {
 coord getBarycenter() {
   long double massSum = 0;
   for (int i = 0; i < count; i++) {
-    massSum += SolarSystem[i].mass;
+    massSum += SolarSystem_[i].mass;
   }
   coord retVal = {0, 0, 0};
   long double invMassSum = 1 / massSum;
   for (int i = 0; i < count; i++) {
-    retVal.x += SolarSystem[i].mass * SolarSystem[i].position.x;
-    retVal.y += SolarSystem[i].mass * SolarSystem[i].position.y;
-    retVal.z += SolarSystem[i].mass * SolarSystem[i].position.z;
+    retVal.x += SolarSystem_[i].mass * SolarSystem_[i].position.x;
+    retVal.y += SolarSystem_[i].mass * SolarSystem_[i].position.y;
+    retVal.z += SolarSystem_[i].mass * SolarSystem_[i].position.z;
   }
   retVal.x *= invMassSum;
   retVal.y *= invMassSum;
@@ -41,14 +41,14 @@ void printCurrentData(time_t current) {
   strftime(time_buffer, sizeof(time_buffer), "%a %b %d %H:%M:%S %Y\n", timeinfo);
   std::cout << time_buffer;
   for (int i = 0; i < count; i++) {
-    std::cout << std::setw(15) << SolarSystem[i].name << std::setw(21) << std::scientific
-              << (SolarSystem[i].position.x - barycenter.x) << std::setw(21) << std::scientific
-              << (SolarSystem[i].position.y - barycenter.y) << std::setw(21) << std::scientific
-              << (SolarSystem[i].position.z - barycenter.z) << std::setw(21) << std::scientific
-              << dist(SolarSystem[i].position, barycenter) << std::setw(21) << std::scientific
-              << SolarSystem[i].speed.x << std::setw(21) << std::scientific
-              << SolarSystem[i].speed.y << std::setw(21) << std::scientific
-              << SolarSystem[i].speed.z << std::endl;
+    std::cout << std::setw(15) << SolarSystem_[i].name << std::setw(21) << std::scientific
+              << (SolarSystem_[i].position.x - barycenter.x) << std::setw(21) << std::scientific
+              << (SolarSystem_[i].position.y - barycenter.y) << std::setw(21) << std::scientific
+              << (SolarSystem_[i].position.z - barycenter.z) << std::setw(21) << std::scientific
+              << dist(SolarSystem_[i].position, barycenter) << std::setw(21) << std::scientific
+              << SolarSystem_[i].speed.x << std::setw(21) << std::scientific
+              << SolarSystem_[i].speed.y << std::setw(21) << std::scientific
+              << SolarSystem_[i].speed.z << std::endl;
   }
 }
 // Functions for accessing celestial bodies
@@ -59,5 +59,5 @@ const planet& get_body(int index) {
     static planet empty_body = {0, {0, 0, 0}, {0, 0, 0}, "Invalid"};
     return empty_body;
   }
-  return SolarSystem[index];
+  return SolarSystem_[index];
 }

@@ -272,4 +272,80 @@ void BodyFactory::initialize_internal_data() {
   data_initialized_ = true;
 }
 
+[[nodiscard]] bool BodyFactory::has_current_year_ephemeris_data() const noexcept {
+  if (!has_current_ephemeris_data()) {
+    return false;
+  }
+
+  // Get current time
+  auto now = std::chrono::system_clock::now();
+
+  // Convert both times to year-month-day for comparison
+  auto now_days = std::chrono::floor<std::chrono::days>(now);
+  auto epoch_days = std::chrono::floor<std::chrono::days>(current_epoch_);
+
+  auto now_ymd = std::chrono::year_month_day{now_days};
+  auto epoch_ymd = std::chrono::year_month_day{epoch_days};
+
+  // Compare years
+  return now_ymd.year() == epoch_ymd.year();
+}
+
+SolarSystem::Utils::Expected<void, std::string> BodyFactory::fetch_current_ephemeris_data(
+    std::chrono::system_clock::time_point time) {
+  auto future = jpl_client_->fetch_all_bodies_async(time);
+  auto result = future.get();
+
+  if (!SolarSystem::JPL::is_success(result)) {
+    auto error = SolarSystem::JPL::get_error(result);
+    return SolarSystem::Utils::Expected<void, std::string>{
+        SolarSystem::JPL::Utils::to_string(error)};
+  }
+
+  // Update internal state
+  cached_ephemeris_ = SolarSystem::JPL::get_value(result);
+  current_epoch_ = time;
+  current_source_ = "JPL_DATA";
+
+  return SolarSystem::Utils::Expected<void, std::string>{};
+}
+
+SolarSystem::Utils::Expected<void, std::string> BodyFactory::rebuild_cache() {
+  auto result = jpl_client_->rebuild_cache();
+
+  if (!SolarSystem::JPL::is_success(result)) {
+    // For JPLVoidResult (std::optional<JPLError>), access the error directly:
+    auto error = result.value();  // Get the JPLError from optional
+    return SolarSystem::Utils::Expected<void, std::string>{
+        SolarSystem::JPL::Utils::to_string(error)};
+  }
+
+  return SolarSystem::Utils::Expected<void, std::string>{};
+}
+
+SolarSystem::Utils::Expected<void, std::string> BodyFactory::test_storage_system() {
+  // Use JPL client to test storage system
+  auto result = jpl_client_->test_storage();
+
+  if (!SolarSystem::JPL::is_success(result)) {
+    auto error = result.value();  // JPLVoidResult uses .value()
+    return SolarSystem::Utils::Expected<void, std::string>{
+        SolarSystem::JPL::Utils::to_string(error)};
+  }
+
+  // Update internal state for testing
+  current_epoch_ = std::chrono::system_clock::now();
+  current_source_ = "TEST_DATA";
+
+  return SolarSystem::Utils::Expected<void, std::string>{};
+}
+
+std::chrono::system_clock::time_point BodyFactory::get_current_year_epoch() noexcept {
+  auto now = std::chrono::system_clock::now();
+  auto now_days = std::chrono::floor<std::chrono::days>(now);
+  auto now_ymd = std::chrono::year_month_day{now_days};
+  auto current_year_start = std::chrono::sys_days{now_ymd.year() / std::chrono::January / 1};
+  return std::chrono::system_clock::time_point{current_year_start};
+}
+
 }  // namespace SolarSystem::Bodies

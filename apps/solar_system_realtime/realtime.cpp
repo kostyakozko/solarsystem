@@ -24,8 +24,8 @@
 #include <vector>
 
 // Modern Solar System Suite APIs
-#include "jpl_data.h"    // Legacy JPL interface (to be modernized)
 #include "simulation.h"  // Legacy simulation functions
+#include "solar_core/bodies/body_factory.hpp"
 #include "solar_core/builders/simulation_builder.hpp"
 #include "solar_utils/logging.hpp"
 
@@ -180,23 +180,24 @@ class RealtimeMonitor {
   /**
    * @brief Start real-time monitoring
    */
-  [[nodiscard]] bool start() {
+  [[nodiscard]] bool start(SolarSystem::Bodies::BodyFactory& factory) {
     try {
       LOG_INFO("Monitor", "Starting real-time solar system monitoring");
 
       // Initialize JPL data system
-      if (!initialize_jpl_data()) {
+      if (!factory.is_initialized()) {
         LOG_ERROR("Monitor", "Failed to initialize JPL data system");
         return false;
       }
 
       // Auto-fetch data if requested
-      if (config_.auto_fetch_data && !has_current_year_ephemeris_data()) {
+      if (config_.auto_fetch_data && !factory.has_current_year_ephemeris_data()) {
         if (!config_.quiet_mode) {
           std::cout << "🌐 Auto-fetching current year JPL data...\n";
         }
 
-        if (!update_ephemeris_data()) {
+        auto result = factory.fetch_current_ephemeris_data();  // Uses default current year
+        if (!result.has_value()) {
           LOG_ERROR("Monitor", "Failed to fetch current data, using cached/hardcoded data");
           if (!config_.quiet_mode) {
             std::cout << "⚠️  Warning: Using cached/hardcoded data\n";
@@ -617,6 +618,8 @@ int main(int argc, char* argv[]) {
     std::signal(SIGINT, signal_handler);
     std::signal(SIGTERM, signal_handler);
 
+    SolarSystem::Bodies::BodyFactory factory;
+
     // Parse command-line arguments
     auto config = ArgumentParser::parse(argc, argv);
     if (!config.has_value()) {
@@ -635,7 +638,7 @@ int main(int argc, char* argv[]) {
 
     // Create and start monitor
     RealtimeMonitor monitor(*config);
-    bool success = monitor.start();
+    bool success = monitor.start(factory);
 
     if (success) {
       LOG_INFO("Main", "Real-time monitoring completed successfully");

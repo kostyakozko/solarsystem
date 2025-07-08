@@ -78,6 +78,27 @@ class BodyFactory {
   [[nodiscard]] bool is_body_available(std::string_view name,
                                        std::chrono::system_clock::time_point time) const;
 
+  [[nodiscard]] bool has_current_ephemeris_data() const noexcept {
+    return current_source_ != "ORIGINAL_DATA";
+  }
+
+  [[nodiscard]] std::chrono::system_clock::time_point current_epoch() const {
+    return current_epoch_;
+  }
+  [[nodiscard]] const std::string& current_source() const { return current_source_; }
+  [[nodiscard]] bool is_initialized() const noexcept { return data_initialized_; }
+
+  [[nodiscard]] bool has_current_year_ephemeris_data() const noexcept;
+
+  [[nodiscard]] SolarSystem::Utils::Expected<void, std::string> rebuild_cache();
+
+  [[nodiscard]] SolarSystem::Utils::Expected<void, std::string> fetch_current_ephemeris_data(
+      std::chrono::system_clock::time_point time = get_current_year_epoch());
+
+  [[nodiscard]] SolarSystem::Utils::Expected<void, std::string> test_storage_system();
+
+  [[nodiscard]] static std::chrono::system_clock::time_point get_current_year_epoch() noexcept;
+
  private:
   CreationOptions default_options_;
   std::unique_ptr<SolarSystem::JPL::JPLClient> jpl_client_;

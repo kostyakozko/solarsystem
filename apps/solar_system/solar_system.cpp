@@ -20,7 +20,6 @@
 
 // Legacy argument parsing and JPL functions
 #include "args.h"
-#include "jpl_data.h"
 
 using namespace SolarSystem;
 
@@ -109,7 +108,7 @@ bool run_optimized_simulation(Bodies::BodyFactory& factory, const SimulationArgs
 
   // Create ALL solar system bodies (should be 27, not 9)
   Bodies::BodyFactory::CreationOptions body_options{
-      .preferred_source = has_current_ephemeris_data()
+      .preferred_source = factory.has_current_ephemeris_data()
                               ? Bodies::BodyFactory::DataSource::CACHED_DATA
                               : Bodies::BodyFactory::DataSource::FALLBACK_DATA,
       .allow_fallback = true,
@@ -153,36 +152,44 @@ bool run_optimized_simulation(Bodies::BodyFactory& factory, const SimulationArgs
 /**
  * @brief Handle JPL data operations (legacy compatibility)
  */
-bool handle_jpl_operations(const SimulationArgs& args) {
+bool handle_jpl_operations(const SimulationArgs& args, SolarSystem::Bodies::BodyFactory& factory) {
   if (args.update_data) {
     std::cout << "Updating ephemeris data..." << std::endl;
-    if (update_ephemeris_data()) {
+    // Calculate current year epoch in the application layer
+    auto result = factory.fetch_current_ephemeris_data();
+
+    if (result) {
       std::cout << "Ephemeris data updated successfully" << std::endl;
       return true;
     } else {
-      std::cerr << "Failed to update ephemeris data" << std::endl;
+      std::cerr << "Failed to update ephemeris data: " << result.error() << std::endl;
       return false;
     }
   }
 
   if (args.rebuild_cache) {
-    std::cout << "Rebuilding binary cache..." << std::endl;
-    if (rebuild_binary_cache()) {
+    // Use JPL client to rebuild cache
+    auto result = factory.rebuild_cache();  // Add this method to BodyFactory
+
+    if (result.has_value()) {
       std::cout << "Binary cache rebuilt successfully" << std::endl;
       return true;
     } else {
-      std::cerr << "Failed to rebuild binary cache" << std::endl;
+      std::cerr << "Failed to rebuild binary cache: " << result.error() << std::endl;
       return false;
     }
   }
 
-  if (args.test_storage) {
+  if (args.test_storage) {  // or whatever the condition is
     std::cout << "Testing storage system..." << std::endl;
-    if (save_current_data_for_testing()) {
+
+    auto result = factory.test_storage_system();  // Add this method to BodyFactory
+
+    if (result.has_value()) {
       std::cout << "Storage system test completed successfully" << std::endl;
       return true;
     } else {
-      std::cerr << "Storage system test failed" << std::endl;
+      std::cerr << "Storage system test failed: " << result.error() << std::endl;
       return false;
     }
   }
@@ -194,40 +201,31 @@ bool handle_jpl_operations(const SimulationArgs& args) {
  * @brief Main application entry point - OPTIMIZED FOR PERFORMANCE
  */
 int main(int argc, char* argv[]) {
+  using namespace std::chrono;
+  // Create body factory
+  Bodies::BodyFactory factory;
   // Parse command line arguments (using legacy parser)
   SimulationArgs args = parse_arguments(argc, argv);
-
-  // Initialize JPL data system (required for legacy compatibility)
-  initialize_jpl_data();
 
   // Set output precision to match legacy
   std::cout.precision(12);
 
   // Handle JPL data operations
   if (args.update_data || args.rebuild_cache || args.test_storage) {
-    return handle_jpl_operations(args) ? 0 : 1;
+    return handle_jpl_operations(args, factory) ? 0 : 1;
   }
 
   // Determine starting date based on available ephemeris data (matching legacy logic)
   std::chrono::system_clock::time_point start_time;
-  if (has_current_ephemeris_data()) {
+
+  if (factory.has_current_ephemeris_data()) {
     // Use JPL data epoch as starting point
-    auto epoch = get_ephemeris_epoch();
-    start_time = std::chrono::system_clock::from_time_t(epoch);
-    std::cout << "Using JPL ephemeris data: " << get_ephemeris_source() << std::endl;
+    start_time = factory.current_epoch();
+    std::cout << "Using JPL ephemeris data: " << factory.current_source() << std::endl;
   } else {
-    // Fallback to original hardcoded date (Feb 11, 2018)
-    struct tm start_timeinfo = {};
-    start_timeinfo.tm_sec = 0;
-    start_timeinfo.tm_min = 0;
-    start_timeinfo.tm_hour = 0;
-    start_timeinfo.tm_mday = 11;
-    start_timeinfo.tm_mon = 1;  // February (0-based)
-    start_timeinfo.tm_year = 2018 - 1900;
-    start_timeinfo.tm_isdst = -1;
-    auto start_time_t = mktime(&start_timeinfo);
-    start_time = std::chrono::system_clock::from_time_t(start_time_t);
-    std::cout << "Using original ephemeris data: " << get_ephemeris_source() << std::endl;
+    year_month_day ymd{year{2018}, month{2}, day{11}};
+    start_time = sys_days{ymd};
+    std::cout << "Using original ephemeris data: " << factory.current_source() << std::endl;
   }
 
   // Show ephemeris data status
@@ -235,15 +233,12 @@ int main(int argc, char* argv[]) {
   std::cout << "Ephemeris epoch: "
             << std::put_time(std::localtime(&start_time_t), "%a %b %d %H:%M:%S %Y") << std::endl;
 
-  if (!has_current_year_ephemeris_data()) {
+  if (factory.has_current_year_ephemeris_data()) {
     std::cout << "Note: Consider updating ephemeris data with -u for current year" << std::endl;
   }
 
   // Target time
   auto target_time = std::chrono::system_clock::from_time_t(args.target_date);
-
-  // Create body factory
-  Bodies::BodyFactory factory;
 
   // Run the OPTIMIZED simulation (matching legacy performance)
   bool success = run_optimized_simulation(factory, args, start_time, target_time);

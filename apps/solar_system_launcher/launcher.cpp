@@ -23,7 +23,7 @@
 #include <vector>
 
 // Modern Solar System Suite APIs
-#include "jpl_data.h"  // Legacy JPL interface (to be modernized)
+#include "solar_core/bodies/body_factory.hpp"
 #include "solar_core/builders/simulation_builder.hpp"
 #include "solar_utils/logging.hpp"
 
@@ -145,24 +145,24 @@ class LauncherUI {
   /**
    * @brief Print system status
    */
-  static void print_system_status() {
+  static void print_system_status(SolarSystem::Bodies::BodyFactory& factory) {
     std::cout << "🌟 Solar System Suite Status\n\n";
 
     // JPL Data Status
     std::cout << "📡 JPL Data Status:\n";
-    if (has_current_ephemeris_data()) {
-      auto epoch = get_ephemeris_epoch();
-      auto source = get_ephemeris_source();
-      auto tm_epoch = *std::localtime(&epoch);
-      auto cached_year = tm_epoch.tm_year + 1900;
+    if (factory.has_current_ephemeris_data()) {
+      auto epoch = factory.current_epoch();
+      auto source = factory.current_source();
+      std::chrono::year_month_day ymd = std::chrono::floor<std::chrono::days>(epoch);
+      int cached_year = static_cast<int>(ymd.year());
 
       std::cout << "  ✅ Status: ACTIVE\n";
       std::cout << "  📊 Source: " << source << "\n";
       std::cout << "  📅 Year: " << cached_year << "\n";
 
-      auto now = std::time(nullptr);
-      auto current_tm = *std::localtime(&now);
-      auto current_year = current_tm.tm_year + 1900;
+      auto curr_epoch = factory.get_current_year_epoch();
+      std::chrono::year_month_day curr_ymd = std::chrono::floor<std::chrono::days>(curr_epoch);
+      int current_year = static_cast<int>(curr_ymd.year());
 
       if (cached_year == current_year) {
         std::cout << "  🎯 Status: CURRENT\n";
@@ -233,7 +233,8 @@ class WorkflowStep {
   /**
    * @brief Execute the workflow step
    */
-  virtual StepResult execute(const LauncherConfig& config) = 0;
+  virtual StepResult execute(const LauncherConfig& config,
+                             SolarSystem::Bodies::BodyFactory& factory) = 0;
 
   /**
    * @brief Get step name for display
@@ -251,7 +252,8 @@ class WorkflowStep {
  */
 class DataManagementStep : public WorkflowStep {
  public:
-  StepResult execute(const LauncherConfig& config) override {
+  StepResult execute(const LauncherConfig& config,
+                     SolarSystem::Bodies::BodyFactory& factory) override {
     auto start_time = std::chrono::steady_clock::now();
 
     try {
@@ -260,7 +262,7 @@ class DataManagementStep : public WorkflowStep {
       }
 
       // Initialize JPL data system
-      if (!initialize_jpl_data()) {
+      if (!factory.is_initialized()) {
         return StepResult(false, "Failed to initialize JPL data system", 1);
       }
 
@@ -289,8 +291,8 @@ class DataManagementStep : public WorkflowStep {
           }
         }
 
-        bool update_success =
-            config.force_update ? force_update_ephemeris_data() : update_ephemeris_data();
+        auto result = factory.fetch_current_ephemeris_data();
+        bool update_success = result.has_value();
 
         if (config.show_progress && !config.quiet_mode) {
           LauncherUI::print_progress("Fetching JPL data", 1.0);
@@ -310,7 +312,7 @@ class DataManagementStep : public WorkflowStep {
           std::cout << "🔍 Validating cache integrity...\n";
         }
 
-        if (has_current_ephemeris_data()) {
+        if (factory.has_current_ephemeris_data()) {
           result_message += "Cache validation successful. ";
         } else {
           success = false;
@@ -323,7 +325,8 @@ class DataManagementStep : public WorkflowStep {
           std::cout << "🔄 Rebuilding binary cache...\n";
         }
 
-        if (rebuild_binary_cache()) {
+        auto result = factory.rebuild_cache();
+        if (result.has_value()) {
           result_message += "Cache rebuild successful. ";
         } else {
           success = false;
@@ -336,7 +339,8 @@ class DataManagementStep : public WorkflowStep {
           std::cout << "🧪 Testing storage system...\n";
         }
 
-        if (test_storage_system()) {
+        auto result = factory.test_storage_system();
+        if (result.has_value()) {
           result_message += "Storage test successful. ";
         } else {
           success = false;
@@ -371,7 +375,8 @@ class DataManagementStep : public WorkflowStep {
  */
 class AutoFetchStep : public WorkflowStep {
  public:
-  StepResult execute(const LauncherConfig& config) override {
+  StepResult execute(const LauncherConfig& config,
+                     SolarSystem::Bodies::BodyFactory& factory) override {
     auto start_time = std::chrono::steady_clock::now();
 
     try {
@@ -379,11 +384,11 @@ class AutoFetchStep : public WorkflowStep {
         std::cout << "🔍 Checking data availability...\n";
       }
 
-      if (!initialize_jpl_data()) {
+      if (!factory.is_initialized()) {
         return StepResult(false, "Failed to initialize JPL data system", 1);
       }
 
-      if (!has_current_year_ephemeris_data()) {
+      if (!factory.has_current_year_ephemeris_data()) {
         if (!config.quiet_mode) {
           std::cout << "📡 Auto-fetching current year data...\n";
           if (config.show_progress) {
@@ -391,7 +396,8 @@ class AutoFetchStep : public WorkflowStep {
           }
         }
 
-        bool success = update_ephemeris_data();
+        auto res = factory.fetch_current_ephemeris_data();
+        bool success = res.has_value();
 
         if (config.show_progress && !config.quiet_mode) {
           LauncherUI::print_progress("Auto-fetching data", 1.0);
@@ -437,7 +443,8 @@ class AutoFetchStep : public WorkflowStep {
  */
 class SimulationStep : public WorkflowStep {
  public:
-  StepResult execute(const LauncherConfig& config) override {
+  StepResult execute(const LauncherConfig& config,
+                     SolarSystem::Bodies::BodyFactory& factory) override {
     auto start_time = std::chrono::steady_clock::now();
 
     try {
@@ -518,7 +525,8 @@ class WorkflowOrchestrator {
   /**
    * @brief Execute all workflow steps
    */
-  [[nodiscard]] bool execute(const LauncherConfig& config) {
+  [[nodiscard]] bool execute(const LauncherConfig& config,
+                             SolarSystem::Bodies::BodyFactory& factory) {
     if (!config.quiet_mode) {
       LauncherUI::print_header();
       LOG_INFO("Workflow", "Starting Solar System Suite workflow");
@@ -541,7 +549,7 @@ class WorkflowOrchestrator {
 
       LOG_INFO("Workflow", "Executing step: " + step->name());
 
-      auto result = step->execute(config);
+      auto result = step->execute(config, factory);
       results.push_back(result);
 
       if (!config.quiet_mode) {
@@ -800,6 +808,7 @@ class ArgumentParser {
  */
 int main(int argc, char* argv[]) {
   try {
+    SolarSystem::Bodies::BodyFactory factory;
     // Parse command-line arguments
     auto config = ArgumentParser::parse(argc, argv);
     if (!config.has_value()) {
@@ -827,7 +836,7 @@ int main(int argc, char* argv[]) {
       if (!config->quiet_mode) {
         LauncherUI::print_header();
       }
-      LauncherUI::print_system_status();
+      LauncherUI::print_system_status(factory);
       return 0;
     }
 
@@ -857,7 +866,7 @@ int main(int argc, char* argv[]) {
       if (!config->quiet_mode) {
         LauncherUI::print_header();
       }
-      LauncherUI::print_system_status();
+      LauncherUI::print_system_status(factory);
       if (!config->quiet_mode) {
         std::cout << "💡 Use --help for available options\n";
       }
@@ -865,7 +874,7 @@ int main(int argc, char* argv[]) {
     }
 
     // Execute workflow
-    bool success = orchestrator->execute(*config);
+    bool success = orchestrator->execute(*config, factory);
 
     if (success) {
       LOG_INFO("Main", "Launcher completed successfully");

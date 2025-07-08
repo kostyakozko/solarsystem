@@ -22,7 +22,7 @@ void print_simulation_info(const SimulationArgs& args, time_t start_date) {
 void perform_simulation_step(long double time_step) {
   for (int i = 0; i < count; ++i) {
     acceleration delta{0.0, 0.0, 0.0};
-    coord& this_position = SolarSystem[i].position;
+    coord& this_position = SolarSystem_[i].position;
 
     // Calculate gravitational forces
     for (int j = 0; j < i; ++j) {
@@ -33,7 +33,7 @@ void perform_simulation_step(long double time_step) {
     }
 
     // Apply time integration
-    velocity& this_speed = SolarSystem[i].speed;
+    velocity& this_speed = SolarSystem_[i].speed;
     this_speed.x += delta.x * time_step;
     this_speed.y += delta.y * time_step;
     this_speed.z += delta.z * time_step;

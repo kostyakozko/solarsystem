@@ -9,7 +9,7 @@ extern const long double G;
 
 extern const coord center;
 
-extern planet SolarSystem[];
+extern planet SolarSystem_[];
 
 // Physical constants for testing and calculations
 extern const double AU;          // Astronomical Unit (meters)
