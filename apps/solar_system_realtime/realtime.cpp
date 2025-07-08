@@ -24,7 +24,6 @@
 #include <vector>
 
 // Modern Solar System Suite APIs
-#include "simulation.h"  // Legacy simulation functions
 #include "solar_core/bodies/body_factory.hpp"
 #include "solar_core/builders/simulation_builder.hpp"
 #include "solar_utils/argument_parser.hpp"
@@ -313,12 +312,11 @@ class RealtimeMonitor {
    */
   void update_simulation() {
     try {
-      // For now, use legacy simulation update
-      // TODO: Replace with modern SimulationEngine when available
-      update_simulation_to_current_time();
+      // Modern BodyFactory provides current data automatically
+      // No explicit simulation update needed
 
       if (config_.verbose_output) {
-        LOG_DEBUG("Monitor", "Simulation updated to current time");
+        LOG_DEBUG("Monitor", "Using modern BodyFactory for current data");
       }
 
     } catch (const std::exception& e) {

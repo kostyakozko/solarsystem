@@ -2,12 +2,7 @@
 # Static library only for maximum performance and LTO benefits
 
 add_library(solar_core STATIC
-    # Legacy C-style files (to be migrated)
-    model.cpp
-    simulation.cpp
-    constants.cpp
-
-    # Modern C++20 classes
+    # Modern C++20 classes - Pure modern architecture
     src/math/vector3.cpp
     src/bodies/celestial_body.cpp
     src/bodies/body_collection.cpp

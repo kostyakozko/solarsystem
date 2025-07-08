@@ -13,7 +13,8 @@
 #include <string>
 #include <vector>
 
-#include "types.h"
+#include "solar_core/bodies/celestial_body.hpp"
+#include "solar_core/math/vector3.hpp"
 
 namespace TestData {
 

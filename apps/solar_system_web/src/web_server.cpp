@@ -36,8 +36,6 @@
 #include <unistd.h>
 
 // Modern Solar System Suite APIs
-#include "model.h"       // Legacy model for body data access
-#include "simulation.h"  // Legacy simulation functions
 #include "solar_core/bodies/body_factory.hpp"
 
 // Simple logging macros to avoid namespace conflicts
@@ -595,14 +593,15 @@ class SolarSystemAPI {
       }
       json << "  },\n";
 
-      // Body information using legacy interface
+      // Body information using modern BodyFactory
       json << "  \"bodies\": {\n";
       try {
-        auto body_count = get_body_count();
-        json << "    \"total\": " << body_count << ",\n";
-        json << "    \"essential\": " << body_count << ",\n";
-        json << "    \"important\": " << body_count << ",\n";
-        json << "    \"optional\": " << body_count << "\n";
+        SolarSystem::Bodies::BodyFactory factory;
+        auto available_bodies = factory.get_available_bodies();
+        json << "    \"total\": " << available_bodies.size() << ",\n";
+        json << "    \"essential\": " << available_bodies.size() << ",\n";
+        json << "    \"important\": " << available_bodies.size() << ",\n";
+        json << "    \"optional\": " << available_bodies.size() << "\n";
       } catch (const std::exception& e) {
         json << "    \"error\": \"" << e.what() << "\"\n";
       }
@@ -638,10 +637,8 @@ class SolarSystemAPI {
         LOG_INFO("API", "Solar system data requested for date: " + *date_param);
 
         // For now, use legacy simulation approach
-        // TODO: Replace with modern SimulationBuilder when date parsing is available
-
-        // Update simulation to current time (legacy approach)
-        update_simulation_to_current_time();
+        // Modern BodyFactory provides current data automatically
+        // No need for explicit simulation updates
       }
 
       // Get current solar system state
@@ -650,30 +647,34 @@ class SolarSystemAPI {
       json << "  \"timestamp\": \"" << std::time(nullptr) << "\",\n";
       json << "  \"bodies\": [\n";
 
-      // Get actual body data from the simulation
+      // Get actual body data from the modern BodyFactory
       try {
-        // Use legacy get_bodies() function to get actual positions
-        auto body_count = get_body_count();
-        bool first = true;
+        SolarSystem::Bodies::BodyFactory factory;
+        auto result = factory.create_solar_system();
 
-        for (int i = 0; i < body_count; ++i) {
-          const auto& body = get_body(i);
+        if (result) {
+          const auto& bodies = result.value();
+          bool first = true;
 
-          if (!first) json << ",\n";
-          first = false;
+          for (const auto& body : bodies) {
+            if (!first) json << ",\n";
+            first = false;
 
-          json << "    {\n";
-          json << "      \"name\": \"" << body.name << "\",\n";
-          json << "      \"type\": \"celestial_body\",\n";
-          json << "      \"position\": { ";
-          json << "\"x\": " << body.position.x << ", ";
-          json << "\"y\": " << body.position.y << ", ";
-          json << "\"z\": " << body.position.z << " },\n";
-          json << "      \"velocity\": { ";
-          json << "\"x\": " << body.speed.x << ", ";
-          json << "\"y\": " << body.speed.y << ", ";
-          json << "\"z\": " << body.speed.z << " }\n";
-          json << "    }";
+            json << "    {\n";
+            json << "      \"name\": \"" << body.name() << "\",\n";
+            json << "      \"type\": \"celestial_body\",\n";
+            json << "      \"position\": { ";
+            json << "\"x\": " << body.position().x() << ", ";
+            json << "\"y\": " << body.position().y() << ", ";
+            json << "\"z\": " << body.position().z() << " },\n";
+            json << "      \"velocity\": { ";
+            json << "\"x\": " << body.velocity().x() << ", ";
+            json << "\"y\": " << body.velocity().y() << ", ";
+            json << "\"z\": " << body.velocity().z() << " }\n";
+            json << "    }";
+          }
+        } else {
+          LOG_ERROR("API", "Failed to create solar system: " + result.error());
         }
       } catch (const std::exception& e) {
         LOG_ERROR("API", "Failed to get body data: " + std::string(e.what()));
@@ -711,9 +712,8 @@ class SolarSystemAPI {
                "Simulation request - Date: " + (date_param.has_value() ? *date_param : "current") +
                    ", Speed: " + (speed_param.has_value() ? *speed_param : "1.0"));
 
-      // For now, use legacy simulation approach
-      // TODO: Replace with modern SimulationBuilder
-      update_simulation_to_current_time();
+      // Modern BodyFactory handles simulation data automatically
+      // TODO: Replace with modern SimulationBuilder for time travel
 
       std::ostringstream json;
       json << "{\n";
@@ -898,13 +898,13 @@ int main(int argc, char* argv[]) {
       return 1;
     }
 
-    // Initialize simulation to current time
+    // Modern BodyFactory initializes automatically
     try {
-      update_simulation_to_current_time();
-      LOG_INFO("Main", "Simulation initialized to current time");
+      SolarSystem::Bodies::BodyFactory factory;
+      LOG_INFO("Main", "Modern BodyFactory initialized successfully");
     } catch (const std::exception& e) {
-      LOG_ERROR("Main", "Failed to initialize simulation: " + std::string(e.what()));
-      std::cerr << "⚠️  Warning: Failed to initialize simulation\n";
+      LOG_ERROR("Main", "Failed to initialize BodyFactory: " + std::string(e.what()));
+      std::cerr << "⚠️  Warning: Failed to initialize BodyFactory\n";
     }
 
     // Create and configure HTTP server
