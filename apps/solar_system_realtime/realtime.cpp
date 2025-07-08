@@ -27,11 +27,16 @@
 #include "simulation.h"  // Legacy simulation functions
 #include "solar_core/bodies/body_factory.hpp"
 #include "solar_core/builders/simulation_builder.hpp"
+#include "solar_utils/argument_parser.hpp"
 #include "solar_utils/logging.hpp"
 
 using namespace SolarSystem::Core::Builders;
 using namespace SolarSystem::Utils;
 using namespace std::chrono_literals;
+using namespace SolarSystem::Utils;
+
+// Use modern RealtimeConfig from argument parser
+using MonitorConfig = RealtimeConfig;
 
 /**
  * @brief Global shutdown flag for signal handling
@@ -46,50 +51,6 @@ void signal_handler(int signal) {
     g_shutdown_requested.store(true);
   }
 }
-
-/**
- * @brief Configuration for real-time monitoring
- */
-struct MonitorConfig {
-  // Display options
-  bool show_positions = true;
-  bool show_velocities = false;
-  bool show_summary = true;
-  bool continuous_mode = true;
-  bool quiet_mode = false;
-  bool verbose_output = false;
-
-  // Timing configuration
-  std::chrono::seconds update_interval = 1s;
-  std::chrono::seconds display_interval = 1s;
-  std::optional<std::chrono::seconds> duration_limit;
-
-  // Body selection
-  std::vector<std::string> selected_bodies;
-  bool auto_fetch_data = false;
-
-  /**
-   * @brief Validate configuration
-   */
-  [[nodiscard]] bool is_valid(std::string* error = nullptr) const {
-    if (update_interval <= 0s) {
-      if (error) *error = "Update interval must be positive";
-      return false;
-    }
-
-    if (display_interval <= 0s) {
-      if (error) *error = "Display interval must be positive";
-      return false;
-    }
-
-    if (duration_limit.has_value() && *duration_limit <= 0s) {
-      if (error) *error = "Duration limit must be positive";
-      return false;
-    }
-
-    return true;
-  }
-};
 
 /**
  * @brief Modern terminal UI utilities
@@ -463,153 +424,6 @@ class RealtimeMonitor {
 };
 
 /**
- * @brief Modern command-line argument parser
- */
-class ArgumentParser {
- public:
-  [[nodiscard]] static std::optional<MonitorConfig> parse(int argc, char* argv[]) {
-    MonitorConfig config;
-
-    for (int i = 1; i < argc; ++i) {
-      std::string_view arg = argv[i];
-
-      if (arg == "-h" || arg == "--help") {
-        return std::nullopt;  // Signal help request
-      } else if (arg == "--positions") {
-        config.show_positions = true;
-      } else if (arg == "--velocities") {
-        config.show_velocities = true;
-      } else if (arg == "--no-summary") {
-        config.show_summary = false;
-      } else if (arg == "--no-continuous") {
-        config.continuous_mode = false;
-      } else if (arg == "-q" || arg == "--quiet") {
-        config.quiet_mode = true;
-      } else if (arg == "-v" || arg == "--verbose") {
-        config.verbose_output = true;
-      } else if (arg == "--auto-fetch") {
-        config.auto_fetch_data = true;
-      } else if (arg == "--update-interval") {
-        if (i + 1 < argc) {
-          try {
-            int seconds = std::stoi(argv[++i]);
-            config.update_interval = std::chrono::seconds(seconds);
-          } catch (const std::exception&) {
-            LOG_ERROR("Parser", "Invalid update interval: " + std::string(argv[i]));
-            return std::nullopt;
-          }
-        } else {
-          LOG_ERROR("Parser", "--update-interval requires a value");
-          return std::nullopt;
-        }
-      } else if (arg == "--display-interval") {
-        if (i + 1 < argc) {
-          try {
-            int seconds = std::stoi(argv[++i]);
-            config.display_interval = std::chrono::seconds(seconds);
-          } catch (const std::exception&) {
-            LOG_ERROR("Parser", "Invalid display interval: " + std::string(argv[i]));
-            return std::nullopt;
-          }
-        } else {
-          LOG_ERROR("Parser", "--display-interval requires a value");
-          return std::nullopt;
-        }
-      } else if (arg == "--duration") {
-        if (i + 1 < argc) {
-          try {
-            int seconds = std::stoi(argv[++i]);
-            config.duration_limit = std::chrono::seconds(seconds);
-          } catch (const std::exception&) {
-            LOG_ERROR("Parser", "Invalid duration: " + std::string(argv[i]));
-            return std::nullopt;
-          }
-        } else {
-          LOG_ERROR("Parser", "--duration requires a value");
-          return std::nullopt;
-        }
-      } else if (arg == "--bodies") {
-        if (i + 1 < argc) {
-          std::string bodies_str = argv[++i];
-          // Parse comma-separated body names
-          std::stringstream ss(bodies_str);
-          std::string body;
-          while (std::getline(ss, body, ',')) {
-            config.selected_bodies.push_back(body);
-          }
-        } else {
-          LOG_ERROR("Parser", "--bodies requires a value");
-          return std::nullopt;
-        }
-      } else {
-        LOG_ERROR("Parser", "Unknown argument: " + std::string(arg));
-        return std::nullopt;
-      }
-    }
-
-    // Validate configuration
-    std::string error;
-    if (!config.is_valid(&error)) {
-      LOG_ERROR("Parser", "Invalid configuration: " + error);
-      return std::nullopt;
-    }
-
-    return config;
-  }
-
-  static void print_usage(std::string_view program_name) {
-    std::cout << "╭─────────────────────────────────────────────────────────╮\n";
-    std::cout << "│       Solar System Real-Time Monitor (Modern)          │\n";
-    std::cout << "│          Live Solar System Tracking & Display          │\n";
-    std::cout << "╰─────────────────────────────────────────────────────────╯\n\n";
-
-    std::cout << "Usage: " << program_name << " [OPTIONS]\n\n";
-
-    std::cout << "🖥️  Display Options:\n";
-    std::cout << "  --positions        Show celestial body positions (default)\n";
-    std::cout << "  --velocities       Show velocity vectors in addition to positions\n";
-    std::cout << "  --no-summary       Hide monitoring summary information\n";
-    std::cout << "  --no-continuous    Single snapshot mode (no continuous updates)\n\n";
-
-    std::cout << "⏱️  Timing Options:\n";
-    std::cout << "  --update-interval N    Update simulation every N seconds (default: 1)\n";
-    std::cout << "  --display-interval N   Update display every N seconds (default: 1)\n";
-    std::cout << "  --duration N           Stop monitoring after N seconds\n\n";
-
-    std::cout << "🌍 Body Selection:\n";
-    std::cout << "  --bodies LIST          Monitor specific bodies (comma-separated)\n";
-    std::cout << "                         Example: --bodies Sun,Earth,Moon,Mars\n";
-    std::cout << "                         Default: Essential and important bodies\n\n";
-
-    std::cout << "⚙️  Options:\n";
-    std::cout << "  --auto-fetch           Auto-fetch current JPL data if needed\n";
-    std::cout << "  -q, --quiet            Minimal output (positions only)\n";
-    std::cout << "  -v, --verbose          Enable verbose logging\n";
-    std::cout << "  -h, --help             Show this help message\n\n";
-
-    std::cout << "💡 Examples:\n";
-    std::cout << "  " << program_name
-              << "                           # Basic real-time monitoring\n";
-    std::cout << "  " << program_name
-              << " --velocities              # Show positions and velocities\n";
-    std::cout << "  " << program_name << " --update-interval 5       # Update every 5 seconds\n";
-    std::cout << "  " << program_name << " --duration 60             # Monitor for 1 minute\n";
-    std::cout << "  " << program_name << " --bodies Sun,Earth,Moon   # Monitor specific bodies\n";
-    std::cout << "  " << program_name << " --no-continuous           # Single snapshot\n";
-    std::cout << "  " << program_name
-              << " --quiet --auto-fetch      # Minimal output with data fetch\n\n";
-
-    std::cout << "🌟 Modern Features:\n";
-    std::cout << "  • Beautiful real-time terminal interface with Unicode\n";
-    std::cout << "  • Structured logging with colors and timestamps\n";
-    std::cout << "  • Type-safe configuration with validation\n";
-    std::cout << "  • Integration with Solar System Suite fluent APIs\n";
-    std::cout << "  • Graceful shutdown handling (Ctrl+C)\n";
-    std::cout << "  • RAII-based resource management\n";
-  }
-};
-
-/**
  * @brief Modern main function with structured error handling
  */
 int main(int argc, char* argv[]) {
@@ -620,16 +434,20 @@ int main(int argc, char* argv[]) {
 
     SolarSystem::Bodies::BodyFactory factory;
 
-    // Parse command-line arguments
-    auto config = ArgumentParser::parse(argc, argv);
-    if (!config.has_value()) {
-      ArgumentParser::print_usage(argv[0]);
-      return 0;  // Help was requested or parsing failed gracefully
+    // Parse command-line arguments using modern parser
+    RealtimeArgumentParser parser(argv[0]);
+    auto result = parser.parse(argc, const_cast<const char* const*>(argv));
+    if (!result) {
+      std::cerr << "Error parsing arguments: " << to_string(result.error()) << std::endl;
+      parser.print_usage();
+      return 1;
     }
+
+    auto config = result.value();
 
     // Initialize logging system
     Logger::Config log_config;
-    log_config.min_level = config->verbose_output ? Logger::Level::DEBUG : Logger::Level::INFO;
+    log_config.min_level = config.verbose_output ? Logger::Level::DEBUG : Logger::Level::INFO;
     log_config.colored_output = true;
     log_config.include_timestamp = true;
     Logger::instance().configure(log_config);
@@ -637,17 +455,17 @@ int main(int argc, char* argv[]) {
     LOG_INFO("Main", "Solar System Real-Time Monitor (Modern) starting");
 
     // Create and start monitor
-    RealtimeMonitor monitor(*config);
+    RealtimeMonitor monitor(config);
     bool success = monitor.start(factory);
 
     if (success) {
       LOG_INFO("Main", "Real-time monitoring completed successfully");
-      if (!config->quiet_mode) {
+      if (!config.quiet_mode) {
         std::cout << "\n🎉 Real-time monitoring session completed!\n";
       }
     } else {
       LOG_ERROR("Main", "Real-time monitoring failed");
-      if (!config->quiet_mode) {
+      if (!config.quiet_mode) {
         std::cout << "\n💥 Real-time monitoring failed!\n";
       }
     }

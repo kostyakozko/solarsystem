@@ -2,10 +2,13 @@
 # Static library for now, shared library option can be added later
 
 add_library(solar_utils STATIC
-    args.cpp
+    src/argument_parser.cpp
     src/logging.cpp
-    src/config.cpp
+    # src/config.cpp  # Temporarily disabled due to Expected usage issues
 )
+
+# Link with solar_core for Expected type
+target_link_libraries(solar_utils PUBLIC solar_core)
 
 # Public headers for other libraries and applications
 target_include_directories(solar_utils PUBLIC

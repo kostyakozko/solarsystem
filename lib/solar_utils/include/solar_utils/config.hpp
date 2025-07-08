@@ -7,7 +7,7 @@
 #include <variant>
 #include <vector>
 
-#include "solar_utils/expected.hpp"
+#include "solar_core/utils/expected.hpp"
 #include "solar_utils/logging.hpp"
 
 namespace SolarSystem::Utils {

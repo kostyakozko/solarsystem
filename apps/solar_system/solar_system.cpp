@@ -18,8 +18,8 @@
 #include "solar_core/bodies/body_factory.hpp"
 #include "solar_core/simulation/simulation_engine.hpp"
 
-// Legacy argument parsing and JPL functions
-#include "args.h"
+// Modern argument parsing
+#include "solar_utils/argument_parser.hpp"
 
 using namespace SolarSystem;
 
@@ -60,7 +60,7 @@ void print_all_bodies(const Bodies::BodyCollection& bodies,
 /**
  * @brief Print simulation information (matching legacy format)
  */
-void print_simulation_info(const SimulationArgs& args,
+void print_simulation_info(const SolarSystem::Utils::SimulationConfig& config,
                            std::chrono::system_clock::time_point start_time,
                            std::chrono::system_clock::time_point target_time) {
   std::cout << "Solar System Simulation" << std::endl;
@@ -70,12 +70,12 @@ void print_simulation_info(const SimulationArgs& args,
             << std::put_time(std::localtime(&start_time_t), "%a %b %d %H:%M:%S %Y") << std::endl;
 
   auto target_time_t = std::chrono::system_clock::to_time_t(target_time);
-  if (args.use_current_date) {
+  if (config.use_current_date) {
     std::cout << "Target date: Current time ("
               << std::put_time(std::localtime(&target_time_t), "%a %b %d %H:%M:%S %Y") << ")"
               << std::endl;
   } else {
-    std::cout << "Target date: " << args.date_string << " ("
+    std::cout << "Target date: " << config.date_string << " ("
               << std::put_time(std::localtime(&target_time_t), "%a %b %d %H:%M:%S %Y") << ")"
               << std::endl;
   }
@@ -84,7 +84,8 @@ void print_simulation_info(const SimulationArgs& args,
 /**
  * @brief Run HIGH-PERFORMANCE simulation matching legacy speed
  */
-bool run_optimized_simulation(Bodies::BodyFactory& factory, const SimulationArgs& args,
+bool run_optimized_simulation(Bodies::BodyFactory& factory,
+                              const SolarSystem::Utils::SimulationConfig& config,
                               std::chrono::system_clock::time_point start_time,
                               std::chrono::system_clock::time_point target_time) {
   // Determine if we're going forward or backward
@@ -93,14 +94,14 @@ bool run_optimized_simulation(Bodies::BodyFactory& factory, const SimulationArgs
             << std::endl;
 
   // OPTIMIZED: Use larger timestep for better performance (matching legacy)
-  Simulation::SimulationConfig config{
+  Simulation::SimulationConfig sim_config{
       .time_step = forward ? 86400.0 : -86400.0,  // 1 day timestep (like legacy)
       .gravitational_constant = 6.67430e-11,
       .use_adaptive_timestep = false,
       .enable_collision_detection = false};
 
   // Create simulation engine with Leapfrog integration (matching legacy)
-  Simulation::SimulationEngine engine(config);
+  Simulation::SimulationEngine engine(sim_config);
   engine.set_integration_method(Simulation::SimulationEngine::IntegrationMethod::LEAPFROG);
 
   // OPTIMIZED: NO progress callback to avoid overhead
@@ -124,7 +125,7 @@ bool run_optimized_simulation(Bodies::BodyFactory& factory, const SimulationArgs
   std::cout << "Created " << bodies.size() << " celestial bodies" << std::endl;
 
   // Print simulation info
-  print_simulation_info(args, start_time, target_time);
+  print_simulation_info(config, start_time, target_time);
 
   // Initialize simulation
   auto init_result = engine.initialize(std::move(bodies), start_time);
@@ -150,10 +151,11 @@ bool run_optimized_simulation(Bodies::BodyFactory& factory, const SimulationArgs
 }
 
 /**
- * @brief Handle JPL data operations (legacy compatibility)
+ * @brief Handle JPL data operations (modern config)
  */
-bool handle_jpl_operations(const SimulationArgs& args, SolarSystem::Bodies::BodyFactory& factory) {
-  if (args.update_data) {
+bool handle_jpl_operations(const SolarSystem::Utils::SimulationConfig& config,
+                           SolarSystem::Bodies::BodyFactory& factory) {
+  if (config.update_data) {
     std::cout << "Updating ephemeris data..." << std::endl;
     // Calculate current year epoch in the application layer
     auto result = factory.fetch_current_ephemeris_data();
@@ -167,7 +169,7 @@ bool handle_jpl_operations(const SimulationArgs& args, SolarSystem::Bodies::Body
     }
   }
 
-  if (args.rebuild_cache) {
+  if (config.rebuild_cache) {
     // Use JPL client to rebuild cache
     auto result = factory.rebuild_cache();  // Add this method to BodyFactory
 
@@ -180,7 +182,7 @@ bool handle_jpl_operations(const SimulationArgs& args, SolarSystem::Bodies::Body
     }
   }
 
-  if (args.test_storage) {  // or whatever the condition is
+  if (config.test_storage) {  // or whatever the condition is
     std::cout << "Testing storage system..." << std::endl;
 
     auto result = factory.test_storage_system();  // Add this method to BodyFactory
@@ -202,17 +204,29 @@ bool handle_jpl_operations(const SimulationArgs& args, SolarSystem::Bodies::Body
  */
 int main(int argc, char* argv[]) {
   using namespace std::chrono;
+  using namespace SolarSystem::Utils;
+
   // Create body factory
   Bodies::BodyFactory factory;
-  // Parse command line arguments (using legacy parser)
-  SimulationArgs args = parse_arguments(argc, argv);
+
+  // Parse command line arguments using modern parser
+  SimulationArgumentParser parser(argv[0]);
+  auto result = parser.parse(argc, const_cast<const char* const*>(argv));
+
+  if (!result) {
+    std::cerr << "Error parsing arguments: " << to_string(result.error()) << std::endl;
+    parser.print_usage();
+    return 1;
+  }
+
+  const auto& config = result.value();
 
   // Set output precision to match legacy
   std::cout.precision(12);
 
   // Handle JPL data operations
-  if (args.update_data || args.rebuild_cache || args.test_storage) {
-    return handle_jpl_operations(args, factory) ? 0 : 1;
+  if (config.update_data || config.rebuild_cache || config.test_storage) {
+    return handle_jpl_operations(config, factory) ? 0 : 1;
   }
 
   // Determine starting date based on available ephemeris data (matching legacy logic)
@@ -238,10 +252,10 @@ int main(int argc, char* argv[]) {
   }
 
   // Target time
-  auto target_time = std::chrono::system_clock::from_time_t(args.target_date);
+  auto target_time = std::chrono::system_clock::from_time_t(config.get_target_date().to_time_t());
 
   // Run the OPTIMIZED simulation (matching legacy performance)
-  bool success = run_optimized_simulation(factory, args, start_time, target_time);
+  bool success = run_optimized_simulation(factory, config, start_time, target_time);
 
   return success ? 0 : 1;
 }
