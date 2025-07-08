@@ -23,11 +23,11 @@ namespace TestData {
  */
 struct ReferenceBody {
   std::string name;
-  double mass;            // kg
-  double radius;          // km
-  coord position;         // km
-  coord velocity;         // km/s
-  double orbital_period;  // days (if applicable)
+  double mass;                           // kg
+  double radius;                         // km
+  SolarSystem::Math::Vector3d position;  // km
+  SolarSystem::Math::Vector3d velocity;  // km/s
+  double orbital_period;                 // days (if applicable)
 };
 
 /**

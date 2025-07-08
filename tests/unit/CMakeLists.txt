@@ -21,33 +21,25 @@ target_link_libraries(test_modern_simulation_engine test_utils solar_core solar_
 add_test(NAME UnitTest_ModernSimulationEngine COMMAND test_modern_simulation_engine)
 set_tests_properties(UnitTest_ModernSimulationEngine PROPERTIES LABELS "unit;modern;simulation;engine" TIMEOUT ${TEST_TIMEOUT})
 
-# Temporarily disabled due to JPL linking issues - will be fixed in next iteration
-# add_executable(test_modern_body_factory test_modern_body_factory.cpp)
-# target_link_libraries(test_modern_body_factory test_utils solar_core solar_jpl solar_utils Threads::Threads)
-# add_test(NAME UnitTest_ModernBodyFactory COMMAND test_modern_body_factory)
-# set_tests_properties(UnitTest_ModernBodyFactory PROPERTIES LABELS "unit;modern;bodies;factory" TIMEOUT ${TEST_TIMEOUT})
+# NEW: Modern BodyFactory with JPL Integration (now working!)
+add_executable(test_body_factory test_body_factory.cpp)
+target_link_libraries(test_body_factory test_utils solar_core solar_jpl solar_utils Threads::Threads)
+add_test(NAME UnitTest_BodyFactory COMMAND test_body_factory)
+set_tests_properties(UnitTest_BodyFactory PROPERTIES LABELS "unit;modern;bodies;factory;jpl" TIMEOUT ${TEST_TIMEOUT})
 
-# Legacy tests (to be migrated gradually)
-add_executable(test_solar_core test_solar_core.cpp)
-target_link_libraries(test_solar_core test_utils solar_core solar_utils Threads::Threads)
-add_test(NAME UnitTest_SolarCore COMMAND test_solar_core)
-set_tests_properties(UnitTest_SolarCore PROPERTIES LABELS "unit;core" TIMEOUT ${TEST_TIMEOUT})
+# NEW: SimulationBuilder with Body Filtering
+add_executable(test_simulation_builder test_simulation_builder.cpp)
+target_link_libraries(test_simulation_builder test_utils solar_core solar_jpl solar_utils Threads::Threads)
+add_test(NAME UnitTest_SimulationBuilder COMMAND test_simulation_builder)
+set_tests_properties(UnitTest_SimulationBuilder PROPERTIES LABELS "unit;modern;builders;filtering" TIMEOUT ${TEST_TIMEOUT})
 
-add_executable(test_simulation_only test_simulation.cpp)
-target_link_libraries(test_simulation_only test_utils solar_core solar_utils)
-add_test(NAME UnitTest_Simulation COMMAND test_simulation_only)
-set_tests_properties(UnitTest_Simulation PROPERTIES LABELS "unit;simulation")
+# Re-enabled: Modern body factory test (JPL linking issues fixed)
+add_executable(test_modern_body_factory test_modern_body_factory.cpp)
+target_link_libraries(test_modern_body_factory test_utils solar_core solar_jpl solar_utils Threads::Threads)
+add_test(NAME UnitTest_ModernBodyFactory COMMAND test_modern_body_factory)
+set_tests_properties(UnitTest_ModernBodyFactory PROPERTIES LABELS "unit;modern;bodies;factory" TIMEOUT ${TEST_TIMEOUT})
 
-add_executable(test_model_only test_model.cpp)
-target_link_libraries(test_model_only test_utils solar_core solar_utils)
-add_test(NAME UnitTest_Model COMMAND test_model_only)
-set_tests_properties(UnitTest_Model PROPERTIES LABELS "unit;model")
-
-add_executable(test_constants test_constants.cpp)
-target_link_libraries(test_constants test_utils solar_core solar_utils)
-add_test(NAME UnitTest_Constants COMMAND test_constants)
-set_tests_properties(UnitTest_Constants PROPERTIES LABELS "unit;constants")
-
+# Existing tests that have source files
 add_executable(test_jpl_data_only test_jpl_data.cpp)
 target_link_libraries(test_jpl_data_only test_utils solar_jpl solar_core solar_utils)
 add_test(NAME UnitTest_JPLData COMMAND test_jpl_data_only)
@@ -68,20 +60,33 @@ target_link_libraries(test_args test_utils solar_utils)
 add_test(NAME UnitTest_Args COMMAND test_args)
 set_tests_properties(UnitTest_Args PROPERTIES LABELS "unit;args")
 
-add_executable(test_types test_types.cpp)
-target_link_libraries(test_types test_utils solar_core solar_utils)
-add_test(NAME UnitTest_Types COMMAND test_types)
-set_tests_properties(UnitTest_Types PROPERTIES LABELS "unit;types")
-
-# Performance-sensitive unit tests
-add_executable(test_performance_critical test_performance_critical.cpp)
-target_link_libraries(test_performance_critical test_utils solar_core solar_jpl solar_utils Threads::Threads)
-add_test(NAME UnitTest_Performance COMMAND test_performance_critical)
-set_tests_properties(UnitTest_Performance PROPERTIES LABELS "unit;performance" TIMEOUT 60)
+add_executable(test_solar_jpl test_solar_jpl.cpp)
+target_link_libraries(test_solar_jpl test_utils solar_jpl solar_core solar_utils)
+add_test(NAME UnitTest_SolarJPL COMMAND test_solar_jpl)
+set_tests_properties(UnitTest_SolarJPL PROPERTIES LABELS "unit;jpl")
 
 message(STATUS "Unit tests configured:")
 message(STATUS "  - Solar Core Library Tests")
 message(STATUS "  - Solar JPL Library Tests") 
 message(STATUS "  - Solar Utils Library Tests")
 message(STATUS "  - Individual Component Tests")
-message(STATUS "  - Performance Critical Tests")
+message(STATUS "  - NEW: BodyFactory JPL Integration Tests")
+message(STATUS "  - NEW: SimulationBuilder Filtering Tests")
+
+# Install test executables to install/bin/tests/ directory
+install(TARGETS 
+    test_modern_vector3
+    test_modern_celestial_body
+    test_modern_body_collection
+    test_modern_simulation_engine
+    test_body_factory
+    test_simulation_builder
+    test_modern_body_factory
+    test_jpl_data_only
+    test_jpl_bodies
+    test_solar_utils
+    test_args
+    test_solar_jpl
+    RUNTIME DESTINATION bin/tests
+    COMPONENT tests
+)

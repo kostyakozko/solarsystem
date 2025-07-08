@@ -50,6 +50,63 @@ inline const std::unordered_map<int, BodyType> JPL_ID_TO_TYPE = {
 };
 
 /**
+ * @brief Body name to JPL ID mapping
+ * Centralized mapping for all supported celestial bodies
+ */
+inline const std::unordered_map<std::string, int> BODY_NAME_TO_JPL_ID = {
+    // Stars
+    {"Sun", 10},
+
+    // Planets
+    {"Mercury", 199},
+    {"Venus", 299},
+    {"Earth", 399},
+    {"Mars", 499},
+    {"Jupiter", 599},
+    {"Saturn", 699},
+    {"Uranus", 799},
+    {"Neptune", 899},
+
+    // Moons
+    {"Moon", 301},
+    {"Io", 501},
+    {"Europa", 502},
+    {"Ganymede", 503},
+    {"Callisto", 504},
+    {"Titan", 606},
+    {"Rhea", 605},
+    {"Iapetus", 608},
+    {"Titania", 703},
+    {"Oberon", 704},
+    {"Triton", 801},
+    {"Charon", 901},
+
+    // Dwarf Planets
+    {"Pluto", 999},
+    {"Quaoar", 50000},
+    {"Haumea", 136108},
+    {"Eris", 136199},
+
+    // Spacecraft
+    {"New Horizons", -98},
+    {"SpaceX Roadster", -143205},
+
+    // Alternative names for compatibility
+    {"Io/JI", 501},
+    {"Europa/JII", 502},
+    {"Ganymede/JIII", 503},
+    {"Callisto/JIV", 504},
+};
+
+/**
+ * @brief Get JPL ID for body name
+ */
+[[nodiscard]] inline std::optional<int> get_jpl_id_for_body_name(std::string_view name) noexcept {
+  auto it = BODY_NAME_TO_JPL_ID.find(std::string(name));
+  return (it != BODY_NAME_TO_JPL_ID.end()) ? std::make_optional(it->second) : std::nullopt;
+}
+
+/**
  * @brief Get BodyType for JPL ID
  */
 [[nodiscard]] inline BodyType get_body_type_for_jpl_id(int jpl_id) noexcept {

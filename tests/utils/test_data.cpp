@@ -219,8 +219,8 @@ bool DataValidator::validate_momentum_conservation(const ReferenceState& initial
                                                    const ReferenceState& final,
                                                    double tolerance_percent) {
   // Calculate total momentum for both states
-  coord initial_momentum = {0.0, 0.0, 0.0};
-  coord final_momentum = {0.0, 0.0, 0.0};
+  SolarSystem::Math::Vector3d initial_momentum = {0.0, 0.0, 0.0};
+  SolarSystem::Math::Vector3d final_momentum = {0.0, 0.0, 0.0};
 
   for (const auto& body : initial.bodies) {
     initial_momentum.x += body.mass * body.velocity.x;

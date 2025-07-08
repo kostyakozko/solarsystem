@@ -132,8 +132,16 @@ Utils::Expected<BodyCollection, std::string> BodyFactory::create_essential_bodie
 
 Utils::Expected<CelestialBody, std::string> BodyFactory::create_from_legacy_data(
     std::string_view name) const {
-  // For now, just delegate to fallback data to avoid namespace conflicts
-  // TODO: Implement proper legacy data integration later
+  // First try to use cached ephemeris data if available
+  if (current_source_ != "ORIGINAL_DATA" && !cached_ephemeris_.empty()) {
+    for (const auto& data : cached_ephemeris_) {
+      if (data.body_name == name) {
+        return Utils::Expected<CelestialBody, std::string>{data.to_celestial_body()};
+      }
+    }
+  }
+
+  // Fall back to hardcoded fallback data
   return create_from_fallback(name);
 }
 
@@ -165,38 +173,95 @@ bool BodyFactory::is_body_available(std::string_view name,
 
 Utils::Expected<CelestialBody, std::string> BodyFactory::create_from_jpl(
     std::string_view name, std::chrono::system_clock::time_point time) const {
-  auto future = jpl_client_->fetch_all_bodies_async(time);
+  if (!jpl_client_) {
+    return Utils::Expected<CelestialBody, std::string>{"JPL client not initialized"};
+  }
+
+  // Get JPL ID for the body name
+  auto jpl_id_opt = Bodies::get_jpl_id_for_body_name(name);
+  if (!jpl_id_opt) {
+    return Utils::Expected<CelestialBody, std::string>{"Unknown body name: " + std::string(name)};
+  }
+
+  // Fetch single body data
+  auto future = jpl_client_->fetch_body_async(jpl_id_opt.value(), time);
   auto result = future.get();
 
   if (!SolarSystem::JPL::is_success(result)) {
     auto error = SolarSystem::JPL::get_error(result);
-    return Utils::Expected<CelestialBody, std::string>{"Failed to fetch JPL data: " +
-                                                       JPL::Utils::to_string(error)};
+    std::string error_msg = "Failed to fetch JPL data: ";
+    switch (error) {
+      case SolarSystem::JPL::JPLError::NetworkError:
+        error_msg += "Network error";
+        break;
+      case SolarSystem::JPL::JPLError::ParseError:
+        error_msg += "Parse error";
+        break;
+      case SolarSystem::JPL::JPLError::InvalidBody:
+        error_msg += "Invalid body";
+        break;
+      case SolarSystem::JPL::JPLError::InvalidDate:
+        error_msg += "Invalid date";
+        break;
+      case SolarSystem::JPL::JPLError::RateLimited:
+        error_msg += "Rate limited";
+        break;
+      case SolarSystem::JPL::JPLError::ServerError:
+        error_msg += "Server error";
+        break;
+      case SolarSystem::JPL::JPLError::CacheError:
+        error_msg += "Cache error";
+        break;
+      case SolarSystem::JPL::JPLError::ValidationError:
+        error_msg += "Validation error";
+        break;
+    }
+    return Utils::Expected<CelestialBody, std::string>{error_msg};
   }
 
   auto ephemeris_data = SolarSystem::JPL::get_value(result);
 
-  // Find the requested body by name
-  for (const auto& data : ephemeris_data) {
-    if (data.body_name == name) {
-      // Convert EphemerisData to CelestialBody
-      return Utils::Expected<CelestialBody, std::string>{data.to_celestial_body()};
-    }
-  }
-
-  return create_from_fallback(name);
+  // Convert EphemerisData to CelestialBody
+  return Utils::Expected<CelestialBody, std::string>{ephemeris_data.to_celestial_body()};
 }
 
 Utils::Expected<CelestialBody, std::string> BodyFactory::create_from_cache(
     std::string_view name, std::chrono::system_clock::time_point time) const {
-  // Check if we have current ephemeris data
-  if (current_source_ == "ORIGINAL_DATA") {
+  if (!jpl_client_) {
+    return Utils::Expected<CelestialBody, std::string>{"JPL client not initialized"};
+  }
+
+  // Try to load from cache
+  auto cache_result = jpl_client_->load_from_cache();
+  if (!SolarSystem::JPL::is_success(cache_result)) {
     return Utils::Expected<CelestialBody, std::string>{"No cached ephemeris data available"};
   }
 
-  // For now, fall back to our modern data since legacy integration is complex
-  // TODO: Implement proper cached data integration later
-  return create_from_fallback(name);
+  auto cached_data = SolarSystem::JPL::get_value(cache_result);
+
+  // Find the requested body by name
+  for (const auto& data : cached_data) {
+    if (data.body_name == name) {
+      return Utils::Expected<CelestialBody, std::string>{data.to_celestial_body()};
+    }
+  }
+
+  // Try alternative name matching (case-insensitive)
+  std::string lower_name = std::string(name);
+  std::transform(lower_name.begin(), lower_name.end(), lower_name.begin(), ::tolower);
+
+  for (const auto& data : cached_data) {
+    std::string lower_body_name = data.body_name;
+    std::transform(lower_body_name.begin(), lower_body_name.end(), lower_body_name.begin(),
+                   ::tolower);
+
+    if (lower_body_name == lower_name) {
+      return Utils::Expected<CelestialBody, std::string>{data.to_celestial_body()};
+    }
+  }
+
+  return Utils::Expected<CelestialBody, std::string>{"Body " + std::string(name) +
+                                                     " not found in cached data"};
 }
 
 Utils::Expected<CelestialBody, std::string> BodyFactory::create_from_fallback(

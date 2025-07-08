@@ -369,19 +369,12 @@ std::vector<std::string> BodySelector::get_selected_names() const {
 }
 
 void BodySelector::add_priority_filter(Bodies::BodyPriority priority) {
-  filters_.push_back([priority](const Bodies::CelestialBody& body) {
-    // This would need to be implemented based on how priority is stored in CelestialBody
-    // For now, we'll use a placeholder
-    return true;  // TODO: Implement priority checking
-  });
+  filters_.push_back(
+      [priority](const Bodies::CelestialBody& body) { return body.priority() == priority; });
 }
 
 void BodySelector::add_type_filter(Bodies::BodyType type) {
-  filters_.push_back([type](const Bodies::CelestialBody& body) {
-    // This would need to be implemented based on how type is stored in CelestialBody
-    // For now, we'll use a placeholder
-    return true;  // TODO: Implement type checking
-  });
+  filters_.push_back([type](const Bodies::CelestialBody& body) { return body.type() == type; });
 }
 
 void BodySelector::add_name_filter(const std::vector<std::string>& names, bool include) {
