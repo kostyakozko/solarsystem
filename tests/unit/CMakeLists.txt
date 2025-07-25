@@ -65,16 +65,27 @@ target_link_libraries(test_solar_jpl test_utils solar_jpl solar_core solar_utils
 add_test(NAME UnitTest_SolarJPL COMMAND test_solar_jpl)
 set_tests_properties(UnitTest_SolarJPL PROPERTIES LABELS "unit;jpl")
 
+# NEW: Test Discovery Mechanism Tests
+add_executable(test_test_discovery test_test_discovery.cpp)
+target_link_libraries(test_test_discovery test_utils solar_test solar_core solar_utils Threads::Threads)
+add_test(NAME UnitTest_TestDiscovery COMMAND test_test_discovery)
+set_tests_properties(UnitTest_TestDiscovery PROPERTIES LABELS "unit;testing;discovery" TIMEOUT ${TEST_TIMEOUT})
+
+add_executable(test_discovery_example test_discovery_example.cpp)
+target_link_libraries(test_discovery_example test_utils solar_test solar_core solar_utils Threads::Threads)
+add_test(NAME UnitTest_DiscoveryExample COMMAND test_discovery_example)
+set_tests_properties(UnitTest_DiscoveryExample PROPERTIES LABELS "unit;testing;example" TIMEOUT ${TEST_TIMEOUT})
+
 message(STATUS "Unit tests configured:")
 message(STATUS "  - Solar Core Library Tests")
-message(STATUS "  - Solar JPL Library Tests") 
+message(STATUS "  - Solar JPL Library Tests")
 message(STATUS "  - Solar Utils Library Tests")
 message(STATUS "  - Individual Component Tests")
 message(STATUS "  - NEW: BodyFactory JPL Integration Tests")
 message(STATUS "  - NEW: SimulationBuilder Filtering Tests")
 
 # Install test executables to install/bin/tests/ directory
-install(TARGETS 
+install(TARGETS
     test_modern_vector3
     test_modern_celestial_body
     test_modern_body_collection
@@ -87,6 +98,8 @@ install(TARGETS
     test_solar_utils
     test_args
     test_solar_jpl
+    test_test_discovery
+    test_discovery_example
     RUNTIME DESTINATION bin/tests
     COMPONENT tests
 )

@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "test_case.hpp"
+#include "test_discovery.hpp"
 #include "test_result.hpp"
 
 namespace SolarSystem::Testing {
@@ -101,19 +102,7 @@ class TestRegistry {
   std::map<std::string, std::function<std::unique_ptr<TestCase>()>> test_factories_;
 };
 
-/**
- * @brief Helper class for automatic test registration
- */
-template <typename TestCaseType>
-class TestRegistrar {
- public:
-  explicit TestRegistrar(const std::string& name) {
-    TestRegistry::instance().register_test_factory(
-        name, []() { return std::make_unique<TestCaseType>(); });
-  }
-};
-
-// Macro for automatic test registration
+// Macro for automatic test registration (using TestDiscovery)
 #define REGISTER_TEST(TestCaseType)                                                       \
   static SolarSystem::Testing::TestRegistrar<TestCaseType> test_registrar_##TestCaseType( \
       #TestCaseType)
