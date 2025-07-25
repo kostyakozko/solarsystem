@@ -44,7 +44,8 @@ TestResult TestCase::execute() {
   } catch (const AssertionFailure& e) {
     result_.status = TestResult::Status::Failed;
     result_.error_message = e.what();
-    record_assertion_failure(e.what());
+    // Don't duplicate the assertion failure in the list since it's already in error_message
+    // record_assertion_failure(e.what());
 
     try {
       teardown();
