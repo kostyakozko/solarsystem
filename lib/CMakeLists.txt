@@ -5,9 +5,10 @@
 add_subdirectory(solar_jpl)
 add_subdirectory(solar_core)
 add_subdirectory(solar_utils)
+add_subdirectory(solar_test)
 
 # Create convenience target for all libraries
 add_custom_target(libraries
-    DEPENDS solar_core solar_jpl solar_utils
+    DEPENDS solar_core solar_jpl solar_utils solar_test
     COMMENT "Building all Solar System libraries"
 )
