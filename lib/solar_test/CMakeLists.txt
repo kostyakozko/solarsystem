@@ -7,6 +7,7 @@ add_library(solar_test STATIC
     src/framework/test_case.cpp
     src/framework/assertions.cpp
     src/framework/test_result.cpp
+    src/framework/test_discovery.cpp
     src/solar_test_main.cpp
 )
 

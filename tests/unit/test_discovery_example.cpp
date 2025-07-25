@@ -3,6 +3,14 @@
  * @brief Example demonstrating automatic test discovery and registration
  */
 
+#include <algorithm>
+#include <chrono>
+#include <iostream>
+#include <numeric>
+#include <random>
+#include <thread>
+
+#include "solar_test/framework/assertions.hpp"
 #include "solar_test/framework/test_case.hpp"
 #include "solar_test/framework/test_discovery.hpp"
 
@@ -11,17 +19,17 @@ using namespace SolarSystem::Testing;
 // Example 1: Simple test with automatic registration
 SOLAR_TEST_CASE_AUTO(BasicArithmeticTest, "Test basic arithmetic operations", "unit", "fast") {
   int result = 2 + 2;
-  assert_equals(4, result, "2 + 2 should equal 4");
+  Assertions::assert_equals(4, result, "2 + 2 should equal 4");
 
   double division = 10.0 / 3.0;
-  assert_true(division > 3.0, "10/3 should be greater than 3");
+  Assertions::assert_true(division > 3.0, "10/3 should be greater than 3");
 }
 
 // Example 2: Integration test with slow tag
 SOLAR_TEST_CASE_AUTO(DatabaseConnectionTest, "Test database connectivity", "integration", "slow") {
   // Simulate a slow database connection test
   std::this_thread::sleep_for(std::chrono::milliseconds(100));
-  assert_true(true, "Database connection successful");
+  Assertions::assert_true(true, "Database connection successful");
 }
 
 // Example 3: Benchmark test
@@ -29,14 +37,16 @@ SOLAR_BENCHMARK_CASE_AUTO(SortingPerformance, "Benchmark sorting algorithms", "b
                           "performance") {
   std::vector<int> data(1000);
   std::iota(data.begin(), data.end(), 0);
-  std::random_shuffle(data.begin(), data.end());
+  std::random_device rd;
+  std::mt19937 g(rd());
+  std::shuffle(data.begin(), data.end(), g);
 
   auto start = std::chrono::high_resolution_clock::now();
   std::sort(data.begin(), data.end());
   auto end = std::chrono::high_resolution_clock::now();
 
   auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-  assert_true(duration.count() < 10000, "Sorting should complete within 10ms");
+  Assertions::assert_true(duration.count() < 10000, "Sorting should complete within 10ms");
 }
 
 // Example 4: Custom test class with manual registration
@@ -52,14 +62,14 @@ class CustomMathTest : public TestCase {
   void run() override {
     // Test trigonometric functions
     double sin_result = std::sin(M_PI / 2);
-    assert_near(1.0, sin_result, 1e-10, "sin(π/2) should equal 1");
+    Assertions::assert_near(1.0, sin_result, 1e-10, "sin(π/2) should equal 1");
 
     double cos_result = std::cos(0);
-    assert_near(1.0, cos_result, 1e-10, "cos(0) should equal 1");
+    Assertions::assert_near(1.0, cos_result, 1e-10, "cos(0) should equal 1");
 
     // Test logarithmic functions
     double log_result = std::log(std::exp(1));
-    assert_near(1.0, log_result, 1e-10, "log(e) should equal 1");
+    Assertions::assert_near(1.0, log_result, 1e-10, "log(e) should equal 1");
   }
 };
 
@@ -78,7 +88,7 @@ class TimeoutTest : public TestCase {
 
   void run() override {
     // This test should complete quickly
-    assert_true(true, "Quick test");
+    Assertions::assert_true(true, "Quick test");
   }
 };
 
@@ -96,7 +106,7 @@ class NetworkTest : public TestCase {
 
   void run() override {
     // Simulate network test
-    assert_true(true, "Network test passed");
+    Assertions::assert_true(true, "Network test passed");
   }
 };
 

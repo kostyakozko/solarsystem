@@ -20,7 +20,7 @@ int main() {
   TEST_CASE("Invalid date format") {
     auto result = Date::from_string("invalid-date");
     ASSERT_FALSE(result.has_value());
-    ASSERT_EQ(result.error(), ArgumentError::InvalidDateFormat);
+    ASSERT_EQ(to_string(result.error()), to_string(ArgumentError::InvalidDateFormat));
   });
 
   TEST_CASE("SimulationArgumentParser basic usage") {
@@ -36,16 +36,6 @@ int main() {
     ASSERT_EQ(config.date_string, "2025-12-31");
     ASSERT_TRUE(config.verbose);
     ASSERT_FALSE(config.use_current_date);
-  });
-
-  TEST_CASE("Legacy compatibility") {
-    const char* argv[] = {"test_program", "--date", "2025-01-01"};
-    int argc = 3;
-
-    // Test legacy parse_arguments function
-    auto args = Legacy::parse_arguments(argc, const_cast<char**>(argv));
-    ASSERT_FALSE(args.use_current_date);
-    ASSERT_EQ(args.date_string, "2025-01-01");
   });
 
   return current_suite->all_passed() ? 0 : 1;

@@ -3,6 +3,8 @@
  * @brief Unit tests for the test discovery mechanism
  */
 
+#include <fstream>
+
 #include "solar_test/framework/test_case.hpp"
 #include "solar_test/framework/test_discovery.hpp"
 #include "test_framework.h"
@@ -81,7 +83,7 @@ int main() {
     ASSERT_EQ(integration_tests.size(), 1);
     ASSERT_EQ(integration_tests[0]->info().name, "MockIntegrationTest");
 
-    auto benchmark_testsiscovery::instance().discover_tests_by_tag("benchmark");
+    auto benchmark_tests = TestDiscovery::instance().discover_tests_by_tag("benchmark");
     ASSERT_EQ(benchmark_tests.size(), 1);
     ASSERT_EQ(benchmark_tests[0]->info().name, "MockBenchmarkTest");
 

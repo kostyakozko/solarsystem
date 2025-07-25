@@ -84,7 +84,7 @@ int main() {
     ASSERT_EQ(6.0, result.z());
 
     // Test commutative property
-    Vector3d result2 = 2.0 * v;
+    Vector3d result2 = 2.0L * v;
     ASSERT_TRUE(result == result2);
   });
 

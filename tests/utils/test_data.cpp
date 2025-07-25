@@ -80,10 +80,10 @@ ReferenceState ReferenceData::get_j2000_state() {
   moon.name = "Moon";
   moon.mass = get_moon_mass();
   moon.radius = 1737.4;  // km
-  moon.position = {earth.position.x - 291608.0, earth.position.y - 266716.0,
-                   earth.position.z - 76146.0};  // km (approximate)
-  moon.velocity = {earth.velocity.x + 0.643, earth.velocity.y - 0.666,
-                   earth.velocity.z - 0.137};  // km/s (approximate)
+  moon.position = {earth.position.x() - 291608.0, earth.position.y() - 266716.0,
+                   earth.position.z() - 76146.0};  // km (approximate)
+  moon.velocity = {earth.velocity.x() + 0.643, earth.velocity.y() - 0.666,
+                   earth.velocity.z() - 0.137};  // km/s (approximate)
   moon.orbital_period = get_moon_orbital_period();
   state.bodies.push_back(moon);
 
@@ -199,14 +199,16 @@ bool DataValidator::validate_energy_conservation(const ReferenceState& initial,
   double initial_kinetic = 0.0, final_kinetic = 0.0;
 
   for (const auto& body : initial.bodies) {
-    double v_squared = body.velocity.x * body.velocity.x + body.velocity.y * body.velocity.y +
-                       body.velocity.z * body.velocity.z;
+    double v_squared = body.velocity.x() * body.velocity.x() +
+                       body.velocity.y() * body.velocity.y() +
+                       body.velocity.z() * body.velocity.z();
     initial_kinetic += 0.5 * body.mass * v_squared * 1e6;  // Convert km²/s² to m²/s²
   }
 
   for (const auto& body : final.bodies) {
-    double v_squared = body.velocity.x * body.velocity.x + body.velocity.y * body.velocity.y +
-                       body.velocity.z * body.velocity.z;
+    double v_squared = body.velocity.x() * body.velocity.x() +
+                       body.velocity.y() * body.velocity.y() +
+                       body.velocity.z() * body.velocity.z();
     final_kinetic += 0.5 * body.mass * v_squared * 1e6;  // Convert km²/s² to m²/s²
   }
 
@@ -219,28 +221,24 @@ bool DataValidator::validate_momentum_conservation(const ReferenceState& initial
                                                    const ReferenceState& final,
                                                    double tolerance_percent) {
   // Calculate total momentum for both states
-  SolarSystem::Math::Vector3d initial_momentum = {0.0, 0.0, 0.0};
-  SolarSystem::Math::Vector3d final_momentum = {0.0, 0.0, 0.0};
+  SolarSystem::Math::Vector3d initial_momentum = {0.0L, 0.0L, 0.0L};
+  SolarSystem::Math::Vector3d final_momentum = {0.0L, 0.0L, 0.0L};
 
   for (const auto& body : initial.bodies) {
-    initial_momentum.x += body.mass * body.velocity.x;
-    initial_momentum.y += body.mass * body.velocity.y;
-    initial_momentum.z += body.mass * body.velocity.z;
+    initial_momentum += static_cast<long double>(body.mass) * body.velocity;
   }
 
   for (const auto& body : final.bodies) {
-    final_momentum.x += body.mass * body.velocity.x;
-    final_momentum.y += body.mass * body.velocity.y;
-    final_momentum.z += body.mass * body.velocity.z;
+    final_momentum += static_cast<long double>(body.mass) * body.velocity;
   }
 
-  double initial_magnitude =
-      std::sqrt(initial_momentum.x * initial_momentum.x + initial_momentum.y * initial_momentum.y +
-                initial_momentum.z * initial_momentum.z);
+  double initial_magnitude = std::sqrt(initial_momentum.x() * initial_momentum.x() +
+                                       initial_momentum.y() * initial_momentum.y() +
+                                       initial_momentum.z() * initial_momentum.z());
 
   double final_magnitude =
-      std::sqrt(final_momentum.x * final_momentum.x + final_momentum.y * final_momentum.y +
-                final_momentum.z * final_momentum.z);
+      std::sqrt(final_momentum.x() * final_momentum.x() + final_momentum.y() * final_momentum.y() +
+                final_momentum.z() * final_momentum.z());
 
   if (initial_magnitude < 1e-10) return true;  // System at rest
 
@@ -257,9 +255,9 @@ double DataValidator::calculate_position_error(const ReferenceState& computed,
 
   double total_error = 0.0;
   for (size_t i = 0; i < computed.bodies.size(); ++i) {
-    double dx = computed.bodies[i].position.x - reference.bodies[i].position.x;
-    double dy = computed.bodies[i].position.y - reference.bodies[i].position.y;
-    double dz = computed.bodies[i].position.z - reference.bodies[i].position.z;
+    double dx = computed.bodies[i].position.x() - reference.bodies[i].position.x();
+    double dy = computed.bodies[i].position.y() - reference.bodies[i].position.y();
+    double dz = computed.bodies[i].position.z() - reference.bodies[i].position.z();
 
     double error = std::sqrt(dx * dx + dy * dy + dz * dz);
     total_error += error;
@@ -276,9 +274,9 @@ double DataValidator::calculate_velocity_error(const ReferenceState& computed,
 
   double total_error = 0.0;
   for (size_t i = 0; i < computed.bodies.size(); ++i) {
-    double dvx = computed.bodies[i].velocity.x - reference.bodies[i].velocity.x;
-    double dvy = computed.bodies[i].velocity.y - reference.bodies[i].velocity.y;
-    double dvz = computed.bodies[i].velocity.z - reference.bodies[i].velocity.z;
+    double dvx = computed.bodies[i].velocity.x() - reference.bodies[i].velocity.x();
+    double dvy = computed.bodies[i].velocity.y() - reference.bodies[i].velocity.y();
+    double dvz = computed.bodies[i].velocity.z() - reference.bodies[i].velocity.z();
 
     double error = std::sqrt(dvx * dvx + dvy * dvy + dvz * dvz);
     total_error += error;
@@ -309,8 +307,8 @@ std::string JPLDataValidator::generate_mock_jpl_response(const ReferenceBody& bo
   response << "$$SOE\n";
   response << start_date << " 00:00:00.000,";
   response << std::fixed << std::setprecision(6);
-  response << body.position.x << "," << body.position.y << "," << body.position.z << ",";
-  response << body.velocity.x << "," << body.velocity.y << "," << body.velocity.z << ",\n";
+  response << body.position.x() << "," << body.position.y() << "," << body.position.z() << ",";
+  response << body.velocity.x() << "," << body.velocity.y() << "," << body.velocity.z() << ",\n";
   response << "$$EOE\n";
   response << "*******************************************************************************\n";
 
