@@ -17,6 +17,8 @@ std::string TestResult::status_string() const {
       return "TIMEOUT";
     case Status::Error:
       return "ERROR";
+    case Status::ExpectedFailure:
+      return "EXPECTED_FAILURE";
     default:
       return "UNKNOWN";
   }
@@ -42,6 +44,19 @@ std::string TestResult::to_string() const {
   }
 
   return oss.str();
+}
+
+void TestResult::add_metadata(const std::string& key, const std::string& value) {
+  metadata[key] = value;
+}
+
+bool TestResult::has_metadata(const std::string& key) const {
+  return metadata.find(key) != metadata.end();
+}
+
+std::string TestResult::get_metadata(const std::string& key) const {
+  auto it = metadata.find(key);
+  return (it != metadata.end()) ? it->second : "";
 }
 
 double TestSuiteResult::success_rate() const {
@@ -72,6 +87,7 @@ void TestSuiteResult::add_result(const TestResult& result) {
 
   switch (result.status) {
     case TestResult::Status::Passed:
+    case TestResult::Status::ExpectedFailure:  // Expected failures count as successes
       ++passed_count;
       break;
     case TestResult::Status::Failed:
@@ -96,6 +112,7 @@ void TestSuiteResult::calculate_statistics() {
 
     switch (result.status) {
       case TestResult::Status::Passed:
+      case TestResult::Status::ExpectedFailure:  // Expected failures count as successes
         ++passed_count;
         break;
       case TestResult::Status::Failed:

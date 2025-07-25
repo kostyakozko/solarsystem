@@ -20,6 +20,8 @@ class TestCase {
     std::vector<std::string> tags;
     std::chrono::milliseconds timeout = std::chrono::seconds(30);
     bool is_benchmark = false;
+    bool expect_failure = false;          // True if this test is expected to fail
+    std::string expected_failure_reason;  // Why this test is expected to fail
   };
 
   explicit TestCase(TestInfo info);
@@ -89,6 +91,17 @@ class TestCase {
     name() : TestCase({#name, description, {"benchmark"}, std::chrono::minutes(5), true}) {} \
     void run() override;                                                                     \
   };                                                                                         \
+  void name::run()
+
+/**
+ * @brief Macro for creating test cases that are expected to fail
+ */
+#define SOLAR_EXPECTED_FAILURE_TEST(name, description, reason)                                    \
+  class name : public SolarSystem::Testing::TestCase {                                            \
+   public:                                                                                        \
+    name() : TestCase({#name, description, {}, std::chrono::seconds(30), false, true, reason}) {} \
+    void run() override;                                                                          \
+  };                                                                                              \
   void name::run()
 
 }  // namespace SolarSystem::Testing

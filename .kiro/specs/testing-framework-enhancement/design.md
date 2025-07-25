@@ -2,9 +2,34 @@
 
 ## Overview
 
-The Testing Framework Enhancement will provide a comprehensive, modern testing infrastructure for the Solar System Suite. The framework will support unit testing, integration testing, performance benchmarking, and CI/CD integration using modern C++20 features and industry best practices.
+The Testing Framework Enhancement will complete and enhance the existing testing infrastructure for the Solar System Suite. The project already has a solid foundation with GitHub Actions CI/CD workflows, CMake test configuration, and performance comparison scripts, but the actual test implementations are incomplete. This enhancement will implement the missing components and fix the existing CI/CD pipeline to provide reliable automated testing and deployment capabilities.
 
 ## Architecture
+
+### Existing CI/CD Infrastructure
+
+The project already has a comprehensive GitHub Actions setup that needs to be completed and fixed:
+
+#### Current CI/CD Components
+- **ci.yml**: Main CI/CD workflow with multi-platform builds, testing, and deployment
+- **docs.yml**: Documentation generation and GitHub Pages deployment
+- **compare_performance.py**: Performance regression detection script
+- **CMake test configuration**: Test discovery and execution framework
+- **Test directory structure**: Organized unit, integration, and benchmark test categories
+
+#### Issues to Address
+1. **Missing test implementations**: CI references test labels ("unit", "integration", "benchmark") but actual tests don't exist
+2. **Incomplete solar_test library**: Framework structure exists but implementation is missing
+3. **Performance baseline missing**: CI expects benchmark CSV files that aren't generated
+4. **Test data gaps**: Mock data and test fixtures referenced but not implemented
+5. **Code quality false positives**: Some linters need configuration adjustments
+
+#### Integration Strategy
+The testing framework will integrate with existing CI/CD by:
+- Implementing missing test executables that ctest can discover
+- Generating performance CSV output compatible with compare_performance.py
+- Creating test artifacts in expected locations for GitHub Actions
+- Ensuring all referenced commands and scripts work correctly
 
 ### Core Components
 
@@ -341,28 +366,93 @@ using TestResult = Expected<T, TestError>;
 - Test command-line applications
 - Verify installation and deployment processes
 
+## CI/CD Integration and Fixes
+
+### GitHub Actions Workflow Fixes
+
+The existing ci.yml workflow needs the following components to be implemented:
+
+#### Test Command Compatibility
+```bash
+# These commands must work after implementation:
+ctest -L "unit" --output-on-failure --timeout 60
+ctest -L "integration" --output-on-failure --timeout 180
+ctest -L "benchmark" --output-on-failure --timeout 300
+```
+
+#### Performance Benchmark Output
+Benchmarks must generate CSV files compatible with compare_performance.py:
+```csv
+Name,AvgDuration(ms),MinDuration(ms),MaxDuration(ms),StdDev(ms),Iterations,OpsPerSec,MemoryUsage(bytes)
+CacheLoadingBenchmark,0.125,0.098,0.234,0.045,1000,8000.0,1048576
+SimulationStepBenchmark,0.001,0.0008,0.0015,0.0002,10000,1000000.0,2097152
+```
+
+#### Installation Test Commands
+The CI expects these commands to work after installation:
+```bash
+./solar_system_launcher --status
+./bin/solar_system --help
+./bin/solar_system_fetch --test-storage
+```
+
+### Code Quality Integration
+
+#### Clang-Format Compatibility
+Tests must pass the existing format check:
+```bash
+find lib apps \( -name "*.cpp" -o -name "*.h" \) -print0 | xargs -0 clang-format --dry-run --Werror
+```
+
+#### Static Analysis Integration
+Code must pass cppcheck without errors:
+```bash
+cppcheck --enable=all --suppress=missingInclude --suppress=missingIncludeSystem --suppress=unusedFunction lib/ apps/
+```
+
+### Artifact Generation
+
+The framework must generate artifacts in expected locations:
+- `build/Testing/` - CTest results
+- `build/tests/benchmark_results/` - Performance CSV files
+- `docs/api/html/` - Generated documentation
+
+### Performance Regression Detection
+
+Integration with existing compare_performance.py script:
+- Generate baseline performance data during nightly builds
+- Compare current performance against baseline in PR builds
+- Exit with error code 1 if regressions > 10% threshold
+- Support JSON output for programmatic consumption
+
 ## Implementation Phases
 
-### Phase 1: Core Framework
+### Phase 1: CI/CD Foundation
+- Fix existing test discovery and execution
+- Implement missing test executables with proper labels
+- Create performance benchmark CSV output
+- Ensure installation test commands work
+
+### Phase 2: Core Framework
 - Implement TestRunner and TestCase base classes
 - Create basic assertion framework
 - Implement console reporter
-- Set up test discovery mechanism
+- Complete test data management
 
-### Phase 2: Mock Framework
+### Phase 3: Mock Framework
 - Implement JPL API mocking
 - Create cache operation mocks
 - Add network simulation capabilities
-- Implement test data management
+- Create comprehensive test data sets
 
-### Phase 3: Advanced Features
-- Add benchmark framework
+### Phase 4: Advanced Features
+- Add benchmark framework with CSV output
 - Implement parallel test execution
 - Create XML/JSON reporters for CI integration
 - Add code coverage analysis
 
-### Phase 4: Integration
-- Integrate with existing build system
-- Create comprehensive test suites for all components
-- Set up CI/CD integration
-- Add performance regression detection
+### Phase 5: CI/CD Enhancement
+- Fix any remaining CI workflow issues
+- Enhance performance regression detection
+- Improve code quality checks
+- Add additional CI/CD capabilities

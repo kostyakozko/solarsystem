@@ -7,6 +7,28 @@
   - Set up CMake integration for test library compilation
   - _Requirements: 1.1, 1.2_
 
+- [ ] 1.5. Fix immediate CI/CD failures (HIGH PRIORITY)
+  - [ ] 1.5.1 Create minimal test executables for CI compatibility
+    - Implement basic unit test executables that ctest can discover with "unit" label
+    - Create minimal integration test executables with "integration" label
+    - Add basic benchmark executables with "benchmark" label that generate CSV output
+    - Ensure all test executables return proper exit codes (0 for success, non-zero for failure)
+    - _Requirements: 4.1, 8.1_
+
+  - [ ] 1.5.2 Fix application command-line interfaces for CI
+    - Add --status flag to solar_system_launcher that returns system status
+    - Add --help flag to solar_system that displays usage information
+    - Add --test-storage flag to solar_system_fetch that validates cache functionality
+    - Ensure all applications handle missing arguments gracefully
+    - _Requirements: 8.2, 8.4_
+
+  - [ ] 1.5.3 Create performance benchmark CSV output
+    - Implement benchmark result CSV generation compatible with compare_performance.py
+    - Create benchmark results directory structure (build/tests/benchmark_results/)
+    - Generate sample baseline performance data for regression testing
+    - Ensure CSV format matches expected columns (Name, AvgDuration, MinDuration, etc.)
+    - _Requirements: 3.1, 8.3_
+
 - [ ] 2. Implement test discovery and execution engine
   - [x] 2.1 Create test discovery mechanism
     - Write test scanner that finds test classes using reflection/registration
@@ -14,7 +36,7 @@
     - Add pattern matching for selective test execution
     - _Requirements: 1.1, 5.1, 5.2_
 
-  - [ ] 2.2 Build test execution engine
+  - [x] 2.2 Build test execution engine
     - Implement sequential test execution with proper lifecycle management
     - Add timeout handling for long-running tests
     - Create test isolation mechanisms to prevent interference
@@ -147,20 +169,20 @@
     - Add load testing for web interface
     - _Requirements: 3.1, 3.2_
 
-- [ ] 11. Integrate with build system and CI/CD
-  - [ ] 11.1 Update CMake configuration
-    - Add solar_test library to build system
-    - Create test target that builds and runs all tests
-    - Integrate code coverage analysis tools
-    - Add test installation and packaging
-    - _Requirements: 4.1, 4.2_
+- [ ] 11. Fix and enhance existing CI/CD infrastructure
+  - [ ] 11.1 Fix GitHub Actions workflow failures
+    - Implement missing test executables that ctest can discover with proper labels
+    - Fix installation test commands (--status, --help, --test-storage flags)
+    - Ensure performance benchmarks generate CSV output compatible with compare_performance.py
+    - Fix code quality checks to eliminate false positives
+    - _Requirements: 4.1, 4.2, 8.1, 8.2_
 
-  - [ ] 11.2 Set up continuous integration
-    - Create GitHub Actions workflow for automated testing
-    - Add test result reporting and artifact collection
-    - Implement performance regression detection in CI
-    - Set up test result notifications and alerts
-    - _Requirements: 4.1, 4.3, 4.5_
+  - [ ] 11.2 Enhance CI/CD capabilities
+    - Improve performance regression detection with better baseline management
+    - Add missing test artifacts in expected locations (build/Testing/, build/tests/benchmark_results/)
+    - Enhance documentation generation and GitHub Pages deployment
+    - Add better error reporting and debugging information for CI failures
+    - _Requirements: 4.3, 4.5, 8.3, 8.4_
 
 - [ ] 12. Create documentation and examples
   - [ ] 12.1 Write testing framework documentation

@@ -10,6 +10,8 @@ namespace SolarSystem::Testing {
 TestCase::TestCase(TestInfo info) : info_(std::move(info)) {
   result_.test_name = info_.name;
   result_.status = TestResult::Status::Failed;
+  result_.was_expected_to_fail = info_.expect_failure;
+  result_.expected_failure_reason = info_.expected_failure_reason;
 }
 
 TestResult TestCase::execute() {
@@ -83,6 +85,25 @@ TestResult TestCase::execute() {
     result_.status = TestResult::Status::Timeout;
     result_.error_message =
         "Test execution exceeded timeout of " + std::to_string(info_.timeout.count()) + "ms";
+  }
+
+  // Handle expected failure logic
+  if (info_.expect_failure) {
+    if (result_.status == TestResult::Status::Failed ||
+        result_.status == TestResult::Status::Error ||
+        result_.status == TestResult::Status::Timeout) {
+      // Test was expected to fail and it did - this is a success!
+      result_.status = TestResult::Status::ExpectedFailure;
+      if (!info_.expected_failure_reason.empty()) {
+        result_.error_message = "Expected failure: " + info_.expected_failure_reason +
+                                " (Original: " + result_.error_message + ")";
+      }
+    } else if (result_.status == TestResult::Status::Passed) {
+      // Test was expected to fail but it passed - this is unexpected!
+      result_.status = TestResult::Status::Failed;
+      result_.error_message = "Test was expected to fail (" + info_.expected_failure_reason +
+                              ") but it passed unexpectedly";
+    }
   }
 
   return result_;

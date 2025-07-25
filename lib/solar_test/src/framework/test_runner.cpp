@@ -1,11 +1,14 @@
 #include "solar_test/framework/test_runner.hpp"
 
 #include <algorithm>
+#include <atomic>
 #include <future>
 #include <iostream>
 #include <map>
+#include <mutex>
 #include <regex>
 #include <set>
+#include <sstream>
 #include <thread>
 
 namespace SolarSystem::Testing {
@@ -208,12 +211,16 @@ TestSuiteResult TestRunner::execute_tests_sequential(const std::vector<TestCase*
 
   notify_progress("Starting test execution", 0.0);
 
+  // Setup test isolation environment
+  setup_test_isolation();
+
   for (size_t i = 0; i < tests.size(); ++i) {
     TestCase* test = tests[i];
 
     notify_test_started(test->info().name);
 
-    TestResult result = test->execute();
+    // Execute test with proper timeout handling and isolation
+    TestResult result = execute_test_in_isolation(test);
     suite_result.add_result(result);
 
     notify_test_completed(result);
@@ -221,6 +228,9 @@ TestSuiteResult TestRunner::execute_tests_sequential(const std::vector<TestCase*
     double progress = static_cast<double>(i + 1) / static_cast<double>(tests.size()) * 100.0;
     notify_progress("Test " + std::to_string(i + 1) + "/" + std::to_string(tests.size()), progress);
   }
+
+  // Cleanup test isolation environment
+  cleanup_test_isolation();
 
   notify_progress("Test execution completed", 100.0);
   return suite_result;
@@ -249,7 +259,8 @@ TestSuiteResult TestRunner::execute_tests_parallel(const std::vector<TestCase*>&
       std::vector<TestResult> thread_results;
       for (TestCase* test : thread_tests) {
         notify_test_started(test->info().name);
-        TestResult result = test->execute();
+        // Use the enhanced execution engine with isolation and timeout handling
+        TestResult result = execute_test_in_isolation(test);
         thread_results.push_back(result);
         notify_test_completed(result);
       }
@@ -287,18 +298,21 @@ bool TestRunner::has_tag(const TestCase& test_case, const std::string& tag) cons
 }
 
 void TestRunner::notify_progress(const std::string& message, double percentage) {
+  std::lock_guard<std::mutex> lock(callback_mutex_);
   if (progress_callback_) {
     progress_callback_(message, percentage);
   }
 }
 
 void TestRunner::notify_test_started(const std::string& test_name) {
+  std::lock_guard<std::mutex> lock(callback_mutex_);
   if (test_started_callback_) {
     test_started_callback_(test_name);
   }
 }
 
 void TestRunner::notify_test_completed(const TestResult& result) {
+  std::lock_guard<std::mutex> lock(callback_mutex_);
   if (test_completed_callback_) {
     test_completed_callback_(result);
   }
@@ -340,6 +354,170 @@ std::unique_ptr<TestCase> TestRegistry::create_test(const std::string& name) con
     return it->second();
   }
   return nullptr;
+}
+
+// Test execution engine implementation
+TestResult TestRunner::execute_single_test_with_timeout(TestCase* test) {
+  const auto& test_info = test->info();
+
+  // Use a promise/future pair for timeout handling
+  auto result_promise = std::make_shared<std::promise<TestResult>>();
+  std::future<TestResult> result_future = result_promise->get_future();
+
+  // Use atomic flag to prevent double promise setting
+  auto promise_set = std::make_shared<std::atomic<bool>>(false);
+
+  // Execute test in a separate thread
+  std::thread test_thread([test, result_promise, promise_set]() {
+    try {
+      TestResult result = test->execute();
+
+      // Only set the promise if it hasn't been set already
+      bool expected = false;
+      if (promise_set->compare_exchange_strong(expected, true)) {
+        result_promise->set_value(result);
+      }
+    } catch (...) {
+      TestResult error_result;
+      error_result.test_name = test->info().name;
+      error_result.status = TestResult::Status::Error;
+      error_result.error_message = "Test execution threw unhandled exception";
+
+      // Only set the promise if it hasn't been set already
+      bool expected = false;
+      if (promise_set->compare_exchange_strong(expected, true)) {
+        result_promise->set_value(error_result);
+      }
+    }
+  });
+
+  // Wait for test completion or timeout
+  std::future_status status = result_future.wait_for(test_info.timeout);
+
+  if (status == std::future_status::timeout) {
+    // Test timed out - set the promise with timeout result if not already set
+    TestResult timeout_result;
+    timeout_result.test_name = test_info.name;
+    timeout_result.status = TestResult::Status::Timeout;
+    timeout_result.error_message =
+        "Test execution exceeded timeout of " + std::to_string(test_info.timeout.count()) + "ms";
+    timeout_result.execution_time = test_info.timeout;
+    timeout_result.was_expected_to_fail = test_info.expect_failure;
+    timeout_result.expected_failure_reason = test_info.expected_failure_reason;
+
+    // Handle expected failure logic for timeouts
+    if (test_info.expect_failure) {
+      timeout_result.status = TestResult::Status::ExpectedFailure;
+      if (!test_info.expected_failure_reason.empty()) {
+        timeout_result.error_message = "Expected failure: " + test_info.expected_failure_reason +
+                                       " (Original: " + timeout_result.error_message + ")";
+      }
+    }
+
+    // Try to set the timeout result
+    bool expected = false;
+    if (promise_set->compare_exchange_strong(expected, true)) {
+      result_promise->set_value(timeout_result);
+    }
+
+    // Detach the thread since we can't safely terminate it
+    test_thread.detach();
+
+    // Get the result (either timeout or the actual test result if it completed just in time)
+    return result_future.get();
+  } else {
+    // Test completed within timeout
+    TestResult result = result_future.get();
+    test_thread.join();
+    return result;
+  }
+}
+
+TestResult TestRunner::execute_test_in_isolation(TestCase* test) {
+  TestResult result;
+
+  try {
+    // For now, skip output capture in parallel execution to avoid thread safety issues
+    // In a full implementation, we would use thread-local storage or per-thread capture
+    if (config_.parallel_execution) {
+      // Execute test with timeout handling without output capture
+      result = execute_single_test_with_timeout(test);
+    } else {
+      // Create isolated environment for the test with output capture
+      std::ostringstream captured_output;
+      std::streambuf* orig_cout = std::cout.rdbuf();
+      std::streambuf* orig_cerr = std::cerr.rdbuf();
+
+      // Set up output capture (only in sequential mode)
+      std::cout.rdbuf(captured_output.rdbuf());
+      std::cerr.rdbuf(captured_output.rdbuf());
+
+      try {
+        // Execute test with timeout handling
+        result = execute_single_test_with_timeout(test);
+
+        // Capture any output produced during test execution
+        std::string output = captured_output.str();
+        if (!output.empty()) {
+          result.add_metadata("captured_output", output);
+        }
+
+      } catch (const std::exception& e) {
+        result.test_name = test->info().name;
+        result.status = TestResult::Status::Error;
+        result.error_message = std::string("Test isolation error: ") + e.what();
+      } catch (...) {
+        result.test_name = test->info().name;
+        result.status = TestResult::Status::Error;
+        result.error_message = "Unknown error during test isolation";
+      }
+
+      // Restore original stdout/stderr
+      std::cout.rdbuf(orig_cout);
+      std::cerr.rdbuf(orig_cerr);
+    }
+
+  } catch (const std::exception& e) {
+    result.test_name = test->info().name;
+    result.status = TestResult::Status::Error;
+    result.error_message = std::string("Failed to set up test isolation: ") + e.what();
+  }
+
+  return result;
+}
+
+void TestRunner::setup_test_isolation() {
+  // Set up global test isolation environment
+  // This could include:
+  // - Setting up temporary directories
+  // - Initializing mock services
+  // - Setting environment variables
+  // - Configuring logging
+
+  if (!config_.quiet) {
+    std::cout << "Setting up test isolation environment..." << std::endl;
+  }
+
+  // Create temporary directory for test artifacts if needed
+  // Set up any global mocks or test doubles
+  // Initialize performance monitoring
+}
+
+void TestRunner::cleanup_test_isolation() {
+  // Clean up global test isolation environment
+  // This includes:
+  // - Removing temporary files and directories
+  // - Resetting global state
+  // - Cleaning up mock services
+  // - Restoring original environment
+
+  if (!config_.quiet) {
+    std::cout << "Cleaning up test isolation environment..." << std::endl;
+  }
+
+  // Clean up temporary directories
+  // Reset global state
+  // Clean up any remaining test artifacts
 }
 
 }  // namespace SolarSystem::Testing

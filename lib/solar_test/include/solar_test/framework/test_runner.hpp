@@ -3,6 +3,7 @@
 #include <functional>
 #include <map>
 #include <memory>
+#include <mutex>
 #include <thread>
 #include <vector>
 
@@ -67,12 +68,21 @@ class TestRunner {
   std::function<void(const std::string&)> test_started_callback_;
   std::function<void(const TestResult&)> test_completed_callback_;
 
+  // Thread safety for callbacks
+  mutable std::mutex callback_mutex_;
+
   // Internal execution methods
   [[nodiscard]] std::vector<TestCase*> filter_tests(const std::vector<std::string>& patterns,
                                                     const std::vector<std::string>& tags) const;
   [[nodiscard]] TestSuiteResult execute_tests(const std::vector<TestCase*>& tests);
   [[nodiscard]] TestSuiteResult execute_tests_sequential(const std::vector<TestCase*>& tests);
   [[nodiscard]] TestSuiteResult execute_tests_parallel(const std::vector<TestCase*>& tests);
+
+  // Test execution engine methods
+  [[nodiscard]] TestResult execute_single_test_with_timeout(TestCase* test);
+  [[nodiscard]] TestResult execute_test_in_isolation(TestCase* test);
+  void setup_test_isolation();
+  void cleanup_test_isolation();
 
   // Utility methods
   [[nodiscard]] bool matches_pattern(const std::string& test_name,

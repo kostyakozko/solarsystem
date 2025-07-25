@@ -11,7 +11,7 @@ namespace SolarSystem::Testing {
  * @brief Result of a single test execution
  */
 struct TestResult {
-  enum class Status { Passed, Failed, Skipped, Timeout, Error };
+  enum class Status { Passed, Failed, Skipped, Timeout, Error, ExpectedFailure };
 
   Status status = Status::Failed;
   std::string test_name;
@@ -20,11 +20,21 @@ struct TestResult {
   size_t memory_usage_bytes = 0;
   std::vector<std::string> assertion_failures;
   std::map<std::string, std::string> metadata;
+  bool was_expected_to_fail = false;
+  std::string expected_failure_reason;
 
   [[nodiscard]] bool passed() const { return status == Status::Passed; }
   [[nodiscard]] bool failed() const { return status == Status::Failed; }
+  [[nodiscard]] bool succeeded() const {
+    return status == Status::Passed || status == Status::ExpectedFailure;
+  }
   [[nodiscard]] std::string status_string() const;
   [[nodiscard]] std::string to_string() const;
+
+  // Metadata management
+  void add_metadata(const std::string& key, const std::string& value);
+  [[nodiscard]] bool has_metadata(const std::string& key) const;
+  [[nodiscard]] std::string get_metadata(const std::string& key) const;
 };
 
 /**

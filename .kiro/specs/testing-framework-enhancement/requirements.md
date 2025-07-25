@@ -44,15 +44,15 @@ The Solar System Suite currently has basic testing capabilities but lacks a comp
 
 ### Requirement 4
 
-**User Story:** As a CI/CD system, I want automated test execution with proper exit codes, so that I can integrate testing into deployment pipelines.
+**User Story:** As a CI/CD system, I want the existing GitHub Actions workflows to work reliably with a complete testing framework, so that I can validate code changes and deployments automatically.
 
 #### Acceptance Criteria
 
-1. WHEN tests are run in CI mode THEN the system SHALL return appropriate exit codes (0 for success, non-zero for failure)
-2. WHEN test results are generated THEN the system SHALL output results in CI-friendly formats (JUnit XML, TAP)
-3. WHEN tests run in parallel THEN the system SHALL coordinate execution to avoid resource conflicts
-4. IF tests require external resources THEN the system SHALL provide mock implementations for CI environments
-5. WHEN test artifacts are created THEN the system SHALL organize them for easy CI consumption
+1. WHEN the existing CI workflow runs THEN all referenced test commands SHALL execute successfully with proper exit codes
+2. WHEN ctest is executed with labels ("unit", "integration", "benchmark") THEN the system SHALL find and run the appropriate tests
+3. WHEN test results are generated THEN the system SHALL output results in formats compatible with GitHub Actions artifact collection
+4. IF external dependencies are unavailable in CI THEN the system SHALL use mock implementations transparently
+5. WHEN performance benchmarks run THEN the system SHALL generate CSV output compatible with the existing performance comparison script
 
 ### Requirement 5
 
@@ -89,3 +89,15 @@ The Solar System Suite currently has basic testing capabilities but lacks a comp
 3. WHEN cache testing occurs THEN the system SHALL provide valid and corrupted cache samples
 4. IF test isolation is needed THEN the system SHALL create temporary test environments
 5. WHEN tests complete THEN the system SHALL clean up test data automatically
+
+### Requirement 8
+
+**User Story:** As a project maintainer, I want the existing GitHub Actions CI/CD workflows to be fixed and enhanced, so that they provide reliable automated testing and deployment capabilities.
+
+#### Acceptance Criteria
+
+1. WHEN the ci.yml workflow runs THEN all test commands SHALL execute without errors and provide meaningful results
+2. WHEN performance regression detection runs THEN the system SHALL use the existing compare_performance.py script with proper baseline data
+3. WHEN code quality checks run THEN the system SHALL validate formatting, static analysis, and security without false positives
+4. IF CI jobs fail THEN the system SHALL provide clear error messages and actionable feedback
+5. WHEN documentation is generated THEN the system SHALL deploy successfully to GitHub Pages with complete API documentation
