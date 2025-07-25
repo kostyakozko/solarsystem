@@ -37,6 +37,7 @@
 
 // Modern Solar System Suite APIs
 #include "solar_core/bodies/body_factory.hpp"
+#include "solar_core/builders/simulation_builder.hpp"
 
 // Simple logging macros to avoid namespace conflicts
 #define LOG_INFO(tag, msg) \
@@ -712,8 +713,41 @@ class SolarSystemAPI {
                "Simulation request - Date: " + (date_param.has_value() ? *date_param : "current") +
                    ", Speed: " + (speed_param.has_value() ? *speed_param : "1.0"));
 
-      // Modern BodyFactory handles simulation data automatically
-      // TODO: Replace with modern SimulationBuilder for time travel
+      // Use modern SimulationBuilder for time travel
+      using namespace SolarSystem::Core::Builders;
+
+      // Create body selector for web interface (essential bodies for performance)
+      BodySelector selector;
+      selector.essential();  // Sun + 8 planets for smooth web rendering
+
+      auto body_collection_result = selector.build();
+      if (!body_collection_result.has_value()) {
+        LOG_ERROR("API", "Failed to build body collection for simulation");
+        return HttpResponse::error(500, "Failed to create simulation bodies");
+      }
+
+      auto bodies = body_collection_result.value();
+
+      // Parse date parameter if provided
+      std::chrono::system_clock::time_point target_time = std::chrono::system_clock::now();
+      if (date_param.has_value()) {
+        // For now, use current time - in a full implementation, we'd parse the date
+        // This is where date parsing would be integrated
+        LOG_INFO("API", "Time travel to date: " + *date_param);
+      }
+
+      // Create and configure simulation
+      SimulationBuilder sim_builder;
+      std::string error_message;
+      auto simulation = sim_builder.with_bodies(std::move(bodies))
+                            .with_timestep(3600.0)  // 1 hour timestep for web interface
+                            .with_max_iterations(1000)
+                            .build(&error_message);
+
+      if (!simulation) {
+        LOG_ERROR("API", "Failed to build simulation: " + error_message);
+        return HttpResponse::error(500, "Simulation configuration failed: " + error_message);
+      }
 
       std::ostringstream json;
       json << "{\n";

@@ -217,8 +217,8 @@ class RealtimeMonitor {
 
       return bodies;
     } else {
-      // Use essential and important bodies by default
-      auto bodies = BodySelector().essential().important().build(&error);
+      // Use essential bodies by default (Sun + planets)
+      auto bodies = BodySelector().essential().build(&error);
 
       if (!bodies.has_value()) {
         LOG_ERROR("Monitor", "Failed to select default bodies: " + error);
@@ -360,9 +360,13 @@ class RealtimeMonitor {
   void display_bodies() const {
     if (config_.quiet_mode) return;
 
-    // Get current body data (using legacy interface for now)
-    // TODO: Replace with modern BodyCollection iteration
+    // Use modern BodyCollection iteration
+    if (!bodies_.has_value()) {
+      LOG_WARN("Display", "No bodies available for display");
+      return;
+    }
 
+    const auto& body_collection = *bodies_;
     std::cout << "🌌 Celestial Bodies:\n";
     std::cout << "┌─────────────────┬─────────────────────────────────────────────┐\n";
     std::cout << "│ Body            │ Position (km)                               │";
@@ -373,9 +377,8 @@ class RealtimeMonitor {
     std::cout << "\n";
     std::cout << "├─────────────────┼─────────────────────────────────────────────┤\n";
 
-    // For now, use legacy body iteration
-    // This will be replaced with modern BodyCollection iteration
-    for (const auto& body : *bodies_) {
+    // Modern BodyCollection iteration with range-based for loop
+    for (const auto& body : body_collection) {
       std::cout << "│ " << std::setw(15) << std::left << body.name() << " │ ";
 
       // Position (using legacy interface for now)
