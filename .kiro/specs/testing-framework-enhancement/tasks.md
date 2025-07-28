@@ -8,7 +8,7 @@
   - _Requirements: 1.1, 1.2_
 
 - [ ] 1.5. Fix immediate CI/CD failures (HIGH PRIORITY)
-  - [ ] 1.5.1 Create minimal test executables for CI compatibility
+  - [x] 1.5.1 Create minimal test executables for CI compatibility
     - Implement basic unit test executables that ctest can discover with "unit" label
     - Create minimal integration test executables with "integration" label
     - Add basic benchmark executables with "benchmark" label that generate CSV output
@@ -29,7 +29,7 @@
     - Ensure CSV format matches expected columns (Name, AvgDuration, MinDuration, etc.)
     - _Requirements: 3.1, 8.3_
 
-- [ ] 2. Implement test discovery and execution engine
+- [x] 2. Implement test discovery and execution engine
   - [x] 2.1 Create test discovery mechanism
     - Write test scanner that finds test classes using reflection/registration
     - Implement tag-based filtering system for test categorization
