@@ -1,0 +1,9 @@
+Name,AvgDuration(ms),MinDuration(ms),MaxDuration(ms),StdDev(ms),Iterations,OpsPerSec,MemoryUsage(bytes)
+DataProcessingScalability_size_10,0.0001,0,0.001,0.0003,10,1e+07,6563664052
+DataProcessingScalability_size_100,0.0011,0.001,0.002,0.0003,10,909091,6563664052
+DataProcessingScalability_size_1000,0.0183,0.018,0.021,0.0009,10,54644.8,6563664052
+DataProcessingScalability_size_5000,0.107,0.104,0.126,0.0063561,10,9345.79,6563664052
+MemoryScalability_size_10,0,0,0,0,10,0,4300882048
+MemoryScalability_size_100,0,0,0,0,10,0,4300882048
+MemoryScalability_size_1000,0,0,0,0,10,0,4300882048
+MemoryScalability_size_5000,0.0016,0.001,0.007,0.0018,10,625000,4300882048

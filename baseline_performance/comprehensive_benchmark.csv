@@ -1,0 +1,4 @@
+Name,AvgDuration(ms),MinDuration(ms),MaxDuration(ms),StdDev(ms),Iterations,OpsPerSec,MemoryUsage(bytes)
+SimulationStepBenchmark,0,0,0,0,10000,0,1157627904
+MemoryAllocationBenchmark,0.000114,0,0.001,0.000317811,1000,8.77193e+06,1409286144
+MathematicalOperationsBenchmark,0.001,0.001,0.001,6.50521e-19,1000,1e+06,1409286144
