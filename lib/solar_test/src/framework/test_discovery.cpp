@@ -1,6 +1,7 @@
 #include "solar_test/framework/test_discovery.hpp"
 
 #include <algorithm>
+#include <cctype>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
@@ -179,30 +180,49 @@ void TestDiscovery::clear_registry() { registered_tests_.clear(); }
 bool TestDiscovery::matches_pattern(const std::string& test_name,
                                     const std::string& pattern) const {
   try {
-    // Try regex matching first
+    // First, try to use the pattern as a regex directly
     std::regex regex_pattern(pattern, std::regex_constants::icase);
     return std::regex_search(test_name, regex_pattern);
   } catch (const std::regex_error&) {
-    // Fall back to simple wildcard matching
-    if (pattern.find('*') != std::string::npos) {
-      // Simple wildcard support: convert * to .*
-      std::string regex_pattern = pattern;
-      // Replace * with .* for regex
-      size_t pos = 0;
-      while ((pos = regex_pattern.find('*', pos)) != std::string::npos) {
-        regex_pattern.replace(pos, 1, ".*");
-        pos += 2;
+    // If regex fails, check if it's a simple wildcard pattern (only contains * and alphanumeric)
+    bool is_simple_wildcard = true;
+    for (char c : pattern) {
+      if (c != '*' && !std::isalnum(c) && c != '_') {
+        is_simple_wildcard = false;
+        break;
+      }
+    }
+
+    if (is_simple_wildcard && pattern.find('*') != std::string::npos) {
+      // Simple wildcard pattern: convert * to .* and escape other special chars
+      std::string escaped_pattern;
+      for (char c : pattern) {
+        if (c == '*') {
+          escaped_pattern += ".*";
+        } else {
+          escaped_pattern += c;
+        }
       }
 
       try {
-        std::regex regex(regex_pattern, std::regex_constants::icase);
+        std::regex regex(escaped_pattern, std::regex_constants::icase);
         return std::regex_match(test_name, regex);
       } catch (const std::regex_error&) {
         // Fall back to substring matching
-        return test_name.find(pattern) != std::string::npos;
+        std::string pattern_no_wildcards = pattern;
+        pattern_no_wildcards.erase(
+            std::remove(pattern_no_wildcards.begin(), pattern_no_wildcards.end(), '*'),
+            pattern_no_wildcards.end());
+        std::string lower_test_name = test_name;
+        std::string lower_pattern = pattern_no_wildcards;
+        std::transform(lower_test_name.begin(), lower_test_name.end(), lower_test_name.begin(),
+                       ::tolower);
+        std::transform(lower_pattern.begin(), lower_pattern.end(), lower_pattern.begin(),
+                       ::tolower);
+        return lower_test_name.find(lower_pattern) != std::string::npos;
       }
     } else {
-      // Simple substring matching
+      // Fall back to simple substring matching
       std::string lower_test_name = test_name;
       std::string lower_pattern = pattern;
       std::transform(lower_test_name.begin(), lower_test_name.end(), lower_test_name.begin(),
@@ -393,9 +413,16 @@ TestScanner::ScanResult TestScanner::scan_file(const std::string& file_path) {
     auto test_names = extract_test_names_from_content(content);
 
     for (const auto& test_name : test_names) {
-      // Check if it's a benchmark
-      if (content.find("SOLAR_BENCHMARK_CASE") != std::string::npos &&
-          content.find(test_name) != std::string::npos) {
+      // Check if this specific test is a benchmark by looking for benchmark macros with this test
+      // name
+      std::string benchmark_pattern1 = "SOLAR_BENCHMARK_CASE\\s*\\(\\s*" + test_name + "\\s*,";
+      std::string benchmark_pattern2 = "SOLAR_BENCHMARK_CASE_AUTO\\s*\\(\\s*" + test_name + "\\s*,";
+
+      std::regex benchmark_regex1(benchmark_pattern1);
+      std::regex benchmark_regex2(benchmark_pattern2);
+
+      if (std::regex_search(content, benchmark_regex1) ||
+          std::regex_search(content, benchmark_regex2)) {
         result.found_benchmarks.push_back(test_name);
       } else {
         result.found_tests.push_back(test_name);

@@ -135,6 +135,21 @@ void TestCase::assert_no_throw(const std::function<void()>& func, const std::str
   Assertions::assert_no_throw(func, message);
 }
 
+void TestCase::assert_contains(const std::string& haystack, const std::string& needle,
+                               const std::string& message) {
+  Assertions::assert_contains(haystack, needle, message);
+}
+
+void TestCase::assert_starts_with(const std::string& str, const std::string& prefix,
+                                  const std::string& message) {
+  Assertions::assert_starts_with(str, prefix, message);
+}
+
+void TestCase::assert_ends_with(const std::string& str, const std::string& suffix,
+                                const std::string& message) {
+  Assertions::assert_ends_with(str, suffix, message);
+}
+
 void TestCase::assert_execution_time_less_than(const std::function<void()>& func,
                                                std::chrono::milliseconds max_time) {
   auto start = std::chrono::high_resolution_clock::now();
@@ -182,5 +197,61 @@ void TestCase::measure_memory_usage() {
   // For now, we'll use a placeholder
   result_.memory_usage_bytes = 0;  // TODO: Implement actual memory measurement
 }
+
+// Template method implementations
+template <typename T>
+void TestCase::assert_equals(const T& expected, const T& actual, const std::string& message) {
+  Assertions::assert_equals(expected, actual, message);
+}
+
+template <typename T>
+void TestCase::assert_not_equals(const T& expected, const T& actual, const std::string& message) {
+  Assertions::assert_not_equals(expected, actual, message);
+}
+
+template <typename T>
+void TestCase::assert_near(const T& expected, const T& actual, const T& tolerance,
+                           const std::string& message) {
+  Assertions::assert_near(expected, actual, tolerance, message);
+}
+
+template <typename T>
+void TestCase::assert_greater_than(const T& actual, const T& threshold,
+                                   const std::string& message) {
+  Assertions::assert_greater_than(actual, threshold, message);
+}
+
+template <typename T>
+void TestCase::assert_less_than(const T& actual, const T& threshold, const std::string& message) {
+  Assertions::assert_less_than(actual, threshold, message);
+}
+
+// Explicit instantiations for common types
+template void TestCase::assert_equals<int>(const int&, const int&, const std::string&);
+template void TestCase::assert_equals<double>(const double&, const double&, const std::string&);
+template void TestCase::assert_equals<float>(const float&, const float&, const std::string&);
+template void TestCase::assert_equals<std::string>(const std::string&, const std::string&,
+                                                   const std::string&);
+
+template void TestCase::assert_not_equals<int>(const int&, const int&, const std::string&);
+template void TestCase::assert_not_equals<double>(const double&, const double&, const std::string&);
+template void TestCase::assert_not_equals<float>(const float&, const float&, const std::string&);
+template void TestCase::assert_not_equals<std::string>(const std::string&, const std::string&,
+                                                       const std::string&);
+
+template void TestCase::assert_near<double>(const double&, const double&, const double&,
+                                            const std::string&);
+template void TestCase::assert_near<float>(const float&, const float&, const float&,
+                                           const std::string&);
+template void TestCase::assert_near<int>(const int&, const int&, const int&, const std::string&);
+
+template void TestCase::assert_greater_than<double>(const double&, const double&,
+                                                    const std::string&);
+template void TestCase::assert_greater_than<float>(const float&, const float&, const std::string&);
+template void TestCase::assert_greater_than<int>(const int&, const int&, const std::string&);
+
+template void TestCase::assert_less_than<double>(const double&, const double&, const std::string&);
+template void TestCase::assert_less_than<float>(const float&, const float&, const std::string&);
+template void TestCase::assert_less_than<int>(const int&, const int&, const std::string&);
 
 }  // namespace SolarSystem::Testing

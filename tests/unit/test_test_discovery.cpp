@@ -99,45 +99,116 @@ int main() {
     // Clear any existing registrations
     TestDiscovery::instance().clear_registry();
 
+    // Create test classes with unique names to avoid conflicts
+    class UniqueTestBodyFactory : public TestCase {
+     public:
+      UniqueTestBodyFactory()
+          : TestCase({"UniqueTestBodyFactory",
+                      "Test body factory",
+                      {"unit"},
+                      std::chrono::seconds(10),
+                      false}) {}
+      void run() override {}
+    };
+
+    class UniqueTestSimulationEngine : public TestCase {
+     public:
+      UniqueTestSimulationEngine()
+          : TestCase({"UniqueTestSimulationEngine",
+                      "Test simulation engine",
+                      {"unit"},
+                      std::chrono::seconds(10),
+                      false}) {}
+      void run() override {}
+    };
+
+    class UniqueBenchmarkCachePerformance : public TestCase {
+     public:
+      UniqueBenchmarkCachePerformance()
+          : TestCase({"UniqueBenchmarkCachePerformance",
+                      "Benchmark cache performance",
+                      {"benchmark"},
+                      std::chrono::seconds(10),
+                      true}) {}
+      void run() override {}
+    };
+
     // Register test with specific name pattern
     TestDiscovery::instance().register_test_factory(
-        "TestBodyFactory", []() { return std::make_unique<MockUnitTest>(); }, {"unit"});
+        "UniqueTestBodyFactory", []() { return std::make_unique<UniqueTestBodyFactory>(); },
+        {"unit"});
 
     TestDiscovery::instance().register_test_factory(
-        "TestSimulationEngine", []() { return std::make_unique<MockUnitTest>(); }, {"unit"});
+        "UniqueTestSimulationEngine",
+        []() { return std::make_unique<UniqueTestSimulationEngine>(); }, {"unit"});
 
     TestDiscovery::instance().register_test_factory(
-        "BenchmarkCachePerformance", []() { return std::make_unique<MockBenchmarkTest>(); },
-        {"benchmark"});
+        "UniqueBenchmarkCachePerformance",
+        []() { return std::make_unique<UniqueBenchmarkCachePerformance>(); }, {"benchmark"});
 
-    // Test pattern matching
-    auto test_pattern_tests = TestDiscovery::instance().discover_tests_by_pattern("Test.*");
+    // Test pattern matching with unique patterns
+    auto test_pattern_tests = TestDiscovery::instance().discover_tests_by_pattern("UniqueTest.*");
     ASSERT_EQ(test_pattern_tests.size(), 2);
 
     auto benchmark_pattern_tests =
-        TestDiscovery::instance().discover_tests_by_pattern("Benchmark.*");
+        TestDiscovery::instance().discover_tests_by_pattern("UniqueBenchmark.*");
     ASSERT_EQ(benchmark_pattern_tests.size(), 1);
 
     // Test wildcard pattern
-    auto factory_tests = TestDiscovery::instance().discover_tests_by_pattern("*Factory*");
+    auto factory_tests =
+        TestDiscovery::instance().discover_tests_by_pattern("*UniqueTestBodyFactory*");
     ASSERT_EQ(factory_tests.size(), 1);
-    ASSERT_EQ(factory_tests[0]->info().name, "TestBodyFactory");
+    ASSERT_EQ(factory_tests[0]->info().name, "UniqueTestBodyFactory");
   });
 
   TEST_CASE("Advanced filtering with DiscoveryOptions") {
     // Clear any existing registrations
     TestDiscovery::instance().clear_registry();
 
+    // Create test classes with the expected names
+    class FastUnitTest : public TestCase {
+     public:
+      FastUnitTest()
+          : TestCase({"FastUnitTest",
+                      "Fast unit test",
+                      {"unit", "fast"},
+                      std::chrono::seconds(10),
+                      false}) {}
+      void run() override {}
+    };
+
+    class SlowIntegrationTest : public TestCase {
+     public:
+      SlowIntegrationTest()
+          : TestCase({"SlowIntegrationTest",
+                      "Slow integration test",
+                      {"integration", "slow"},
+                      std::chrono::seconds(10),
+                      false}) {}
+      void run() override {}
+    };
+
+    class PerformanceBenchmark : public TestCase {
+     public:
+      PerformanceBenchmark()
+          : TestCase({"PerformanceBenchmark",
+                      "Performance benchmark",
+                      {"benchmark", "performance", "slow"},
+                      std::chrono::seconds(10),
+                      true}) {}
+      void run() override {}
+    };
+
     // Register various tests
     TestDiscovery::instance().register_test_factory(
-        "FastUnitTest", []() { return std::make_unique<MockUnitTest>(); }, {"unit", "fast"});
+        "FastUnitTest", []() { return std::make_unique<FastUnitTest>(); }, {"unit", "fast"});
 
     TestDiscovery::instance().register_test_factory(
-        "SlowIntegrationTest", []() { return std::make_unique<MockIntegrationTest>(); },
+        "SlowIntegrationTest", []() { return std::make_unique<SlowIntegrationTest>(); },
         {"integration", "slow"});
 
     TestDiscovery::instance().register_test_factory(
-        "PerformanceBenchmark", []() { return std::make_unique<MockBenchmarkTest>(); },
+        "PerformanceBenchmark", []() { return std::make_unique<PerformanceBenchmark>(); },
         {"benchmark", "performance", "slow"});
 
     // Test filtering with options

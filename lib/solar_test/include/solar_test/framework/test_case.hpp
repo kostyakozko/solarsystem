@@ -53,6 +53,23 @@ class TestCase {
   void assert_throws(const std::function<void()>& func, const std::string& message = "");
   void assert_no_throw(const std::function<void()>& func, const std::string& message = "");
 
+  // String assertions
+  void assert_contains(const std::string& haystack, const std::string& needle,
+                       const std::string& message = "");
+  void assert_starts_with(const std::string& str, const std::string& prefix,
+                          const std::string& message = "");
+  void assert_ends_with(const std::string& str, const std::string& suffix,
+                        const std::string& message = "");
+
+  // Numeric assertions
+  template <typename T>
+  void assert_near(const T& expected, const T& actual, const T& tolerance,
+                   const std::string& message = "");
+  template <typename T>
+  void assert_greater_than(const T& actual, const T& threshold, const std::string& message = "");
+  template <typename T>
+  void assert_less_than(const T& actual, const T& threshold, const std::string& message = "");
+
   // Performance assertions
   void assert_execution_time_less_than(const std::function<void()>& func,
                                        std::chrono::milliseconds max_time);
