@@ -14,6 +14,9 @@
 #include "framework/test_result.hpp"
 #include "framework/test_runner.hpp"
 
+// Mock framework
+#include "mocks/jpl_mock.hpp"
+
 namespace SolarSystem::Testing {
 
 /**

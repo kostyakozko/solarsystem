@@ -1,0 +1,33 @@
+*******************************************************************************
+ Revised: April 12, 2021                  Sun                              10
+
+ PHYSICAL DATA (updated 2021-May-11):
+ Vol. mean radius (km) = 6.96000E+05     Mass x10^24 (kg)   = 1.98847E+06
+ Surface radius (km)   = 6.96000E+05     Mass layers:
+ Volumetric mean radius= 6.96000E+05       photosphere    = 2.0   x 10^16 kg
+ Core radius (km)      = 1.50000E+05       chromosphere   = 5.0   x 10^15 kg
+ Core temperature (K)  = 1.50000E+07       corona         = 1.0   x 10^15 kg
+ Surface area (km^2)   = 6.09E+12        Volume (km^3)   = 1.41E+18
+ Sidereal rot. period  = 609.12 hr       Rot. rate(10^-5 rad/s) = 2.865
+ Mean solar day        = 609.12 hr       Differential rotation
+ Moment of inertia     = 0.070           Surface gravity     = 274.0 m/s^2
+ Surface pressure      = 0.0 bar         Escape speed        = 617.5 km/s
+ Effective temp. (K)   = 5778            Visual mag. V(1,0)  = -26.74
+ Luminosity (10^24 J/s)= 382.8           Absolute mag.       = 4.83
+ Mass-energy conv.rate = 4.260 x 10^9 kg/s
+ Mean density (g/cm^3) = 1.408           GM (km^3/s^2)      = 1.3271244E+11
+ Angular diam at 1 AU  = 1919.3"         Hill's sphere rad.  = 1.00 AU
+*******************************************************************************
+
+Ephemeris / WWW_USER Mon Dec 18 15:30:45 2023
+
+Target body name: Sun (10)                       {source: DE441}
+Center body name: Solar System Barycenter (0)    {source: DE441}
+Center-site name: BODY CENTER
+*******************************************************************************
+Initial IAU76/J2000 heliocentric ecliptic osculating elements (au, days, deg.):
+
+$$SOE
+2023-Dec-18 00:00,0.000000000000E+00,0.000000000000E+00,0.000000000000E+00,0.000000000000E+00,0.000000000000E+00,0.000000000000E+00
+$$EOE
+*******************************************************************************

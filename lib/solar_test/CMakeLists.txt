@@ -8,6 +8,7 @@ add_library(solar_test STATIC
     src/framework/assertions.cpp
     src/framework/test_result.cpp
     src/framework/test_discovery.cpp
+    src/mocks/jpl_mock.cpp
     src/solar_test_main.cpp
 )
 
@@ -27,6 +28,7 @@ target_link_libraries(solar_test
     PUBLIC
         solar_core
         solar_utils
+        solar_jpl
     PRIVATE
         Threads::Threads
 )

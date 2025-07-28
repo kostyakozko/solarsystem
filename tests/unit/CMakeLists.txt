@@ -76,6 +76,12 @@ target_link_libraries(test_discovery_example test_utils solar_test solar_core so
 add_test(NAME UnitTest_DiscoveryExample COMMAND test_discovery_example)
 set_tests_properties(UnitTest_DiscoveryExample PROPERTIES LABELS "unit;testing;example" TIMEOUT ${TEST_TIMEOUT})
 
+# NEW: JPL Mock System Tests
+add_executable(test_jpl_mock test_jpl_mock.cpp)
+target_link_libraries(test_jpl_mock test_utils solar_test solar_jpl solar_core solar_utils Threads::Threads)
+add_test(NAME UnitTest_JPLMock COMMAND test_jpl_mock)
+set_tests_properties(UnitTest_JPLMock PROPERTIES LABELS "unit;testing;mock;jpl" TIMEOUT ${TEST_TIMEOUT})
+
 message(STATUS "Unit tests configured:")
 message(STATUS "  - Solar Core Library Tests")
 message(STATUS "  - Solar JPL Library Tests")
@@ -100,6 +106,7 @@ install(TARGETS
     test_solar_jpl
     test_test_discovery
     test_discovery_example
+    test_jpl_mock
     RUNTIME DESTINATION bin/tests
     COMPONENT tests
 )

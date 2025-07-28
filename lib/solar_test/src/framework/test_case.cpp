@@ -3,6 +3,7 @@
 #include <chrono>
 #include <iostream>
 
+#include "solar_jpl/jpl_client.hpp"
 #include "solar_test/framework/assertions.hpp"
 
 namespace SolarSystem::Testing {
@@ -232,6 +233,7 @@ template void TestCase::assert_equals<double>(const double&, const double&, cons
 template void TestCase::assert_equals<float>(const float&, const float&, const std::string&);
 template void TestCase::assert_equals<std::string>(const std::string&, const std::string&,
                                                    const std::string&);
+template void TestCase::assert_equals<size_t>(const size_t&, const size_t&, const std::string&);
 
 template void TestCase::assert_not_equals<int>(const int&, const int&, const std::string&);
 template void TestCase::assert_not_equals<double>(const double&, const double&, const std::string&);
