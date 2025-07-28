@@ -30,10 +30,11 @@ docs: update API documentation - add examples for new simulation methods
 1. Complete the assigned task
 2. Verify the implementation works correctly
 3. **Run comprehensive test suite** (see Testing Requirements below)
-4. Format code if needed (`make format`)
-5. Stage all relevant changes (`git add`)
-6. Commit with descriptive message
-7. Confirm commit was successful
+4. **Mark task as completed** (update task status to completed)
+5. Format code if needed (`make format`)
+6. Stage all relevant changes (`git add`)
+7. Commit with descriptive message
+8. Confirm commit was successful
 
 ### What to Commit
 - All source code changes (`.cpp`, `.h` files)
@@ -41,6 +42,7 @@ docs: update API documentation - add examples for new simulation methods
 - Documentation updates (`.md` files)
 - Test files and test data
 - Configuration files when modified
+- **Task status updates** (tasks.md files with completed status)
 
 ### What NOT to Commit
 - Build artifacts (`build/` directory contents)
@@ -53,13 +55,15 @@ docs: update API documentation - add examples for new simulation methods
 ### After Every Successful Task:
 1. **Verify**: Ensure the task requirements are fully met
 2. **Test**: Run comprehensive test suite (MANDATORY - see Testing Requirements)
-3. **Format**: Apply code formatting if source files were modified
-4. **Stage**: Add all relevant changes to git staging
-5. **Commit**: Create a descriptive commit message
-6. **Confirm**: Verify the commit was created successfully
+3. **Mark Complete**: Update task status to completed (so it's included in commit)
+4. **Format**: Apply code formatting if source files were modified
+5. **Stage**: Add all relevant changes to git staging (including task status updates)
+6. **Commit**: Create a descriptive commit message
+7. **Confirm**: Verify the commit was created successfully
 
 ### Commit Timing
-- Commit immediately after task completion
+- Mark task as completed BEFORE committing (so task status is included in commit)
+- Commit immediately after marking task complete
 - Don't wait for multiple tasks to accumulate
 - Each task should result in at least one commit
 - Break large tasks into smaller commits if they involve multiple logical changes

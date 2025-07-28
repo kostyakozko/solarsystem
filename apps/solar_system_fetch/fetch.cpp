@@ -464,7 +464,7 @@ int main(int argc, char* argv[]) {
     } else if (options->update_data || options->force_update) {
       success = fetcher.update_data(factory, options->force_update, options->target_year);
     } else {
-      // Default action: show status
+      // Default action: show status when no specific operation is requested
       fetcher.show_status(factory);
       std::cout << "💡 Use --help for available options\n";
     }

@@ -15,7 +15,7 @@
     - Ensure all test executables return proper exit codes (0 for success, non-zero for failure)
     - _Requirements: 4.1, 8.1_
 
-  - [ ] 1.5.2 Fix application command-line interfaces for CI
+  - [x] 1.5.2 Fix application command-line interfaces for CI
     - Add --status flag to solar_system_launcher that returns system status
     - Add --help flag to solar_system that displays usage information
     - Add --test-storage flag to solar_system_fetch that validates cache functionality
