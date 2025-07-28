@@ -314,6 +314,17 @@ SOLAR_REGISTER_TEST_WITH_TAGS(CustomTest, "custom", "manual");
     // Test file scanning
     auto scan_result = TestScanner::scan_file(temp_file);
 
+    // Debug output if test fails
+    if (scan_result.found_tests.size() == 0 || scan_result.found_benchmarks.size() == 0) {
+      std::cout << "Scanner debug info:" << std::endl;
+      std::cout << "  Found tests: " << scan_result.found_tests.size() << std::endl;
+      std::cout << "  Found benchmarks: " << scan_result.found_benchmarks.size() << std::endl;
+      std::cout << "  Scan errors: " << scan_result.scan_errors.size() << std::endl;
+      for (const auto& error : scan_result.scan_errors) {
+        std::cout << "    Error: " << error << std::endl;
+      }
+    }
+
     // Verify found tests
     ASSERT_GT(scan_result.found_tests.size(), 0);
     ASSERT_GT(scan_result.found_benchmarks.size(), 0);
