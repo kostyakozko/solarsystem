@@ -1,0 +1,21 @@
+*******************************************************************************
+ Revised: April 12, 2021                 Earth                            399
+
+ PHYSICAL DATA (updated 2021-May-11):
+ Vol. mean radius (km) = 6371.01+-0.02   Mass x10^24 (kg)   = 5.97219+-0.0006
+ Equ. radius, a (km)   = 6378.137
+ Polar radius, c (km)  = 6356.752
+*******************************************************************************
+
+Ephemeris / WWW_USER Mon Dec 18 15:30:45 2023
+
+Target body name: Earth (399)                    {source: DE441}
+Center body name: Solar System Barycenter (0)    {source: DE441}
+Center-site name: BODY CENTER
+*******************************************************************************
+Initial IAU76/J2000 heliocentric ecliptic osculating elements (au, days, deg.):
+
+$SOE
+MISSING EPHEMERIS DATA - NO COORDINATES PROVIDED
+$EOE
+*******************************************************************************

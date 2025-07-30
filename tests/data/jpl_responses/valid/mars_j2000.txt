@@ -1,0 +1,39 @@
+*******************************************************************************
+ Revised: April 12, 2021                  Mars                            499
+
+ PHYSICAL DATA (updated 2021-May-11):
+ Vol. mean radius (km) = 3389.92+-0.04   Mass x10^23 (kg)   = 6.4171+-0.0003
+ Equ. radius, a (km)   = 3396.19         Mass layers:
+ Polar radius, c (km)  = 3376.20           crust          = 1.6   x 10^22 kg
+                                            mantle         = 5.9   x 10^23 kg
+                                            core           = 1.8   x 10^23 kg
+ Volumetric mean radius= 3389.50+-0.2    Flattening, f   = 1/169.779
+ Surface area (km^2)   = 1.448x10^8      Volume (km^3)   = 1.6318x10^11
+ Sidereal rot. period  = 24.622962 hr    Rot. rate(10^-5 rad/s) = 7.088218
+ Mean solar day        = 24.659699 hr    Polar motion coeff. = 1.4x10^-4
+ Mom. of inertia       = 0.366           Est. elastic k_2    = 0.153
+ Atm. pressure (bar)   = 0.00636         Max. angular diam.  = 17.9"
+ Mean Temperature (K)  = 210             Visual mag. V(1,0)  = -1.52
+ Geometric albedo      = 0.170           Obliquity to orbit  = 25.19 deg
+ Sidereal orb. per.    = 1.8808476 y     Sidereal orb. per.  = 686.98 d
+ Hill's sphere rad. Rp = 319.8           Mean motion         = 0.5240 deg/d
+ Escape speed (km/s)   = 5.027           Perihelion  Aphelion    Mean
+ Surface gravity       = 3.71 m/s^2        AU            AU       AU
+ Moment of inertia     = 0.366 MR^2        1.38497   1.66621   1.52369
+ Mean orbital speed    = 24.07 km/s      Orbital period      = 686.98 d
+ Max. orbital speed    = 26.50 km/s      Hill's sphere rad.  = 319.8
+ Min. orbital speed    = 21.97 km/s      Escape speed        = 5.03 km/s
+*******************************************************************************
+
+Ephemeris / WWW_USER Mon Dec 18 15:30:45 2023
+
+Target body name: Mars (499)                     {source: DE441}
+Center body name: Solar System Barycenter (0)    {source: DE441}
+Center-site name: BODY CENTER
+*******************************************************************************
+Initial IAU76/J2000 heliocentric ecliptic osculating elements (au, days, deg.):
+
+$SOE
+2000-Jan-01 12:00,1.382692748798E+08,1.867552778965E+08,2.277498438447E+06,-2.148664285714E+01,2.628678929286E+01,1.649525714286E+00
+$EOE
+*******************************************************************************

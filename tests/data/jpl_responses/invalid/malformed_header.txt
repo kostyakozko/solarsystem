@@ -1,0 +1,9 @@
+*******************************************************************************
+ INVALID HEADER - MISSING BODY NAME AND ID
+
+ PHYSICAL DATA (updated 2021-May-11):
+ Vol. mean radius (km) = INVALID_VALUE   Mass x10^24 (kg)   = NOT_A_NUMBER
+ Equ. radius, a (km)   = 6378.137        Mass layers:
+ Polar radius, c (km)  = 6356.752          Atmos          = 5.1   x 10^18 kg
+
+ MISSING CLOSING ASTERISKS AND EPHEMERIS DATA
