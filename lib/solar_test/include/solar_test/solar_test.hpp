@@ -17,6 +17,9 @@
 // Mock framework
 #include "mocks/cache_mock.hpp"
 #include "mocks/jpl_mock.hpp"
+#include "mocks/mock_service_registry.hpp"
+#include "mocks/network_mock.hpp"
+#include "mocks/time_mock.hpp"
 
 namespace SolarSystem::Testing {
 

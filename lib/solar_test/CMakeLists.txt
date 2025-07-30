@@ -10,6 +10,9 @@ add_library(solar_test STATIC
     src/framework/test_discovery.cpp
     src/mocks/jpl_mock.cpp
     src/mocks/cache_mock.cpp
+    src/mocks/time_mock.cpp
+    src/mocks/network_mock.cpp
+    src/mocks/mock_service_registry.cpp
     src/solar_test_main.cpp
 )
 

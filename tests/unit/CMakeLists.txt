@@ -88,6 +88,24 @@ target_link_libraries(test_cache_mock test_utils solar_test solar_jpl solar_core
 add_test(NAME UnitTest_CacheMock COMMAND test_cache_mock)
 set_tests_properties(UnitTest_CacheMock PROPERTIES LABELS "unit;testing;mock;cache" TIMEOUT ${TEST_TIMEOUT})
 
+# NEW: Time Mock System Tests
+add_executable(test_time_mock test_time_mock.cpp)
+target_link_libraries(test_time_mock test_utils solar_test solar_jpl solar_core solar_utils Threads::Threads)
+add_test(NAME UnitTest_TimeMock COMMAND test_time_mock)
+set_tests_properties(UnitTest_TimeMock PROPERTIES LABELS "unit;testing;mock;time" TIMEOUT ${TEST_TIMEOUT})
+
+# NEW: Network Mock System Tests
+add_executable(test_network_mock test_network_mock.cpp)
+target_link_libraries(test_network_mock test_utils solar_test solar_jpl solar_core solar_utils Threads::Threads)
+add_test(NAME UnitTest_NetworkMock COMMAND test_network_mock)
+set_tests_properties(UnitTest_NetworkMock PROPERTIES LABELS "unit;testing;mock;network" TIMEOUT ${TEST_TIMEOUT})
+
+# NEW: Mock Service Registry Tests
+add_executable(test_mock_service_registry test_mock_service_registry.cpp)
+target_link_libraries(test_mock_service_registry test_utils solar_test solar_jpl solar_core solar_utils Threads::Threads)
+add_test(NAME UnitTest_MockServiceRegistry COMMAND test_mock_service_registry)
+set_tests_properties(UnitTest_MockServiceRegistry PROPERTIES LABELS "unit;testing;mock;registry" TIMEOUT ${TEST_TIMEOUT})
+
 message(STATUS "Unit tests configured:")
 message(STATUS "  - Solar Core Library Tests")
 message(STATUS "  - Solar JPL Library Tests")
@@ -95,6 +113,9 @@ message(STATUS "  - Solar Utils Library Tests")
 message(STATUS "  - Individual Component Tests")
 message(STATUS "  - NEW: BodyFactory JPL Integration Tests")
 message(STATUS "  - NEW: SimulationBuilder Filtering Tests")
+message(STATUS "  - NEW: Time Mock System Tests")
+message(STATUS "  - NEW: Network Mock System Tests")
+message(STATUS "  - NEW: Mock Service Registry Tests")
 
 # Install test executables to install/bin/tests/ directory
 install(TARGETS
@@ -114,6 +135,9 @@ install(TARGETS
     test_discovery_example
     test_jpl_mock
     test_cache_mock
+    test_time_mock
+    test_network_mock
+    test_mock_service_registry
     RUNTIME DESTINATION bin/tests
     COMPONENT tests
 )
