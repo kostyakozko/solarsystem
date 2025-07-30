@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Testing Framework Enhancement will complete and enhance the existing testing infrastructure for the Solar System Suite. The project already has a solid foundation with GitHub Actions CI/CD workflows, CMake test configuration, and performance comparison scripts, but the actual test implementations are incomplete. This enhancement will implement the missing components and fix the existing CI/CD pipeline to provide reliable automated testing and deployment capabilities.
+The Testing Framework Enhancement will implement a comprehensive, modern testing framework for the Solar System Suite that addresses the complete testing lifecycle from unit testing to CI/CD integration. The project currently has basic testing infrastructure but lacks the robust framework needed to validate complex interactions between JPL data, simulation engines, and web interfaces. This enhancement will create a professional-grade testing system with automated test discovery, performance benchmarking, mock frameworks, and seamless CI/CD integration that ensures code quality and prevents regressions.
 
 ## Architecture
 
@@ -55,6 +55,30 @@ graph TB
     O[Test Data Manager] --> P[JPL Mock Data]
     O --> Q[Cache Test Data]
     O --> R[Epheme Samples]
+```
+
+### Test Organization and Categorization
+
+The framework supports comprehensive test categorization to meet requirement 5 (test organization):
+
+```cpp
+enum class TestCategory {
+    Unit,           // Individual component testing
+    Integration,    // End-to-end pipeline testing
+    Performance,    // Benchmarking and regression detection
+    Slow,          // Long-running tests
+    Network,       // Tests requiring external connectivity
+    Cache,         // File system and caching tests
+    Mock          // Tests using mock implementations
+};
+
+class TestRegistry {
+public:
+    void register_test(std::unique_ptr<TestCase> test, std::vector<TestCategory> categories);
+    std::vector<TestCase*> find_tests_by_category(TestCategory category);
+    std::vector<TestCase*> find_tests_by_tag(const std::string& tag);
+    std::vector<TestCase*> find_tests_by_pattern(const std::string& pattern);
+};
 ```
 
 ### Framework Architecture
@@ -278,6 +302,38 @@ public:
     [[nodiscard]] static bool validate_jpl_response(const std::string& response);
     [[nodiscard]] static bool validate_ephemeris_data(const std::string& data);
     [[nodiscard]] static bool validate_cache_integrity(const std::string& cache_path);
+
+    // Automatic cleanup (requirement 7.5)
+    static void cleanup_test_data();
+    static void register_cleanup_handler();
+};
+
+class TemporaryDirectory {
+public:
+    explicit TemporaryDirectory(const std::string& prefix = "solar_test_");
+    ~TemporaryDirectory(); // Automatic cleanup
+
+    [[nodiscard]] std::string path() const;
+    void create_file(const std::string& name, const std::string& content);
+    void create_subdirectory(const std::string& name);
+
+private:
+    std::string temp_path_;
+};
+
+class TemporaryCache {
+public:
+    explicit TemporaryCache(const std::string& cache_type = "ephemeris");
+    ~TemporaryCache(); // Automatic cleanup
+
+    void populate_with_valid_data();
+    void populate_with_corrupted_data();
+    void simulate_partial_corruption();
+    [[nodiscard]] std::string cache_path() const;
+
+private:
+    std::unique_ptr<TemporaryDirectory> temp_dir_;
+    std::string cache_file_;
 };
 ```
 

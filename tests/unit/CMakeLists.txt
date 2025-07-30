@@ -82,6 +82,12 @@ target_link_libraries(test_jpl_mock test_utils solar_test solar_jpl solar_core s
 add_test(NAME UnitTest_JPLMock COMMAND test_jpl_mock)
 set_tests_properties(UnitTest_JPLMock PROPERTIES LABELS "unit;testing;mock;jpl" TIMEOUT ${TEST_TIMEOUT})
 
+# NEW: Cache Mock System Tests
+add_executable(test_cache_mock test_cache_mock.cpp)
+target_link_libraries(test_cache_mock test_utils solar_test solar_jpl solar_core solar_utils Threads::Threads)
+add_test(NAME UnitTest_CacheMock COMMAND test_cache_mock)
+set_tests_properties(UnitTest_CacheMock PROPERTIES LABELS "unit;testing;mock;cache" TIMEOUT ${TEST_TIMEOUT})
+
 message(STATUS "Unit tests configured:")
 message(STATUS "  - Solar Core Library Tests")
 message(STATUS "  - Solar JPL Library Tests")
@@ -107,6 +113,7 @@ install(TARGETS
     test_test_discovery
     test_discovery_example
     test_jpl_mock
+    test_cache_mock
     RUNTIME DESTINATION bin/tests
     COMPONENT tests
 )
