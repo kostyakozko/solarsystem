@@ -21,6 +21,11 @@
 #include "mocks/network_mock.hpp"
 #include "mocks/time_mock.hpp"
 
+// Benchmark framework
+#include "benchmarks/benchmark.hpp"
+#include "benchmarks/performance_monitor.hpp"
+#include "benchmarks/regression_detector.hpp"
+
 namespace SolarSystem::Testing {
 
 /**

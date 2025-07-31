@@ -14,6 +14,10 @@ add_library(solar_test STATIC
     src/mocks/time_mock.cpp
     src/mocks/network_mock.cpp
     src/mocks/mock_service_registry.cpp
+    src/benchmarks/benchmark.cpp
+    src/benchmarks/performance_monitor.cpp
+    src/benchmarks/regression_detector.cpp
+    src/benchmarks/ci_integration.cpp
     src/solar_test_main.cpp
 )
 
