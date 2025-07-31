@@ -64,7 +64,7 @@
     - Add mock service registry for dependency injection
     - _Requirements: 6.4, 6.5_
 
-- [ ] 4. Build comprehensive test data management
+- [-] 4. Build comprehensive test data management
   - [x] 4.1 Create test data repository
     - Set up structured test data directory with JPL response samples
     - Create ephemeris data samples for various time periods and bodies
@@ -72,7 +72,7 @@
     - Implement test data validation utilities
     - _Requirements: 7.1, 7.2, 7.3_
 
-  - [ ] 4.2 Implement test environment management
+  - [x] 4.2 Implement test environment management
     - Create TemporaryDirectory class for isolated test environments
     - Implement automatic cleanup mechanisms
     - Add test fixture management for setup/teardown
@@ -184,15 +184,33 @@
     - Add better error reporting and debugging information for CI failures
     - _Requirements: 4.3, 4.5, 8.3, 8.4_
 
-- [ ] 12. Create documentation and examples
-  - [ ] 12.1 Write testing framework documentation
+- [ ] 12. Clean up development artifacts and code quality
+  - [ ] 12.1 Remove TODO and development markers
+    - Fix memory measurement TODO in lib/solar_test/src/framework/test_case.cpp:199
+    - Resolve progress callback TODOs in apps/solar_system_fetch/fetch.cpp:155-156
+    - Implement date parsing TODOs in apps/solar_system_web/src/web_server.cpp:735-736
+    - Verify CI/CD TODO/FIXME checks are working correctly
+    - Ensure code is production-ready without development artifacts
+    - _Requirements: 9.1, 9.3_
+
+  - [ ] 12.2 Clean up Legacy references and improve compatibility
+    - Clean up "Initialize JPL data system (legacy)" comment in apps/solar_system_fetch/fetch.cpp:442
+    - Replace "Use legacy system call for now" comment in apps/solar_system_launcher/launcher.cpp:276
+    - Update "use legacy simulation approach" comment in apps/solar_system_web/src/web_server.cpp:643
+    - Fix "using legacy interface for now" comment in apps/solar_system_realtime/realtime.cpp:384
+    - Maintain compatibility documentation without cluttering code
+    - Ensure legacy compatibility is clear and well-documented
+    - _Requirements: 9.2, 9.4_
+
+- [ ] 13. Create documentation and examples
+  - [ ] 13.1 Write testing framework documentation
     - Create API documentation for all testing classes
     - Write user guide for writing and running tests
     - Add examples of unit, integration, and performance tests
     - Document CI integration and best practices
     - _Requirements: 5.5_
 
-  - [ ] 12.2 Create developer testing guidelines
+  - [ ] 13.2 Create developer testing guidelines
     - Write testing standards and conventions
     - Create templates for common test scenarios
     - Document mock usage patterns and best practices

@@ -70,7 +70,7 @@ void Logger::fatal(std::string_view component, std::string_view message) {
 
 template <typename... Args>
 void Logger::log_formatted(Level level, std::string_view component, std::string_view format,
-                           Args&&... args) {
+                           Args&&...) {
   if (level < config_.min_level) {
     return;
   }

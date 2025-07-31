@@ -19,7 +19,11 @@ class NetworkMockBasicTest : public TestCase {
   NetworkMockBasicTest()
       : TestCase({"NetworkMockBasicTest",
                   "Test basic network mock operations",
-                  {"unit", "network_mock"}}) {}
+                  {"unit", "network_mock"},
+                  std::chrono::seconds(30),
+                  false,
+                  false,
+                  ""}) {}
 
   void run() override {
     NetworkMockConfig config;
@@ -57,7 +61,11 @@ class NetworkConditionTest : public TestCase {
   NetworkConditionTest()
       : TestCase({"NetworkConditionTest",
                   "Test network condition simulation",
-                  {"unit", "network_mock"}}) {}
+                  {"unit", "network_mock"},
+                  std::chrono::seconds(30),
+                  false,
+                  false,
+                  ""}) {}
 
   void run() override {
     NetworkMock network_mock;
@@ -102,7 +110,11 @@ class NetworkResponseTest : public TestCase {
   NetworkResponseTest()
       : TestCase({"NetworkResponseTest",
                   "Test custom response configuration",
-                  {"unit", "network_mock"}}) {}
+                  {"unit", "network_mock"},
+                  std::chrono::seconds(30),
+                  false,
+                  false,
+                  ""}) {}
 
   void run() override {
     NetworkMock network_mock;
@@ -137,7 +149,13 @@ class NetworkResponseTest : public TestCase {
 class NetworkHttpMethodTest : public TestCase {
  public:
   NetworkHttpMethodTest()
-      : TestCase({"NetworkHttpMethodTest", "Test HTTP method support", {"unit", "network_mock"}}) {}
+      : TestCase({"NetworkHttpMethodTest",
+                  "Test HTTP method support",
+                  {"unit", "network_mock"},
+                  std::chrono::seconds(30),
+                  false,
+                  false,
+                  ""}) {}
 
   void run() override {
     NetworkMock network_mock;
@@ -180,8 +198,13 @@ class NetworkHttpMethodTest : public TestCase {
 class NetworkConnectionTest : public TestCase {
  public:
   NetworkConnectionTest()
-      : TestCase(
-            {"NetworkConnectionTest", "Test connection management", {"unit", "network_mock"}}) {}
+      : TestCase({"NetworkConnectionTest",
+                  "Test connection management",
+                  {"unit", "network_mock"},
+                  std::chrono::seconds(30),
+                  false,
+                  false,
+                  ""}) {}
 
   void run() override {
     NetworkMock network_mock;
@@ -195,6 +218,7 @@ class NetworkConnectionTest : public TestCase {
 
     // Test multiple connections
     bool connected2 = network_mock.mock_connect("other.com", 443);
+    assert_true(connected2, "Second connection should succeed");
     assert_equals(static_cast<size_t>(2), network_mock.active_connection_count(),
                   "Should have two active connections");
 
@@ -215,7 +239,11 @@ class NetworkMockFactoryTest : public TestCase {
   NetworkMockFactoryTest()
       : TestCase({"NetworkMockFactoryTest",
                   "Test network mock factory methods",
-                  {"unit", "network_mock"}}) {}
+                  {"unit", "network_mock"},
+                  std::chrono::seconds(30),
+                  false,
+                  false,
+                  ""}) {}
 
   void run() override {
     // Test default factory

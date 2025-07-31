@@ -17,7 +17,13 @@ using namespace SolarSystem::Testing::Mocks;
 class JPLMockBasicTest : public TestCase {
  public:
   JPLMockBasicTest()
-      : TestCase({"JPLMockBasicTest", "Test basic JPL mock functionality", {"unit", "mock"}}) {}
+      : TestCase({"JPLMockBasicTest",
+                  "Test basic JPL mock functionality",
+                  {"unit", "mock"},
+                  std::chrono::seconds(30),
+                  false,
+                  false,
+                  ""}) {}
 
   void run() override {
     // Create a basic mock
@@ -52,7 +58,11 @@ class JPLMockResponseConfigTest : public TestCase {
   JPLMockResponseConfigTest()
       : TestCase({"JPLMockResponseConfigTest",
                   "Test JPL mock response configuration",
-                  {"unit", "mock"}}) {}
+                  {"unit", "mock"},
+                  std::chrono::seconds(30),
+                  false,
+                  false,
+                  ""}) {}
 
   void run() override {
     auto mock = JPLMockFactory::create_default();
@@ -86,7 +96,13 @@ class JPLMockResponseConfigTest : public TestCase {
 class JPLMockFailureTest : public TestCase {
  public:
   JPLMockFailureTest()
-      : TestCase({"JPLMockFailureTest", "Test JPL mock failure simulation", {"unit", "mock"}}) {}
+      : TestCase({"JPLMockFailureTest",
+                  "Test JPL mock failure simulation",
+                  {"unit", "mock"},
+                  std::chrono::seconds(30),
+                  false,
+                  false,
+                  ""}) {}
 
   void run() override {
     auto mock = JPLMockFactory::create_default();
@@ -126,8 +142,13 @@ class JPLMockFailureTest : public TestCase {
 class JPLMockCallVerificationTest : public TestCase {
  public:
   JPLMockCallVerificationTest()
-      : TestCase(
-            {"JPLMockCallVerificationTest", "Test JPL mock call verification", {"unit", "mock"}}) {}
+      : TestCase({"JPLMockCallVerificationTest",
+                  "Test JPL mock call verification",
+                  {"unit", "mock"},
+                  std::chrono::seconds(30),
+                  false,
+                  false,
+                  ""}) {}
 
   void run() override {
     auto mock = JPLMockFactory::create_default();
@@ -186,7 +207,11 @@ class JPLMockNetworkDelayTest : public TestCase {
   JPLMockNetworkDelayTest()
       : TestCase({"JPLMockNetworkDelayTest",
                   "Test JPL mock network delay simulation",
-                  {"unit", "mock"}}) {}
+                  {"unit", "mock"},
+                  std::chrono::seconds(30),
+                  false,
+                  false,
+                  ""}) {}
 
   void run() override {
     JPLMockConfig config;
@@ -219,7 +244,13 @@ class JPLMockNetworkDelayTest : public TestCase {
 class JPLMockCacheTest : public TestCase {
  public:
   JPLMockCacheTest()
-      : TestCase({"JPLMockCacheTest", "Test JPL mock cache operations", {"unit", "mock"}}) {}
+      : TestCase({"JPLMockCacheTest",
+                  "Test JPL mock cache operations",
+                  {"unit", "mock"},
+                  std::chrono::seconds(30),
+                  false,
+                  false,
+                  ""}) {}
 
   void run() override {
     auto mock = JPLMockFactory::create_default();
@@ -270,7 +301,13 @@ class JPLMockCacheTest : public TestCase {
 class JPLMockFactoryTest : public TestCase {
  public:
   JPLMockFactoryTest()
-      : TestCase({"JPLMockFactoryTest", "Test JPL mock factory methods", {"unit", "mock"}}) {}
+      : TestCase({"JPLMockFactoryTest",
+                  "Test JPL mock factory methods",
+                  {"unit", "mock"},
+                  std::chrono::seconds(30),
+                  false,
+                  false,
+                  ""}) {}
 
   void run() override {
     // Test default factory

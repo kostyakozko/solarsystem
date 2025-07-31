@@ -87,8 +87,8 @@ class CelestialBody {
 
   // Gravitational interactions
   [[nodiscard]] Math::Vector3d gravitational_force_to(const CelestialBody& other) const noexcept;
-  [[nodiscard]] double distance_to(const CelestialBody& other) const noexcept;
-  [[nodiscard]] double distance_squared_to(const CelestialBody& other) const noexcept;
+  [[nodiscard]] long double distance_to(const CelestialBody& other) const noexcept;
+  [[nodiscard]] long double distance_squared_to(const CelestialBody& other) const noexcept;
 
   // Utility functions
   [[nodiscard]] bool is_available_at(std::chrono::system_clock::time_point time) const noexcept;

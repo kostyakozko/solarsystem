@@ -97,8 +97,8 @@ class TerminalUI {
    */
   static void print_status_line(std::string_view status) {
     auto now = std::chrono::system_clock::now();
-    auto time_t = std::chrono::system_clock::to_time_t(now);
-    auto tm = *std::localtime(&time_t);
+    auto current_time_t = std::chrono::system_clock::to_time_t(now);
+    auto tm = *std::localtime(&current_time_t);
 
     std::cout << "🕒 " << std::put_time(&tm, "%Y-%m-%d %H:%M:%S") << " │ " << status << "\n\n";
   }
@@ -407,8 +407,8 @@ class RealtimeMonitor {
    */
   void display_summary() const {
     auto now = std::chrono::system_clock::now();
-    auto time_t = std::chrono::system_clock::to_time_t(now);
-    auto tm = *std::localtime(&time_t);
+    auto current_time_t = std::chrono::system_clock::to_time_t(now);
+    auto tm = *std::localtime(&current_time_t);
 
     std::cout << "📈 Summary:\n";
     std::cout << "  Current Time: " << std::put_time(&tm, "%Y-%m-%d %H:%M:%S %Z") << "\n";

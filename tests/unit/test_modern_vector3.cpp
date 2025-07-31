@@ -100,7 +100,7 @@ int main() {
   suite.run_test("Dot Product", []() {
     Vector3d v1(1.0, 2.0, 3.0);
     Vector3d v2(4.0, 5.0, 6.0);
-    double result = v1.dot(v2);
+    double result = static_cast<double>(v1.dot(v2));
 
     // 1*4 + 2*5 + 3*6 = 4 + 10 + 18 = 32
     ASSERT_EQ(32.0, result);
@@ -118,7 +118,7 @@ int main() {
 
   suite.run_test("Magnitude", []() {
     Vector3d v(3.0, 4.0, 0.0);
-    double mag = v.magnitude();
+    double mag = static_cast<double>(v.magnitude());
 
     ASSERT_EQ(5.0, mag);  // 3-4-5 triangle
     ASSERT_EQ(25.0, v.magnitude_squared());
@@ -133,7 +133,7 @@ int main() {
     ASSERT_EQ(0.0, normalized.z());
 
     // Normalized vector should have magnitude 1
-    double mag = normalized.magnitude();
+    double mag = static_cast<double>(normalized.magnitude());
     ASSERT_TRUE(std::abs(mag - 1.0) < 1e-10);
   });
 
@@ -182,8 +182,8 @@ int main() {
     Vector3d v1(0.0, 0.0, 0.0);
     Vector3d v2(3.0, 4.0, 0.0);
 
-    double dist = distance(v1, v2);
-    double dist_sq = distance_squared(v1, v2);
+    double dist = static_cast<double>(distance(v1, v2));
+    double dist_sq = static_cast<double>(distance_squared(v1, v2));
 
     ASSERT_EQ(5.0, dist);
     ASSERT_EQ(25.0, dist_sq);

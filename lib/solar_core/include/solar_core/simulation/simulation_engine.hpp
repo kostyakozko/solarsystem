@@ -32,9 +32,9 @@ struct SimulationState {
   double current_time = 0.0;                             // Current simulation time (seconds)
   std::chrono::system_clock::time_point reference_time;  // Reference epoch
   size_t iteration_count = 0;                            // Number of iterations performed
-  double total_energy = 0.0;                             // Total system energy
-  double kinetic_energy = 0.0;                           // Total kinetic energy
-  double potential_energy = 0.0;                         // Total potential energy
+  long double total_energy = 0.0;                        // Total system energy
+  long double kinetic_energy = 0.0;                      // Total kinetic energy
+  long double potential_energy = 0.0;                    // Total potential energy
   Math::Vector3d center_of_mass{};                       // System center of mass
   Math::Vector3d total_momentum{};                       // Total system momentum
   double largest_timestep = 0.0;                         // Largest timestep used
@@ -118,9 +118,9 @@ class SimulationEngine {
 
   // Analysis
   void update_statistics();
-  [[nodiscard]] double calculate_total_energy() const;
-  [[nodiscard]] double calculate_kinetic_energy() const;
-  [[nodiscard]] double calculate_potential_energy() const;
+  [[nodiscard]] long double calculate_total_energy() const;
+  [[nodiscard]] long double calculate_kinetic_energy() const;
+  [[nodiscard]] long double calculate_potential_energy() const;
   [[nodiscard]] Math::Vector3d calculate_center_of_mass() const;
   [[nodiscard]] Math::Vector3d calculate_total_momentum() const;
 

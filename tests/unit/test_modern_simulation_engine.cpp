@@ -69,7 +69,9 @@ int main() {
                                               .position = Vector3d{0.0, 0.0, 0.0},
                                               .velocity = Vector3d{0.0, 0.0, 0.0},
                                               .type = BodyType::Planet,
-                                              .priority = BodyPriority::Essential});
+                                              .priority = BodyPriority::Essential,
+                                              .jpl_id = "",
+                                              .creation_date = std::chrono::system_clock::now()});
 
     bodies.add_body(
         CelestialBody::Properties{.name = "Moon",
@@ -77,7 +79,9 @@ int main() {
                                   .position = Vector3d{3.844e8, 0.0, 0.0},  // 384,400 km
                                   .velocity = Vector3d{0.0, 1022.0, 0.0},   // Orbital velocity
                                   .type = BodyType::Moon,
-                                  .priority = BodyPriority::Important});
+                                  .priority = BodyPriority::Important,
+                                  .jpl_id = "",
+                                  .creation_date = std::chrono::system_clock::now()});
 
     auto init_result = engine.initialize(std::move(bodies));
     ASSERT_TRUE(init_result.has_value());
@@ -95,16 +99,21 @@ int main() {
                                               .position = Vector3d{0.0, 0.0, 0.0},
                                               .velocity = Vector3d{1000.0, 0.0, 0.0},
                                               .type = BodyType::Planet,
-                                              .priority = BodyPriority::Essential});
+                                              .priority = BodyPriority::Essential,
+                                              .jpl_id = "",
+                                              .creation_date = std::chrono::system_clock::now()});
 
     bodies.add_body(CelestialBody::Properties{.name = "Body2",
                                               .mass = 1e24,
                                               .position = Vector3d{1e9, 0.0, 0.0},
                                               .velocity = Vector3d{-1000.0, 0.0, 0.0},
                                               .type = BodyType::Planet,
-                                              .priority = BodyPriority::Essential});
+                                              .priority = BodyPriority::Essential,
+                                              .jpl_id = "",
+                                              .creation_date = std::chrono::system_clock::now()});
 
-    engine.initialize(std::move(bodies));
+    auto init_result = engine.initialize(std::move(bodies));
+    ASSERT_TRUE(init_result.has_value());
 
     double initial_time = engine.get_current_time();
     auto step_result = engine.step();
@@ -124,18 +133,23 @@ int main() {
                                               .position = Vector3d{0.0, 0.0, 0.0},
                                               .velocity = Vector3d{0.0, 0.0, 0.0},
                                               .type = BodyType::Planet,
-                                              .priority = BodyPriority::Essential});
+                                              .priority = BodyPriority::Essential,
+                                              .jpl_id = "",
+                                              .creation_date = std::chrono::system_clock::now()});
 
     bodies.add_body(CelestialBody::Properties{.name = "Moon",
                                               .mass = 7.342e22,
                                               .position = Vector3d{3.844e8, 0.0, 0.0},
                                               .velocity = Vector3d{0.0, 1022.0, 0.0},
                                               .type = BodyType::Moon,
-                                              .priority = BodyPriority::Important});
+                                              .priority = BodyPriority::Important,
+                                              .jpl_id = "",
+                                              .creation_date = std::chrono::system_clock::now()});
 
-    engine.initialize(std::move(bodies));
+    auto init_result = engine.initialize(std::move(bodies));
+    ASSERT_TRUE(init_result.has_value());
 
-    double initial_energy = engine.get_state().total_energy;
+    double initial_energy = static_cast<double>(engine.get_state().total_energy);
 
     // Run several steps
     for (int i = 0; i < 10; ++i) {
@@ -143,7 +157,7 @@ int main() {
       ASSERT_TRUE(result.has_value());
     }
 
-    double final_energy = engine.get_state().total_energy;
+    double final_energy = static_cast<double>(engine.get_state().total_energy);
 
     // Energy should be approximately conserved (within 1% for this simple test)
     double energy_change = std::abs(final_energy - initial_energy) / std::abs(initial_energy);
@@ -159,16 +173,21 @@ int main() {
                                               .position = Vector3d{0.0, 0.0, 0.0},
                                               .velocity = Vector3d{1000.0, 0.0, 0.0},
                                               .type = BodyType::Planet,
-                                              .priority = BodyPriority::Essential});
+                                              .priority = BodyPriority::Essential,
+                                              .jpl_id = "",
+                                              .creation_date = std::chrono::system_clock::now()});
 
     bodies.add_body(CelestialBody::Properties{.name = "TestBody2",
                                               .mass = 1e24,
                                               .position = Vector3d{1e9, 0.0, 0.0},
                                               .velocity = Vector3d{0.0, 0.0, 0.0},
                                               .type = BodyType::Planet,
-                                              .priority = BodyPriority::Essential});
+                                              .priority = BodyPriority::Essential,
+                                              .jpl_id = "",
+                                              .creation_date = std::chrono::system_clock::now()});
 
-    engine.initialize(std::move(bodies));
+    auto init_result = engine.initialize(std::move(bodies));
+    ASSERT_TRUE(init_result.has_value());
 
     double target_time = 3600.0;  // 1 hour
     auto result = engine.simulate_to_time(target_time);
@@ -187,16 +206,21 @@ int main() {
                                               .position = Vector3d{0.0, 0.0, 0.0},
                                               .velocity = Vector3d{100.0, 0.0, 0.0},
                                               .type = BodyType::Planet,
-                                              .priority = BodyPriority::Essential});
+                                              .priority = BodyPriority::Essential,
+                                              .jpl_id = "",
+                                              .creation_date = std::chrono::system_clock::now()});
 
     bodies.add_body(CelestialBody::Properties{.name = "TestBody2",
                                               .mass = 1e24,
                                               .position = Vector3d{1e8, 0.0, 0.0},
                                               .velocity = Vector3d{0.0, 0.0, 0.0},
                                               .type = BodyType::Planet,
-                                              .priority = BodyPriority::Essential});
+                                              .priority = BodyPriority::Essential,
+                                              .jpl_id = "",
+                                              .creation_date = std::chrono::system_clock::now()});
 
-    engine.initialize(std::move(bodies));
+    auto init_result = engine.initialize(std::move(bodies));
+    ASSERT_TRUE(init_result.has_value());
 
     double initial_time = engine.get_current_time();
     double duration = 1800.0;  // 30 minutes
@@ -223,14 +247,18 @@ int main() {
                                                 .position = Vector3d{0.0, 0.0, 0.0},
                                                 .velocity = Vector3d{1000.0, 0.0, 0.0},
                                                 .type = BodyType::Planet,
-                                                .priority = BodyPriority::Essential});
+                                                .priority = BodyPriority::Essential,
+                                                .jpl_id = "",
+                                                .creation_date = std::chrono::system_clock::now()});
 
       bodies.add_body(CelestialBody::Properties{.name = "TestBody2",
                                                 .mass = 1e24,
                                                 .position = Vector3d{1e8, 0.0, 0.0},
                                                 .velocity = Vector3d{0.0, 1000.0, 0.0},
                                                 .type = BodyType::Planet,
-                                                .priority = BodyPriority::Essential});
+                                                .priority = BodyPriority::Essential,
+                                                .jpl_id = "",
+                                                .creation_date = std::chrono::system_clock::now()});
 
       auto init_result = engine.initialize(std::move(bodies));
       ASSERT_TRUE(init_result.has_value());
@@ -249,16 +277,21 @@ int main() {
                                               .position = Vector3d{-1e8, 0.0, 0.0},
                                               .velocity = Vector3d{0.0, 1000.0, 0.0},
                                               .type = BodyType::Planet,
-                                              .priority = BodyPriority::Essential});
+                                              .priority = BodyPriority::Essential,
+                                              .jpl_id = "",
+                                              .creation_date = std::chrono::system_clock::now()});
 
     bodies.add_body(CelestialBody::Properties{.name = "Body2",
                                               .mass = 1e24,
                                               .position = Vector3d{2e8, 0.0, 0.0},
                                               .velocity = Vector3d{0.0, -2000.0, 0.0},
                                               .type = BodyType::Planet,
-                                              .priority = BodyPriority::Essential});
+                                              .priority = BodyPriority::Essential,
+                                              .jpl_id = "",
+                                              .creation_date = std::chrono::system_clock::now()});
 
-    engine.initialize(std::move(bodies));
+    auto init_result = engine.initialize(std::move(bodies));
+    ASSERT_TRUE(init_result.has_value());
 
     const auto& state = engine.get_state();
 
@@ -284,9 +317,12 @@ int main() {
                                               .position = Vector3d{0.0, 0.0, 0.0},
                                               .velocity = Vector3d{1000.0, 0.0, 0.0},
                                               .type = BodyType::Planet,
-                                              .priority = BodyPriority::Essential});
+                                              .priority = BodyPriority::Essential,
+                                              .jpl_id = "",
+                                              .creation_date = std::chrono::system_clock::now()});
 
-    engine.initialize(std::move(bodies));
+    auto init_result = engine.initialize(std::move(bodies));
+    ASSERT_TRUE(init_result.has_value());
 
     std::string status = engine.get_status_summary();
 
@@ -304,10 +340,14 @@ int main() {
                                               .position = Vector3d{0.0, 0.0, 0.0},
                                               .velocity = Vector3d{1000.0, 0.0, 0.0},
                                               .type = BodyType::Planet,
-                                              .priority = BodyPriority::Essential});
+                                              .priority = BodyPriority::Essential,
+                                              .jpl_id = "",
+                                              .creation_date = std::chrono::system_clock::now()});
 
-    engine.initialize(std::move(bodies));
-    engine.step();
+    auto init_result = engine.initialize(std::move(bodies));
+    ASSERT_TRUE(init_result.has_value());
+    auto step_result = engine.step();
+    ASSERT_TRUE(step_result.has_value());
 
     ASSERT_TRUE(engine.is_initialized());
     ASSERT_TRUE(engine.get_current_time() > 0.0);

@@ -658,7 +658,7 @@ void ScopedServiceRegistry::register_mock(const std::string& name) {
 }
 
 template <typename T>
-std::shared_ptr<T> ScopedServiceRegistry::resolve(const std::string& name) {
+std::shared_ptr<T> ScopedServiceRegistry::resolve(const std::string&) {
   return scope().get_service<T>();
 }
 

@@ -48,7 +48,7 @@ int main() {
         double positions[9] = {1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0};
         volatile double sum = 0.0;
         for (int i = 0; i < 9; ++i) {
-          sum += positions[i];
+          sum = sum + positions[i];
         }
         (void)sum;
       },

@@ -298,8 +298,8 @@ JPLResult<EphemerisData> JPLClient::parse_jpl_response(const std::string& respon
   auto data_end = std::sregex_iterator(response.begin(), response.end(), data_end_regex);
 
   if (data_start != std::sregex_iterator() && data_end != std::sregex_iterator()) {
-    size_t start_pos = data_start->position() + data_start->length();
-    size_t end_pos = data_end->position();
+    size_t start_pos = static_cast<size_t>(data_start->position() + data_start->length());
+    size_t end_pos = static_cast<size_t>(data_end->position());
 
     if (start_pos < end_pos) {
       std::string ephemeris_section = response.substr(start_pos, end_pos - start_pos);
@@ -539,7 +539,7 @@ JPLResult<std::vector<EphemerisData>> JPLClient::load_from_cache() {
           size_t name_length;
           file.read(reinterpret_cast<char*>(&name_length), sizeof(name_length));
           body_data.body_name.resize(name_length);
-          file.read(&body_data.body_name[0], name_length);
+          file.read(&body_data.body_name[0], static_cast<std::streamsize>(name_length));
 
           // Read epoch
           auto epoch_time = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
@@ -761,7 +761,7 @@ JPLVoidResult JPLClient::save_to_cache(const std::vector<EphemerisData>& data) {
           // Write body name length and name
           size_t name_length = body_data.body_name.length();
           file.write(reinterpret_cast<const char*>(&name_length), sizeof(name_length));
-          file.write(body_data.body_name.c_str(), name_length);
+          file.write(body_data.body_name.c_str(), static_cast<std::streamsize>(name_length));
 
           // Write epoch
           auto epoch_time = std::chrono::system_clock::to_time_t(body_data.epoch);

@@ -49,6 +49,8 @@ jobs:
       env:
         CC: ${{ matrix.cc }}
         CXX: ${{ matrix.cxx }}
+        # Ensure GitHub Actions environment is detected
+        GITHUB_ACTIONS: true
       run: |
         cmake -B build \
           -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \

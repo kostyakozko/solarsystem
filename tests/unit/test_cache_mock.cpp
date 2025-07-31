@@ -22,7 +22,11 @@ class CacheMockBasicTest : public TestCase {
   CacheMockBasicTest()
       : TestCase({"CacheMockBasicTest",
                   "Test basic cache mock construction and configuration",
-                  {"unit", "mock", "cache"}}) {}
+                  {"unit", "mock", "cache"},
+                  std::chrono::seconds(30),
+                  false,
+                  false,
+                  ""}) {}
 
   void run() override {
     // Create default cache mock
@@ -46,7 +50,11 @@ class CacheMockExistenceTest : public TestCase {
   CacheMockExistenceTest()
       : TestCase({"CacheMockExistenceTest",
                   "Test cache existence simulation",
-                  {"unit", "mock", "cache"}}) {}
+                  {"unit", "mock", "cache"},
+                  std::chrono::seconds(30),
+                  false,
+                  false,
+                  ""}) {}
 
   void run() override {
     auto cache_mock = CacheMockFactory::create_default();
@@ -75,7 +83,11 @@ class CacheMockValidityTest : public TestCase {
   CacheMockValidityTest()
       : TestCase({"CacheMockValidityTest",
                   "Test cache validity simulation",
-                  {"unit", "mock", "cache"}}) {}
+                  {"unit", "mock", "cache"},
+                  std::chrono::seconds(30),
+                  false,
+                  false,
+                  ""}) {}
 
   void run() override {
     auto cache_mock = CacheMockFactory::create_default();
@@ -103,7 +115,11 @@ class CacheMockCorruptionTest : public TestCase {
   CacheMockCorruptionTest()
       : TestCase({"CacheMockCorruptionTest",
                   "Test cache corruption simulation",
-                  {"unit", "mock", "cache"}}) {}
+                  {"unit", "mock", "cache"},
+                  std::chrono::seconds(30),
+                  false,
+                  false,
+                  ""}) {}
 
   void run() override {
     auto cache_mock = CacheMockFactory::create_default();
@@ -136,8 +152,13 @@ class CacheMockCorruptionTest : public TestCase {
 class CacheMockDiskFullTest : public TestCase {
  public:
   CacheMockDiskFullTest()
-      : TestCase(
-            {"CacheMockDiskFullTest", "Test disk full simulation", {"unit", "mock", "cache"}}) {}
+      : TestCase({"CacheMockDiskFullTest",
+                  "Test disk full simulation",
+                  {"unit", "mock", "cache"},
+                  std::chrono::seconds(30),
+                  false,
+                  false,
+                  ""}) {}
 
   void run() override {
     auto cache_mock = CacheMockFactory::create_default();
@@ -172,7 +193,11 @@ class CacheMockDataOperationsTest : public TestCase {
   CacheMockDataOperationsTest()
       : TestCase({"CacheMockDataOperationsTest",
                   "Test cache data loading and saving",
-                  {"unit", "mock", "cache"}}) {}
+                  {"unit", "mock", "cache"},
+                  std::chrono::seconds(30),
+                  false,
+                  false,
+                  ""}) {}
 
   void run() override {
     auto cache_mock = CacheMockFactory::create_default();
@@ -206,9 +231,13 @@ class CacheMockDataOperationsTest : public TestCase {
 class TemporaryCacheTest : public TestCase {
  public:
   TemporaryCacheTest()
-      : TestCase(
-            {"TemporaryCacheTest", "Test temporary cache environment", {"unit", "mock", "cache"}}) {
-  }
+      : TestCase({"TemporaryCacheTest",
+                  "Test temporary cache environment",
+                  {"unit", "mock", "cache"},
+                  std::chrono::seconds(30),
+                  false,
+                  false,
+                  ""}) {}
 
   void run() override {
     // Create temporary cache
@@ -254,7 +283,11 @@ class CacheMockFactoryTest : public TestCase {
   CacheMockFactoryTest()
       : TestCase({"CacheMockFactoryTest",
                   "Test cache mock factory methods",
-                  {"unit", "mock", "cache"}}) {}
+                  {"unit", "mock", "cache"},
+                  std::chrono::seconds(30),
+                  false,
+                  false,
+                  ""}) {}
 
   void run() override {
     // Test corruption testing factory

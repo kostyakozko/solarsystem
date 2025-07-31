@@ -770,8 +770,8 @@ void CacheMock::simulate_operation_delay() const {
 
   auto delay = config_.min_operation_delay;
   if (config_.max_operation_delay > config_.min_operation_delay) {
-    std::uniform_int_distribution<int> delay_dist(config_.min_operation_delay.count(),
-                                                  config_.max_operation_delay.count());
+    std::uniform_int_distribution<long long> delay_dist(config_.min_operation_delay.count(),
+                                                        config_.max_operation_delay.count());
     delay = std::chrono::milliseconds(delay_dist(gen_));
   }
 
@@ -941,7 +941,7 @@ std::string CacheMock::ephemeris_data_to_binary(
     // Write body name length and name
     size_t name_length = body_data.body_name.length();
     binary_stream.write(reinterpret_cast<const char*>(&name_length), sizeof(name_length));
-    binary_stream.write(body_data.body_name.c_str(), name_length);
+    binary_stream.write(body_data.body_name.c_str(), static_cast<std::streamsize>(name_length));
 
     // Write epoch
     auto epoch_time = std::chrono::system_clock::to_time_t(body_data.epoch);
@@ -1179,7 +1179,7 @@ void TemporaryCache::write_binary_cache(const std::vector<SolarSystem::JPL::Ephe
 
   std::ofstream file(binary_cache_file(), std::ios::binary);
   if (file.is_open()) {
-    file.write(binary_data.c_str(), binary_data.size());
+    file.write(binary_data.c_str(), static_cast<std::streamsize>(binary_data.size()));
   }
 }
 
@@ -1240,7 +1240,8 @@ void TemporaryCache::corrupt_file(const std::filesystem::path& file_path, double
   // Write back corrupted content
   std::ofstream out_file(file_path, std::ios::binary);
   if (out_file.is_open()) {
-    out_file.write(corrupted_content.c_str(), corrupted_content.size());
+    out_file.write(corrupted_content.c_str(),
+                   static_cast<std::streamsize>(corrupted_content.size()));
   }
 }
 

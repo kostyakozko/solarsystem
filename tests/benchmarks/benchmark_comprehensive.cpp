@@ -55,7 +55,7 @@ int main() {
         volatile double result = 0.0;
 
         for (int i = 0; i < 100; ++i) {
-          result += std::sqrt(x * x + y * y);
+          result = result + std::sqrt(x * x + y * y);
           x *= 1.001;
           y *= 0.999;
         }

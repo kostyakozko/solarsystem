@@ -18,7 +18,7 @@ int main() {
         // Simulate cache loading operation
         volatile int result = 0;
         for (int i = 0; i < 1000; ++i) {
-          result += i * i;
+          result = result + (i * i);
         }
         (void)result;
       },

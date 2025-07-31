@@ -19,7 +19,9 @@ class MockUnitTest : public TestCase {
                   "A mock unit test",
                   {"unit", "fast"},
                   std::chrono::seconds(10),
-                  false}) {}
+                  false,
+                  false,
+                  ""}) {}
   void run() override {
     // Mock test implementation
   }
@@ -32,7 +34,9 @@ class MockIntegrationTest : public TestCase {
                   "A mock integration test",
                   {"integration", "slow"},
                   std::chrono::minutes(1),
-                  false}) {}
+                  false,
+                  false,
+                  ""}) {}
   void run() override {
     // Mock test implementation
   }
@@ -45,7 +49,9 @@ class MockBenchmarkTest : public TestCase {
                   "A mock benchmark test",
                   {"benchmark", "performance"},
                   std::chrono::minutes(5),
-                  true}) {}
+                  true,
+                  false,
+                  ""}) {}
   void run() override {
     // Mock test implementation
   }
@@ -107,7 +113,9 @@ int main() {
                       "Test body factory",
                       {"unit"},
                       std::chrono::seconds(10),
-                      false}) {}
+                      false,
+                      false,
+                      ""}) {}
       void run() override {}
     };
 
@@ -118,7 +126,9 @@ int main() {
                       "Test simulation engine",
                       {"unit"},
                       std::chrono::seconds(10),
-                      false}) {}
+                      false,
+                      false,
+                      ""}) {}
       void run() override {}
     };
 
@@ -129,7 +139,9 @@ int main() {
                       "Benchmark cache performance",
                       {"benchmark"},
                       std::chrono::seconds(10),
-                      true}) {}
+                      true,
+                      false,
+                      ""}) {}
       void run() override {}
     };
 
@@ -173,7 +185,9 @@ int main() {
                       "Fast unit test",
                       {"unit", "fast"},
                       std::chrono::seconds(10),
-                      false}) {}
+                      false,
+                      false,
+                      ""}) {}
       void run() override {}
     };
 
@@ -184,7 +198,9 @@ int main() {
                       "Slow integration test",
                       {"integration", "slow"},
                       std::chrono::seconds(10),
-                      false}) {}
+                      false,
+                      false,
+                      ""}) {}
       void run() override {}
     };
 
@@ -195,7 +211,9 @@ int main() {
                       "Performance benchmark",
                       {"benchmark", "performance", "slow"},
                       std::chrono::seconds(10),
-                      true}) {}
+                      true,
+                      false,
+                      ""}) {}
       void run() override {}
     };
 
@@ -298,7 +316,7 @@ SOLAR_BENCHMARK_CASE_AUTO(SampleBenchmark, "A sample benchmark", "benchmark", "p
 
 class CustomTest : public SolarSystem::Testing::TestCase {
 public:
-  CustomTest() : TestCase({"CustomTest", "Custom test", {"custom"}, std::chrono::seconds(30), false}) {}
+  CustomTest() : TestCase({"CustomTest", "Custom test", {"custom"}, std::chrono::seconds(30), false}), ""} {}
   void run() override {}
 };
 

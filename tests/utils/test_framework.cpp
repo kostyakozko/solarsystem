@@ -30,20 +30,20 @@ void TestSuite::run_test(const std::string& test_name, std::function<void()> tes
     auto end = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
 
-    results.push_back({test_name, true, "PASSED", duration.count() / 1000.0});
+    results.push_back({test_name, true, "PASSED", static_cast<double>(duration.count()) / 1000.0});
     passed_tests++;
 
     std::cout << "✓ " << test_name << " (" << std::fixed << std::setprecision(2)
-              << duration.count() / 1000.0 << " ms)" << std::endl;
+              << static_cast<double>(duration.count()) / 1000.0 << " ms)" << std::endl;
 
   } catch (const std::exception& e) {
     auto end = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
 
-    results.push_back({test_name, false, e.what(), duration.count() / 1000.0});
+    results.push_back({test_name, false, e.what(), static_cast<double>(duration.count()) / 1000.0});
 
     std::cout << "✗ " << test_name << " (" << std::fixed << std::setprecision(2)
-              << duration.count() / 1000.0 << " ms)" << std::endl;
+              << static_cast<double>(duration.count()) / 1000.0 << " ms)" << std::endl;
     std::cout << "  Error: " << e.what() << std::endl;
   }
 }
@@ -55,7 +55,7 @@ void TestSuite::print_summary() {
   std::cout << "Failed: " << (total_tests - passed_tests) << std::endl;
 
   if (total_tests > 0) {
-    double success_rate = (double)passed_tests / total_tests * 100.0;
+    double success_rate = static_cast<double>(passed_tests) / total_tests * 100.0;
     std::cout << "Success rate: " << std::fixed << std::setprecision(1) << success_rate << "%"
               << std::endl;
   }

@@ -38,16 +38,27 @@
 // Modern Solar System Suite APIs
 #include "solar_core/bodies/body_factory.hpp"
 #include "solar_core/builders/simulation_builder.hpp"
-
-// Simple logging macros to avoid namespace conflicts
-#define LOG_INFO(tag, msg) \
-  if (verbose_logging) std::cout << "[INFO ] [" << tag << "] " << msg << "\n"
-#define LOG_ERROR(tag, msg) std::cerr << "[ERROR] [" << tag << "] " << msg << "\n"
-#define LOG_DEBUG(tag, msg) \
-  if (verbose_logging) std::cout << "[DEBUG] [" << tag << "] " << msg << "\n"
+#include "solar_utils/logging.hpp"
 
 // Global verbose logging flag
 static bool verbose_logging = false;
+
+// Verbose-aware logging wrappers
+#define VERBOSE_LOG_INFO(tag, msg) \
+  do {                             \
+    if (verbose_logging) {         \
+      LOG_INFO(tag, msg);          \
+    }                              \
+  } while (0)
+
+#define VERBOSE_LOG_DEBUG(tag, msg) \
+  do {                              \
+    if (verbose_logging) {          \
+      LOG_DEBUG(tag, msg);          \
+    }                               \
+  } while (0)
+
+// LOG_ERROR is always shown regardless of verbose flag
 using namespace std::chrono_literals;
 
 /**
@@ -231,7 +242,7 @@ class HttpServer {
                       std::shared_ptr<SolarSystem::Bodies::BodyFactory> factory)
       : config_(std::move(config)), factory_(std::move(factory)) {
     if (config_.verbose_output) {
-      LOG_INFO("HttpServer", "Initialized with verbose output enabled");
+      VERBOSE_LOG_INFO("HttpServer", "Initialized with verbose output enabled");
     }
   }
 
@@ -255,7 +266,7 @@ class HttpServer {
    */
   [[nodiscard]] bool start() {
     try {
-      LOG_INFO("HttpServer", "Starting web server on port " + std::to_string(config_.port));
+      VERBOSE_LOG_INFO("HttpServer", "Starting web server on port " + std::to_string(config_.port));
 
       // Create socket
       server_socket_ = socket(AF_INET, SOCK_STREAM, 0);
@@ -294,7 +305,7 @@ class HttpServer {
         std::cout << "🛑 Press Ctrl+C to stop\n\n";
       }
 
-      LOG_INFO("HttpServer", "Server listening on port " + std::to_string(config_.port));
+      VERBOSE_LOG_INFO("HttpServer", "Server listening on port " + std::to_string(config_.port));
 
       // Main server loop
       return run_server_loop();
@@ -312,7 +323,7 @@ class HttpServer {
     if (server_socket_ >= 0) {
       close(server_socket_);
       server_socket_ = -1;
-      LOG_INFO("HttpServer", "Server stopped");
+      VERBOSE_LOG_INFO("HttpServer", "Server stopped");
     }
   }
 
@@ -367,7 +378,7 @@ class HttpServer {
       }
 
       if (config_.verbose_output) {
-        LOG_DEBUG("HttpServer", "Request: " + request->method + " " + request->path);
+        VERBOSE_LOG_DEBUG("HttpServer", "Request: " + request->method + " " + request->path);
       }
 
       // Generate response
@@ -561,8 +572,7 @@ class SolarSystemAPI {
   /**
    * @brief Get system status
    */
-  static HttpResponse handle_status(const HttpRequest& request,
-                                    SolarSystem::Bodies::BodyFactory& factory) {
+  static HttpResponse handle_status(const HttpRequest&, SolarSystem::Bodies::BodyFactory& factory) {
     try {
       std::ostringstream json;
       json << "{\n";
@@ -597,8 +607,8 @@ class SolarSystemAPI {
       // Body information using modern BodyFactory
       json << "  \"bodies\": {\n";
       try {
-        SolarSystem::Bodies::BodyFactory factory;
-        auto available_bodies = factory.get_available_bodies();
+        SolarSystem::Bodies::BodyFactory local_factory;
+        auto available_bodies = local_factory.get_available_bodies();
         json << "    \"total\": " << available_bodies.size() << ",\n";
         json << "    \"essential\": " << available_bodies.size() << ",\n";
         json << "    \"important\": " << available_bodies.size() << ",\n";
@@ -610,8 +620,8 @@ class SolarSystemAPI {
 
       // Timestamp
       auto now = std::chrono::system_clock::now();
-      auto time_t = std::chrono::system_clock::to_time_t(now);
-      auto tm = *std::localtime(&time_t);
+      auto current_time_t = std::chrono::system_clock::to_time_t(now);
+      auto tm = *std::localtime(&current_time_t);
 
       json << "  \"timestamp\": \"" << std::put_time(&tm, "%Y-%m-%d %H:%M:%S") << "\"\n";
       json << "}";
@@ -628,14 +638,14 @@ class SolarSystemAPI {
    * @brief Get solar system data
    */
   static HttpResponse handle_solar_system(const HttpRequest& request,
-                                          SolarSystem::Bodies::BodyFactory& factory) {
+                                          SolarSystem::Bodies::BodyFactory&) {
     try {
       // Check for date parameter
       auto date_param = request.get_query_param("date");
 
       if (date_param.has_value()) {
         // Handle specific date request
-        LOG_INFO("API", "Solar system data requested for date: " + *date_param);
+        VERBOSE_LOG_INFO("API", "Solar system data requested for date: " + *date_param);
 
         // For now, use legacy simulation approach
         // Modern BodyFactory provides current data automatically
@@ -650,8 +660,8 @@ class SolarSystemAPI {
 
       // Get actual body data from the modern BodyFactory
       try {
-        SolarSystem::Bodies::BodyFactory factory;
-        auto result = factory.create_solar_system();
+        SolarSystem::Bodies::BodyFactory local_factory;
+        auto result = local_factory.create_solar_system();
 
         if (result) {
           const auto& bodies = result.value();
@@ -704,14 +714,14 @@ class SolarSystemAPI {
    * @brief Handle simulation request
    */
   static HttpResponse handle_simulate(const HttpRequest& request,
-                                      SolarSystem::Bodies::BodyFactory& factory) {
+                                      SolarSystem::Bodies::BodyFactory&) {
     try {
       auto date_param = request.get_query_param("date");
       auto speed_param = request.get_query_param("speed");
 
-      LOG_INFO("API",
-               "Simulation request - Date: " + (date_param.has_value() ? *date_param : "current") +
-                   ", Speed: " + (speed_param.has_value() ? *speed_param : "1.0"));
+      VERBOSE_LOG_INFO("API", "Simulation request - Date: " +
+                                  (date_param.has_value() ? *date_param : "current") +
+                                  ", Speed: " + (speed_param.has_value() ? *speed_param : "1.0"));
 
       // Use modern SimulationBuilder for time travel
       using namespace SolarSystem::Core::Builders;
@@ -729,11 +739,14 @@ class SolarSystemAPI {
       auto bodies = body_collection_result.value();
 
       // Parse date parameter if provided
-      std::chrono::system_clock::time_point target_time = std::chrono::system_clock::now();
+      // TODO: Implement date parsing and use target_time for simulation
+      // TODO: Remove [[maybe_unused]] when date parsing is implemented
+      [[maybe_unused]] std::chrono::system_clock::time_point target_time =
+          std::chrono::system_clock::now();
       if (date_param.has_value()) {
         // For now, use current time - in a full implementation, we'd parse the date
         // This is where date parsing would be integrated
-        LOG_INFO("API", "Time travel to date: " + *date_param);
+        VERBOSE_LOG_INFO("API", "Time travel to date: " + *date_param);
       }
 
       // Create and configure simulation
@@ -923,7 +936,7 @@ int main(int argc, char* argv[]) {
     // Initialize logging system
     verbose_logging = config->verbose_output;
 
-    LOG_INFO("Main", "Solar System Web Server (Modern) starting");
+    VERBOSE_LOG_INFO("Main", "Solar System Web Server (Modern) starting");
 
     // Initialize JPL data system
     if (!factory->is_initialized()) {
@@ -934,8 +947,8 @@ int main(int argc, char* argv[]) {
 
     // Modern BodyFactory initializes automatically
     try {
-      SolarSystem::Bodies::BodyFactory factory;
-      LOG_INFO("Main", "Modern BodyFactory initialized successfully");
+      SolarSystem::Bodies::BodyFactory test_factory;
+      VERBOSE_LOG_INFO("Main", "Modern BodyFactory initialized successfully");
     } catch (const std::exception& e) {
       LOG_ERROR("Main", "Failed to initialize BodyFactory: " + std::string(e.what()));
       std::cerr << "⚠️  Warning: Failed to initialize BodyFactory\n";
@@ -962,7 +975,7 @@ int main(int argc, char* argv[]) {
     bool success = server.start();
 
     if (success) {
-      LOG_INFO("Main", "Web server completed successfully");
+      VERBOSE_LOG_INFO("Main", "Web server completed successfully");
       if (!config->verbose_output) {
         std::cout << "\n🎉 Web server session completed!\n";
       }

@@ -120,7 +120,7 @@ int main() {
   // Test web server startup
   TEST_CASE("Web Server Startup") {
     // Clean up any existing web servers first
-    system("pkill -f solar_system_web 2>/dev/null || true");
+    [[maybe_unused]] int cleanup_result = system("pkill -f solar_system_web 2>/dev/null || true");
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
     // Use a unique port to avoid conflicts
@@ -130,7 +130,7 @@ int main() {
                                 std::to_string(test_port) +
                                 " --web-root share/solar_system/web > "
                                 "/dev/null 2>&1 &";
-    system(start_command.c_str());
+    [[maybe_unused]] int start_result = system(start_command.c_str());
 
     // Give server time to start
     std::this_thread::sleep_for(std::chrono::seconds(3));
@@ -159,7 +159,7 @@ int main() {
     }
 
     // Clean up - kill the web server
-    system("pkill -f solar_system_web 2>/dev/null || true");
+    [[maybe_unused]] int cleanup_result2 = system("pkill -f solar_system_web 2>/dev/null || true");
   });
 
   // Test data consistency across applications

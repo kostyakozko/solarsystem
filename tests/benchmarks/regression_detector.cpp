@@ -18,7 +18,7 @@ int main() {
         // Consistent baseline operation
         volatile double result = 0.0;
         for (int i = 0; i < 1000; ++i) {
-          result += std::sin(i * 0.001);
+          result = result + std::sin(i * 0.001);
         }
         (void)result;
       },
@@ -35,7 +35,7 @@ int main() {
         }
         volatile size_t sum = 0;
         for (int val : data) {
-          sum += val;
+          sum = sum + static_cast<size_t>(val);
         }
         (void)sum;
       },

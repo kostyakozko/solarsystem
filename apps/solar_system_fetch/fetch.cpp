@@ -116,7 +116,10 @@ class DataFetcher {
       std::cout << "✅ Cache Status: ACTIVE\n";
       std::cout << "📊 Data Source: " << source << "\n";
       std::cout << "📅 Cached Year: " << current_year << "\n";
-      std::cout << "🕒 Last Updated: " << epoch << "\n";
+
+      // Convert time_point to readable format
+      auto epoch_time_t = std::chrono::system_clock::to_time_t(epoch);
+      std::cout << "🕒 Last Updated: " << std::ctime(&epoch_time_t);
 
       // Show body count using modern BodySelector
       auto body_count = BodySelector().all().count();
@@ -149,7 +152,10 @@ class DataFetcher {
     std::cout << "📅 Target Year: " << target_year << "\n";
 
     // Progress callback for modern experience
-    auto progress_callback = [this](double progress) {
+    // TODO: Pass progress_callback to fetch_current_ephemeris_data() when progress support is
+    // implemented
+    // TODO: Remove [[maybe_unused]] attribute once progress_callback is actually used
+    [[maybe_unused]] auto progress_callback = [this](double progress) {
       if (config_.enable_progress) {
         static int last_percent = -1;
         int current_percent = static_cast<int>(progress * 100);
@@ -304,8 +310,8 @@ class DataFetcher {
 
   [[nodiscard]] int get_current_year() const {
     auto now = std::chrono::system_clock::now();
-    auto time_t = std::chrono::system_clock::to_time_t(now);
-    auto tm = *std::localtime(&time_t);
+    auto current_time_t = std::chrono::system_clock::to_time_t(now);
+    auto tm = *std::localtime(&current_time_t);
     return tm.tm_year + 1900;
   }
 };

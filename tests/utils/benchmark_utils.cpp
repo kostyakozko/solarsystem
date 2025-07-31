@@ -36,7 +36,7 @@ void Timer::reset() { is_running = false; }
 double Timer::elapsed_ms() const {
   auto end = is_running ? std::chrono::high_resolution_clock::now() : end_time;
   auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start_time);
-  return duration.count() / 1000.0;
+  return static_cast<double>(duration.count()) / 1000.0;
 }
 
 double Timer::elapsed_us() const {
@@ -88,14 +88,15 @@ PerformanceResult Profiler::get_result(const std::string& name) const {
 
   result.min_duration_ms = *std::min_element(values.begin(), values.end());
   result.max_duration_ms = *std::max_element(values.begin(), values.end());
-  result.avg_duration_ms = std::accumulate(values.begin(), values.end(), 0.0) / values.size();
+  result.avg_duration_ms =
+      std::accumulate(values.begin(), values.end(), 0.0) / static_cast<double>(values.size());
 
   // Calculate standard deviation
   double variance = 0.0;
   for (double value : values) {
     variance += (value - result.avg_duration_ms) * (value - result.avg_duration_ms);
   }
-  result.std_deviation_ms = std::sqrt(variance / values.size());
+  result.std_deviation_ms = std::sqrt(variance / static_cast<double>(values.size()));
 
   result.duration_ms = result.avg_duration_ms;
   result.operations_per_second = result.avg_duration_ms > 0 ? 1000.0 / result.avg_duration_ms : 0.0;
@@ -171,7 +172,8 @@ MemoryStats MemoryMonitor::get_stats() const {
 size_t MemoryMonitor::get_current_usage() const {
   struct rusage usage;
   getrusage(RUSAGE_SELF, &usage);
-  return usage.ru_maxrss * 1024;  // Convert KB to bytes on Linux, already bytes on macOS
+  return static_cast<size_t>(usage.ru_maxrss) *
+         1024;  // Convert KB to bytes on Linux, already bytes on macOS
 }
 
 size_t MemoryMonitor::get_peak_usage() const { return peak_memory; }
@@ -287,12 +289,12 @@ SystemMonitor::SystemStats SystemMonitor::get_current_stats() {
   // Get memory usage
   struct rusage usage;
   getrusage(RUSAGE_SELF, &usage);
-  stats.memory_usage_bytes = usage.ru_maxrss * 1024;
+  stats.memory_usage_bytes = static_cast<size_t>(usage.ru_maxrss) * 1024;
 
   // Get available memory (simplified)
   long pages = sysconf(_SC_PHYS_PAGES);
   long page_size = sysconf(_SC_PAGE_SIZE);
-  stats.available_memory_bytes = pages * page_size;
+  stats.available_memory_bytes = static_cast<size_t>(pages) * static_cast<size_t>(page_size);
 
   // Other stats would require platform-specific implementations
   stats.cpu_usage_percent = 0.0;
@@ -305,8 +307,8 @@ SystemMonitor::SystemStats SystemMonitor::get_current_stats() {
 
 bool SystemMonitor::is_system_under_load(double cpu_threshold, double memory_threshold) {
   auto stats = get_current_stats();
-  double memory_usage_percent =
-      (double)stats.memory_usage_bytes / stats.available_memory_bytes * 100.0;
+  double memory_usage_percent = static_cast<double>(stats.memory_usage_bytes) /
+                                static_cast<double>(stats.available_memory_bytes) * 100.0;
 
   return stats.cpu_usage_percent > cpu_threshold || memory_usage_percent > memory_threshold;
 }

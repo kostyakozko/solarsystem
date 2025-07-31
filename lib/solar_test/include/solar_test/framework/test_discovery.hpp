@@ -204,22 +204,29 @@ class TestScanner {
       #TestCaseType, {__VA_ARGS__})
 
 // Enhanced test case macros with automatic registration
-#define SOLAR_TEST_CASE_AUTO(name, description, ...)                                           \
-  class name : public SolarSystem::Testing::TestCase {                                         \
-   public:                                                                                     \
-    name() : TestCase({#name, description, {__VA_ARGS__}, std::chrono::seconds(30), false}) {} \
-    void run() override;                                                                       \
-  };                                                                                           \
-  SOLAR_REGISTER_TEST_WITH_TAGS(name, __VA_ARGS__);                                            \
-  void name::run()
-
-#define SOLAR_BENCHMARK_CASE_AUTO(name, description, ...)                                         \
+#define SOLAR_TEST_CASE_AUTO(name, description, ...)                                              \
   class name : public SolarSystem::Testing::TestCase {                                            \
    public:                                                                                        \
     name()                                                                                        \
         : TestCase(                                                                               \
-              {#name, description, {"benchmark", __VA_ARGS__}, std::chrono::minutes(5), true}) {} \
+              {#name, description, {__VA_ARGS__}, std::chrono::seconds(30), false, false, ""}) {} \
     void run() override;                                                                          \
   };                                                                                              \
-  SOLAR_REGISTER_TEST_WITH_TAGS(name, "benchmark", __VA_ARGS__);                                  \
+  SOLAR_REGISTER_TEST_WITH_TAGS(name, __VA_ARGS__);                                               \
+  void name::run()
+
+#define SOLAR_BENCHMARK_CASE_AUTO(name, description, ...)        \
+  class name : public SolarSystem::Testing::TestCase {           \
+   public:                                                       \
+    name()                                                       \
+        : TestCase({#name,                                       \
+                    description,                                 \
+                    {"benchmark", __VA_ARGS__},                  \
+                    std::chrono::minutes(5),                     \
+                    true,                                        \
+                    false,                                       \
+                    ""}) {}                                      \
+    void run() override;                                         \
+  };                                                             \
+  SOLAR_REGISTER_TEST_WITH_TAGS(name, "benchmark", __VA_ARGS__); \
   void name::run()

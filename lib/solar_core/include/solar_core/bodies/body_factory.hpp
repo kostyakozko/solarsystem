@@ -39,7 +39,7 @@ class BodyFactory {
   };
 
   // Constructor
-  BodyFactory() : data_initialized_(false), current_source_("UNINITIALIZED") {
+  BodyFactory() : current_source_("UNINITIALIZED"), data_initialized_(false) {
     initialize_internal_data();
   }
   explicit BodyFactory(CreationOptions options);

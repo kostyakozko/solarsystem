@@ -143,21 +143,21 @@ void SimulationEngine::update_statistics() {
   state_.total_momentum = calculate_total_momentum();
 }
 
-double SimulationEngine::calculate_total_energy() const {
+long double SimulationEngine::calculate_total_energy() const {
   return calculate_kinetic_energy() + calculate_potential_energy();
 }
 
-double SimulationEngine::calculate_kinetic_energy() const {
-  double total_ke = 0.0;
+long double SimulationEngine::calculate_kinetic_energy() const {
+  long double total_ke = 0.0;
   for (const auto& body : bodies_) {
-    double v_squared = body.velocity().magnitude_squared();
+    long double v_squared = body.velocity().magnitude_squared();
     total_ke += 0.5 * body.mass() * v_squared;
   }
   return total_ke;
 }
 
-double SimulationEngine::calculate_potential_energy() const {
-  double total_pe = 0.0;
+long double SimulationEngine::calculate_potential_energy() const {
+  long double total_pe = 0.0;
 
   // Calculate gravitational potential energy between all pairs
   for (auto it1 = bodies_.begin(); it1 != bodies_.end(); ++it1) {
@@ -165,7 +165,7 @@ double SimulationEngine::calculate_potential_energy() const {
       const auto& body1 = *it1;
       const auto& body2 = *it2;
 
-      double distance = (body2.position() - body1.position()).magnitude();
+      long double distance = (body2.position() - body1.position()).magnitude();
       if (distance > 0.0) {
         total_pe -= config_.gravitational_constant * body1.mass() * body2.mass() / distance;
       }
@@ -325,20 +325,20 @@ void SimulationEngine::calculate_forces(std::vector<Math::Vector3d>& forces) con
 Math::Vector3d SimulationEngine::calculate_gravitational_force(
     const Bodies::CelestialBody& body1, const Bodies::CelestialBody& body2) const {
   Math::Vector3d r = body2.position() - body1.position();
-  double distance = r.magnitude();
+  long double distance = r.magnitude();
 
   if (distance == 0.0) {
     return Math::Vector3d{};  // Avoid division by zero
   }
 
-  double force_magnitude =
+  long double force_magnitude =
       config_.gravitational_constant * body1.mass() * body2.mass() / (distance * distance);
   return r.normalized() * force_magnitude;
 }
 
 double SimulationEngine::calculate_adaptive_timestep() const {
   // Simple adaptive timestep based on maximum acceleration
-  double max_acceleration = 0.0;
+  long double max_acceleration = 0.0;
 
   std::vector<Math::Vector3d> forces(bodies_.size());
   calculate_forces(forces);
@@ -346,7 +346,7 @@ double SimulationEngine::calculate_adaptive_timestep() const {
   size_t i = 0;
   for (const auto& body : bodies_) {
     if (body.mass() > 0.0) {
-      double acceleration = forces[i].magnitude() / body.mass();
+      long double acceleration = forces[i].magnitude() / body.mass();
       max_acceleration = std::max(max_acceleration, acceleration);
     }
     ++i;
@@ -354,7 +354,7 @@ double SimulationEngine::calculate_adaptive_timestep() const {
 
   if (max_acceleration > 0.0) {
     // Choose timestep such that position change is reasonable
-    return std::sqrt(config_.tolerance / max_acceleration);
+    return std::sqrt(config_.tolerance / static_cast<double>(max_acceleration));
   }
 
   return config_.time_step;
@@ -363,7 +363,7 @@ double SimulationEngine::calculate_adaptive_timestep() const {
 void SimulationEngine::check_collisions() {
   for (auto it1 = bodies_.begin(); it1 != bodies_.end(); ++it1) {
     for (auto it2 = std::next(it1); it2 != bodies_.end(); ++it2) {
-      double distance = (it2->position() - it1->position()).magnitude();
+      long double distance = (it2->position() - it1->position()).magnitude();
       if (distance < config_.collision_threshold) {
         if (collision_callback_) {
           collision_callback_(*it1, *it2);

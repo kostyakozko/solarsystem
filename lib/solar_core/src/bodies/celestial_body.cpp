@@ -25,7 +25,7 @@ CelestialBody::CelestialBody(Properties props)
   }
 }
 
-void CelestialBody::apply_force(const Math::Vector3d& force, double dt) noexcept {
+void CelestialBody::apply_force(const Math::Vector3d& force, double) noexcept {
   if (mass_ > 0.0) {
     // F = ma, so a = F/m
     acceleration_ += force / mass_;
@@ -50,18 +50,17 @@ Math::Vector3d CelestialBody::gravitational_force_to(const CelestialBody& other)
     return Math::Vector3d{};
   }
 
-  const auto distance = std::sqrt(distance_sq);
   const auto force_magnitude = Math::Constants::G * mass_ * other.mass_ / distance_sq;
 
   // Force direction is along the displacement vector
   return displacement.normalized() * force_magnitude;
 }
 
-double CelestialBody::distance_to(const CelestialBody& other) const noexcept {
+long double CelestialBody::distance_to(const CelestialBody& other) const noexcept {
   return Math::distance(position_, other.position_);
 }
 
-double CelestialBody::distance_squared_to(const CelestialBody& other) const noexcept {
+long double CelestialBody::distance_squared_to(const CelestialBody& other) const noexcept {
   return Math::distance_squared(position_, other.position_);
 }
 

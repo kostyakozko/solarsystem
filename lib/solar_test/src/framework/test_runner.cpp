@@ -252,8 +252,9 @@ TestSuiteResult TestRunner::execute_tests_parallel(const std::vector<TestCase*>&
   for (size_t thread_id = 0; thread_id < num_threads; ++thread_id) {
     size_t thread_test_count = tests_per_thread + (thread_id < remaining_tests ? 1 : 0);
 
-    std::vector<TestCase*> thread_tests(tests.begin() + test_index,
-                                        tests.begin() + test_index + thread_test_count);
+    std::vector<TestCase*> thread_tests(
+        tests.begin() + static_cast<std::ptrdiff_t>(test_index),
+        tests.begin() + static_cast<std::ptrdiff_t>(test_index + thread_test_count));
 
     futures.push_back(std::async(std::launch::async, [this, thread_tests]() {
       std::vector<TestResult> thread_results;

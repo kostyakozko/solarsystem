@@ -20,12 +20,12 @@ int main() {
         // Simulate data processing that scales with input size
         std::vector<double> data(size);
         for (size_t i = 0; i < size; ++i) {
-          data[i] = std::sin(i * 0.001);
+          data[i] = std::sin(static_cast<double>(i) * 0.001);
         }
 
         volatile double sum = 0.0;
         for (double val : data) {
-          sum += val;
+          sum = sum + val;
         }
         (void)sum;
       },

@@ -205,7 +205,7 @@ void NetworkMock::set_default_response(const MockHttpResponse& response) {
   default_response_ = response;
 }
 
-bool NetworkMock::load_mock_responses_from_directory(const std::string& directory_path) {
+bool NetworkMock::load_mock_responses_from_directory(const std::string&) {
   // Simplified implementation - in a real implementation, this would
   // load response files from the directory
   return true;
@@ -516,7 +516,7 @@ void NetworkMock::remove_global_mock() {
 
 void NetworkMock::create_test_scenario(const std::string& scenario_name,
                                        const NetworkCondition& condition,
-                                       std::chrono::duration<double> duration) {
+                                       std::chrono::duration<double>) {
   set_network_condition(condition);
 
   record_operation(MockNetworkOperationType::Connect, scenario_name, "SCENARIO", {}, "", {},
@@ -680,8 +680,8 @@ std::optional<MockHttpResponse> NetworkMock::find_response_for_url(const std::st
   return std::nullopt;
 }
 
-MockHttpResponse NetworkMock::generate_realistic_response(const std::string& url,
-                                                          const std::string& method) const {
+MockHttpResponse NetworkMock::generate_realistic_response(const std::string&,
+                                                          const std::string&) const {
   MockHttpResponse response;
   response.status_code = 200;
   response.status_message = "OK";
@@ -820,7 +820,7 @@ ScopedNetworkMock::~ScopedNetworkMock() { NetworkMock::remove_global_mock(); }
 bool NetworkTestUtils::test_network_resilience(std::function<bool()> network_operation,
                                                const std::vector<NetworkCondition>& conditions,
                                                size_t max_retries) {
-  for (const auto& condition : conditions) {
+  for ([[maybe_unused]] const auto& condition : conditions) {
     bool success = false;
     size_t attempts = 0;
 

@@ -199,16 +199,16 @@ bool DataValidator::validate_energy_conservation(const ReferenceState& initial,
   double initial_kinetic = 0.0, final_kinetic = 0.0;
 
   for (const auto& body : initial.bodies) {
-    double v_squared = body.velocity.x() * body.velocity.x() +
-                       body.velocity.y() * body.velocity.y() +
-                       body.velocity.z() * body.velocity.z();
+    double v_squared = static_cast<double>(body.velocity.x() * body.velocity.x()) +
+                       static_cast<double>(body.velocity.y() * body.velocity.y()) +
+                       static_cast<double>(body.velocity.z() * body.velocity.z());
     initial_kinetic += 0.5 * body.mass * v_squared * 1e6;  // Convert km²/s² to m²/s²
   }
 
   for (const auto& body : final.bodies) {
-    double v_squared = body.velocity.x() * body.velocity.x() +
-                       body.velocity.y() * body.velocity.y() +
-                       body.velocity.z() * body.velocity.z();
+    double v_squared = static_cast<double>(body.velocity.x() * body.velocity.x()) +
+                       static_cast<double>(body.velocity.y() * body.velocity.y()) +
+                       static_cast<double>(body.velocity.z() * body.velocity.z());
     final_kinetic += 0.5 * body.mass * v_squared * 1e6;  // Convert km²/s² to m²/s²
   }
 
@@ -232,13 +232,13 @@ bool DataValidator::validate_momentum_conservation(const ReferenceState& initial
     final_momentum += static_cast<long double>(body.mass) * body.velocity;
   }
 
-  double initial_magnitude = std::sqrt(initial_momentum.x() * initial_momentum.x() +
-                                       initial_momentum.y() * initial_momentum.y() +
-                                       initial_momentum.z() * initial_momentum.z());
+  double initial_magnitude = static_cast<double>(std::sqrt(
+      initial_momentum.x() * initial_momentum.x() + initial_momentum.y() * initial_momentum.y() +
+      initial_momentum.z() * initial_momentum.z()));
 
-  double final_magnitude =
-      std::sqrt(final_momentum.x() * final_momentum.x() + final_momentum.y() * final_momentum.y() +
-                final_momentum.z() * final_momentum.z());
+  double final_magnitude = static_cast<double>(std::sqrt(final_momentum.x() * final_momentum.x() +
+                                                         final_momentum.y() * final_momentum.y() +
+                                                         final_momentum.z() * final_momentum.z()));
 
   if (initial_magnitude < 1e-10) return true;  // System at rest
 
@@ -255,15 +255,18 @@ double DataValidator::calculate_position_error(const ReferenceState& computed,
 
   double total_error = 0.0;
   for (size_t i = 0; i < computed.bodies.size(); ++i) {
-    double dx = computed.bodies[i].position.x() - reference.bodies[i].position.x();
-    double dy = computed.bodies[i].position.y() - reference.bodies[i].position.y();
-    double dz = computed.bodies[i].position.z() - reference.bodies[i].position.z();
+    double dx =
+        static_cast<double>(computed.bodies[i].position.x() - reference.bodies[i].position.x());
+    double dy =
+        static_cast<double>(computed.bodies[i].position.y() - reference.bodies[i].position.y());
+    double dz =
+        static_cast<double>(computed.bodies[i].position.z() - reference.bodies[i].position.z());
 
     double error = std::sqrt(dx * dx + dy * dy + dz * dz);
     total_error += error;
   }
 
-  return total_error / computed.bodies.size();  // Average error
+  return total_error / static_cast<double>(computed.bodies.size());  // Average error
 }
 
 double DataValidator::calculate_velocity_error(const ReferenceState& computed,
@@ -274,15 +277,18 @@ double DataValidator::calculate_velocity_error(const ReferenceState& computed,
 
   double total_error = 0.0;
   for (size_t i = 0; i < computed.bodies.size(); ++i) {
-    double dvx = computed.bodies[i].velocity.x() - reference.bodies[i].velocity.x();
-    double dvy = computed.bodies[i].velocity.y() - reference.bodies[i].velocity.y();
-    double dvz = computed.bodies[i].velocity.z() - reference.bodies[i].velocity.z();
+    double dvx =
+        static_cast<double>(computed.bodies[i].velocity.x() - reference.bodies[i].velocity.x());
+    double dvy =
+        static_cast<double>(computed.bodies[i].velocity.y() - reference.bodies[i].velocity.y());
+    double dvz =
+        static_cast<double>(computed.bodies[i].velocity.z() - reference.bodies[i].velocity.z());
 
     double error = std::sqrt(dvx * dvx + dvy * dvy + dvz * dvz);
     total_error += error;
   }
 
-  return total_error / computed.bodies.size();  // Average error
+  return total_error / static_cast<double>(computed.bodies.size());  // Average error
 }
 
 // Mock JPL data generation for testing

@@ -115,14 +115,15 @@ void BodyCollection::apply_to_all(std::function<void(const CelestialBody&)> func
 }
 
 BodyCollection::size_type BodyCollection::count_by_type(BodyType type) const {
-  return std::count_if(bodies_.begin(), bodies_.end(),
-                       [type](const CelestialBody& body) { return body.type() == type; });
+  return static_cast<size_type>(
+      std::count_if(bodies_.begin(), bodies_.end(),
+                    [type](const CelestialBody& body) { return body.type() == type; }));
 }
 
 BodyCollection::size_type BodyCollection::count_by_priority(BodyPriority priority) const {
-  return std::count_if(bodies_.begin(), bodies_.end(), [priority](const CelestialBody& body) {
-    return body.priority() == priority;
-  });
+  return static_cast<size_type>(
+      std::count_if(bodies_.begin(), bodies_.end(),
+                    [priority](const CelestialBody& body) { return body.priority() == priority; }));
 }
 
 double BodyCollection::total_mass() const {

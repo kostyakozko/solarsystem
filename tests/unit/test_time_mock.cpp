@@ -17,7 +17,13 @@ using namespace SolarSystem::Testing::Mocks;
 class TimeMockBasicTest : public TestCase {
  public:
   TimeMockBasicTest()
-      : TestCase({"TimeMockBasicTest", "Test basic time mock operations", {"unit", "time_mock"}}) {}
+      : TestCase({"TimeMockBasicTest",
+                  "Test basic time mock operations",
+                  {"unit", "time_mock"},
+                  std::chrono::seconds(30),
+                  false,
+                  false,
+                  ""}) {}
 
   void run() override {
     TimeMockConfig config;
@@ -60,7 +66,13 @@ class TimeMockBasicTest : public TestCase {
 class TimeMockSleepTest : public TestCase {
  public:
   TimeMockSleepTest()
-      : TestCase({"TimeMockSleepTest", "Test time mock sleep operations", {"unit", "time_mock"}}) {}
+      : TestCase({"TimeMockSleepTest",
+                  "Test time mock sleep operations",
+                  {"unit", "time_mock"},
+                  std::chrono::seconds(30),
+                  false,
+                  false,
+                  ""}) {}
 
   void run() override {
     TimeMockConfig config;
@@ -68,8 +80,6 @@ class TimeMockSleepTest : public TestCase {
     config.start_frozen = true;
 
     TimeMock time_mock(config);
-
-    auto start_time = time_mock.now();
 
     // Test sleep_for
     time_mock.sleep_for(std::chrono::seconds(30));
@@ -86,7 +96,11 @@ class TimeMockSleepTest : public TestCase {
     // Test total sleep duration
     auto total_sleep = time_mock.total_sleep_duration();
     auto expected_sleep = std::chrono::seconds(35);
-    assert_true(std::abs(total_sleep.count() - expected_sleep.count()) < 0.1,
+    auto total_sleep_seconds =
+        std::chrono::duration_cast<std::chrono::duration<double>>(total_sleep);
+    auto expected_sleep_seconds =
+        std::chrono::duration_cast<std::chrono::duration<double>>(expected_sleep);
+    assert_true(std::abs(total_sleep_seconds.count() - expected_sleep_seconds.count()) < 0.1,
                 "Total sleep duration should be ~35 seconds");
   }
 };
@@ -97,9 +111,13 @@ class TimeMockSleepTest : public TestCase {
 class TimeMockFormatTest : public TestCase {
  public:
   TimeMockFormatTest()
-      : TestCase(
-            {"TimeMockFormatTest", "Test time mock formatting operations", {"unit", "time_mock"}}) {
-  }
+      : TestCase({"TimeMockFormatTest",
+                  "Test time mock formatting operations",
+                  {"unit", "time_mock"},
+                  std::chrono::seconds(30),
+                  false,
+                  false,
+                  ""}) {}
 
   void run() override {
     TimeMock time_mock;
@@ -131,8 +149,13 @@ class TimeMockFormatTest : public TestCase {
 class TimeMockFactoryTest : public TestCase {
  public:
   TimeMockFactoryTest()
-      : TestCase({"TimeMockFactoryTest", "Test time mock factory methods", {"unit", "time_mock"}}) {
-  }
+      : TestCase({"TimeMockFactoryTest",
+                  "Test time mock factory methods",
+                  {"unit", "time_mock"},
+                  std::chrono::seconds(30),
+                  false,
+                  false,
+                  ""}) {}
 
   void run() override {
     // Test default factory
@@ -169,7 +192,13 @@ class TimeMockFactoryTest : public TestCase {
 class ScopedTimeMockTest : public TestCase {
  public:
   ScopedTimeMockTest()
-      : TestCase({"ScopedTimeMockTest", "Test scoped time mock RAII", {"unit", "time_mock"}}) {}
+      : TestCase({"ScopedTimeMockTest",
+                  "Test scoped time mock RAII",
+                  {"unit", "time_mock"},
+                  std::chrono::seconds(30),
+                  false,
+                  false,
+                  ""}) {}
 
   void run() override {
     auto original_mock = TimeMockFactory::create_default();

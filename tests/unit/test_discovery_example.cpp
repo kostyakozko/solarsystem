@@ -57,7 +57,9 @@ class CustomMathTest : public TestCase {
                   "Custom mathematical operations test",
                   {"unit", "math", "custom"},
                   std::chrono::seconds(30),
-                  false}) {}
+                  false,
+                  false,
+                  ""}) {}
 
   void run() override {
     // Test trigonometric functions
@@ -84,7 +86,9 @@ class TimeoutTest : public TestCase {
                   "Test with custom timeout",
                   {"unit", "timeout"},
                   std::chrono::milliseconds(500),  // Short timeout
-                  false}) {}
+                  false,
+                  false,
+                  ""}) {}
 
   void run() override {
     // This test should complete quickly
@@ -102,7 +106,9 @@ class NetworkTest : public TestCase {
                   "Network connectivity test",
                   {"integration", "network", "external"},
                   std::chrono::minutes(1),
-                  false}) {}
+                  false,
+                  false,
+                  ""}) {}
 
   void run() override {
     // Simulate network test

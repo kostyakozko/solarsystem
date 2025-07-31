@@ -1,4 +1,9 @@
 cmake_minimum_required(VERSION 3.15)
+
+# Configure compiler selection BEFORE project() declaration
+include(cmake/CompilerSelection.cmake)
+configure_solar_system_compiler()
+
 project(SolarSystemSuite VERSION 4.0.0 LANGUAGES CXX)
 
 # Modern C++20 standard for Phase 0 architecture refactoring
@@ -6,10 +11,16 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+# Include compiler warnings configuration
+include(cmake/CompilerWarnings.cmake)
+
 # Build type
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
 endif()
+
+# Compiler warnings configuration - enabled by default
+option(WARNINGS_AS_ERRORS "Treat compilation warnings as errors (linking warnings ignored)" ON)
 
 # Enable LTO for Release builds
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
@@ -65,6 +76,9 @@ endif()
 add_subdirectory(lib)
 add_subdirectory(apps)
 add_subdirectory(examples)
+
+# Configure warnings as errors for compilation (but not linking)
+configure_solar_system_warnings()
 
 # Testing framework (optional)
 option(ENABLE_TESTING "Enable comprehensive testing framework" OFF)
@@ -147,11 +161,13 @@ add_custom_target(install-suite
 )
 
 # Print build information
+display_compiler_info()
 message(STATUS "Solar System Suite Configuration:")
 message(STATUS "  Version: ${PROJECT_VERSION}")
 message(STATUS "  Build type: ${CMAKE_BUILD_TYPE}")
 message(STATUS "  C++ standard: ${CMAKE_CXX_STANDARD}")
 message(STATUS "  Compiler: ${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION}")
+message(STATUS "  Warnings as errors: ${WARNINGS_AS_ERRORS}")
 message(STATUS "  LTO enabled: ${CMAKE_INTERPROCEDURAL_OPTIMIZATION}")
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
     message(STATUS "  Optimization flags: ${CMAKE_CXX_FLAGS_RELEASE}")

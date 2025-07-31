@@ -46,7 +46,7 @@ void print_all_bodies(const Bodies::BodyCollection& bodies,
   // Print all bodies in legacy format: name, x, y, z (relative to barycenter), distance, vx, vy, vz
   for (const auto& body : bodies) {
     auto pos_relative = body.position() - barycenter;
-    double distance = pos_relative.magnitude();
+    long double distance = pos_relative.magnitude();
 
     std::cout << std::setw(15) << body.name() << std::setw(21) << std::scientific
               << pos_relative.x() << std::setw(21) << std::scientific << pos_relative.y()
@@ -112,8 +112,8 @@ bool run_optimized_simulation(Bodies::BodyFactory& factory,
       .preferred_source = factory.has_current_ephemeris_data()
                               ? Bodies::BodyFactory::DataSource::CACHED_DATA
                               : Bodies::BodyFactory::DataSource::FALLBACK_DATA,
-      .allow_fallback = true,
-      .reference_time = start_time};
+      .reference_time = start_time,
+      .allow_fallback = true};
 
   auto solar_system_result = factory.create_solar_system(body_options);
   if (!solar_system_result.has_value()) {

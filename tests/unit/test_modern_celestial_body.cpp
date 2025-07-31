@@ -22,7 +22,8 @@ int main() {
                                     .velocity = Vector3d{0.0, 29780.0, 0.0},
                                     .type = BodyType::Planet,
                                     .priority = BodyPriority::Essential,
-                                    .jpl_id = "399"};
+                                    .jpl_id = "399",
+                                    .creation_date = std::chrono::system_clock::now()};
 
     CelestialBody earth(props);
 
@@ -40,7 +41,9 @@ int main() {
                                     .position = Vector3d{},
                                     .velocity = Vector3d{},
                                     .type = BodyType::Planet,
-                                    .priority = BodyPriority::Essential};
+                                    .priority = BodyPriority::Essential,
+                                    .jpl_id = "",
+                                    .creation_date = std::chrono::system_clock::now()};
 
     bool exception_thrown = false;
     try {
@@ -58,7 +61,9 @@ int main() {
                                     .position = Vector3d{},
                                     .velocity = Vector3d{},
                                     .type = BodyType::Planet,
-                                    .priority = BodyPriority::Essential};
+                                    .priority = BodyPriority::Essential,
+                                    .jpl_id = "",
+                                    .creation_date = std::chrono::system_clock::now()};
 
     bool exception_thrown = false;
     try {
@@ -76,7 +81,9 @@ int main() {
                                     .position = Vector3d{0.0, 0.0, 0.0},
                                     .velocity = Vector3d{0.0, 0.0, 0.0},
                                     .type = BodyType::Planet,
-                                    .priority = BodyPriority::Essential};
+                                    .priority = BodyPriority::Essential,
+                                    .jpl_id = "",
+                                    .creation_date = std::chrono::system_clock::now()};
 
     CelestialBody body(props);
 
@@ -104,7 +111,9 @@ int main() {
                                     .position = Vector3d{},
                                     .velocity = Vector3d{},
                                     .type = BodyType::Planet,
-                                    .priority = BodyPriority::Essential};
+                                    .priority = BodyPriority::Essential,
+                                    .jpl_id = "",
+                                    .creation_date = std::chrono::system_clock::now()};
 
     CelestialBody body(props);
 
@@ -123,7 +132,9 @@ int main() {
                                     .position = Vector3d{0.0, 0.0, 0.0},
                                     .velocity = Vector3d{1.0, 0.0, 0.0},
                                     .type = BodyType::Planet,
-                                    .priority = BodyPriority::Essential};
+                                    .priority = BodyPriority::Essential,
+                                    .jpl_id = "",
+                                    .creation_date = std::chrono::system_clock::now()};
 
     CelestialBody body(props);
 
@@ -150,14 +161,18 @@ int main() {
                                      .position = Vector3d{0.0, 0.0, 0.0},
                                      .velocity = Vector3d{},
                                      .type = BodyType::Planet,
-                                     .priority = BodyPriority::Essential};
+                                     .priority = BodyPriority::Essential,
+                                     .jpl_id = "",
+                                     .creation_date = std::chrono::system_clock::now()};
 
     CelestialBody::Properties props2{.name = "Body2",
                                      .mass = 1e24,
                                      .position = Vector3d{1e6, 0.0, 0.0},
                                      .velocity = Vector3d{},
                                      .type = BodyType::Planet,
-                                     .priority = BodyPriority::Essential};
+                                     .priority = BodyPriority::Essential,
+                                     .jpl_id = "",
+                                     .creation_date = std::chrono::system_clock::now()};
 
     CelestialBody body1(props1);
     CelestialBody body2(props2);
@@ -180,20 +195,24 @@ int main() {
                                      .position = Vector3d{0.0, 0.0, 0.0},
                                      .velocity = Vector3d{},
                                      .type = BodyType::Planet,
-                                     .priority = BodyPriority::Essential};
+                                     .priority = BodyPriority::Essential,
+                                     .jpl_id = "",
+                                     .creation_date = std::chrono::system_clock::now()};
 
     CelestialBody::Properties props2{.name = "Body2",
                                      .mass = 1.0,
                                      .position = Vector3d{3.0, 4.0, 0.0},
                                      .velocity = Vector3d{},
                                      .type = BodyType::Planet,
-                                     .priority = BodyPriority::Essential};
+                                     .priority = BodyPriority::Essential,
+                                     .jpl_id = "",
+                                     .creation_date = std::chrono::system_clock::now()};
 
     CelestialBody body1(props1);
     CelestialBody body2(props2);
 
-    double distance = body1.distance_to(body2);
-    double distance_sq = body1.distance_squared_to(body2);
+    double distance = static_cast<double>(body1.distance_to(body2));
+    double distance_sq = static_cast<double>(body1.distance_squared_to(body2));
 
     ASSERT_EQ(5.0, distance);
     ASSERT_EQ(25.0, distance_sq);
@@ -210,7 +229,9 @@ int main() {
                                      .position = Vector3d{},
                                      .velocity = Vector3d{},
                                      .type = BodyType::Planet,
-                                     .priority = BodyPriority::Essential};
+                                     .priority = BodyPriority::Essential,
+                                     .jpl_id = "",
+                                     .creation_date = std::chrono::system_clock::now()};
 
     CelestialBody always_available(props1);
     ASSERT_TRUE(always_available.is_available_at(past));
@@ -224,6 +245,7 @@ int main() {
                                      .velocity = Vector3d{},
                                      .type = BodyType::Spacecraft,
                                      .priority = BodyPriority::Optional,
+                                     .jpl_id = "",
                                      .creation_date = now};
 
     CelestialBody time_limited(props2);
@@ -238,23 +260,27 @@ int main() {
                                      .position = Vector3d{},
                                      .velocity = Vector3d{},
                                      .type = BodyType::Planet,
-                                     .priority = BodyPriority::Essential};
+                                     .priority = BodyPriority::Essential,
+                                     .jpl_id = "",
+                                     .creation_date = std::chrono::system_clock::now()};
 
-    CelestialBody::Properties props2{
-        .name = "Earth",
-        .mass = 2.0,                          // Different mass
-        .position = Vector3d{1.0, 0.0, 0.0},  // Different position
-        .velocity = Vector3d{},
-        .type = BodyType::Moon,              // Different type
-        .priority = BodyPriority::Important  // Different priority
-    };
+    CelestialBody::Properties props2{.name = "Earth",
+                                     .mass = 2.0,                          // Different mass
+                                     .position = Vector3d{1.0, 0.0, 0.0},  // Different position
+                                     .velocity = Vector3d{},
+                                     .type = BodyType::Moon,               // Different type
+                                     .priority = BodyPriority::Important,  // Different priority
+                                     .jpl_id = "",
+                                     .creation_date = std::chrono::system_clock::now()};
 
     CelestialBody::Properties props3{.name = "Mars",
                                      .mass = 1.0,
                                      .position = Vector3d{},
                                      .velocity = Vector3d{},
                                      .type = BodyType::Planet,
-                                     .priority = BodyPriority::Essential};
+                                     .priority = BodyPriority::Essential,
+                                     .jpl_id = "",
+                                     .creation_date = std::chrono::system_clock::now()};
 
     CelestialBody earth1(props1);
     CelestialBody earth2(props2);
@@ -273,7 +299,8 @@ int main() {
                                     .velocity = Vector3d{0.0, 29780.0, 0.0},
                                     .type = BodyType::Planet,
                                     .priority = BodyPriority::Essential,
-                                    .jpl_id = "399"};
+                                    .jpl_id = "399",
+                                    .creation_date = std::chrono::system_clock::now()};
 
     CelestialBody earth(props);
     std::string str = earth.to_string();

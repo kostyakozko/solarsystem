@@ -219,8 +219,8 @@ struct StepResult {
   int exit_code = 0;
   std::chrono::milliseconds duration{0};
 
-  StepResult(bool success, std::string message, int exit_code = 0)
-      : success(success), message(std::move(message)), exit_code(exit_code) {}
+  StepResult(bool success_param, std::string message_param, int exit_code_param = 0)
+      : success(success_param), message(std::move(message_param)), exit_code(exit_code_param) {}
 };
 
 /**
@@ -244,7 +244,7 @@ class WorkflowStep {
   /**
    * @brief Check if step should be skipped
    */
-  virtual bool should_skip(const LauncherConfig& config) const { return false; }
+  virtual bool should_skip(const LauncherConfig&) const { return false; }
 };
 
 /**
@@ -443,8 +443,7 @@ class AutoFetchStep : public WorkflowStep {
  */
 class SimulationStep : public WorkflowStep {
  public:
-  StepResult execute(const LauncherConfig& config,
-                     SolarSystem::Bodies::BodyFactory& factory) override {
+  StepResult execute(const LauncherConfig& config, SolarSystem::Bodies::BodyFactory&) override {
     auto start_time = std::chrono::steady_clock::now();
 
     try {

@@ -53,7 +53,11 @@ class ServiceRegistryBasicTest : public TestCase {
   ServiceRegistryBasicTest()
       : TestCase({"ServiceRegistryBasicTest",
                   "Test basic service registry operations",
-                  {"unit", "mock_registry"}}) {}
+                  {"unit", "mock_registry"},
+                  std::chrono::seconds(30),
+                  false,
+                  false,
+                  ""}) {}
 
   void run() override {
     auto& registry = MockServiceRegistry::instance();
@@ -84,7 +88,11 @@ class MockServiceRegistryTest : public TestCase {
   MockServiceRegistryTest()
       : TestCase({"MockServiceRegistryTest",
                   "Test mock service registration",
-                  {"unit", "mock_registry"}}) {}
+                  {"unit", "mock_registry"},
+                  std::chrono::seconds(30),
+                  false,
+                  false,
+                  ""}) {}
 
   void run() override {
     auto& registry = MockServiceRegistry::instance();
@@ -116,7 +124,11 @@ class ServiceInstanceTest : public TestCase {
   ServiceInstanceTest()
       : TestCase({"ServiceInstanceTest",
                   "Test service instance registration",
-                  {"unit", "mock_registry"}}) {}
+                  {"unit", "mock_registry"},
+                  std::chrono::seconds(30),
+                  false,
+                  false,
+                  ""}) {}
 
   void run() override {
     auto& registry = MockServiceRegistry::instance();
@@ -144,7 +156,11 @@ class ServiceLifetimeTest : public TestCase {
   ServiceLifetimeTest()
       : TestCase({"ServiceLifetimeTest",
                   "Test service lifetime management",
-                  {"unit", "mock_registry"}}) {}
+                  {"unit", "mock_registry"},
+                  std::chrono::seconds(30),
+                  false,
+                  false,
+                  ""}) {}
 
   void run() override {
     auto& registry = MockServiceRegistry::instance();
@@ -179,8 +195,13 @@ class ServiceLifetimeTest : public TestCase {
 class ServiceScopeTest : public TestCase {
  public:
   ServiceScopeTest()
-      : TestCase(
-            {"ServiceScopeTest", "Test service scope functionality", {"unit", "mock_registry"}}) {}
+      : TestCase({"ServiceScopeTest",
+                  "Test service scope functionality",
+                  {"unit", "mock_registry"},
+                  std::chrono::seconds(30),
+                  false,
+                  false,
+                  ""}) {}
 
   void run() override {
     auto& registry = MockServiceRegistry::instance();
@@ -218,8 +239,13 @@ class ServiceScopeTest : public TestCase {
 class MockServiceFactoryTest : public TestCase {
  public:
   MockServiceFactoryTest()
-      : TestCase(
-            {"MockServiceFactoryTest", "Test mock service factory", {"unit", "mock_registry"}}) {}
+      : TestCase({"MockServiceFactoryTest",
+                  "Test mock service factory",
+                  {"unit", "mock_registry"},
+                  std::chrono::seconds(30),
+                  false,
+                  false,
+                  ""}) {}
 
   void run() override {
     // Test JPL mock creation

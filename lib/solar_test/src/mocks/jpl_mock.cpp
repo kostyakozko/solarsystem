@@ -296,7 +296,7 @@ void JPLMock::reset_call_history() {
 
 // === Mock Interface Implementation ===
 
-SolarSystem::JPL::JPLResult<std::string> JPLMock::mock_request(const std::string& url,
+SolarSystem::JPL::JPLResult<std::string> JPLMock::mock_request(const std::string&,
                                                                const std::string& params) {
   // Parse JPL ID and epoch from parameters
   int jpl_id = parse_jpl_id_from_params(params);
@@ -509,8 +509,8 @@ void JPLMock::simulate_network_delay() const {
   }
 
   // Generate random delay within configured range
-  std::uniform_int_distribution<int> delay_dist(config_.min_response_delay.count(),
-                                                config_.max_response_delay.count());
+  std::uniform_int_distribution<long long> delay_dist(config_.min_response_delay.count(),
+                                                      config_.max_response_delay.count());
 
   auto delay = std::chrono::milliseconds(delay_dist(gen_));
   std::this_thread::sleep_for(delay);

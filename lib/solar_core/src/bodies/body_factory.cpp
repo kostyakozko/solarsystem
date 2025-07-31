@@ -4,14 +4,15 @@
 
 // Include existing JPL system
 #include <algorithm>
+#include <charconv>
 #include <sstream>
 
 namespace SolarSystem::Bodies {
 
 BodyFactory::BodyFactory(CreationOptions options)
-    : data_initialized_(false),
+    : default_options_(std::move(options)),
       current_source_("UNINITIALIZED"),
-      default_options_(std::move(options)) {
+      data_initialized_(false) {
   // Only initialize JPL data system if we're going to use JPL sources
   if (default_options_.preferred_source == DataSource::JPL_HORIZONS ||
       default_options_.preferred_source == DataSource::CACHED_DATA) {
@@ -226,7 +227,7 @@ Utils::Expected<CelestialBody, std::string> BodyFactory::create_from_jpl(
 }
 
 Utils::Expected<CelestialBody, std::string> BodyFactory::create_from_cache(
-    std::string_view name, std::chrono::system_clock::time_point time) const {
+    std::string_view name, std::chrono::system_clock::time_point) const {
   if (!jpl_client_) {
     return Utils::Expected<CelestialBody, std::string>{"JPL client not initialized"};
   }
@@ -291,7 +292,7 @@ BodyPriority BodyFactory::determine_body_priority(std::string_view name) const {
 
 std::optional<int> BodyFactory::get_jpl_id(std::string_view name) const {
   // Find in JPL body map
-  for (int i = 0; i < SolarSystem::Data::BODY_COUNT; ++i) {
+  for (size_t i = 0; i < SolarSystem::Data::BODY_COUNT; ++i) {
     if (name == Data::FALLBACK_SOLAR_SYSTEM[i].name) {
       int jpl_id;
       auto sv = Data::FALLBACK_SOLAR_SYSTEM[i].jpl_id;

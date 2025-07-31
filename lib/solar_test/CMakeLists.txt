@@ -8,6 +8,7 @@ add_library(solar_test STATIC
     src/framework/assertions.cpp
     src/framework/test_result.cpp
     src/framework/test_discovery.cpp
+    src/framework/test_data_manager.cpp
     src/mocks/jpl_mock.cpp
     src/mocks/cache_mock.cpp
     src/mocks/time_mock.cpp

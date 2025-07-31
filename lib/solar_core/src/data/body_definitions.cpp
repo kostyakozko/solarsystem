@@ -11,7 +11,8 @@ Bodies::CelestialBody BodyDefinition::to_celestial_body() const {
                                           .velocity = velocity,
                                           .type = type,
                                           .priority = priority,
-                                          .jpl_id = std::string(jpl_id)};
+                                          .jpl_id = std::string(jpl_id),
+                                          .creation_date = std::nullopt};
 
   // Set creation dates for spacecraft for historical accuracy
   if (type == Bodies::BodyType::Spacecraft) {
