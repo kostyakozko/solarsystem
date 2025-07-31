@@ -9,6 +9,12 @@ add_library(solar_test STATIC
     src/framework/test_result.cpp
     src/framework/test_discovery.cpp
     src/framework/test_data_manager.cpp
+    src/reporters/test_reporter.cpp
+    src/reporters/console_reporter.cpp
+    src/reporters/xml_reporter.cpp
+    src/reporters/json_reporter.cpp
+    src/reporters/tap_reporter.cpp
+    src/reporters/coverage_reporter.cpp
     src/mocks/jpl_mock.cpp
     src/mocks/cache_mock.cpp
     src/mocks/time_mock.cpp

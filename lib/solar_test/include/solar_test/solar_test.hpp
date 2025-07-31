@@ -14,6 +14,14 @@
 #include "framework/test_result.hpp"
 #include "framework/test_runner.hpp"
 
+// Reporting framework
+#include "reporters/console_reporter.hpp"
+#include "reporters/coverage_reporter.hpp"
+#include "reporters/json_reporter.hpp"
+#include "reporters/tap_reporter.hpp"
+#include "reporters/test_reporter.hpp"
+#include "reporters/xml_reporter.hpp"
+
 // Mock framework
 #include "mocks/cache_mock.hpp"
 #include "mocks/jpl_mock.hpp"

@@ -7,6 +7,7 @@
 #include <thread>
 #include <vector>
 
+#include "../reporters/test_reporter.hpp"
 #include "test_case.hpp"
 #include "test_discovery.hpp"
 #include "test_result.hpp"
@@ -48,7 +49,12 @@ class TestRunner {
   void set_configuration(const Configuration& config) { config_ = config; }
   [[nodiscard]] const Configuration& configuration() const { return config_; }
 
-  // Progress callbacks
+  // Reporter management
+  void add_reporter(std::unique_ptr<TestReporter> reporter);
+  void clear_reporters();
+  [[nodiscard]] size_t reporter_count() const { return reporters_.size(); }
+
+  // Progress callbacks (legacy - prefer using reporters)
   void set_progress_callback(std::function<void(const std::string&, double)> callback);
   void set_test_started_callback(std::function<void(const std::string&)> callback);
   void set_test_completed_callback(std::function<void(const TestResult&)> callback);
@@ -62,13 +68,14 @@ class TestRunner {
   Configuration config_;
   std::vector<std::unique_ptr<TestCase>> registered_tests_;
   std::map<std::string, std::vector<std::unique_ptr<TestCase>>> test_suites_;
+  std::vector<std::unique_ptr<TestReporter>> reporters_;
 
-  // Callbacks
+  // Callbacks (legacy)
   std::function<void(const std::string&, double)> progress_callback_;
   std::function<void(const std::string&)> test_started_callback_;
   std::function<void(const TestResult&)> test_completed_callback_;
 
-  // Thread safety for callbacks
+  // Thread safety for callbacks and reporters
   mutable std::mutex callback_mutex_;
 
   // Internal execution methods
@@ -91,6 +98,9 @@ class TestRunner {
   void notify_progress(const std::string& message, double percentage);
   void notify_test_started(const std::string& test_name);
   void notify_test_completed(const TestResult& result);
+  void notify_suite_started(const std::string& suite_name, size_t total_tests);
+  void notify_suite_finished(const TestSuiteResult& result);
+  void notify_error(const std::string& error_message);
 };
 
 /**

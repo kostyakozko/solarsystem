@@ -11,9 +11,19 @@
 #include <sstream>
 #include <thread>
 
+#include "solar_test/reporters/console_reporter.hpp"
+
 namespace SolarSystem::Testing {
 
-TestRunner::TestRunner(Configuration config) : config_(std::move(config)) {}
+TestRunner::TestRunner(Configuration config) : config_(std::move(config)) {
+  // Create default console reporter if none specified
+  if (config_.output_format == "console") {
+    auto console_reporter = std::make_unique<ConsoleReporter>();
+    console_reporter->set_verbose(config_.verbose);
+    console_reporter->set_quiet(config_.quiet);
+    reporters_.push_back(std::move(console_reporter));
+  }
+}
 
 void TestRunner::register_test(std::unique_ptr<TestCase> test_case) {
   registered_tests_.push_back(std::move(test_case));
@@ -90,6 +100,18 @@ TestSuiteResult TestRunner::run_specific_test(const std::string& test_name) {
 TestSuiteResult TestRunner::run_tests_matching_pattern(const std::string& pattern) {
   std::vector<TestCase*> matching_tests = filter_tests({pattern}, {});
   return execute_tests(matching_tests);
+}
+
+void TestRunner::add_reporter(std::unique_ptr<TestReporter> reporter) {
+  std::lock_guard<std::mutex> lock(callback_mutex_);
+  reporter->set_verbose(config_.verbose);
+  reporter->set_quiet(config_.quiet);
+  reporters_.push_back(std::move(reporter));
+}
+
+void TestRunner::clear_reporters() {
+  std::lock_guard<std::mutex> lock(callback_mutex_);
+  reporters_.clear();
 }
 
 void TestRunner::set_progress_callback(std::function<void(const std::string&, double)> callback) {
@@ -209,6 +231,7 @@ TestSuiteResult TestRunner::execute_tests_sequential(const std::vector<TestCase*
   TestSuiteResult suite_result;
   suite_result.suite_name = "Sequential Test Execution";
 
+  notify_suite_started(suite_result.suite_name, tests.size());
   notify_progress("Starting test execution", 0.0);
 
   // Setup test isolation environment
@@ -233,6 +256,8 @@ TestSuiteResult TestRunner::execute_tests_sequential(const std::vector<TestCase*
   cleanup_test_isolation();
 
   notify_progress("Test execution completed", 100.0);
+  suite_result.calculate_statistics();
+  notify_suite_finished(suite_result);
   return suite_result;
 }
 
@@ -240,6 +265,7 @@ TestSuiteResult TestRunner::execute_tests_parallel(const std::vector<TestCase*>&
   TestSuiteResult suite_result;
   suite_result.suite_name = "Parallel Test Execution";
 
+  notify_suite_started(suite_result.suite_name, tests.size());
   notify_progress("Starting parallel test execution", 0.0);
 
   const size_t num_threads = std::min(config_.max_threads, tests.size());
@@ -280,6 +306,8 @@ TestSuiteResult TestRunner::execute_tests_parallel(const std::vector<TestCase*>&
   }
 
   notify_progress("Parallel test execution completed", 100.0);
+  suite_result.calculate_statistics();
+  notify_suite_finished(suite_result);
   return suite_result;
 }
 
@@ -300,6 +328,13 @@ bool TestRunner::has_tag(const TestCase& test_case, const std::string& tag) cons
 
 void TestRunner::notify_progress(const std::string& message, double percentage) {
   std::lock_guard<std::mutex> lock(callback_mutex_);
+
+  // Notify reporters
+  for (auto& reporter : reporters_) {
+    reporter->on_progress(message, percentage);
+  }
+
+  // Legacy callback support
   if (progress_callback_) {
     progress_callback_(message, percentage);
   }
@@ -307,6 +342,13 @@ void TestRunner::notify_progress(const std::string& message, double percentage) 
 
 void TestRunner::notify_test_started(const std::string& test_name) {
   std::lock_guard<std::mutex> lock(callback_mutex_);
+
+  // Notify reporters
+  for (auto& reporter : reporters_) {
+    reporter->on_test_started(test_name);
+  }
+
+  // Legacy callback support
   if (test_started_callback_) {
     test_started_callback_(test_name);
   }
@@ -314,8 +356,42 @@ void TestRunner::notify_test_started(const std::string& test_name) {
 
 void TestRunner::notify_test_completed(const TestResult& result) {
   std::lock_guard<std::mutex> lock(callback_mutex_);
+
+  // Notify reporters
+  for (auto& reporter : reporters_) {
+    reporter->on_test_finished(result);
+  }
+
+  // Legacy callback support
   if (test_completed_callback_) {
     test_completed_callback_(result);
+  }
+}
+
+void TestRunner::notify_suite_started(const std::string& suite_name, size_t total_tests) {
+  std::lock_guard<std::mutex> lock(callback_mutex_);
+
+  // Notify reporters
+  for (auto& reporter : reporters_) {
+    reporter->on_suite_started(suite_name, total_tests);
+  }
+}
+
+void TestRunner::notify_suite_finished(const TestSuiteResult& result) {
+  std::lock_guard<std::mutex> lock(callback_mutex_);
+
+  // Notify reporters
+  for (auto& reporter : reporters_) {
+    reporter->on_suite_finished(result);
+  }
+}
+
+void TestRunner::notify_error(const std::string& error_message) {
+  std::lock_guard<std::mutex> lock(callback_mutex_);
+
+  // Notify reporters
+  for (auto& reporter : reporters_) {
+    reporter->on_error(error_message);
   }
 }
 
