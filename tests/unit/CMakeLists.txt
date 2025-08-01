@@ -118,6 +118,32 @@ target_link_libraries(test_parallel_execution test_utils solar_test solar_jpl so
 add_test(NAME UnitTest_ParallelExecution COMMAND test_parallel_execution)
 set_tests_properties(UnitTest_ParallelExecution PROPERTIES LABELS "unit;testing;parallel;execution" TIMEOUT ${TEST_TIMEOUT})
 
+# NEW: Comprehensive Core Library Component Tests
+add_executable(test_body_factory_comprehensive test_body_factory_comprehensive.cpp)
+target_link_libraries(test_body_factory_comprehensive test_utils solar_test solar_core solar_jpl solar_utils Threads::Threads)
+add_test(NAME UnitTest_BodyFactoryComprehensive COMMAND test_body_factory_comprehensive)
+set_tests_properties(UnitTest_BodyFactoryComprehensive PROPERTIES LABELS "unit;core;bodies;factory;comprehensive" TIMEOUT ${TEST_TIMEOUT})
+
+add_executable(test_simulation_builder_comprehensive test_simulation_builder_comprehensive.cpp)
+target_link_libraries(test_simulation_builder_comprehensive test_utils solar_test solar_core solar_jpl solar_utils Threads::Threads)
+add_test(NAME UnitTest_SimulationBuilderComprehensive COMMAND test_simulation_builder_comprehensive)
+set_tests_properties(UnitTest_SimulationBuilderComprehensive PROPERTIES LABELS "unit;core;builders;comprehensive" TIMEOUT ${TEST_TIMEOUT})
+
+add_executable(test_cache_systems_comprehensive test_cache_systems_comprehensive.cpp)
+target_link_libraries(test_cache_systems_comprehensive test_utils solar_test solar_jpl solar_core solar_utils Threads::Threads)
+add_test(NAME UnitTest_CacheSystemsComprehensive COMMAND test_cache_systems_comprehensive)
+set_tests_properties(UnitTest_CacheSystemsComprehensive PROPERTIES LABELS "unit;cache;systems;comprehensive" TIMEOUT ${TEST_TIMEOUT})
+
+add_executable(test_error_handling_comprehensive test_error_handling_comprehensive.cpp)
+target_link_libraries(test_error_handling_comprehensive test_utils solar_test solar_jpl solar_core solar_utils Threads::Threads)
+add_test(NAME UnitTest_ErrorHandlingComprehensive COMMAND test_error_handling_comprehensive)
+set_tests_properties(UnitTest_ErrorHandlingComprehensive PROPERTIES LABELS "unit;error;handling;comprehensive" TIMEOUT ${TEST_TIMEOUT})
+
+add_executable(test_application_components test_application_components.cpp)
+target_link_libraries(test_application_components test_utils solar_test solar_jpl solar_core solar_utils Threads::Threads)
+add_test(NAME UnitTest_ApplicationComponents COMMAND test_application_components)
+set_tests_properties(UnitTest_ApplicationComponents PROPERTIES LABELS "unit;applications;components;comprehensive" TIMEOUT ${TEST_TIMEOUT})
+
 message(STATUS "Unit tests configured:")
 message(STATUS "  - Solar Core Library Tests")
 message(STATUS "  - Solar JPL Library Tests")
@@ -130,6 +156,15 @@ message(STATUS "  - NEW: Network Mock System Tests")
 message(STATUS "  - NEW: Mock Service Registry Tests")
 message(STATUS "  - NEW: Test Data Management System Tests")
 message(STATUS "  - NEW: Parallel Execution Tests")
+message(STATUS "  - NEW: Comprehensive Core Library Component Tests")
+message(STATUS "    * BodyFactory with mocked JPL client")
+message(STATUS "    * SimulationBuilder with filtering scenarios")
+message(STATUS "    * Cache systems with mock file operations")
+message(STATUS "    * Error handling and fallback mechanisms")
+message(STATUS "    * Application components with argument parsing")
+message(STATUS "    * Web server endpoints with mocked simulation data")
+message(STATUS "    * Real-time monitoring with time simulation")
+message(STATUS "    * Launcher workflow coordination")
 
 # Install test executables to install/bin/tests/ directory
 install(TARGETS
@@ -154,6 +189,11 @@ install(TARGETS
     test_mock_service_registry
     test_data_management
     test_parallel_execution
+    test_body_factory_comprehensive
+    test_simulation_builder_comprehensive
+    test_cache_systems_comprehensive
+    test_error_handling_comprehensive
+    test_application_components
     RUNTIME DESTINATION bin/tests
     COMPONENT tests
 )
