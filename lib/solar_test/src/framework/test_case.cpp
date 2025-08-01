@@ -1,7 +1,20 @@
 #include "solar_test/framework/test_case.hpp"
 
 #include <chrono>
+#include <fstream>
 #include <iostream>
+#include <sstream>
+
+#ifdef __APPLE__
+#include <mach/mach.h>
+#elif defined(__linux__)
+#include <sys/resource.h>
+#elif defined(_WIN32)
+#include <psapi.h>
+#include <windows.h>
+#else
+#include <sys/resource.h>
+#endif
 
 #include "solar_jpl/jpl_client.hpp"
 #include "solar_test/framework/assertions.hpp"
@@ -193,10 +206,50 @@ void TestCase::record_assertion_failure(const std::string& message) {
 }
 
 void TestCase::measure_memory_usage() {
-  // Simple memory usage measurement
-  // In a real implementation, this would use platform-specific APIs
-  // For now, we'll use a placeholder
-  result_.memory_usage_bytes = 0;  // TODO: Implement actual memory measurement
+  // Use platform-specific memory measurement
+#ifdef __APPLE__
+  struct mach_task_basic_info info;
+  mach_msg_type_number_t info_count = MACH_TASK_BASIC_INFO_COUNT;
+  if (task_info(mach_task_self(), MACH_TASK_BASIC_INFO, (task_info_t)&info, &info_count) ==
+      KERN_SUCCESS) {
+    result_.memory_usage_bytes = info.resident_size;
+    return;
+  }
+#elif defined(__linux__)
+  std::ifstream status_file("/proc/self/status");
+  std::string line;
+  while (std::getline(status_file, line)) {
+    if (line.substr(0, 6) == "VmRSS:") {
+      std::istringstream iss(line);
+      std::string label;
+      size_t value;
+      std::string unit;
+      if (iss >> label >> value >> unit) {
+        result_.memory_usage_bytes = value * 1024;  // Convert from kB to bytes
+        return;
+      }
+    }
+  }
+#elif defined(_WIN32)
+  PROCESS_MEMORY_COUNTERS pmc;
+  if (GetProcessMemoryInfo(GetCurrentProcess(), &pmc, sizeof(pmc))) {
+    result_.memory_usage_bytes = pmc.WorkingSetSize;
+    return;
+  }
+#else
+  struct rusage usage;
+  if (getrusage(RUSAGE_SELF, &usage) == 0) {
+#ifdef __linux__
+    result_.memory_usage_bytes = usage.ru_maxrss * 1024;
+#else
+    result_.memory_usage_bytes = usage.ru_maxrss;
+#endif
+    return;
+  }
+#endif
+
+  // Fallback if platform-specific measurement fails
+  result_.memory_usage_bytes = 0;
 }
 
 // Template method implementations

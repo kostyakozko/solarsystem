@@ -273,7 +273,7 @@ class DataManagementStep : public WorkflowStep {
         if (!config.quiet_mode) {
           std::cout << "🧹 Cleaning cache files...\n";
         }
-        // Use legacy system call for now
+        // Clean cache files using system command
         int result = std::system("rm -f ephemeris_cache.bin ephemeris_data.json");
         if (result == 0) {
           result_message += "Cache cleaned successfully. ";

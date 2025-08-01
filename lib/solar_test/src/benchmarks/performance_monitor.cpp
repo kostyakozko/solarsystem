@@ -180,9 +180,49 @@ double CpuMonitor::stop_monitoring() {
 }
 
 double CpuMonitor::get_current_usage() const {
-  // This is a simplified implementation
-  // In practice, you might want to sample over a short period
-  return 0.0;  // TODO: Implement real-time CPU usage measurement
+  // Get current CPU usage by sampling over a short period
+  static auto last_sample_time = std::chrono::steady_clock::now();
+  static std::chrono::nanoseconds last_cpu_time{0};
+
+  auto current_time = std::chrono::steady_clock::now();
+  std::chrono::nanoseconds current_cpu_time{0};
+
+#if defined(__APPLE__) || defined(__linux__)
+  struct rusage usage;
+  if (getrusage(RUSAGE_SELF, &usage) == 0) {
+    current_cpu_time = std::chrono::seconds(usage.ru_utime.tv_sec) +
+                       std::chrono::microseconds(usage.ru_utime.tv_usec) +
+                       std::chrono::seconds(usage.ru_stime.tv_sec) +
+                       std::chrono::microseconds(usage.ru_stime.tv_usec);
+  }
+#elif defined(_WIN32)
+  FILETIME creation_time, exit_time, kernel_time, user_time;
+  if (GetProcessTimes(GetCurrentProcess(), &creation_time, &exit_time, &kernel_time, &user_time)) {
+    ULARGE_INTEGER kernel_time_int, user_time_int;
+    kernel_time_int.LowPart = kernel_time.dwLowDateTime;
+    kernel_time_int.HighPart = kernel_time.dwHighDateTime;
+    user_time_int.LowPart = user_time.dwLowDateTime;
+    user_time_int.HighPart = user_time.dwHighDateTime;
+    current_cpu_time =
+        std::chrono::nanoseconds((kernel_time_int.QuadPart + user_time_int.QuadPart) * 100);
+  }
+#endif
+
+  auto wall_time_diff =
+      std::chrono::duration_cast<std::chrono::nanoseconds>(current_time - last_sample_time);
+  auto cpu_time_diff = current_cpu_time - last_cpu_time;
+
+  // Update for next sample
+  last_sample_time = current_time;
+  last_cpu_time = current_cpu_time;
+
+  if (wall_time_diff.count() > 0) {
+    return (static_cast<double>(cpu_time_diff.count()) /
+            static_cast<double>(wall_time_diff.count())) *
+           100.0;
+  }
+
+  return 0.0;
 }
 
 // PerformanceMonitor implementation

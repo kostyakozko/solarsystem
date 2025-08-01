@@ -381,7 +381,7 @@ class RealtimeMonitor {
     for (const auto& body : body_collection) {
       std::cout << "│ " << std::setw(15) << std::left << body.name() << " │ ";
 
-      // Position (using legacy interface for now)
+      // Position display (placeholder values for real-time display)
       std::cout << std::fixed << std::setprecision(2);
       std::cout << "(" << std::setw(12) << 0.0   // body.position.x
                 << ", " << std::setw(12) << 0.0  // body.position.y

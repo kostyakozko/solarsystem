@@ -647,9 +647,8 @@ class SolarSystemAPI {
         // Handle specific date request
         VERBOSE_LOG_INFO("API", "Solar system data requested for date: " + *date_param);
 
-        // For now, use legacy simulation approach
         // Modern BodyFactory provides current data automatically
-        // No need for explicit simulation updates
+        // No explicit simulation updates needed for current data
       }
 
       // Get current solar system state
@@ -739,14 +738,17 @@ class SolarSystemAPI {
       auto bodies = body_collection_result.value();
 
       // Parse date parameter if provided
-      // TODO: Implement date parsing and use target_time for simulation
-      // TODO: Remove [[maybe_unused]] when date parsing is implemented
-      [[maybe_unused]] std::chrono::system_clock::time_point target_time =
-          std::chrono::system_clock::now();
+      std::chrono::system_clock::time_point target_time = std::chrono::system_clock::now();
       if (date_param.has_value()) {
-        // For now, use current time - in a full implementation, we'd parse the date
-        // This is where date parsing would be integrated
-        VERBOSE_LOG_INFO("API", "Time travel to date: " + *date_param);
+        // Parse date in YYYY-MM-DD format
+        std::istringstream date_stream(*date_param);
+        std::tm tm = {};
+        if (date_stream >> std::get_time(&tm, "%Y-%m-%d")) {
+          target_time = std::chrono::system_clock::from_time_t(std::mktime(&tm));
+          VERBOSE_LOG_INFO("API", "Time travel to date: " + *date_param);
+        } else {
+          VERBOSE_LOG_INFO("API", "Invalid date format, using current time: " + *date_param);
+        }
       }
 
       // Create and configure simulation

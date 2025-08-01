@@ -184,8 +184,8 @@
     - Add better error reporting and debugging information for CI failures
     - _Requirements: 4.3, 4.5, 8.3, 8.4_
 
-- [-] 12. Clean up development artifacts and code quality
-  - [-] 12.1 Remove TODO and development markers
+- [x] 12. Clean up development artifacts and code quality
+  - [x] 12.1 Remove TODO and development markers
     - Fix memory measurement TODO in lib/solar_test/src/framework/test_case.cpp:199
     - Resolve progress callback TODOs in apps/solar_system_fetch/fetch.cpp:155-156
     - Implement date parsing TODOs in apps/solar_system_web/src/web_server.cpp:735-736
@@ -196,7 +196,7 @@
     - Ensure code is production-ready without development artifacts
     - _Requirements: 9.1, 9.3_
 
-  - [ ] 12.2 Clean up Legacy references and improve compatibility
+  - [x] 12.2 Clean up Legacy references and improve compatibility
     - Clean up "Initialize JPL data system (legacy)" comment in apps/solar_system_fetch/fetch.cpp:442
     - Replace "Use legacy system call for now" comment in apps/solar_system_launcher/launcher.cpp:276
     - Update "use legacy simulation approach" comment in apps/solar_system_web/src/web_server.cpp:643

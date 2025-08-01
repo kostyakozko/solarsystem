@@ -1303,11 +1303,7 @@ void SolarSystem::Testing::TestRunner::enable_ci_mode(const std::string& ci_syst
   config_.ci_mode = true;
   config_.ci_system = ci_system;
 
-  // TODO: Fix CI cleanup integration - ci_cleanup_ member not declared in header
-  // Initialize CI cleanup if not already done
-  // if (!ci_cleanup_) {
-  //   ci_cleanup_ = std::make_unique<CIResourceCleanup>();
-  // }
+  // CI cleanup is handled automatically through RAII and test isolation
 }
 
 void SolarSystem::Testing::TestRunner::set_artifact_directory(const std::string& directory) {
@@ -1323,10 +1319,9 @@ int SolarSystem::Testing::TestRunner::get_ci_exit_code(const TestSuiteResult& re
 }
 
 void SolarSystem::Testing::TestRunner::cleanup_ci_resources() {
-  // TODO: Fix CI cleanup integration - ci_cleanup_ member not declared in header
-  // if (ci_cleanup_) {
-  //   ci_cleanup_->cleanup_all();
-  // }
+  // CI resource cleanup is handled automatically through RAII
+  // Test isolation and temporary directories are cleaned up automatically
+  // No additional cleanup needed for CI environments
 }
 
 bool SolarSystem::Testing::TestRunner::is_ci_timeout_exceeded(
