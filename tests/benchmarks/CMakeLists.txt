@@ -2,24 +2,28 @@
 
 # Benchmark executables (only include existing files)
 add_executable(benchmark_jpl_data benchmark_jpl_data.cpp)
-target_link_libraries(benchmark_jpl_data test_utils solar_core solar_jpl solar_utils Threads::Threads)
+target_link_libraries(benchmark_jpl_data test_utils solar_test solar_core solar_jpl solar_utils Threads::Threads)
 
 add_executable(benchmark_web_server benchmark_web_server.cpp)
-target_link_libraries(benchmark_web_server test_utils solar_core solar_jpl solar_utils Threads::Threads)
+target_link_libraries(benchmark_web_server test_utils solar_test solar_core solar_jpl solar_utils Threads::Threads)
 
 add_executable(benchmark_comprehensive benchmark_comprehensive.cpp)
-target_link_libraries(benchmark_comprehensive test_utils solar_core solar_jpl solar_utils Threads::Threads)
+target_link_libraries(benchmark_comprehensive test_utils solar_test solar_core solar_jpl solar_utils Threads::Threads)
+
+add_executable(benchmark_core_performance benchmark_core_performance.cpp)
+target_link_libraries(benchmark_core_performance test_utils solar_test solar_core solar_jpl solar_utils Threads::Threads)
 
 add_executable(regression_detector regression_detector.cpp)
-target_link_libraries(regression_detector test_utils solar_core solar_jpl solar_utils Threads::Threads)
+target_link_libraries(regression_detector test_utils solar_test solar_core solar_jpl solar_utils Threads::Threads)
 
 add_executable(scalability_tests scalability_tests.cpp)
-target_link_libraries(scalability_tests test_utils solar_core solar_jpl solar_utils Threads::Threads)
+target_link_libraries(scalability_tests test_utils solar_test solar_core solar_jpl solar_utils Threads::Threads)
 
 # Add benchmark tests to CTest
 add_test(NAME Benchmark_JPLData COMMAND benchmark_jpl_data)
 add_test(NAME Benchmark_WebServer COMMAND benchmark_web_server)
 add_test(NAME Benchmark_Comprehensive COMMAND benchmark_comprehensive)
+add_test(NAME Benchmark_CorePerformance COMMAND benchmark_core_performance)
 add_test(NAME Benchmark_RegressionDetector COMMAND regression_detector)
 add_test(NAME Benchmark_ScalabilityTests COMMAND scalability_tests)
 
@@ -39,6 +43,11 @@ set_tests_properties(Benchmark_Comprehensive PROPERTIES
     TIMEOUT 600
 )
 
+set_tests_properties(Benchmark_CorePerformance PROPERTIES
+    LABELS "benchmark;core;performance"
+    TIMEOUT 300
+)
+
 set_tests_properties(Benchmark_RegressionDetector PROPERTIES
     LABELS "benchmark;regression"
     TIMEOUT 300
@@ -56,6 +65,7 @@ message(STATUS "Performance benchmarks configured:")
 message(STATUS "  - JPL Data Processing Tests")
 message(STATUS "  - Web Server Performance Tests")
 message(STATUS "  - Comprehensive System Tests")
+message(STATUS "  - Core Performance Validation Tests")
 message(STATUS "  - Performance Regression Detection")
 message(STATUS "  - Scalability Analysis")
 message(STATUS "  - Results directory: ${CMAKE_CURRENT_BINARY_DIR}/benchmark_results")
