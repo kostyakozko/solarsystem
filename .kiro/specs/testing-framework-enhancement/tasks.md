@@ -189,6 +189,9 @@
     - Fix memory measurement TODO in lib/solar_test/src/framework/test_case.cpp:199
     - Resolve progress callback TODOs in apps/solar_system_fetch/fetch.cpp:155-156
     - Implement date parsing TODOs in apps/solar_system_web/src/web_server.cpp:735-736
+    - Fix CI cleanup integration TODOs in lib/solar_test/src/framework/test_runner.cpp:1306,1326
+    - Implement real-time CPU usage measurement TODO in lib/solar_test/src/benchmarks/performance_monitor.cpp:185
+    - Implement actual memory measurement TODO in lib/solar_test/src/framework/test_case.cpp:199
     - Verify CI/CD TODO/FIXME checks are working correctly
     - Ensure code is production-ready without development artifacts
     - _Requirements: 9.1, 9.3_
