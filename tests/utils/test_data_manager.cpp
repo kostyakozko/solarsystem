@@ -146,7 +146,8 @@ void TemporaryCache::populate_with_valid_data() {
     auto cache_path = temp_dir_->path() / cache_file_;
     std::ofstream file(cache_path, std::ios::binary);
     if (file.is_open()) {
-      file.write(reinterpret_cast<const char*>(binary_data.data()), binary_data.size());
+      file.write(reinterpret_cast<const char*>(binary_data.data()),
+                 static_cast<std::streamsize>(binary_data.size()));
       file.close();
     }
   }
@@ -296,11 +297,12 @@ std::optional<std::vector<uint8_t>> TestDataManager::read_binary_file(
   }
 
   file.seekg(0, std::ios::end);
-  size_t size = file.tellg();
+  auto size_pos = file.tellg();
   file.seekg(0, std::ios::beg);
 
+  size_t size = static_cast<size_t>(size_pos);
   std::vector<uint8_t> data(size);
-  file.read(reinterpret_cast<char*>(data.data()), size);
+  file.read(reinterpret_cast<char*>(data.data()), static_cast<std::streamsize>(size));
 
   return data;
 }
@@ -629,24 +631,24 @@ TestDataSet TestDataManager::parse_metadata(const std::string& json_content) {
   // Try to extract some basic fields using simple string matching
   if (json_content.find("\"name\"") != std::string::npos) {
     // Extract name field if present
-    std::regex name_pattern(R"("name"\s*:\s*"([^"]+)") ");
-        std::smatch match;
+    std::regex name_pattern("\"name\"\\s*:\\s*\"([^\"]+)\"");
+    std::smatch match;
     if (std::regex_search(json_content, match, name_pattern)) {
       dataset.name = match[1].str();
     }
   }
 
   if (json_content.find("\"description\"") != std::string::npos) {
-    std::regex desc_pattern(R"("description"\s*:\s*"([^"]+)") ");
-        std::smatch match;
+    std::regex desc_pattern("\"description\"\\s*:\\s*\"([^\"]+)\"");
+    std::smatch match;
     if (std::regex_search(json_content, match, desc_pattern)) {
       dataset.description = match[1].str();
     }
   }
 
   if (json_content.find("\"version\"") != std::string::npos) {
-    std::regex version_pattern(R"("version"\s*:\s*"([^"]+)") ");
-        std::smatch match;
+    std::regex version_pattern("\"version\"\\s*:\\s*\"([^\"]+)\"");
+    std::smatch match;
     if (std::regex_search(json_content, match, version_pattern)) {
       dataset.version = match[1].str();
     }
@@ -751,7 +753,7 @@ bool DataValidator::validate_csv_format(const std::string& csv_data, size_t expe
       (first_newline != std::string::npos) ? csv_data.substr(0, first_newline) : csv_data;
 
   // Count commas + 1 for column count
-  size_t comma_count = std::count(first_line.begin(), first_line.end(), ',');
+  size_t comma_count = static_cast<size_t>(std::count(first_line.begin(), first_line.end(), ','));
   return (comma_count + 1) == expected_columns;
 }
 
@@ -918,14 +920,20 @@ std::string JPLDataValidator::generate_malformed_response(const std::string& cor
 double JPLDataValidator::compare_with_reference(const std::string& computed_response,
                                                 const std::string& reference_file) {
   // Load reference data
-  auto reference_content = TestDataManager::read_file_content(reference_file);
-  if (!reference_content) {
+  std::ifstream ref_file(reference_file);
+  if (!ref_file.is_open()) {
+    return 0.0;
+  }
+  std::stringstream buffer;
+  buffer << ref_file.rdbuf();
+  std::string reference_content = buffer.str();
+  if (reference_content.empty()) {
     return std::numeric_limits<double>::max();  // Error loading reference
   }
 
   // Extract coordinates from both responses
   auto computed_coords = extract_ephemeris_coordinates(computed_response);
-  auto reference_coords = extract_ephemeris_coordinates(*reference_content);
+  auto reference_coords = extract_ephemeris_coordinates(reference_content);
 
   if (!computed_coords || !reference_coords) {
     return std::numeric_limits<double>::max();  // Error extracting coordinates
@@ -1092,17 +1100,23 @@ std::map<std::string, double> PerformanceTestData::load_performance_baselines() 
   // Load from baseline file if it exists
   auto baseline_path =
       TestDataManager::get_validation_data_path() / "benchmarks" / "performance_baseline.json";
-  auto content = TestDataManager::read_file_content(baseline_path);
+  std::ifstream file(baseline_path);
+  if (!file.is_open()) {
+    return {};
+  }
+  std::stringstream buffer;
+  buffer << file.rdbuf();
+  std::string content = buffer.str();
 
-  if (content) {
+  if (!content.empty()) {
     // Parse baseline data (simplified parsing)
-    if (content->find("cache_loading_ms") != std::string::npos) {
+    if (content.find("cache_loading_ms") != std::string::npos) {
       baselines["cache_loading"] = 1.0;  // 1ms baseline
     }
-    if (content->find("simulation_step_us") != std::string::npos) {
+    if (content.find("simulation_step_us") != std::string::npos) {
       baselines["simulation_step"] = 1000.0;  // 1000μs baseline
     }
-    if (content->find("jpl_parsing_ms") != std::string::npos) {
+    if (content.find("jpl_parsing_ms") != std::string::npos) {
       baselines["jpl_parsing"] = 10.0;  // 10ms baseline
     }
   } else {
@@ -1116,7 +1130,7 @@ std::map<std::string, double> PerformanceTestData::load_performance_baselines() 
   return baselines;
 }
 
-bool PerformanceTestData::validate_performance_regression(const std::string& test_name,
+bool PerformanceTestData::validate_performance_regression(const std::string& /* test_name */,
                                                           double measured_time,
                                                           double baseline_time, double tolerance) {
   if (baseline_time <= 0.0) return true;  // No baseline to compare against
