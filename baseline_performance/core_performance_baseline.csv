@@ -1,0 +1,5 @@
+Name,AvgDuration(ms),MinDuration(ms),MaxDuration(ms),StdDev(ms),Iterations,OpsPerSec,MemoryUsage(bytes)
+CacheLoadingPerformance,0.0149951,0.013,0.224,0.00561709,50000,66688.3,1124073472
+SimulationStepPerformance,9e-07,0,0.02,0.000118234,100000,1.11111e+09,2650800128
+MathematicalOperationsPerformance,6.7e-07,0,0.025,0.000103148,200000,1.49254e+09,4563402752
+MemoryAllocationPerformance,1.94e-05,0,0.02,0.000544999,5000,5.15464e+07,0

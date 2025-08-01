@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Benchmark System Verification Script
-Verifies that the complete benchmark system is working correctly.
+Verification script for CI/CD benchmark system
+Validates that all required components are working correctly
 """
 
 import os
@@ -10,251 +10,200 @@ import subprocess
 import csv
 from pathlib import Path
 
-def verify_directory_structure():
-    """Verify that all required directories exist."""
-    required_dirs = [
-        "build/tests/benchmarks/benchmark_results",
-        "baseline_performance",
-        "benchmark_archives"
-    ]
-
-    print("🔍 Verifying directory structure...")
-    all_exist = True
-
-    for directory in required_dirs:
-        if os.path.exists(directory):
-            print(f"  ✅ {directory}")
-        else:
-            print(f"  ❌ {directory} - MISSING")
-            all_exist = False
-
-    return all_exist
-
-def verify_csv_files():
-    """Verify that CSV files exist and have correct format."""
-    results_dir = "build/tests/benchmarks/benchmark_results"
-    expected_files = [
-        "comprehensive_benchmark.csv",
-        "jpl_data_benchmark.csv",
-        "web_server_benchmark.csv",
-        "scalability_analysis.csv",
-        "regression_detection.csv"
-    ]
-
-    expected_columns = [
-        'Name', 'AvgDuration(ms)', 'MinDuration(ms)', 'MaxDuration(ms)',
-        'StdDev(ms)', 'Iterations', 'OpsPerSec', 'MemoryUsage(bytes)'
-    ]
-
-    print("\n📊 Verifying CSV files...")
-    all_valid = True
-
-    for filename in expected_files:
-        filepath = os.path.join(results_dir, filename)
-
-        if not os.path.exists(filepath):
-            print(f"  ❌ {filename} - MISSING")
-            all_valid = False
-            continue
-
-        try:
-            with open(filepath, 'r') as f:
-                reader = csv.DictReader(f)
-                columns = reader.fieldnames
-
-                if columns == expected_columns:
-                    # Count rows to verify data exists
-                    row_count = sum(1 for row in reader)
-                    print(f"  ✅ {filename} - {row_count} benchmarks")
-                else:
-                    print(f"  ❌ {filename} - Invalid columns: {columns}")
-                    all_valid = False
-        except Exception as e:
-            print(f"  ❌ {filename} - Error reading: {e}")
-            all_valid = False
-
-    return all_valid
-
-def verify_baseline_files():
-    """Verify that baseline files exist and are valid."""
-    baseline_dir = "baseline_performance"
-    expected_files = [
-        "combined_baseline.csv",
-        "sample_baseline.csv",
-        "baseline_metadata.json"
-    ]
-
-    print("\n📈 Verifying baseline files...")
-    all_exist = True
-
-    for filename in expected_files:
-        filepath = os.path.join(baseline_dir, filename)
-
-        if os.path.exists(filepath):
-            print(f"  ✅ {filename}")
-        else:
-            print(f"  ❌ {filename} - MISSING")
-            all_exist = False
-
-    return all_exist
-
-def verify_ctest_integration():
-    """Verify that CTest can find and run benchmark tests."""
-    print("\n🧪 Verifying CTest integration...")
-
+def run_command(cmd, cwd=None, timeout=60):
+    """Run a command and return result"""
     try:
-        # Check if benchmark tests are discoverable
         result = subprocess.run(
-            ['ctest', '-L', 'benchmark', '-N'],
-            cwd='build',
-            capture_output=True,
-            text=True,
-            timeout=30
+            cmd, shell=True, capture_output=True, text=True,
+            cwd=cwd, timeout=timeout
         )
+        return result.returncode, result.stdout, result.stderr
+    except subprocess.TimeoutExpired:
+        return -1, "", f"Command timed out after {timeout}s"
+    except Exception as e:
+        return -1, "", str(e)
 
-        if result.returncode == 0:
-            # Count number of benchmark tests found
-            lines = result.stdout.split('\n')
-            test_count = 0
-            for line in lines:
-                if 'Test #' in line and 'Benchmark_' in line:
-                    test_count += 1
+def verify_test_discovery():
+    """Verify that ctest can discover tests with proper labels"""
+    print("🔍 Verifying test discovery...")
 
-            print(f"  ✅ CTest found {test_count} benchmark tests")
-            return test_count > 0
+    test_categories = [
+        ("unit", 60),
+        ("integration", 180),
+        ("benchmark", 300)
+    ]
+
+    for category, timeout in test_categories:
+        # Use -N to show tests without running them (equivalent to --dry-run)
+        cmd = f'ctest -L "{category}" -N'
+        returncode, stdout, stderr = run_command(cmd, cwd="build")
+
+        if returncode == 0:
+            # Count discovered tests
+            test_count = stdout.count("Test #")
+            print(f"  ✅ {category}: {test_count} tests discovered")
         else:
-            print(f"  ❌ CTest failed: {result.stderr}")
+            print(f"  ❌ {category}: Failed to discover tests")
+            print(f"     Error: {stderr}")
             return False
 
-    except Exception as e:
-        print(f"  ❌ CTest error: {e}")
-        return False
+    return True
+
+def verify_installation_commands():
+    """Verify that installation test commands work"""
+    print("🔧 Verifying installation commands...")
+
+    commands = [
+        ("./solar_system_launcher --status", "install"),
+        ("./bin/solar_system --help", "install"),
+        ("./bin/solar_system_fetch --test-storage", "install")
+    ]
+
+    for cmd, cwd in commands:
+        returncode, stdout, stderr = run_command(cmd, cwd=cwd, timeout=30)
+
+        if returncode == 0:
+            print(f"  ✅ {cmd}: Working")
+        else:
+            print(f"  ❌ {cmd}: Failed")
+            print(f"     Error: {stderr}")
+            return False
+
+    return True
+
+def verify_benchmark_csv_output():
+    """Verify that benchmarks generate CSV output in correct format"""
+    print("📊 Verifying benchmark CSV output...")
+
+    csv_files = [
+        "build/tests/benchmarks/benchmark_results/comprehensive_benchmark.csv",
+        "build/tests/benchmarks/benchmark_results/core_performance_benchmark.csv",
+        "build/tests/benchmarks/benchmark_results/jpl_data_benchmark.csv"
+    ]
+
+    expected_headers = [
+        "Name", "AvgDuration(ms)", "MinDuration(ms)", "MaxDuration(ms)",
+        "StdDev(ms)", "Iterations", "OpsPerSec", "MemoryUsage(bytes)"
+    ]
+
+    for csv_file in csv_files:
+        if not Path(csv_file).exists():
+            print(f"  ❌ {csv_file}: File not found")
+            return False
+
+        try:
+            with open(csv_file, 'r') as f:
+                reader = csv.reader(f)
+                headers = next(reader)
+
+                if headers == expected_headers:
+                    row_count = sum(1 for _ in reader)
+                    print(f"  ✅ {Path(csv_file).name}: {row_count} benchmarks")
+                else:
+                    print(f"  ❌ {Path(csv_file).name}: Invalid headers")
+                    print(f"     Expected: {expected_headers}")
+                    print(f"     Got: {headers}")
+                    return False
+        except Exception as e:
+            print(f"  ❌ {csv_file}: Error reading file - {e}")
+            return False
+
+    return True
 
 def verify_performance_comparison():
-    """Verify that performance comparison script works."""
-    print("\n📊 Verifying performance comparison...")
+    """Verify that performance comparison script works"""
+    print("📈 Verifying performance comparison...")
 
-    baseline_file = "baseline_performance/sample_baseline.csv"
-    current_file = "build/tests/benchmarks/benchmark_results/jpl_data_benchmark.csv"
+    baseline_file = "baseline_performance/simulation_performance.csv"
+    current_file = "build/tests/benchmarks/benchmark_results/comprehensive_benchmark.csv"
 
-    if not os.path.exists(baseline_file):
-        print(f"  ❌ Baseline file missing: {baseline_file}")
+    if not Path(baseline_file).exists():
+        print(f"  ❌ Baseline file not found: {baseline_file}")
         return False
 
-    if not os.path.exists(current_file):
-        print(f"  ❌ Current file missing: {current_file}")
+    if not Path(current_file).exists():
+        print(f"  ❌ Current file not found: {current_file}")
         return False
 
-    try:
-        # Test normal output
-        result = subprocess.run(
-            ['python3', 'tests/scripts/compare_performance.py', baseline_file, current_file],
-            capture_output=True,
-            text=True,
-            timeout=30
-        )
+    cmd = f"python3 tests/scripts/compare_performance.py {baseline_file} {current_file}"
+    returncode, stdout, stderr = run_command(cmd, timeout=30)
 
-        if result.returncode == 0:
-            print("  ✅ Performance comparison (normal output)")
-        else:
-            print(f"  ❌ Performance comparison failed: {result.stderr}")
-            return False
-
-        # Test JSON output
-        result = subprocess.run(
-            ['python3', 'tests/scripts/compare_performance.py', '--json', baseline_file, current_file],
-            capture_output=True,
-            text=True,
-            timeout=30
-        )
-
-        if result.returncode == 0:
-            # Verify JSON is valid
-            import json
-            try:
-                json.loads(result.stdout.strip())
-                print("  ✅ Performance comparison (JSON output)")
-                return True
-            except json.JSONDecodeError as e:
-                print(f"  ❌ Invalid JSON output: {e}")
-                return False
-            else:
-                print("  ❌ No JSON found in output")
-                return False
-        else:
-            print(f"  ❌ JSON comparison failed: {result.stderr}")
-            return False
-
-    except Exception as e:
-        print(f"  ❌ Comparison error: {e}")
+    if returncode in [0, 1]:  # 0 = no regression, 1 = regression found (both valid)
+        print("  ✅ Performance comparison script working")
+        return True
+    else:
+        print("  ❌ Performance comparison script failed")
+        print(f"     Error: {stderr}")
         return False
 
-def verify_scripts_executable():
-    """Verify that all scripts are executable."""
-    scripts = [
-        "tests/scripts/compare_performance.py",
-        "tests/scripts/generate_baseline.py",
-        "tests/scripts/setup_benchmark_environment.py"
+def verify_code_quality():
+    """Verify code quality checks"""
+    print("🔍 Verifying code quality...")
+
+    # Check code formatting
+    cmd = 'find lib apps \\( -name "*.cpp" -o -name "*.h" \\) -print0 | xargs -0 clang-format --dry-run --Werror'
+    returncode, stdout, stderr = run_command(cmd, timeout=60)
+
+    if returncode == 0:
+        print("  ✅ Code formatting: Passed")
+    else:
+        print("  ❌ Code formatting: Failed")
+        print(f"     Error: {stderr}")
+        return False
+
+    return True
+
+def verify_test_artifacts():
+    """Verify that test artifacts are in expected locations"""
+    print("📁 Verifying test artifacts...")
+
+    required_dirs = [
+        "build/Testing",
+        "build/tests/benchmark_results"
     ]
 
-    print("\n🔧 Verifying script permissions...")
-    all_executable = True
-
-    for script in scripts:
-        if os.path.exists(script) and os.access(script, os.X_OK):
-            print(f"  ✅ {script}")
+    for dir_path in required_dirs:
+        if Path(dir_path).exists():
+            file_count = len(list(Path(dir_path).iterdir()))
+            print(f"  ✅ {dir_path}: {file_count} files")
         else:
-            print(f"  ❌ {script} - Not executable")
-            all_executable = False
+            print(f"  ❌ {dir_path}: Directory not found")
+            return False
 
-    return all_executable
+    return True
 
 def main():
-    print("=" * 80)
-    print("SOLAR SYSTEM SUITE - BENCHMARK SYSTEM VERIFICATION")
-    print("=" * 80)
+    print("🚀 Solar System Suite CI/CD Verification")
+    print("=" * 50)
 
     checks = [
-        ("Directory Structure", verify_directory_structure),
-        ("CSV Files", verify_csv_files),
-        ("Baseline Files", verify_baseline_files),
-        ("CTest Integration", verify_ctest_integration),
+        ("Test Discovery", verify_test_discovery),
+        ("Installation Commands", verify_installation_commands),
+        ("Benchmark CSV Output", verify_benchmark_csv_output),
         ("Performance Comparison", verify_performance_comparison),
-        ("Script Permissions", verify_scripts_executable)
+        ("Code Quality", verify_code_quality),
+        ("Test Artifacts", verify_test_artifacts)
     ]
 
-    passed_checks = 0
-    total_checks = len(checks)
+    passed = 0
+    total = len(checks)
 
-    for check_name, check_func in checks:
-        try:
-            if check_func():
-                passed_checks += 1
-        except Exception as e:
-            print(f"\n❌ {check_name} check failed with exception: {e}")
+    for name, check_func in checks:
+        print(f"\n{name}:")
+        if check_func():
+            passed += 1
+        else:
+            print(f"❌ {name} failed")
 
-    print("\n" + "=" * 80)
-    print("VERIFICATION SUMMARY")
-    print("=" * 80)
-    print(f"Passed: {passed_checks}/{total_checks} checks")
-    print(f"Success rate: {passed_checks/total_checks*100:.1f}%")
+    print("\n" + "=" * 50)
+    print(f"Results: {passed}/{total} checks passed")
 
-    if passed_checks == total_checks:
-        print("\n✅ ALL CHECKS PASSED - Benchmark system is fully functional!")
-        print("\nThe benchmark system provides:")
-        print("  • CSV output compatible with compare_performance.py")
-        print("  • Proper directory structure (build/tests/benchmark_results/)")
-        print("  • Sample baseline data for regression testing")
-        print("  • CTest integration with 'benchmark' label")
-        print("  • Performance regression detection")
-        print("  • JSON output for CI/CD integration")
+    if passed == total:
+        print("✅ All CI/CD verification checks passed!")
+        return 0
     else:
-        print(f"\n❌ {total_checks - passed_checks} CHECKS FAILED")
-        print("Please review the errors above and fix the issues.")
-
-    print("=" * 80)
-
-    return 0 if passed_checks == total_checks else 1
+        print("❌ Some CI/CD verification checks failed")
+        return 1
 
 if __name__ == '__main__':
     sys.exit(main())

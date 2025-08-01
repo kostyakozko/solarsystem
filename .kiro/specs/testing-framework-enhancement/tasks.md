@@ -154,38 +154,38 @@
     - Test deployment and installation processes
     - _Requirements: 2.3, 2.5_
 
-- [ ] 10. Implement performance test suites
-  - [ ] 10.1 Create core performance benchmarks
+- [x] 10. Implement performance test suites
+  - [x] 10.1 Create core performance benchmarks
     - Benchmark cache loading performance (validate 1000x improvement claim)
     - Test simulation step execution time (validate microsecond claims)
     - Benchmark JPL response parsing and data conversion
     - Test memory usage and allocation patterns
     - _Requirements: 3.1, 3.3, 3.4_
 
-  - [ ] 10.2 Add scalability and stress tests
+  - [x] 10.2 Add scalability and stress tests
     - Test performance with large numbers of celestial bodies
     - Benchmark long-running simulations and memory stability
     - Test concurrent access and thread safety
     - Add load testing for web interface
     - _Requirements: 3.1, 3.2_
 
-- [ ] 11. Fix and enhance existing CI/CD infrastructure
-  - [ ] 11.1 Fix GitHub Actions workflow failures
+- [x] 11. Fix and enhance existing CI/CD infrastructure
+  - [x] 11.1 Fix GitHub Actions workflow failures
     - Implement missing test executables that ctest can discover with proper labels
     - Fix installation test commands (--status, --help, --test-storage flags)
     - Ensure performance benchmarks generate CSV output compatible with compare_performance.py
     - Fix code quality checks to eliminate false positives
     - _Requirements: 4.1, 4.2, 8.1, 8.2_
 
-  - [ ] 11.2 Enhance CI/CD capabilities
+  - [x] 11.2 Enhance CI/CD capabilities
     - Improve performance regression detection with better baseline management
     - Add missing test artifacts in expected locations (build/Testing/, build/tests/benchmark_results/)
     - Enhance documentation generation and GitHub Pages deployment
     - Add better error reporting and debugging information for CI failures
     - _Requirements: 4.3, 4.5, 8.3, 8.4_
 
-- [ ] 12. Clean up development artifacts and code quality
-  - [ ] 12.1 Remove TODO and development markers
+- [-] 12. Clean up development artifacts and code quality
+  - [-] 12.1 Remove TODO and development markers
     - Fix memory measurement TODO in lib/solar_test/src/framework/test_case.cpp:199
     - Resolve progress callback TODOs in apps/solar_system_fetch/fetch.cpp:155-156
     - Implement date parsing TODOs in apps/solar_system_web/src/web_server.cpp:735-736

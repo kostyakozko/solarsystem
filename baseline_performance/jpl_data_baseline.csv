@@ -1,0 +1,6 @@
+Name,AvgDuration(ms),MinDuration(ms),MaxDuration(ms),StdDev(ms),Iterations,OpsPerSec,MemoryUsage(bytes)
+BinaryCacheLoadingBenchmark,0.0151333,0.013,0.737,0.0123197,10000,66079.4,1174405120
+JSONCacheLoadingBenchmark,0.05031,0.044,0.839,0.0407906,1000,19876.8,1795162112
+SimulatedNetworkRequestBenchmark,103.679,100.08,105.057,1.97184,10,9.6452,1845493760
+JPLResponseParsingBenchmark,0.0029288,0.002,1.079,0.0220491,5000,341437,1845493760
+DataConversionBenchmark,1e-06,0,0.007,7.21041e-05,10000,1e+09,2097152000
