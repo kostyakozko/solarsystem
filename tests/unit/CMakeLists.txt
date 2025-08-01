@@ -112,6 +112,12 @@ target_link_libraries(test_data_management test_utils solar_test solar_jpl solar
 add_test(NAME UnitTest_DataManagement COMMAND test_data_management)
 set_tests_properties(UnitTest_DataManagement PROPERTIES LABELS "unit;testing;data;management" TIMEOUT ${TEST_TIMEOUT})
 
+# NEW: Parallel Execution Tests
+add_executable(test_parallel_execution test_parallel_execution.cpp)
+target_link_libraries(test_parallel_execution test_utils solar_test solar_jpl solar_core solar_utils Threads::Threads)
+add_test(NAME UnitTest_ParallelExecution COMMAND test_parallel_execution)
+set_tests_properties(UnitTest_ParallelExecution PROPERTIES LABELS "unit;testing;parallel;execution" TIMEOUT ${TEST_TIMEOUT})
+
 message(STATUS "Unit tests configured:")
 message(STATUS "  - Solar Core Library Tests")
 message(STATUS "  - Solar JPL Library Tests")
@@ -123,6 +129,7 @@ message(STATUS "  - NEW: Time Mock System Tests")
 message(STATUS "  - NEW: Network Mock System Tests")
 message(STATUS "  - NEW: Mock Service Registry Tests")
 message(STATUS "  - NEW: Test Data Management System Tests")
+message(STATUS "  - NEW: Parallel Execution Tests")
 
 # Install test executables to install/bin/tests/ directory
 install(TARGETS
@@ -146,6 +153,7 @@ install(TARGETS
     test_network_mock
     test_mock_service_registry
     test_data_management
+    test_parallel_execution
     RUNTIME DESTINATION bin/tests
     COMPONENT tests
 )
