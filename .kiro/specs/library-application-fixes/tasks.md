@@ -7,7 +7,7 @@
   - Add proper validation and edge case handling
   - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 1.6_
 
-- [ ] 2. Fix web server application startup and HTTP handling
+- [x] 2. Fix web server application startup and HTTP handling
   - Debug the web server startup process in solar_system_web application
   - Fix port binding and HTTP response issues
   - Implement proper static file serving from web-root directory
@@ -15,7 +15,7 @@
   - Improve error handling and resource cleanup
   - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 2.6_
 
-- [ ] 3. Improve application command-line interfaces
+- [x] 3. Improve application command-line interfaces
   - Ensure all applications provide consistent --help output
   - Fix any missing or incorrect command-line argument handling
   - Verify launcher --status functionality works correctly

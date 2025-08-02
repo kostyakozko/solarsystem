@@ -209,14 +209,6 @@ int main(int argc, char* argv[]) {
   // Create body factory
   Bodies::BodyFactory factory;
 
-  // Handle help request first
-  if (argc == 1) {
-    // No arguments provided - show usage
-    SimulationArgumentParser parser(argv[0]);
-    parser.print_usage();
-    return 0;
-  }
-
   // Check for help flag specifically
   for (int i = 1; i < argc; ++i) {
     if (std::string(argv[i]) == "-h" || std::string(argv[i]) == "--help") {

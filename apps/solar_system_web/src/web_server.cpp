@@ -1042,11 +1042,19 @@ int main(int argc, char* argv[]) {
 
     auto factory = std::make_shared<SolarSystem::Bodies::BodyFactory>();
 
+    // Check for help flag first
+    for (int i = 1; i < argc; ++i) {
+      if (std::string(argv[i]) == "-h" || std::string(argv[i]) == "--help") {
+        ArgumentParser::print_usage(argv[0]);
+        return 0;  // Help was requested - return success
+      }
+    }
+
     // Parse command-line arguments
     auto config = ArgumentParser::parse(argc, argv);
     if (!config.has_value()) {
       ArgumentParser::print_usage(argv[0]);
-      return 0;  // Help was requested or parsing failed gracefully
+      return 1;  // Parsing failed - return error code
     }
 
     // Initialize logging system
