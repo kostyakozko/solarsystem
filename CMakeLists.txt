@@ -52,10 +52,10 @@ set(CMAKE_INSTALL_DATADIR "share/solar_system")
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     # Release optimizations (matching current performance)
     set(CMAKE_CXX_FLAGS_RELEASE "-O3 -march=native -mtune=native -flto -ffast-math -funroll-loops")
-    
+
     # Debug flags
     set(CMAKE_CXX_FLAGS_DEBUG "-g -O0 -Wall -Wextra")
-    
+
     # Profiling support (matching current -pg flag)
     if(ENABLE_PROFILING)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pg")
@@ -133,7 +133,7 @@ if(CLANG_FORMAT_EXECUTABLE)
         ${CMAKE_CURRENT_SOURCE_DIR}/apps/**/*.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/apps/**/*.h
     )
-    
+
     add_custom_target(format
         COMMAND ${CLANG_FORMAT_EXECUTABLE} -i ${ALL_CXX_SOURCE_FILES}
         COMMENT "Formatting code with clang-format"
@@ -151,6 +151,24 @@ add_custom_target(clean-cache
 # Convenience targets
 add_custom_target(all-libraries DEPENDS libraries)
 add_custom_target(all-applications DEPENDS applications)
+
+# Create symlinks for executables in build root for testing
+# This target runs after all applications are built
+add_custom_target(create-symlinks ALL
+    COMMAND ${CMAKE_COMMAND} -E create_symlink
+        apps/solar_system/solar_system solar_system
+    COMMAND ${CMAKE_COMMAND} -E create_symlink
+        apps/solar_system_web/solar_system_web solar_system_web
+    COMMAND ${CMAKE_COMMAND} -E create_symlink
+        apps/solar_system_launcher/solar_system_launcher solar_system_launcher
+    COMMAND ${CMAKE_COMMAND} -E create_symlink
+        apps/solar_system_fetch/solar_system_fetch solar_system_fetch
+    COMMAND ${CMAKE_COMMAND} -E create_symlink
+        apps/solar_system_realtime/solar_system_realtime solar_system_realtime
+    DEPENDS applications
+    COMMENT "Creating symlinks for executables in build root"
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+)
 
 # Custom install target with post-processing
 add_custom_target(install-suite

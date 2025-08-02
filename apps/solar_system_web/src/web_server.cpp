@@ -11,8 +11,10 @@
  */
 
 #include <atomic>
+#include <cerrno>
 #include <chrono>
 #include <csignal>
+#include <cstring>
 #include <filesystem>
 #include <fstream>
 #include <functional>
@@ -96,9 +98,15 @@ struct WebServerConfig {
       return false;
     }
 
+    // Try to create web root directory if it doesn't exist
     if (!std::filesystem::exists(web_root)) {
-      if (error) *error = "Web root directory does not exist: " + web_root.string();
-      return false;
+      try {
+        std::filesystem::create_directories(web_root);
+      } catch (const std::exception& e) {
+        if (error)
+          *error = "Cannot create web root directory: " + web_root.string() + " - " + e.what();
+        return false;
+      }
     }
 
     if (request_timeout <= 0s) {
@@ -118,10 +126,24 @@ struct WebServerConfig {
    * @brief Get default web root path
    */
   static std::filesystem::path get_default_web_root() {
-    // Try multiple possible locations
-    std::vector<std::filesystem::path> candidates = {"./web", "../share/solar_system/web",
-                                                     "./share/solar_system/web",
-                                                     "./apps/solar_system_web/web"};
+    // Try multiple possible locations in order of preference
+    std::vector<std::filesystem::path> candidates = {
+        // Development/build context - source files
+        "../apps/solar_system_web/web",  // From build directory to source
+        "./apps/solar_system_web/web",   // From project root
+
+        // Install context - installed files
+        "./share/solar_system/web",   // Standard install location
+        "../share/solar_system/web",  // Install relative
+
+        // Local install context
+        "./install/share/solar_system/web",   // Local install from root
+        "../install/share/solar_system/web",  // Local install from build
+
+        // Fallback locations
+        "./web",  // Current directory
+        "../web"  // Parent directory
+    };
 
     for (const auto& candidate : candidates) {
       if (std::filesystem::exists(candidate / "index.html")) {
@@ -129,8 +151,41 @@ struct WebServerConfig {
       }
     }
 
-    // Default fallback
-    return "./web";
+    // Default fallback - create a minimal web directory if none found
+    std::filesystem::path fallback = "./web";
+    std::filesystem::create_directories(fallback);
+
+    // Create a minimal index.html if it doesn't exist
+    std::filesystem::path index_file = fallback / "index.html";
+    if (!std::filesystem::exists(index_file)) {
+      std::ofstream file(index_file);
+      file << R"(<!DOCTYPE html>
+<html>
+<head>
+    <title>Solar System Web Server</title>
+    <meta charset="utf-8">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .api-list { background: #f5f5f5; padding: 20px; border-radius: 5px; }
+        .api-list a { display: block; margin: 5px 0; }
+    </style>
+</head>
+<body>
+    <h1>🌟 Solar System Web Server</h1>
+    <p>Web server is running successfully!</p>
+    <p>Web files not found at expected locations, but API endpoints are available:</p>
+    <div class="api-list">
+        <h3>Available API Endpoints:</h3>
+        <a href="/api/status">/api/status</a> - Server and system status
+        <a href="/api/solar_system">/api/solar_system</a> - Current solar system state
+        <a href="/api/solar_system?date=2024-01-01">/api/solar_system?date=2024-01-01</a> - Historical data
+    </div>
+    <p><em>To use the full web interface, ensure web files are available in the web-root directory.</em></p>
+</body>
+</html>)";
+    }
+
+    return fallback;
   }
 };
 
@@ -271,14 +326,16 @@ class HttpServer {
       // Create socket
       server_socket_ = socket(AF_INET, SOCK_STREAM, 0);
       if (server_socket_ < 0) {
-        LOG_ERROR("HttpServer", "Failed to create socket");
+        LOG_ERROR("HttpServer", "Failed to create socket: " + std::string(strerror(errno)));
         return false;
       }
 
-      // Set socket options
+      // Set socket options for reuse
       int opt = 1;
       if (setsockopt(server_socket_, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0) {
-        LOG_ERROR("HttpServer", "Failed to set socket options");
+        LOG_ERROR("HttpServer", "Failed to set socket options: " + std::string(strerror(errno)));
+        close(server_socket_);
+        server_socket_ = -1;
         return false;
       }
 
@@ -289,13 +346,33 @@ class HttpServer {
       address.sin_port = htons(config_.port);
 
       if (bind(server_socket_, reinterpret_cast<sockaddr*>(&address), sizeof(address)) < 0) {
-        LOG_ERROR("HttpServer", "Failed to bind socket to port " + std::to_string(config_.port));
+        LOG_ERROR("HttpServer", "Failed to bind socket to port " + std::to_string(config_.port) +
+                                    ": " + std::string(strerror(errno)));
+        close(server_socket_);
+        server_socket_ = -1;
         return false;
       }
 
       // Listen for connections
       if (listen(server_socket_, static_cast<int>(config_.max_connections)) < 0) {
-        LOG_ERROR("HttpServer", "Failed to listen on socket");
+        LOG_ERROR("HttpServer", "Failed to listen on socket: " + std::string(strerror(errno)));
+        close(server_socket_);
+        server_socket_ = -1;
+        return false;
+      }
+
+      // Set socket to non-blocking mode for graceful shutdown
+      int flags = fcntl(server_socket_, F_GETFL, 0);
+      if (flags == -1) {
+        LOG_ERROR("HttpServer", "Failed to get socket flags");
+        close(server_socket_);
+        server_socket_ = -1;
+        return false;
+      }
+      if (fcntl(server_socket_, F_SETFL, flags | O_NONBLOCK) == -1) {
+        LOG_ERROR("HttpServer", "Failed to set socket to non-blocking");
+        close(server_socket_);
+        server_socket_ = -1;
         return false;
       }
 
@@ -312,6 +389,11 @@ class HttpServer {
 
     } catch (const std::exception& e) {
       LOG_ERROR("HttpServer", "Exception during startup: " + std::string(e.what()));
+      // Ensure cleanup on exception
+      if (server_socket_ >= 0) {
+        close(server_socket_);
+        server_socket_ = -1;
+      }
       return false;
     }
   }
@@ -321,8 +403,15 @@ class HttpServer {
    */
   void stop() {
     if (server_socket_ >= 0) {
+      VERBOSE_LOG_INFO("HttpServer", "Stopping server...");
+
+      // Signal the server to stop
+      g_server_running.store(false);
+
+      // Close the server socket to unblock any pending operations
       close(server_socket_);
       server_socket_ = -1;
+
       VERBOSE_LOG_INFO("HttpServer", "Server stopped");
     }
   }
@@ -346,8 +435,12 @@ class HttpServer {
           accept(server_socket_, reinterpret_cast<sockaddr*>(&client_address), &client_len);
 
       if (client_socket < 0) {
-        if (g_server_running.load()) {
-          LOG_ERROR("HttpServer", "Failed to accept connection");
+        if (errno == EAGAIN || errno == EWOULDBLOCK) {
+          // No pending connections, sleep briefly and continue
+          std::this_thread::sleep_for(std::chrono::milliseconds(100));
+          continue;
+        } else if (g_server_running.load()) {
+          LOG_ERROR("HttpServer", "Failed to accept connection: " + std::string(strerror(errno)));
         }
         continue;
       }
@@ -356,6 +449,7 @@ class HttpServer {
       std::thread([this, client_socket]() { handle_client(client_socket); }).detach();
     }
 
+    VERBOSE_LOG_INFO("HttpServer", "Server loop exiting gracefully");
     return true;
   }
 
@@ -631,6 +725,26 @@ class SolarSystemAPI {
     } catch (const std::exception& e) {
       LOG_ERROR("API", "Status handler exception: " + std::string(e.what()));
       return HttpResponse::error(500, "Failed to get status");
+    }
+  }
+
+  /**
+   * @brief Simple health check endpoint
+   */
+  static HttpResponse handle_health(const HttpRequest&, SolarSystem::Bodies::BodyFactory&) {
+    try {
+      std::ostringstream json;
+      json << "{\n";
+      json << "  \"status\": \"healthy\",\n";
+      json << "  \"server\": \"Solar System Web Server\",\n";
+      json << "  \"timestamp\": " << std::time(nullptr) << "\n";
+      json << "}";
+
+      return HttpResponse::json_response(json.str());
+
+    } catch (const std::exception& e) {
+      LOG_ERROR("API", "Health check exception: " + std::string(e.what()));
+      return HttpResponse::error(500, "Health check failed");
     }
   }
 
@@ -940,11 +1054,14 @@ int main(int argc, char* argv[]) {
 
     VERBOSE_LOG_INFO("Main", "Solar System Web Server (Modern) starting");
 
-    // Initialize JPL data system
+    // Initialize JPL data system (non-fatal if it fails)
     if (!factory->is_initialized()) {
-      LOG_ERROR("Main", "Failed to initialize JPL data system");
-      std::cerr << "❌ Failed to initialize JPL data system\n";
-      return 1;
+      VERBOSE_LOG_INFO("Main", "JPL data system not initialized, using fallback data");
+      if (!config->verbose_output) {
+        std::cout << "⚠️  JPL data not available, using built-in data\n";
+      }
+    } else {
+      VERBOSE_LOG_INFO("Main", "JPL data system initialized successfully");
     }
 
     // Modern BodyFactory initializes automatically
@@ -961,6 +1078,10 @@ int main(int argc, char* argv[]) {
 
     // Register API endpoints
     server
+        .handle("/api/health",
+                [factory](const HttpRequest& req) {
+                  return SolarSystemAPI::handle_health(req, *factory);
+                })
         .handle("/api/status",
                 [factory](const HttpRequest& req) {
                   return SolarSystemAPI::handle_status(req, *factory);
