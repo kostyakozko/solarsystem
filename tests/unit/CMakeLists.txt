@@ -144,6 +144,18 @@ target_link_libraries(test_application_components test_utils solar_test solar_jp
 add_test(NAME UnitTest_ApplicationComponents COMMAND test_application_components)
 set_tests_properties(UnitTest_ApplicationComponents PROPERTIES LABELS "unit;applications;components;comprehensive" TIMEOUT ${TEST_TIMEOUT})
 
+# NEW: Port Management System Tests
+add_executable(test_port_management test_port_management.cpp)
+target_link_libraries(test_port_management test_utils solar_core solar_utils Threads::Threads)
+add_test(NAME UnitTest_PortManagement COMMAND test_port_management)
+set_tests_properties(UnitTest_PortManagement PROPERTIES LABELS "unit;testing;port;management" TIMEOUT ${TEST_TIMEOUT})
+
+# NEW: Concurrent Execution Tests
+add_executable(test_concurrent_execution test_concurrent_execution.cpp)
+target_link_libraries(test_concurrent_execution test_utils solar_core solar_utils Threads::Threads)
+add_test(NAME UnitTest_ConcurrentExecution COMMAND test_concurrent_execution)
+set_tests_properties(UnitTest_ConcurrentExecution PROPERTIES LABELS "unit;testing;concurrent;execution" TIMEOUT ${TEST_TIMEOUT})
+
 message(STATUS "Unit tests configured:")
 message(STATUS "  - Solar Core Library Tests")
 message(STATUS "  - Solar JPL Library Tests")
@@ -194,6 +206,8 @@ install(TARGETS
     test_cache_systems_comprehensive
     test_error_handling_comprehensive
     test_application_components
+    test_port_management
+    test_concurrent_execution
     RUNTIME DESTINATION bin/tests
     COMPONENT tests
 )

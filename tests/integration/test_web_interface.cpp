@@ -160,12 +160,10 @@ int main() {
 
   // Test 1: Web server startup and basic functionality
   TEST_CASE("Web Server Startup and Configuration") {
-    // Find available port for testing
-    int test_port = 8081;
-    while (!SimpleHTTPClient::is_port_available(test_port) && test_port < 8090) {
-      test_port++;
-    }
-    ASSERT_TRUE(SimpleHTTPClient::is_port_available(test_port));
+    // Use enhanced port allocation system
+    auto port_allocation = current_suite->allocate_port();
+    ASSERT_TRUE(port_allocation.is_valid());
+    int test_port = port_allocation.port();
 
     // Create test web server
     TestWebServer server(test_port);
@@ -194,10 +192,9 @@ int main() {
 
   // Test 2: API endpoints with simulation data
   TEST_CASE("API Endpoints with Simulation Data") {
-    int test_port = 8082;
-    while (!SimpleHTTPClient::is_port_available(test_port) && test_port < 8090) {
-      test_port++;
-    }
+    auto port_allocation = current_suite->allocate_port();
+    ASSERT_TRUE(port_allocation.is_valid());
+    int test_port = port_allocation.port();
 
     TestWebServer server(test_port);
     auto test_env = TestDataManager::create_test_environment();

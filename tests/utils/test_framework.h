@@ -1,6 +1,6 @@
 /**
  * @file test_framework.h
- * @brief Lightweight testing framework for Solar System Suite
+ * @brief Enhanced testing framework for Solar System Suite
  *
  * Provides comprehensive testing utilities including:
  * - Unit test macros and assertions
@@ -8,6 +8,8 @@
  * - Performance measurement
  * - Test data validation
  * - Mock data generation
+ * - Enhanced diagnostics and resource management
+ * - Port allocation and test isolation
  */
 
 #ifndef TEST_FRAMEWORK_H
@@ -20,6 +22,9 @@
 #include <sstream>
 #include <string>
 #include <vector>
+
+#include "test_diagnostics.hpp"
+#include "test_port_manager.hpp"
 
 // Test result tracking
 struct TestResult {
@@ -35,6 +40,7 @@ class TestSuite {
   std::vector<TestResult> results;
   int total_tests;
   int passed_tests;
+  std::unique_ptr<TestUtils::TestEnvironmentIsolation::IsolatedEnvironment> test_env_;
 
  public:
   TestSuite(const std::string& name);
@@ -44,6 +50,11 @@ class TestSuite {
   void print_summary();
   bool all_passed() const;
   int get_failed_count() const;
+
+  // Enhanced functionality
+  TestUtils::ScopedPortAllocation allocate_port();
+  std::string create_temp_file(const std::string& content = "");
+  std::string create_temp_directory();
 };
 
 // Global test suite instance
@@ -57,13 +68,18 @@ extern TestSuite* current_suite;
 #define TEST_CASE(name) \
     current_suite->run_test(name, []()
 
-#define ASSERT_TRUE(condition)                                                            \
-  do {                                                                                    \
-    if (!(condition)) {                                                                   \
-      std::ostringstream oss;                                                             \
-      oss << "Assertion failed: " << #condition << " at " << __FILE__ << ":" << __LINE__; \
-      throw std::runtime_error(oss.str());                                                \
-    }                                                                                     \
+#define ASSERT_TRUE(condition)                                                             \
+  do {                                                                                     \
+    if (!(condition)) {                                                                    \
+      std::ostringstream oss;                                                              \
+      oss << "Assertion failed: " << #condition << " at " << __FILE__ << ":" << __LINE__;  \
+      std::string error_msg = oss.str();                                                   \
+      if (current_suite) {                                                                 \
+        TestUtils::TestDiagnosticLogger::instance().test_failed("current_test", error_msg, \
+                                                                __FILE__, __LINE__);       \
+      }                                                                                    \
+      throw std::runtime_error(error_msg);                                                 \
+    }                                                                                      \
   } while (0)
 
 #define ASSERT_FALSE(condition) ASSERT_TRUE(!(condition))
@@ -118,6 +134,26 @@ extern TestSuite* current_suite;
           << __FILE__ << ":" << __LINE__;                                               \
       throw std::runtime_error(oss.str());                                              \
     }                                                                                   \
+  } while (0)
+
+#define ASSERT_GE(value, threshold)                                                      \
+  do {                                                                                   \
+    if (!((value) >= (threshold))) {                                                     \
+      std::ostringstream oss;                                                            \
+      oss << "Assertion failed: expected " << (value) << " >= " << (threshold) << " at " \
+          << __FILE__ << ":" << __LINE__;                                                \
+      throw std::runtime_error(oss.str());                                               \
+    }                                                                                    \
+  } while (0)
+
+#define ASSERT_LE(value, threshold)                                                      \
+  do {                                                                                   \
+    if (!((value) <= (threshold))) {                                                     \
+      std::ostringstream oss;                                                            \
+      oss << "Assertion failed: expected " << (value) << " <= " << (threshold) << " at " \
+          << __FILE__ << ":" << __LINE__;                                                \
+      throw std::runtime_error(oss.str());                                               \
+    }                                                                                    \
   } while (0)
 
 #define ASSERT_NOT_NULL(ptr) ASSERT_TRUE((ptr) != nullptr)

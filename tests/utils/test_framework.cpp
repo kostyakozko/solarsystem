@@ -16,12 +16,26 @@ TestSuite* current_suite = nullptr;
 
 TestSuite::TestSuite(const std::string& name) : suite_name(name), total_tests(0), passed_tests(0) {
   std::cout << "\n=== Running Test Suite: " << suite_name << " ===" << std::endl;
+
+  // Create isolated test environment
+  TestUtils::TestEnvironmentIsolation::EnvironmentConfig config;
+  config.test_name = suite_name;
+  test_env_ = TestUtils::TestEnvironmentIsolation::create_environment(config);
+
+  // Configure diagnostic logger
+  TestUtils::TestDiagnosticLogger::Config log_config;
+  log_config.log_file_prefix = "test_" + suite_name;
+  TestUtils::TestDiagnosticLogger::instance().configure(log_config);
 }
 
 TestSuite::~TestSuite() { print_summary(); }
 
 void TestSuite::run_test(const std::string& test_name, std::function<void()> test_func) {
   total_tests++;
+
+  // Start diagnostic logging and performance monitoring
+  TestUtils::TestDiagnosticLogger::instance().test_started(test_name, suite_name);
+  TestUtils::TestPerformanceMonitor::start_monitoring(test_name);
 
   auto start = std::chrono::high_resolution_clock::now();
 
@@ -36,6 +50,9 @@ void TestSuite::run_test(const std::string& test_name, std::function<void()> tes
     std::cout << "✓ " << test_name << " (" << std::fixed << std::setprecision(2)
               << static_cast<double>(duration.count()) / 1000.0 << " ms)" << std::endl;
 
+    // Log successful completion
+    TestUtils::TestDiagnosticLogger::instance().test_completed(test_name, true);
+
   } catch (const std::exception& e) {
     auto end = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
@@ -45,7 +62,20 @@ void TestSuite::run_test(const std::string& test_name, std::function<void()> tes
     std::cout << "✗ " << test_name << " (" << std::fixed << std::setprecision(2)
               << static_cast<double>(duration.count()) / 1000.0 << " ms)" << std::endl;
     std::cout << "  Error: " << e.what() << std::endl;
+
+    // Log failure with detailed diagnostics
+    TestUtils::TestDiagnosticLogger::instance().test_completed(test_name, false, e.what());
+
+    // Generate failure analysis
+    auto failure_analysis =
+        TestUtils::TestDiagnosticLogger::instance().generate_failure_analysis(test_name);
+    if (!failure_analysis.empty()) {
+      std::cout << "  Analysis: " << failure_analysis.substr(0, 200) << "..." << std::endl;
+    }
   }
+
+  // Stop performance monitoring
+  auto perf_metrics = TestUtils::TestPerformanceMonitor::stop_monitoring(test_name);
 }
 
 void TestSuite::print_summary() {
@@ -83,6 +113,27 @@ void TestSuite::print_summary() {
 bool TestSuite::all_passed() const { return passed_tests == total_tests; }
 
 int TestSuite::get_failed_count() const { return total_tests - passed_tests; }
+
+TestUtils::ScopedPortAllocation TestSuite::allocate_port() {
+  if (test_env_) {
+    return test_env_->allocate_port();
+  }
+  return TestUtils::ScopedPortAllocation(suite_name);
+}
+
+std::string TestSuite::create_temp_file(const std::string& content) {
+  if (test_env_) {
+    return test_env_->create_temp_file(content);
+  }
+  return "";
+}
+
+std::string TestSuite::create_temp_directory() {
+  if (test_env_) {
+    return test_env_->create_temp_directory();
+  }
+  return "";
+}
 
 // TestUtils implementation
 namespace TestUtils {
