@@ -1,6 +1,6 @@
 # Implementation Plan
 
-- [ ] 1. Fix CelestialBody availability logic
+- [x] 1. Fix CelestialBody availability logic
   - Analyze the current `is_available_at()` implementation in CelestialBody class
   - Fix the logic to properly handle bodies without creation dates (should be always available)
   - Update the Properties struct to use std::optional for creation_date

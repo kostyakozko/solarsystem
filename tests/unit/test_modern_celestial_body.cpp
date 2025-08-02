@@ -231,7 +231,7 @@ int main() {
                                      .type = BodyType::Planet,
                                      .priority = BodyPriority::Essential,
                                      .jpl_id = "",
-                                     .creation_date = std::chrono::system_clock::now()};
+                                     .creation_date = std::nullopt};
 
     CelestialBody always_available(props1);
     ASSERT_TRUE(always_available.is_available_at(past));
@@ -252,6 +252,21 @@ int main() {
     ASSERT_FALSE(time_limited.is_available_at(past));
     ASSERT_TRUE(time_limited.is_available_at(now));
     ASSERT_TRUE(time_limited.is_available_at(future));
+
+    // Edge case: Body with epoch time (should be treated as always available)
+    CelestialBody::Properties props3{.name = "EpochBody",
+                                     .mass = 1.0,
+                                     .position = Vector3d{},
+                                     .velocity = Vector3d{},
+                                     .type = BodyType::Spacecraft,
+                                     .priority = BodyPriority::Optional,
+                                     .jpl_id = "",
+                                     .creation_date = std::chrono::system_clock::time_point{}};
+
+    CelestialBody epoch_body(props3);
+    ASSERT_TRUE(epoch_body.is_available_at(past));
+    ASSERT_TRUE(epoch_body.is_available_at(now));
+    ASSERT_TRUE(epoch_body.is_available_at(future));
   });
 
   suite.run_test("Equality Comparison", []() {

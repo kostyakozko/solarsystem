@@ -70,6 +70,12 @@ bool CelestialBody::is_available_at(std::chrono::system_clock::time_point time) 
     return true;
   }
 
+  // Handle edge case: if creation date is at epoch (default constructed), treat as always available
+  const auto epoch = std::chrono::system_clock::time_point{};
+  if (creation_date_.value() == epoch) {
+    return true;
+  }
+
   // Body is available if the query time is after its creation date
   return time >= creation_date_.value();
 }
