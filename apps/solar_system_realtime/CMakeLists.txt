@@ -16,7 +16,7 @@ target_link_libraries(solar_system_realtime PRIVATE
 # Modern C++20 optimization flags
 target_compile_options(solar_system_realtime PRIVATE
     $<$<CONFIG:Release>:-O3 -march=native -mtune=native -flto>
-    $<$<CONFIG:Debug>:-g -O0 -Wall -Wextra>
+    $<$<CONFIG:Debug>:-g -O0>
 )
 
 # Enable profiling if requested

@@ -10,6 +10,7 @@
 #include <cstdlib>
 #include <fstream>
 #include <iomanip>
+#include <iostream>
 #include <random>
 #include <regex>
 #include <sstream>
@@ -249,6 +250,7 @@ std::filesystem::path TestDataManager::get_test_data_root() {
   std::vector<std::filesystem::path> search_paths = {
       current_path / "tests" / "data", current_path / ".." / "tests" / "data",
       current_path / ".." / ".." / "tests" / "data",
+      current_path / "build" / ".." / "tests" / "data",  // From build directory
       std::filesystem::path(__FILE__).parent_path().parent_path() / "data"};
 
   for (const auto& path : search_paths) {
@@ -309,6 +311,9 @@ std::optional<std::vector<uint8_t>> TestDataManager::read_binary_file(
 
 std::optional<TestDataSet> TestDataManager::load_jpl_responses(const std::string& scenario) {
   auto jpl_path = get_jpl_responses_path();
+  std::cerr << "DEBUG: load_jpl_responses - jpl_path: " << jpl_path << std::endl;
+  std::cerr << "DEBUG: load_jpl_responses - scenario: " << scenario << std::endl;
+
   TestDataSet dataset;
   dataset.name = "jpl_responses_" + scenario;
   dataset.description = "JPL HORIZONS API response samples for " + scenario;
@@ -670,14 +675,14 @@ bool DataValidator::validate_mass_positive(double mass) {
 
 bool DataValidator::validate_position_bounds(const SolarSystem::Math::Vector3d& position,
                                              double max_distance_au) {
-  double distance = position.magnitude();
+  double distance = static_cast<double>(position.magnitude());
   double max_distance_km = max_distance_au * 149597870.7;  // AU to km
   return distance <= max_distance_km && std::isfinite(distance);
 }
 
 bool DataValidator::validate_velocity_bounds(const SolarSystem::Math::Vector3d& velocity,
                                              double max_velocity_kms) {
-  double speed = velocity.magnitude();
+  double speed = static_cast<double>(velocity.magnitude());
   return speed <= max_velocity_kms && std::isfinite(speed);
 }
 
@@ -708,7 +713,7 @@ bool DataValidator::validate_angular_momentum(const SolarSystem::Math::Vector3d&
                                               const SolarSystem::Math::Vector3d& expected_momentum,
                                               double tolerance) {
   auto computed_momentum = position.cross(velocity);
-  double error = (computed_momentum - expected_momentum).magnitude();
+  double error = static_cast<double>((computed_momentum - expected_momentum).magnitude());
   return error <= tolerance;
 }
 
@@ -759,12 +764,12 @@ bool DataValidator::validate_csv_format(const std::string& csv_data, size_t expe
 
 double DataValidator::calculate_position_error(const SolarSystem::Math::Vector3d& computed,
                                                const SolarSystem::Math::Vector3d& reference) {
-  return (computed - reference).magnitude();
+  return static_cast<double>((computed - reference).magnitude());
 }
 
 double DataValidator::calculate_velocity_error(const SolarSystem::Math::Vector3d& computed,
                                                const SolarSystem::Math::Vector3d& reference) {
-  return (computed - reference).magnitude();
+  return static_cast<double>((computed - reference).magnitude());
 }
 
 // JPLDataValidator implementation
@@ -948,7 +953,7 @@ double JPLDataValidator::compare_with_reference(const std::string& computed_resp
     sum_squared_error += error * error;
   }
 
-  return std::sqrt(sum_squared_error / min_size);
+  return std::sqrt(sum_squared_error / static_cast<double>(min_size));
 }
 
 bool JPLDataValidator::validate_against_physical_constants(const std::string& response) {

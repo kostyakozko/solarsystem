@@ -87,10 +87,12 @@ void create_test_cache_data(const std::filesystem::path& cache_dir) {
       auto epoch_time = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
       binary_file.write(reinterpret_cast<const char*>(&epoch_time), sizeof(epoch_time));
 
-      double pos[3] = {1.0e11 * (i + 1), 2.0e11 * (i + 1), 3.0e11 * (i + 1)};
+      double pos[3] = {1.0e11 * static_cast<double>(i + 1), 2.0e11 * static_cast<double>(i + 1),
+                       3.0e11 * static_cast<double>(i + 1)};
       binary_file.write(reinterpret_cast<const char*>(pos), sizeof(pos));
 
-      double vel[3] = {1000.0 * (i + 1), 2000.0 * (i + 1), 3000.0 * (i + 1)};
+      double vel[3] = {1000.0 * static_cast<double>(i + 1), 2000.0 * static_cast<double>(i + 1),
+                       3000.0 * static_cast<double>(i + 1)};
       binary_file.write(reinterpret_cast<const char*>(vel), sizeof(vel));
 
       long double mass = 1.0e24L * (i + 1);
@@ -395,7 +397,8 @@ int main() {
             .velocity = ephemeris_data.velocity * 1000.0L,  // Convert km/s to m/s
             .type = Bodies::BodyType::Planet,
             .priority = Bodies::BodyPriority::Essential,
-            .jpl_id = std::to_string(ephemeris_data.jpl_id)};
+            .jpl_id = std::to_string(ephemeris_data.jpl_id),
+            .creation_date = std::nullopt};
 
         Bodies::CelestialBody body(props);
 

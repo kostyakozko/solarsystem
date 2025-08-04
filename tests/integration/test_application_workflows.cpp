@@ -58,6 +58,12 @@ bool file_exists(const std::string& filename) {
   return file.good();
 }
 
+// Helper function to get absolute path to executable
+std::string get_executable_path(const std::string& exe_name) {
+  static std::string build_dir = std::filesystem::current_path().string();
+  return build_dir + "/" + exe_name;
+}
+
 int main() {
   TEST_SUITE("Application Workflow Integration Tests");
 
@@ -268,10 +274,12 @@ int main() {
     {
       auto test_env = TestDataManager::create_test_environment();
       std::string old_cwd = std::filesystem::current_path();
+      std::string launcher_path =
+          (std::filesystem::current_path() / "solar_system_launcher").string();
 
       std::filesystem::current_path(test_env->path());
 
-      std::string output = execute_command("../solar_system_launcher --status 2>&1");
+      std::string output = execute_command(launcher_path + " --status 2>&1");
       ASSERT_TRUE(output.find("Status") != std::string::npos ||
                   output.find("Solar System") != std::string::npos);
 
@@ -288,7 +296,8 @@ int main() {
         std::filesystem::rename(lib_path, backup_path);
 
         // Application should handle missing library gracefully
-        std::string output = execute_command("./solar_system_launcher --status 2>&1");
+        std::string output =
+            execute_command(get_executable_path("solar_system_launcher") + " --status 2>&1");
         // Should either work with fallback or provide clear error message
         ASSERT_TRUE(output.find("Status") != std::string::npos ||
                     output.find("Error") != std::string::npos ||
@@ -327,7 +336,8 @@ int main() {
       })";
       config.close();
 
-      std::string command = "./solar_system_launcher --config " + config_file + " --status";
+      std::string command =
+          get_executable_path("solar_system_launcher") + " --config " + config_file + " --status";
       std::string output = execute_command(command + " 2>&1");
       ASSERT_TRUE(output.find("Status") != std::string::npos ||
                   output.find("configuration") != std::string::npos);
@@ -340,7 +350,8 @@ int main() {
       config << "{ invalid json content }";
       config.close();
 
-      std::string command = "./solar_system_launcher --config " + invalid_config + " --status";
+      std::string command = get_executable_path("solar_system_launcher") + " --config " +
+                            invalid_config + " --status";
       std::string output = execute_command(command + " 2>&1");
       // Should handle invalid config gracefully
       ASSERT_TRUE(output.find("Error") != std::string::npos ||
@@ -351,7 +362,8 @@ int main() {
     // Test with missing configuration file
     {
       std::string missing_config = test_env->path_string() + "/nonexistent.json";
-      std::string command = "./solar_system_launcher --config " + missing_config + " --status";
+      std::string command = get_executable_path("solar_system_launcher") + " --config " +
+                            missing_config + " --status";
       std::string output = execute_command(command + " 2>&1");
       // Should handle missing config gracefully
       ASSERT_TRUE(output.find("Error") != std::string::npos ||
@@ -364,7 +376,8 @@ int main() {
       setenv("SOLAR_SYSTEM_CACHE_DIR", test_env->path_string().c_str(), 1);
       setenv("SOLAR_SYSTEM_LOG_LEVEL", "DEBUG", 1);
 
-      std::string output = execute_command("./solar_system_launcher --status 2>&1");
+      std::string output =
+          execute_command(get_executable_path("solar_system_launcher") + " --status 2>&1");
       ASSERT_TRUE(output.find("Status") != std::string::npos);
 
       unsetenv("SOLAR_SYSTEM_CACHE_DIR");
@@ -416,7 +429,7 @@ int main() {
       int test_port = 8088;
       std::string web_command = "./solar_system_web --port " + std::to_string(test_port) +
                                 " --cache-dir " + shared_cache + " &";
-      system(web_command.c_str());
+      [[maybe_unused]] int result = system(web_command.c_str());
 
       std::this_thread::sleep_for(std::chrono::seconds(2));
 
@@ -427,7 +440,7 @@ int main() {
 
       // Clean up web server
       std::string cleanup = "pkill -f 'solar_system_web.*--port " + std::to_string(test_port) + "'";
-      system(cleanup.c_str());
+      [[maybe_unused]] int result2 = system(cleanup.c_str());
 
       // API may or may not work depending on implementation, just verify no crashes
       ASSERT_TRUE(api_output.find("FAILED") == std::string::npos || api_output.length() > 0);
@@ -547,7 +560,7 @@ ASSERT_TRUE(output.find("segmentation fault") == std::string::npos);
                                        "./solar_system --bodies Sun,Earth --duration 1800 &"};
 
   for (const auto& cmd : commands) {
-    system(cmd.c_str());
+    [[maybe_unused]] int result = system(cmd.c_str());
   }
 
   std::this_thread::sleep_for(std::chrono::seconds(3));
@@ -556,7 +569,7 @@ ASSERT_TRUE(output.find("segmentation fault") == std::string::npos);
   std::string ps_output = execute_command("ps aux | grep solar_system | grep -v grep");
 
   // Clean up any remaining processes
-  system("pkill -f solar_system 2>/dev/null || true");
+  [[maybe_unused]] int result = system("pkill -f solar_system 2>/dev/null || true");
 
   // Should not have excessive number of processes
   int process_count = 0;
@@ -576,7 +589,7 @@ ASSERT_TRUE(output.find("segmentation fault") == std::string::npos);
 
   // Start web server
   std::string start_cmd = "./solar_system_web --port " + std::to_string(test_port) + " &";
-  system(start_cmd.c_str());
+  [[maybe_unused]] int result2 = system(start_cmd.c_str());
 
   std::this_thread::sleep_for(std::chrono::seconds(2));
 
@@ -586,7 +599,7 @@ ASSERT_TRUE(output.find("segmentation fault") == std::string::npos);
 
   // Stop web server
   std::string stop_cmd = "pkill -f 'solar_system_web.*--port " + std::to_string(test_port) + "'";
-  system(stop_cmd.c_str());
+  [[maybe_unused]] int result3 = system(stop_cmd.c_str());
 
   std::this_thread::sleep_for(std::chrono::seconds(1));
 

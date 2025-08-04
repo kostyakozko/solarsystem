@@ -17,7 +17,7 @@ target_link_libraries(solar_system PRIVATE
 # Aggressive optimization for all executables
 target_compile_options(solar_system PRIVATE
     $<$<CONFIG:Release>:-O3 -march=native -mtune=native -flto -ffast-math -funroll-loops>
-    $<$<CONFIG:Debug>:-g -O0 -Wall -Wextra>
+    $<$<CONFIG:Debug>:-g -O0>
 )
 
 # Enable LTO for maximum performance

@@ -118,7 +118,7 @@ class TestWebServer {
   void stop() {
     if (process_id_ != -1) {
       std::string command = "pkill -f 'solar_system_web.*--port " + std::to_string(port_) + "'";
-      system(command.c_str());
+      [[maybe_unused]] int result = system(command.c_str());
       process_id_ = -1;
     }
   }

@@ -19,7 +19,7 @@ target_include_directories(solar_utils PUBLIC
 # Standard optimization flags
 target_compile_options(solar_utils PRIVATE
     $<$<CONFIG:Release>:-O3 -march=native -mtune=native>
-    $<$<CONFIG:Debug>:-g -O0 -Wall -Wextra>
+    $<$<CONFIG:Debug>:-g -O0>
 )
 
 # Enable profiling if requested

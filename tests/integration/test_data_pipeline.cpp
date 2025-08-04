@@ -240,12 +240,12 @@ TEST_CASE("Real Data Integration and Validation") {
 
     // Validate position is within reasonable bounds (within 100 AU)
     const auto& pos = body.position();
-    double distance_au = pos.magnitude() / 1.496e11;  // Convert to AU
+    double distance_au = static_cast<double>(pos.magnitude()) / 1.496e11;  // Convert to AU
     ASSERT_LT(distance_au, 100.0);
 
     // Validate velocity is within reasonable bounds (< 100 km/s)
     const auto& vel = body.velocity();
-    double speed_kms = vel.magnitude() / 1000.0;  // Convert to km/s
+    double speed_kms = static_cast<double>(vel.magnitude()) / 1000.0;  // Convert to km/s
     ASSERT_LT(speed_kms, 100.0);
   }
 });
@@ -275,12 +275,13 @@ TEST_CASE("Data Consistency Across Pipeline Stages") {
     ASSERT_EQ(earth1.name(), earth2.name());
 
     // Masses should be reasonably close (within 1%)
-    double mass_diff = std::abs(earth1.mass() - earth2.mass()) / earth1.mass();
+    double mass_diff = static_cast<double>(std::abs(earth1.mass() - earth2.mass())) /
+                       static_cast<double>(earth1.mass());
     ASSERT_LT(mass_diff, 0.01);
 
     // Positions may differ due to different epochs, but should be reasonable
-    double pos1_au = earth1.position().magnitude() / 1.496e11;
-    double pos2_au = earth2.position().magnitude() / 1.496e11;
+    double pos1_au = static_cast<double>(earth1.position().magnitude()) / 1.496e11;
+    double pos2_au = static_cast<double>(earth2.position().magnitude()) / 1.496e11;
     ASSERT_GT(pos1_au, 0.8);  // Earth's minimum distance from Sun
     ASSERT_LT(pos1_au, 1.2);  // Earth's maximum distance from Sun
     ASSERT_GT(pos2_au, 0.8);

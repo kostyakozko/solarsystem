@@ -1,0 +1,37 @@
+# Dockerfile for Linux cross-platform compatibility testing
+# Based on GitHub CI configuration
+
+FROM ubuntu:22.04
+
+# Prevent interactive prompts during package installation
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install dependencies matching GitHub CI
+RUN apt-get update && apt-get install -y \
+    cmake \
+    build-essential \
+    curl \
+    doxygen \
+    graphviz \
+    lcov \
+    git \
+    bc \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set up working directory
+WORKDIR /workspace
+
+# Copy the project files
+COPY . .
+
+# Set environment variables matching GitHub CI
+ENV BUILD_TYPE=Release
+ENV CC=gcc
+ENV CXX=g++
+ENV GITHUB_ACTIONS=true
+
+# Make the test script executable
+RUN chmod +x test_linux_compatibility.sh
+
+# Default command runs the compatibility test
+CMD ["./test_linux_compatibility.sh"]

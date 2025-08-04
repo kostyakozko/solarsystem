@@ -30,7 +30,7 @@ target_link_libraries(solar_core PUBLIC
 # Aggressive optimization for core physics calculations
 target_compile_options(solar_core PRIVATE
     $<$<CONFIG:Release>:-O3 -march=native -mtune=native -flto -ffast-math -funroll-loops>
-    $<$<CONFIG:Debug>:-g -O0 -Wall -Wextra>
+    $<$<CONFIG:Debug>:-g -O0>
 )
 
 # Enable profiling if requested

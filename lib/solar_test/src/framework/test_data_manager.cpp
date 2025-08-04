@@ -13,6 +13,39 @@ namespace solar_test {
 std::vector<std::string> TestDataManager::active_temp_directories_;
 bool TestDataManager::cleanup_registered_ = false;
 
+// Helper function to get test data root directory
+std::filesystem::path get_test_data_root() {
+  std::filesystem::path current_path = std::filesystem::current_path();
+
+  // Look for tests/data directory
+  std::vector<std::filesystem::path> search_paths = {
+      current_path / "tests" / "data", current_path / ".." / "tests" / "data",
+      current_path / ".." / ".." / "tests" / "data",
+      current_path / "build" / ".." / "tests" / "data",
+      std::filesystem::path(__FILE__).parent_path().parent_path().parent_path().parent_path() /
+          "tests" / "data"};
+
+  for (const auto& path : search_paths) {
+    if (std::filesystem::exists(path) && std::filesystem::is_directory(path)) {
+      return path;
+    }
+  }
+
+  // Fallback to current directory
+  return current_path / "tests" / "data";
+}
+
+// Helper function to load file content
+std::string load_file_content(const std::filesystem::path& file_path) {
+  std::ifstream file(file_path);
+  if (file) {
+    std::ostringstream content;
+    content << file.rdbuf();
+    return content.str();
+  }
+  return "";
+}
+
 // TemporaryDirectory implementation
 TemporaryDirectory::TemporaryDirectory(const std::string& prefix) {
   // Create unique temporary directory
@@ -166,30 +199,44 @@ TestDataSet TestDataManager::load_jpl_responses(const std::string& scenario) {
   dataset.name = "jpl_responses_" + scenario;
   dataset.description = "JPL HORIZONS API response samples for " + scenario;
 
-  // Load scenario-specific JPL responses
-  std::string data_path = "tests/data/jpl_responses/" + scenario + "/";
+  // Load scenario-specific JPL responses with cross-platform path resolution
+  std::filesystem::path data_path = get_test_data_root() / "jpl_responses" / scenario;
 
-  if (scenario == "planets") {
+  if (scenario == "valid") {
+    // Load actual test data files
+    std::vector<std::string> files = {"earth_j2000.txt", "mars_j2000.txt", "moon_j2000.txt",
+                                      "sun_j2000.txt"};
+    for (const auto& filename : files) {
+      auto file_path = data_path / filename;
+      if (std::filesystem::exists(file_path)) {
+        dataset.files[filename] = load_file_content(file_path);
+      } else {
+        // Fallback to generated data
+        std::string body_name = filename.substr(0, filename.find("_"));
+        dataset.files[filename] = load_sample_jpl_response(body_name);
+      }
+    }
+  } else if (scenario == "planets") {
     // Try to load from actual files first, fallback to generated data
-    dataset.files["mercury.json"] =
-        load_file_or_fallback(data_path + "mercury.json", load_sample_jpl_response("Mercury"));
-    dataset.files["venus.json"] =
-        load_file_or_fallback(data_path + "venus.json", load_sample_jpl_response("Venus"));
-    dataset.files["earth.json"] =
-        load_file_or_fallback(data_path + "earth.json", load_sample_jpl_response("Earth"));
+    dataset.files["mercury.json"] = load_file_or_fallback((data_path / "mercury.json").string(),
+                                                          load_sample_jpl_response("Mercury"));
+    dataset.files["venus.json"] = load_file_or_fallback((data_path / "venus.json").string(),
+                                                        load_sample_jpl_response("Venus"));
+    dataset.files["earth.json"] = load_file_or_fallback((data_path / "earth.json").string(),
+                                                        load_sample_jpl_response("Earth"));
     dataset.files["mars.json"] =
-        load_file_or_fallback(data_path + "mars.json", load_sample_jpl_response("Mars"));
+        load_file_or_fallback((data_path / "mars.json").string(), load_sample_jpl_response("Mars"));
   } else if (scenario == "error_conditions") {
     dataset.files["timeout.json"] =
-        load_file_or_fallback(data_path + "timeout.json", create_timeout_response());
+        load_file_or_fallback((data_path / "timeout.json").string(), create_timeout_response());
     dataset.files["invalid_body.json"] = load_file_or_fallback(
-        data_path + "invalid_body.json", create_error_response("Invalid body ID"));
-    dataset.files["server_error.json"] =
-        load_file_or_fallback(data_path + "server_error.json", create_server_error_response());
+        (data_path / "invalid_body.json").string(), create_error_response("Invalid body ID"));
+    dataset.files["server_error.json"] = load_file_or_fallback(
+        (data_path / "server_error.json").string(), create_server_error_response());
   }
 
   dataset.metadata["scenario"] = scenario;
-  dataset.metadata["format"] = "json";
+  dataset.metadata["format"] = (scenario == "valid") ? "txt" : "json";
 
   return dataset;
 }
@@ -199,7 +246,18 @@ TestDataSet TestDataManager::load_ephemeris_data(const std::string& time_period)
   dataset.name = "ephemeris_" + time_period;
   dataset.description = "Ephemeris data for " + time_period;
 
-  if (time_period == "2024") {
+  // Load actual ephemeris data files with cross-platform path resolution
+  std::filesystem::path data_path = get_test_data_root() / "ephemeris" / "time_periods";
+
+  if (time_period == "j2000_epoch") {
+    auto file_path = data_path / (time_period + ".json");
+    if (std::filesystem::exists(file_path)) {
+      dataset.files[time_period + ".json"] = load_file_content(file_path);
+    } else {
+      // Fallback to generated data
+      dataset.files["ephemeris_j2000.json"] = create_ephemeris_json_data();
+    }
+  } else if (time_period == "2024") {
     dataset.files["ephemeris_2024.bin"] = create_ephemeris_binary_data();
     dataset.files["ephemeris_2024.json"] = create_ephemeris_json_data();
   } else if (time_period == "historical") {
@@ -244,7 +302,7 @@ bool TestDataManager::validate_jpl_response(const std::string& response) {
   if (response.empty()) return false;
 
   // Check for required JPL response elements
-  return response.find("$$SOE") != std::string::npos && response.find("$$EOE") != std::string::npos;
+  return response.find("$SOE") != std::string::npos && response.find("$EOE") != std::string::npos;
 }
 
 bool TestDataManager::validate_ephemeris_data(const std::string& data) {

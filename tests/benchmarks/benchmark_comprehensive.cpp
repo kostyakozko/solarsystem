@@ -36,7 +36,9 @@ int main() {
                                                        .position = Math::Vector3d{0.0, 0.0, 0.0},
                                                        .velocity = Math::Vector3d{0.0, 0.0, 0.0},
                                                        .type = Bodies::BodyType::Star,
-                                                       .priority = Bodies::BodyPriority::Essential};
+                                                       .priority = Bodies::BodyPriority::Essential,
+                                                       .jpl_id = "10",
+                                                       .creation_date = std::nullopt};
 
         Bodies::CelestialBody::Properties earth_props = {
             .name = "Earth",
@@ -44,7 +46,9 @@ int main() {
             .position = Math::Vector3d{1.496e11, 0.0, 0.0},  // 1 AU in meters
             .velocity = Math::Vector3d{0.0, 29780.0, 0.0},   // Earth orbital velocity m/s
             .type = Bodies::BodyType::Planet,
-            .priority = Bodies::BodyPriority::Essential};
+            .priority = Bodies::BodyPriority::Essential,
+            .jpl_id = "399",
+            .creation_date = std::nullopt};
 
         Bodies::CelestialBody sun(sun_props);
         Bodies::CelestialBody earth(earth_props);
@@ -93,7 +97,9 @@ int main() {
             .position = Math::Vector3d{0.0, 0.0, 0.0},
             .velocity = Math::Vector3d{0.0, 0.0, 0.0},
             .type = Bodies::BodyType::Star,
-            .priority = Bodies::BodyPriority::Essential};
+            .priority = Bodies::BodyPriority::Essential,
+            .jpl_id = "10",
+            .creation_date = std::nullopt};
 
         Bodies::CelestialBody::Properties body2_props = {
             .name = "Body2",
@@ -101,7 +107,9 @@ int main() {
             .position = Math::Vector3d{1.496e11, 0.0, 0.0},  // 1 AU
             .velocity = Math::Vector3d{0.0, 29780.0, 0.0},
             .type = Bodies::BodyType::Planet,
-            .priority = Bodies::BodyPriority::Essential};
+            .priority = Bodies::BodyPriority::Essential,
+            .jpl_id = "399",
+            .creation_date = std::nullopt};
 
         Bodies::CelestialBody body1(body1_props);
         Bodies::CelestialBody body2(body2_props);
@@ -136,7 +144,9 @@ int main() {
                                          static_cast<long double>(i) * 500.0,
                                          static_cast<long double>(i) * 100.0},
               .type = Bodies::BodyType::Planet,
-              .priority = Bodies::BodyPriority::Essential};
+              .priority = Bodies::BodyPriority::Essential,
+              .jpl_id = std::to_string(i + 100),
+              .creation_date = std::nullopt};
           bodies.emplace_back(props);
         }
 

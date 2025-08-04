@@ -243,7 +243,7 @@ std::vector<BenchmarkResult> BenchmarkSuite::run_all() {
       // Simulate some work
       volatile int sum = 0;
       for (int i = 0; i < 1000; ++i) {
-        sum += i;
+        sum = sum + i;  // Avoid compound assignment with volatile
       }
     };
 
@@ -261,7 +261,7 @@ std::optional<BenchmarkResult> BenchmarkSuite::run_benchmark(const std::string& 
       auto dummy_func = []() {
         volatile int sum = 0;
         for (int i = 0; i < 1000; ++i) {
-          sum += i;
+          sum = sum + i;  // Avoid compound assignment with volatile
         }
       };
 

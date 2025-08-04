@@ -82,11 +82,11 @@ int main() {
   });
 
   suite.run_test("Cache Integrity Validation", []() {
-    auto temp_cache = std::make_unique<TemporaryCache>("json");
+    auto temp_cache = std::make_unique<TemporaryCache>("ephemeris");
     temp_cache->populate_with_valid_data();
 
     // Test cache integrity validation
-    ASSERT_TRUE(TestDataManager::validate_cache_integrity(temp_cache->cache_path()));
+    ASSERT_TRUE(TestDataManager::validate_cache_integrity(temp_cache->cache_file()));
   });
 
   suite.run_test("Realistic Solar System Data", []() {

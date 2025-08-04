@@ -110,7 +110,10 @@ set_tests_properties(UnitTest_MockServiceRegistry PROPERTIES LABELS "unit;testin
 add_executable(test_data_management test_data_management.cpp)
 target_link_libraries(test_data_management test_utils solar_test solar_jpl solar_core solar_utils Threads::Threads)
 add_test(NAME UnitTest_DataManagement COMMAND test_data_management)
-set_tests_properties(UnitTest_DataManagement PROPERTIES LABELS "unit;testing;data;management" TIMEOUT ${TEST_TIMEOUT})
+set_tests_properties(UnitTest_DataManagement PROPERTIES
+    LABELS "unit;testing;data;management"
+    TIMEOUT ${TEST_TIMEOUT}
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 
 # NEW: Parallel Execution Tests
 add_executable(test_parallel_execution test_parallel_execution.cpp)

@@ -49,12 +49,15 @@ void create_performance_test_cache(const std::filesystem::path& cache_dir) {
       binary_file.write(reinterpret_cast<const char*>(&epoch_time), sizeof(epoch_time));
 
       // Realistic astronomical positions (in km)
-      double pos[3] = {1.0e8 * (i + 1) * std::cos(i * 0.5), 1.0e8 * (i + 1) * std::sin(i * 0.5),
-                       1.0e7 * (i + 1) * std::sin(i * 0.3)};
+      double i_double = static_cast<double>(i);
+      double pos[3] = {1.0e8 * (i_double + 1.0) * std::cos(i_double * 0.5),
+                       1.0e8 * (i_double + 1.0) * std::sin(i_double * 0.5),
+                       1.0e7 * (i_double + 1.0) * std::sin(i_double * 0.3)};
       binary_file.write(reinterpret_cast<const char*>(pos), sizeof(pos));
 
       // Realistic orbital velocities (in km/s)
-      double vel[3] = {30.0 * std::sin(i * 0.7), 30.0 * std::cos(i * 0.7), 5.0 * std::sin(i * 0.2)};
+      double vel[3] = {30.0 * std::sin(i_double * 0.7), 30.0 * std::cos(i_double * 0.7),
+                       5.0 * std::sin(i_double * 0.2)};
       binary_file.write(reinterpret_cast<const char*>(vel), sizeof(vel));
 
       // Realistic masses (in kg)
@@ -127,7 +130,9 @@ int main() {
                                                        .position = Math::Vector3d{0.0, 0.0, 0.0},
                                                        .velocity = Math::Vector3d{0.0, 0.0, 0.0},
                                                        .type = Bodies::BodyType::Star,
-                                                       .priority = Bodies::BodyPriority::Essential};
+                                                       .priority = Bodies::BodyPriority::Essential,
+                                                       .jpl_id = std::nullopt,
+                                                       .creation_date = std::nullopt};
 
         Bodies::CelestialBody::Properties earth_props = {
             .name = "Earth",
@@ -135,7 +140,9 @@ int main() {
             .position = Math::Vector3d{1.496e11, 0.0, 0.0},  // 1 AU
             .velocity = Math::Vector3d{0.0, 29780.0, 0.0},   // Earth orbital velocity
             .type = Bodies::BodyType::Planet,
-            .priority = Bodies::BodyPriority::Essential};
+            .priority = Bodies::BodyPriority::Essential,
+            .jpl_id = std::nullopt,
+            .creation_date = std::nullopt};
 
         Bodies::CelestialBody sun(sun_props);
         Bodies::CelestialBody earth(earth_props);
@@ -192,7 +199,9 @@ int main() {
                                          static_cast<long double>(i) * 500.0,
                                          static_cast<long double>(i) * 100.0},
               .type = Bodies::BodyType::Planet,
-              .priority = Bodies::BodyPriority::Essential};
+              .priority = Bodies::BodyPriority::Essential,
+              .jpl_id = std::nullopt,
+              .creation_date = std::nullopt};
           bodies.emplace_back(props);
         }
 

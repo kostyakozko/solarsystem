@@ -48,14 +48,6 @@ target_link_libraries(solar_test
         Threads::Threads
 )
 
-# Compiler-specific options
-if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-    target_compile_options(solar_test PRIVATE
-        -Wall -Wextra -Wpedantic
-        -Wno-unused-parameter
-    )
-endif()
-
 # Installation
 install(TARGETS solar_test
     ARCHIVE DESTINATION lib

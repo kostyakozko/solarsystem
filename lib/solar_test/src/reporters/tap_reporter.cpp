@@ -1,5 +1,6 @@
 #include "solar_test/reporters/tap_reporter.hpp"
 
+#include <iomanip>
 #include <iostream>
 #include <sstream>
 

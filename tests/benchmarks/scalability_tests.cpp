@@ -45,7 +45,9 @@ std::vector<Bodies::CelestialBody> create_test_bodies(size_t count) {
         .position = Math::Vector3d{pos_dist(gen), pos_dist(gen), pos_dist(gen)},
         .velocity = Math::Vector3d{vel_dist(gen), vel_dist(gen), vel_dist(gen)},
         .type = Bodies::BodyType::Planet,
-        .priority = Bodies::BodyPriority::Essential};
+        .priority = Bodies::BodyPriority::Essential,
+        .jpl_id = std::nullopt,
+        .creation_date = std::nullopt};
     bodies.emplace_back(props);
   }
 

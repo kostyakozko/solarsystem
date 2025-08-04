@@ -243,7 +243,7 @@ TEST_CASE("Web Interface Integration Workflow") {
   // Start web server in background
   std::string start_command =
       "./solar_system_web --port " + std::to_string(test_port) + " --web-root " + web_dir + " &";
-  system(start_command.c_str());
+  [[maybe_unused]] int start_result = system(start_command.c_str());
 
   // Wait for server to start
   std::this_thread::sleep_for(std::chrono::seconds(2));
@@ -251,25 +251,25 @@ TEST_CASE("Web Interface Integration Workflow") {
   // Test web server connectivity
   {
     std::string test_command = "curl -s -f http://localhost:" + std::to_string(test_port) + "/";
-    auto result = TestApplicationRunner::run_command(test_command, 5);
-    ASSERT_TRUE(result.success);
-    ASSERT_TRUE(result.stdout_output.find("Solar System") != std::string::npos);
+    auto web_result = TestApplicationRunner::run_command(test_command, 5);
+    ASSERT_TRUE(web_result.success);
+    ASSERT_TRUE(web_result.stdout_output.find("Solar System") != std::string::npos);
   }
 
   // Test API endpoints
   {
     std::string api_command =
         "curl -s -f http://localhost:" + std::to_string(test_port) + "/api/status";
-    auto result = TestApplicationRunner::run_command(api_command, 5);
-    ASSERT_TRUE(result.success);
+    auto api_result = TestApplicationRunner::run_command(api_command, 5);
+    ASSERT_TRUE(api_result.success);
     // Should return some status information
-    ASSERT_FALSE(result.stdout_output.empty());
+    ASSERT_FALSE(api_result.stdout_output.empty());
   }
 
   // Clean up web server
   std::string cleanup_command =
       "pkill -f 'solar_system_web.*--port " + std::to_string(test_port) + "'";
-  system(cleanup_command.c_str());
+  [[maybe_unused]] int result2 = system(cleanup_command.c_str());
   std::this_thread::sleep_for(std::chrono::seconds(1));
 });
 

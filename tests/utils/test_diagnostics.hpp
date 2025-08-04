@@ -13,6 +13,7 @@
 #include <map>
 #include <memory>
 #include <mutex>
+#include <optional>
 #include <sstream>
 #include <string>
 #include <vector>

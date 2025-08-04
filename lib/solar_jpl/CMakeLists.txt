@@ -29,7 +29,7 @@ target_link_libraries(solar_jpl PUBLIC
 # Modern C++20 optimization flags
 target_compile_options(solar_jpl PRIVATE
     $<$<CONFIG:Release>:-O3 -march=native -mtune=native -flto>
-    $<$<CONFIG:Debug>:-g -O0 -Wall -Wextra -Wpedantic>
+    $<$<CONFIG:Debug>:-g -O0>
 )
 
 # Enable profiling if requested

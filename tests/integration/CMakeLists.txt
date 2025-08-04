@@ -51,12 +51,17 @@ target_link_libraries(test_end_to_end
 )
 
 # Add integration tests to CTest
-add_test(NAME IntegrationTest_ApplicationWorkflows 
+add_test(NAME IntegrationTest_ApplicationWorkflows
          COMMAND tests/integration/test_application_workflows
          WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
 add_test(NAME IntegrationTest_DataPipeline COMMAND test_data_pipeline)
 add_test(NAME IntegrationTest_WebInterface COMMAND test_web_interface)
 add_test(NAME IntegrationTest_EndToEnd COMMAND test_end_to_end)
+
+# Set working directory for all integration tests
+set_tests_properties(IntegrationTest_DataPipeline PROPERTIES WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+set_tests_properties(IntegrationTest_WebInterface PROPERTIES WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+set_tests_properties(IntegrationTest_EndToEnd PROPERTIES WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 
 # Set test properties
 set_tests_properties(IntegrationTest_ApplicationWorkflows PROPERTIES
