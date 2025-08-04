@@ -1,0 +1,5 @@
+<map id="SolarSystem::Data::get_fallback_body" name="SolarSystem::Data::get_fallback_body">
+<area shape="rect" id="Node000001" title="Get fallback body definition by name." alt="" coords="210,13,350,54"/>
+<area shape="rect" id="Node000002" href="$class_solar_system_1_1_bodies_1_1_body_factory.html#abfcbca8b1d6549002e88e891091a739b" title=" " alt="" coords="5,5,162,61"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="194,36,162,36,162,30,194,30"/>
+</map>

@@ -1,0 +1,136 @@
+\doxysection{Solar\+System\+::Utils\+::Realtime\+Config Struct Reference}
+\hypertarget{struct_solar_system_1_1_utils_1_1_realtime_config}{}\label{struct_solar_system_1_1_utils_1_1_realtime_config}\index{SolarSystem::Utils::RealtimeConfig@{SolarSystem::Utils::RealtimeConfig}}
+
+
+Configuration for real-\/time monitoring applications.  
+
+
+
+
+{\ttfamily \#include $<$argument\+\_\+parser.\+hpp$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{struct_solar_system_1_1_utils_1_1_realtime_config_a0032687c310ec1a4a0ca2f8987f8ee4c}{is\+\_\+valid}} (std\+::string \texorpdfstring{$\ast$}{*}error=nullptr) const
+\begin{DoxyCompactList}\small\item\em Validate configuration. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{struct_solar_system_1_1_utils_1_1_realtime_config_a41cd4c27cb58f08f3b573d18b6ed46c5}{show\+\_\+positions}} \{true\}
+\item 
+bool \mbox{\hyperlink{struct_solar_system_1_1_utils_1_1_realtime_config_aa7b21dd8cc4071fb346aae8c0f8ecb8e}{show\+\_\+velocities}} \{false\}
+\item 
+bool \mbox{\hyperlink{struct_solar_system_1_1_utils_1_1_realtime_config_a82b3e5d0f1009e2dd6e342e6d7220875}{show\+\_\+summary}} \{true\}
+\item 
+bool \mbox{\hyperlink{struct_solar_system_1_1_utils_1_1_realtime_config_a485233f86199511254f172c15c55a81e}{continuous\+\_\+mode}} \{true\}
+\item 
+bool \mbox{\hyperlink{struct_solar_system_1_1_utils_1_1_realtime_config_ad9b16083cd355f9b51f3594c6d837e39}{quiet\+\_\+mode}} \{false\}
+\item 
+bool \mbox{\hyperlink{struct_solar_system_1_1_utils_1_1_realtime_config_a9cdeffde39b299c5810ed3743405a612}{verbose\+\_\+output}} \{false\}
+\item 
+std\+::chrono\+::seconds \mbox{\hyperlink{struct_solar_system_1_1_utils_1_1_realtime_config_a7e6daec023e218901a0e94ec5efbbfe5}{update\+\_\+interval}} \{1\}
+\item 
+std\+::chrono\+::seconds \mbox{\hyperlink{struct_solar_system_1_1_utils_1_1_realtime_config_a1ad28f800ac720d7d03262828f6cbfda}{display\+\_\+interval}} \{1\}
+\item 
+std\+::optional$<$ std\+::chrono\+::seconds $>$ \mbox{\hyperlink{struct_solar_system_1_1_utils_1_1_realtime_config_a4a8ab9de61f4a403d197d57f35d00cfe}{duration\+\_\+limit}}
+\item 
+std\+::vector$<$ std\+::string $>$ \mbox{\hyperlink{struct_solar_system_1_1_utils_1_1_realtime_config_af27784ff23d9cca71ca7c6cdbb837c53}{selected\+\_\+bodies}}
+\item 
+bool \mbox{\hyperlink{struct_solar_system_1_1_utils_1_1_realtime_config_a39e3e3012be68b316247a703d01e381c}{auto\+\_\+fetch\+\_\+data}} \{false\}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Configuration for real-\/time monitoring applications. 
+
+\label{doc-func-members}
+\Hypertarget{struct_solar_system_1_1_utils_1_1_realtime_config_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{struct_solar_system_1_1_utils_1_1_realtime_config_a0032687c310ec1a4a0ca2f8987f8ee4c}\index{SolarSystem::Utils::RealtimeConfig@{SolarSystem::Utils::RealtimeConfig}!is\_valid@{is\_valid}}
+\index{is\_valid@{is\_valid}!SolarSystem::Utils::RealtimeConfig@{SolarSystem::Utils::RealtimeConfig}}
+\doxysubsubsection{\texorpdfstring{is\_valid()}{is\_valid()}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_utils_1_1_realtime_config_a0032687c310ec1a4a0ca2f8987f8ee4c} 
+bool Solar\+System\+::\+Utils\+::\+Realtime\+Config\+::is\+\_\+valid (\begin{DoxyParamCaption}\item[{std\+::string \texorpdfstring{$\ast$}{*}}]{error}{ = {\ttfamily nullptr}}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Validate configuration. 
+
+
+
+\label{doc-variable-members}
+\Hypertarget{struct_solar_system_1_1_utils_1_1_realtime_config_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{struct_solar_system_1_1_utils_1_1_realtime_config_a39e3e3012be68b316247a703d01e381c}\index{SolarSystem::Utils::RealtimeConfig@{SolarSystem::Utils::RealtimeConfig}!auto\_fetch\_data@{auto\_fetch\_data}}
+\index{auto\_fetch\_data@{auto\_fetch\_data}!SolarSystem::Utils::RealtimeConfig@{SolarSystem::Utils::RealtimeConfig}}
+\doxysubsubsection{\texorpdfstring{auto\_fetch\_data}{auto\_fetch\_data}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_utils_1_1_realtime_config_a39e3e3012be68b316247a703d01e381c} 
+bool Solar\+System\+::\+Utils\+::\+Realtime\+Config\+::auto\+\_\+fetch\+\_\+data \{false\}}
+
+\Hypertarget{struct_solar_system_1_1_utils_1_1_realtime_config_a485233f86199511254f172c15c55a81e}\index{SolarSystem::Utils::RealtimeConfig@{SolarSystem::Utils::RealtimeConfig}!continuous\_mode@{continuous\_mode}}
+\index{continuous\_mode@{continuous\_mode}!SolarSystem::Utils::RealtimeConfig@{SolarSystem::Utils::RealtimeConfig}}
+\doxysubsubsection{\texorpdfstring{continuous\_mode}{continuous\_mode}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_utils_1_1_realtime_config_a485233f86199511254f172c15c55a81e} 
+bool Solar\+System\+::\+Utils\+::\+Realtime\+Config\+::continuous\+\_\+mode \{true\}}
+
+\Hypertarget{struct_solar_system_1_1_utils_1_1_realtime_config_a1ad28f800ac720d7d03262828f6cbfda}\index{SolarSystem::Utils::RealtimeConfig@{SolarSystem::Utils::RealtimeConfig}!display\_interval@{display\_interval}}
+\index{display\_interval@{display\_interval}!SolarSystem::Utils::RealtimeConfig@{SolarSystem::Utils::RealtimeConfig}}
+\doxysubsubsection{\texorpdfstring{display\_interval}{display\_interval}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_utils_1_1_realtime_config_a1ad28f800ac720d7d03262828f6cbfda} 
+std\+::chrono\+::seconds Solar\+System\+::\+Utils\+::\+Realtime\+Config\+::display\+\_\+interval \{1\}}
+
+\Hypertarget{struct_solar_system_1_1_utils_1_1_realtime_config_a4a8ab9de61f4a403d197d57f35d00cfe}\index{SolarSystem::Utils::RealtimeConfig@{SolarSystem::Utils::RealtimeConfig}!duration\_limit@{duration\_limit}}
+\index{duration\_limit@{duration\_limit}!SolarSystem::Utils::RealtimeConfig@{SolarSystem::Utils::RealtimeConfig}}
+\doxysubsubsection{\texorpdfstring{duration\_limit}{duration\_limit}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_utils_1_1_realtime_config_a4a8ab9de61f4a403d197d57f35d00cfe} 
+std\+::optional$<$std\+::chrono\+::seconds$>$ Solar\+System\+::\+Utils\+::\+Realtime\+Config\+::duration\+\_\+limit}
+
+\Hypertarget{struct_solar_system_1_1_utils_1_1_realtime_config_ad9b16083cd355f9b51f3594c6d837e39}\index{SolarSystem::Utils::RealtimeConfig@{SolarSystem::Utils::RealtimeConfig}!quiet\_mode@{quiet\_mode}}
+\index{quiet\_mode@{quiet\_mode}!SolarSystem::Utils::RealtimeConfig@{SolarSystem::Utils::RealtimeConfig}}
+\doxysubsubsection{\texorpdfstring{quiet\_mode}{quiet\_mode}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_utils_1_1_realtime_config_ad9b16083cd355f9b51f3594c6d837e39} 
+bool Solar\+System\+::\+Utils\+::\+Realtime\+Config\+::quiet\+\_\+mode \{false\}}
+
+\Hypertarget{struct_solar_system_1_1_utils_1_1_realtime_config_af27784ff23d9cca71ca7c6cdbb837c53}\index{SolarSystem::Utils::RealtimeConfig@{SolarSystem::Utils::RealtimeConfig}!selected\_bodies@{selected\_bodies}}
+\index{selected\_bodies@{selected\_bodies}!SolarSystem::Utils::RealtimeConfig@{SolarSystem::Utils::RealtimeConfig}}
+\doxysubsubsection{\texorpdfstring{selected\_bodies}{selected\_bodies}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_utils_1_1_realtime_config_af27784ff23d9cca71ca7c6cdbb837c53} 
+std\+::vector$<$std\+::string$>$ Solar\+System\+::\+Utils\+::\+Realtime\+Config\+::selected\+\_\+bodies}
+
+\Hypertarget{struct_solar_system_1_1_utils_1_1_realtime_config_a41cd4c27cb58f08f3b573d18b6ed46c5}\index{SolarSystem::Utils::RealtimeConfig@{SolarSystem::Utils::RealtimeConfig}!show\_positions@{show\_positions}}
+\index{show\_positions@{show\_positions}!SolarSystem::Utils::RealtimeConfig@{SolarSystem::Utils::RealtimeConfig}}
+\doxysubsubsection{\texorpdfstring{show\_positions}{show\_positions}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_utils_1_1_realtime_config_a41cd4c27cb58f08f3b573d18b6ed46c5} 
+bool Solar\+System\+::\+Utils\+::\+Realtime\+Config\+::show\+\_\+positions \{true\}}
+
+\Hypertarget{struct_solar_system_1_1_utils_1_1_realtime_config_a82b3e5d0f1009e2dd6e342e6d7220875}\index{SolarSystem::Utils::RealtimeConfig@{SolarSystem::Utils::RealtimeConfig}!show\_summary@{show\_summary}}
+\index{show\_summary@{show\_summary}!SolarSystem::Utils::RealtimeConfig@{SolarSystem::Utils::RealtimeConfig}}
+\doxysubsubsection{\texorpdfstring{show\_summary}{show\_summary}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_utils_1_1_realtime_config_a82b3e5d0f1009e2dd6e342e6d7220875} 
+bool Solar\+System\+::\+Utils\+::\+Realtime\+Config\+::show\+\_\+summary \{true\}}
+
+\Hypertarget{struct_solar_system_1_1_utils_1_1_realtime_config_aa7b21dd8cc4071fb346aae8c0f8ecb8e}\index{SolarSystem::Utils::RealtimeConfig@{SolarSystem::Utils::RealtimeConfig}!show\_velocities@{show\_velocities}}
+\index{show\_velocities@{show\_velocities}!SolarSystem::Utils::RealtimeConfig@{SolarSystem::Utils::RealtimeConfig}}
+\doxysubsubsection{\texorpdfstring{show\_velocities}{show\_velocities}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_utils_1_1_realtime_config_aa7b21dd8cc4071fb346aae8c0f8ecb8e} 
+bool Solar\+System\+::\+Utils\+::\+Realtime\+Config\+::show\+\_\+velocities \{false\}}
+
+\Hypertarget{struct_solar_system_1_1_utils_1_1_realtime_config_a7e6daec023e218901a0e94ec5efbbfe5}\index{SolarSystem::Utils::RealtimeConfig@{SolarSystem::Utils::RealtimeConfig}!update\_interval@{update\_interval}}
+\index{update\_interval@{update\_interval}!SolarSystem::Utils::RealtimeConfig@{SolarSystem::Utils::RealtimeConfig}}
+\doxysubsubsection{\texorpdfstring{update\_interval}{update\_interval}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_utils_1_1_realtime_config_a7e6daec023e218901a0e94ec5efbbfe5} 
+std\+::chrono\+::seconds Solar\+System\+::\+Utils\+::\+Realtime\+Config\+::update\+\_\+interval \{1\}}
+
+\Hypertarget{struct_solar_system_1_1_utils_1_1_realtime_config_a9cdeffde39b299c5810ed3743405a612}\index{SolarSystem::Utils::RealtimeConfig@{SolarSystem::Utils::RealtimeConfig}!verbose\_output@{verbose\_output}}
+\index{verbose\_output@{verbose\_output}!SolarSystem::Utils::RealtimeConfig@{SolarSystem::Utils::RealtimeConfig}}
+\doxysubsubsection{\texorpdfstring{verbose\_output}{verbose\_output}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_utils_1_1_realtime_config_a9cdeffde39b299c5810ed3743405a612} 
+bool Solar\+System\+::\+Utils\+::\+Realtime\+Config\+::verbose\+\_\+output \{false\}}
+
+
+
+The documentation for this struct was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+utils/include/solar\+\_\+utils/\mbox{\hyperlink{argument__parser_8hpp}{argument\+\_\+parser.\+hpp}}\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+utils/src/\mbox{\hyperlink{argument__parser_8cpp}{argument\+\_\+parser.\+cpp}}\end{DoxyCompactItemize}

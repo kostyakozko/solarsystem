@@ -1,0 +1,7 @@
+<map id="SolarSystem::Bodies::BodyCollection::add_body" name="SolarSystem::Bodies::BodyCollection::add_body">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,39,187,79"/>
+<area shape="rect" id="Node000002" href="$class_solar_system_1_1_bodies_1_1_body_collection.html#af82b22f9073d1d13df623cae6a22ad8e" title=" " alt="" coords="235,5,409,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="186,43,219,38,220,43,187,48"/>
+<area shape="rect" id="Node000003" href="$class_solar_system_1_1_bodies_1_1_celestial_body.html#a89dac8f57b8283b90172873399eb924f" title=" " alt="" coords="247,71,397,111"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="187,69,231,76,231,81,186,74"/>
+</map>

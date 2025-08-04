@@ -1,0 +1,41 @@
+<map id="main" name="main">
+<area shape="rect" id="Node000001" title="Main demonstration function." alt="" coords="5,390,55,415"/>
+<area shape="rect" id="Node000002" href="$benchmark__execution__demo_8cpp.html#aec4c8d31831d95ff25a78fd8c09ad76b" title="Example benchmark suite." alt="" coords="107,165,271,206"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="38,388,100,296,160,216,164,220,105,299,42,391"/>
+<area shape="rect" id="Node000008" href="$benchmark__execution__demo_8cpp.html#a677f373af5d59480eef35fd4457fdd0e" title="Example benchmark with setup and teardown." alt="" coords="115,309,263,350"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="54,389,129,354,131,359,56,394"/>
+<area shape="rect" id="Node000010" href="$benchmark__execution__demo_8cpp.html#a9fa03b4d998ed7c123c77fb416cc4bc7" title="Example performance monitoring." alt="" coords="103,382,275,423"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="55,400,87,400,87,405,55,405"/>
+<area shape="rect" id="Node000014" href="$benchmark__execution__demo_8cpp.html#a599412473fb07e55dd3ac5e17837f629" title="Example performance profiler." alt="" coords="103,462,275,503"/>
+<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="56,412,134,452,132,457,54,417"/>
+<area shape="rect" id="Node000017" href="$benchmark__execution__demo_8cpp.html#a6e3c008972c73ea82cbf4adcb46a87d1" title="Example benchmark for vector operations." alt="" coords="121,646,257,687"/>
+<area shape="poly" id="edge16_Node000001_Node000017" title=" " alt="" coords="42,415,170,632,165,634,37,417"/>
+<area shape="rect" id="Node000003" href="$class_solar_system_1_1_testing_1_1_benchmark_suite.html#adbd51b16e4528f262313b0ef228d8de2" title="Add benchmark to suite." alt="" coords="340,5,494,61"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="209,162,258,118,322,71,329,66,332,71,324,75,262,122,213,166"/>
+<area shape="rect" id="Node000004" href="$class_solar_system_1_1_testing_1_1_benchmark_suite.html#a2ad046abf18bdf1d84202779feccea58" title="Generate CSV report for all results." alt="" coords="326,85,509,141"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="255,162,312,144,314,149,256,167"/>
+<area shape="rect" id="Node000006" href="$class_solar_system_1_1_testing_1_1_benchmark_suite.html#a267755572989f2fb9a84a8962f4f61c7" title="Get suite name." alt="" coords="334,165,500,206"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="272,182,319,182,319,188,272,188"/>
+<area shape="rect" id="Node000007" href="$class_solar_system_1_1_testing_1_1_benchmark_suite.html#a7f39ce9428115f1e32a593270ce644b6" title="Run all benchmarks in suite." alt="" coords="332,230,503,271"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="263,203,330,223,328,228,261,209"/>
+<area shape="rect" id="Node000005" href="$struct_solar_system_1_1_testing_1_1_benchmark_result.html#a3b0d9c956619679fa00cd208f9eefae9" title="Get CSV header for benchmark results." alt="" coords="559,85,722,141"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="509,110,544,110,544,116,509,116"/>
+<area shape="rect" id="Node000009" href="$class_solar_system_1_1_testing_1_1_benchmark.html#ad61214c38f9e02561aa64fd30e0ffccc" title="Measure with setup and teardown functions." alt="" coords="340,295,494,350"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="263,324,324,323,325,328,264,330"/>
+<area shape="rect" id="Node000011" href="$class_solar_system_1_1_testing_1_1_performance_monitor.html#a53398b391bf2964aa2bcd92f2be30406" title="Monitor function execution and return metrics." alt="" coords="344,375,490,430"/>
+<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="275,400,329,400,329,405,275,405"/>
+<area shape="rect" id="Node000012" href="$class_solar_system_1_1_testing_1_1_performance_monitor.html#a570589b1cedb062be31465d8144b285d" title="Start monitoring performance." alt="" coords="567,335,714,390"/>
+<area shape="poly" id="edge11_Node000011_Node000012" title=" " alt="" coords="490,387,552,376,553,381,491,392"/>
+<area shape="rect" id="Node000013" href="$class_solar_system_1_1_testing_1_1_performance_monitor.html#a8adfdc6cd3f2d22484783e857deff2df" title="Stop monitoring and return metrics." alt="" coords="567,415,714,470"/>
+<area shape="poly" id="edge12_Node000011_Node000013" title=" " alt="" coords="491,413,553,424,552,429,490,418"/>
+<area shape="rect" id="Node000015" href="$class_solar_system_1_1_testing_1_1_performance_profiler.html#aa6714a8b6bd08333387a50d4c6e3d30a" title="Add profile point." alt="" coords="344,455,490,510"/>
+<area shape="poly" id="edge14_Node000014_Node000015" title=" " alt="" coords="275,480,329,480,329,485,275,485"/>
+<area shape="rect" id="Node000016" href="$class_solar_system_1_1_testing_1_1_performance_profiler.html#a2831ed1e6a0579c1d692896ace2c5a06" title="Generate performance report." alt="" coords="344,535,490,590"/>
+<area shape="poly" id="edge15_Node000014_Node000016" title=" " alt="" coords="250,501,330,529,329,534,248,506"/>
+<area shape="rect" id="Node000018" href="$class_solar_system_1_1_testing_1_1_benchmark.html#ae57486b0511b04d2c38b5af0f67e1a47" title="Add metadata to benchmark results." alt="" coords="324,614,510,655"/>
+<area shape="poly" id="edge17_Node000017_Node000018" title=" " alt="" coords="257,654,309,647,310,652,258,660"/>
+<area shape="rect" id="Node000019" href="$class_solar_system_1_1_testing_1_1_benchmark.html#abaf4832f07880851220e70685f31ae51" title="Measure execution time of a function." alt="" coords="340,680,494,720"/>
+<area shape="poly" id="edge18_Node000017_Node000019" title=" " alt="" coords="258,674,326,684,325,689,257,679"/>
+<area shape="rect" id="Node000020" href="$class_solar_system_1_1_testing_1_1_benchmark.html#a9a0fca86748d9e311a948c2bbe927b2d" title="Set performance thresholds for validation." alt="" coords="323,745,511,786"/>
+<area shape="poly" id="edge19_Node000017_Node000020" title=" " alt="" coords="231,685,324,729,342,736,340,741,322,734,229,690"/>
+</map>

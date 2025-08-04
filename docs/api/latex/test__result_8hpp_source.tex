@@ -1,0 +1,60 @@
+\doxysection{test\+\_\+result.\+hpp}
+\hypertarget{test__result_8hpp_source}{}\label{test__result_8hpp_source}\index{/Users/kostiantyn.kozko/tmp/solarsystem/lib/solar\_test/include/solar\_test/framework/test\_result.hpp@{/Users/kostiantyn.kozko/tmp/solarsystem/lib/solar\_test/include/solar\_test/framework/test\_result.hpp}}
+\mbox{\hyperlink{test__result_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <chrono>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <map>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespace_solar_system_1_1_testing}{SolarSystem::Testing}}\ \{}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00013\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_result}{TestResult}}\ \{}
+\DoxyCodeLine{00014\ \ \ \textcolor{keyword}{enum\ class}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_result_a2038ab3e6ab60e65e31352201fa99b25}{Status}}\ \{\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_result_a2038ab3e6ab60e65e31352201fa99b25aa0d0628f6b4e4d78d2ffef4d4d1c4b15}{Passed}},\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_result_a2038ab3e6ab60e65e31352201fa99b25ad7c8c85bf79bbe1b7188497c32c3b0ca}{Failed}},\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_result_a2038ab3e6ab60e65e31352201fa99b25ad9c8f187972e6320a34e9c40b4cba605}{Skipped}},\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_result_a2038ab3e6ab60e65e31352201fa99b25ac85a251cc457840f1e032f1b733e9398}{Timeout}},\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_result_a2038ab3e6ab60e65e31352201fa99b25a902b0d55fddef6f8d651fe1035b7d4bd}{Error}},\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_result_a2038ab3e6ab60e65e31352201fa99b25abbebabfb51ec20a82774cab66903ea7a}{ExpectedFailure}}\ \};}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \ \ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_result_a2038ab3e6ab60e65e31352201fa99b25}{Status}}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_result_ab253608b1a0a4210af5a73ecaf94c08f}{status}}\ =\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_result_a2038ab3e6ab60e65e31352201fa99b25ad7c8c85bf79bbe1b7188497c32c3b0ca}{Status::Failed}};}
+\DoxyCodeLine{00017\ \ \ std::string\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_result_aae2268a28992bca34780e6a6fc5ff453}{test\_name}};}
+\DoxyCodeLine{00018\ \ \ std::string\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_result_afebe6d50e06914c4aebc2af10317f46e}{error\_message}};}
+\DoxyCodeLine{00019\ \ \ std::chrono::milliseconds\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_result_a6dbd82982537280bbc31d126d013f569}{execution\_time}}\{0\};}
+\DoxyCodeLine{00020\ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_result_a021bb8f8ae1e33af11ba33e7f609e652}{memory\_usage\_bytes}}\ =\ 0;}
+\DoxyCodeLine{00021\ \ \ std::vector<std::string>\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_result_ab876ca60eac1841cd6b78828f36dfb71}{assertion\_failures}};}
+\DoxyCodeLine{00022\ \ \ std::map<std::string,\ std::string>\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_result_a495a55f3262a58094fd44f0fbc357a5b}{metadata}};}
+\DoxyCodeLine{00023\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_result_aa183f77e109a3ab249b4aa8663a501f5}{was\_expected\_to\_fail}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00024\ \ \ std::string\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_result_ab0acc56ff2acc6b3eed82ad356b7beca}{expected\_failure\_reason}};}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_result_a76258cddcd64146cf97789cab6ef6f15}{passed}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_result_ab253608b1a0a4210af5a73ecaf94c08f}{status}}\ ==\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_result_a2038ab3e6ab60e65e31352201fa99b25aa0d0628f6b4e4d78d2ffef4d4d1c4b15}{Status::Passed}};\ \}}
+\DoxyCodeLine{00027\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_result_ad0d44079c728487588787708c629ae97}{failed}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_result_ab253608b1a0a4210af5a73ecaf94c08f}{status}}\ ==\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_result_a2038ab3e6ab60e65e31352201fa99b25ad7c8c85bf79bbe1b7188497c32c3b0ca}{Status::Failed}};\ \}}
+\DoxyCodeLine{00028\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_result_a76853cf410c8c707530ff66b03ff02c7}{succeeded}}()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_result_ab253608b1a0a4210af5a73ecaf94c08f}{status}}\ ==\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_result_a2038ab3e6ab60e65e31352201fa99b25aa0d0628f6b4e4d78d2ffef4d4d1c4b15}{Status::Passed}}\ ||\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_result_ab253608b1a0a4210af5a73ecaf94c08f}{status}}\ ==\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_result_a2038ab3e6ab60e65e31352201fa99b25abbebabfb51ec20a82774cab66903ea7a}{Status::ExpectedFailure}};}
+\DoxyCodeLine{00030\ \ \ \}}
+\DoxyCodeLine{00031\ \ \ [[nodiscard]]\ std::string\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_result_a881e1672d7d9d3a8edca4307046246bd}{status\_string}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00032\ \ \ [[nodiscard]]\ std::string\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_result_a078afd1b3a17ba06be609553e2ad7266}{to\_string}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \ \ \textcolor{comment}{//\ Metadata\ management}}
+\DoxyCodeLine{00035\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_result_aa84557da35710ea49f84d6a17780afc7}{add\_metadata}}(\textcolor{keyword}{const}\ std::string\&\ key,\ \textcolor{keyword}{const}\ std::string\&\ value);}
+\DoxyCodeLine{00036\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_result_a8445a6fda5657a5decba55be1f2790c0}{has\_metadata}}(\textcolor{keyword}{const}\ std::string\&\ key)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00037\ \ \ [[nodiscard]]\ std::string\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_result_a1aafdf16afac79f81f9c5785981e4087}{get\_metadata}}(\textcolor{keyword}{const}\ std::string\&\ key)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00038\ \};}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00043\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_suite_result}{TestSuiteResult}}\ \{}
+\DoxyCodeLine{00044\ \ \ std::string\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_suite_result_a62a386d03a6cd22dc1992f2c1da691e5}{suite\_name}};}
+\DoxyCodeLine{00045\ \ \ std::vector<TestResult>\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_suite_result_ae855c14a6bb9e13f935542e865ee3483}{test\_results}};}
+\DoxyCodeLine{00046\ \ \ std::chrono::milliseconds\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_suite_result_a14722e1f7ac1c1319a5cbc16e1c96e0a}{total\_execution\_time}}\{0\};}
+\DoxyCodeLine{00047\ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_suite_result_a266028dd94fe313e368d6028a9198e33}{passed\_count}}\ =\ 0;}
+\DoxyCodeLine{00048\ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_suite_result_abed6df2a31db55801b7a1a402f95f716}{failed\_count}}\ =\ 0;}
+\DoxyCodeLine{00049\ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_suite_result_a48c7c94eda559443550efd60466825aa}{skipped\_count}}\ =\ 0;}
+\DoxyCodeLine{00050\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_suite_result_a0b19c4a92f1c3b2f9ec32e685233d59b}{code\_coverage\_percentage}}\ =\ 0.0;}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_suite_result_a1831e08c441b0c0558510ac4b9651d87}{all\_passed}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_suite_result_abed6df2a31db55801b7a1a402f95f716}{failed\_count}}\ ==\ 0;\ \}}
+\DoxyCodeLine{00053\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_suite_result_a6533a7084863342e550f36ae01f58c8b}{success\_rate}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00054\ \ \ [[nodiscard]]\ std::string\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_suite_result_a4ceff0d943e063958610929a6834b137}{summary}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_suite_result_a9b8f595623857de7f10581508028ffd0}{add\_result}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_result}{TestResult}}\&\ result);}
+\DoxyCodeLine{00057\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_suite_result_a5b0a850a26eefa5300c756a1796ad5f5}{calculate\_statistics}}();}
+\DoxyCodeLine{00058\ \};}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \}\ \ \textcolor{comment}{//\ namespace\ SolarSystem::Testing}}
+
+\end{DoxyCode}

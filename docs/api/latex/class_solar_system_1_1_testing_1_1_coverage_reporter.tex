@@ -1,0 +1,233 @@
+\doxysection{Solar\+System\+::Testing\+::Coverage\+Reporter Class Reference}
+\hypertarget{class_solar_system_1_1_testing_1_1_coverage_reporter}{}\label{class_solar_system_1_1_testing_1_1_coverage_reporter}\index{SolarSystem::Testing::CoverageReporter@{SolarSystem::Testing::CoverageReporter}}
+
+
+Coverage reporter for generating code coverage reports.  
+
+
+
+
+{\ttfamily \#include $<$coverage\+\_\+reporter.\+hpp$>$}
+
+
+
+Inheritance diagram for Solar\+System\+::Testing\+::Coverage\+Reporter\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=190pt]{class_solar_system_1_1_testing_1_1_coverage_reporter__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Solar\+System\+::Testing\+::Coverage\+Reporter\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=190pt]{class_solar_system_1_1_testing_1_1_coverage_reporter__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_coverage_reporter_1_1_configuration}{Configuration}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_coverage_reporter_adb46c08981227822ad98038d40c42a70}{Coverage\+Reporter}} (\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_coverage_reporter_1_1_configuration}{Configuration}} config)
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_coverage_reporter_a71c8eea49ca99555295ada83051185e0}{Coverage\+Reporter}} (const std\+::string \&output\+\_\+file)
+\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_coverage_reporter_a00da0d835a957d38c247a7df841ed4d8}{on\+\_\+suite\+\_\+started}} (const std\+::string \&suite\+\_\+name, size\+\_\+t total\+\_\+tests) override
+\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_coverage_reporter_a7c5e571bb7743475a00f5654738d5d84}{on\+\_\+suite\+\_\+finished}} (const \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_suite_result}{Test\+Suite\+Result}} \&result) override
+\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_coverage_reporter_aa71910530eb01c2bc7c4bf594adb440b}{on\+\_\+test\+\_\+started}} (const std\+::string \&test\+\_\+name) override
+\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_coverage_reporter_a46dd3876b46d2e051b979162184256be}{on\+\_\+test\+\_\+finished}} (const \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_result}{Test\+Result}} \&result) override
+\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_coverage_reporter_ab1d55414d57f6a66b3bef793763e05cd}{on\+\_\+progress}} (const std\+::string \&message, double percentage) override
+\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_coverage_reporter_a208d0aa7793ee9fa47eaa65f121ec6c0}{on\+\_\+error}} (const std\+::string \&error\+\_\+message) override
+\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_coverage_reporter_a088fa33d68cee28fe6f31b7976b57d9e}{set\+\_\+coverage\+\_\+data}} (const std\+::map$<$ std\+::string, double $>$ \&file\+\_\+coverage)
+\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_coverage_reporter_a33428e42f2bd55b369a80f265f28abab}{add\+\_\+file\+\_\+coverage}} (const std\+::string \&file\+\_\+path, double coverage\+\_\+percentage)
+\item 
+double \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_coverage_reporter_a8ee989b8bcde4af26e44102c7b161a5b}{overall\+\_\+coverage}} () const
+\item 
+bool \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_coverage_reporter_a992ea999c0b364429b30eb1e9914b3f1}{meets\+\_\+threshold}} () const
+\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_coverage_reporter_a32fc3e35b37eda08d24b72436feba8b4}{set\+\_\+configuration}} (const \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_coverage_reporter_1_1_configuration}{Configuration}} \&config)
+\item 
+const \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_coverage_reporter_1_1_configuration}{Configuration}} \& \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_coverage_reporter_a7e3347a06f05983538a3fe6f82f5c073}{configuration}} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_reporter}{Solar\+System\+::\+Testing\+::\+Test\+Reporter}}}
+\begin{DoxyCompactItemize}
+\item 
+virtual \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_reporter_a571cfb87f6f488b6b3406e22b1d512b6}{\texorpdfstring{$\sim$}{\string~}\+Test\+Reporter}} ()=default
+\item 
+virtual void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_reporter_a3ca9e4bb857b914f258daf0e908225ba}{set\+\_\+verbose}} (bool verbose)
+\item 
+virtual void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_reporter_ac2eecfc547fba6ff7046bef87fe6b514}{set\+\_\+quiet}} (bool quiet)
+\item 
+virtual bool \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_reporter_af1fc9ae1251f3ffb53df9940ff0edcf4}{is\+\_\+verbose}} () const
+\item 
+virtual bool \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_reporter_a5e898eb341a9041eafc68467cc5416be}{is\+\_\+quiet}} () const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Protected Attributes inherited from \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_reporter}{Solar\+System\+::\+Testing\+::\+Test\+Reporter}}}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_reporter_a2814917fb658732a96acab2d999233f7}{verbose\+\_\+}} = false
+\item 
+bool \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_reporter_af31eab1358a78593612d633c2ff2dd79}{quiet\+\_\+}} = false
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Coverage reporter for generating code coverage reports. 
+
+This is a basic coverage reporter that can be extended to integrate with coverage tools like gcov, lcov, or llvm-\/cov. 
+
+\label{doc-constructors}
+\Hypertarget{class_solar_system_1_1_testing_1_1_coverage_reporter_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_solar_system_1_1_testing_1_1_coverage_reporter_adb46c08981227822ad98038d40c42a70}\index{SolarSystem::Testing::CoverageReporter@{SolarSystem::Testing::CoverageReporter}!CoverageReporter@{CoverageReporter}}
+\index{CoverageReporter@{CoverageReporter}!SolarSystem::Testing::CoverageReporter@{SolarSystem::Testing::CoverageReporter}}
+\doxysubsubsection{\texorpdfstring{CoverageReporter()}{CoverageReporter()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_coverage_reporter_adb46c08981227822ad98038d40c42a70} 
+Solar\+System\+::\+Testing\+::\+Coverage\+Reporter\+::\+Coverage\+Reporter (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_coverage_reporter_1_1_configuration}{Configuration}}}]{config}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_coverage_reporter_adb46c08981227822ad98038d40c42a70_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_coverage_reporter_a71c8eea49ca99555295ada83051185e0}\index{SolarSystem::Testing::CoverageReporter@{SolarSystem::Testing::CoverageReporter}!CoverageReporter@{CoverageReporter}}
+\index{CoverageReporter@{CoverageReporter}!SolarSystem::Testing::CoverageReporter@{SolarSystem::Testing::CoverageReporter}}
+\doxysubsubsection{\texorpdfstring{CoverageReporter()}{CoverageReporter()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_coverage_reporter_a71c8eea49ca99555295ada83051185e0} 
+Solar\+System\+::\+Testing\+::\+Coverage\+Reporter\+::\+Coverage\+Reporter (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{output\+\_\+file}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_coverage_reporter_a71c8eea49ca99555295ada83051185e0_cgraph}
+\end{center}
+\end{figure}
+
+
+\label{doc-func-members}
+\Hypertarget{class_solar_system_1_1_testing_1_1_coverage_reporter_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_solar_system_1_1_testing_1_1_coverage_reporter_a33428e42f2bd55b369a80f265f28abab}\index{SolarSystem::Testing::CoverageReporter@{SolarSystem::Testing::CoverageReporter}!add\_file\_coverage@{add\_file\_coverage}}
+\index{add\_file\_coverage@{add\_file\_coverage}!SolarSystem::Testing::CoverageReporter@{SolarSystem::Testing::CoverageReporter}}
+\doxysubsubsection{\texorpdfstring{add\_file\_coverage()}{add\_file\_coverage()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_coverage_reporter_a33428e42f2bd55b369a80f265f28abab} 
+void Solar\+System\+::\+Testing\+::\+Coverage\+Reporter\+::add\+\_\+file\+\_\+coverage (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{file\+\_\+path}{, }\item[{double}]{coverage\+\_\+percentage}{}\end{DoxyParamCaption})}
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_coverage_reporter_a7e3347a06f05983538a3fe6f82f5c073}\index{SolarSystem::Testing::CoverageReporter@{SolarSystem::Testing::CoverageReporter}!configuration@{configuration}}
+\index{configuration@{configuration}!SolarSystem::Testing::CoverageReporter@{SolarSystem::Testing::CoverageReporter}}
+\doxysubsubsection{\texorpdfstring{configuration()}{configuration()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_coverage_reporter_a7e3347a06f05983538a3fe6f82f5c073} 
+const \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_coverage_reporter_1_1_configuration}{Configuration}} \& Solar\+System\+::\+Testing\+::\+Coverage\+Reporter\+::configuration (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}}
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_coverage_reporter_a992ea999c0b364429b30eb1e9914b3f1}\index{SolarSystem::Testing::CoverageReporter@{SolarSystem::Testing::CoverageReporter}!meets\_threshold@{meets\_threshold}}
+\index{meets\_threshold@{meets\_threshold}!SolarSystem::Testing::CoverageReporter@{SolarSystem::Testing::CoverageReporter}}
+\doxysubsubsection{\texorpdfstring{meets\_threshold()}{meets\_threshold()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_coverage_reporter_a992ea999c0b364429b30eb1e9914b3f1} 
+bool Solar\+System\+::\+Testing\+::\+Coverage\+Reporter\+::meets\+\_\+threshold (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_coverage_reporter_a208d0aa7793ee9fa47eaa65f121ec6c0}\index{SolarSystem::Testing::CoverageReporter@{SolarSystem::Testing::CoverageReporter}!on\_error@{on\_error}}
+\index{on\_error@{on\_error}!SolarSystem::Testing::CoverageReporter@{SolarSystem::Testing::CoverageReporter}}
+\doxysubsubsection{\texorpdfstring{on\_error()}{on\_error()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_coverage_reporter_a208d0aa7793ee9fa47eaa65f121ec6c0} 
+void Solar\+System\+::\+Testing\+::\+Coverage\+Reporter\+::on\+\_\+error (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{error\+\_\+message}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_reporter_a5494fec561ad1abd2d3700bbb43a2c97}{Solar\+System\+::\+Testing\+::\+Test\+Reporter}}.
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_coverage_reporter_ab1d55414d57f6a66b3bef793763e05cd}\index{SolarSystem::Testing::CoverageReporter@{SolarSystem::Testing::CoverageReporter}!on\_progress@{on\_progress}}
+\index{on\_progress@{on\_progress}!SolarSystem::Testing::CoverageReporter@{SolarSystem::Testing::CoverageReporter}}
+\doxysubsubsection{\texorpdfstring{on\_progress()}{on\_progress()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_coverage_reporter_ab1d55414d57f6a66b3bef793763e05cd} 
+void Solar\+System\+::\+Testing\+::\+Coverage\+Reporter\+::on\+\_\+progress (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{message}{, }\item[{double}]{percentage}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_reporter_aacb8d0e1b3ff21617aa38a05a4a2b7cb}{Solar\+System\+::\+Testing\+::\+Test\+Reporter}}.
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_coverage_reporter_a7c5e571bb7743475a00f5654738d5d84}\index{SolarSystem::Testing::CoverageReporter@{SolarSystem::Testing::CoverageReporter}!on\_suite\_finished@{on\_suite\_finished}}
+\index{on\_suite\_finished@{on\_suite\_finished}!SolarSystem::Testing::CoverageReporter@{SolarSystem::Testing::CoverageReporter}}
+\doxysubsubsection{\texorpdfstring{on\_suite\_finished()}{on\_suite\_finished()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_coverage_reporter_a7c5e571bb7743475a00f5654738d5d84} 
+void Solar\+System\+::\+Testing\+::\+Coverage\+Reporter\+::on\+\_\+suite\+\_\+finished (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_suite_result}{Test\+Suite\+Result}} \&}]{result}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_reporter_aa1612b76bf9d7daabfa6e4e929eb334c}{Solar\+System\+::\+Testing\+::\+Test\+Reporter}}.
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_coverage_reporter_a00da0d835a957d38c247a7df841ed4d8}\index{SolarSystem::Testing::CoverageReporter@{SolarSystem::Testing::CoverageReporter}!on\_suite\_started@{on\_suite\_started}}
+\index{on\_suite\_started@{on\_suite\_started}!SolarSystem::Testing::CoverageReporter@{SolarSystem::Testing::CoverageReporter}}
+\doxysubsubsection{\texorpdfstring{on\_suite\_started()}{on\_suite\_started()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_coverage_reporter_a00da0d835a957d38c247a7df841ed4d8} 
+void Solar\+System\+::\+Testing\+::\+Coverage\+Reporter\+::on\+\_\+suite\+\_\+started (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{suite\+\_\+name}{, }\item[{size\+\_\+t}]{total\+\_\+tests}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_reporter_a05631ec889ac3ac811cccc1c7f863d9a}{Solar\+System\+::\+Testing\+::\+Test\+Reporter}}.
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_coverage_reporter_a46dd3876b46d2e051b979162184256be}\index{SolarSystem::Testing::CoverageReporter@{SolarSystem::Testing::CoverageReporter}!on\_test\_finished@{on\_test\_finished}}
+\index{on\_test\_finished@{on\_test\_finished}!SolarSystem::Testing::CoverageReporter@{SolarSystem::Testing::CoverageReporter}}
+\doxysubsubsection{\texorpdfstring{on\_test\_finished()}{on\_test\_finished()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_coverage_reporter_a46dd3876b46d2e051b979162184256be} 
+void Solar\+System\+::\+Testing\+::\+Coverage\+Reporter\+::on\+\_\+test\+\_\+finished (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_result}{Test\+Result}} \&}]{result}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_reporter_a05ecf1aed00ddf5caba8d8dec8f5a36a}{Solar\+System\+::\+Testing\+::\+Test\+Reporter}}.
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_coverage_reporter_aa71910530eb01c2bc7c4bf594adb440b}\index{SolarSystem::Testing::CoverageReporter@{SolarSystem::Testing::CoverageReporter}!on\_test\_started@{on\_test\_started}}
+\index{on\_test\_started@{on\_test\_started}!SolarSystem::Testing::CoverageReporter@{SolarSystem::Testing::CoverageReporter}}
+\doxysubsubsection{\texorpdfstring{on\_test\_started()}{on\_test\_started()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_coverage_reporter_aa71910530eb01c2bc7c4bf594adb440b} 
+void Solar\+System\+::\+Testing\+::\+Coverage\+Reporter\+::on\+\_\+test\+\_\+started (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{test\+\_\+name}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_reporter_aa1d893102de196c54185b9799f27aa81}{Solar\+System\+::\+Testing\+::\+Test\+Reporter}}.
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_coverage_reporter_a8ee989b8bcde4af26e44102c7b161a5b}\index{SolarSystem::Testing::CoverageReporter@{SolarSystem::Testing::CoverageReporter}!overall\_coverage@{overall\_coverage}}
+\index{overall\_coverage@{overall\_coverage}!SolarSystem::Testing::CoverageReporter@{SolarSystem::Testing::CoverageReporter}}
+\doxysubsubsection{\texorpdfstring{overall\_coverage()}{overall\_coverage()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_coverage_reporter_a8ee989b8bcde4af26e44102c7b161a5b} 
+double Solar\+System\+::\+Testing\+::\+Coverage\+Reporter\+::overall\+\_\+coverage (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_coverage_reporter_a32fc3e35b37eda08d24b72436feba8b4}\index{SolarSystem::Testing::CoverageReporter@{SolarSystem::Testing::CoverageReporter}!set\_configuration@{set\_configuration}}
+\index{set\_configuration@{set\_configuration}!SolarSystem::Testing::CoverageReporter@{SolarSystem::Testing::CoverageReporter}}
+\doxysubsubsection{\texorpdfstring{set\_configuration()}{set\_configuration()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_coverage_reporter_a32fc3e35b37eda08d24b72436feba8b4} 
+void Solar\+System\+::\+Testing\+::\+Coverage\+Reporter\+::set\+\_\+configuration (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_coverage_reporter_1_1_configuration}{Configuration}} \&}]{config}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_coverage_reporter_a088fa33d68cee28fe6f31b7976b57d9e}\index{SolarSystem::Testing::CoverageReporter@{SolarSystem::Testing::CoverageReporter}!set\_coverage\_data@{set\_coverage\_data}}
+\index{set\_coverage\_data@{set\_coverage\_data}!SolarSystem::Testing::CoverageReporter@{SolarSystem::Testing::CoverageReporter}}
+\doxysubsubsection{\texorpdfstring{set\_coverage\_data()}{set\_coverage\_data()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_coverage_reporter_a088fa33d68cee28fe6f31b7976b57d9e} 
+void Solar\+System\+::\+Testing\+::\+Coverage\+Reporter\+::set\+\_\+coverage\+\_\+data (\begin{DoxyParamCaption}\item[{const std\+::map$<$ std\+::string, double $>$ \&}]{file\+\_\+coverage}{}\end{DoxyParamCaption})}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+test/include/solar\+\_\+test/reporters/\mbox{\hyperlink{coverage__reporter_8hpp}{coverage\+\_\+reporter.\+hpp}}\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+test/src/reporters/\mbox{\hyperlink{coverage__reporter_8cpp}{coverage\+\_\+reporter.\+cpp}}\end{DoxyCompactItemize}

@@ -1,0 +1,9 @@
+<map id="ExampleTestFixture" name="ExampleTestFixture">
+<area shape="rect" id="Node000001" title="Example test fixture demonstrating test environment management." alt="" coords="212,122,350,148"/>
+<area shape="rect" id="Node000002" href="$classsolar__test_1_1_test_fixture.html" title="Base class for test fixtures with setup/teardown lifecycle." alt="" coords="5,5,157,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="116,37,262,120,259,124,114,41"/>
+<area shape="rect" id="Node000003" href="$classsolar__test_1_1_temporary_directory.html" title="RAII class for creating isolated temporary directories for tests." alt="" coords="181,5,381,31"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="284,47,284,122,278,122,278,47"/>
+<area shape="rect" id="Node000004" href="$classsolar__test_1_1_temporary_cache.html" title="RAII class for creating temporary cache environments for testing." alt="" coords="406,5,591,31"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="476,43,439,73,394,101,332,124,331,119,392,96,436,68,473,39"/>
+</map>

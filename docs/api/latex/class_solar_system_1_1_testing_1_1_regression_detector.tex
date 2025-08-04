@@ -1,0 +1,305 @@
+\doxysection{Solar\+System\+::Testing\+::Regression\+Detector Class Reference}
+\hypertarget{class_solar_system_1_1_testing_1_1_regression_detector}{}\label{class_solar_system_1_1_testing_1_1_regression_detector}\index{SolarSystem::Testing::RegressionDetector@{SolarSystem::Testing::RegressionDetector}}
+
+
+Performance regression detector.  
+
+
+
+
+{\ttfamily \#include $<$regression\+\_\+detector.\+hpp$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_regression_detector_aa2bf2cc7622450a54baff2856e2a2517}{Regression\+Detector}} (\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_regression_detector_config}{Regression\+Detector\+Config}} \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_regression_detector_a90e8c7986fdda0697bba6350041d45ae}{config}}=\{\})
+\begin{DoxyCompactList}\small\item\em Create regression detector with configuration. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_regression_detector_ad1ff9222f07525052a8acac43fb25b83}{load\+\_\+baselines}} ()
+\begin{DoxyCompactList}\small\item\em Load baseline data from storage. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_regression_detector_a5749878607dd588ad869bef6a06475e3}{save\+\_\+baselines}} ()
+\begin{DoxyCompactList}\small\item\em Save baseline data to storage. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_regression_detector_a352533cd8ba36727c845e1949534fc98}{set\+\_\+baseline}} (const std\+::string \&benchmark\+\_\+name, const \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_benchmark_result}{Benchmark\+Result}} \&result, const std\+::string \&version="{}"{})
+\begin{DoxyCompactList}\small\item\em Set baseline for a benchmark. \end{DoxyCompactList}\item 
+std\+::optional$<$ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_performance_baseline}{Performance\+Baseline}} $>$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_regression_detector_a83955e6064f95c317cbe8b8a255d2c72}{get\+\_\+baseline}} (const std\+::string \&benchmark\+\_\+name) const
+\begin{DoxyCompactList}\small\item\em Get baseline for a benchmark. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_regression_analysis}{Regression\+Analysis}} \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_regression_detector_a84c1c109f67284566977c3a8e5019e9c}{analyze\+\_\+regression}} (const \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_benchmark_result}{Benchmark\+Result}} \&result)
+\begin{DoxyCompactList}\small\item\em Analyze benchmark result for regressions. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_regression_detector_a9c9acc55c86e9c23c1c171c223437b9f}{add\+\_\+trend\+\_\+data\+\_\+point}} (const std\+::string \&benchmark\+\_\+name, const \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_benchmark_result}{Benchmark\+Result}} \&result, const std\+::string \&version="{}"{})
+\begin{DoxyCompactList}\small\item\em Add data point for trend analysis. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_trend_analysis}{Trend\+Analysis}} \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_regression_detector_a7454c681a25605903397349a7b291177}{analyze\+\_\+trends}} (const std\+::string \&benchmark\+\_\+name)
+\begin{DoxyCompactList}\small\item\em Analyze performance trends. \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_regression_detector_a954863aaf004ad23eaab16175dd7035e}{generate\+\_\+regression\+\_\+report}} (const std\+::vector$<$ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_regression_analysis}{Regression\+Analysis}} $>$ \&analyses)
+\begin{DoxyCompactList}\small\item\em Generate comprehensive regression report. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_regression_detector_ac20dbe9d0ad3ba6dbba7390146728b2f}{generate\+\_\+ci\+\_\+output}} (const std\+::vector$<$ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_regression_analysis}{Regression\+Analysis}} $>$ \&analyses, const std\+::string \&output\+\_\+path)
+\begin{DoxyCompactList}\small\item\em Generate CI-\/compatible output. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_regression_detector_a3c737e99861be49b840004cb581eefaf}{has\+\_\+critical\+\_\+regressions}} (const std\+::vector$<$ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_regression_analysis}{Regression\+Analysis}} $>$ \&analyses) const
+\begin{DoxyCompactList}\small\item\em Check if any regressions exceed threshold. \end{DoxyCompactList}\item 
+const \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_regression_detector_config}{Regression\+Detector\+Config}} \& \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_regression_detector_a90e8c7986fdda0697bba6350041d45ae}{config}} () const
+\begin{DoxyCompactList}\small\item\em Get configuration. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Performance regression detector. 
+
+\label{doc-constructors}
+\Hypertarget{class_solar_system_1_1_testing_1_1_regression_detector_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_solar_system_1_1_testing_1_1_regression_detector_aa2bf2cc7622450a54baff2856e2a2517}\index{SolarSystem::Testing::RegressionDetector@{SolarSystem::Testing::RegressionDetector}!RegressionDetector@{RegressionDetector}}
+\index{RegressionDetector@{RegressionDetector}!SolarSystem::Testing::RegressionDetector@{SolarSystem::Testing::RegressionDetector}}
+\doxysubsubsection{\texorpdfstring{RegressionDetector()}{RegressionDetector()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_regression_detector_aa2bf2cc7622450a54baff2856e2a2517} 
+Solar\+System\+::\+Testing\+::\+Regression\+Detector\+::\+Regression\+Detector (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_regression_detector_config}{Regression\+Detector\+Config}}}]{config}{ = {\ttfamily \{\}}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+
+
+Create regression detector with configuration. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_regression_detector_aa2bf2cc7622450a54baff2856e2a2517_cgraph}
+\end{center}
+\end{figure}
+
+
+\label{doc-func-members}
+\Hypertarget{class_solar_system_1_1_testing_1_1_regression_detector_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_solar_system_1_1_testing_1_1_regression_detector_a9c9acc55c86e9c23c1c171c223437b9f}\index{SolarSystem::Testing::RegressionDetector@{SolarSystem::Testing::RegressionDetector}!add\_trend\_data\_point@{add\_trend\_data\_point}}
+\index{add\_trend\_data\_point@{add\_trend\_data\_point}!SolarSystem::Testing::RegressionDetector@{SolarSystem::Testing::RegressionDetector}}
+\doxysubsubsection{\texorpdfstring{add\_trend\_data\_point()}{add\_trend\_data\_point()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_regression_detector_a9c9acc55c86e9c23c1c171c223437b9f} 
+void Solar\+System\+::\+Testing\+::\+Regression\+Detector\+::add\+\_\+trend\+\_\+data\+\_\+point (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{benchmark\+\_\+name}{, }\item[{const \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_benchmark_result}{Benchmark\+Result}} \&}]{result}{, }\item[{const std\+::string \&}]{version}{ = {\ttfamily "{}"{}}}\end{DoxyParamCaption})}
+
+
+
+Add data point for trend analysis. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_regression_detector_a9c9acc55c86e9c23c1c171c223437b9f_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_regression_detector_a84c1c109f67284566977c3a8e5019e9c}\index{SolarSystem::Testing::RegressionDetector@{SolarSystem::Testing::RegressionDetector}!analyze\_regression@{analyze\_regression}}
+\index{analyze\_regression@{analyze\_regression}!SolarSystem::Testing::RegressionDetector@{SolarSystem::Testing::RegressionDetector}}
+\doxysubsubsection{\texorpdfstring{analyze\_regression()}{analyze\_regression()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_regression_detector_a84c1c109f67284566977c3a8e5019e9c} 
+\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_regression_analysis}{Regression\+Analysis}} Solar\+System\+::\+Testing\+::\+Regression\+Detector\+::analyze\+\_\+regression (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_benchmark_result}{Benchmark\+Result}} \&}]{result}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Analyze benchmark result for regressions. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_regression_detector_a84c1c109f67284566977c3a8e5019e9c_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_regression_detector_a84c1c109f67284566977c3a8e5019e9c_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_regression_detector_a7454c681a25605903397349a7b291177}\index{SolarSystem::Testing::RegressionDetector@{SolarSystem::Testing::RegressionDetector}!analyze\_trends@{analyze\_trends}}
+\index{analyze\_trends@{analyze\_trends}!SolarSystem::Testing::RegressionDetector@{SolarSystem::Testing::RegressionDetector}}
+\doxysubsubsection{\texorpdfstring{analyze\_trends()}{analyze\_trends()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_regression_detector_a7454c681a25605903397349a7b291177} 
+\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_trend_analysis}{Trend\+Analysis}} Solar\+System\+::\+Testing\+::\+Regression\+Detector\+::analyze\+\_\+trends (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{benchmark\+\_\+name}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Analyze performance trends. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_regression_detector_a7454c681a25605903397349a7b291177_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_regression_detector_a90e8c7986fdda0697bba6350041d45ae}\index{SolarSystem::Testing::RegressionDetector@{SolarSystem::Testing::RegressionDetector}!config@{config}}
+\index{config@{config}!SolarSystem::Testing::RegressionDetector@{SolarSystem::Testing::RegressionDetector}}
+\doxysubsubsection{\texorpdfstring{config()}{config()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_regression_detector_a90e8c7986fdda0697bba6350041d45ae} 
+const \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_regression_detector_config}{Regression\+Detector\+Config}} \& Solar\+System\+::\+Testing\+::\+Regression\+Detector\+::config (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}}
+
+
+
+Get configuration. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=336pt]{class_solar_system_1_1_testing_1_1_regression_detector_a90e8c7986fdda0697bba6350041d45ae_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_regression_detector_ac20dbe9d0ad3ba6dbba7390146728b2f}\index{SolarSystem::Testing::RegressionDetector@{SolarSystem::Testing::RegressionDetector}!generate\_ci\_output@{generate\_ci\_output}}
+\index{generate\_ci\_output@{generate\_ci\_output}!SolarSystem::Testing::RegressionDetector@{SolarSystem::Testing::RegressionDetector}}
+\doxysubsubsection{\texorpdfstring{generate\_ci\_output()}{generate\_ci\_output()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_regression_detector_ac20dbe9d0ad3ba6dbba7390146728b2f} 
+void Solar\+System\+::\+Testing\+::\+Regression\+Detector\+::generate\+\_\+ci\+\_\+output (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_regression_analysis}{Regression\+Analysis}} $>$ \&}]{analyses}{, }\item[{const std\+::string \&}]{output\+\_\+path}{}\end{DoxyParamCaption})}
+
+
+
+Generate CI-\/compatible output. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_regression_detector_ac20dbe9d0ad3ba6dbba7390146728b2f_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_regression_detector_ac20dbe9d0ad3ba6dbba7390146728b2f_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_regression_detector_a954863aaf004ad23eaab16175dd7035e}\index{SolarSystem::Testing::RegressionDetector@{SolarSystem::Testing::RegressionDetector}!generate\_regression\_report@{generate\_regression\_report}}
+\index{generate\_regression\_report@{generate\_regression\_report}!SolarSystem::Testing::RegressionDetector@{SolarSystem::Testing::RegressionDetector}}
+\doxysubsubsection{\texorpdfstring{generate\_regression\_report()}{generate\_regression\_report()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_regression_detector_a954863aaf004ad23eaab16175dd7035e} 
+std\+::string Solar\+System\+::\+Testing\+::\+Regression\+Detector\+::generate\+\_\+regression\+\_\+report (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_regression_analysis}{Regression\+Analysis}} $>$ \&}]{analyses}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Generate comprehensive regression report. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_regression_detector_a954863aaf004ad23eaab16175dd7035e_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_regression_detector_a83955e6064f95c317cbe8b8a255d2c72}\index{SolarSystem::Testing::RegressionDetector@{SolarSystem::Testing::RegressionDetector}!get\_baseline@{get\_baseline}}
+\index{get\_baseline@{get\_baseline}!SolarSystem::Testing::RegressionDetector@{SolarSystem::Testing::RegressionDetector}}
+\doxysubsubsection{\texorpdfstring{get\_baseline()}{get\_baseline()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_regression_detector_a83955e6064f95c317cbe8b8a255d2c72} 
+std\+::optional$<$ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_performance_baseline}{Performance\+Baseline}} $>$ Solar\+System\+::\+Testing\+::\+Regression\+Detector\+::get\+\_\+baseline (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{benchmark\+\_\+name}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Get baseline for a benchmark. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_regression_detector_a83955e6064f95c317cbe8b8a255d2c72_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_regression_detector_a3c737e99861be49b840004cb581eefaf}\index{SolarSystem::Testing::RegressionDetector@{SolarSystem::Testing::RegressionDetector}!has\_critical\_regressions@{has\_critical\_regressions}}
+\index{has\_critical\_regressions@{has\_critical\_regressions}!SolarSystem::Testing::RegressionDetector@{SolarSystem::Testing::RegressionDetector}}
+\doxysubsubsection{\texorpdfstring{has\_critical\_regressions()}{has\_critical\_regressions()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_regression_detector_a3c737e99861be49b840004cb581eefaf} 
+bool Solar\+System\+::\+Testing\+::\+Regression\+Detector\+::has\+\_\+critical\+\_\+regressions (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_regression_analysis}{Regression\+Analysis}} $>$ \&}]{analyses}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Check if any regressions exceed threshold. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_regression_detector_a3c737e99861be49b840004cb581eefaf_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_regression_detector_ad1ff9222f07525052a8acac43fb25b83}\index{SolarSystem::Testing::RegressionDetector@{SolarSystem::Testing::RegressionDetector}!load\_baselines@{load\_baselines}}
+\index{load\_baselines@{load\_baselines}!SolarSystem::Testing::RegressionDetector@{SolarSystem::Testing::RegressionDetector}}
+\doxysubsubsection{\texorpdfstring{load\_baselines()}{load\_baselines()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_regression_detector_ad1ff9222f07525052a8acac43fb25b83} 
+void Solar\+System\+::\+Testing\+::\+Regression\+Detector\+::load\+\_\+baselines (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Load baseline data from storage. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=341pt]{class_solar_system_1_1_testing_1_1_regression_detector_ad1ff9222f07525052a8acac43fb25b83_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=336pt]{class_solar_system_1_1_testing_1_1_regression_detector_ad1ff9222f07525052a8acac43fb25b83_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_regression_detector_a5749878607dd588ad869bef6a06475e3}\index{SolarSystem::Testing::RegressionDetector@{SolarSystem::Testing::RegressionDetector}!save\_baselines@{save\_baselines}}
+\index{save\_baselines@{save\_baselines}!SolarSystem::Testing::RegressionDetector@{SolarSystem::Testing::RegressionDetector}}
+\doxysubsubsection{\texorpdfstring{save\_baselines()}{save\_baselines()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_regression_detector_a5749878607dd588ad869bef6a06475e3} 
+void Solar\+System\+::\+Testing\+::\+Regression\+Detector\+::save\+\_\+baselines (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Save baseline data to storage. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_regression_detector_a5749878607dd588ad869bef6a06475e3_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_regression_detector_a352533cd8ba36727c845e1949534fc98}\index{SolarSystem::Testing::RegressionDetector@{SolarSystem::Testing::RegressionDetector}!set\_baseline@{set\_baseline}}
+\index{set\_baseline@{set\_baseline}!SolarSystem::Testing::RegressionDetector@{SolarSystem::Testing::RegressionDetector}}
+\doxysubsubsection{\texorpdfstring{set\_baseline()}{set\_baseline()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_regression_detector_a352533cd8ba36727c845e1949534fc98} 
+void Solar\+System\+::\+Testing\+::\+Regression\+Detector\+::set\+\_\+baseline (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{benchmark\+\_\+name}{, }\item[{const \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_benchmark_result}{Benchmark\+Result}} \&}]{result}{, }\item[{const std\+::string \&}]{version}{ = {\ttfamily "{}"{}}}\end{DoxyParamCaption})}
+
+
+
+Set baseline for a benchmark. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=336pt]{class_solar_system_1_1_testing_1_1_regression_detector_a352533cd8ba36727c845e1949534fc98_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_regression_detector_a352533cd8ba36727c845e1949534fc98_icgraph}
+\end{center}
+\end{figure}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+test/include/solar\+\_\+test/benchmarks/\mbox{\hyperlink{regression__detector_8hpp}{regression\+\_\+detector.\+hpp}}\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+test/src/benchmarks/\mbox{\hyperlink{regression__detector_8cpp}{regression\+\_\+detector.\+cpp}}\end{DoxyCompactItemize}

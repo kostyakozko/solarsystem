@@ -1,0 +1,9 @@
+<map id="SolarSystem::Core::Builders::SimulationBuilder::build_and_run" name="SolarSystem::Core::Builders::SimulationBuilder::build_and_run">
+<area shape="rect" id="Node000001" title="Build and immediately run the simulation." alt="" coords="5,45,183,101"/>
+<area shape="rect" id="Node000002" href="$class_solar_system_1_1_core_1_1_builders_1_1_simulation_builder.html#ab2a229d75a97b3ffe7e9c480be5dc5ea" title="Build the configured simulation engine." alt="" coords="231,45,408,101"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="183,70,215,70,215,76,183,76"/>
+<area shape="rect" id="Node000003" href="$class_solar_system_1_1_core_1_1_builders_1_1_simulation_builder.html#a15d78a48d83d7d811e725c5cc87130a3" title="Get current configuration summary." alt="" coords="456,5,633,61"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="408,55,440,49,441,54,409,60"/>
+<area shape="rect" id="Node000004" href="$class_solar_system_1_1_core_1_1_builders_1_1_simulation_builder.html#a281574809cd93ebaf15410e6e9a8f178" title="Validate current configuration." alt="" coords="456,85,633,141"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="409,86,441,92,440,97,408,91"/>
+</map>

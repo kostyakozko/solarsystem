@@ -1,0 +1,226 @@
+\doxysection{Solar\+System\+::Utils\+::Config Class Reference}
+\hypertarget{class_solar_system_1_1_utils_1_1_config}{}\label{class_solar_system_1_1_utils_1_1_config}\index{SolarSystem::Utils::Config@{SolarSystem::Utils::Config}}
+
+
+Modern configuration system with YAML/\+JSON support.  
+
+
+
+
+{\ttfamily \#include $<$config.\+hpp$>$}
+
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_solar_system_1_1_utils_1_1_config_1_1_app_config}{App\+Config}}
+\begin{DoxyCompactList}\small\item\em Complete application configuration. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_solar_system_1_1_utils_1_1_config_1_1_data_config}{Data\+Config}}
+\begin{DoxyCompactList}\small\item\em \doxylink{namespace_solar_system_1_1_data}{Data} source configuration. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_solar_system_1_1_utils_1_1_config_1_1_logging_config}{Logging\+Config}}
+\begin{DoxyCompactList}\small\item\em Logging configuration. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_solar_system_1_1_utils_1_1_config_1_1_simulation_config}{Simulation\+Config}}
+\begin{DoxyCompactList}\small\item\em Simulation-\/specific configuration. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_solar_system_1_1_utils_1_1_config_1_1_web_config}{Web\+Config}}
+\begin{DoxyCompactList}\small\item\em Web server configuration. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+enum class \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_config_a33eeb5e8dd394650b54bafd07141b0a4}{Source}} \{ \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_config_a33eeb5e8dd394650b54bafd07141b0a4a5b39c8b553c821e7cddc6da64b5bd2ee}{DEFAULT}} = 0
+, \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_config_a33eeb5e8dd394650b54bafd07141b0a4a1cdc529d5e9f373827ba8e3d14766119}{CONFIG\+\_\+\+FILE}} = 1
+, \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_config_a33eeb5e8dd394650b54bafd07141b0a4a889a65415d92b72cffa7df3f8ecf13f9}{ENVIRONMENT}} = 2
+, \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_config_a33eeb5e8dd394650b54bafd07141b0a4a17c0d60311af7eb6f176ae236481a02d}{COMMAND\+\_\+\+LINE}} = 3
+ \}
+\begin{DoxyCompactList}\small\item\em Configuration sources in priority order. \end{DoxyCompactList}\item 
+using \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_config_a1a6bdbdb64b3fb441a65f5c57c0ca02c}{Value}} = std\+::variant$<$bool, int64\+\_\+t, double, std\+::string$>$
+\begin{DoxyCompactList}\small\item\em Configuration value types. \end{DoxyCompactList}\item 
+using \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_config_ad94b3ec226ed9a3c3652bbac671d6364}{Config\+Map}} = std\+::unordered\+\_\+map$<$std\+::string, \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_config_a1a6bdbdb64b3fb441a65f5c57c0ca02c}{Value}}$>$
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Expected}}$<$ \mbox{\hyperlink{struct_solar_system_1_1_utils_1_1_config_1_1_app_config}{App\+Config}}, std\+::string $>$ \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_config_aae6444cfe19bc26da1086502b7e74940}{load}} (const std\+::optional$<$ std\+::string $>$ \&config\+\_\+file=std\+::nullopt, const std\+::vector$<$ std\+::string $>$ \&cli\+\_\+args=\{\})
+\begin{DoxyCompactList}\small\item\em Load configuration from multiple sources. \end{DoxyCompactList}\item 
+static \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Expected}}$<$ void, std\+::string $>$ \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_config_aaf67fa93d8665c4d52b3d6a4a2e10f23}{save}} (const \mbox{\hyperlink{struct_solar_system_1_1_utils_1_1_config_1_1_app_config}{App\+Config}} \&config, const std\+::string \&filename)
+\begin{DoxyCompactList}\small\item\em Save configuration to file. \end{DoxyCompactList}\item 
+static \mbox{\hyperlink{struct_solar_system_1_1_utils_1_1_config_1_1_app_config}{App\+Config}} \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_config_acdc32eab0eba535679d3ce0d8aef0c56}{get\+\_\+default}} ()
+\begin{DoxyCompactList}\small\item\em Get default configuration. \end{DoxyCompactList}\item 
+static \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Expected}}$<$ void, std\+::string $>$ \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_config_adce7c1cad75ffafc213d4c4d6738cee4}{validate}} (const \mbox{\hyperlink{struct_solar_system_1_1_utils_1_1_config_1_1_app_config}{App\+Config}} \&config)
+\begin{DoxyCompactList}\small\item\em Validate configuration. \end{DoxyCompactList}\item 
+static \mbox{\hyperlink{struct_solar_system_1_1_utils_1_1_config_1_1_app_config}{App\+Config}} \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_config_aba5d7c5994aaa151c3e4e47b0ebb1355}{merge}} (const \mbox{\hyperlink{struct_solar_system_1_1_utils_1_1_config_1_1_app_config}{App\+Config}} \&base, const \mbox{\hyperlink{struct_solar_system_1_1_utils_1_1_config_1_1_app_config}{App\+Config}} \&override)
+\begin{DoxyCompactList}\small\item\em Merge configurations (higher priority overwrites lower) \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Modern configuration system with YAML/\+JSON support. 
+
+Provides centralized configuration management with type safety, validation, and multiple data sources (files, environment, CLI). 
+
+\label{doc-typedef-members}
+\Hypertarget{class_solar_system_1_1_utils_1_1_config_doc-typedef-members}
+\doxysubsection{Member Typedef Documentation}
+\Hypertarget{class_solar_system_1_1_utils_1_1_config_ad94b3ec226ed9a3c3652bbac671d6364}\index{SolarSystem::Utils::Config@{SolarSystem::Utils::Config}!ConfigMap@{ConfigMap}}
+\index{ConfigMap@{ConfigMap}!SolarSystem::Utils::Config@{SolarSystem::Utils::Config}}
+\doxysubsubsection{\texorpdfstring{ConfigMap}{ConfigMap}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_utils_1_1_config_ad94b3ec226ed9a3c3652bbac671d6364} 
+using \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_config_ad94b3ec226ed9a3c3652bbac671d6364}{Solar\+System\+::\+Utils\+::\+Config\+::\+Config\+Map}} = std\+::unordered\+\_\+map$<$std\+::string, \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_config_a1a6bdbdb64b3fb441a65f5c57c0ca02c}{Value}}$>$}
+
+\Hypertarget{class_solar_system_1_1_utils_1_1_config_a1a6bdbdb64b3fb441a65f5c57c0ca02c}\index{SolarSystem::Utils::Config@{SolarSystem::Utils::Config}!Value@{Value}}
+\index{Value@{Value}!SolarSystem::Utils::Config@{SolarSystem::Utils::Config}}
+\doxysubsubsection{\texorpdfstring{Value}{Value}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_utils_1_1_config_a1a6bdbdb64b3fb441a65f5c57c0ca02c} 
+using \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_config_a1a6bdbdb64b3fb441a65f5c57c0ca02c}{Solar\+System\+::\+Utils\+::\+Config\+::\+Value}} = std\+::variant$<$bool, int64\+\_\+t, double, std\+::string$>$}
+
+
+
+Configuration value types. 
+
+
+
+\label{doc-enum-members}
+\Hypertarget{class_solar_system_1_1_utils_1_1_config_doc-enum-members}
+\doxysubsection{Member Enumeration Documentation}
+\Hypertarget{class_solar_system_1_1_utils_1_1_config_a33eeb5e8dd394650b54bafd07141b0a4}\index{SolarSystem::Utils::Config@{SolarSystem::Utils::Config}!Source@{Source}}
+\index{Source@{Source}!SolarSystem::Utils::Config@{SolarSystem::Utils::Config}}
+\doxysubsubsection{\texorpdfstring{Source}{Source}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_utils_1_1_config_a33eeb5e8dd394650b54bafd07141b0a4} 
+enum class \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_config_a33eeb5e8dd394650b54bafd07141b0a4}{Solar\+System\+::\+Utils\+::\+Config\+::\+Source}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+
+
+Configuration sources in priority order. 
+
+\begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{DEFAULT@{DEFAULT}!SolarSystem::Utils::Config@{SolarSystem::Utils::Config}}\index{SolarSystem::Utils::Config@{SolarSystem::Utils::Config}!DEFAULT@{DEFAULT}}}\Hypertarget{class_solar_system_1_1_utils_1_1_config_a33eeb5e8dd394650b54bafd07141b0a4a5b39c8b553c821e7cddc6da64b5bd2ee}\label{class_solar_system_1_1_utils_1_1_config_a33eeb5e8dd394650b54bafd07141b0a4a5b39c8b553c821e7cddc6da64b5bd2ee} 
+DEFAULT&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CONFIG\_FILE@{CONFIG\_FILE}!SolarSystem::Utils::Config@{SolarSystem::Utils::Config}}\index{SolarSystem::Utils::Config@{SolarSystem::Utils::Config}!CONFIG\_FILE@{CONFIG\_FILE}}}\Hypertarget{class_solar_system_1_1_utils_1_1_config_a33eeb5e8dd394650b54bafd07141b0a4a1cdc529d5e9f373827ba8e3d14766119}\label{class_solar_system_1_1_utils_1_1_config_a33eeb5e8dd394650b54bafd07141b0a4a1cdc529d5e9f373827ba8e3d14766119} 
+CONFIG\+\_\+\+FILE&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ENVIRONMENT@{ENVIRONMENT}!SolarSystem::Utils::Config@{SolarSystem::Utils::Config}}\index{SolarSystem::Utils::Config@{SolarSystem::Utils::Config}!ENVIRONMENT@{ENVIRONMENT}}}\Hypertarget{class_solar_system_1_1_utils_1_1_config_a33eeb5e8dd394650b54bafd07141b0a4a889a65415d92b72cffa7df3f8ecf13f9}\label{class_solar_system_1_1_utils_1_1_config_a33eeb5e8dd394650b54bafd07141b0a4a889a65415d92b72cffa7df3f8ecf13f9} 
+ENVIRONMENT&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{COMMAND\_LINE@{COMMAND\_LINE}!SolarSystem::Utils::Config@{SolarSystem::Utils::Config}}\index{SolarSystem::Utils::Config@{SolarSystem::Utils::Config}!COMMAND\_LINE@{COMMAND\_LINE}}}\Hypertarget{class_solar_system_1_1_utils_1_1_config_a33eeb5e8dd394650b54bafd07141b0a4a17c0d60311af7eb6f176ae236481a02d}\label{class_solar_system_1_1_utils_1_1_config_a33eeb5e8dd394650b54bafd07141b0a4a17c0d60311af7eb6f176ae236481a02d} 
+COMMAND\+\_\+\+LINE&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\label{doc-func-members}
+\Hypertarget{class_solar_system_1_1_utils_1_1_config_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_solar_system_1_1_utils_1_1_config_acdc32eab0eba535679d3ce0d8aef0c56}\index{SolarSystem::Utils::Config@{SolarSystem::Utils::Config}!get\_default@{get\_default}}
+\index{get\_default@{get\_default}!SolarSystem::Utils::Config@{SolarSystem::Utils::Config}}
+\doxysubsubsection{\texorpdfstring{get\_default()}{get\_default()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_utils_1_1_config_acdc32eab0eba535679d3ce0d8aef0c56} 
+\mbox{\hyperlink{struct_solar_system_1_1_utils_1_1_config_1_1_app_config}{Config\+::\+App\+Config}} Solar\+System\+::\+Utils\+::\+Config\+::get\+\_\+default (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Get default configuration. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_utils_1_1_config_acdc32eab0eba535679d3ce0d8aef0c56_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_utils_1_1_config_aae6444cfe19bc26da1086502b7e74940}\index{SolarSystem::Utils::Config@{SolarSystem::Utils::Config}!load@{load}}
+\index{load@{load}!SolarSystem::Utils::Config@{SolarSystem::Utils::Config}}
+\doxysubsubsection{\texorpdfstring{load()}{load()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_utils_1_1_config_aae6444cfe19bc26da1086502b7e74940} 
+\mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Expected}}$<$ \mbox{\hyperlink{struct_solar_system_1_1_utils_1_1_config_1_1_app_config}{Config\+::\+App\+Config}}, std\+::string $>$ Solar\+System\+::\+Utils\+::\+Config\+::load (\begin{DoxyParamCaption}\item[{const std\+::optional$<$ std\+::string $>$ \&}]{config\+\_\+file}{ = {\ttfamily std\+:\+:nullopt}, }\item[{const std\+::vector$<$ std\+::string $>$ \&}]{cli\+\_\+args}{ = {\ttfamily \{\}}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Load configuration from multiple sources. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_utils_1_1_config_aae6444cfe19bc26da1086502b7e74940_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_utils_1_1_config_aba5d7c5994aaa151c3e4e47b0ebb1355}\index{SolarSystem::Utils::Config@{SolarSystem::Utils::Config}!merge@{merge}}
+\index{merge@{merge}!SolarSystem::Utils::Config@{SolarSystem::Utils::Config}}
+\doxysubsubsection{\texorpdfstring{merge()}{merge()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_utils_1_1_config_aba5d7c5994aaa151c3e4e47b0ebb1355} 
+\mbox{\hyperlink{struct_solar_system_1_1_utils_1_1_config_1_1_app_config}{Config\+::\+App\+Config}} Solar\+System\+::\+Utils\+::\+Config\+::merge (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_solar_system_1_1_utils_1_1_config_1_1_app_config}{App\+Config}} \&}]{base}{, }\item[{const \mbox{\hyperlink{struct_solar_system_1_1_utils_1_1_config_1_1_app_config}{App\+Config}} \&}]{override}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Merge configurations (higher priority overwrites lower) 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=319pt]{class_solar_system_1_1_utils_1_1_config_aba5d7c5994aaa151c3e4e47b0ebb1355_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=313pt]{class_solar_system_1_1_utils_1_1_config_aba5d7c5994aaa151c3e4e47b0ebb1355_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_utils_1_1_config_aaf67fa93d8665c4d52b3d6a4a2e10f23}\index{SolarSystem::Utils::Config@{SolarSystem::Utils::Config}!save@{save}}
+\index{save@{save}!SolarSystem::Utils::Config@{SolarSystem::Utils::Config}}
+\doxysubsubsection{\texorpdfstring{save()}{save()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_utils_1_1_config_aaf67fa93d8665c4d52b3d6a4a2e10f23} 
+\mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Expected}}$<$ void, std\+::string $>$ Solar\+System\+::\+Utils\+::\+Config\+::save (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_solar_system_1_1_utils_1_1_config_1_1_app_config}{App\+Config}} \&}]{config}{, }\item[{const std\+::string \&}]{filename}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Save configuration to file. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=313pt]{class_solar_system_1_1_utils_1_1_config_aaf67fa93d8665c4d52b3d6a4a2e10f23_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_utils_1_1_config_adce7c1cad75ffafc213d4c4d6738cee4}\index{SolarSystem::Utils::Config@{SolarSystem::Utils::Config}!validate@{validate}}
+\index{validate@{validate}!SolarSystem::Utils::Config@{SolarSystem::Utils::Config}}
+\doxysubsubsection{\texorpdfstring{validate()}{validate()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_utils_1_1_config_adce7c1cad75ffafc213d4c4d6738cee4} 
+\mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Expected}}$<$ void, std\+::string $>$ Solar\+System\+::\+Utils\+::\+Config\+::validate (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_solar_system_1_1_utils_1_1_config_1_1_app_config}{App\+Config}} \&}]{config}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Validate configuration. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=313pt]{class_solar_system_1_1_utils_1_1_config_adce7c1cad75ffafc213d4c4d6738cee4_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=313pt]{class_solar_system_1_1_utils_1_1_config_adce7c1cad75ffafc213d4c4d6738cee4_icgraph}
+\end{center}
+\end{figure}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+utils/include/solar\+\_\+utils/\mbox{\hyperlink{config_8hpp}{config.\+hpp}}\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+utils/src/\mbox{\hyperlink{config_8cpp}{config.\+cpp}}\end{DoxyCompactItemize}

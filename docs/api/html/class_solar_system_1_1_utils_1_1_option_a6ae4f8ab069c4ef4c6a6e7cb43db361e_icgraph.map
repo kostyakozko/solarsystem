@@ -1,0 +1,9 @@
+<map id="SolarSystem::Utils::Option::action" name="SolarSystem::Utils::Option::action">
+<area shape="rect" id="Node000001" title="Set action to perform when option is found." alt="" coords="238,93,369,134"/>
+<area shape="rect" id="Node000002" href="$class_solar_system_1_1_utils_1_1_extended_argument_parser.html#aefb26f0ab61c24f444e8312451d731c2" title=" " alt="" coords="8,5,187,61"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="234,89,170,64,172,59,236,84"/>
+<area shape="rect" id="Node000003" href="$class_solar_system_1_1_utils_1_1_realtime_argument_parser.html#a9d27cffa3617f67515a6bdf5c087a9eb" title=" " alt="" coords="10,85,185,141"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="222,116,186,116,186,110,222,110"/>
+<area shape="rect" id="Node000004" href="$class_solar_system_1_1_utils_1_1_simulation_argument_parser.html#a55bdf05f0b08383924ec967f4f9c7739" title=" " alt="" coords="5,165,190,221"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="236,142,172,167,170,162,234,137"/>
+</map>

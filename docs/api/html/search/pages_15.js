@@ -1,8 +1,8 @@
 var searchData=
 [
   ['scalability_0',['Scalability',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md68',1,'📊 Performance &amp; Scalability'],['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md70',1,'<b>Scalability</b>']]],
-  ['scalability_20v5_200_20⚡_1',['&lt;b&gt;Phase 4: Performance &amp;amp; Scalability (v5.0)&lt;/b&gt; ⚡',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md79',1,'']]],
-  ['scientific_20computing_20v4_200_20🔬_2',['&lt;b&gt;Phase 1: Data Analysis &amp;amp; Scientific Computing (v4.0)&lt;/b&gt; 🔬',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md76',1,'']]],
+  ['scalability_20v5_200_20⚡_1',['&lt;b&gt;Phase 4: Performance &amp;amp; Scalability (v5.0)&lt;/b&gt; ⚡',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md80',1,'']]],
+  ['scientific_20computing_20v4_200_20🔬_2',['&lt;b&gt;Phase 1: Data Analysis &amp;amp; Scientific Computing (v4.0)&lt;/b&gt; 🔬',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md77',1,'']]],
   ['server_20configuration_3',['&lt;b&gt;Web Server Configuration&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md39',1,'']]],
   ['server_20deployment_4',['&lt;b&gt;Web Server Deployment&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md58',1,'']]],
   ['settings_5',['&lt;b&gt;Custom Port and Settings&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md40',1,'']]],

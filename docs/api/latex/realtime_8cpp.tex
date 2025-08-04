@@ -1,16 +1,21 @@
 \doxysection{/\+Users/kostiantyn.kozko/tmp/solarsystem/apps/solar\+\_\+system\+\_\+realtime/realtime.cpp File Reference}
 \hypertarget{realtime_8cpp}{}\label{realtime_8cpp}\index{/Users/kostiantyn.kozko/tmp/solarsystem/apps/solar\_system\_realtime/realtime.cpp@{/Users/kostiantyn.kozko/tmp/solarsystem/apps/solar\_system\_realtime/realtime.cpp}}
-{\ttfamily \#include $<$signal.\+h$>$}\newline
+{\ttfamily \#include $<$atomic$>$}\newline
 {\ttfamily \#include $<$chrono$>$}\newline
-{\ttfamily \#include $<$ctime$>$}\newline
+{\ttfamily \#include $<$csignal$>$}\newline
+{\ttfamily \#include $<$future$>$}\newline
 {\ttfamily \#include $<$iomanip$>$}\newline
 {\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$memory$>$}\newline
+{\ttfamily \#include $<$optional$>$}\newline
 {\ttfamily \#include $<$string$>$}\newline
+{\ttfamily \#include $<$string\+\_\+view$>$}\newline
 {\ttfamily \#include $<$thread$>$}\newline
-{\ttfamily \#include "{}args.\+h"{}}\newline
-{\ttfamily \#include "{}jpl\+\_\+data.\+h"{}}\newline
-{\ttfamily \#include "{}model.\+h"{}}\newline
-{\ttfamily \#include "{}simulation.\+h"{}}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include "{}solar\+\_\+core/bodies/body\+\_\+factory.\+hpp"{}}\newline
+{\ttfamily \#include "{}solar\+\_\+core/builders/simulation\+\_\+builder.\+hpp"{}}\newline
+{\ttfamily \#include "{}solar\+\_\+utils/argument\+\_\+parser.\+hpp"{}}\newline
+{\ttfamily \#include "{}solar\+\_\+utils/logging.\+hpp"{}}\newline
 Include dependency graph for realtime.\+cpp\+:
 \nopagebreak
 \begin{figure}[H]
@@ -22,149 +27,61 @@ Include dependency graph for realtime.\+cpp\+:
 \doxysubsubsection*{Classes}
 \begin{DoxyCompactItemize}
 \item 
-struct \mbox{\hyperlink{struct_realtime_args}{Realtime\+Args}}
+class \mbox{\hyperlink{class_terminal_u_i}{Terminal\+UI}}
+\begin{DoxyCompactList}\small\item\em Modern terminal UI utilities. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_terminal_state_guard}{Terminal\+State\+Guard}}
+\begin{DoxyCompactList}\small\item\em RAII-\/based terminal state manager. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_realtime_monitor}{Realtime\+Monitor}}
+\begin{DoxyCompactList}\small\item\em Modern real-\/time solar system monitor. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+using \mbox{\hyperlink{realtime_8cpp_a41dda04c58a94c2ab996f1ae4e0a78e2}{Monitor\+Config}} = \mbox{\hyperlink{struct_solar_system_1_1_utils_1_1_realtime_config}{Realtime\+Config}}
 \end{DoxyCompactItemize}
 \doxysubsubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
 void \mbox{\hyperlink{realtime_8cpp_a3b527c56ed133ee6815bfbc625e757af}{signal\+\_\+handler}} (int signal)
-\item 
-void \mbox{\hyperlink{realtime_8cpp_afa94f8b920cdb49e3baa013c814e04db}{print\+\_\+realtime\+\_\+usage}} (const char \texorpdfstring{$\ast$}{*}program\+\_\+name)
-\item 
-bool \mbox{\hyperlink{realtime_8cpp_a9a941068d2e8ae2b615df9dffbc83075}{parse\+\_\+realtime\+\_\+args}} (int argc, const char \texorpdfstring{$\ast$}{*}const argv\mbox{[}$\,$\mbox{]}, \mbox{\hyperlink{struct_realtime_args}{Realtime\+Args}} \&args)
-\item 
-void \mbox{\hyperlink{realtime_8cpp_a42ce67bd8e5b81d1e1457a576e6ee3ba}{print\+\_\+timestamp}} ()
-\item 
-void \mbox{\hyperlink{realtime_8cpp_ac79ce85355ea086c0f6c60fe0ecf0969}{print\+\_\+system\+\_\+summary}} (bool verbose)
-\item 
-void \mbox{\hyperlink{realtime_8cpp_a2ff41c739cdb12d583c1514fd765a973}{print\+\_\+body\+\_\+positions}} (bool show\+\_\+velocities, bool quiet)
-\item 
-void \mbox{\hyperlink{realtime_8cpp_a4953d1edcbbfc7e420c423ded1d5621a}{clear\+\_\+screen}} ()
-\item 
-int \mbox{\hyperlink{realtime_8cpp_a814244b02f6701fd8ead246678bb3dae}{main}} (int argc, const char \texorpdfstring{$\ast$}{*}const argv\mbox{[}$\,$\mbox{]})
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Modern signal handler for graceful shutdown. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{realtime_8cpp_a0ddf1224851353fc92bfbff6f499fa97}{main}} (int argc, char \texorpdfstring{$\ast$}{*}argv\mbox{[}$\,$\mbox{]})
+\begin{DoxyCompactList}\small\item\em Modern main function with structured error handling. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsubsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
-volatile bool \mbox{\hyperlink{realtime_8cpp_a7c10027ca174fc9d529796f04aca6bd4}{running}} = true
-\end{DoxyCompactItemize}
+std\+::atomic$<$ bool $>$ \mbox{\hyperlink{realtime_8cpp_ad9223bbbed1d71323a789daf88911c4a}{g\+\_\+shutdown\+\_\+requested}} \{false\}
+\begin{DoxyCompactList}\small\item\em Global shutdown flag for signal handling. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\label{doc-typedef-members}
+\Hypertarget{realtime_8cpp_doc-typedef-members}
+\doxysubsection{Typedef Documentation}
+\Hypertarget{realtime_8cpp_a41dda04c58a94c2ab996f1ae4e0a78e2}\index{realtime.cpp@{realtime.cpp}!MonitorConfig@{MonitorConfig}}
+\index{MonitorConfig@{MonitorConfig}!realtime.cpp@{realtime.cpp}}
+\doxysubsubsection{\texorpdfstring{MonitorConfig}{MonitorConfig}}
+{\footnotesize\ttfamily \label{realtime_8cpp_a41dda04c58a94c2ab996f1ae4e0a78e2} 
+using \mbox{\hyperlink{realtime_8cpp_a41dda04c58a94c2ab996f1ae4e0a78e2}{Monitor\+Config}} = \mbox{\hyperlink{struct_solar_system_1_1_utils_1_1_realtime_config}{Realtime\+Config}}}
+
 
 
 \label{doc-func-members}
 \Hypertarget{realtime_8cpp_doc-func-members}
 \doxysubsection{Function Documentation}
-\Hypertarget{realtime_8cpp_a4953d1edcbbfc7e420c423ded1d5621a}\index{realtime.cpp@{realtime.cpp}!clear\_screen@{clear\_screen}}
-\index{clear\_screen@{clear\_screen}!realtime.cpp@{realtime.cpp}}
-\doxysubsubsection{\texorpdfstring{clear\_screen()}{clear\_screen()}}
-{\footnotesize\ttfamily \label{realtime_8cpp_a4953d1edcbbfc7e420c423ded1d5621a} 
-void clear\+\_\+screen (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
-
-Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=225pt]{realtime_8cpp_a4953d1edcbbfc7e420c423ded1d5621a_icgraph}
-\end{center}
-\end{figure}
-\Hypertarget{realtime_8cpp_a814244b02f6701fd8ead246678bb3dae}\index{realtime.cpp@{realtime.cpp}!main@{main}}
+\Hypertarget{realtime_8cpp_a0ddf1224851353fc92bfbff6f499fa97}\index{realtime.cpp@{realtime.cpp}!main@{main}}
 \index{main@{main}!realtime.cpp@{realtime.cpp}}
 \doxysubsubsection{\texorpdfstring{main()}{main()}}
-{\footnotesize\ttfamily \label{realtime_8cpp_a814244b02f6701fd8ead246678bb3dae} 
-int main (\begin{DoxyParamCaption}\item[{int}]{argc}{, }\item[{const char \texorpdfstring{$\ast$}{*}const}]{argv}{\mbox{[}$\,$\mbox{]}}\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{realtime_8cpp_a0ddf1224851353fc92bfbff6f499fa97} 
+int main (\begin{DoxyParamCaption}\item[{int}]{argc}{, }\item[{char \texorpdfstring{$\ast$}{*}}]{argv}{\mbox{[}$\,$\mbox{]}}\end{DoxyParamCaption})}
+
+
+
+Modern main function with structured error handling. 
 
 Here is the call graph for this function\+:
 \nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=350pt]{realtime_8cpp_a814244b02f6701fd8ead246678bb3dae_cgraph}
-\end{center}
-\end{figure}
-\Hypertarget{realtime_8cpp_a9a941068d2e8ae2b615df9dffbc83075}\index{realtime.cpp@{realtime.cpp}!parse\_realtime\_args@{parse\_realtime\_args}}
-\index{parse\_realtime\_args@{parse\_realtime\_args}!realtime.cpp@{realtime.cpp}}
-\doxysubsubsection{\texorpdfstring{parse\_realtime\_args()}{parse\_realtime\_args()}}
-{\footnotesize\ttfamily \label{realtime_8cpp_a9a941068d2e8ae2b615df9dffbc83075} 
-bool parse\+\_\+realtime\+\_\+args (\begin{DoxyParamCaption}\item[{int}]{argc}{, }\item[{const char \texorpdfstring{$\ast$}{*}const}]{argv}{\mbox{[}$\,$\mbox{]}, }\item[{\mbox{\hyperlink{struct_realtime_args}{Realtime\+Args}} \&}]{args}{}\end{DoxyParamCaption})}
-
-Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=257pt]{realtime_8cpp_a9a941068d2e8ae2b615df9dffbc83075_icgraph}
-\end{center}
-\end{figure}
-\Hypertarget{realtime_8cpp_a2ff41c739cdb12d583c1514fd765a973}\index{realtime.cpp@{realtime.cpp}!print\_body\_positions@{print\_body\_positions}}
-\index{print\_body\_positions@{print\_body\_positions}!realtime.cpp@{realtime.cpp}}
-\doxysubsubsection{\texorpdfstring{print\_body\_positions()}{print\_body\_positions()}}
-{\footnotesize\ttfamily \label{realtime_8cpp_a2ff41c739cdb12d583c1514fd765a973} 
-void print\+\_\+body\+\_\+positions (\begin{DoxyParamCaption}\item[{bool}]{show\+\_\+velocities}{, }\item[{bool}]{quiet}{}\end{DoxyParamCaption})}
-
-Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=306pt]{realtime_8cpp_a2ff41c739cdb12d583c1514fd765a973_cgraph}
-\end{center}
-\end{figure}
-Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=258pt]{realtime_8cpp_a2ff41c739cdb12d583c1514fd765a973_icgraph}
-\end{center}
-\end{figure}
-\Hypertarget{realtime_8cpp_afa94f8b920cdb49e3baa013c814e04db}\index{realtime.cpp@{realtime.cpp}!print\_realtime\_usage@{print\_realtime\_usage}}
-\index{print\_realtime\_usage@{print\_realtime\_usage}!realtime.cpp@{realtime.cpp}}
-\doxysubsubsection{\texorpdfstring{print\_realtime\_usage()}{print\_realtime\_usage()}}
-{\footnotesize\ttfamily \label{realtime_8cpp_afa94f8b920cdb49e3baa013c814e04db} 
-void print\+\_\+realtime\+\_\+usage (\begin{DoxyParamCaption}\item[{const char \texorpdfstring{$\ast$}{*}}]{program\+\_\+name}{}\end{DoxyParamCaption})}
-
-Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=259pt]{realtime_8cpp_afa94f8b920cdb49e3baa013c814e04db_icgraph}
-\end{center}
-\end{figure}
-\Hypertarget{realtime_8cpp_ac79ce85355ea086c0f6c60fe0ecf0969}\index{realtime.cpp@{realtime.cpp}!print\_system\_summary@{print\_system\_summary}}
-\index{print\_system\_summary@{print\_system\_summary}!realtime.cpp@{realtime.cpp}}
-\doxysubsubsection{\texorpdfstring{print\_system\_summary()}{print\_system\_summary()}}
-{\footnotesize\ttfamily \label{realtime_8cpp_ac79ce85355ea086c0f6c60fe0ecf0969} 
-void print\+\_\+system\+\_\+summary (\begin{DoxyParamCaption}\item[{bool}]{verbose}{}\end{DoxyParamCaption})}
-
-Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{realtime_8cpp_ac79ce85355ea086c0f6c60fe0ecf0969_cgraph}
-\end{center}
-\end{figure}
-Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=271pt]{realtime_8cpp_ac79ce85355ea086c0f6c60fe0ecf0969_icgraph}
-\end{center}
-\end{figure}
-\Hypertarget{realtime_8cpp_a42ce67bd8e5b81d1e1457a576e6ee3ba}\index{realtime.cpp@{realtime.cpp}!print\_timestamp@{print\_timestamp}}
-\index{print\_timestamp@{print\_timestamp}!realtime.cpp@{realtime.cpp}}
-\doxysubsubsection{\texorpdfstring{print\_timestamp()}{print\_timestamp()}}
-{\footnotesize\ttfamily \label{realtime_8cpp_a42ce67bd8e5b81d1e1457a576e6ee3ba} 
-void print\+\_\+timestamp (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
-
-Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{realtime_8cpp_a42ce67bd8e5b81d1e1457a576e6ee3ba_icgraph}
+\includegraphics[width=350pt]{realtime_8cpp_a0ddf1224851353fc92bfbff6f499fa97_cgraph}
 \end{center}
 \end{figure}
 \Hypertarget{realtime_8cpp_a3b527c56ed133ee6815bfbc625e757af}\index{realtime.cpp@{realtime.cpp}!signal\_handler@{signal\_handler}}
@@ -172,6 +89,10 @@ Here is the caller graph for this function\+:
 \doxysubsubsection{\texorpdfstring{signal\_handler()}{signal\_handler()}}
 {\footnotesize\ttfamily \label{realtime_8cpp_a3b527c56ed133ee6815bfbc625e757af} 
 void signal\+\_\+handler (\begin{DoxyParamCaption}\item[{int}]{signal}{}\end{DoxyParamCaption})}
+
+
+
+Modern signal handler for graceful shutdown. 
 
 Here is the caller graph for this function\+:
 \nopagebreak
@@ -186,12 +107,13 @@ Here is the caller graph for this function\+:
 \label{doc-var-members}
 \Hypertarget{realtime_8cpp_doc-var-members}
 \doxysubsection{Variable Documentation}
-\Hypertarget{realtime_8cpp_a7c10027ca174fc9d529796f04aca6bd4}\index{realtime.cpp@{realtime.cpp}!running@{running}}
-\index{running@{running}!realtime.cpp@{realtime.cpp}}
-\doxysubsubsection{\texorpdfstring{running}{running}}
-{\footnotesize\ttfamily \label{realtime_8cpp_a7c10027ca174fc9d529796f04aca6bd4} 
-volatile bool running = true}
+\Hypertarget{realtime_8cpp_ad9223bbbed1d71323a789daf88911c4a}\index{realtime.cpp@{realtime.cpp}!g\_shutdown\_requested@{g\_shutdown\_requested}}
+\index{g\_shutdown\_requested@{g\_shutdown\_requested}!realtime.cpp@{realtime.cpp}}
+\doxysubsubsection{\texorpdfstring{g\_shutdown\_requested}{g\_shutdown\_requested}}
+{\footnotesize\ttfamily \label{realtime_8cpp_ad9223bbbed1d71323a789daf88911c4a} 
+std\+::atomic$<$bool$>$ g\+\_\+shutdown\+\_\+requested \{false\}}
 
-Solar System Real-\/\+Time Simulation
 
-Live simulation application that continuously tracks the current solar system state using real system time. Perfect for demonstrations, live displays, and real-\/time solar system monitoring. 
+
+Global shutdown flag for signal handling. 
+

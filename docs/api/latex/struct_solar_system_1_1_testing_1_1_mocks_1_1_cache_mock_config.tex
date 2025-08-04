@@ -1,0 +1,179 @@
+\doxysection{Solar\+System\+::Testing\+::Mocks\+::Cache\+Mock\+Config Struct Reference}
+\hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config}{}\label{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config}\index{SolarSystem::Testing::Mocks::CacheMockConfig@{SolarSystem::Testing::Mocks::CacheMockConfig}}
+
+
+Configuration for cache mock behavior.  
+
+
+
+
+{\ttfamily \#include $<$cache\+\_\+mock.\+hpp$>$}
+
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_a682fd984dc3078b75517d8c82fdbef69}{simulate\+\_\+file\+\_\+operations}} = true
+\item 
+std\+::chrono\+::milliseconds \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_a5e56b50f6593ddf2c726d31e888ceb63}{min\+\_\+operation\+\_\+delay}} = std\+::chrono\+::milliseconds(1)
+\item 
+std\+::chrono\+::milliseconds \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_ac0c870fdd1ed9dab65515e15bf73295d}{max\+\_\+operation\+\_\+delay}} = std\+::chrono\+::milliseconds(50)
+\item 
+double \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_a4b90ddcafb01f4ddd35aab4cc9b748b8}{disk\+\_\+full\+\_\+rate}} = 0.\+0
+\item 
+double \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_a0013730bab1230e602f6112f175fe5fd}{corruption\+\_\+rate}} = 0.\+0
+\item 
+double \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_ae8d248b48de6206d368c91acef12c611}{permission\+\_\+error\+\_\+rate}} = 0.\+0
+\item 
+double \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_a9261d8e4ca1a0527d0e7735282ddcb61}{io\+\_\+error\+\_\+rate}} = 0.\+0
+\item 
+bool \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_a1010667d387edb001eec51b976806b27}{cache\+\_\+always\+\_\+exists}} = false
+\item 
+bool \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_a8e78685072c297d5ea6e993fd98dae6f}{cache\+\_\+never\+\_\+exists}} = false
+\item 
+bool \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_a0dce48801ca1c1306b39b397adbb4cff}{cache\+\_\+always\+\_\+valid}} = false
+\item 
+bool \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_ac0b1ff63795d674cf9b54380a547d5c5}{cache\+\_\+always\+\_\+invalid}} = false
+\item 
+bool \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_aecdd91c3b33666d657ea53e5b170c6b1}{cache\+\_\+always\+\_\+corrupted}} = false
+\item 
+size\+\_\+t \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_a10fec487a73b008932642cf240a50c07}{max\+\_\+cache\+\_\+size}} = 100 \texorpdfstring{$\ast$}{*} 1024 \texorpdfstring{$\ast$}{*} 1024
+\item 
+double \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_a26256d6f7f24efcea30ff439dee7b7db}{cache\+\_\+hit\+\_\+rate}} = 0.\+8
+\item 
+bool \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_aaa8ec61864a3371e490bddda14032fef}{simulate\+\_\+slow\+\_\+disk}} = false
+\item 
+bool \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_a8c42d793da26fe866cfdf4c4bd682541}{enable\+\_\+call\+\_\+history}} = true
+\item 
+size\+\_\+t \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_ac7ee80b2f4a6005820a2734e9ffe0474}{max\+\_\+history\+\_\+size}} = 1000
+\item 
+std\+::string \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_a0d8eab0a3cb347e03471adc043079085}{temp\+\_\+directory\+\_\+prefix}} = "{}solar\+\_\+test\+\_\+cache\+\_\+"{}
+\item 
+bool \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_a1138a03fb3b9b65b4ba96d23fc4724a2}{auto\+\_\+cleanup}} = true
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Configuration for cache mock behavior. 
+
+\label{doc-variable-members}
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_a1138a03fb3b9b65b4ba96d23fc4724a2}\index{SolarSystem::Testing::Mocks::CacheMockConfig@{SolarSystem::Testing::Mocks::CacheMockConfig}!auto\_cleanup@{auto\_cleanup}}
+\index{auto\_cleanup@{auto\_cleanup}!SolarSystem::Testing::Mocks::CacheMockConfig@{SolarSystem::Testing::Mocks::CacheMockConfig}}
+\doxysubsubsection{\texorpdfstring{auto\_cleanup}{auto\_cleanup}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_a1138a03fb3b9b65b4ba96d23fc4724a2} 
+bool Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+Config\+::auto\+\_\+cleanup = true}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_aecdd91c3b33666d657ea53e5b170c6b1}\index{SolarSystem::Testing::Mocks::CacheMockConfig@{SolarSystem::Testing::Mocks::CacheMockConfig}!cache\_always\_corrupted@{cache\_always\_corrupted}}
+\index{cache\_always\_corrupted@{cache\_always\_corrupted}!SolarSystem::Testing::Mocks::CacheMockConfig@{SolarSystem::Testing::Mocks::CacheMockConfig}}
+\doxysubsubsection{\texorpdfstring{cache\_always\_corrupted}{cache\_always\_corrupted}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_aecdd91c3b33666d657ea53e5b170c6b1} 
+bool Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+Config\+::cache\+\_\+always\+\_\+corrupted = false}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_a1010667d387edb001eec51b976806b27}\index{SolarSystem::Testing::Mocks::CacheMockConfig@{SolarSystem::Testing::Mocks::CacheMockConfig}!cache\_always\_exists@{cache\_always\_exists}}
+\index{cache\_always\_exists@{cache\_always\_exists}!SolarSystem::Testing::Mocks::CacheMockConfig@{SolarSystem::Testing::Mocks::CacheMockConfig}}
+\doxysubsubsection{\texorpdfstring{cache\_always\_exists}{cache\_always\_exists}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_a1010667d387edb001eec51b976806b27} 
+bool Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+Config\+::cache\+\_\+always\+\_\+exists = false}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_ac0b1ff63795d674cf9b54380a547d5c5}\index{SolarSystem::Testing::Mocks::CacheMockConfig@{SolarSystem::Testing::Mocks::CacheMockConfig}!cache\_always\_invalid@{cache\_always\_invalid}}
+\index{cache\_always\_invalid@{cache\_always\_invalid}!SolarSystem::Testing::Mocks::CacheMockConfig@{SolarSystem::Testing::Mocks::CacheMockConfig}}
+\doxysubsubsection{\texorpdfstring{cache\_always\_invalid}{cache\_always\_invalid}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_ac0b1ff63795d674cf9b54380a547d5c5} 
+bool Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+Config\+::cache\+\_\+always\+\_\+invalid = false}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_a0dce48801ca1c1306b39b397adbb4cff}\index{SolarSystem::Testing::Mocks::CacheMockConfig@{SolarSystem::Testing::Mocks::CacheMockConfig}!cache\_always\_valid@{cache\_always\_valid}}
+\index{cache\_always\_valid@{cache\_always\_valid}!SolarSystem::Testing::Mocks::CacheMockConfig@{SolarSystem::Testing::Mocks::CacheMockConfig}}
+\doxysubsubsection{\texorpdfstring{cache\_always\_valid}{cache\_always\_valid}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_a0dce48801ca1c1306b39b397adbb4cff} 
+bool Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+Config\+::cache\+\_\+always\+\_\+valid = false}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_a26256d6f7f24efcea30ff439dee7b7db}\index{SolarSystem::Testing::Mocks::CacheMockConfig@{SolarSystem::Testing::Mocks::CacheMockConfig}!cache\_hit\_rate@{cache\_hit\_rate}}
+\index{cache\_hit\_rate@{cache\_hit\_rate}!SolarSystem::Testing::Mocks::CacheMockConfig@{SolarSystem::Testing::Mocks::CacheMockConfig}}
+\doxysubsubsection{\texorpdfstring{cache\_hit\_rate}{cache\_hit\_rate}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_a26256d6f7f24efcea30ff439dee7b7db} 
+double Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+Config\+::cache\+\_\+hit\+\_\+rate = 0.\+8}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_a8e78685072c297d5ea6e993fd98dae6f}\index{SolarSystem::Testing::Mocks::CacheMockConfig@{SolarSystem::Testing::Mocks::CacheMockConfig}!cache\_never\_exists@{cache\_never\_exists}}
+\index{cache\_never\_exists@{cache\_never\_exists}!SolarSystem::Testing::Mocks::CacheMockConfig@{SolarSystem::Testing::Mocks::CacheMockConfig}}
+\doxysubsubsection{\texorpdfstring{cache\_never\_exists}{cache\_never\_exists}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_a8e78685072c297d5ea6e993fd98dae6f} 
+bool Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+Config\+::cache\+\_\+never\+\_\+exists = false}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_a0013730bab1230e602f6112f175fe5fd}\index{SolarSystem::Testing::Mocks::CacheMockConfig@{SolarSystem::Testing::Mocks::CacheMockConfig}!corruption\_rate@{corruption\_rate}}
+\index{corruption\_rate@{corruption\_rate}!SolarSystem::Testing::Mocks::CacheMockConfig@{SolarSystem::Testing::Mocks::CacheMockConfig}}
+\doxysubsubsection{\texorpdfstring{corruption\_rate}{corruption\_rate}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_a0013730bab1230e602f6112f175fe5fd} 
+double Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+Config\+::corruption\+\_\+rate = 0.\+0}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_a4b90ddcafb01f4ddd35aab4cc9b748b8}\index{SolarSystem::Testing::Mocks::CacheMockConfig@{SolarSystem::Testing::Mocks::CacheMockConfig}!disk\_full\_rate@{disk\_full\_rate}}
+\index{disk\_full\_rate@{disk\_full\_rate}!SolarSystem::Testing::Mocks::CacheMockConfig@{SolarSystem::Testing::Mocks::CacheMockConfig}}
+\doxysubsubsection{\texorpdfstring{disk\_full\_rate}{disk\_full\_rate}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_a4b90ddcafb01f4ddd35aab4cc9b748b8} 
+double Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+Config\+::disk\+\_\+full\+\_\+rate = 0.\+0}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_a8c42d793da26fe866cfdf4c4bd682541}\index{SolarSystem::Testing::Mocks::CacheMockConfig@{SolarSystem::Testing::Mocks::CacheMockConfig}!enable\_call\_history@{enable\_call\_history}}
+\index{enable\_call\_history@{enable\_call\_history}!SolarSystem::Testing::Mocks::CacheMockConfig@{SolarSystem::Testing::Mocks::CacheMockConfig}}
+\doxysubsubsection{\texorpdfstring{enable\_call\_history}{enable\_call\_history}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_a8c42d793da26fe866cfdf4c4bd682541} 
+bool Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+Config\+::enable\+\_\+call\+\_\+history = true}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_a9261d8e4ca1a0527d0e7735282ddcb61}\index{SolarSystem::Testing::Mocks::CacheMockConfig@{SolarSystem::Testing::Mocks::CacheMockConfig}!io\_error\_rate@{io\_error\_rate}}
+\index{io\_error\_rate@{io\_error\_rate}!SolarSystem::Testing::Mocks::CacheMockConfig@{SolarSystem::Testing::Mocks::CacheMockConfig}}
+\doxysubsubsection{\texorpdfstring{io\_error\_rate}{io\_error\_rate}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_a9261d8e4ca1a0527d0e7735282ddcb61} 
+double Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+Config\+::io\+\_\+error\+\_\+rate = 0.\+0}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_a10fec487a73b008932642cf240a50c07}\index{SolarSystem::Testing::Mocks::CacheMockConfig@{SolarSystem::Testing::Mocks::CacheMockConfig}!max\_cache\_size@{max\_cache\_size}}
+\index{max\_cache\_size@{max\_cache\_size}!SolarSystem::Testing::Mocks::CacheMockConfig@{SolarSystem::Testing::Mocks::CacheMockConfig}}
+\doxysubsubsection{\texorpdfstring{max\_cache\_size}{max\_cache\_size}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_a10fec487a73b008932642cf240a50c07} 
+size\+\_\+t Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+Config\+::max\+\_\+cache\+\_\+size = 100 \texorpdfstring{$\ast$}{*} 1024 \texorpdfstring{$\ast$}{*} 1024}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_ac7ee80b2f4a6005820a2734e9ffe0474}\index{SolarSystem::Testing::Mocks::CacheMockConfig@{SolarSystem::Testing::Mocks::CacheMockConfig}!max\_history\_size@{max\_history\_size}}
+\index{max\_history\_size@{max\_history\_size}!SolarSystem::Testing::Mocks::CacheMockConfig@{SolarSystem::Testing::Mocks::CacheMockConfig}}
+\doxysubsubsection{\texorpdfstring{max\_history\_size}{max\_history\_size}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_ac7ee80b2f4a6005820a2734e9ffe0474} 
+size\+\_\+t Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+Config\+::max\+\_\+history\+\_\+size = 1000}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_ac0c870fdd1ed9dab65515e15bf73295d}\index{SolarSystem::Testing::Mocks::CacheMockConfig@{SolarSystem::Testing::Mocks::CacheMockConfig}!max\_operation\_delay@{max\_operation\_delay}}
+\index{max\_operation\_delay@{max\_operation\_delay}!SolarSystem::Testing::Mocks::CacheMockConfig@{SolarSystem::Testing::Mocks::CacheMockConfig}}
+\doxysubsubsection{\texorpdfstring{max\_operation\_delay}{max\_operation\_delay}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_ac0c870fdd1ed9dab65515e15bf73295d} 
+std\+::chrono\+::milliseconds Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+Config\+::max\+\_\+operation\+\_\+delay = std\+::chrono\+::milliseconds(50)}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_a5e56b50f6593ddf2c726d31e888ceb63}\index{SolarSystem::Testing::Mocks::CacheMockConfig@{SolarSystem::Testing::Mocks::CacheMockConfig}!min\_operation\_delay@{min\_operation\_delay}}
+\index{min\_operation\_delay@{min\_operation\_delay}!SolarSystem::Testing::Mocks::CacheMockConfig@{SolarSystem::Testing::Mocks::CacheMockConfig}}
+\doxysubsubsection{\texorpdfstring{min\_operation\_delay}{min\_operation\_delay}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_a5e56b50f6593ddf2c726d31e888ceb63} 
+std\+::chrono\+::milliseconds Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+Config\+::min\+\_\+operation\+\_\+delay = std\+::chrono\+::milliseconds(1)}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_ae8d248b48de6206d368c91acef12c611}\index{SolarSystem::Testing::Mocks::CacheMockConfig@{SolarSystem::Testing::Mocks::CacheMockConfig}!permission\_error\_rate@{permission\_error\_rate}}
+\index{permission\_error\_rate@{permission\_error\_rate}!SolarSystem::Testing::Mocks::CacheMockConfig@{SolarSystem::Testing::Mocks::CacheMockConfig}}
+\doxysubsubsection{\texorpdfstring{permission\_error\_rate}{permission\_error\_rate}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_ae8d248b48de6206d368c91acef12c611} 
+double Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+Config\+::permission\+\_\+error\+\_\+rate = 0.\+0}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_a682fd984dc3078b75517d8c82fdbef69}\index{SolarSystem::Testing::Mocks::CacheMockConfig@{SolarSystem::Testing::Mocks::CacheMockConfig}!simulate\_file\_operations@{simulate\_file\_operations}}
+\index{simulate\_file\_operations@{simulate\_file\_operations}!SolarSystem::Testing::Mocks::CacheMockConfig@{SolarSystem::Testing::Mocks::CacheMockConfig}}
+\doxysubsubsection{\texorpdfstring{simulate\_file\_operations}{simulate\_file\_operations}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_a682fd984dc3078b75517d8c82fdbef69} 
+bool Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+Config\+::simulate\+\_\+file\+\_\+operations = true}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_aaa8ec61864a3371e490bddda14032fef}\index{SolarSystem::Testing::Mocks::CacheMockConfig@{SolarSystem::Testing::Mocks::CacheMockConfig}!simulate\_slow\_disk@{simulate\_slow\_disk}}
+\index{simulate\_slow\_disk@{simulate\_slow\_disk}!SolarSystem::Testing::Mocks::CacheMockConfig@{SolarSystem::Testing::Mocks::CacheMockConfig}}
+\doxysubsubsection{\texorpdfstring{simulate\_slow\_disk}{simulate\_slow\_disk}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_aaa8ec61864a3371e490bddda14032fef} 
+bool Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+Config\+::simulate\+\_\+slow\+\_\+disk = false}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_a0d8eab0a3cb347e03471adc043079085}\index{SolarSystem::Testing::Mocks::CacheMockConfig@{SolarSystem::Testing::Mocks::CacheMockConfig}!temp\_directory\_prefix@{temp\_directory\_prefix}}
+\index{temp\_directory\_prefix@{temp\_directory\_prefix}!SolarSystem::Testing::Mocks::CacheMockConfig@{SolarSystem::Testing::Mocks::CacheMockConfig}}
+\doxysubsubsection{\texorpdfstring{temp\_directory\_prefix}{temp\_directory\_prefix}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_a0d8eab0a3cb347e03471adc043079085} 
+std\+::string Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+Config\+::temp\+\_\+directory\+\_\+prefix = "{}solar\+\_\+test\+\_\+cache\+\_\+"{}}
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+test/include/solar\+\_\+test/mocks/\mbox{\hyperlink{cache__mock_8hpp}{cache\+\_\+mock.\+hpp}}\end{DoxyCompactItemize}

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['🔬_0',['&lt;b&gt;Phase 1: Data Analysis &amp;amp; Scientific Computing (v4.0)&lt;/b&gt; 🔬',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md76',1,'']]]
+  ['🔍_20troubleshooting_0',['🔍 Troubleshooting',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md61',1,'']]]
 ];

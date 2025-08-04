@@ -1,0 +1,5 @@
+<map id="SolarSystem::Testing::Mocks::NetworkMock::simulate_high_latency" name="SolarSystem::Testing::Mocks::NetworkMock::simulate_high_latency">
+<area shape="rect" id="Node000001" title="Simulate high latency network." alt="" coords="5,5,164,61"/>
+<area shape="rect" id="Node000002" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock.html#a380f6663a15b1c8d9d48610697432139" title="Set network condition for all requests." alt="" coords="212,5,371,61"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="164,30,196,30,196,36,164,36"/>
+</map>

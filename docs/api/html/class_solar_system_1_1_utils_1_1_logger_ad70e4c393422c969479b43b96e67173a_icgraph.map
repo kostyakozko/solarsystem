@@ -1,0 +1,6 @@
+<map id="SolarSystem::Utils::Logger::instance" name="SolarSystem::Utils::Logger::instance">
+<area shape="rect" id="Node000001" title="Get the global logger instance." alt="" coords="103,29,234,70"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="190,16,182,10,168,8,156,10,148,14,145,20,146,28,141,29,140,20,144,11,154,5,168,3,184,5,193,12"/>
+<area shape="rect" id="Node000002" href="$fetch_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title="Modern main function using RAII and structured error handling." alt="" coords="5,37,55,62"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="87,52,55,52,55,47,87,47"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="SolarSystem::Testing::Mocks::TimeMock::sleep_ms" name="SolarSystem::Testing::Mocks::TimeMock::sleep_ms">
+<area shape="rect" id="Node000001" title="Mock millisecond sleep." alt="" coords="5,5,207,46"/>
+<area shape="rect" id="Node000002" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock.html#a9752b26ba9196c83900a7d20fa342b8d" title="Mock sleep for specified duration." alt="" coords="255,5,453,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="207,23,239,23,239,28,207,28"/>
+<area shape="rect" id="Node000003" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock.html#a0acae586e48d49c3982e439618bd3030" title="Advance time by specified duration." alt="" coords="501,5,727,46"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="453,23,485,23,485,28,453,28"/>
+</map>

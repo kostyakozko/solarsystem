@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['httprequest_0',['HttpRequest',['../struct_http_request.html',1,'']]],
-  ['httpresponse_1',['HttpResponse',['../struct_http_response.html',1,'']]]
+  ['failingtest_0',['FailingTest',['../class_failing_test.html',1,'']]],
+  ['fetchoptions_1',['FetchOptions',['../struct_fetch_options.html',1,'']]]
 ];

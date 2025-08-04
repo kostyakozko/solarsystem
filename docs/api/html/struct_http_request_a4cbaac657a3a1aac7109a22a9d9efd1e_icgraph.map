@@ -1,0 +1,9 @@
+<map id="HttpRequest::get_query_param" name="HttpRequest::get_query_param">
+<area shape="rect" id="Node000001" title="Get query parameter." alt="" coords="315,39,475,79"/>
+<area shape="rect" id="Node000002" href="$class_solar_system_a_p_i.html#ae62b5c5789c5e2880871005a9d244471" title="Handle simulation request." alt="" coords="103,5,267,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="299,47,267,41,268,36,300,41"/>
+<area shape="rect" id="Node000003" href="$class_solar_system_a_p_i.html#abe257a4d793daeece30ee45b2a4e5adb" title="Get solar system data." alt="" coords="103,71,267,111"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="300,76,268,81,267,76,299,71"/>
+<area shape="rect" id="Node000004" href="$web__server_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title="Modern main function with structured error handling." alt="" coords="5,78,55,104"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="87,94,55,94,55,88,87,88"/>
+</map>

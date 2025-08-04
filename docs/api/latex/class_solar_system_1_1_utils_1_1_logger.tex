@@ -1,0 +1,290 @@
+\doxysection{Solar\+System\+::Utils\+::Logger Class Reference}
+\hypertarget{class_solar_system_1_1_utils_1_1_logger}{}\label{class_solar_system_1_1_utils_1_1_logger}\index{SolarSystem::Utils::Logger@{SolarSystem::Utils::Logger}}
+
+
+Modern structured logging system.  
+
+
+
+
+{\ttfamily \#include $<$logging.\+hpp$>$}
+
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_solar_system_1_1_utils_1_1_logger_1_1_config}{Config}}
+\begin{DoxyCompactList}\small\item\em Configuration for logger behavior. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+enum class \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_logger_a88d51d420405aed281321aaad5903605}{Level}} \{ \newline
+\mbox{\hyperlink{class_solar_system_1_1_utils_1_1_logger_a88d51d420405aed281321aaad5903605adc30ec20708ef7b0f641ef78b7880a15}{DEBUG}} = 0
+, \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_logger_a88d51d420405aed281321aaad5903605a551b723eafd6a31d444fcb2f5920fbd3}{INFO}} = 1
+, \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_logger_a88d51d420405aed281321aaad5903605a32bd8a1db2275458673903bdb84cb277}{WARN}} = 2
+, \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_logger_a88d51d420405aed281321aaad5903605abb1ca97ec761fc37101737ba0aa2e7c5}{ERROR}} = 3
+, \newline
+\mbox{\hyperlink{class_solar_system_1_1_utils_1_1_logger_a88d51d420405aed281321aaad5903605a19da7170bea36556dde582519795f3fc}{FATAL}} = 4
+ \}
+\item 
+enum class \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_logger_a5c68493988ff87f2943126fa0d00ceb1}{Output}} \{ \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_logger_a5c68493988ff87f2943126fa0d00ceb1a4695859f52d337ca3d7020b2c8f7882a}{CONSOLE}}
+, \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_logger_a5c68493988ff87f2943126fa0d00ceb1a9fc5887c030f7a3e19821ebec457e719}{FILE}}
+, \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_logger_a5c68493988ff87f2943126fa0d00ceb1a6328e5e3186c227a021ef2ff77e40197}{BOTH}}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_logger_a93b328387d8eea8f854b85a23b3847f8}{configure}} (const \mbox{\hyperlink{struct_solar_system_1_1_utils_1_1_logger_1_1_config}{Config}} \&config)
+\begin{DoxyCompactList}\small\item\em Configure the logger. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_logger_ae6c61ba1be784a090d5308e027897b2f}{log}} (\mbox{\hyperlink{class_solar_system_1_1_utils_1_1_logger_a88d51d420405aed281321aaad5903605}{Level}} level, std\+::string\+\_\+view component, std\+::string\+\_\+view message)
+\begin{DoxyCompactList}\small\item\em Log a message at the specified level. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_logger_af4c162c2f3346533edfeb676056de529}{debug}} (std\+::string\+\_\+view component, std\+::string\+\_\+view message)
+\begin{DoxyCompactList}\small\item\em Convenience methods for different log levels. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_logger_a8c0b4f9878d474c4932fa8b1d79084d8}{info}} (std\+::string\+\_\+view component, std\+::string\+\_\+view message)
+\item 
+void \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_logger_ae093c94f5ccf00c929d58f69e19813d6}{warn}} (std\+::string\+\_\+view component, std\+::string\+\_\+view message)
+\item 
+void \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_logger_aa2f9d8c3278e6fb1e233aa81b10decf1}{error}} (std\+::string\+\_\+view component, std\+::string\+\_\+view message)
+\item 
+void \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_logger_af51fb2af34c476a5834165de7174824f}{fatal}} (std\+::string\+\_\+view component, std\+::string\+\_\+view message)
+\item 
+{\footnotesize template$<$typename... Args$>$ }\\void \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_logger_a6ec442bb4bba5f6095ce92dd6a4bdd9a}{log\+\_\+formatted}} (\mbox{\hyperlink{class_solar_system_1_1_utils_1_1_logger_a88d51d420405aed281321aaad5903605}{Level}} level, std\+::string\+\_\+view component, std\+::string\+\_\+view format, Args \&\&... args)
+\begin{DoxyCompactList}\small\item\em Template method for formatted logging. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename... Args$>$ }\\void \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_logger_a23187267e67cbfe24bb5fc8d9253273d}{log\+\_\+formatted}} (\mbox{\hyperlink{class_solar_system_1_1_utils_1_1_logger_a88d51d420405aed281321aaad5903605}{Level}} level, std\+::string\+\_\+view component, std\+::string\+\_\+view format, Args \&\&...)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_logger}{Logger}} \& \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_logger_ad70e4c393422c969479b43b96e67173a}{instance}} ()
+\begin{DoxyCompactList}\small\item\em Get the global logger instance. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Modern structured logging system. 
+
+Provides thread-\/safe, configurable logging with multiple output targets and structured formatting for better debugging and monitoring. 
+
+\label{doc-enum-members}
+\Hypertarget{class_solar_system_1_1_utils_1_1_logger_doc-enum-members}
+\doxysubsection{Member Enumeration Documentation}
+\Hypertarget{class_solar_system_1_1_utils_1_1_logger_a88d51d420405aed281321aaad5903605}\index{SolarSystem::Utils::Logger@{SolarSystem::Utils::Logger}!Level@{Level}}
+\index{Level@{Level}!SolarSystem::Utils::Logger@{SolarSystem::Utils::Logger}}
+\doxysubsubsection{\texorpdfstring{Level}{Level}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_utils_1_1_logger_a88d51d420405aed281321aaad5903605} 
+enum class \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_logger_a88d51d420405aed281321aaad5903605}{Solar\+System\+::\+Utils\+::\+Logger\+::\+Level}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+\begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{DEBUG@{DEBUG}!SolarSystem::Utils::Logger@{SolarSystem::Utils::Logger}}\index{SolarSystem::Utils::Logger@{SolarSystem::Utils::Logger}!DEBUG@{DEBUG}}}\Hypertarget{class_solar_system_1_1_utils_1_1_logger_a88d51d420405aed281321aaad5903605adc30ec20708ef7b0f641ef78b7880a15}\label{class_solar_system_1_1_utils_1_1_logger_a88d51d420405aed281321aaad5903605adc30ec20708ef7b0f641ef78b7880a15} 
+DEBUG&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{INFO@{INFO}!SolarSystem::Utils::Logger@{SolarSystem::Utils::Logger}}\index{SolarSystem::Utils::Logger@{SolarSystem::Utils::Logger}!INFO@{INFO}}}\Hypertarget{class_solar_system_1_1_utils_1_1_logger_a88d51d420405aed281321aaad5903605a551b723eafd6a31d444fcb2f5920fbd3}\label{class_solar_system_1_1_utils_1_1_logger_a88d51d420405aed281321aaad5903605a551b723eafd6a31d444fcb2f5920fbd3} 
+INFO&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{WARN@{WARN}!SolarSystem::Utils::Logger@{SolarSystem::Utils::Logger}}\index{SolarSystem::Utils::Logger@{SolarSystem::Utils::Logger}!WARN@{WARN}}}\Hypertarget{class_solar_system_1_1_utils_1_1_logger_a88d51d420405aed281321aaad5903605a32bd8a1db2275458673903bdb84cb277}\label{class_solar_system_1_1_utils_1_1_logger_a88d51d420405aed281321aaad5903605a32bd8a1db2275458673903bdb84cb277} 
+WARN&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ERROR@{ERROR}!SolarSystem::Utils::Logger@{SolarSystem::Utils::Logger}}\index{SolarSystem::Utils::Logger@{SolarSystem::Utils::Logger}!ERROR@{ERROR}}}\Hypertarget{class_solar_system_1_1_utils_1_1_logger_a88d51d420405aed281321aaad5903605abb1ca97ec761fc37101737ba0aa2e7c5}\label{class_solar_system_1_1_utils_1_1_logger_a88d51d420405aed281321aaad5903605abb1ca97ec761fc37101737ba0aa2e7c5} 
+ERROR&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FATAL@{FATAL}!SolarSystem::Utils::Logger@{SolarSystem::Utils::Logger}}\index{SolarSystem::Utils::Logger@{SolarSystem::Utils::Logger}!FATAL@{FATAL}}}\Hypertarget{class_solar_system_1_1_utils_1_1_logger_a88d51d420405aed281321aaad5903605a19da7170bea36556dde582519795f3fc}\label{class_solar_system_1_1_utils_1_1_logger_a88d51d420405aed281321aaad5903605a19da7170bea36556dde582519795f3fc} 
+FATAL&\\
+\hline
+
+\end{DoxyEnumFields}
+\Hypertarget{class_solar_system_1_1_utils_1_1_logger_a5c68493988ff87f2943126fa0d00ceb1}\index{SolarSystem::Utils::Logger@{SolarSystem::Utils::Logger}!Output@{Output}}
+\index{Output@{Output}!SolarSystem::Utils::Logger@{SolarSystem::Utils::Logger}}
+\doxysubsubsection{\texorpdfstring{Output}{Output}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_utils_1_1_logger_a5c68493988ff87f2943126fa0d00ceb1} 
+enum class \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_logger_a5c68493988ff87f2943126fa0d00ceb1}{Solar\+System\+::\+Utils\+::\+Logger\+::\+Output}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+\begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CONSOLE@{CONSOLE}!SolarSystem::Utils::Logger@{SolarSystem::Utils::Logger}}\index{SolarSystem::Utils::Logger@{SolarSystem::Utils::Logger}!CONSOLE@{CONSOLE}}}\Hypertarget{class_solar_system_1_1_utils_1_1_logger_a5c68493988ff87f2943126fa0d00ceb1a4695859f52d337ca3d7020b2c8f7882a}\label{class_solar_system_1_1_utils_1_1_logger_a5c68493988ff87f2943126fa0d00ceb1a4695859f52d337ca3d7020b2c8f7882a} 
+CONSOLE&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FILE@{FILE}!SolarSystem::Utils::Logger@{SolarSystem::Utils::Logger}}\index{SolarSystem::Utils::Logger@{SolarSystem::Utils::Logger}!FILE@{FILE}}}\Hypertarget{class_solar_system_1_1_utils_1_1_logger_a5c68493988ff87f2943126fa0d00ceb1a9fc5887c030f7a3e19821ebec457e719}\label{class_solar_system_1_1_utils_1_1_logger_a5c68493988ff87f2943126fa0d00ceb1a9fc5887c030f7a3e19821ebec457e719} 
+FILE&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{BOTH@{BOTH}!SolarSystem::Utils::Logger@{SolarSystem::Utils::Logger}}\index{SolarSystem::Utils::Logger@{SolarSystem::Utils::Logger}!BOTH@{BOTH}}}\Hypertarget{class_solar_system_1_1_utils_1_1_logger_a5c68493988ff87f2943126fa0d00ceb1a6328e5e3186c227a021ef2ff77e40197}\label{class_solar_system_1_1_utils_1_1_logger_a5c68493988ff87f2943126fa0d00ceb1a6328e5e3186c227a021ef2ff77e40197} 
+BOTH&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\label{doc-func-members}
+\Hypertarget{class_solar_system_1_1_utils_1_1_logger_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_solar_system_1_1_utils_1_1_logger_a93b328387d8eea8f854b85a23b3847f8}\index{SolarSystem::Utils::Logger@{SolarSystem::Utils::Logger}!configure@{configure}}
+\index{configure@{configure}!SolarSystem::Utils::Logger@{SolarSystem::Utils::Logger}}
+\doxysubsubsection{\texorpdfstring{configure()}{configure()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_utils_1_1_logger_a93b328387d8eea8f854b85a23b3847f8} 
+void Solar\+System\+::\+Utils\+::\+Logger\+::configure (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_solar_system_1_1_utils_1_1_logger_1_1_config}{Config}} \&}]{config}{}\end{DoxyParamCaption})}
+
+
+
+Configure the logger. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=252pt]{class_solar_system_1_1_utils_1_1_logger_a93b328387d8eea8f854b85a23b3847f8_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_utils_1_1_logger_af4c162c2f3346533edfeb676056de529}\index{SolarSystem::Utils::Logger@{SolarSystem::Utils::Logger}!debug@{debug}}
+\index{debug@{debug}!SolarSystem::Utils::Logger@{SolarSystem::Utils::Logger}}
+\doxysubsubsection{\texorpdfstring{debug()}{debug()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_utils_1_1_logger_af4c162c2f3346533edfeb676056de529} 
+void Solar\+System\+::\+Utils\+::\+Logger\+::debug (\begin{DoxyParamCaption}\item[{std\+::string\+\_\+view}]{component}{, }\item[{std\+::string\+\_\+view}]{message}{}\end{DoxyParamCaption})}
+
+
+
+Convenience methods for different log levels. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=313pt]{class_solar_system_1_1_utils_1_1_logger_af4c162c2f3346533edfeb676056de529_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_utils_1_1_logger_aa2f9d8c3278e6fb1e233aa81b10decf1}\index{SolarSystem::Utils::Logger@{SolarSystem::Utils::Logger}!error@{error}}
+\index{error@{error}!SolarSystem::Utils::Logger@{SolarSystem::Utils::Logger}}
+\doxysubsubsection{\texorpdfstring{error()}{error()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_utils_1_1_logger_aa2f9d8c3278e6fb1e233aa81b10decf1} 
+void Solar\+System\+::\+Utils\+::\+Logger\+::error (\begin{DoxyParamCaption}\item[{std\+::string\+\_\+view}]{component}{, }\item[{std\+::string\+\_\+view}]{message}{}\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=313pt]{class_solar_system_1_1_utils_1_1_logger_aa2f9d8c3278e6fb1e233aa81b10decf1_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_utils_1_1_logger_af51fb2af34c476a5834165de7174824f}\index{SolarSystem::Utils::Logger@{SolarSystem::Utils::Logger}!fatal@{fatal}}
+\index{fatal@{fatal}!SolarSystem::Utils::Logger@{SolarSystem::Utils::Logger}}
+\doxysubsubsection{\texorpdfstring{fatal()}{fatal()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_utils_1_1_logger_af51fb2af34c476a5834165de7174824f} 
+void Solar\+System\+::\+Utils\+::\+Logger\+::fatal (\begin{DoxyParamCaption}\item[{std\+::string\+\_\+view}]{component}{, }\item[{std\+::string\+\_\+view}]{message}{}\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=313pt]{class_solar_system_1_1_utils_1_1_logger_af51fb2af34c476a5834165de7174824f_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_utils_1_1_logger_a8c0b4f9878d474c4932fa8b1d79084d8}\index{SolarSystem::Utils::Logger@{SolarSystem::Utils::Logger}!info@{info}}
+\index{info@{info}!SolarSystem::Utils::Logger@{SolarSystem::Utils::Logger}}
+\doxysubsubsection{\texorpdfstring{info()}{info()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_utils_1_1_logger_a8c0b4f9878d474c4932fa8b1d79084d8} 
+void Solar\+System\+::\+Utils\+::\+Logger\+::info (\begin{DoxyParamCaption}\item[{std\+::string\+\_\+view}]{component}{, }\item[{std\+::string\+\_\+view}]{message}{}\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=313pt]{class_solar_system_1_1_utils_1_1_logger_a8c0b4f9878d474c4932fa8b1d79084d8_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_utils_1_1_logger_ad70e4c393422c969479b43b96e67173a}\index{SolarSystem::Utils::Logger@{SolarSystem::Utils::Logger}!instance@{instance}}
+\index{instance@{instance}!SolarSystem::Utils::Logger@{SolarSystem::Utils::Logger}}
+\doxysubsubsection{\texorpdfstring{instance()}{instance()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_utils_1_1_logger_ad70e4c393422c969479b43b96e67173a} 
+\mbox{\hyperlink{class_solar_system_1_1_utils_1_1_logger}{Logger}} \& Solar\+System\+::\+Utils\+::\+Logger\+::instance (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Get the global logger instance. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=179pt]{class_solar_system_1_1_utils_1_1_logger_ad70e4c393422c969479b43b96e67173a_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=252pt]{class_solar_system_1_1_utils_1_1_logger_ad70e4c393422c969479b43b96e67173a_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_utils_1_1_logger_ae6c61ba1be784a090d5308e027897b2f}\index{SolarSystem::Utils::Logger@{SolarSystem::Utils::Logger}!log@{log}}
+\index{log@{log}!SolarSystem::Utils::Logger@{SolarSystem::Utils::Logger}}
+\doxysubsubsection{\texorpdfstring{log()}{log()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_utils_1_1_logger_ae6c61ba1be784a090d5308e027897b2f} 
+void Solar\+System\+::\+Utils\+::\+Logger\+::log (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_solar_system_1_1_utils_1_1_logger_a88d51d420405aed281321aaad5903605}{Level}}}]{level}{, }\item[{std\+::string\+\_\+view}]{component}{, }\item[{std\+::string\+\_\+view}]{message}{}\end{DoxyParamCaption})}
+
+
+
+Log a message at the specified level. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=331pt]{class_solar_system_1_1_utils_1_1_logger_ae6c61ba1be784a090d5308e027897b2f_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_utils_1_1_logger_a6ec442bb4bba5f6095ce92dd6a4bdd9a}\index{SolarSystem::Utils::Logger@{SolarSystem::Utils::Logger}!log\_formatted@{log\_formatted}}
+\index{log\_formatted@{log\_formatted}!SolarSystem::Utils::Logger@{SolarSystem::Utils::Logger}}
+\doxysubsubsection{\texorpdfstring{log\_formatted()}{log\_formatted()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_utils_1_1_logger_a6ec442bb4bba5f6095ce92dd6a4bdd9a} 
+template$<$typename... Args$>$ \\
+void Solar\+System\+::\+Utils\+::\+Logger\+::log\+\_\+formatted (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_solar_system_1_1_utils_1_1_logger_a88d51d420405aed281321aaad5903605}{Level}}}]{level}{, }\item[{std\+::string\+\_\+view}]{component}{, }\item[{std\+::string\+\_\+view}]{format}{, }\item[{Args \&\&...}]{args}{}\end{DoxyParamCaption})}
+
+
+
+Template method for formatted logging. 
+
+\Hypertarget{class_solar_system_1_1_utils_1_1_logger_a23187267e67cbfe24bb5fc8d9253273d}\index{SolarSystem::Utils::Logger@{SolarSystem::Utils::Logger}!log\_formatted@{log\_formatted}}
+\index{log\_formatted@{log\_formatted}!SolarSystem::Utils::Logger@{SolarSystem::Utils::Logger}}
+\doxysubsubsection{\texorpdfstring{log\_formatted()}{log\_formatted()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_utils_1_1_logger_a23187267e67cbfe24bb5fc8d9253273d} 
+template$<$typename... Args$>$ \\
+void Solar\+System\+::\+Utils\+::\+Logger\+::log\+\_\+formatted (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_solar_system_1_1_utils_1_1_logger_a88d51d420405aed281321aaad5903605}{Level}}}]{level}{, }\item[{std\+::string\+\_\+view}]{component}{, }\item[{std\+::string\+\_\+view}]{format}{, }\item[{Args \&\&}]{...}{}\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=331pt]{class_solar_system_1_1_utils_1_1_logger_a23187267e67cbfe24bb5fc8d9253273d_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_utils_1_1_logger_ae093c94f5ccf00c929d58f69e19813d6}\index{SolarSystem::Utils::Logger@{SolarSystem::Utils::Logger}!warn@{warn}}
+\index{warn@{warn}!SolarSystem::Utils::Logger@{SolarSystem::Utils::Logger}}
+\doxysubsubsection{\texorpdfstring{warn()}{warn()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_utils_1_1_logger_ae093c94f5ccf00c929d58f69e19813d6} 
+void Solar\+System\+::\+Utils\+::\+Logger\+::warn (\begin{DoxyParamCaption}\item[{std\+::string\+\_\+view}]{component}{, }\item[{std\+::string\+\_\+view}]{message}{}\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=313pt]{class_solar_system_1_1_utils_1_1_logger_ae093c94f5ccf00c929d58f69e19813d6_cgraph}
+\end{center}
+\end{figure}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+utils/include/solar\+\_\+utils/\mbox{\hyperlink{logging_8hpp}{logging.\+hpp}}\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+utils/src/\mbox{\hyperlink{logging_8cpp}{logging.\+cpp}}\end{DoxyCompactItemize}

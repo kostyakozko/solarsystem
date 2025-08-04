@@ -1,0 +1,1015 @@
+\doxysection{Solar\+System\+::Testing\+::Mocks\+::Time\+Mock Class Reference}
+\hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock}{}\label{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock}\index{SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}}
+
+
+Time Mock Implementation.  
+
+
+
+
+{\ttfamily \#include $<$time\+\_\+mock.\+hpp$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a86e935365ba7b638f668ceda24743bd5}{Time\+Mock}} (\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config}{Time\+Mock\+Config}} \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_ad183076b9f8ff58cc5f38d7af3ed058f}{config}}=\{\})
+\begin{DoxyCompactList}\small\item\em Construct time mock with configuration. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_aeda7376266a2609ea37c633d5b538de4}{\texorpdfstring{$\sim$}{\string~}\+Time\+Mock}} ()
+\begin{DoxyCompactList}\small\item\em Destructor. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a5824b8c0b5277143cc0757176d0bea1b}{Time\+Mock}} (const \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock}{Time\+Mock}} \&)=delete
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock}{Time\+Mock}} \& \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a816b30d5f2894e7c5e2b1931495a4b60}{operator=}} (const \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock}{Time\+Mock}} \&)=delete
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_af353329b574b2901729a486c223452a8}{Time\+Mock}} (\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock}{Time\+Mock}} \&\&)=delete
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock}{Time\+Mock}} \& \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a16fef7ce8e204673fe4f6c61a3bf2630}{operator=}} (\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock}{Time\+Mock}} \&\&)=delete
+\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_af33440b670ac3c3d8017398bc12c8036}{set\+\_\+time}} (std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point time)
+\begin{DoxyCompactList}\small\item\em Set the current mock time. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a0acae586e48d49c3982e439618bd3030}{advance\+\_\+time}} (std\+::chrono\+::duration$<$ double $>$ duration)
+\begin{DoxyCompactList}\small\item\em Advance time by specified duration. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a812d9419e730f725e98d284edf75e564}{advance\+\_\+time\+\_\+ms}} (int64\+\_\+t milliseconds)
+\begin{DoxyCompactList}\small\item\em Advance time by milliseconds. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a89cce77e3c21a917fb7eaecd28fd2613}{advance\+\_\+time\+\_\+s}} (double seconds)
+\begin{DoxyCompactList}\small\item\em Advance time by seconds. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a8bc56de2ce899c207b8afa6bb6b3f0f0}{advance\+\_\+time\+\_\+min}} (double minutes)
+\begin{DoxyCompactList}\small\item\em Advance time by minutes. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a1061b966218936d47feb3d56055e4d29}{advance\+\_\+time\+\_\+h}} (double hours)
+\begin{DoxyCompactList}\small\item\em Advance time by hours. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a18633f1300a6104df4d4fbbc31a33d8f}{advance\+\_\+time\+\_\+days}} (double days)
+\begin{DoxyCompactList}\small\item\em Advance time by days. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a3212b2f57525f60e2144a130b8d10a4a}{freeze\+\_\+time}} ()
+\begin{DoxyCompactList}\small\item\em Freeze time at current value. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_aa71eae6e093a9317e4e67572b51be4a4}{unfreeze\+\_\+time}} ()
+\begin{DoxyCompactList}\small\item\em Unfreeze time and resume normal flow. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a1974ccc45623ca35407379607e3c73da}{is\+\_\+time\+\_\+frozen}} () const
+\begin{DoxyCompactList}\small\item\em Check if time is currently frozen. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_af9d6467e47adfac2f74095c8c6b1b23f}{set\+\_\+time\+\_\+scale}} (double scale)
+\begin{DoxyCompactList}\small\item\em Set time scale (1.\+0 = normal, 2.\+0 = 2x speed, 0.\+5 = half speed) \end{DoxyCompactList}\item 
+double \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a2b7980977f369899c5e7ac166cf525a8}{get\+\_\+time\+\_\+scale}} () const
+\begin{DoxyCompactList}\small\item\em Get current time scale. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a8e1a301d69a267ce05c4de2df4b5c38f}{reset\+\_\+to\+\_\+system\+\_\+time}} ()
+\begin{DoxyCompactList}\small\item\em Reset time to system time and normal flow. \end{DoxyCompactList}\item 
+std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_aae726ffc5b25d10cdcf232ea25dff40d}{now}} () const
+\begin{DoxyCompactList}\small\item\em Get current mock time. \end{DoxyCompactList}\item 
+std\+::time\+\_\+t \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_afcfdac59293e0ab37fa1e192d4793bda}{now\+\_\+time\+\_\+t}} () const
+\begin{DoxyCompactList}\small\item\em Get current mock time as time\+\_\+t. \end{DoxyCompactList}\item 
+int64\+\_\+t \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_adfda91994da37296328e7cc791466183}{now\+\_\+ms}} () const
+\begin{DoxyCompactList}\small\item\em Get current mock time in milliseconds since epoch. \end{DoxyCompactList}\item 
+double \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a1d98389bdca2082a1b17aea0abde9360}{now\+\_\+seconds}} () const
+\begin{DoxyCompactList}\small\item\em Get current mock time in seconds since epoch. \end{DoxyCompactList}\item 
+std\+::chrono\+::steady\+\_\+clock\+::time\+\_\+point \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a9bebe2420639c08a4c82de0921fa0027}{steady\+\_\+now}} () const
+\begin{DoxyCompactList}\small\item\em Get steady clock time (for duration measurements) \end{DoxyCompactList}\item 
+std\+::chrono\+::high\+\_\+resolution\+\_\+clock\+::time\+\_\+point \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a6cd275da6ded649ab332cfbed4553161}{high\+\_\+res\+\_\+now}} () const
+\begin{DoxyCompactList}\small\item\em Get high resolution clock time. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a9752b26ba9196c83900a7d20fa342b8d}{sleep\+\_\+for}} (std\+::chrono\+::duration$<$ double $>$ duration)
+\begin{DoxyCompactList}\small\item\em Mock sleep for specified duration. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_adad60f1f26a955a8630dd9f03f78fb43}{sleep\+\_\+until}} (std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point time\+\_\+point)
+\begin{DoxyCompactList}\small\item\em Mock sleep until specified time point. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a41be962d5629522e30c99ff422ed9ab8}{nanosleep}} (std\+::chrono\+::nanoseconds duration)
+\begin{DoxyCompactList}\small\item\em Mock nanosleep. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a0cb3bcbcb9de09ce445dc5a1d624e1be}{usleep}} (std\+::chrono\+::microseconds duration)
+\begin{DoxyCompactList}\small\item\em Mock usleep (microseconds) \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a2e3902342f5be110b63bd3b3b3a8de07}{sleep\+\_\+ms}} (int64\+\_\+t milliseconds)
+\begin{DoxyCompactList}\small\item\em Mock millisecond sleep. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a325a50a6f063af2d4b06d98d7018ab5e}{sleep\+\_\+s}} (double seconds)
+\begin{DoxyCompactList}\small\item\em Mock second sleep. \end{DoxyCompactList}\item 
+std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a5c7d59c769644a1daffada2ea9846645}{to\+\_\+timezone}} (std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point time, const std\+::string \&timezone) const
+\begin{DoxyCompactList}\small\item\em Convert time to specified time zone. \end{DoxyCompactList}\item 
+std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a2b7810272e35cf01b80085ef41db1af0}{from\+\_\+timezone}} (std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point time, const std\+::string \&timezone) const
+\begin{DoxyCompactList}\small\item\em Convert time from specified time zone to UTC. \end{DoxyCompactList}\item 
+std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_ac5a1c88a768cd24b204cba48cecd0bc5}{now\+\_\+in\+\_\+timezone}} (const std\+::string \&timezone) const
+\begin{DoxyCompactList}\small\item\em Get current time in specified time zone. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_af28904aa406ef72a16b71fb54af1310a}{set\+\_\+default\+\_\+timezone}} (const std\+::string \&timezone)
+\begin{DoxyCompactList}\small\item\em Set default time zone. \end{DoxyCompactList}\item 
+const std\+::string \& \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a90344829280c02df0606a365f4e853d2}{get\+\_\+default\+\_\+timezone}} () const
+\begin{DoxyCompactList}\small\item\em Get default time zone. \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_af46bc2e49fcc616c40fdd3d996f1469d}{format\+\_\+iso8601}} (std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point time) const
+\begin{DoxyCompactList}\small\item\em Format time as ISO 8601 string. \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a393c291e4f0e6abf911502662bf6dc10}{format\+\_\+time}} (std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point time, const std\+::string \&format) const
+\begin{DoxyCompactList}\small\item\em Format time with custom format string. \end{DoxyCompactList}\item 
+std\+::optional$<$ std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point $>$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a4fd29ea01a94bdd125360ad37a834a60}{parse\+\_\+iso8601}} (const std\+::string \&time\+\_\+str) const
+\begin{DoxyCompactList}\small\item\em Parse ISO 8601 time string. \end{DoxyCompactList}\item 
+std\+::optional$<$ std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point $>$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a93e6a1d0639dda731a39511ee1dcb382}{parse\+\_\+time}} (const std\+::string \&time\+\_\+str, const std\+::string \&format) const
+\begin{DoxyCompactList}\small\item\em Parse time string with custom format. \end{DoxyCompactList}\item 
+double \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_aab9a3761e72167f1e0ca1473139e373a}{to\+\_\+julian\+\_\+date}} (std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point time) const
+\begin{DoxyCompactList}\small\item\em Convert to Julian Date. \end{DoxyCompactList}\item 
+std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a54a7cb6914499f5d8ca841d42e982865}{from\+\_\+julian\+\_\+date}} (double jd) const
+\begin{DoxyCompactList}\small\item\em Convert from Julian Date. \end{DoxyCompactList}\item 
+double \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a9acc1839d98bb2cfba9a63df911f8860}{to\+\_\+modified\+\_\+julian\+\_\+date}} (std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point time) const
+\begin{DoxyCompactList}\small\item\em Convert to Modified Julian Date. \end{DoxyCompactList}\item 
+std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_ab0012cd5c6c6b06c2470f738495a7f2f}{from\+\_\+modified\+\_\+julian\+\_\+date}} (double mjd) const
+\begin{DoxyCompactList}\small\item\em Convert from Modified Julian Date. \end{DoxyCompactList}\item 
+double \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_aea9bb06a4fe241be7dafd5ff47b54f43}{get\+\_\+sidereal\+\_\+time}} (std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point time, double longitude\+\_\+deg) const
+\begin{DoxyCompactList}\small\item\em Get sidereal time for given location. \end{DoxyCompactList}\item 
+size\+\_\+t \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a15626d9f56f75edd7909d34d5580238a}{operation\+\_\+count}} () const
+\begin{DoxyCompactList}\small\item\em Get total number of time operations. \end{DoxyCompactList}\item 
+size\+\_\+t \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a3cdfae83fa53afb8a7fd38835bec4b05}{operation\+\_\+count}} (\mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a7f069575516b6cd3bfe25c49fd5137f9}{Mock\+Time\+Operation\+Type}} type) const
+\begin{DoxyCompactList}\small\item\em Get number of operations by type. \end{DoxyCompactList}\item 
+const std\+::vector$<$ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_mock_time_call_info}{Mock\+Time\+Call\+Info}} $>$ \& \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a14e17cb0fe12a4a5e598e8059c4c45ee}{operation\+\_\+history}} () const
+\begin{DoxyCompactList}\small\item\em Get complete operation history. \end{DoxyCompactList}\item 
+std\+::vector$<$ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_mock_time_call_info}{Mock\+Time\+Call\+Info}} $>$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a4260bf9025cd09f04c0b0bf4019c5df2}{operations\+\_\+of\+\_\+type}} (\mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a7f069575516b6cd3bfe25c49fd5137f9}{Mock\+Time\+Operation\+Type}} type) const
+\begin{DoxyCompactList}\small\item\em Get operations of specific type. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a187637c54f58d3fde59e77a7004b254e}{was\+\_\+time\+\_\+requested}} (std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point time) const
+\begin{DoxyCompactList}\small\item\em Check if specific time was requested. \end{DoxyCompactList}\item 
+std\+::chrono\+::duration$<$ double $>$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a9bb4674bb36fba8a321a264547464f43}{total\+\_\+sleep\+\_\+duration}} () const
+\begin{DoxyCompactList}\small\item\em Get total sleep duration requested. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a907308a2466ce02df1fc241cd971589b}{reset\+\_\+call\+\_\+history}} ()
+\begin{DoxyCompactList}\small\item\em Reset call history and counters. \end{DoxyCompactList}\item 
+const \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config}{Time\+Mock\+Config}} \& \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_ad183076b9f8ff58cc5f38d7af3ed058f}{config}} () const noexcept
+\begin{DoxyCompactList}\small\item\em Get current configuration. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a55ba4a58827369aa5e00825d9c78473f}{update\+\_\+config}} (const \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config}{Time\+Mock\+Config}} \&new\+\_\+config)
+\begin{DoxyCompactList}\small\item\em Update configuration. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_abdefddac19662c8aa3491b005e93de74}{install\+\_\+as\+\_\+global\+\_\+mock}} ()
+\begin{DoxyCompactList}\small\item\em Install this mock as global time mock. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a6fb6ccc00dbde9704c2df830610e4dc9}{create\+\_\+test\+\_\+scenario}} (const std\+::string \&scenario\+\_\+name, std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point start\+\_\+time, std\+::chrono\+::duration$<$ double $>$ duration, double time\+\_\+scale=1.\+0)
+\begin{DoxyCompactList}\small\item\em Create time-\/dependent test scenario. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename Func$>$ }\\auto \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a4e3426a96256273416236633b5874d8f}{execute\+\_\+with\+\_\+time\+\_\+control}} (std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point start\+\_\+time, double time\+\_\+scale, Func \&\&func) -\/$>$ decltype(func())
+\begin{DoxyCompactList}\small\item\em Execute function with time control. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a93b2b6f6c40fdf793457088353c5f60c}{remove\+\_\+global\+\_\+mock}} ()
+\begin{DoxyCompactList}\small\item\em Remove global mock installation. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Time Mock Implementation. 
+
+Provides comprehensive mocking of time operations for testing purposes. Allows complete control over time flow, enabling deterministic testing of time-\/dependent functionality. 
+
+\label{doc-constructors}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a86e935365ba7b638f668ceda24743bd5}\index{SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}!TimeMock@{TimeMock}}
+\index{TimeMock@{TimeMock}!SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}}
+\doxysubsubsection{\texorpdfstring{TimeMock()}{TimeMock()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a86e935365ba7b638f668ceda24743bd5} 
+Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+::\+Time\+Mock (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config}{Time\+Mock\+Config}}}]{config}{ = {\ttfamily \{\}}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+
+
+Construct time mock with configuration. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a86e935365ba7b638f668ceda24743bd5_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a86e935365ba7b638f668ceda24743bd5_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_aeda7376266a2609ea37c633d5b538de4}\index{SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}!````~TimeMock@{\texorpdfstring{$\sim$}{\string~}TimeMock}}
+\index{````~TimeMock@{\texorpdfstring{$\sim$}{\string~}TimeMock}!SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}TimeMock()}{\string~TimeMock()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_aeda7376266a2609ea37c633d5b538de4} 
+Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+::\texorpdfstring{$\sim$}{\string~}\+Time\+Mock (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Destructor. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a5824b8c0b5277143cc0757176d0bea1b}\index{SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}!TimeMock@{TimeMock}}
+\index{TimeMock@{TimeMock}!SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}}
+\doxysubsubsection{\texorpdfstring{TimeMock()}{TimeMock()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a5824b8c0b5277143cc0757176d0bea1b} 
+Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+::\+Time\+Mock (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock}{Time\+Mock}} \&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a5824b8c0b5277143cc0757176d0bea1b_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_af353329b574b2901729a486c223452a8}\index{SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}!TimeMock@{TimeMock}}
+\index{TimeMock@{TimeMock}!SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}}
+\doxysubsubsection{\texorpdfstring{TimeMock()}{TimeMock()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_af353329b574b2901729a486c223452a8} 
+Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+::\+Time\+Mock (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock}{Time\+Mock}} \&\&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_af353329b574b2901729a486c223452a8_cgraph}
+\end{center}
+\end{figure}
+
+
+\label{doc-func-members}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a0acae586e48d49c3982e439618bd3030}\index{SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}!advance\_time@{advance\_time}}
+\index{advance\_time@{advance\_time}!SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}}
+\doxysubsubsection{\texorpdfstring{advance\_time()}{advance\_time()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a0acae586e48d49c3982e439618bd3030} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+::advance\+\_\+time (\begin{DoxyParamCaption}\item[{std\+::chrono\+::duration$<$ double $>$}]{duration}{}\end{DoxyParamCaption})}
+
+
+
+Advance time by specified duration. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a0acae586e48d49c3982e439618bd3030_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a18633f1300a6104df4d4fbbc31a33d8f}\index{SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}!advance\_time\_days@{advance\_time\_days}}
+\index{advance\_time\_days@{advance\_time\_days}!SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}}
+\doxysubsubsection{\texorpdfstring{advance\_time\_days()}{advance\_time\_days()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a18633f1300a6104df4d4fbbc31a33d8f} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+::advance\+\_\+time\+\_\+days (\begin{DoxyParamCaption}\item[{double}]{days}{}\end{DoxyParamCaption})}
+
+
+
+Advance time by days. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a18633f1300a6104df4d4fbbc31a33d8f_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a1061b966218936d47feb3d56055e4d29}\index{SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}!advance\_time\_h@{advance\_time\_h}}
+\index{advance\_time\_h@{advance\_time\_h}!SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}}
+\doxysubsubsection{\texorpdfstring{advance\_time\_h()}{advance\_time\_h()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a1061b966218936d47feb3d56055e4d29} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+::advance\+\_\+time\+\_\+h (\begin{DoxyParamCaption}\item[{double}]{hours}{}\end{DoxyParamCaption})}
+
+
+
+Advance time by hours. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a1061b966218936d47feb3d56055e4d29_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a8bc56de2ce899c207b8afa6bb6b3f0f0}\index{SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}!advance\_time\_min@{advance\_time\_min}}
+\index{advance\_time\_min@{advance\_time\_min}!SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}}
+\doxysubsubsection{\texorpdfstring{advance\_time\_min()}{advance\_time\_min()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a8bc56de2ce899c207b8afa6bb6b3f0f0} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+::advance\+\_\+time\+\_\+min (\begin{DoxyParamCaption}\item[{double}]{minutes}{}\end{DoxyParamCaption})}
+
+
+
+Advance time by minutes. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a8bc56de2ce899c207b8afa6bb6b3f0f0_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a812d9419e730f725e98d284edf75e564}\index{SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}!advance\_time\_ms@{advance\_time\_ms}}
+\index{advance\_time\_ms@{advance\_time\_ms}!SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}}
+\doxysubsubsection{\texorpdfstring{advance\_time\_ms()}{advance\_time\_ms()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a812d9419e730f725e98d284edf75e564} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+::advance\+\_\+time\+\_\+ms (\begin{DoxyParamCaption}\item[{int64\+\_\+t}]{milliseconds}{}\end{DoxyParamCaption})}
+
+
+
+Advance time by milliseconds. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a812d9419e730f725e98d284edf75e564_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a89cce77e3c21a917fb7eaecd28fd2613}\index{SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}!advance\_time\_s@{advance\_time\_s}}
+\index{advance\_time\_s@{advance\_time\_s}!SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}}
+\doxysubsubsection{\texorpdfstring{advance\_time\_s()}{advance\_time\_s()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a89cce77e3c21a917fb7eaecd28fd2613} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+::advance\+\_\+time\+\_\+s (\begin{DoxyParamCaption}\item[{double}]{seconds}{}\end{DoxyParamCaption})}
+
+
+
+Advance time by seconds. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a89cce77e3c21a917fb7eaecd28fd2613_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_ad183076b9f8ff58cc5f38d7af3ed058f}\index{SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}!config@{config}}
+\index{config@{config}!SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}}
+\doxysubsubsection{\texorpdfstring{config()}{config()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_ad183076b9f8ff58cc5f38d7af3ed058f} 
+const \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config}{Time\+Mock\+Config}} \& Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+::config (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}, {\ttfamily [noexcept]}}
+
+
+
+Get current configuration. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_ad183076b9f8ff58cc5f38d7af3ed058f_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a6fb6ccc00dbde9704c2df830610e4dc9}\index{SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}!create\_test\_scenario@{create\_test\_scenario}}
+\index{create\_test\_scenario@{create\_test\_scenario}!SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}}
+\doxysubsubsection{\texorpdfstring{create\_test\_scenario()}{create\_test\_scenario()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a6fb6ccc00dbde9704c2df830610e4dc9} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+::create\+\_\+test\+\_\+scenario (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{scenario\+\_\+name}{, }\item[{std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point}]{start\+\_\+time}{, }\item[{std\+::chrono\+::duration$<$ double $>$}]{duration}{, }\item[{double}]{time\+\_\+scale}{ = {\ttfamily 1.0}}\end{DoxyParamCaption})}
+
+
+
+Create time-\/dependent test scenario. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a6fb6ccc00dbde9704c2df830610e4dc9_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a4e3426a96256273416236633b5874d8f}\index{SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}!execute\_with\_time\_control@{execute\_with\_time\_control}}
+\index{execute\_with\_time\_control@{execute\_with\_time\_control}!SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}}
+\doxysubsubsection{\texorpdfstring{execute\_with\_time\_control()}{execute\_with\_time\_control()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a4e3426a96256273416236633b5874d8f} 
+template$<$typename Func$>$ \\
+auto Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+::execute\+\_\+with\+\_\+time\+\_\+control (\begin{DoxyParamCaption}\item[{std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point}]{start\+\_\+time}{, }\item[{double}]{time\+\_\+scale}{, }\item[{Func \&\&}]{func}{}\end{DoxyParamCaption}) -\/$>$  decltype(func())}
+
+
+
+Execute function with time control. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_af46bc2e49fcc616c40fdd3d996f1469d}\index{SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}!format\_iso8601@{format\_iso8601}}
+\index{format\_iso8601@{format\_iso8601}!SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}}
+\doxysubsubsection{\texorpdfstring{format\_iso8601()}{format\_iso8601()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_af46bc2e49fcc616c40fdd3d996f1469d} 
+std\+::string Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+::format\+\_\+iso8601 (\begin{DoxyParamCaption}\item[{std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point}]{time}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Format time as ISO 8601 string. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a393c291e4f0e6abf911502662bf6dc10}\index{SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}!format\_time@{format\_time}}
+\index{format\_time@{format\_time}!SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}}
+\doxysubsubsection{\texorpdfstring{format\_time()}{format\_time()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a393c291e4f0e6abf911502662bf6dc10} 
+std\+::string Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+::format\+\_\+time (\begin{DoxyParamCaption}\item[{std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point}]{time}{, }\item[{const std\+::string \&}]{format}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Format time with custom format string. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a3212b2f57525f60e2144a130b8d10a4a}\index{SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}!freeze\_time@{freeze\_time}}
+\index{freeze\_time@{freeze\_time}!SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}}
+\doxysubsubsection{\texorpdfstring{freeze\_time()}{freeze\_time()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a3212b2f57525f60e2144a130b8d10a4a} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+::freeze\+\_\+time (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Freeze time at current value. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a54a7cb6914499f5d8ca841d42e982865}\index{SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}!from\_julian\_date@{from\_julian\_date}}
+\index{from\_julian\_date@{from\_julian\_date}!SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}}
+\doxysubsubsection{\texorpdfstring{from\_julian\_date()}{from\_julian\_date()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a54a7cb6914499f5d8ca841d42e982865} 
+std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+::from\+\_\+julian\+\_\+date (\begin{DoxyParamCaption}\item[{double}]{jd}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Convert from Julian Date. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a54a7cb6914499f5d8ca841d42e982865_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_ab0012cd5c6c6b06c2470f738495a7f2f}\index{SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}!from\_modified\_julian\_date@{from\_modified\_julian\_date}}
+\index{from\_modified\_julian\_date@{from\_modified\_julian\_date}!SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}}
+\doxysubsubsection{\texorpdfstring{from\_modified\_julian\_date()}{from\_modified\_julian\_date()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_ab0012cd5c6c6b06c2470f738495a7f2f} 
+std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+::from\+\_\+modified\+\_\+julian\+\_\+date (\begin{DoxyParamCaption}\item[{double}]{mjd}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Convert from Modified Julian Date. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_ab0012cd5c6c6b06c2470f738495a7f2f_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a2b7810272e35cf01b80085ef41db1af0}\index{SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}!from\_timezone@{from\_timezone}}
+\index{from\_timezone@{from\_timezone}!SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}}
+\doxysubsubsection{\texorpdfstring{from\_timezone()}{from\_timezone()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a2b7810272e35cf01b80085ef41db1af0} 
+std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+::from\+\_\+timezone (\begin{DoxyParamCaption}\item[{std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point}]{time}{, }\item[{const std\+::string \&}]{timezone}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Convert time from specified time zone to UTC. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a90344829280c02df0606a365f4e853d2}\index{SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}!get\_default\_timezone@{get\_default\_timezone}}
+\index{get\_default\_timezone@{get\_default\_timezone}!SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}}
+\doxysubsubsection{\texorpdfstring{get\_default\_timezone()}{get\_default\_timezone()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a90344829280c02df0606a365f4e853d2} 
+const std\+::string \& Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+::get\+\_\+default\+\_\+timezone (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Get default time zone. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_aea9bb06a4fe241be7dafd5ff47b54f43}\index{SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}!get\_sidereal\_time@{get\_sidereal\_time}}
+\index{get\_sidereal\_time@{get\_sidereal\_time}!SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}}
+\doxysubsubsection{\texorpdfstring{get\_sidereal\_time()}{get\_sidereal\_time()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_aea9bb06a4fe241be7dafd5ff47b54f43} 
+double Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+::get\+\_\+sidereal\+\_\+time (\begin{DoxyParamCaption}\item[{std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point}]{time}{, }\item[{double}]{longitude\+\_\+deg}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Get sidereal time for given location. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_aea9bb06a4fe241be7dafd5ff47b54f43_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a2b7980977f369899c5e7ac166cf525a8}\index{SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}!get\_time\_scale@{get\_time\_scale}}
+\index{get\_time\_scale@{get\_time\_scale}!SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}}
+\doxysubsubsection{\texorpdfstring{get\_time\_scale()}{get\_time\_scale()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a2b7980977f369899c5e7ac166cf525a8} 
+double Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+::get\+\_\+time\+\_\+scale (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Get current time scale. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a6cd275da6ded649ab332cfbed4553161}\index{SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}!high\_res\_now@{high\_res\_now}}
+\index{high\_res\_now@{high\_res\_now}!SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}}
+\doxysubsubsection{\texorpdfstring{high\_res\_now()}{high\_res\_now()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a6cd275da6ded649ab332cfbed4553161} 
+std\+::chrono\+::high\+\_\+resolution\+\_\+clock\+::time\+\_\+point Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+::high\+\_\+res\+\_\+now (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Get high resolution clock time. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a6cd275da6ded649ab332cfbed4553161_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_abdefddac19662c8aa3491b005e93de74}\index{SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}!install\_as\_global\_mock@{install\_as\_global\_mock}}
+\index{install\_as\_global\_mock@{install\_as\_global\_mock}!SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}}
+\doxysubsubsection{\texorpdfstring{install\_as\_global\_mock()}{install\_as\_global\_mock()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_abdefddac19662c8aa3491b005e93de74} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+::install\+\_\+as\+\_\+global\+\_\+mock (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Install this mock as global time mock. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a1974ccc45623ca35407379607e3c73da}\index{SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}!is\_time\_frozen@{is\_time\_frozen}}
+\index{is\_time\_frozen@{is\_time\_frozen}!SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}}
+\doxysubsubsection{\texorpdfstring{is\_time\_frozen()}{is\_time\_frozen()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a1974ccc45623ca35407379607e3c73da} 
+bool Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+::is\+\_\+time\+\_\+frozen (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Check if time is currently frozen. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a41be962d5629522e30c99ff422ed9ab8}\index{SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}!nanosleep@{nanosleep}}
+\index{nanosleep@{nanosleep}!SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}}
+\doxysubsubsection{\texorpdfstring{nanosleep()}{nanosleep()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a41be962d5629522e30c99ff422ed9ab8} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+::nanosleep (\begin{DoxyParamCaption}\item[{std\+::chrono\+::nanoseconds}]{duration}{}\end{DoxyParamCaption})}
+
+
+
+Mock nanosleep. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a41be962d5629522e30c99ff422ed9ab8_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_aae726ffc5b25d10cdcf232ea25dff40d}\index{SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}!now@{now}}
+\index{now@{now}!SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}}
+\doxysubsubsection{\texorpdfstring{now()}{now()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_aae726ffc5b25d10cdcf232ea25dff40d} 
+std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+::now (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Get current mock time. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_aae726ffc5b25d10cdcf232ea25dff40d_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_ac5a1c88a768cd24b204cba48cecd0bc5}\index{SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}!now\_in\_timezone@{now\_in\_timezone}}
+\index{now\_in\_timezone@{now\_in\_timezone}!SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}}
+\doxysubsubsection{\texorpdfstring{now\_in\_timezone()}{now\_in\_timezone()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_ac5a1c88a768cd24b204cba48cecd0bc5} 
+std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+::now\+\_\+in\+\_\+timezone (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{timezone}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Get current time in specified time zone. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_ac5a1c88a768cd24b204cba48cecd0bc5_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_adfda91994da37296328e7cc791466183}\index{SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}!now\_ms@{now\_ms}}
+\index{now\_ms@{now\_ms}!SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}}
+\doxysubsubsection{\texorpdfstring{now\_ms()}{now\_ms()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_adfda91994da37296328e7cc791466183} 
+int64\+\_\+t Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+::now\+\_\+ms (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Get current mock time in milliseconds since epoch. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_adfda91994da37296328e7cc791466183_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a1d98389bdca2082a1b17aea0abde9360}\index{SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}!now\_seconds@{now\_seconds}}
+\index{now\_seconds@{now\_seconds}!SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}}
+\doxysubsubsection{\texorpdfstring{now\_seconds()}{now\_seconds()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a1d98389bdca2082a1b17aea0abde9360} 
+double Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+::now\+\_\+seconds (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Get current mock time in seconds since epoch. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a1d98389bdca2082a1b17aea0abde9360_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_afcfdac59293e0ab37fa1e192d4793bda}\index{SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}!now\_time\_t@{now\_time\_t}}
+\index{now\_time\_t@{now\_time\_t}!SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}}
+\doxysubsubsection{\texorpdfstring{now\_time\_t()}{now\_time\_t()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_afcfdac59293e0ab37fa1e192d4793bda} 
+std\+::time\+\_\+t Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+::now\+\_\+time\+\_\+t (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Get current mock time as time\+\_\+t. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_afcfdac59293e0ab37fa1e192d4793bda_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a15626d9f56f75edd7909d34d5580238a}\index{SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}!operation\_count@{operation\_count}}
+\index{operation\_count@{operation\_count}!SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}}
+\doxysubsubsection{\texorpdfstring{operation\_count()}{operation\_count()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a15626d9f56f75edd7909d34d5580238a} 
+size\+\_\+t Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+::operation\+\_\+count (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Get total number of time operations. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a3cdfae83fa53afb8a7fd38835bec4b05}\index{SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}!operation\_count@{operation\_count}}
+\index{operation\_count@{operation\_count}!SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}}
+\doxysubsubsection{\texorpdfstring{operation\_count()}{operation\_count()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a3cdfae83fa53afb8a7fd38835bec4b05} 
+size\+\_\+t Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+::operation\+\_\+count (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a7f069575516b6cd3bfe25c49fd5137f9}{Mock\+Time\+Operation\+Type}}}]{type}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Get number of operations by type. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a14e17cb0fe12a4a5e598e8059c4c45ee}\index{SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}!operation\_history@{operation\_history}}
+\index{operation\_history@{operation\_history}!SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}}
+\doxysubsubsection{\texorpdfstring{operation\_history()}{operation\_history()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a14e17cb0fe12a4a5e598e8059c4c45ee} 
+const std\+::vector$<$ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_mock_time_call_info}{Mock\+Time\+Call\+Info}} $>$ \& Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+::operation\+\_\+history (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Get complete operation history. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a4260bf9025cd09f04c0b0bf4019c5df2}\index{SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}!operations\_of\_type@{operations\_of\_type}}
+\index{operations\_of\_type@{operations\_of\_type}!SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}}
+\doxysubsubsection{\texorpdfstring{operations\_of\_type()}{operations\_of\_type()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a4260bf9025cd09f04c0b0bf4019c5df2} 
+std\+::vector$<$ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_mock_time_call_info}{Mock\+Time\+Call\+Info}} $>$ Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+::operations\+\_\+of\+\_\+type (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a7f069575516b6cd3bfe25c49fd5137f9}{Mock\+Time\+Operation\+Type}}}]{type}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Get operations of specific type. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a816b30d5f2894e7c5e2b1931495a4b60}\index{SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}!operator=@{operator=}}
+\index{operator=@{operator=}!SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a816b30d5f2894e7c5e2b1931495a4b60} 
+\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock}{Time\+Mock}} \& Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+::operator= (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock}{Time\+Mock}} \&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a816b30d5f2894e7c5e2b1931495a4b60_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a16fef7ce8e204673fe4f6c61a3bf2630}\index{SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}!operator=@{operator=}}
+\index{operator=@{operator=}!SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a16fef7ce8e204673fe4f6c61a3bf2630} 
+\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock}{Time\+Mock}} \& Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+::operator= (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock}{Time\+Mock}} \&\&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a16fef7ce8e204673fe4f6c61a3bf2630_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a4fd29ea01a94bdd125360ad37a834a60}\index{SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}!parse\_iso8601@{parse\_iso8601}}
+\index{parse\_iso8601@{parse\_iso8601}!SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}}
+\doxysubsubsection{\texorpdfstring{parse\_iso8601()}{parse\_iso8601()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a4fd29ea01a94bdd125360ad37a834a60} 
+std\+::optional$<$ std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point $>$ Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+::parse\+\_\+iso8601 (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{time\+\_\+str}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Parse ISO 8601 time string. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a93e6a1d0639dda731a39511ee1dcb382}\index{SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}!parse\_time@{parse\_time}}
+\index{parse\_time@{parse\_time}!SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}}
+\doxysubsubsection{\texorpdfstring{parse\_time()}{parse\_time()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a93e6a1d0639dda731a39511ee1dcb382} 
+std\+::optional$<$ std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point $>$ Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+::parse\+\_\+time (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{time\+\_\+str}{, }\item[{const std\+::string \&}]{format}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Parse time string with custom format. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a93b2b6f6c40fdf793457088353c5f60c}\index{SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}!remove\_global\_mock@{remove\_global\_mock}}
+\index{remove\_global\_mock@{remove\_global\_mock}!SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}}
+\doxysubsubsection{\texorpdfstring{remove\_global\_mock()}{remove\_global\_mock()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a93b2b6f6c40fdf793457088353c5f60c} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+::remove\+\_\+global\+\_\+mock (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Remove global mock installation. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a93b2b6f6c40fdf793457088353c5f60c_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a907308a2466ce02df1fc241cd971589b}\index{SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}!reset\_call\_history@{reset\_call\_history}}
+\index{reset\_call\_history@{reset\_call\_history}!SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}}
+\doxysubsubsection{\texorpdfstring{reset\_call\_history()}{reset\_call\_history()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a907308a2466ce02df1fc241cd971589b} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+::reset\+\_\+call\+\_\+history (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Reset call history and counters. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a8e1a301d69a267ce05c4de2df4b5c38f}\index{SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}!reset\_to\_system\_time@{reset\_to\_system\_time}}
+\index{reset\_to\_system\_time@{reset\_to\_system\_time}!SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}}
+\doxysubsubsection{\texorpdfstring{reset\_to\_system\_time()}{reset\_to\_system\_time()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a8e1a301d69a267ce05c4de2df4b5c38f} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+::reset\+\_\+to\+\_\+system\+\_\+time (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Reset time to system time and normal flow. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_af28904aa406ef72a16b71fb54af1310a}\index{SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}!set\_default\_timezone@{set\_default\_timezone}}
+\index{set\_default\_timezone@{set\_default\_timezone}!SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}}
+\doxysubsubsection{\texorpdfstring{set\_default\_timezone()}{set\_default\_timezone()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_af28904aa406ef72a16b71fb54af1310a} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+::set\+\_\+default\+\_\+timezone (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{timezone}{}\end{DoxyParamCaption})}
+
+
+
+Set default time zone. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_af33440b670ac3c3d8017398bc12c8036}\index{SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}!set\_time@{set\_time}}
+\index{set\_time@{set\_time}!SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}}
+\doxysubsubsection{\texorpdfstring{set\_time()}{set\_time()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_af33440b670ac3c3d8017398bc12c8036} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+::set\+\_\+time (\begin{DoxyParamCaption}\item[{std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point}]{time}{}\end{DoxyParamCaption})}
+
+
+
+Set the current mock time. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_af33440b670ac3c3d8017398bc12c8036_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_af9d6467e47adfac2f74095c8c6b1b23f}\index{SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}!set\_time\_scale@{set\_time\_scale}}
+\index{set\_time\_scale@{set\_time\_scale}!SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}}
+\doxysubsubsection{\texorpdfstring{set\_time\_scale()}{set\_time\_scale()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_af9d6467e47adfac2f74095c8c6b1b23f} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+::set\+\_\+time\+\_\+scale (\begin{DoxyParamCaption}\item[{double}]{scale}{}\end{DoxyParamCaption})}
+
+
+
+Set time scale (1.\+0 = normal, 2.\+0 = 2x speed, 0.\+5 = half speed) 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_af9d6467e47adfac2f74095c8c6b1b23f_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a9752b26ba9196c83900a7d20fa342b8d}\index{SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}!sleep\_for@{sleep\_for}}
+\index{sleep\_for@{sleep\_for}!SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}}
+\doxysubsubsection{\texorpdfstring{sleep\_for()}{sleep\_for()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a9752b26ba9196c83900a7d20fa342b8d} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+::sleep\+\_\+for (\begin{DoxyParamCaption}\item[{std\+::chrono\+::duration$<$ double $>$}]{duration}{}\end{DoxyParamCaption})}
+
+
+
+Mock sleep for specified duration. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a9752b26ba9196c83900a7d20fa342b8d_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a9752b26ba9196c83900a7d20fa342b8d_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a2e3902342f5be110b63bd3b3b3a8de07}\index{SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}!sleep\_ms@{sleep\_ms}}
+\index{sleep\_ms@{sleep\_ms}!SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}}
+\doxysubsubsection{\texorpdfstring{sleep\_ms()}{sleep\_ms()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a2e3902342f5be110b63bd3b3b3a8de07} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+::sleep\+\_\+ms (\begin{DoxyParamCaption}\item[{int64\+\_\+t}]{milliseconds}{}\end{DoxyParamCaption})}
+
+
+
+Mock millisecond sleep. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a2e3902342f5be110b63bd3b3b3a8de07_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a325a50a6f063af2d4b06d98d7018ab5e}\index{SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}!sleep\_s@{sleep\_s}}
+\index{sleep\_s@{sleep\_s}!SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}}
+\doxysubsubsection{\texorpdfstring{sleep\_s()}{sleep\_s()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a325a50a6f063af2d4b06d98d7018ab5e} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+::sleep\+\_\+s (\begin{DoxyParamCaption}\item[{double}]{seconds}{}\end{DoxyParamCaption})}
+
+
+
+Mock second sleep. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a325a50a6f063af2d4b06d98d7018ab5e_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_adad60f1f26a955a8630dd9f03f78fb43}\index{SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}!sleep\_until@{sleep\_until}}
+\index{sleep\_until@{sleep\_until}!SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}}
+\doxysubsubsection{\texorpdfstring{sleep\_until()}{sleep\_until()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_adad60f1f26a955a8630dd9f03f78fb43} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+::sleep\+\_\+until (\begin{DoxyParamCaption}\item[{std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point}]{time\+\_\+point}{}\end{DoxyParamCaption})}
+
+
+
+Mock sleep until specified time point. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_adad60f1f26a955a8630dd9f03f78fb43_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a9bebe2420639c08a4c82de0921fa0027}\index{SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}!steady\_now@{steady\_now}}
+\index{steady\_now@{steady\_now}!SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}}
+\doxysubsubsection{\texorpdfstring{steady\_now()}{steady\_now()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a9bebe2420639c08a4c82de0921fa0027} 
+std\+::chrono\+::steady\+\_\+clock\+::time\+\_\+point Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+::steady\+\_\+now (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Get steady clock time (for duration measurements) 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a9bebe2420639c08a4c82de0921fa0027_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_aab9a3761e72167f1e0ca1473139e373a}\index{SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}!to\_julian\_date@{to\_julian\_date}}
+\index{to\_julian\_date@{to\_julian\_date}!SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}}
+\doxysubsubsection{\texorpdfstring{to\_julian\_date()}{to\_julian\_date()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_aab9a3761e72167f1e0ca1473139e373a} 
+double Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+::to\+\_\+julian\+\_\+date (\begin{DoxyParamCaption}\item[{std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point}]{time}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Convert to Julian Date. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_aab9a3761e72167f1e0ca1473139e373a_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a9acc1839d98bb2cfba9a63df911f8860}\index{SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}!to\_modified\_julian\_date@{to\_modified\_julian\_date}}
+\index{to\_modified\_julian\_date@{to\_modified\_julian\_date}!SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}}
+\doxysubsubsection{\texorpdfstring{to\_modified\_julian\_date()}{to\_modified\_julian\_date()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a9acc1839d98bb2cfba9a63df911f8860} 
+double Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+::to\+\_\+modified\+\_\+julian\+\_\+date (\begin{DoxyParamCaption}\item[{std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point}]{time}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Convert to Modified Julian Date. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a9acc1839d98bb2cfba9a63df911f8860_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a5c7d59c769644a1daffada2ea9846645}\index{SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}!to\_timezone@{to\_timezone}}
+\index{to\_timezone@{to\_timezone}!SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}}
+\doxysubsubsection{\texorpdfstring{to\_timezone()}{to\_timezone()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a5c7d59c769644a1daffada2ea9846645} 
+std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+::to\+\_\+timezone (\begin{DoxyParamCaption}\item[{std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point}]{time}{, }\item[{const std\+::string \&}]{timezone}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Convert time to specified time zone. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a5c7d59c769644a1daffada2ea9846645_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a9bb4674bb36fba8a321a264547464f43}\index{SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}!total\_sleep\_duration@{total\_sleep\_duration}}
+\index{total\_sleep\_duration@{total\_sleep\_duration}!SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}}
+\doxysubsubsection{\texorpdfstring{total\_sleep\_duration()}{total\_sleep\_duration()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a9bb4674bb36fba8a321a264547464f43} 
+std\+::chrono\+::duration$<$ double $>$ Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+::total\+\_\+sleep\+\_\+duration (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Get total sleep duration requested. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_aa71eae6e093a9317e4e67572b51be4a4}\index{SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}!unfreeze\_time@{unfreeze\_time}}
+\index{unfreeze\_time@{unfreeze\_time}!SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}}
+\doxysubsubsection{\texorpdfstring{unfreeze\_time()}{unfreeze\_time()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_aa71eae6e093a9317e4e67572b51be4a4} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+::unfreeze\+\_\+time (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Unfreeze time and resume normal flow. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a55ba4a58827369aa5e00825d9c78473f}\index{SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}!update\_config@{update\_config}}
+\index{update\_config@{update\_config}!SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}}
+\doxysubsubsection{\texorpdfstring{update\_config()}{update\_config()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a55ba4a58827369aa5e00825d9c78473f} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+::update\+\_\+config (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config}{Time\+Mock\+Config}} \&}]{new\+\_\+config}{}\end{DoxyParamCaption})}
+
+
+
+Update configuration. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a0cb3bcbcb9de09ce445dc5a1d624e1be}\index{SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}!usleep@{usleep}}
+\index{usleep@{usleep}!SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}}
+\doxysubsubsection{\texorpdfstring{usleep()}{usleep()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a0cb3bcbcb9de09ce445dc5a1d624e1be} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+::usleep (\begin{DoxyParamCaption}\item[{std\+::chrono\+::microseconds}]{duration}{}\end{DoxyParamCaption})}
+
+
+
+Mock usleep (microseconds) 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a0cb3bcbcb9de09ce445dc5a1d624e1be_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a187637c54f58d3fde59e77a7004b254e}\index{SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}!was\_time\_requested@{was\_time\_requested}}
+\index{was\_time\_requested@{was\_time\_requested}!SolarSystem::Testing::Mocks::TimeMock@{SolarSystem::Testing::Mocks::TimeMock}}
+\doxysubsubsection{\texorpdfstring{was\_time\_requested()}{was\_time\_requested()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_a187637c54f58d3fde59e77a7004b254e} 
+bool Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+::was\+\_\+time\+\_\+requested (\begin{DoxyParamCaption}\item[{std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point}]{time}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Check if specific time was requested. 
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+test/include/solar\+\_\+test/mocks/\mbox{\hyperlink{time__mock_8hpp}{time\+\_\+mock.\+hpp}}\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+test/src/mocks/\mbox{\hyperlink{time__mock_8cpp}{time\+\_\+mock.\+cpp}}\end{DoxyCompactItemize}

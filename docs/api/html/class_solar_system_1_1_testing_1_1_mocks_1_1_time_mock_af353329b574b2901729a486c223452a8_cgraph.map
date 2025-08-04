@@ -1,0 +1,9 @@
+<map id="SolarSystem::Testing::Mocks::TimeMock::TimeMock" name="SolarSystem::Testing::Mocks::TimeMock::TimeMock">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,39,212,79"/>
+<area shape="rect" id="Node000002" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock.html#a86e935365ba7b638f668ceda24743bd5" title="Construct time mock with configuration." alt="" coords="260,39,466,79"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="212,56,244,56,244,62,212,62"/>
+<area shape="rect" id="Node000003" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock.html#ad183076b9f8ff58cc5f38d7af3ed058f" title="Get current configuration." alt="" coords="514,5,694,46"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="466,42,498,38,499,43,467,47"/>
+<area shape="rect" id="Node000004" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock.html#aae726ffc5b25d10cdcf232ea25dff40d" title="Get current mock time." alt="" coords="520,71,689,111"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="467,70,504,75,504,80,466,75"/>
+</map>

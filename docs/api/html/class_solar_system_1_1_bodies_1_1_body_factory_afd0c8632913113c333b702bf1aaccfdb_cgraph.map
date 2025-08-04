@@ -1,0 +1,14 @@
+<map id="SolarSystem::Bodies::BodyFactory::fetch_current_ephemeris_data" name="SolarSystem::Bodies::BodyFactory::fetch_current_ephemeris_data">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,92,173,148"/>
+<area shape="rect" id="Node000002" href="$namespace_solar_system_1_1_j_p_l.html#aa87d1eae6faed2285995bb3f55e8bf4e" title="Helper to create error void result." alt="" coords="431,111,592,137"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="116,90,161,51,189,34,220,20,265,7,302,3,339,7,384,20,416,35,445,56,491,98,487,102,442,60,413,40,382,25,338,12,302,8,266,13,222,25,192,38,164,56,119,94"/>
+<area shape="rect" id="Node000003" href="$namespace_solar_system_1_1_j_p_l.html#ab3c2444575b2bb169fc9aa27a6fee7c6" title="Helper to get error from failed result." alt="" coords="225,35,378,75"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="172,92,218,78,220,83,174,97"/>
+<area shape="rect" id="Node000004" href="$namespace_solar_system_1_1_j_p_l.html#a605668a4c434918864026fc3a0216137" title="Helper to get value from successful result." alt="" coords="225,100,378,141"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="173,118,210,118,210,123,173,123"/>
+<area shape="rect" id="Node000005" href="$namespace_solar_system_1_1_j_p_l.html#abb8eb67716801804e9c24e2a80dda44e" title="Helper to check if result is successful." alt="" coords="229,165,374,206"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="174,143,220,158,218,163,172,148"/>
+<area shape="rect" id="Node000006" href="$namespace_solar_system_1_1_j_p_l_1_1_utils.html#a26fe3bf37cab4ce4fff30537465e2839" title="Convert JPL error to string." alt="" coords="221,231,383,271"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="125,147,170,181,222,215,233,221,230,226,219,220,167,186,122,151"/>
+<area shape="poly" id="edge6_Node000006_Node000002" title=" " alt="" coords="357,228,382,215,436,180,481,145,485,149,439,184,384,220,359,232"/>
+</map>

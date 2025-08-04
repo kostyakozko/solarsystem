@@ -1,0 +1,11 @@
+<map id="SolarSystem::Testing::Mocks::ScopedCacheMock::ScopedCacheMock" name="SolarSystem::Testing::Mocks::ScopedCacheMock::ScopedCacheMock">
+<area shape="rect" id="Node000001" title="ScopedCacheMock constructor." alt="" coords="244,125,434,181"/>
+<area shape="rect" id="Node000002" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_cache_mock.html#ae4bf83ece4fb5e0f17240ee86f53f4f3" title=" " alt="" coords="5,5,196,61"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="276,120,194,76,170,64,172,59,197,71,279,115"/>
+<area shape="rect" id="Node000003" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_cache_mock.html#a48aa05e95b6ce3c1963958aad77ac130" title=" " alt="" coords="5,85,196,141"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="228,137,196,132,196,127,228,132"/>
+<area shape="rect" id="Node000004" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_cache_mock.html#a3449a6bc5579b9362f64285faefbd865" title=" " alt="" coords="5,165,196,221"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="228,174,196,180,196,175,228,169"/>
+<area shape="rect" id="Node000005" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_cache_mock.html#a34e89382c3e6d7c9b53b075499a1e071" title=" " alt="" coords="5,245,196,301"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="279,191,197,236,172,247,170,242,194,231,276,187"/>
+</map>

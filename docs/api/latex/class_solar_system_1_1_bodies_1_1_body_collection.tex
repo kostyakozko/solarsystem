@@ -1,0 +1,589 @@
+\doxysection{Solar\+System\+::Bodies\+::Body\+Collection Class Reference}
+\hypertarget{class_solar_system_1_1_bodies_1_1_body_collection}{}\label{class_solar_system_1_1_bodies_1_1_body_collection}\index{SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}}
+
+
+Modern container for managing collections of celestial bodies.  
+
+
+
+
+{\ttfamily \#include $<$body\+\_\+collection.\+hpp$>$}
+
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+using \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a061e789427590d26710a727588b1f0f1}{iterator}} = std\+::vector$<$\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}}$>$\+::iterator
+\item 
+using \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a8902bacb76f0b5e3c1b2720d8812ab72}{const\+\_\+iterator}} = std\+::vector$<$\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}}$>$\+::const\+\_\+iterator
+\item 
+using \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a307dbd41222f749357eb5daeb0574ba9}{size\+\_\+type}} = std\+::vector$<$\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}}$>$\+::size\+\_\+type
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_abe423b960b5c3807b6402084b46308c8}{Body\+Collection}} ()=default
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_afeeb5768edd0836174f8e388d250759d}{Body\+Collection}} (std\+::vector$<$ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}} $>$ bodies)
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a0f33178cc6480e83d2f2c15d5c925222}{Body\+Collection}} (const \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection}{Body\+Collection}} \&)=default
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a0d613cdd6c30a9d57455820fa083d4d9}{Body\+Collection}} (\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection}{Body\+Collection}} \&\&)=default
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection}{Body\+Collection}} \& \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a0e7945eb78a6ee506e9494e4277f0e9a}{operator=}} (const \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection}{Body\+Collection}} \&)=default
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection}{Body\+Collection}} \& \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a5ef3e5e10e14f822f4660da9aa41e199}{operator=}} (\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection}{Body\+Collection}} \&\&)=default
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_af8c869d15ba38b1f46e1bb82968a5a61}{\texorpdfstring{$\sim$}{\string~}\+Body\+Collection}} ()=default
+\item 
+void \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a67865f9c5671a4187cb98f3f8720b7b1}{add\+\_\+body}} (\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}} body)
+\item 
+void \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_aab5ff30dcd87ba5e5323fbb33912456d}{add\+\_\+body}} (\mbox{\hyperlink{struct_solar_system_1_1_bodies_1_1_celestial_body_1_1_properties}{Celestial\+Body\+::\+Properties}} props)
+\item 
+bool \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_af97f7ee2e46da5ac1bf89c84b8e73be5}{remove\+\_\+body}} (std\+::string\+\_\+view name)
+\item 
+void \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_aa69f8bb75342a6cf9f795eeba789c9fd}{clear}} ()
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a307dbd41222f749357eb5daeb0574ba9}{size\+\_\+type}} \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_aab8db2368ba1d22c6a6496d5fbd44040}{size}} () const noexcept
+\item 
+bool \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a973a85e240c688f175d4ad4a6e232313}{empty}} () const noexcept
+\item 
+void \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a2e7c846269951dd463cb97802103ce64}{reserve}} (\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a307dbd41222f749357eb5daeb0574ba9}{size\+\_\+type}} capacity)
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}} \& \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a96fd6a936928819dfbabbf25fa691ad3}{at}} (\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a307dbd41222f749357eb5daeb0574ba9}{size\+\_\+type}} index)
+\item 
+const \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}} \& \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_aebed795e99fb85930b202e91a99be924}{at}} (\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a307dbd41222f749357eb5daeb0574ba9}{size\+\_\+type}} index) const
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}} \& \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_af13d9b9913d34ebb7b4bae226f0fa112}{operator\mbox{[}$\,$\mbox{]}}} (\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a307dbd41222f749357eb5daeb0574ba9}{size\+\_\+type}} index)
+\item 
+const \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}} \& \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a0e762961774cdd378d67b8dd672276f7}{operator\mbox{[}$\,$\mbox{]}}} (\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a307dbd41222f749357eb5daeb0574ba9}{size\+\_\+type}} index) const
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a061e789427590d26710a727588b1f0f1}{iterator}} \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a9e7807816fc06a5faaaf5e1cf4e19994}{begin}} ()
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a8902bacb76f0b5e3c1b2720d8812ab72}{const\+\_\+iterator}} \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a5989243c2cb39fbd5646291aecd61d82}{begin}} () const
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a8902bacb76f0b5e3c1b2720d8812ab72}{const\+\_\+iterator}} \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_ac022f1366caa2cd85161df7e0cd359fc}{cbegin}} () const
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a061e789427590d26710a727588b1f0f1}{iterator}} \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a7a2cca4f873119a1e8b6c7f156b4ff07}{end}} ()
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a8902bacb76f0b5e3c1b2720d8812ab72}{const\+\_\+iterator}} \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a58543f2c6f137c28e412efb252721b39}{end}} () const
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a8902bacb76f0b5e3c1b2720d8812ab72}{const\+\_\+iterator}} \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a3bc2f787a20c3251585fc8cd543dc06f}{cend}} () const
+\item 
+std\+::optional$<$ std\+::reference\+\_\+wrapper$<$ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}} $>$ $>$ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a2af6341b8cc8bdcb28b65b41c1654628}{find\+\_\+body}} (std\+::string\+\_\+view name)
+\item 
+std\+::optional$<$ std\+::reference\+\_\+wrapper$<$ const \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}} $>$ $>$ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a35fb4cca17ec8247bd99724e02586dcc}{find\+\_\+body}} (std\+::string\+\_\+view name) const
+\item 
+bool \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_af82b22f9073d1d13df623cae6a22ad8e}{contains}} (std\+::string\+\_\+view name) const
+\item 
+std\+::vector$<$ std\+::reference\+\_\+wrapper$<$ const \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}} $>$ $>$ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_ace20b1380de21447bb964cae854e062c}{filter\+\_\+by\+\_\+type}} (\mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdc}{Body\+Type}} type) const
+\item 
+std\+::vector$<$ std\+::reference\+\_\+wrapper$<$ const \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}} $>$ $>$ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a610b98608a164b8066e73feb951f92c9}{filter\+\_\+by\+\_\+priority}} (\mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121}{Body\+Priority}} priority) const
+\item 
+std\+::vector$<$ std\+::reference\+\_\+wrapper$<$ const \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}} $>$ $>$ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_af9c44691a41a08a75d728ae36bc9d6a8}{filter\+\_\+essential}} () const
+\item 
+std\+::vector$<$ std\+::reference\+\_\+wrapper$<$ const \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}} $>$ $>$ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a623aa8acccd4683aba58e6265b383670}{filter\+\_\+available\+\_\+at}} (std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point time) const
+\item 
+void \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a7d2395800623fc69bce6b61bdf310f2c}{apply\+\_\+to\+\_\+all}} (std\+::function$<$ void(\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}} \&)$>$ func)
+\item 
+void \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_aee3a0bde845c70ab22fc4809446a7637}{apply\+\_\+to\+\_\+all}} (std\+::function$<$ void(const \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}} \&)$>$ func) const
+\item 
+{\footnotesize template$<$typename Predicate$>$ }\\void \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a2f89c08e1fe1f406950a5c4ef6e4beb8}{apply\+\_\+to\+\_\+filtered}} (Predicate pred, std\+::function$<$ void(\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}} \&)$>$ func)
+\item 
+{\footnotesize template$<$typename Predicate$>$ }\\void \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a5fbf4ab167c283d746c4e0e1d13bbe58}{apply\+\_\+to\+\_\+filtered}} (Predicate pred, std\+::function$<$ void(const \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}} \&)$>$ func) const
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a307dbd41222f749357eb5daeb0574ba9}{size\+\_\+type}} \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_ac45fa7adf22fc4196f4b237ae906676f}{count\+\_\+by\+\_\+type}} (\mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdc}{Body\+Type}} type) const
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a307dbd41222f749357eb5daeb0574ba9}{size\+\_\+type}} \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a6d596634030b94434c7b6572c9be74fb}{count\+\_\+by\+\_\+priority}} (\mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121}{Body\+Priority}} priority) const
+\item 
+double \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a515650f47d3bbe50816cdb54f359c226}{total\+\_\+mass}} () const
+\item 
+\mbox{\hyperlink{namespace_solar_system_1_1_math_a58b613f1c9974f449ee706cd131b1f41}{Math\+::\+Vector3d}} \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_acd291494f4ab1b23c0c8419b16fc6fa0}{center\+\_\+of\+\_\+mass}} () const
+\item 
+bool \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a782d32c115a5db2132a957e83f342c9f}{validate}} () const
+\item 
+std\+::vector$<$ std\+::string $>$ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_af77c38e81900ad5c307835a7b68ef4bd}{get\+\_\+validation\+\_\+errors}} () const
+\item 
+std\+::string \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a98066436563d88f49a8ada820270dcee}{to\+\_\+json}} () const
+\item 
+std\+::string \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a96c4ee3e6780d5a07f12866705074646}{summary}} () const
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Modern container for managing collections of celestial bodies. 
+
+Provides efficient storage, lookup, and filtering of celestial bodies with modern C++ features like ranges, algorithms, and type safety. 
+
+\label{doc-typedef-members}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_collection_doc-typedef-members}
+\doxysubsection{Member Typedef Documentation}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_collection_a8902bacb76f0b5e3c1b2720d8812ab72}\index{SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}!const\_iterator@{const\_iterator}}
+\index{const\_iterator@{const\_iterator}!SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}}
+\doxysubsubsection{\texorpdfstring{const\_iterator}{const\_iterator}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_collection_a8902bacb76f0b5e3c1b2720d8812ab72} 
+using \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a8902bacb76f0b5e3c1b2720d8812ab72}{Solar\+System\+::\+Bodies\+::\+Body\+Collection\+::const\+\_\+iterator}} = std\+::vector$<$\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}}$>$\+::const\+\_\+iterator}
+
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_collection_a061e789427590d26710a727588b1f0f1}\index{SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}!iterator@{iterator}}
+\index{iterator@{iterator}!SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}}
+\doxysubsubsection{\texorpdfstring{iterator}{iterator}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_collection_a061e789427590d26710a727588b1f0f1} 
+using \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a061e789427590d26710a727588b1f0f1}{Solar\+System\+::\+Bodies\+::\+Body\+Collection\+::iterator}} = std\+::vector$<$\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}}$>$\+::iterator}
+
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_collection_a307dbd41222f749357eb5daeb0574ba9}\index{SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}!size\_type@{size\_type}}
+\index{size\_type@{size\_type}!SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}}
+\doxysubsubsection{\texorpdfstring{size\_type}{size\_type}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_collection_a307dbd41222f749357eb5daeb0574ba9} 
+using \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a307dbd41222f749357eb5daeb0574ba9}{Solar\+System\+::\+Bodies\+::\+Body\+Collection\+::size\+\_\+type}} = std\+::vector$<$\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}}$>$\+::size\+\_\+type}
+
+
+
+\label{doc-constructors}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_collection_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_collection_abe423b960b5c3807b6402084b46308c8}\index{SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}!BodyCollection@{BodyCollection}}
+\index{BodyCollection@{BodyCollection}!SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}}
+\doxysubsubsection{\texorpdfstring{BodyCollection()}{BodyCollection()}\hspace{0.1cm}{\footnotesize\ttfamily [1/4]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_collection_abe423b960b5c3807b6402084b46308c8} 
+Solar\+System\+::\+Bodies\+::\+Body\+Collection\+::\+Body\+Collection (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_bodies_1_1_body_collection_abe423b960b5c3807b6402084b46308c8_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_collection_afeeb5768edd0836174f8e388d250759d}\index{SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}!BodyCollection@{BodyCollection}}
+\index{BodyCollection@{BodyCollection}!SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}}
+\doxysubsubsection{\texorpdfstring{BodyCollection()}{BodyCollection()}\hspace{0.1cm}{\footnotesize\ttfamily [2/4]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_collection_afeeb5768edd0836174f8e388d250759d} 
+Solar\+System\+::\+Bodies\+::\+Body\+Collection\+::\+Body\+Collection (\begin{DoxyParamCaption}\item[{std\+::vector$<$ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}} $>$}]{bodies}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_collection_a0f33178cc6480e83d2f2c15d5c925222}\index{SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}!BodyCollection@{BodyCollection}}
+\index{BodyCollection@{BodyCollection}!SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}}
+\doxysubsubsection{\texorpdfstring{BodyCollection()}{BodyCollection()}\hspace{0.1cm}{\footnotesize\ttfamily [3/4]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_collection_a0f33178cc6480e83d2f2c15d5c925222} 
+Solar\+System\+::\+Bodies\+::\+Body\+Collection\+::\+Body\+Collection (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection}{Body\+Collection}} \&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_bodies_1_1_body_collection_a0f33178cc6480e83d2f2c15d5c925222_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_collection_a0d613cdd6c30a9d57455820fa083d4d9}\index{SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}!BodyCollection@{BodyCollection}}
+\index{BodyCollection@{BodyCollection}!SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}}
+\doxysubsubsection{\texorpdfstring{BodyCollection()}{BodyCollection()}\hspace{0.1cm}{\footnotesize\ttfamily [4/4]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_collection_a0d613cdd6c30a9d57455820fa083d4d9} 
+Solar\+System\+::\+Bodies\+::\+Body\+Collection\+::\+Body\+Collection (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection}{Body\+Collection}} \&\&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_bodies_1_1_body_collection_a0d613cdd6c30a9d57455820fa083d4d9_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_collection_af8c869d15ba38b1f46e1bb82968a5a61}\index{SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}!````~BodyCollection@{\texorpdfstring{$\sim$}{\string~}BodyCollection}}
+\index{````~BodyCollection@{\texorpdfstring{$\sim$}{\string~}BodyCollection}!SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}BodyCollection()}{\string~BodyCollection()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_collection_af8c869d15ba38b1f46e1bb82968a5a61} 
+Solar\+System\+::\+Bodies\+::\+Body\+Collection\+::\texorpdfstring{$\sim$}{\string~}\+Body\+Collection (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}}
+
+
+
+\label{doc-func-members}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_collection_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_collection_a67865f9c5671a4187cb98f3f8720b7b1}\index{SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}!add\_body@{add\_body}}
+\index{add\_body@{add\_body}!SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}}
+\doxysubsubsection{\texorpdfstring{add\_body()}{add\_body()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_collection_a67865f9c5671a4187cb98f3f8720b7b1} 
+void Solar\+System\+::\+Bodies\+::\+Body\+Collection\+::add\+\_\+body (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}}}]{body}{}\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_bodies_1_1_body_collection_a67865f9c5671a4187cb98f3f8720b7b1_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_bodies_1_1_body_collection_a67865f9c5671a4187cb98f3f8720b7b1_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_collection_aab5ff30dcd87ba5e5323fbb33912456d}\index{SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}!add\_body@{add\_body}}
+\index{add\_body@{add\_body}!SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}}
+\doxysubsubsection{\texorpdfstring{add\_body()}{add\_body()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_collection_aab5ff30dcd87ba5e5323fbb33912456d} 
+void Solar\+System\+::\+Bodies\+::\+Body\+Collection\+::add\+\_\+body (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_solar_system_1_1_bodies_1_1_celestial_body_1_1_properties}{Celestial\+Body\+::\+Properties}}}]{props}{}\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_bodies_1_1_body_collection_aab5ff30dcd87ba5e5323fbb33912456d_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_collection_a7d2395800623fc69bce6b61bdf310f2c}\index{SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}!apply\_to\_all@{apply\_to\_all}}
+\index{apply\_to\_all@{apply\_to\_all}!SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}}
+\doxysubsubsection{\texorpdfstring{apply\_to\_all()}{apply\_to\_all()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_collection_a7d2395800623fc69bce6b61bdf310f2c} 
+void Solar\+System\+::\+Bodies\+::\+Body\+Collection\+::apply\+\_\+to\+\_\+all (\begin{DoxyParamCaption}\item[{std\+::function$<$ void(\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}} \&)$>$}]{func}{}\end{DoxyParamCaption})}
+
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_collection_aee3a0bde845c70ab22fc4809446a7637}\index{SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}!apply\_to\_all@{apply\_to\_all}}
+\index{apply\_to\_all@{apply\_to\_all}!SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}}
+\doxysubsubsection{\texorpdfstring{apply\_to\_all()}{apply\_to\_all()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_collection_aee3a0bde845c70ab22fc4809446a7637} 
+void Solar\+System\+::\+Bodies\+::\+Body\+Collection\+::apply\+\_\+to\+\_\+all (\begin{DoxyParamCaption}\item[{std\+::function$<$ void(const \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}} \&)$>$}]{func}{}\end{DoxyParamCaption}) const}
+
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_collection_a2f89c08e1fe1f406950a5c4ef6e4beb8}\index{SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}!apply\_to\_filtered@{apply\_to\_filtered}}
+\index{apply\_to\_filtered@{apply\_to\_filtered}!SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}}
+\doxysubsubsection{\texorpdfstring{apply\_to\_filtered()}{apply\_to\_filtered()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_collection_a2f89c08e1fe1f406950a5c4ef6e4beb8} 
+template$<$typename Predicate$>$ \\
+void Solar\+System\+::\+Bodies\+::\+Body\+Collection\+::apply\+\_\+to\+\_\+filtered (\begin{DoxyParamCaption}\item[{Predicate}]{pred}{, }\item[{std\+::function$<$ void(\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}} \&)$>$}]{func}{}\end{DoxyParamCaption})}
+
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_collection_a5fbf4ab167c283d746c4e0e1d13bbe58}\index{SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}!apply\_to\_filtered@{apply\_to\_filtered}}
+\index{apply\_to\_filtered@{apply\_to\_filtered}!SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}}
+\doxysubsubsection{\texorpdfstring{apply\_to\_filtered()}{apply\_to\_filtered()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_collection_a5fbf4ab167c283d746c4e0e1d13bbe58} 
+template$<$typename Predicate$>$ \\
+void Solar\+System\+::\+Bodies\+::\+Body\+Collection\+::apply\+\_\+to\+\_\+filtered (\begin{DoxyParamCaption}\item[{Predicate}]{pred}{, }\item[{std\+::function$<$ void(const \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}} \&)$>$}]{func}{}\end{DoxyParamCaption}) const}
+
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_collection_a96fd6a936928819dfbabbf25fa691ad3}\index{SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}!at@{at}}
+\index{at@{at}!SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}}
+\doxysubsubsection{\texorpdfstring{at()}{at()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_collection_a96fd6a936928819dfbabbf25fa691ad3} 
+\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}} \& Solar\+System\+::\+Bodies\+::\+Body\+Collection\+::at (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a307dbd41222f749357eb5daeb0574ba9}{size\+\_\+type}}}]{index}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}}
+
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_collection_aebed795e99fb85930b202e91a99be924}\index{SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}!at@{at}}
+\index{at@{at}!SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}}
+\doxysubsubsection{\texorpdfstring{at()}{at()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_collection_aebed795e99fb85930b202e91a99be924} 
+const \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}} \& Solar\+System\+::\+Bodies\+::\+Body\+Collection\+::at (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a307dbd41222f749357eb5daeb0574ba9}{size\+\_\+type}}}]{index}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}}
+
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_collection_a9e7807816fc06a5faaaf5e1cf4e19994}\index{SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}!begin@{begin}}
+\index{begin@{begin}!SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}}
+\doxysubsubsection{\texorpdfstring{begin()}{begin()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_collection_a9e7807816fc06a5faaaf5e1cf4e19994} 
+\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a061e789427590d26710a727588b1f0f1}{iterator}} Solar\+System\+::\+Bodies\+::\+Body\+Collection\+::begin (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}}
+
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_collection_a5989243c2cb39fbd5646291aecd61d82}\index{SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}!begin@{begin}}
+\index{begin@{begin}!SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}}
+\doxysubsubsection{\texorpdfstring{begin()}{begin()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_collection_a5989243c2cb39fbd5646291aecd61d82} 
+\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a8902bacb76f0b5e3c1b2720d8812ab72}{const\+\_\+iterator}} Solar\+System\+::\+Bodies\+::\+Body\+Collection\+::begin (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}}
+
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_collection_ac022f1366caa2cd85161df7e0cd359fc}\index{SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}!cbegin@{cbegin}}
+\index{cbegin@{cbegin}!SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}}
+\doxysubsubsection{\texorpdfstring{cbegin()}{cbegin()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_collection_ac022f1366caa2cd85161df7e0cd359fc} 
+\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a8902bacb76f0b5e3c1b2720d8812ab72}{const\+\_\+iterator}} Solar\+System\+::\+Bodies\+::\+Body\+Collection\+::cbegin (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}}
+
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_collection_a3bc2f787a20c3251585fc8cd543dc06f}\index{SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}!cend@{cend}}
+\index{cend@{cend}!SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}}
+\doxysubsubsection{\texorpdfstring{cend()}{cend()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_collection_a3bc2f787a20c3251585fc8cd543dc06f} 
+\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a8902bacb76f0b5e3c1b2720d8812ab72}{const\+\_\+iterator}} Solar\+System\+::\+Bodies\+::\+Body\+Collection\+::cend (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}}
+
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_collection_acd291494f4ab1b23c0c8419b16fc6fa0}\index{SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}!center\_of\_mass@{center\_of\_mass}}
+\index{center\_of\_mass@{center\_of\_mass}!SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}}
+\doxysubsubsection{\texorpdfstring{center\_of\_mass()}{center\_of\_mass()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_collection_acd291494f4ab1b23c0c8419b16fc6fa0} 
+\mbox{\hyperlink{namespace_solar_system_1_1_math_a58b613f1c9974f449ee706cd131b1f41}{Math\+::\+Vector3d}} Solar\+System\+::\+Bodies\+::\+Body\+Collection\+::center\+\_\+of\+\_\+mass (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=343pt]{class_solar_system_1_1_bodies_1_1_body_collection_acd291494f4ab1b23c0c8419b16fc6fa0_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_bodies_1_1_body_collection_acd291494f4ab1b23c0c8419b16fc6fa0_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_collection_aa69f8bb75342a6cf9f795eeba789c9fd}\index{SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}!clear@{clear}}
+\index{clear@{clear}!SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}}
+\doxysubsubsection{\texorpdfstring{clear()}{clear()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_collection_aa69f8bb75342a6cf9f795eeba789c9fd} 
+void Solar\+System\+::\+Bodies\+::\+Body\+Collection\+::clear (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_collection_af82b22f9073d1d13df623cae6a22ad8e}\index{SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}!contains@{contains}}
+\index{contains@{contains}!SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}}
+\doxysubsubsection{\texorpdfstring{contains()}{contains()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_collection_af82b22f9073d1d13df623cae6a22ad8e} 
+bool Solar\+System\+::\+Bodies\+::\+Body\+Collection\+::contains (\begin{DoxyParamCaption}\item[{std\+::string\+\_\+view}]{name}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_bodies_1_1_body_collection_af82b22f9073d1d13df623cae6a22ad8e_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_collection_a6d596634030b94434c7b6572c9be74fb}\index{SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}!count\_by\_priority@{count\_by\_priority}}
+\index{count\_by\_priority@{count\_by\_priority}!SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}}
+\doxysubsubsection{\texorpdfstring{count\_by\_priority()}{count\_by\_priority()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_collection_a6d596634030b94434c7b6572c9be74fb} 
+\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a307dbd41222f749357eb5daeb0574ba9}{Body\+Collection\+::size\+\_\+type}} Solar\+System\+::\+Bodies\+::\+Body\+Collection\+::count\+\_\+by\+\_\+priority (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121}{Body\+Priority}}}]{priority}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_bodies_1_1_body_collection_a6d596634030b94434c7b6572c9be74fb_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_collection_ac45fa7adf22fc4196f4b237ae906676f}\index{SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}!count\_by\_type@{count\_by\_type}}
+\index{count\_by\_type@{count\_by\_type}!SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}}
+\doxysubsubsection{\texorpdfstring{count\_by\_type()}{count\_by\_type()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_collection_ac45fa7adf22fc4196f4b237ae906676f} 
+\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a307dbd41222f749357eb5daeb0574ba9}{Body\+Collection\+::size\+\_\+type}} Solar\+System\+::\+Bodies\+::\+Body\+Collection\+::count\+\_\+by\+\_\+type (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdc}{Body\+Type}}}]{type}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_bodies_1_1_body_collection_ac45fa7adf22fc4196f4b237ae906676f_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_collection_a973a85e240c688f175d4ad4a6e232313}\index{SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}!empty@{empty}}
+\index{empty@{empty}!SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}}
+\doxysubsubsection{\texorpdfstring{empty()}{empty()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_collection_a973a85e240c688f175d4ad4a6e232313} 
+bool Solar\+System\+::\+Bodies\+::\+Body\+Collection\+::empty (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}, {\ttfamily [noexcept]}}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_bodies_1_1_body_collection_a973a85e240c688f175d4ad4a6e232313_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_collection_a7a2cca4f873119a1e8b6c7f156b4ff07}\index{SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}!end@{end}}
+\index{end@{end}!SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}}
+\doxysubsubsection{\texorpdfstring{end()}{end()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_collection_a7a2cca4f873119a1e8b6c7f156b4ff07} 
+\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a061e789427590d26710a727588b1f0f1}{iterator}} Solar\+System\+::\+Bodies\+::\+Body\+Collection\+::end (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}}
+
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_collection_a58543f2c6f137c28e412efb252721b39}\index{SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}!end@{end}}
+\index{end@{end}!SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}}
+\doxysubsubsection{\texorpdfstring{end()}{end()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_collection_a58543f2c6f137c28e412efb252721b39} 
+\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a8902bacb76f0b5e3c1b2720d8812ab72}{const\+\_\+iterator}} Solar\+System\+::\+Bodies\+::\+Body\+Collection\+::end (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}}
+
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_collection_a623aa8acccd4683aba58e6265b383670}\index{SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}!filter\_available\_at@{filter\_available\_at}}
+\index{filter\_available\_at@{filter\_available\_at}!SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}}
+\doxysubsubsection{\texorpdfstring{filter\_available\_at()}{filter\_available\_at()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_collection_a623aa8acccd4683aba58e6265b383670} 
+std\+::vector$<$ std\+::reference\+\_\+wrapper$<$ const \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}} $>$ $>$ Solar\+System\+::\+Bodies\+::\+Body\+Collection\+::filter\+\_\+available\+\_\+at (\begin{DoxyParamCaption}\item[{std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point}]{time}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_collection_a610b98608a164b8066e73feb951f92c9}\index{SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}!filter\_by\_priority@{filter\_by\_priority}}
+\index{filter\_by\_priority@{filter\_by\_priority}!SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}}
+\doxysubsubsection{\texorpdfstring{filter\_by\_priority()}{filter\_by\_priority()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_collection_a610b98608a164b8066e73feb951f92c9} 
+std\+::vector$<$ std\+::reference\+\_\+wrapper$<$ const \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}} $>$ $>$ Solar\+System\+::\+Bodies\+::\+Body\+Collection\+::filter\+\_\+by\+\_\+priority (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121}{Body\+Priority}}}]{priority}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=342pt]{class_solar_system_1_1_bodies_1_1_body_collection_a610b98608a164b8066e73feb951f92c9_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_collection_ace20b1380de21447bb964cae854e062c}\index{SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}!filter\_by\_type@{filter\_by\_type}}
+\index{filter\_by\_type@{filter\_by\_type}!SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}}
+\doxysubsubsection{\texorpdfstring{filter\_by\_type()}{filter\_by\_type()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_collection_ace20b1380de21447bb964cae854e062c} 
+std\+::vector$<$ std\+::reference\+\_\+wrapper$<$ const \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}} $>$ $>$ Solar\+System\+::\+Bodies\+::\+Body\+Collection\+::filter\+\_\+by\+\_\+type (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdc}{Body\+Type}}}]{type}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_collection_af9c44691a41a08a75d728ae36bc9d6a8}\index{SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}!filter\_essential@{filter\_essential}}
+\index{filter\_essential@{filter\_essential}!SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}}
+\doxysubsubsection{\texorpdfstring{filter\_essential()}{filter\_essential()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_collection_af9c44691a41a08a75d728ae36bc9d6a8} 
+std\+::vector$<$ std\+::reference\+\_\+wrapper$<$ const \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}} $>$ $>$ Solar\+System\+::\+Bodies\+::\+Body\+Collection\+::filter\+\_\+essential (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=342pt]{class_solar_system_1_1_bodies_1_1_body_collection_af9c44691a41a08a75d728ae36bc9d6a8_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_collection_a2af6341b8cc8bdcb28b65b41c1654628}\index{SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}!find\_body@{find\_body}}
+\index{find\_body@{find\_body}!SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}}
+\doxysubsubsection{\texorpdfstring{find\_body()}{find\_body()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_collection_a2af6341b8cc8bdcb28b65b41c1654628} 
+std\+::optional$<$ std\+::reference\+\_\+wrapper$<$ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}} $>$ $>$ Solar\+System\+::\+Bodies\+::\+Body\+Collection\+::find\+\_\+body (\begin{DoxyParamCaption}\item[{std\+::string\+\_\+view}]{name}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_collection_a35fb4cca17ec8247bd99724e02586dcc}\index{SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}!find\_body@{find\_body}}
+\index{find\_body@{find\_body}!SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}}
+\doxysubsubsection{\texorpdfstring{find\_body()}{find\_body()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_collection_a35fb4cca17ec8247bd99724e02586dcc} 
+std\+::optional$<$ std\+::reference\+\_\+wrapper$<$ const \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}} $>$ $>$ Solar\+System\+::\+Bodies\+::\+Body\+Collection\+::find\+\_\+body (\begin{DoxyParamCaption}\item[{std\+::string\+\_\+view}]{name}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_collection_af77c38e81900ad5c307835a7b68ef4bd}\index{SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}!get\_validation\_errors@{get\_validation\_errors}}
+\index{get\_validation\_errors@{get\_validation\_errors}!SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}}
+\doxysubsubsection{\texorpdfstring{get\_validation\_errors()}{get\_validation\_errors()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_collection_af77c38e81900ad5c307835a7b68ef4bd} 
+std\+::vector$<$ std\+::string $>$ Solar\+System\+::\+Bodies\+::\+Body\+Collection\+::get\+\_\+validation\+\_\+errors (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_bodies_1_1_body_collection_af77c38e81900ad5c307835a7b68ef4bd_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_collection_a5ef3e5e10e14f822f4660da9aa41e199}\index{SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}!operator=@{operator=}}
+\index{operator=@{operator=}!SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_collection_a5ef3e5e10e14f822f4660da9aa41e199} 
+\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection}{Body\+Collection}} \& Solar\+System\+::\+Bodies\+::\+Body\+Collection\+::operator= (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection}{Body\+Collection}} \&\&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_bodies_1_1_body_collection_a5ef3e5e10e14f822f4660da9aa41e199_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_collection_a0e7945eb78a6ee506e9494e4277f0e9a}\index{SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}!operator=@{operator=}}
+\index{operator=@{operator=}!SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_collection_a0e7945eb78a6ee506e9494e4277f0e9a} 
+\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection}{Body\+Collection}} \& Solar\+System\+::\+Bodies\+::\+Body\+Collection\+::operator= (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection}{Body\+Collection}} \&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_bodies_1_1_body_collection_a0e7945eb78a6ee506e9494e4277f0e9a_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_collection_af13d9b9913d34ebb7b4bae226f0fa112}\index{SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}!operator\mbox{[}\mbox{]}@{operator[]}}
+\index{operator\mbox{[}\mbox{]}@{operator[]}!SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}}
+\doxysubsubsection{\texorpdfstring{operator[]()}{operator[]()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_collection_af13d9b9913d34ebb7b4bae226f0fa112} 
+\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}} \& Solar\+System\+::\+Bodies\+::\+Body\+Collection\+::operator\mbox{[}$\,$\mbox{]} (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a307dbd41222f749357eb5daeb0574ba9}{size\+\_\+type}}}]{index}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}}
+
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_collection_a0e762961774cdd378d67b8dd672276f7}\index{SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}!operator\mbox{[}\mbox{]}@{operator[]}}
+\index{operator\mbox{[}\mbox{]}@{operator[]}!SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}}
+\doxysubsubsection{\texorpdfstring{operator[]()}{operator[]()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_collection_a0e762961774cdd378d67b8dd672276f7} 
+const \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}} \& Solar\+System\+::\+Bodies\+::\+Body\+Collection\+::operator\mbox{[}$\,$\mbox{]} (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a307dbd41222f749357eb5daeb0574ba9}{size\+\_\+type}}}]{index}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}}
+
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_collection_af97f7ee2e46da5ac1bf89c84b8e73be5}\index{SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}!remove\_body@{remove\_body}}
+\index{remove\_body@{remove\_body}!SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}}
+\doxysubsubsection{\texorpdfstring{remove\_body()}{remove\_body()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_collection_af97f7ee2e46da5ac1bf89c84b8e73be5} 
+bool Solar\+System\+::\+Bodies\+::\+Body\+Collection\+::remove\+\_\+body (\begin{DoxyParamCaption}\item[{std\+::string\+\_\+view}]{name}{}\end{DoxyParamCaption})}
+
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_collection_a2e7c846269951dd463cb97802103ce64}\index{SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}!reserve@{reserve}}
+\index{reserve@{reserve}!SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}}
+\doxysubsubsection{\texorpdfstring{reserve()}{reserve()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_collection_a2e7c846269951dd463cb97802103ce64} 
+void Solar\+System\+::\+Bodies\+::\+Body\+Collection\+::reserve (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a307dbd41222f749357eb5daeb0574ba9}{size\+\_\+type}}}]{capacity}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_collection_aab8db2368ba1d22c6a6496d5fbd44040}\index{SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}!size@{size}}
+\index{size@{size}!SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}}
+\doxysubsubsection{\texorpdfstring{size()}{size()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_collection_aab8db2368ba1d22c6a6496d5fbd44040} 
+\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection_a307dbd41222f749357eb5daeb0574ba9}{size\+\_\+type}} Solar\+System\+::\+Bodies\+::\+Body\+Collection\+::size (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}, {\ttfamily [noexcept]}}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_bodies_1_1_body_collection_aab8db2368ba1d22c6a6496d5fbd44040_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_collection_a96c4ee3e6780d5a07f12866705074646}\index{SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}!summary@{summary}}
+\index{summary@{summary}!SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}}
+\doxysubsubsection{\texorpdfstring{summary()}{summary()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_collection_a96c4ee3e6780d5a07f12866705074646} 
+std\+::string Solar\+System\+::\+Bodies\+::\+Body\+Collection\+::summary (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_bodies_1_1_body_collection_a96c4ee3e6780d5a07f12866705074646_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_collection_a98066436563d88f49a8ada820270dcee}\index{SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}!to\_json@{to\_json}}
+\index{to\_json@{to\_json}!SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}}
+\doxysubsubsection{\texorpdfstring{to\_json()}{to\_json()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_collection_a98066436563d88f49a8ada820270dcee} 
+std\+::string Solar\+System\+::\+Bodies\+::\+Body\+Collection\+::to\+\_\+json (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_bodies_1_1_body_collection_a98066436563d88f49a8ada820270dcee_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_collection_a515650f47d3bbe50816cdb54f359c226}\index{SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}!total\_mass@{total\_mass}}
+\index{total\_mass@{total\_mass}!SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}}
+\doxysubsubsection{\texorpdfstring{total\_mass()}{total\_mass()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_collection_a515650f47d3bbe50816cdb54f359c226} 
+double Solar\+System\+::\+Bodies\+::\+Body\+Collection\+::total\+\_\+mass (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_bodies_1_1_body_collection_a515650f47d3bbe50816cdb54f359c226_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_collection_a782d32c115a5db2132a957e83f342c9f}\index{SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}!validate@{validate}}
+\index{validate@{validate}!SolarSystem::Bodies::BodyCollection@{SolarSystem::Bodies::BodyCollection}}
+\doxysubsubsection{\texorpdfstring{validate()}{validate()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_collection_a782d32c115a5db2132a957e83f342c9f} 
+bool Solar\+System\+::\+Bodies\+::\+Body\+Collection\+::validate (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_bodies_1_1_body_collection_a782d32c115a5db2132a957e83f342c9f_cgraph}
+\end{center}
+\end{figure}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+core/include/solar\+\_\+core/bodies/\mbox{\hyperlink{body__collection_8hpp}{body\+\_\+collection.\+hpp}}\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+core/src/bodies/\mbox{\hyperlink{body__collection_8cpp}{body\+\_\+collection.\+cpp}}\end{DoxyCompactItemize}

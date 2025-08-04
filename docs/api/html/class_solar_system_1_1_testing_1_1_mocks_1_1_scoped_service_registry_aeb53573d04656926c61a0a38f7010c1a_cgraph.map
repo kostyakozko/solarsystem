@@ -1,0 +1,9 @@
+<map id="SolarSystem::Testing::Mocks::ScopedServiceRegistry::registry" name="SolarSystem::Testing::Mocks::ScopedServiceRegistry::registry">
+<area shape="rect" id="Node000001" title="Get the registry." alt="" coords="5,29,219,85"/>
+<area shape="rect" id="Node000002" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry.html#a449b026183046fbb50877dda6d7eea75" title="Get global registry instance." alt="" coords="267,29,468,85"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="219,54,251,54,251,60,219,60"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="319,29,319,19,328,10,344,5,367,3,393,5,409,12,407,17,392,10,367,8,345,10,331,15,324,21,324,29"/>
+<area shape="rect" id="Node000003" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry.html#a2474c9a8aba5cd14aa69f66789e84df2" title=" " alt="" coords="516,29,717,85"/>
+<area shape="poly" id="edge3_Node000002_Node000003" title=" " alt="" coords="469,54,501,54,501,60,469,60"/>
+<area shape="poly" id="edge4_Node000003_Node000003" title=" " alt="" coords="568,29,569,19,577,10,594,5,617,3,643,5,659,12,657,17,641,10,617,8,595,10,580,15,573,21,573,29"/>
+</map>

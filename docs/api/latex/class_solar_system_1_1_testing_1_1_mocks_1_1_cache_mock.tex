@@ -1,0 +1,858 @@
+\doxysection{Solar\+System\+::Testing\+::Mocks\+::Cache\+Mock Class Reference}
+\hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock}{}\label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock}\index{SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}}
+
+
+Cache Operation Mock Implementation.  
+
+
+
+
+{\ttfamily \#include $<$cache\+\_\+mock.\+hpp$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a522edb5d49da1e0091b488a52137d5bd}{Cache\+Mock}} (\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config}{Cache\+Mock\+Config}} \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a2e580f1ca9e7f926ad08c8e0c31520bd}{config}}=\{\})
+\begin{DoxyCompactList}\small\item\em Construct cache mock with configuration. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a6e34109c456f8146df2449503be29e9c}{\texorpdfstring{$\sim$}{\string~}\+Cache\+Mock}} ()
+\begin{DoxyCompactList}\small\item\em Destructor with automatic cleanup. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_afd97b4c92a798336c09f9f8f58ac14e1}{Cache\+Mock}} (const \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock}{Cache\+Mock}} \&)=delete
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock}{Cache\+Mock}} \& \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_ae93589630ec11c58e189de5cbf68b5c4}{operator=}} (const \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock}{Cache\+Mock}} \&)=delete
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a294e480b9251973a1ff4bc91a843e246}{Cache\+Mock}} (\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock}{Cache\+Mock}} \&\&)=delete
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock}{Cache\+Mock}} \& \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_aa9fdef9f9f069f4b84302e1157ff672c}{operator=}} (\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock}{Cache\+Mock}} \&\&)=delete
+\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_ad9a574edb78b7fbca76ef8a59bce1750}{set\+\_\+cache\+\_\+exists}} (bool exists)
+\begin{DoxyCompactList}\small\item\em Set whether cache exists. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a31491fc3d9e6e71b19b90244e1068f89}{set\+\_\+cache\+\_\+valid}} (bool valid)
+\begin{DoxyCompactList}\small\item\em Set whether cache is valid. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a15ca63a81c55d8c7ceb40fd2f238f382}{set\+\_\+cache\+\_\+data}} (const std\+::string \&data)
+\begin{DoxyCompactList}\small\item\em Set cache data content. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a66180705755ca6509fd17b308b3dbdf6}{set\+\_\+cache\+\_\+data}} (const std\+::vector$<$ \mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_ephemeris_data}{Solar\+System\+::\+JPL\+::\+Ephemeris\+Data}} $>$ \&data)
+\begin{DoxyCompactList}\small\item\em Set cache data as ephemeris data. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_abc36f08890d034bc15d1c71e3aced49f}{set\+\_\+cache\+\_\+metadata}} (const \mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_cache_metadata}{Solar\+System\+::\+JPL\+::\+Cache\+Metadata}} \&metadata)
+\begin{DoxyCompactList}\small\item\em Set cache metadata. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a2887e4af2d7f852559e46b5ead1c984a}{simulate\+\_\+cache\+\_\+corruption}} ()
+\begin{DoxyCompactList}\small\item\em Simulate cache corruption. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_ab91d8fbd2ad65f448876870fa4083428}{simulate\+\_\+disk\+\_\+full}} ()
+\begin{DoxyCompactList}\small\item\em Simulate disk full condition. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a40e749d3eff16db5b198058455d2b789}{simulate\+\_\+permission\+\_\+denied}} ()
+\begin{DoxyCompactList}\small\item\em Simulate permission denied errors. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_acd2daf829c27f653dc31c49c62a27567}{simulate\+\_\+io\+\_\+error}} (size\+\_\+t \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_aae76998553f78b179326a45d282fd395}{operation\+\_\+count}}=1)
+\begin{DoxyCompactList}\small\item\em Simulate I/O errors for next N operations. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_ad8ee2c5d56fb14baffbd6daa1379e1bc}{simulate\+\_\+partial\+\_\+corruption}} (double corruption\+\_\+percentage=0.\+1)
+\begin{DoxyCompactList}\small\item\em Simulate partial cache corruption. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a75d6b5ae4ce1a20a132558dd331ab3cf}{simulate\+\_\+slow\+\_\+disk}} (std\+::chrono\+::milliseconds delay)
+\begin{DoxyCompactList}\small\item\em Simulate slow disk operations. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_aad3c1fff12a1f57f0331a8b38cdb1829}{populate\+\_\+with\+\_\+valid\+\_\+data}} ()
+\begin{DoxyCompactList}\small\item\em Populate cache with valid test data. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_afe5d2b35298afcde993bad66adf1031d}{populate\+\_\+with\+\_\+corrupted\+\_\+data}} ()
+\begin{DoxyCompactList}\small\item\em Populate cache with corrupted test data. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a44074ed875f1d27ff585d7679649fbcb}{populate\+\_\+with\+\_\+ephemeris\+\_\+data}} (const std\+::vector$<$ \mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_ephemeris_data}{Solar\+System\+::\+JPL\+::\+Ephemeris\+Data}} $>$ \&data)
+\begin{DoxyCompactList}\small\item\em Populate cache with specific ephemeris data. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a4769a319e4f096aeb428733df4f70af0}{clear\+\_\+cache\+\_\+data}} ()
+\begin{DoxyCompactList}\small\item\em Clear all cache data. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a1ae7174894acb8c6560a62a72f42d5cd}{Solar\+System\+::\+JPL\+::\+JPLResult}}$<$ std\+::vector$<$ \mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_ephemeris_data}{Solar\+System\+::\+JPL\+::\+Ephemeris\+Data}} $>$ $>$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a1972501492faa3427ae8f4d376437133}{mock\+\_\+load\+\_\+from\+\_\+cache}} ()
+\begin{DoxyCompactList}\small\item\em Mock implementation of cache loading. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a9db0f8fc911088c5455067676ea1e99d}{Solar\+System\+::\+JPL\+::\+JPLVoid\+Result}} \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a97eead2c367c35f945e46fbf0ae2c291}{mock\+\_\+save\+\_\+to\+\_\+cache}} (const std\+::vector$<$ \mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_ephemeris_data}{Solar\+System\+::\+JPL\+::\+Ephemeris\+Data}} $>$ \&data)
+\begin{DoxyCompactList}\small\item\em Mock implementation of cache saving. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a1ae7174894acb8c6560a62a72f42d5cd}{Solar\+System\+::\+JPL\+::\+JPLResult}}$<$ bool $>$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a8b0a1100933d2d8222b006af7c9565f6}{mock\+\_\+validate\+\_\+cache}} () const
+\begin{DoxyCompactList}\small\item\em Mock implementation of cache validation. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a9db0f8fc911088c5455067676ea1e99d}{Solar\+System\+::\+JPL\+::\+JPLVoid\+Result}} \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a2013c77a6b2eaa00e5cefdf0999522ff}{mock\+\_\+clear\+\_\+cache}} ()
+\begin{DoxyCompactList}\small\item\em Mock implementation of cache clearing. \end{DoxyCompactList}\item 
+std\+::optional$<$ \mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_cache_metadata}{Solar\+System\+::\+JPL\+::\+Cache\+Metadata}} $>$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_aeb0b3f6425841fa33c0e59c7b67cca93}{mock\+\_\+get\+\_\+cache\+\_\+metadata}} () const
+\begin{DoxyCompactList}\small\item\em Mock implementation of cache metadata loading. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a9db0f8fc911088c5455067676ea1e99d}{Solar\+System\+::\+JPL\+::\+JPLVoid\+Result}} \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a9a26dc8538c947ca356b6f5c11f873e9}{mock\+\_\+rebuild\+\_\+cache}} ()
+\begin{DoxyCompactList}\small\item\em Mock implementation of cache rebuilding. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_ae25e5d5d40c19a310db60f9e798e26e5}{mock\+\_\+file\+\_\+exists}} (const std\+::filesystem\+::path \&path) const
+\begin{DoxyCompactList}\small\item\em Check if file exists (mock) \end{DoxyCompactList}\item 
+std\+::optional$<$ size\+\_\+t $>$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a09414e1c7d685bdfb3dc270ae29090f2}{mock\+\_\+file\+\_\+size}} (const std\+::filesystem\+::path \&path) const
+\begin{DoxyCompactList}\small\item\em Get file size (mock) \end{DoxyCompactList}\item 
+std\+::optional$<$ std\+::string $>$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_aeb2791bc68b6b3b1b9a899b27eef1a97}{mock\+\_\+read\+\_\+file}} (const std\+::filesystem\+::path \&path)
+\begin{DoxyCompactList}\small\item\em Read file content (mock) \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_aec5c77b26b516774a4165e9537944464}{mock\+\_\+write\+\_\+file}} (const std\+::filesystem\+::path \&path, const std\+::string \&content)
+\begin{DoxyCompactList}\small\item\em Write file content (mock) \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a69166e2787e23d9e1481788de3330f60}{mock\+\_\+create\+\_\+directory}} (const std\+::filesystem\+::path \&path)
+\begin{DoxyCompactList}\small\item\em Create directory (mock) \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a283941cc4d301053d91b630b860df041}{mock\+\_\+remove\+\_\+file}} (const std\+::filesystem\+::path \&path)
+\begin{DoxyCompactList}\small\item\em Remove file (mock) \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a868d6c0681fd42a2a58dfc0a55a60d91}{was\+\_\+cache\+\_\+read}} () const
+\begin{DoxyCompactList}\small\item\em Check if cache was read. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_ae3fdb16a5d5f4034b20a697f29f57db0}{was\+\_\+cache\+\_\+written}} () const
+\begin{DoxyCompactList}\small\item\em Check if cache was written. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a74c6da438ce419c858fafaf0f787592f}{was\+\_\+cache\+\_\+validated}} () const
+\begin{DoxyCompactList}\small\item\em Check if cache was validated. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_af9a3d1ca9d634444874b93b090ae119c}{was\+\_\+cache\+\_\+cleared}} () const
+\begin{DoxyCompactList}\small\item\em Check if cache was cleared. \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_adf9fd730dd1075ae11b7b27a2c995976}{last\+\_\+written\+\_\+data}} () const
+\begin{DoxyCompactList}\small\item\em Get last written data. \end{DoxyCompactList}\item 
+size\+\_\+t \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_aae76998553f78b179326a45d282fd395}{operation\+\_\+count}} () const
+\begin{DoxyCompactList}\small\item\em Get total number of operations. \end{DoxyCompactList}\item 
+size\+\_\+t \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a39b13bff672912552bd6c534bb8364d9}{operation\+\_\+count}} (\mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_aebdea943a0edba0bd54aac11293bf00f}{Mock\+Cache\+Operation\+Type}} type) const
+\begin{DoxyCompactList}\small\item\em Get number of operations by type. \end{DoxyCompactList}\item 
+const std\+::vector$<$ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_mock_cache_call_info}{Mock\+Cache\+Call\+Info}} $>$ \& \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_ac705731389317873ccc5700cc1b7debc}{operation\+\_\+history}} () const
+\begin{DoxyCompactList}\small\item\em Get complete operation history. \end{DoxyCompactList}\item 
+std\+::vector$<$ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_mock_cache_call_info}{Mock\+Cache\+Call\+Info}} $>$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a28309ef010926cca0066f0e9c5305d25}{operations\+\_\+of\+\_\+type}} (\mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_aebdea943a0edba0bd54aac11293bf00f}{Mock\+Cache\+Operation\+Type}} type) const
+\begin{DoxyCompactList}\small\item\em Get operations of specific type. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a223ee2487d769bce223de74d90e9ab2c}{reset\+\_\+call\+\_\+history}} ()
+\begin{DoxyCompactList}\small\item\em Reset call history and counters. \end{DoxyCompactList}\item 
+const \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config}{Cache\+Mock\+Config}} \& \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a2e580f1ca9e7f926ad08c8e0c31520bd}{config}} () const noexcept
+\begin{DoxyCompactList}\small\item\em Get current configuration. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_aaafab43a7383d7c34807de094ea7987c}{update\+\_\+config}} (const \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config}{Cache\+Mock\+Config}} \&new\+\_\+config)
+\begin{DoxyCompactList}\small\item\em Update configuration. \end{DoxyCompactList}\item 
+std\+::filesystem\+::path \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_ae83cea0968a3b51ba2f3bcfc0f9659a5}{cache\+\_\+directory}} () const
+\begin{DoxyCompactList}\small\item\em Get current cache directory path. \end{DoxyCompactList}\item 
+std\+::filesystem\+::path \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a8d72fffbde78183881c15c0cc60b6c5c}{binary\+\_\+cache\+\_\+path}} () const
+\begin{DoxyCompactList}\small\item\em Get binary cache file path. \end{DoxyCompactList}\item 
+std\+::filesystem\+::path \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a13d786bd59435856c1eb87418b8b7757}{json\+\_\+cache\+\_\+path}} () const
+\begin{DoxyCompactList}\small\item\em Get JSON cache file path. \end{DoxyCompactList}\item 
+std\+::filesystem\+::path \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a76efa7594775234cec5aa211af46f97d}{metadata\+\_\+path}} () const
+\begin{DoxyCompactList}\small\item\em Get metadata file path. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a143aa29b6b311f1ad67991c563115377}{install\+\_\+as\+\_\+global\+\_\+mock}} ()
+\begin{DoxyCompactList}\small\item\em Install this mock as global cache mock. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a22e7ed268743d5cac31cbc75a3effee1}{remove\+\_\+global\+\_\+mock}} ()
+\begin{DoxyCompactList}\small\item\em Remove global mock installation. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_abed8e5b36362fb6b3dc8c4bff87b71db}{Temporary\+Cache}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Cache Operation Mock Implementation. 
+
+Provides comprehensive mocking of cache operations for testing purposes. Can simulate various file system conditions, corruption scenarios, and failure modes. 
+
+\label{doc-constructors}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a522edb5d49da1e0091b488a52137d5bd}\index{SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}!CacheMock@{CacheMock}}
+\index{CacheMock@{CacheMock}!SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}}
+\doxysubsubsection{\texorpdfstring{CacheMock()}{CacheMock()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a522edb5d49da1e0091b488a52137d5bd} 
+Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+::\+Cache\+Mock (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config}{Cache\+Mock\+Config}}}]{config}{ = {\ttfamily \{\}}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+
+
+Construct cache mock with configuration. 
+
+\doxylink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock}{Cache\+Mock} constructor. Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a522edb5d49da1e0091b488a52137d5bd_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a522edb5d49da1e0091b488a52137d5bd_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a6e34109c456f8146df2449503be29e9c}\index{SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}!````~CacheMock@{\texorpdfstring{$\sim$}{\string~}CacheMock}}
+\index{````~CacheMock@{\texorpdfstring{$\sim$}{\string~}CacheMock}!SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}CacheMock()}{\string~CacheMock()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a6e34109c456f8146df2449503be29e9c} 
+Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+::\texorpdfstring{$\sim$}{\string~}\+Cache\+Mock (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Destructor with automatic cleanup. 
+
+\doxylink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock}{Cache\+Mock} destructor. \Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_afd97b4c92a798336c09f9f8f58ac14e1}\index{SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}!CacheMock@{CacheMock}}
+\index{CacheMock@{CacheMock}!SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}}
+\doxysubsubsection{\texorpdfstring{CacheMock()}{CacheMock()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_afd97b4c92a798336c09f9f8f58ac14e1} 
+Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+::\+Cache\+Mock (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock}{Cache\+Mock}} \&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_afd97b4c92a798336c09f9f8f58ac14e1_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a294e480b9251973a1ff4bc91a843e246}\index{SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}!CacheMock@{CacheMock}}
+\index{CacheMock@{CacheMock}!SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}}
+\doxysubsubsection{\texorpdfstring{CacheMock()}{CacheMock()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a294e480b9251973a1ff4bc91a843e246} 
+Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+::\+Cache\+Mock (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock}{Cache\+Mock}} \&\&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a294e480b9251973a1ff4bc91a843e246_cgraph}
+\end{center}
+\end{figure}
+
+
+\label{doc-func-members}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a8d72fffbde78183881c15c0cc60b6c5c}\index{SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}!binary\_cache\_path@{binary\_cache\_path}}
+\index{binary\_cache\_path@{binary\_cache\_path}!SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}}
+\doxysubsubsection{\texorpdfstring{binary\_cache\_path()}{binary\_cache\_path()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a8d72fffbde78183881c15c0cc60b6c5c} 
+std\+::filesystem\+::path Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+::binary\+\_\+cache\+\_\+path (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Get binary cache file path. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_ae83cea0968a3b51ba2f3bcfc0f9659a5}\index{SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}!cache\_directory@{cache\_directory}}
+\index{cache\_directory@{cache\_directory}!SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}}
+\doxysubsubsection{\texorpdfstring{cache\_directory()}{cache\_directory()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_ae83cea0968a3b51ba2f3bcfc0f9659a5} 
+std\+::filesystem\+::path Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+::cache\+\_\+directory (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Get current cache directory path. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a4769a319e4f096aeb428733df4f70af0}\index{SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}!clear\_cache\_data@{clear\_cache\_data}}
+\index{clear\_cache\_data@{clear\_cache\_data}!SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}}
+\doxysubsubsection{\texorpdfstring{clear\_cache\_data()}{clear\_cache\_data()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a4769a319e4f096aeb428733df4f70af0} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+::clear\+\_\+cache\+\_\+data (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Clear all cache data. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a4769a319e4f096aeb428733df4f70af0_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a2e580f1ca9e7f926ad08c8e0c31520bd}\index{SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}!config@{config}}
+\index{config@{config}!SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}}
+\doxysubsubsection{\texorpdfstring{config()}{config()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a2e580f1ca9e7f926ad08c8e0c31520bd} 
+const \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config}{Cache\+Mock\+Config}} \& Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+::config (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}, {\ttfamily [noexcept]}}
+
+
+
+Get current configuration. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a2e580f1ca9e7f926ad08c8e0c31520bd_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a143aa29b6b311f1ad67991c563115377}\index{SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}!install\_as\_global\_mock@{install\_as\_global\_mock}}
+\index{install\_as\_global\_mock@{install\_as\_global\_mock}!SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}}
+\doxysubsubsection{\texorpdfstring{install\_as\_global\_mock()}{install\_as\_global\_mock()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a143aa29b6b311f1ad67991c563115377} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+::install\+\_\+as\+\_\+global\+\_\+mock (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Install this mock as global cache mock. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a13d786bd59435856c1eb87418b8b7757}\index{SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}!json\_cache\_path@{json\_cache\_path}}
+\index{json\_cache\_path@{json\_cache\_path}!SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}}
+\doxysubsubsection{\texorpdfstring{json\_cache\_path()}{json\_cache\_path()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a13d786bd59435856c1eb87418b8b7757} 
+std\+::filesystem\+::path Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+::json\+\_\+cache\+\_\+path (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Get JSON cache file path. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_adf9fd730dd1075ae11b7b27a2c995976}\index{SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}!last\_written\_data@{last\_written\_data}}
+\index{last\_written\_data@{last\_written\_data}!SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}}
+\doxysubsubsection{\texorpdfstring{last\_written\_data()}{last\_written\_data()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_adf9fd730dd1075ae11b7b27a2c995976} 
+std\+::string Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+::last\+\_\+written\+\_\+data (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Get last written data. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a76efa7594775234cec5aa211af46f97d}\index{SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}!metadata\_path@{metadata\_path}}
+\index{metadata\_path@{metadata\_path}!SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}}
+\doxysubsubsection{\texorpdfstring{metadata\_path()}{metadata\_path()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a76efa7594775234cec5aa211af46f97d} 
+std\+::filesystem\+::path Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+::metadata\+\_\+path (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Get metadata file path. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a2013c77a6b2eaa00e5cefdf0999522ff}\index{SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}!mock\_clear\_cache@{mock\_clear\_cache}}
+\index{mock\_clear\_cache@{mock\_clear\_cache}!SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}}
+\doxysubsubsection{\texorpdfstring{mock\_clear\_cache()}{mock\_clear\_cache()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a2013c77a6b2eaa00e5cefdf0999522ff} 
+\mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a9db0f8fc911088c5455067676ea1e99d}{Solar\+System\+::\+JPL\+::\+JPLVoid\+Result}} Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+::mock\+\_\+clear\+\_\+cache (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Mock implementation of cache clearing. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a2013c77a6b2eaa00e5cefdf0999522ff_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a69166e2787e23d9e1481788de3330f60}\index{SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}!mock\_create\_directory@{mock\_create\_directory}}
+\index{mock\_create\_directory@{mock\_create\_directory}!SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}}
+\doxysubsubsection{\texorpdfstring{mock\_create\_directory()}{mock\_create\_directory()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a69166e2787e23d9e1481788de3330f60} 
+bool Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+::mock\+\_\+create\+\_\+directory (\begin{DoxyParamCaption}\item[{const std\+::filesystem\+::path \&}]{path}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Create directory (mock) 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_ae25e5d5d40c19a310db60f9e798e26e5}\index{SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}!mock\_file\_exists@{mock\_file\_exists}}
+\index{mock\_file\_exists@{mock\_file\_exists}!SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}}
+\doxysubsubsection{\texorpdfstring{mock\_file\_exists()}{mock\_file\_exists()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_ae25e5d5d40c19a310db60f9e798e26e5} 
+bool Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+::mock\+\_\+file\+\_\+exists (\begin{DoxyParamCaption}\item[{const std\+::filesystem\+::path \&}]{path}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Check if file exists (mock) 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_ae25e5d5d40c19a310db60f9e798e26e5_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a09414e1c7d685bdfb3dc270ae29090f2}\index{SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}!mock\_file\_size@{mock\_file\_size}}
+\index{mock\_file\_size@{mock\_file\_size}!SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}}
+\doxysubsubsection{\texorpdfstring{mock\_file\_size()}{mock\_file\_size()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a09414e1c7d685bdfb3dc270ae29090f2} 
+std\+::optional$<$ size\+\_\+t $>$ Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+::mock\+\_\+file\+\_\+size (\begin{DoxyParamCaption}\item[{const std\+::filesystem\+::path \&}]{path}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Get file size (mock) 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a09414e1c7d685bdfb3dc270ae29090f2_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_aeb0b3f6425841fa33c0e59c7b67cca93}\index{SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}!mock\_get\_cache\_metadata@{mock\_get\_cache\_metadata}}
+\index{mock\_get\_cache\_metadata@{mock\_get\_cache\_metadata}!SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}}
+\doxysubsubsection{\texorpdfstring{mock\_get\_cache\_metadata()}{mock\_get\_cache\_metadata()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_aeb0b3f6425841fa33c0e59c7b67cca93} 
+std\+::optional$<$ \mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_cache_metadata}{Solar\+System\+::\+JPL\+::\+Cache\+Metadata}} $>$ Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+::mock\+\_\+get\+\_\+cache\+\_\+metadata (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Mock implementation of cache metadata loading. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a1972501492faa3427ae8f4d376437133}\index{SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}!mock\_load\_from\_cache@{mock\_load\_from\_cache}}
+\index{mock\_load\_from\_cache@{mock\_load\_from\_cache}!SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}}
+\doxysubsubsection{\texorpdfstring{mock\_load\_from\_cache()}{mock\_load\_from\_cache()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a1972501492faa3427ae8f4d376437133} 
+\mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a1ae7174894acb8c6560a62a72f42d5cd}{Solar\+System\+::\+JPL\+::\+JPLResult}}$<$ std\+::vector$<$ \mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_ephemeris_data}{Solar\+System\+::\+JPL\+::\+Ephemeris\+Data}} $>$ $>$ Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+::mock\+\_\+load\+\_\+from\+\_\+cache (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Mock implementation of cache loading. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_aeb2791bc68b6b3b1b9a899b27eef1a97}\index{SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}!mock\_read\_file@{mock\_read\_file}}
+\index{mock\_read\_file@{mock\_read\_file}!SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}}
+\doxysubsubsection{\texorpdfstring{mock\_read\_file()}{mock\_read\_file()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_aeb2791bc68b6b3b1b9a899b27eef1a97} 
+std\+::optional$<$ std\+::string $>$ Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+::mock\+\_\+read\+\_\+file (\begin{DoxyParamCaption}\item[{const std\+::filesystem\+::path \&}]{path}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Read file content (mock) 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_aeb2791bc68b6b3b1b9a899b27eef1a97_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a9a26dc8538c947ca356b6f5c11f873e9}\index{SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}!mock\_rebuild\_cache@{mock\_rebuild\_cache}}
+\index{mock\_rebuild\_cache@{mock\_rebuild\_cache}!SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}}
+\doxysubsubsection{\texorpdfstring{mock\_rebuild\_cache()}{mock\_rebuild\_cache()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a9a26dc8538c947ca356b6f5c11f873e9} 
+\mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a9db0f8fc911088c5455067676ea1e99d}{Solar\+System\+::\+JPL\+::\+JPLVoid\+Result}} Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+::mock\+\_\+rebuild\+\_\+cache (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Mock implementation of cache rebuilding. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a9a26dc8538c947ca356b6f5c11f873e9_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a283941cc4d301053d91b630b860df041}\index{SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}!mock\_remove\_file@{mock\_remove\_file}}
+\index{mock\_remove\_file@{mock\_remove\_file}!SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}}
+\doxysubsubsection{\texorpdfstring{mock\_remove\_file()}{mock\_remove\_file()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a283941cc4d301053d91b630b860df041} 
+bool Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+::mock\+\_\+remove\+\_\+file (\begin{DoxyParamCaption}\item[{const std\+::filesystem\+::path \&}]{path}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Remove file (mock) 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a97eead2c367c35f945e46fbf0ae2c291}\index{SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}!mock\_save\_to\_cache@{mock\_save\_to\_cache}}
+\index{mock\_save\_to\_cache@{mock\_save\_to\_cache}!SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}}
+\doxysubsubsection{\texorpdfstring{mock\_save\_to\_cache()}{mock\_save\_to\_cache()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a97eead2c367c35f945e46fbf0ae2c291} 
+\mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a9db0f8fc911088c5455067676ea1e99d}{Solar\+System\+::\+JPL\+::\+JPLVoid\+Result}} Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+::mock\+\_\+save\+\_\+to\+\_\+cache (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ \mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_ephemeris_data}{Solar\+System\+::\+JPL\+::\+Ephemeris\+Data}} $>$ \&}]{data}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Mock implementation of cache saving. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a97eead2c367c35f945e46fbf0ae2c291_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a8b0a1100933d2d8222b006af7c9565f6}\index{SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}!mock\_validate\_cache@{mock\_validate\_cache}}
+\index{mock\_validate\_cache@{mock\_validate\_cache}!SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}}
+\doxysubsubsection{\texorpdfstring{mock\_validate\_cache()}{mock\_validate\_cache()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a8b0a1100933d2d8222b006af7c9565f6} 
+\mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a1ae7174894acb8c6560a62a72f42d5cd}{Solar\+System\+::\+JPL\+::\+JPLResult}}$<$ bool $>$ Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+::mock\+\_\+validate\+\_\+cache (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Mock implementation of cache validation. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_aec5c77b26b516774a4165e9537944464}\index{SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}!mock\_write\_file@{mock\_write\_file}}
+\index{mock\_write\_file@{mock\_write\_file}!SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}}
+\doxysubsubsection{\texorpdfstring{mock\_write\_file()}{mock\_write\_file()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_aec5c77b26b516774a4165e9537944464} 
+bool Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+::mock\+\_\+write\+\_\+file (\begin{DoxyParamCaption}\item[{const std\+::filesystem\+::path \&}]{path}{, }\item[{const std\+::string \&}]{content}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Write file content (mock) 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_aae76998553f78b179326a45d282fd395}\index{SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}!operation\_count@{operation\_count}}
+\index{operation\_count@{operation\_count}!SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}}
+\doxysubsubsection{\texorpdfstring{operation\_count()}{operation\_count()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_aae76998553f78b179326a45d282fd395} 
+size\+\_\+t Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+::operation\+\_\+count (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Get total number of operations. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_aae76998553f78b179326a45d282fd395_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a39b13bff672912552bd6c534bb8364d9}\index{SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}!operation\_count@{operation\_count}}
+\index{operation\_count@{operation\_count}!SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}}
+\doxysubsubsection{\texorpdfstring{operation\_count()}{operation\_count()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a39b13bff672912552bd6c534bb8364d9} 
+size\+\_\+t Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+::operation\+\_\+count (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_aebdea943a0edba0bd54aac11293bf00f}{Mock\+Cache\+Operation\+Type}}}]{type}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Get number of operations by type. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_ac705731389317873ccc5700cc1b7debc}\index{SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}!operation\_history@{operation\_history}}
+\index{operation\_history@{operation\_history}!SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}}
+\doxysubsubsection{\texorpdfstring{operation\_history()}{operation\_history()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_ac705731389317873ccc5700cc1b7debc} 
+const std\+::vector$<$ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_mock_cache_call_info}{Mock\+Cache\+Call\+Info}} $>$ \& Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+::operation\+\_\+history (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Get complete operation history. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a28309ef010926cca0066f0e9c5305d25}\index{SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}!operations\_of\_type@{operations\_of\_type}}
+\index{operations\_of\_type@{operations\_of\_type}!SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}}
+\doxysubsubsection{\texorpdfstring{operations\_of\_type()}{operations\_of\_type()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a28309ef010926cca0066f0e9c5305d25} 
+std\+::vector$<$ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_mock_cache_call_info}{Mock\+Cache\+Call\+Info}} $>$ Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+::operations\+\_\+of\+\_\+type (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_aebdea943a0edba0bd54aac11293bf00f}{Mock\+Cache\+Operation\+Type}}}]{type}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Get operations of specific type. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_aa9fdef9f9f069f4b84302e1157ff672c}\index{SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}!operator=@{operator=}}
+\index{operator=@{operator=}!SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_aa9fdef9f9f069f4b84302e1157ff672c} 
+\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock}{Cache\+Mock}} \& Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+::operator= (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock}{Cache\+Mock}} \&\&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_aa9fdef9f9f069f4b84302e1157ff672c_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_ae93589630ec11c58e189de5cbf68b5c4}\index{SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}!operator=@{operator=}}
+\index{operator=@{operator=}!SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_ae93589630ec11c58e189de5cbf68b5c4} 
+\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock}{Cache\+Mock}} \& Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+::operator= (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock}{Cache\+Mock}} \&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_ae93589630ec11c58e189de5cbf68b5c4_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_afe5d2b35298afcde993bad66adf1031d}\index{SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}!populate\_with\_corrupted\_data@{populate\_with\_corrupted\_data}}
+\index{populate\_with\_corrupted\_data@{populate\_with\_corrupted\_data}!SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}}
+\doxysubsubsection{\texorpdfstring{populate\_with\_corrupted\_data()}{populate\_with\_corrupted\_data()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_afe5d2b35298afcde993bad66adf1031d} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+::populate\+\_\+with\+\_\+corrupted\+\_\+data (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Populate cache with corrupted test data. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_afe5d2b35298afcde993bad66adf1031d_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a44074ed875f1d27ff585d7679649fbcb}\index{SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}!populate\_with\_ephemeris\_data@{populate\_with\_ephemeris\_data}}
+\index{populate\_with\_ephemeris\_data@{populate\_with\_ephemeris\_data}!SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}}
+\doxysubsubsection{\texorpdfstring{populate\_with\_ephemeris\_data()}{populate\_with\_ephemeris\_data()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a44074ed875f1d27ff585d7679649fbcb} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+::populate\+\_\+with\+\_\+ephemeris\+\_\+data (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ \mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_ephemeris_data}{Solar\+System\+::\+JPL\+::\+Ephemeris\+Data}} $>$ \&}]{data}{}\end{DoxyParamCaption})}
+
+
+
+Populate cache with specific ephemeris data. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a44074ed875f1d27ff585d7679649fbcb_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_aad3c1fff12a1f57f0331a8b38cdb1829}\index{SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}!populate\_with\_valid\_data@{populate\_with\_valid\_data}}
+\index{populate\_with\_valid\_data@{populate\_with\_valid\_data}!SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}}
+\doxysubsubsection{\texorpdfstring{populate\_with\_valid\_data()}{populate\_with\_valid\_data()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_aad3c1fff12a1f57f0331a8b38cdb1829} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+::populate\+\_\+with\+\_\+valid\+\_\+data (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Populate cache with valid test data. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_aad3c1fff12a1f57f0331a8b38cdb1829_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_aad3c1fff12a1f57f0331a8b38cdb1829_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a22e7ed268743d5cac31cbc75a3effee1}\index{SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}!remove\_global\_mock@{remove\_global\_mock}}
+\index{remove\_global\_mock@{remove\_global\_mock}!SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}}
+\doxysubsubsection{\texorpdfstring{remove\_global\_mock()}{remove\_global\_mock()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a22e7ed268743d5cac31cbc75a3effee1} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+::remove\+\_\+global\+\_\+mock (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Remove global mock installation. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a22e7ed268743d5cac31cbc75a3effee1_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a223ee2487d769bce223de74d90e9ab2c}\index{SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}!reset\_call\_history@{reset\_call\_history}}
+\index{reset\_call\_history@{reset\_call\_history}!SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}}
+\doxysubsubsection{\texorpdfstring{reset\_call\_history()}{reset\_call\_history()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a223ee2487d769bce223de74d90e9ab2c} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+::reset\+\_\+call\+\_\+history (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Reset call history and counters. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a15ca63a81c55d8c7ceb40fd2f238f382}\index{SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}!set\_cache\_data@{set\_cache\_data}}
+\index{set\_cache\_data@{set\_cache\_data}!SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}}
+\doxysubsubsection{\texorpdfstring{set\_cache\_data()}{set\_cache\_data()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a15ca63a81c55d8c7ceb40fd2f238f382} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+::set\+\_\+cache\+\_\+data (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{data}{}\end{DoxyParamCaption})}
+
+
+
+Set cache data content. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a15ca63a81c55d8c7ceb40fd2f238f382_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a66180705755ca6509fd17b308b3dbdf6}\index{SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}!set\_cache\_data@{set\_cache\_data}}
+\index{set\_cache\_data@{set\_cache\_data}!SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}}
+\doxysubsubsection{\texorpdfstring{set\_cache\_data()}{set\_cache\_data()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a66180705755ca6509fd17b308b3dbdf6} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+::set\+\_\+cache\+\_\+data (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ \mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_ephemeris_data}{Solar\+System\+::\+JPL\+::\+Ephemeris\+Data}} $>$ \&}]{data}{}\end{DoxyParamCaption})}
+
+
+
+Set cache data as ephemeris data. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_ad9a574edb78b7fbca76ef8a59bce1750}\index{SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}!set\_cache\_exists@{set\_cache\_exists}}
+\index{set\_cache\_exists@{set\_cache\_exists}!SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}}
+\doxysubsubsection{\texorpdfstring{set\_cache\_exists()}{set\_cache\_exists()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_ad9a574edb78b7fbca76ef8a59bce1750} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+::set\+\_\+cache\+\_\+exists (\begin{DoxyParamCaption}\item[{bool}]{exists}{}\end{DoxyParamCaption})}
+
+
+
+Set whether cache exists. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_ad9a574edb78b7fbca76ef8a59bce1750_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_abc36f08890d034bc15d1c71e3aced49f}\index{SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}!set\_cache\_metadata@{set\_cache\_metadata}}
+\index{set\_cache\_metadata@{set\_cache\_metadata}!SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}}
+\doxysubsubsection{\texorpdfstring{set\_cache\_metadata()}{set\_cache\_metadata()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_abc36f08890d034bc15d1c71e3aced49f} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+::set\+\_\+cache\+\_\+metadata (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_cache_metadata}{Solar\+System\+::\+JPL\+::\+Cache\+Metadata}} \&}]{metadata}{}\end{DoxyParamCaption})}
+
+
+
+Set cache metadata. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_abc36f08890d034bc15d1c71e3aced49f_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a31491fc3d9e6e71b19b90244e1068f89}\index{SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}!set\_cache\_valid@{set\_cache\_valid}}
+\index{set\_cache\_valid@{set\_cache\_valid}!SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}}
+\doxysubsubsection{\texorpdfstring{set\_cache\_valid()}{set\_cache\_valid()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a31491fc3d9e6e71b19b90244e1068f89} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+::set\+\_\+cache\+\_\+valid (\begin{DoxyParamCaption}\item[{bool}]{valid}{}\end{DoxyParamCaption})}
+
+
+
+Set whether cache is valid. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a31491fc3d9e6e71b19b90244e1068f89_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a2887e4af2d7f852559e46b5ead1c984a}\index{SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}!simulate\_cache\_corruption@{simulate\_cache\_corruption}}
+\index{simulate\_cache\_corruption@{simulate\_cache\_corruption}!SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}}
+\doxysubsubsection{\texorpdfstring{simulate\_cache\_corruption()}{simulate\_cache\_corruption()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a2887e4af2d7f852559e46b5ead1c984a} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+::simulate\+\_\+cache\+\_\+corruption (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Simulate cache corruption. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a2887e4af2d7f852559e46b5ead1c984a_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_ab91d8fbd2ad65f448876870fa4083428}\index{SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}!simulate\_disk\_full@{simulate\_disk\_full}}
+\index{simulate\_disk\_full@{simulate\_disk\_full}!SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}}
+\doxysubsubsection{\texorpdfstring{simulate\_disk\_full()}{simulate\_disk\_full()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_ab91d8fbd2ad65f448876870fa4083428} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+::simulate\+\_\+disk\+\_\+full (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Simulate disk full condition. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_acd2daf829c27f653dc31c49c62a27567}\index{SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}!simulate\_io\_error@{simulate\_io\_error}}
+\index{simulate\_io\_error@{simulate\_io\_error}!SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}}
+\doxysubsubsection{\texorpdfstring{simulate\_io\_error()}{simulate\_io\_error()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_acd2daf829c27f653dc31c49c62a27567} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+::simulate\+\_\+io\+\_\+error (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{operation\+\_\+count}{ = {\ttfamily 1}}\end{DoxyParamCaption})}
+
+
+
+Simulate I/O errors for next N operations. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_acd2daf829c27f653dc31c49c62a27567_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_ad8ee2c5d56fb14baffbd6daa1379e1bc}\index{SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}!simulate\_partial\_corruption@{simulate\_partial\_corruption}}
+\index{simulate\_partial\_corruption@{simulate\_partial\_corruption}!SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}}
+\doxysubsubsection{\texorpdfstring{simulate\_partial\_corruption()}{simulate\_partial\_corruption()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_ad8ee2c5d56fb14baffbd6daa1379e1bc} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+::simulate\+\_\+partial\+\_\+corruption (\begin{DoxyParamCaption}\item[{double}]{corruption\+\_\+percentage}{ = {\ttfamily 0.1}}\end{DoxyParamCaption})}
+
+
+
+Simulate partial cache corruption. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a40e749d3eff16db5b198058455d2b789}\index{SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}!simulate\_permission\_denied@{simulate\_permission\_denied}}
+\index{simulate\_permission\_denied@{simulate\_permission\_denied}!SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}}
+\doxysubsubsection{\texorpdfstring{simulate\_permission\_denied()}{simulate\_permission\_denied()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a40e749d3eff16db5b198058455d2b789} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+::simulate\+\_\+permission\+\_\+denied (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Simulate permission denied errors. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a75d6b5ae4ce1a20a132558dd331ab3cf}\index{SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}!simulate\_slow\_disk@{simulate\_slow\_disk}}
+\index{simulate\_slow\_disk@{simulate\_slow\_disk}!SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}}
+\doxysubsubsection{\texorpdfstring{simulate\_slow\_disk()}{simulate\_slow\_disk()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a75d6b5ae4ce1a20a132558dd331ab3cf} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+::simulate\+\_\+slow\+\_\+disk (\begin{DoxyParamCaption}\item[{std\+::chrono\+::milliseconds}]{delay}{}\end{DoxyParamCaption})}
+
+
+
+Simulate slow disk operations. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_aaafab43a7383d7c34807de094ea7987c}\index{SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}!update\_config@{update\_config}}
+\index{update\_config@{update\_config}!SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}}
+\doxysubsubsection{\texorpdfstring{update\_config()}{update\_config()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_aaafab43a7383d7c34807de094ea7987c} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+::update\+\_\+config (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config}{Cache\+Mock\+Config}} \&}]{new\+\_\+config}{}\end{DoxyParamCaption})}
+
+
+
+Update configuration. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_af9a3d1ca9d634444874b93b090ae119c}\index{SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}!was\_cache\_cleared@{was\_cache\_cleared}}
+\index{was\_cache\_cleared@{was\_cache\_cleared}!SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}}
+\doxysubsubsection{\texorpdfstring{was\_cache\_cleared()}{was\_cache\_cleared()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_af9a3d1ca9d634444874b93b090ae119c} 
+bool Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+::was\+\_\+cache\+\_\+cleared (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Check if cache was cleared. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a868d6c0681fd42a2a58dfc0a55a60d91}\index{SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}!was\_cache\_read@{was\_cache\_read}}
+\index{was\_cache\_read@{was\_cache\_read}!SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}}
+\doxysubsubsection{\texorpdfstring{was\_cache\_read()}{was\_cache\_read()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a868d6c0681fd42a2a58dfc0a55a60d91} 
+bool Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+::was\+\_\+cache\+\_\+read (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Check if cache was read. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a74c6da438ce419c858fafaf0f787592f}\index{SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}!was\_cache\_validated@{was\_cache\_validated}}
+\index{was\_cache\_validated@{was\_cache\_validated}!SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}}
+\doxysubsubsection{\texorpdfstring{was\_cache\_validated()}{was\_cache\_validated()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a74c6da438ce419c858fafaf0f787592f} 
+bool Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+::was\+\_\+cache\+\_\+validated (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Check if cache was validated. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_ae3fdb16a5d5f4034b20a697f29f57db0}\index{SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}!was\_cache\_written@{was\_cache\_written}}
+\index{was\_cache\_written@{was\_cache\_written}!SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}}
+\doxysubsubsection{\texorpdfstring{was\_cache\_written()}{was\_cache\_written()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_ae3fdb16a5d5f4034b20a697f29f57db0} 
+bool Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+::was\+\_\+cache\+\_\+written (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Check if cache was written. 
+
+
+
+\label{doc-related-members}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_doc-related-members}
+\doxysubsection{Friends And Related Symbol Documentation}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_abed8e5b36362fb6b3dc8c4bff87b71db}\index{SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}!TemporaryCache@{TemporaryCache}}
+\index{TemporaryCache@{TemporaryCache}!SolarSystem::Testing::Mocks::CacheMock@{SolarSystem::Testing::Mocks::CacheMock}}
+\doxysubsubsection{\texorpdfstring{TemporaryCache}{TemporaryCache}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_abed8e5b36362fb6b3dc8c4bff87b71db} 
+friend class \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_temporary_cache}{Temporary\+Cache}}\hspace{0.3cm}{\ttfamily [friend]}}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+test/include/solar\+\_\+test/mocks/\mbox{\hyperlink{cache__mock_8hpp}{cache\+\_\+mock.\+hpp}}\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+test/src/mocks/\mbox{\hyperlink{cache__mock_8cpp}{cache\+\_\+mock.\+cpp}}\end{DoxyCompactItemize}

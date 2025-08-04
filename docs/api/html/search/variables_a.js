@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['last_5fsimulated_5fdate_0',['last_simulated_date',['../struct_simulation_state.html#abff3aabf235f8064be6ac07ebd9ccd9a',1,'SimulationState']]]
+  ['kinetic_5fenergy_0',['kinetic_energy',['../struct_solar_system_1_1_simulation_1_1_simulation_state.html#af98a38af17a720aa15fc0360b908f0a7',1,'SolarSystem::Simulation::SimulationState']]]
 ];

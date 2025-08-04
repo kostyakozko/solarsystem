@@ -1,4 +1,29 @@
 var searchData=
 [
-  ['execute_5fcommand_0',['execute_command',['../launcher_8cpp.html#a0777aaf440764d41242d9f35b302448a',1,'launcher.cpp']]]
+  ['datafetcher_0',['DataFetcher',['../class_data_fetcher.html#aa42354787a2075294fb8f4f1a8bc765e',1,'DataFetcher::DataFetcher(Config config)'],['../class_data_fetcher.html#ac84127fead7f1d7542f02166bb38d267',1,'DataFetcher::DataFetcher()']]],
+  ['date_1',['Date',['../class_solar_system_1_1_utils_1_1_date.html#adbf99787192e678af95e5e789a56ad67',1,'SolarSystem::Utils::Date::Date()=default'],['../class_solar_system_1_1_utils_1_1_date.html#a1147a50d68b0022a7150c45de1fe7f81',1,'SolarSystem::Utils::Date::Date(std::chrono::system_clock::time_point tp)'],['../class_solar_system_1_1_utils_1_1_date.html#a8e91126a3346ab7fa4c2d063314e88c3',1,'SolarSystem::Utils::Date::Date(std::time_t t)']]],
+  ['debug_2',['debug',['../class_solar_system_1_1_utils_1_1_logger.html#af4c162c2f3346533edfeb676056de529',1,'SolarSystem::Utils::Logger']]],
+  ['demonstrate_5falert_5fsystem_3',['demonstrate_alert_system',['../regression__detection__demo_8cpp.html#a58414182b19170a76ef21f226f2c0e50',1,'regression_detection_demo.cpp']]],
+  ['demonstrate_5fbaseline_5fmanagement_4',['demonstrate_baseline_management',['../regression__detection__demo_8cpp.html#a3545f45ecc74ea7d87bc4646a900b5d9',1,'regression_detection_demo.cpp']]],
+  ['demonstrate_5fbenchmark_5fsuite_5',['demonstrate_benchmark_suite',['../benchmark__execution__demo_8cpp.html#aec4c8d31831d95ff25a78fd8c09ad76b',1,'benchmark_execution_demo.cpp']]],
+  ['demonstrate_5fci_5fintegration_6',['demonstrate_ci_integration',['../regression__detection__demo_8cpp.html#a55b22bbf1c63a158e7fa5495a5a29acf',1,'regression_detection_demo.cpp']]],
+  ['demonstrate_5flifecycle_5fbenchmark_7',['demonstrate_lifecycle_benchmark',['../benchmark__execution__demo_8cpp.html#a677f373af5d59480eef35fd4457fdd0e',1,'benchmark_execution_demo.cpp']]],
+  ['demonstrate_5fperformance_5fmonitoring_8',['demonstrate_performance_monitoring',['../benchmark__execution__demo_8cpp.html#a9fa03b4d998ed7c123c77fb416cc4bc7',1,'benchmark_execution_demo.cpp']]],
+  ['demonstrate_5fperformance_5fprofiler_9',['demonstrate_performance_profiler',['../benchmark__execution__demo_8cpp.html#a599412473fb07e55dd3ac5e17837f629',1,'benchmark_execution_demo.cpp']]],
+  ['demonstrate_5fregression_5fdetection_10',['demonstrate_regression_detection',['../regression__detection__demo_8cpp.html#a4f784b266172b5e58c3d262b9250a81a',1,'regression_detection_demo.cpp']]],
+  ['demonstrate_5ftrend_5fanalysis_11',['demonstrate_trend_analysis',['../regression__detection__demo_8cpp.html#a59fd53d99c1ec6222018119226f2418f',1,'regression_detection_demo.cpp']]],
+  ['demonstrate_5fvector_5fbenchmark_12',['demonstrate_vector_benchmark',['../benchmark__execution__demo_8cpp.html#a6e3c008972c73ea82cbf4adcb46a87d1',1,'benchmark_execution_demo.cpp']]],
+  ['dependency_5fmanager_13',['dependency_manager',['../class_solar_system_1_1_testing_1_1_parallel_test_executor.html#a8ca37c2472e970d9aa6fa0ff805bb6bf',1,'SolarSystem::Testing::ParallelTestExecutor']]],
+  ['description_14',['description',['../class_solar_system_1_1_utils_1_1_option.html#aee65f5afe989806f5a7c9bbdf88487b3',1,'SolarSystem::Utils::Option']]],
+  ['detect_5fci_5fsystem_15',['detect_ci_system',['../class_solar_system_1_1_testing_1_1_c_i_system_integration.html#a0519d2e9c1a6f9bb3e4f10766a11e6a4',1,'SolarSystem::Testing::CISystemIntegration']]],
+  ['discover_5fall_5ftests_16',['discover_all_tests',['../class_solar_system_1_1_testing_1_1_test_discovery.html#ab33aa0184d29ded4dc986c5cae308a60',1,'SolarSystem::Testing::TestDiscovery']]],
+  ['discover_5ftests_17',['discover_tests',['../class_solar_system_1_1_testing_1_1_test_discovery.html#a3cba78e17d171aba98e534edf8ed4cca',1,'SolarSystem::Testing::TestDiscovery']]],
+  ['discover_5ftests_5fby_5fpattern_18',['discover_tests_by_pattern',['../class_solar_system_1_1_testing_1_1_test_discovery.html#abe549f782bafca91f004d075b5c453b0',1,'SolarSystem::Testing::TestDiscovery']]],
+  ['discover_5ftests_5fby_5ftag_19',['discover_tests_by_tag',['../class_solar_system_1_1_testing_1_1_test_discovery.html#addbd2f55097cf3d6756d51f758a3b6ea',1,'SolarSystem::Testing::TestDiscovery']]],
+  ['discover_5ftests_5fby_5ftags_20',['discover_tests_by_tags',['../class_solar_system_1_1_testing_1_1_test_discovery.html#abb2507954086b9443b3c3f1141ab1a24',1,'SolarSystem::Testing::TestDiscovery']]],
+  ['distance_21',['distance',['../namespace_solar_system_1_1_math.html#abf8bee8732f253fc11dad8553b6c5795',1,'SolarSystem::Math']]],
+  ['distance_5fsquared_22',['distance_squared',['../namespace_solar_system_1_1_math.html#a1d1e01b1ab0b3ee21a630d3d0870aef9',1,'SolarSystem::Math']]],
+  ['distance_5fsquared_5fto_23',['distance_squared_to',['../class_solar_system_1_1_bodies_1_1_celestial_body.html#a7bb130fbb5eccc6b9b1053ca4e0030f1',1,'SolarSystem::Bodies::CelestialBody']]],
+  ['distance_5fto_24',['distance_to',['../class_solar_system_1_1_bodies_1_1_celestial_body.html#a6dba6038ff32e86816430cfa99f57073',1,'SolarSystem::Bodies::CelestialBody']]],
+  ['dot_25',['dot',['../class_solar_system_1_1_math_1_1_vector3.html#a8e71bf4ada39761d8784cd54caaa57ea',1,'SolarSystem::Math::Vector3']]]
 ];

@@ -1,0 +1,452 @@
+\doxysection{test\+\_\+runner.\+hpp}
+\hypertarget{test__runner_8hpp_source}{}\label{test__runner_8hpp_source}\index{/Users/kostiantyn.kozko/tmp/solarsystem/lib/solar\_test/include/solar\_test/framework/test\_runner.hpp@{/Users/kostiantyn.kozko/tmp/solarsystem/lib/solar\_test/include/solar\_test/framework/test\_runner.hpp}}
+\mbox{\hyperlink{test__runner_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <atomic>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <condition\_variable>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <functional>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <future>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <map>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <mutex>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <queue>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <set>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <thread>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <type\_traits>}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <unordered\_map>}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{test__reporter_8hpp}{../reporters/test\_reporter.hpp}}"{}}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{test__case_8hpp}{test\_case.hpp}}"{}}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{test__discovery_8hpp}{test\_discovery.hpp}}"{}}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{test__result_8hpp}{test\_result.hpp}}"{}}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespace_solar_system_1_1_testing}{SolarSystem::Testing}}\ \{}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00027\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_resource_manager_a71d814f66fda8acd0ac2a05bc6d810b2}{TestResourceManager}}\ \{}
+\DoxyCodeLine{00028\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00029\ \ \ \textcolor{keyword}{enum\ class}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_resource_manager_a810cb17c20b027bf46fdbac83bf571ff}{ResourceType}}\ \{}
+\DoxyCodeLine{00030\ \ \ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_resource_manager_a810cb17c20b027bf46fdbac83bf571ffae2d63d195b2bce9c8d5bf797a268bcec}{FileSystem}},\ \ \ \textcolor{comment}{//\ Tests\ that\ modify\ files}}
+\DoxyCodeLine{00031\ \ \ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_resource_manager_a810cb17c20b027bf46fdbac83bf571ffaeec89088ee408b80387155272b113256}{Network}},\ \ \ \ \ \ \textcolor{comment}{//\ Tests\ that\ use\ network\ resources}}
+\DoxyCodeLine{00032\ \ \ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_resource_manager_a810cb17c20b027bf46fdbac83bf571ffae307db07b3975fef922a80d07455ee5e}{Database}},\ \ \ \ \ \textcolor{comment}{//\ Tests\ that\ use\ database\ connections}}
+\DoxyCodeLine{00033\ \ \ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_resource_manager_a810cb17c20b027bf46fdbac83bf571ffa0ba29c6a1afacf586b03a26162c72274}{Environment}},\ \ \textcolor{comment}{//\ Tests\ that\ modify\ environment\ variables}}
+\DoxyCodeLine{00034\ \ \ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_resource_manager_a810cb17c20b027bf46fdbac83bf571ffa1565b07df48c2bb51e42a6d69eb33bb6}{GlobalState}},\ \ \textcolor{comment}{//\ Tests\ that\ modify\ global\ application\ state}}
+\DoxyCodeLine{00035\ \ \ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_resource_manager_a810cb17c20b027bf46fdbac83bf571ffaab0cf104f39708eabd07b8cb67e149ba}{Cache}},\ \ \ \ \ \ \ \ \textcolor{comment}{//\ Tests\ that\ use\ cache\ systems}}
+\DoxyCodeLine{00036\ \ \ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_resource_manager_a810cb17c20b027bf46fdbac83bf571ffa7b608ec14f2c89b7e6093df8161a8dfc}{JPLApi}},\ \ \ \ \ \ \ \textcolor{comment}{//\ Tests\ that\ use\ JPL\ API\ (mock\ or\ real)}}
+\DoxyCodeLine{00037\ \ \ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_resource_manager_a810cb17c20b027bf46fdbac83bf571ffa217098c5b66ce08999941688cc8d74c4}{WebServer}}\ \ \ \ \ \textcolor{comment}{//\ Tests\ that\ start\ web\ servers}}
+\DoxyCodeLine{00038\ \ \ \};}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_resource_manager_a71d814f66fda8acd0ac2a05bc6d810b2}{TestResourceManager}}();}
+\DoxyCodeLine{00041\ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_resource_manager_ab6ecf3974dac5bef459b513423560d2e}{\string~TestResourceManager}}();}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \ \ \textcolor{comment}{//\ Resource\ acquisition\ and\ release}}
+\DoxyCodeLine{00044\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_resource_manager_a436cdc26a4d5d125c366a571d6a8106b}{acquire\_resource}}(\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_resource_manager_a810cb17c20b027bf46fdbac83bf571ff}{ResourceType}}\ resource,\ \textcolor{keyword}{const}\ std::string\&\ test\_name,}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::chrono::milliseconds\ timeout\ =\ std::chrono::seconds(30));}
+\DoxyCodeLine{00046\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_resource_manager_a3e2de26240c8b14262059ec04c6d16f8}{release\_resource}}(\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_resource_manager_a810cb17c20b027bf46fdbac83bf571ff}{ResourceType}}\ resource,\ \textcolor{keyword}{const}\ std::string\&\ test\_name);}
+\DoxyCodeLine{00047\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_resource_manager_a32fa8520071b6f3dcc5e5757cd0b4e44}{release\_all\_resources}}(\textcolor{keyword}{const}\ std::string\&\ test\_name);}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \ \ \textcolor{comment}{//\ Resource\ conflict\ detection}}
+\DoxyCodeLine{00050\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_resource_manager_ac929059f2efec1d9d5200e6f3b979733}{has\_resource\_conflict}}(\textcolor{keyword}{const}\ std::vector<ResourceType>\&\ required\_resources,}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ test\_name)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00052\ \ \ [[nodiscard]]\ std::vector<std::string>\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_resource_manager_ae05882f17e78e2f283c57e879a4ce2a2}{get\_conflicting\_tests}}(}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::vector<ResourceType>\&\ required\_resources)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \ \ \textcolor{comment}{//\ Statistics\ and\ monitoring}}
+\DoxyCodeLine{00056\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_resource_manager_a6672d5a6fae62d68a7da2b6bd7347d24}{active\_resource\_count}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00057\ \ \ [[nodiscard]]\ std::map<ResourceType,\ std::string>\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_resource_manager_ab5567dff13899fc32efaee3a5ee38015}{get\_resource\_owners}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00060\ \ \ \textcolor{keyword}{mutable}\ std::mutex\ resource\_mutex\_;}
+\DoxyCodeLine{00061\ \ \ std::map<ResourceType,\ std::string>\ resource\_owners\_;\ \ \textcolor{comment}{//\ Resource\ -\/>\ Test\ name}}
+\DoxyCodeLine{00062\ \ \ std::condition\_variable\ resource\_condition\_;}
+\DoxyCodeLine{00063\ \};}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00068\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_dependency_manager_afb067a51d19b605302c5b7dbec268800}{TestDependencyManager}}\ \{}
+\DoxyCodeLine{00069\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00070\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_dependency_manager_1_1_test_dependency}{TestDependency}}\ \{}
+\DoxyCodeLine{00071\ \ \ \ \ std::string\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_dependency_manager_1_1_test_dependency_a81527ff907f3b9651a17590c271d7500}{test\_name}};}
+\DoxyCodeLine{00072\ \ \ \ \ std::vector<std::string>\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_dependency_manager_1_1_test_dependency_a8b8bed9a91f1efe1feb5c02c91e777d6}{depends\_on}};\ \ \textcolor{comment}{//\ Tests\ that\ must\ complete\ first}}
+\DoxyCodeLine{00073\ \ \ \ \ std::vector<TestResourceManager::ResourceType>\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_dependency_manager_1_1_test_dependency_a74ca11bad4eef3c6e39f9d732e4b2560}{required\_resources}};}
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_dependency_manager_1_1_test_dependency_a0117c36558ee8da408889fe3c3fb2cd5}{priority}}\ =\ 0;\ \ \textcolor{comment}{//\ Higher\ priority\ tests\ run\ first}}
+\DoxyCodeLine{00075\ \ \ \};}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_dependency_manager_afb067a51d19b605302c5b7dbec268800}{TestDependencyManager}}();}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \ \ \textcolor{comment}{//\ Dependency\ registration}}
+\DoxyCodeLine{00080\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_dependency_manager_ae27840f00af8cda430fc0c11cd3557ec}{add\_dependency}}(\textcolor{keyword}{const}\ std::string\&\ test\_name,\ \textcolor{keyword}{const}\ std::string\&\ depends\_on);}
+\DoxyCodeLine{00081\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_dependency_manager_a6041873e739b397d32bcca892280bb43}{add\_dependencies}}(\textcolor{keyword}{const}\ std::string\&\ test\_name,\ \textcolor{keyword}{const}\ std::vector<std::string>\&\ depends\_on);}
+\DoxyCodeLine{00082\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_dependency_manager_ae0e21fba3bca8ac12cb8dbec438090a8}{set\_test\_resources}}(\textcolor{keyword}{const}\ std::string\&\ test\_name,}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::vector<TestResourceManager::ResourceType>\&\ resources);}
+\DoxyCodeLine{00084\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_dependency_manager_ac6bb51d1f5067f0d70f1badd0e685bd6}{set\_test\_priority}}(\textcolor{keyword}{const}\ std::string\&\ test\_name,\ \textcolor{keywordtype}{int}\ priority);}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ \ \ \textcolor{comment}{//\ Dependency\ resolution}}
+\DoxyCodeLine{00087\ \ \ [[nodiscard]]\ std::vector<std::vector<std::string>>\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_dependency_manager_aa407f22a809bdeb8053224236ec2dc72}{resolve\_execution\_order}}(}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::vector<std::string>\&\ test\_names)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00089\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_dependency_manager_aadc76ff6bfaa6a30065c3121c02bc7a9}{has\_circular\_dependency}}(\textcolor{keyword}{const}\ std::vector<std::string>\&\ test\_names)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00090\ \ \ [[nodiscard]]\ std::vector<std::string>\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_dependency_manager_acd5fea1b1db410b625a532c680ec321e}{get\_ready\_tests}}(}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::vector<std::string>\&\ all\_tests,}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::set<std::string>\&\ completed\_tests)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ \ \ \textcolor{comment}{//\ Validation}}
+\DoxyCodeLine{00095\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_dependency_manager_aed3cef28352ff1228bf9a42cf8ef4fbc}{validate\_dependencies}}(\textcolor{keyword}{const}\ std::vector<std::string>\&\ test\_names)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00096\ \ \ [[nodiscard]]\ std::vector<std::string>\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_dependency_manager_a8f52ff1451d7f8e261cd1b15fe9aa052}{find\_missing\_dependencies}}(}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::vector<std::string>\&\ test\_names)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00100\ \ \ std::map<std::string,\ TestDependency>\ dependencies\_;}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ \ \ \textcolor{keyword}{friend}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_dependency_manager_aafadf6ae355f1f8145df3d4586311cfa}{ParallelTestExecutor}};}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ \ \ \textcolor{comment}{//\ Helper\ methods\ for\ topological\ sorting}}
+\DoxyCodeLine{00105\ \ \ \textcolor{keywordtype}{void}\ topological\_sort\_util(\textcolor{keyword}{const}\ std::string\&\ test\_name,\ std::set<std::string>\&\ visited,}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::set<std::string>\&\ recursion\_stack,}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<std::string>\&\ result,}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::vector<std::string>\&\ all\_tests)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00109\ \};}
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00114\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_thread_pool_a8302d11bc228ddc2842f9f4205f1f9a6}{TestThreadPool}}\ \{}
+\DoxyCodeLine{00115\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00116\ \ \ \textcolor{keyword}{explicit}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_thread_pool_a8302d11bc228ddc2842f9f4205f1f9a6}{TestThreadPool}}(\textcolor{keywordtype}{size\_t}\ num\_threads);}
+\DoxyCodeLine{00117\ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_thread_pool_a40f27c6dbefabd7eb9be5a674d19d80c}{\string~TestThreadPool}}();}
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00119\ \ \ \textcolor{comment}{//\ Task\ submission}}
+\DoxyCodeLine{00120\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ F,\ \textcolor{keyword}{typename}...\ Args>}
+\DoxyCodeLine{00121\ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_thread_pool_acda4b71b427853a5a7ab4281d9238c3b}{submit}}(F\&\&\ f,\ Args\&\&...\ args)\ -\/>\ std::future<\textcolor{keyword}{typename}\ std::invoke\_result<F,\ Args...>::type>\ \{}
+\DoxyCodeLine{00122\ \ \ \ \ \textcolor{keyword}{using\ }return\_type\ =\ \textcolor{keyword}{typename}\ std::invoke\_result<F,\ Args...>::type;}
+\DoxyCodeLine{00123\ }
+\DoxyCodeLine{00124\ \ \ \ \ \textcolor{keyword}{auto}\ task\ =\ std::make\_shared<std::packaged\_task<return\_type()>>(}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ std::bind(std::forward<F>(f),\ std::forward<Args>(args)...));}
+\DoxyCodeLine{00126\ }
+\DoxyCodeLine{00127\ \ \ \ \ std::future<return\_type>\ result\ =\ task-\/>get\_future();}
+\DoxyCodeLine{00128\ }
+\DoxyCodeLine{00129\ \ \ \ \ \{}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ std::unique\_lock<std::mutex>\ lock(queue\_mutex\_);}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (stop\_)\ \{}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}Cannot\ submit\ task\ to\ stopped\ thread\ pool"{}});}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00135\ \ \ \ \ \ \ tasks\_.emplace([task]()\ \{\ (*task)();\ \});}
+\DoxyCodeLine{00136\ \ \ \ \ \}}
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00138\ \ \ \ \ condition\_.notify\_one();}
+\DoxyCodeLine{00139\ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
+\DoxyCodeLine{00140\ \ \ \}}
+\DoxyCodeLine{00141\ }
+\DoxyCodeLine{00142\ \ \ \textcolor{comment}{//\ Pool\ management}}
+\DoxyCodeLine{00143\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_thread_pool_ab2f370be639cd74d4820945f1d4a9a2c}{shutdown}}();}
+\DoxyCodeLine{00144\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_thread_pool_a9d79b68759c2e6d163803a35f2159a0c}{wait\_for\_completion}}();}
+\DoxyCodeLine{00145\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_thread_pool_aef1870408abf741bab1a341be49490f6}{active\_thread\_count}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00146\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_thread_pool_a63ab166192c85087fab1fbb803fc0d38}{queued\_task\_count}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00147\ }
+\DoxyCodeLine{00148\ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00149\ \ \ std::vector<std::thread>\ workers\_;}
+\DoxyCodeLine{00150\ \ \ std::queue<std::function<void()>>\ tasks\_;}
+\DoxyCodeLine{00151\ \ \ std::mutex\ queue\_mutex\_;}
+\DoxyCodeLine{00152\ \ \ std::condition\_variable\ condition\_;}
+\DoxyCodeLine{00153\ \ \ std::atomic<bool>\ stop\_;}
+\DoxyCodeLine{00154\ \ \ std::atomic<size\_t>\ active\_tasks\_;}
+\DoxyCodeLine{00155\ \};}
+\DoxyCodeLine{00156\ }
+\DoxyCodeLine{00160\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_thread_safe_result_collector_aaafdaff6ed4fb9c4ce255f8edbeb16ab}{ThreadSafeResultCollector}}\ \{}
+\DoxyCodeLine{00161\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00162\ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_thread_safe_result_collector_aaafdaff6ed4fb9c4ce255f8edbeb16ab}{ThreadSafeResultCollector}}();}
+\DoxyCodeLine{00163\ }
+\DoxyCodeLine{00164\ \ \ \textcolor{comment}{//\ Result\ collection}}
+\DoxyCodeLine{00165\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_thread_safe_result_collector_a5678e0df2adbe3d1e87a22f29774554f}{add\_result}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_result}{TestResult}}\&\ result);}
+\DoxyCodeLine{00166\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_thread_safe_result_collector_ab89db1ce7151b4b25c568ad57d991c8d}{add\_results}}(\textcolor{keyword}{const}\ std::vector<TestResult>\&\ results);}
+\DoxyCodeLine{00167\ }
+\DoxyCodeLine{00168\ \ \ \textcolor{comment}{//\ Progress\ tracking}}
+\DoxyCodeLine{00169\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_thread_safe_result_collector_a0f08eb4721321d8ac34739ecff4ba1be}{set\_total\_tests}}(\textcolor{keywordtype}{size\_t}\ total);}
+\DoxyCodeLine{00170\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_thread_safe_result_collector_ae51ed08c27aa8e55dc14241a8c75de7f}{increment\_completed\_tests}}();}
+\DoxyCodeLine{00171\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_thread_safe_result_collector_a9c3c00662aab657e5c5f1b7af4ea89bc}{get\_progress}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00172\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_thread_safe_result_collector_a28c6d3c4e79ff1116dc1c967cfa4bc65}{get\_completed\_count}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00173\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_thread_safe_result_collector_a94d002c1a22db4f6ddf425f4ff099fff}{get\_total\_count}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00174\ }
+\DoxyCodeLine{00175\ \ \ \textcolor{comment}{//\ Result\ retrieval}}
+\DoxyCodeLine{00176\ \ \ [[nodiscard]]\ std::vector<TestResult>\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_thread_safe_result_collector_ab0ccde7b4447c3c4e9e436b93121e492}{get\_all\_results}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00177\ \ \ [[nodiscard]]\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_suite_result}{TestSuiteResult}}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_thread_safe_result_collector_ab7f7a0da9a1d61d89520c69bef137351}{build\_suite\_result}}(\textcolor{keyword}{const}\ std::string\&\ suite\_name)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00178\ }
+\DoxyCodeLine{00179\ \ \ \textcolor{comment}{//\ Statistics}}
+\DoxyCodeLine{00180\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_thread_safe_result_collector_a45f277e2bbb53d1a6a97d2b429b80659}{passed\_count}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00181\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_thread_safe_result_collector_a8768f2b2a010c230da3b14e2266b7859}{failed\_count}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00182\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_thread_safe_result_collector_adc4dad316b8dce1539cda39f0f3cfdac}{skipped\_count}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00183\ }
+\DoxyCodeLine{00184\ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00185\ \ \ \textcolor{keyword}{mutable}\ std::mutex\ results\_mutex\_;}
+\DoxyCodeLine{00186\ \ \ std::vector<TestResult>\ results\_;}
+\DoxyCodeLine{00187\ \ \ std::atomic<size\_t>\ total\_tests\_;}
+\DoxyCodeLine{00188\ \ \ std::atomic<size\_t>\ completed\_tests\_;}
+\DoxyCodeLine{00189\ \};}
+\DoxyCodeLine{00190\ }
+\DoxyCodeLine{00194\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_parallel_test_executor_a512f65445e45eb6a0fa1e016f01fc28e}{ParallelTestExecutor}}\ \{}
+\DoxyCodeLine{00195\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00196\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_parallel_test_executor_1_1_configuration}{Configuration}}\ \{}
+\DoxyCodeLine{00197\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_parallel_test_executor_1_1_configuration_a21d25d24970dc3644ddda89173e2d67c}{max\_threads}}\ =\ std::thread::hardware\_concurrency();}
+\DoxyCodeLine{00198\ \ \ \ \ std::chrono::milliseconds\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_parallel_test_executor_1_1_configuration_a41b18367ef5e05ad3f8470a4ea361d74}{resource\_timeout}}\ =\ std::chrono::seconds(30);}
+\DoxyCodeLine{00199\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_parallel_test_executor_1_1_configuration_aa2dd831643cc2500409025dbef4088b8}{enable\_dependency\_resolution}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00200\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_parallel_test_executor_1_1_configuration_aa5085a00f4424c80f22940cb89c805d2}{enable\_resource\_coordination}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00201\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_parallel_test_executor_1_1_configuration_a1a5f58988d0ae82fc7c22a43be388afc}{fail\_fast}}\ =\ \textcolor{keyword}{false};\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Stop\ execution\ on\ first\ failure}}
+\DoxyCodeLine{00202\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_parallel_test_executor_1_1_configuration_a1d78d00c58ecb92ef78d61e6d9768e26}{max\_failure\_rate}}\ =\ 1.0;\ \ \textcolor{comment}{//\ Stop\ if\ failure\ rate\ exceeds\ this\ (0.0-\/1.0)}}
+\DoxyCodeLine{00203\ \ \ \};}
+\DoxyCodeLine{00204\ }
+\DoxyCodeLine{00205\ \ \ \textcolor{keyword}{explicit}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_parallel_test_executor_a512f65445e45eb6a0fa1e016f01fc28e}{ParallelTestExecutor}}(\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_parallel_test_executor_1_1_configuration}{Configuration}}\ config);}
+\DoxyCodeLine{00206\ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_parallel_test_executor_a3f1ac4e2a58013b0b61f06ead9483889}{\string~ParallelTestExecutor}}();}
+\DoxyCodeLine{00207\ }
+\DoxyCodeLine{00208\ \ \ \textcolor{comment}{//\ Test\ execution}}
+\DoxyCodeLine{00209\ \ \ [[nodiscard]]\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_suite_result}{TestSuiteResult}}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_parallel_test_executor_a8d0f675b145cfe3881b5efa820d6cb7b}{execute\_tests}}(}
+\DoxyCodeLine{00210\ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::vector<TestCase*>\&\ tests,}
+\DoxyCodeLine{00211\ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::function<\textcolor{keywordtype}{void}(\textcolor{keyword}{const}\ std::string\&,\ \textcolor{keywordtype}{double})>\&\ progress\_callback\ =\ \textcolor{keyword}{nullptr},}
+\DoxyCodeLine{00212\ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::function<\textcolor{keywordtype}{void}(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_result}{TestResult}}\&)>\&\ result\_callback\ =\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00213\ }
+\DoxyCodeLine{00214\ \ \ \textcolor{comment}{//\ Configuration}}
+\DoxyCodeLine{00215\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_parallel_test_executor_a5fdd49934f674353d8804a580c95d69f}{set\_configuration}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_parallel_test_executor_1_1_configuration}{Configuration}}\&\ config)\ \{\ config\_\ =\ config;\ \}}
+\DoxyCodeLine{00216\ \ \ [[nodiscard]]\ \textcolor{keyword}{const}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_parallel_test_executor_1_1_configuration}{Configuration}}\&\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_parallel_test_executor_a61aee3314b560257caec17e0b70a81c3}{configuration}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ config\_;\ \}}
+\DoxyCodeLine{00217\ }
+\DoxyCodeLine{00218\ \ \ \textcolor{comment}{//\ Resource\ and\ dependency\ management}}
+\DoxyCodeLine{00219\ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_resource_manager}{TestResourceManager}}\&\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_parallel_test_executor_a8cf376eadfb38a428fb90f7296244332}{resource\_manager}}()\ \{\ \textcolor{keywordflow}{return}\ resource\_manager\_;\ \}}
+\DoxyCodeLine{00220\ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_dependency_manager}{TestDependencyManager}}\&\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_parallel_test_executor_a8ca37c2472e970d9aa6fa0ff805bb6bf}{dependency\_manager}}()\ \{\ \textcolor{keywordflow}{return}\ dependency\_manager\_;\ \}}
+\DoxyCodeLine{00221\ }
+\DoxyCodeLine{00222\ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00223\ \ \ Configuration\ config\_;}
+\DoxyCodeLine{00224\ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_resource_manager}{TestResourceManager}}\ resource\_manager\_;}
+\DoxyCodeLine{00225\ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_dependency_manager}{TestDependencyManager}}\ dependency\_manager\_;}
+\DoxyCodeLine{00226\ \ \ std::unique\_ptr<TestThreadPool>\ thread\_pool\_;}
+\DoxyCodeLine{00227\ }
+\DoxyCodeLine{00228\ \ \ \textcolor{comment}{//\ Execution\ methods}}
+\DoxyCodeLine{00229\ \ \ [[nodiscard]]\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_result}{TestResult}}\ execute\_single\_test\_with\_coordination(}
+\DoxyCodeLine{00230\ \ \ \ \ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_case}{TestCase}}*\ test,\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_thread_safe_result_collector}{ThreadSafeResultCollector}}\&\ collector,}
+\DoxyCodeLine{00231\ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::function<\textcolor{keywordtype}{void}(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_result}{TestResult}}\&)>\&\ result\_callback);}
+\DoxyCodeLine{00232\ }
+\DoxyCodeLine{00233\ \ \ \textcolor{keywordtype}{void}\ setup\_test\_dependencies(\textcolor{keyword}{const}\ std::vector<TestCase*>\&\ tests);}
+\DoxyCodeLine{00234\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ should\_stop\_execution(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_thread_safe_result_collector}{ThreadSafeResultCollector}}\&\ collector)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00235\ \};}
+\DoxyCodeLine{00236\ }
+\DoxyCodeLine{00240\ }
+\DoxyCodeLine{00244\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_c_i_resource_cleanup_a2cfd898b73d3eddbf7ac958abf6e9487}{CIResourceCleanup}}\ \{}
+\DoxyCodeLine{00245\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00246\ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_c_i_resource_cleanup_a2cfd898b73d3eddbf7ac958abf6e9487}{CIResourceCleanup}}();}
+\DoxyCodeLine{00247\ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_c_i_resource_cleanup_a26e60885913a4a63567d6f93f4510004}{\string~CIResourceCleanup}}();}
+\DoxyCodeLine{00248\ }
+\DoxyCodeLine{00249\ \ \ \textcolor{comment}{//\ Resource\ tracking}}
+\DoxyCodeLine{00250\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_c_i_resource_cleanup_af552de08a20e0f9ae8c30fd5acb78a55}{register\_temp\_directory}}(\textcolor{keyword}{const}\ std::string\&\ path);}
+\DoxyCodeLine{00251\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_c_i_resource_cleanup_afce90f71bd33ddb0b9c4eab787c7d1a2}{register\_temp\_file}}(\textcolor{keyword}{const}\ std::string\&\ path);}
+\DoxyCodeLine{00252\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_c_i_resource_cleanup_a3bb3efe977e8cbbc7020fa61b5672e02}{register\_process}}(\textcolor{keywordtype}{int}\ pid);}
+\DoxyCodeLine{00253\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_c_i_resource_cleanup_af0e165a25d537fb2ba8969172de946ba}{register\_network\_port}}(\textcolor{keywordtype}{int}\ port);}
+\DoxyCodeLine{00254\ }
+\DoxyCodeLine{00255\ \ \ \textcolor{comment}{//\ Cleanup\ operations}}
+\DoxyCodeLine{00256\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_c_i_resource_cleanup_a7b53834c177105ca3a60bd271ce7e51d}{cleanup\_all}}();}
+\DoxyCodeLine{00257\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_c_i_resource_cleanup_a1cb8c4f822877c8d22a6db27177954ac}{cleanup\_temp\_files}}();}
+\DoxyCodeLine{00258\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_c_i_resource_cleanup_acd5f01aed87ffc5db530378e001e30b0}{cleanup\_processes}}();}
+\DoxyCodeLine{00259\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_c_i_resource_cleanup_a7743df66c38ab3a4c3229ed586ba4aa6}{cleanup\_network\_resources}}();}
+\DoxyCodeLine{00260\ }
+\DoxyCodeLine{00261\ \ \ \textcolor{comment}{//\ CI-\/specific\ cleanup}}
+\DoxyCodeLine{00262\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_c_i_resource_cleanup_a9de034371838e15ab68235c976dc71ae}{cleanup\_for\_github\_actions}}();}
+\DoxyCodeLine{00263\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_c_i_resource_cleanup_a867daf5dbe3bc84fdb93c8a10c962a6f}{cleanup\_for\_jenkins}}();}
+\DoxyCodeLine{00264\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_c_i_resource_cleanup_acfb7ae80e91e5877d4b27e31999419a0}{cleanup\_for\_docker}}();}
+\DoxyCodeLine{00265\ }
+\DoxyCodeLine{00266\ \ \ \textcolor{comment}{//\ Emergency\ cleanup\ (called\ on\ signals)}}
+\DoxyCodeLine{00267\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_c_i_resource_cleanup_a1cce450f55e6bcbd518ab875a0dd2f13}{emergency\_cleanup}}();}
+\DoxyCodeLine{00268\ }
+\DoxyCodeLine{00269\ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00270\ \ \ std::vector<std::string>\ temp\_directories\_;}
+\DoxyCodeLine{00271\ \ \ std::vector<std::string>\ temp\_files\_;}
+\DoxyCodeLine{00272\ \ \ std::vector<int>\ processes\_;}
+\DoxyCodeLine{00273\ \ \ std::vector<int>\ network\_ports\_;}
+\DoxyCodeLine{00274\ \ \ std::mutex\ cleanup\_mutex\_;}
+\DoxyCodeLine{00275\ }
+\DoxyCodeLine{00276\ \ \ \textcolor{keyword}{static}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_c_i_resource_cleanup_a2cfd898b73d3eddbf7ac958abf6e9487}{CIResourceCleanup}}*\ instance\_;}
+\DoxyCodeLine{00277\ \};}
+\DoxyCodeLine{00278\ }
+\DoxyCodeLine{00282\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_container_environment}{ContainerEnvironment}}\ \{}
+\DoxyCodeLine{00283\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00284\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_container_environment_ae9ca50c5da13732f44bffffb4fa473e2}{is\_running\_in\_container}}();}
+\DoxyCodeLine{00285\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_container_environment_a462ee11997f70b9d0ca414a7d781639a}{is\_docker\_container}}();}
+\DoxyCodeLine{00286\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_container_environment_ad68fae37ae9d65671f105046276a9c62}{is\_kubernetes\_pod}}();}
+\DoxyCodeLine{00287\ \ \ \textcolor{keyword}{static}\ std::string\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_container_environment_a1f3de9cc90d18084c0f31883905c38bf}{get\_container\_runtime}}();}
+\DoxyCodeLine{00288\ }
+\DoxyCodeLine{00289\ \ \ \textcolor{comment}{//\ Container-\/specific\ optimizations}}
+\DoxyCodeLine{00290\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_container_environment_ab13a38c1d5c23f0901ec235334a1287b}{get\_optimal\_thread\_count}}();}
+\DoxyCodeLine{00291\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_container_environment_aa93548d83ae412b4588522cff46b252b}{get\_available\_memory\_mb}}();}
+\DoxyCodeLine{00292\ \ \ \textcolor{keyword}{static}\ std::chrono::milliseconds\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_container_environment_a38e6b892df3fa3bf37ed5007a73b7e09}{get\_optimal\_timeout}}();}
+\DoxyCodeLine{00293\ }
+\DoxyCodeLine{00294\ \ \ \textcolor{comment}{//\ Resource\ limits}}
+\DoxyCodeLine{00295\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_container_environment_a9f37f35772094ad93faf107403312b9b}{has\_memory\_limit}}();}
+\DoxyCodeLine{00296\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_container_environment_af76101cfe1b24b884e1d358ed1e8b296}{has\_cpu\_limit}}();}
+\DoxyCodeLine{00297\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_container_environment_ae0924e4e24423897a45bdc8b2a547f29}{get\_memory\_limit\_mb}}();}
+\DoxyCodeLine{00298\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_container_environment_a1e2bd20bb577ca99ae08a93ee1a00512}{get\_cpu\_limit}}();}
+\DoxyCodeLine{00299\ \};}
+\DoxyCodeLine{00300\ }
+\DoxyCodeLine{00304\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_runner_ad7a294179c6dbad6ac6a6de77dedad1f}{TestRunner}}\ \{}
+\DoxyCodeLine{00305\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00306\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_runner_1_1_configuration}{Configuration}}\ \{}
+\DoxyCodeLine{00307\ \ \ \ \ std::vector<std::string>\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_runner_1_1_configuration_a6aaa31e900c8f4405959796c8e07a543}{test\_patterns}};}
+\DoxyCodeLine{00308\ \ \ \ \ std::vector<std::string>\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_runner_1_1_configuration_abc8a9598f2bde8d7b1fa40980a25a115}{tags}};}
+\DoxyCodeLine{00309\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_runner_1_1_configuration_a7e41d399b8bacad5774f283ed58cac7d}{parallel\_execution}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00310\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_runner_1_1_configuration_a1f75d0bf5b90470d79697bd58bc1ebe1}{max\_threads}}\ =\ std::thread::hardware\_concurrency();}
+\DoxyCodeLine{00311\ \ \ \ \ std::chrono::milliseconds\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_runner_1_1_configuration_a65272da818fb385249cdb8f7b6762f47}{timeout}}\ =\ std::chrono::minutes(5);}
+\DoxyCodeLine{00312\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_runner_1_1_configuration_a0de83bd4a988b6af4ded3e3c715ac16c}{generate\_coverage}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00313\ \ \ \ \ std::string\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_runner_1_1_configuration_ad7e159f91507b9d6a8ecdef1d7d92757}{output\_format}}\ =\ \textcolor{stringliteral}{"{}console"{}};}
+\DoxyCodeLine{00314\ \ \ \ \ std::string\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_runner_1_1_configuration_abafb99eeba02129cd2af03d46ba1dbb3}{output\_file}};}
+\DoxyCodeLine{00315\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_runner_1_1_configuration_afa1ecaf5728c2bc6b70651ed826c7f81}{verbose}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00316\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_runner_1_1_configuration_adf5f836bc8e0913433d2b24f459be132}{quiet}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00317\ }
+\DoxyCodeLine{00318\ \ \ \ \ \textcolor{comment}{//\ CI/CD\ specific\ options}}
+\DoxyCodeLine{00319\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_runner_1_1_configuration_a5eed07608ac569942b21f947f8030927}{ci\_mode}}\ =\ \textcolor{keyword}{false};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Enable\ CI-\/specific\ optimizations}}
+\DoxyCodeLine{00320\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_runner_1_1_configuration_a1d5950b304d528fa3b39897f586728d5}{fail\_fast}}\ =\ \textcolor{keyword}{false};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Stop\ on\ first\ failure}}
+\DoxyCodeLine{00321\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_runner_1_1_configuration_a5d9ad9dcbd3b258912e0329bc856d35f}{max\_failure\_rate}}\ =\ 1.0;\ \ \ \ \ \ \ \ \textcolor{comment}{//\ Stop\ if\ failure\ rate\ exceeds\ this}}
+\DoxyCodeLine{00322\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_runner_1_1_configuration_a4d32cca37f3003cc829bb5c5e6eaa23d}{cleanup\_on\_exit}}\ =\ \textcolor{keyword}{true};\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Clean\ up\ resources\ on\ exit}}
+\DoxyCodeLine{00323\ \ \ \ \ std::string\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_runner_1_1_configuration_a14e1c6d6ec4064b60c57dea8098e85a5}{ci\_system}}\ =\ \textcolor{stringliteral}{"{}"{}};\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ CI\ system\ identifier\ (github,\ jenkins,\ etc.)}}
+\DoxyCodeLine{00324\ \ \ \ \ std::string\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_runner_1_1_configuration_a1d0a2e4bb83da2c44dabc0444c373615}{artifact\_directory}}\ =\ \textcolor{stringliteral}{"{}"{}};\ \ \textcolor{comment}{//\ Directory\ for\ CI\ artifacts}}
+\DoxyCodeLine{00325\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_runner_1_1_configuration_a65c2be48e9417d357a017bfd2a595774}{containerized}}\ =\ \textcolor{keyword}{false};\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Running\ in\ container\ environment}}
+\DoxyCodeLine{00326\ \ \ \ \ std::chrono::milliseconds\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_runner_1_1_configuration_a98b869554a228a9ec1e0bfd8e1145fd0}{ci\_timeout}}\ =\ std::chrono::minutes(30);\ \ \textcolor{comment}{//\ CI-\/specific\ timeout}}
+\DoxyCodeLine{00327\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_runner_1_1_configuration_a5cd0332b047a6b68fd1230c806acc99d}{max\_memory\_mb}}\ =\ 0;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Memory\ limit\ (0\ =\ no\ limit)}}
+\DoxyCodeLine{00328\ \ \ \};}
+\DoxyCodeLine{00329\ }
+\DoxyCodeLine{00330\ \ \ \textcolor{keyword}{explicit}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_runner_ad7a294179c6dbad6ac6a6de77dedad1f}{TestRunner}}(\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_runner_1_1_configuration}{Configuration}}\ config);}
+\DoxyCodeLine{00331\ }
+\DoxyCodeLine{00332\ \ \ \textcolor{comment}{//\ Test\ registration}}
+\DoxyCodeLine{00333\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_runner_aa67215337d6563c21822c6d527b8633d}{register\_test}}(std::unique\_ptr<TestCase>\ test\_case);}
+\DoxyCodeLine{00334\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_runner_a65c972054210afc3ad333a237f69d6e8}{register\_test\_suite}}(\textcolor{keyword}{const}\ std::string\&\ suite\_name,}
+\DoxyCodeLine{00335\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<std::unique\_ptr<TestCase>>\ test\_cases);}
+\DoxyCodeLine{00336\ }
+\DoxyCodeLine{00337\ \ \ \textcolor{comment}{//\ Test\ discovery\ and\ execution}}
+\DoxyCodeLine{00338\ \ \ [[nodiscard]]\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_suite_result}{TestSuiteResult}}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_runner_a4aa4be7671c992c847ca27e2bcb6f006}{run\_all\_tests}}();}
+\DoxyCodeLine{00339\ \ \ [[nodiscard]]\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_suite_result}{TestSuiteResult}}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_runner_af9ecc16c005b6b587b2a2c92750b4914}{run\_tests\_with\_tag}}(\textcolor{keyword}{const}\ std::string\&\ tag);}
+\DoxyCodeLine{00340\ \ \ [[nodiscard]]\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_suite_result}{TestSuiteResult}}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_runner_a327ebebfa710e53afc9d3dc324d4493e}{run\_specific\_test}}(\textcolor{keyword}{const}\ std::string\&\ test\_name);}
+\DoxyCodeLine{00341\ \ \ [[nodiscard]]\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_suite_result}{TestSuiteResult}}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_runner_a42c05c3715b0a6b4a0ed9ccf8df5cd74}{run\_tests\_matching\_pattern}}(\textcolor{keyword}{const}\ std::string\&\ pattern);}
+\DoxyCodeLine{00342\ }
+\DoxyCodeLine{00343\ \ \ \textcolor{comment}{//\ Configuration}}
+\DoxyCodeLine{00344\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_runner_a9ffa423d71b2f4caf924cef32ff529bb}{set\_configuration}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_runner_1_1_configuration}{Configuration}}\&\ config)\ \{\ config\_\ =\ config;\ \}}
+\DoxyCodeLine{00345\ \ \ [[nodiscard]]\ \textcolor{keyword}{const}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_runner_1_1_configuration}{Configuration}}\&\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_runner_a8a631d7c62450af08246a1fce5f44066}{configuration}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ config\_;\ \}}
+\DoxyCodeLine{00346\ }
+\DoxyCodeLine{00347\ \ \ \textcolor{comment}{//\ Reporter\ management}}
+\DoxyCodeLine{00348\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_runner_aab4f92dfd754bf7909a87f5bb189af14}{add\_reporter}}(std::unique\_ptr<TestReporter>\ reporter);}
+\DoxyCodeLine{00349\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_runner_a71d87694a49c860f8d770405cd92b56e}{clear\_reporters}}();}
+\DoxyCodeLine{00350\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_runner_a418cf31bb78281aee1abc4e4cb0a0b5a}{reporter\_count}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ reporters\_.size();\ \}}
+\DoxyCodeLine{00351\ }
+\DoxyCodeLine{00352\ \ \ \textcolor{comment}{//\ Progress\ callbacks\ (legacy\ -\/\ prefer\ using\ reporters)}}
+\DoxyCodeLine{00353\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_runner_aa5ed18047e90bbe1fd91cc4644ab01e0}{set\_progress\_callback}}(std::function<\textcolor{keywordtype}{void}(\textcolor{keyword}{const}\ std::string\&,\ \textcolor{keywordtype}{double})>\ callback);}
+\DoxyCodeLine{00354\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_runner_a5f149601a07d6bb50b0f92650009bffa}{set\_test\_started\_callback}}(std::function<\textcolor{keywordtype}{void}(\textcolor{keyword}{const}\ std::string\&)>\ callback);}
+\DoxyCodeLine{00355\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_runner_a85d62d9c4a2cb466cb2b88e3d1acfdce}{set\_test\_completed\_callback}}(std::function<\textcolor{keywordtype}{void}(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_result}{TestResult}}\&)>\ callback);}
+\DoxyCodeLine{00356\ }
+\DoxyCodeLine{00357\ \ \ \textcolor{comment}{//\ Statistics}}
+\DoxyCodeLine{00358\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_runner_ad11131d44ba3cf91755d0895d6d7fdba}{total\_test\_count}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00359\ \ \ [[nodiscard]]\ std::vector<std::string>\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_runner_a21fd6c0878fc088c3699c7ca19318397}{available\_tags}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00360\ \ \ [[nodiscard]]\ std::vector<std::string>\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_runner_ac886df19d8ad9c15903ed9b9958060f2}{available\_test\_names}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00361\ }
+\DoxyCodeLine{00362\ \ \ \textcolor{comment}{//\ CI/CD\ integration\ methods}}
+\DoxyCodeLine{00363\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_runner_a1f9e6e0e90e000878920e88c771f9ddf}{enable\_ci\_mode}}(\textcolor{keyword}{const}\ std::string\&\ ci\_system\ =\ \textcolor{stringliteral}{"{}"{}});}
+\DoxyCodeLine{00364\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_runner_a78ef5cf77450ff8e04a11605b8eedd8a}{set\_artifact\_directory}}(\textcolor{keyword}{const}\ std::string\&\ directory);}
+\DoxyCodeLine{00365\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_runner_a87de90ed91c1583e5b004b0b7f6f83c2}{set\_containerized\_mode}}(\textcolor{keywordtype}{bool}\ containerized);}
+\DoxyCodeLine{00366\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_runner_a28f31adfbcd53a81d5185e9af095b9de}{get\_ci\_exit\_code}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_suite_result}{TestSuiteResult}}\&\ result)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00367\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_runner_a78b56a88d521f37c033ec7c940c69ec6}{cleanup\_ci\_resources}}();}
+\DoxyCodeLine{00368\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_runner_a22183d165095ab71fe9281585d04a31e}{is\_ci\_timeout\_exceeded}}(std::chrono::steady\_clock::time\_point\ start\_time)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00369\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_runner_aefedaa8a6a9006e565d6e03fc05d5cc7}{generate\_ci\_artifacts}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_suite_result}{TestSuiteResult}}\&\ result);}
+\DoxyCodeLine{00370\ }
+\DoxyCodeLine{00371\ \ \ \textcolor{comment}{//\ Resource\ monitoring\ for\ CI}}
+\DoxyCodeLine{00372\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_runner_a2935ff6b01df16bf11fd57aa618d5cb0}{get\_memory\_usage\_mb}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00373\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_runner_ac05f35dd552a20c0d3ecd5d15e52ea39}{is\_memory\_limit\_exceeded}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00374\ }
+\DoxyCodeLine{00375\ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00376\ \ \ Configuration\ config\_;}
+\DoxyCodeLine{00377\ \ \ std::vector<std::unique\_ptr<TestCase>>\ registered\_tests\_;}
+\DoxyCodeLine{00378\ \ \ std::map<std::string,\ std::vector<std::unique\_ptr<TestCase>>>\ test\_suites\_;}
+\DoxyCodeLine{00379\ \ \ std::vector<std::unique\_ptr<TestReporter>>\ reporters\_;}
+\DoxyCodeLine{00380\ }
+\DoxyCodeLine{00381\ \ \ \textcolor{comment}{//\ Callbacks\ (legacy)}}
+\DoxyCodeLine{00382\ \ \ std::function<void(\textcolor{keyword}{const}\ std::string\&,\ \textcolor{keywordtype}{double})>\ progress\_callback\_;}
+\DoxyCodeLine{00383\ \ \ std::function<void(\textcolor{keyword}{const}\ std::string\&)>\ test\_started\_callback\_;}
+\DoxyCodeLine{00384\ \ \ std::function<void(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_result}{TestResult}}\&)>\ test\_completed\_callback\_;}
+\DoxyCodeLine{00385\ }
+\DoxyCodeLine{00386\ \ \ \textcolor{comment}{//\ Thread\ safety\ for\ callbacks\ and\ reporters}}
+\DoxyCodeLine{00387\ \ \ \textcolor{keyword}{mutable}\ std::mutex\ callback\_mutex\_;}
+\DoxyCodeLine{00388\ }
+\DoxyCodeLine{00389\ \ \ \textcolor{comment}{//\ Enhanced\ parallel\ execution}}
+\DoxyCodeLine{00390\ \ \ std::unique\_ptr<ParallelTestExecutor>\ parallel\_executor\_;}
+\DoxyCodeLine{00391\ }
+\DoxyCodeLine{00392\ \ \ \textcolor{comment}{//\ CI/CD\ integration\ removed\ for\ now\ to\ avoid\ linking\ issues}}
+\DoxyCodeLine{00393\ \ \ std::chrono::steady\_clock::time\_point\ execution\_start\_time\_;}
+\DoxyCodeLine{00394\ }
+\DoxyCodeLine{00395\ \ \ \textcolor{comment}{//\ Internal\ execution\ methods}}
+\DoxyCodeLine{00396\ \ \ [[nodiscard]]\ std::vector<TestCase*>\ filter\_tests(\textcolor{keyword}{const}\ std::vector<std::string>\&\ patterns,}
+\DoxyCodeLine{00397\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::vector<std::string>\&\ tags)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00398\ \ \ [[nodiscard]]\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_suite_result}{TestSuiteResult}}\ execute\_tests(\textcolor{keyword}{const}\ std::vector<TestCase*>\&\ tests);}
+\DoxyCodeLine{00399\ \ \ [[nodiscard]]\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_suite_result}{TestSuiteResult}}\ execute\_tests\_sequential(\textcolor{keyword}{const}\ std::vector<TestCase*>\&\ tests);}
+\DoxyCodeLine{00400\ \ \ [[nodiscard]]\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_suite_result}{TestSuiteResult}}\ execute\_tests\_parallel(\textcolor{keyword}{const}\ std::vector<TestCase*>\&\ tests);}
+\DoxyCodeLine{00401\ }
+\DoxyCodeLine{00402\ \ \ \textcolor{comment}{//\ Test\ execution\ engine\ methods}}
+\DoxyCodeLine{00403\ \ \ [[nodiscard]]\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_result}{TestResult}}\ execute\_single\_test\_with\_timeout(\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_case}{TestCase}}*\ test);}
+\DoxyCodeLine{00404\ \ \ [[nodiscard]]\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_result}{TestResult}}\ execute\_test\_in\_isolation(\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_case}{TestCase}}*\ test);}
+\DoxyCodeLine{00405\ \ \ \textcolor{keywordtype}{void}\ setup\_test\_isolation();}
+\DoxyCodeLine{00406\ \ \ \textcolor{keywordtype}{void}\ cleanup\_test\_isolation();}
+\DoxyCodeLine{00407\ }
+\DoxyCodeLine{00408\ \ \ \textcolor{comment}{//\ Utility\ methods}}
+\DoxyCodeLine{00409\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ matches\_pattern(\textcolor{keyword}{const}\ std::string\&\ test\_name,}
+\DoxyCodeLine{00410\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ pattern)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00411\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ has\_tag(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_case}{TestCase}}\&\ test\_case,\ \textcolor{keyword}{const}\ std::string\&\ tag)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00412\ \ \ \textcolor{keywordtype}{void}\ notify\_progress(\textcolor{keyword}{const}\ std::string\&\ message,\ \textcolor{keywordtype}{double}\ percentage);}
+\DoxyCodeLine{00413\ \ \ \textcolor{keywordtype}{void}\ notify\_test\_started(\textcolor{keyword}{const}\ std::string\&\ test\_name);}
+\DoxyCodeLine{00414\ \ \ \textcolor{keywordtype}{void}\ notify\_test\_completed(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_result}{TestResult}}\&\ result);}
+\DoxyCodeLine{00415\ \ \ \textcolor{keywordtype}{void}\ notify\_suite\_started(\textcolor{keyword}{const}\ std::string\&\ suite\_name,\ \textcolor{keywordtype}{size\_t}\ total\_tests);}
+\DoxyCodeLine{00416\ \ \ \textcolor{keywordtype}{void}\ notify\_suite\_finished(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_suite_result}{TestSuiteResult}}\&\ result);}
+\DoxyCodeLine{00417\ \ \ \textcolor{keywordtype}{void}\ notify\_error(\textcolor{keyword}{const}\ std::string\&\ error\_message);}
+\DoxyCodeLine{00418\ \};}
+\DoxyCodeLine{00419\ }
+\DoxyCodeLine{00423\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_c_i_system_integration}{CISystemIntegration}}\ \{}
+\DoxyCodeLine{00424\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00425\ \ \ \textcolor{keyword}{enum\ class}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_c_i_system_integration_a4238e07ea1468e7e16a476af8ccfe276}{CISystem}}\ \{}
+\DoxyCodeLine{00426\ \ \ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_c_i_system_integration_a4238e07ea1468e7e16a476af8ccfe276a88183b946cc5f0e8c96b2e66e1c74a7e}{Unknown}},}
+\DoxyCodeLine{00427\ \ \ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_c_i_system_integration_a4238e07ea1468e7e16a476af8ccfe276a9c5f3cb3840e332c3dfb249a372ef25a}{GitHubActions}},}
+\DoxyCodeLine{00428\ \ \ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_c_i_system_integration_a4238e07ea1468e7e16a476af8ccfe276a2e54334c0a5ce2e3e5a5845df3ab3ada}{Jenkins}},}
+\DoxyCodeLine{00429\ \ \ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_c_i_system_integration_a4238e07ea1468e7e16a476af8ccfe276a9c886026947caa010009dea528f3a04c}{GitLabCI}},}
+\DoxyCodeLine{00430\ \ \ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_c_i_system_integration_a4238e07ea1468e7e16a476af8ccfe276ac4c409c631a7fbb907d721ef8a6e32d6}{CircleCI}},}
+\DoxyCodeLine{00431\ \ \ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_c_i_system_integration_a4238e07ea1468e7e16a476af8ccfe276a07a6a8fbdb8232150d08426258780086}{TravisCI}},}
+\DoxyCodeLine{00432\ \ \ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_c_i_system_integration_a4238e07ea1468e7e16a476af8ccfe276aef7ae16297ba65650302edd0dedf4fa9}{AzurePipelines}}}
+\DoxyCodeLine{00433\ \ \ \};}
+\DoxyCodeLine{00434\ }
+\DoxyCodeLine{00435\ \ \ \textcolor{keyword}{static}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_c_i_system_integration_a4238e07ea1468e7e16a476af8ccfe276}{CISystem}}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_c_i_system_integration_a0519d2e9c1a6f9bb3e4f10766a11e6a4}{detect\_ci\_system}}();}
+\DoxyCodeLine{00436\ \ \ \textcolor{keyword}{static}\ std::string\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_c_i_system_integration_a8ccafe26086518e4072c975526760807}{get\_ci\_system\_name}}(\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_c_i_system_integration_a4238e07ea1468e7e16a476af8ccfe276}{CISystem}}\ system);}
+\DoxyCodeLine{00437\ }
+\DoxyCodeLine{00438\ \ \ \textcolor{comment}{//\ CI-\/specific\ configurations}}
+\DoxyCodeLine{00439\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_c_i_system_integration_af914228d89eba328168b2c680ca01ac7}{configure\_for\_github\_actions}}(\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_runner}{TestRunner}}\&\ runner);}
+\DoxyCodeLine{00440\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_c_i_system_integration_a33cf3c42e42440b028d37aeecfdaa80e}{configure\_for\_jenkins}}(\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_runner}{TestRunner}}\&\ runner);}
+\DoxyCodeLine{00441\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_c_i_system_integration_ac16eb0235db69e559ce41aa8a878d269}{configure\_for\_gitlab\_ci}}(\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_runner}{TestRunner}}\&\ runner);}
+\DoxyCodeLine{00442\ }
+\DoxyCodeLine{00443\ \ \ \textcolor{comment}{//\ Artifact\ generation}}
+\DoxyCodeLine{00444\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_c_i_system_integration_a399ba0d15b31b7ee03840e5ccacff1cf}{generate\_github\_actions\_artifacts}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_suite_result}{TestSuiteResult}}\&\ result,}
+\DoxyCodeLine{00445\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ directory);}
+\DoxyCodeLine{00446\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_c_i_system_integration_ab281844a645b9d45afa660a4005a0140}{generate\_jenkins\_artifacts}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_suite_result}{TestSuiteResult}}\&\ result,}
+\DoxyCodeLine{00447\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ directory);}
+\DoxyCodeLine{00448\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_c_i_system_integration_a24297ed9ed901203c10c80e961f3d253}{generate\_junit\_xml}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_suite_result}{TestSuiteResult}}\&\ result,\ \textcolor{keyword}{const}\ std::string\&\ file\_path);}
+\DoxyCodeLine{00449\ }
+\DoxyCodeLine{00450\ \ \ \textcolor{comment}{//\ Exit\ codes}}
+\DoxyCodeLine{00451\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_c_i_system_integration_a827367c9090dac6aa68abb0dbeb249b2}{get\_standard\_exit\_code}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_suite_result}{TestSuiteResult}}\&\ result);}
+\DoxyCodeLine{00452\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_c_i_system_integration_a58bac4a9b4b603def459cd9a8dec40af}{get\_ci\_specific\_exit\_code}}(\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_c_i_system_integration_a4238e07ea1468e7e16a476af8ccfe276}{CISystem}}\ system,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_suite_result}{TestSuiteResult}}\&\ result);}
+\DoxyCodeLine{00453\ \};}
+\DoxyCodeLine{00454\ }
+\DoxyCodeLine{00458\ \textcolor{keyword}{class\ }TestRegistry\ \{}
+\DoxyCodeLine{00459\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00460\ \ \ \textcolor{keyword}{static}\ TestRegistry\&\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_registry_a38948c96a559c9b1c33f0c34bfc378ac}{instance}}();}
+\DoxyCodeLine{00461\ }
+\DoxyCodeLine{00462\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_registry_a8648641f0323c8f360dd352f3c31c63b}{register\_test}}(std::unique\_ptr<TestCase>\ test\_case);}
+\DoxyCodeLine{00463\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_registry_a0d13543327f672d919b01f4e7cfa3782}{register\_test\_factory}}(\textcolor{keyword}{const}\ std::string\&\ name,}
+\DoxyCodeLine{00464\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::function<std::unique\_ptr<TestCase>()>\ factory);}
+\DoxyCodeLine{00465\ }
+\DoxyCodeLine{00466\ \ \ [[nodiscard]]\ std::vector<std::unique\_ptr<TestCase>>\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_registry_a04c09ceecc59922ee7c0b643d1d2c8f8}{create\_all\_tests}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00467\ \ \ [[nodiscard]]\ std::unique\_ptr<TestCase>\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_registry_a1b6c387b1f1e7ab06d4341a65fd11829}{create\_test}}(\textcolor{keyword}{const}\ std::string\&\ name)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00468\ }
+\DoxyCodeLine{00469\ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00470\ \ \ TestRegistry()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00471\ \ \ std::map<std::string,\ std::function<std::unique\_ptr<TestCase>()>>\ test\_factories\_;}
+\DoxyCodeLine{00472\ \};}
+\DoxyCodeLine{00473\ }
+\DoxyCodeLine{00474\ \textcolor{comment}{//\ Macro\ for\ automatic\ test\ registration\ (using\ TestDiscovery)}}
+\DoxyCodeLine{00475\ \textcolor{preprocessor}{\#define\ REGISTER\_TEST(TestCaseType)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00476\ \textcolor{preprocessor}{\ \ static\ SolarSystem::Testing::TestRegistrar<TestCaseType>\ test\_registrar\_\#\#TestCaseType(\ \(\backslash\)}}
+\DoxyCodeLine{00477\ \textcolor{preprocessor}{\ \ \ \ \ \ \#TestCaseType)}}
+\DoxyCodeLine{00478\ }
+\DoxyCodeLine{00479\ \}\ \ \textcolor{comment}{//\ namespace\ SolarSystem::Testing}}
+
+\end{DoxyCode}

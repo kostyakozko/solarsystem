@@ -1,0 +1,5 @@
+<map id="SolarSystem::Core::Builders::SimulationBuilder::is_valid" name="SolarSystem::Core::Builders::SimulationBuilder::is_valid">
+<area shape="rect" id="Node000001" title="Check if configuration is valid." alt="" coords="5,5,183,61"/>
+<area shape="rect" id="Node000002" href="$class_solar_system_1_1_core_1_1_builders_1_1_simulation_builder.html#a281574809cd93ebaf15410e6e9a8f178" title="Validate current configuration." alt="" coords="231,5,408,61"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="183,30,215,30,215,36,183,36"/>
+</map>

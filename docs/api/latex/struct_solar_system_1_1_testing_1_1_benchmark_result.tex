@@ -1,0 +1,203 @@
+\doxysection{Solar\+System\+::Testing\+::Benchmark\+Result Struct Reference}
+\hypertarget{struct_solar_system_1_1_testing_1_1_benchmark_result}{}\label{struct_solar_system_1_1_testing_1_1_benchmark_result}\index{SolarSystem::Testing::BenchmarkResult@{SolarSystem::Testing::BenchmarkResult}}
+
+
+Result of a single benchmark execution.  
+
+
+
+
+{\ttfamily \#include $<$benchmark.\+hpp$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_benchmark_result_ace5cfea813655476b2c4556166d7b012}{passed\+\_\+thresholds}} () const
+\begin{DoxyCompactList}\small\item\em Check if benchmark passed all thresholds. \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_benchmark_result_a1ba9c23dcb9f42e2938dd8f01911fb27}{to\+\_\+csv\+\_\+row}} () const
+\begin{DoxyCompactList}\small\item\em Convert to CSV format for CI integration. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static std\+::string \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_benchmark_result_a3b0d9c956619679fa00cd208f9eefae9}{csv\+\_\+header}} ()
+\begin{DoxyCompactList}\small\item\em Get CSV header for benchmark results. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::string \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_benchmark_result_aedbc7a1f9f2351b594d9d484fc1aea70}{name}}
+\begin{DoxyCompactList}\small\item\em \doxylink{class_solar_system_1_1_testing_1_1_benchmark}{Benchmark} name. \end{DoxyCompactList}\item 
+std\+::chrono\+::nanoseconds \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_benchmark_result_a701c2f341f89ece572e592af76669a40}{min\+\_\+time}} \{0\}
+\begin{DoxyCompactList}\small\item\em Minimum execution time. \end{DoxyCompactList}\item 
+std\+::chrono\+::nanoseconds \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_benchmark_result_a44eacb4d047a56f99ebe92fad9201374}{max\+\_\+time}} \{0\}
+\begin{DoxyCompactList}\small\item\em Maximum execution time. \end{DoxyCompactList}\item 
+std\+::chrono\+::nanoseconds \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_benchmark_result_a57a04dd95cebf88686e5f2b4c1578f18}{mean\+\_\+time}} \{0\}
+\begin{DoxyCompactList}\small\item\em Mean execution time. \end{DoxyCompactList}\item 
+std\+::chrono\+::nanoseconds \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_benchmark_result_a502b8af248ad68af03c9dc55de72bb91}{median\+\_\+time}} \{0\}
+\begin{DoxyCompactList}\small\item\em Median execution time. \end{DoxyCompactList}\item 
+std\+::chrono\+::nanoseconds \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_benchmark_result_a3316dc307ea9a27eed3e9f1cfffaebe2}{std\+\_\+dev}} \{0\}
+\begin{DoxyCompactList}\small\item\em Standard deviation. \end{DoxyCompactList}\item 
+size\+\_\+t \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_benchmark_result_a44ca8387cd7e35509f8e58c0cd368fff}{iterations}} = 0
+\begin{DoxyCompactList}\small\item\em Number of iterations. \end{DoxyCompactList}\item 
+double \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_benchmark_result_a66812cf9d3f45b7da9820f05c07b31f4}{operations\+\_\+per\+\_\+second}} = 0.\+0
+\begin{DoxyCompactList}\small\item\em Operations per second. \end{DoxyCompactList}\item 
+size\+\_\+t \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_benchmark_result_a82ccfdbdea4b3587def18aea6ff5699a}{memory\+\_\+usage\+\_\+bytes}} = 0
+\begin{DoxyCompactList}\small\item\em Peak memory usage. \end{DoxyCompactList}\item 
+std\+::map$<$ std\+::string, std\+::string $>$ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_benchmark_result_ad54e04ea93b3de86795e176fed3eacfb}{metadata}}
+\begin{DoxyCompactList}\small\item\em Additional metadata. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Result of a single benchmark execution. 
+
+\label{doc-func-members}
+\Hypertarget{struct_solar_system_1_1_testing_1_1_benchmark_result_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{struct_solar_system_1_1_testing_1_1_benchmark_result_a3b0d9c956619679fa00cd208f9eefae9}\index{SolarSystem::Testing::BenchmarkResult@{SolarSystem::Testing::BenchmarkResult}!csv\_header@{csv\_header}}
+\index{csv\_header@{csv\_header}!SolarSystem::Testing::BenchmarkResult@{SolarSystem::Testing::BenchmarkResult}}
+\doxysubsubsection{\texorpdfstring{csv\_header()}{csv\_header()}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_benchmark_result_a3b0d9c956619679fa00cd208f9eefae9} 
+std\+::string Solar\+System\+::\+Testing\+::\+Benchmark\+Result\+::csv\+\_\+header (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [nodiscard]}}
+
+
+
+Get CSV header for benchmark results. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{struct_solar_system_1_1_testing_1_1_benchmark_result_a3b0d9c956619679fa00cd208f9eefae9_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{struct_solar_system_1_1_testing_1_1_benchmark_result_ace5cfea813655476b2c4556166d7b012}\index{SolarSystem::Testing::BenchmarkResult@{SolarSystem::Testing::BenchmarkResult}!passed\_thresholds@{passed\_thresholds}}
+\index{passed\_thresholds@{passed\_thresholds}!SolarSystem::Testing::BenchmarkResult@{SolarSystem::Testing::BenchmarkResult}}
+\doxysubsubsection{\texorpdfstring{passed\_thresholds()}{passed\_thresholds()}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_benchmark_result_ace5cfea813655476b2c4556166d7b012} 
+bool Solar\+System\+::\+Testing\+::\+Benchmark\+Result\+::passed\+\_\+thresholds (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Check if benchmark passed all thresholds. 
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_benchmark_result_a1ba9c23dcb9f42e2938dd8f01911fb27}\index{SolarSystem::Testing::BenchmarkResult@{SolarSystem::Testing::BenchmarkResult}!to\_csv\_row@{to\_csv\_row}}
+\index{to\_csv\_row@{to\_csv\_row}!SolarSystem::Testing::BenchmarkResult@{SolarSystem::Testing::BenchmarkResult}}
+\doxysubsubsection{\texorpdfstring{to\_csv\_row()}{to\_csv\_row()}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_benchmark_result_a1ba9c23dcb9f42e2938dd8f01911fb27} 
+std\+::string Solar\+System\+::\+Testing\+::\+Benchmark\+Result\+::to\+\_\+csv\+\_\+row (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Convert to CSV format for CI integration. 
+
+
+
+\label{doc-variable-members}
+\Hypertarget{struct_solar_system_1_1_testing_1_1_benchmark_result_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{struct_solar_system_1_1_testing_1_1_benchmark_result_a44ca8387cd7e35509f8e58c0cd368fff}\index{SolarSystem::Testing::BenchmarkResult@{SolarSystem::Testing::BenchmarkResult}!iterations@{iterations}}
+\index{iterations@{iterations}!SolarSystem::Testing::BenchmarkResult@{SolarSystem::Testing::BenchmarkResult}}
+\doxysubsubsection{\texorpdfstring{iterations}{iterations}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_benchmark_result_a44ca8387cd7e35509f8e58c0cd368fff} 
+size\+\_\+t Solar\+System\+::\+Testing\+::\+Benchmark\+Result\+::iterations = 0}
+
+
+
+Number of iterations. 
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_benchmark_result_a44eacb4d047a56f99ebe92fad9201374}\index{SolarSystem::Testing::BenchmarkResult@{SolarSystem::Testing::BenchmarkResult}!max\_time@{max\_time}}
+\index{max\_time@{max\_time}!SolarSystem::Testing::BenchmarkResult@{SolarSystem::Testing::BenchmarkResult}}
+\doxysubsubsection{\texorpdfstring{max\_time}{max\_time}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_benchmark_result_a44eacb4d047a56f99ebe92fad9201374} 
+std\+::chrono\+::nanoseconds Solar\+System\+::\+Testing\+::\+Benchmark\+Result\+::max\+\_\+time \{0\}}
+
+
+
+Maximum execution time. 
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_benchmark_result_a57a04dd95cebf88686e5f2b4c1578f18}\index{SolarSystem::Testing::BenchmarkResult@{SolarSystem::Testing::BenchmarkResult}!mean\_time@{mean\_time}}
+\index{mean\_time@{mean\_time}!SolarSystem::Testing::BenchmarkResult@{SolarSystem::Testing::BenchmarkResult}}
+\doxysubsubsection{\texorpdfstring{mean\_time}{mean\_time}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_benchmark_result_a57a04dd95cebf88686e5f2b4c1578f18} 
+std\+::chrono\+::nanoseconds Solar\+System\+::\+Testing\+::\+Benchmark\+Result\+::mean\+\_\+time \{0\}}
+
+
+
+Mean execution time. 
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_benchmark_result_a502b8af248ad68af03c9dc55de72bb91}\index{SolarSystem::Testing::BenchmarkResult@{SolarSystem::Testing::BenchmarkResult}!median\_time@{median\_time}}
+\index{median\_time@{median\_time}!SolarSystem::Testing::BenchmarkResult@{SolarSystem::Testing::BenchmarkResult}}
+\doxysubsubsection{\texorpdfstring{median\_time}{median\_time}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_benchmark_result_a502b8af248ad68af03c9dc55de72bb91} 
+std\+::chrono\+::nanoseconds Solar\+System\+::\+Testing\+::\+Benchmark\+Result\+::median\+\_\+time \{0\}}
+
+
+
+Median execution time. 
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_benchmark_result_a82ccfdbdea4b3587def18aea6ff5699a}\index{SolarSystem::Testing::BenchmarkResult@{SolarSystem::Testing::BenchmarkResult}!memory\_usage\_bytes@{memory\_usage\_bytes}}
+\index{memory\_usage\_bytes@{memory\_usage\_bytes}!SolarSystem::Testing::BenchmarkResult@{SolarSystem::Testing::BenchmarkResult}}
+\doxysubsubsection{\texorpdfstring{memory\_usage\_bytes}{memory\_usage\_bytes}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_benchmark_result_a82ccfdbdea4b3587def18aea6ff5699a} 
+size\+\_\+t Solar\+System\+::\+Testing\+::\+Benchmark\+Result\+::memory\+\_\+usage\+\_\+bytes = 0}
+
+
+
+Peak memory usage. 
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_benchmark_result_ad54e04ea93b3de86795e176fed3eacfb}\index{SolarSystem::Testing::BenchmarkResult@{SolarSystem::Testing::BenchmarkResult}!metadata@{metadata}}
+\index{metadata@{metadata}!SolarSystem::Testing::BenchmarkResult@{SolarSystem::Testing::BenchmarkResult}}
+\doxysubsubsection{\texorpdfstring{metadata}{metadata}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_benchmark_result_ad54e04ea93b3de86795e176fed3eacfb} 
+std\+::map$<$std\+::string, std\+::string$>$ Solar\+System\+::\+Testing\+::\+Benchmark\+Result\+::metadata}
+
+
+
+Additional metadata. 
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_benchmark_result_a701c2f341f89ece572e592af76669a40}\index{SolarSystem::Testing::BenchmarkResult@{SolarSystem::Testing::BenchmarkResult}!min\_time@{min\_time}}
+\index{min\_time@{min\_time}!SolarSystem::Testing::BenchmarkResult@{SolarSystem::Testing::BenchmarkResult}}
+\doxysubsubsection{\texorpdfstring{min\_time}{min\_time}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_benchmark_result_a701c2f341f89ece572e592af76669a40} 
+std\+::chrono\+::nanoseconds Solar\+System\+::\+Testing\+::\+Benchmark\+Result\+::min\+\_\+time \{0\}}
+
+
+
+Minimum execution time. 
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_benchmark_result_aedbc7a1f9f2351b594d9d484fc1aea70}\index{SolarSystem::Testing::BenchmarkResult@{SolarSystem::Testing::BenchmarkResult}!name@{name}}
+\index{name@{name}!SolarSystem::Testing::BenchmarkResult@{SolarSystem::Testing::BenchmarkResult}}
+\doxysubsubsection{\texorpdfstring{name}{name}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_benchmark_result_aedbc7a1f9f2351b594d9d484fc1aea70} 
+std\+::string Solar\+System\+::\+Testing\+::\+Benchmark\+Result\+::name}
+
+
+
+\doxylink{class_solar_system_1_1_testing_1_1_benchmark}{Benchmark} name. 
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_benchmark_result_a66812cf9d3f45b7da9820f05c07b31f4}\index{SolarSystem::Testing::BenchmarkResult@{SolarSystem::Testing::BenchmarkResult}!operations\_per\_second@{operations\_per\_second}}
+\index{operations\_per\_second@{operations\_per\_second}!SolarSystem::Testing::BenchmarkResult@{SolarSystem::Testing::BenchmarkResult}}
+\doxysubsubsection{\texorpdfstring{operations\_per\_second}{operations\_per\_second}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_benchmark_result_a66812cf9d3f45b7da9820f05c07b31f4} 
+double Solar\+System\+::\+Testing\+::\+Benchmark\+Result\+::operations\+\_\+per\+\_\+second = 0.\+0}
+
+
+
+Operations per second. 
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_benchmark_result_a3316dc307ea9a27eed3e9f1cfffaebe2}\index{SolarSystem::Testing::BenchmarkResult@{SolarSystem::Testing::BenchmarkResult}!std\_dev@{std\_dev}}
+\index{std\_dev@{std\_dev}!SolarSystem::Testing::BenchmarkResult@{SolarSystem::Testing::BenchmarkResult}}
+\doxysubsubsection{\texorpdfstring{std\_dev}{std\_dev}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_benchmark_result_a3316dc307ea9a27eed3e9f1cfffaebe2} 
+std\+::chrono\+::nanoseconds Solar\+System\+::\+Testing\+::\+Benchmark\+Result\+::std\+\_\+dev \{0\}}
+
+
+
+Standard deviation. 
+
+
+
+The documentation for this struct was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+test/include/solar\+\_\+test/benchmarks/\mbox{\hyperlink{benchmark_8hpp}{benchmark.\+hpp}}\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+test/src/benchmarks/\mbox{\hyperlink{benchmark_8cpp}{benchmark.\+cpp}}\end{DoxyCompactItemize}

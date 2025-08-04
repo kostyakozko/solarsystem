@@ -1,0 +1,12 @@
+<map id="SolarSystem::Testing::RegressionDetector::set_baseline" name="SolarSystem::Testing::RegressionDetector::set_baseline">
+<area shape="rect" id="Node000001" title="Set baseline for a benchmark." alt="" coords="505,39,652,94"/>
+<area shape="rect" id="Node000002" href="$class_solar_system_1_1_testing_1_1_regression_detector.html#a84c1c109f67284566977c3a8e5019e9c" title="Analyze benchmark result for regressions." alt="" coords="311,5,457,61"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="489,54,457,48,458,43,490,49"/>
+<area shape="rect" id="Node000005" href="$regression__detection__demo_8cpp.html#a3545f45ecc74ea7d87bc4646a900b5d9" title="Demonstrate baseline creation and storage." alt="" coords="109,78,257,119"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="490,76,258,95,257,90,490,71"/>
+<area shape="rect" id="Node000003" href="$regression__detection__demo_8cpp.html#a4f784b266172b5e58c3d262b9250a81a" title="Demonstrate regression detection." alt="" coords="103,13,263,54"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="295,36,263,36,263,30,295,30"/>
+<area shape="rect" id="Node000004" href="$regression__detection__demo_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title="Main demonstration function." alt="" coords="5,54,55,79"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="88,57,56,64,54,59,87,51"/>
+<area shape="poly" id="edge5_Node000005_Node000004" title=" " alt="" coords="93,82,54,74,55,69,94,77"/>
+</map>

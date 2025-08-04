@@ -1,0 +1,19 @@
+<map id="SolarSystem::Testing::Mocks::MockServiceRegistry::register_mock" name="SolarSystem::Testing::Mocks::MockServiceRegistry::register_mock">
+<area shape="rect" id="Node000001" title="Register mock service." alt="" coords="789,125,991,181"/>
+<area shape="rect" id="Node000002" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry.html#abe6571ec052adba6e5f10a9dd0b33a79" title="Register common mock services." alt="" coords="534,85,735,141"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="774,138,736,132,736,126,774,132"/>
+<area shape="rect" id="Node000009" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_service_registry.html#a36be2a6f96dd841975e9d6e093806949" title="Register mock for this scope." alt="" coords="528,165,741,221"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="774,174,742,179,741,174,773,169"/>
+<area shape="rect" id="Node000003" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry.html#a93aed04eb715452bc02b733a9b8d9ae5" title="Create test environment with all mocks." alt="" coords="273,45,474,101"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="519,98,474,91,475,86,519,93"/>
+<area shape="rect" id="Node000004" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_service_registry.html#a5836d27c99a6a3c1a7fefdce31d7088b" title="Create scoped registry with automatic cleanup." alt="" coords="267,125,480,181"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="519,134,481,139,480,134,518,128"/>
+<area shape="rect" id="Node000005" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_service_registry.html#a692a3044c3414a4a8082280d38573a36" title=" " alt="" coords="5,5,219,61"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="274,120,265,115,241,95,217,75,195,64,197,59,220,71,244,91,268,111,277,116"/>
+<area shape="rect" id="Node000006" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_service_registry.html#ab8be82cb90c641edddaf3c628f9a31ef" title=" " alt="" coords="5,85,219,141"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="251,137,219,132,220,127,251,132"/>
+<area shape="rect" id="Node000007" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_service_registry.html#a07c1ac05459b7769a1ef2123ced3252a" title=" " alt="" coords="5,165,219,221"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="251,175,220,179,219,174,251,169"/>
+<area shape="rect" id="Node000008" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_service_registry.html#afca47fa6650e5e6813d5c463d3af2c07" title=" " alt="" coords="5,245,219,301"/>
+<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="309,191,220,236,192,247,190,242,218,231,307,186"/>
+</map>

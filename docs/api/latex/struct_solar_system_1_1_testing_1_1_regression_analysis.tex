@@ -1,0 +1,202 @@
+\doxysection{Solar\+System\+::Testing\+::Regression\+Analysis Struct Reference}
+\hypertarget{struct_solar_system_1_1_testing_1_1_regression_analysis}{}\label{struct_solar_system_1_1_testing_1_1_regression_analysis}\index{SolarSystem::Testing::RegressionAnalysis@{SolarSystem::Testing::RegressionAnalysis}}
+
+
+Performance regression analysis result.  
+
+
+
+
+{\ttfamily \#include $<$regression\+\_\+detector.\+hpp$>$}
+
+
+
+Collaboration diagram for Solar\+System\+::Testing\+::Regression\+Analysis\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=322pt]{struct_solar_system_1_1_testing_1_1_regression_analysis__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_regression_analysis_a6e624b9dc18f7f41b062e0f59ffef607}{exceeds\+\_\+threshold}} (double threshold\+\_\+percentage) const
+\begin{DoxyCompactList}\small\item\em Check if regression exceeds threshold. \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_regression_analysis_a96e62d8fdd84464f88bdb3dff1835955}{generate\+\_\+report}} () const
+\begin{DoxyCompactList}\small\item\em Generate human-\/readable report. \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_regression_analysis_aac652c6e26fa184fad621d2dfb2b89d1}{to\+\_\+json}} () const
+\begin{DoxyCompactList}\small\item\em Convert to JSON for CI integration. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::string \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_regression_analysis_a5f041ae3840f27525c0c58af29a229dc}{benchmark\+\_\+name}}
+\begin{DoxyCompactList}\small\item\em Name of the benchmark. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_regression_analysis_ab26d33d26745381db2a4ad1b0b38c7ea}{has\+\_\+regression}} = false
+\begin{DoxyCompactList}\small\item\em Whether regression was detected. \end{DoxyCompactList}\item 
+double \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_regression_analysis_a193964d7d06c1bafc7856f8af2837c02}{time\+\_\+regression\+\_\+percentage}} = 0.\+0
+\begin{DoxyCompactList}\small\item\em Time regression as percentage. \end{DoxyCompactList}\item 
+double \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_regression_analysis_aa9a9b1014e6d86192b2badf77b002832}{memory\+\_\+regression\+\_\+percentage}} = 0.\+0
+\begin{DoxyCompactList}\small\item\em Memory regression as percentage. \end{DoxyCompactList}\item 
+double \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_regression_analysis_a48b5c3f03b7f7f019c60b3134030880e}{ops\+\_\+regression\+\_\+percentage}} = 0.\+0
+\begin{DoxyCompactList}\small\item\em Operations/sec regression as percentage. \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_regression_analysis_ad6ec31528752663f96b4e098bee3c230}{severity}}
+\begin{DoxyCompactList}\small\item\em Regression severity (minor, major, critical) \end{DoxyCompactList}\item 
+std\+::vector$<$ std\+::string $>$ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_regression_analysis_a1d21f421a1fb34649dbc086fc2b40f5e}{alerts}}
+\begin{DoxyCompactList}\small\item\em List of alert messages. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_performance_baseline}{Performance\+Baseline}} \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_regression_analysis_aec171eb4d9e40eb5420a77363d43c4c2}{baseline}}
+\begin{DoxyCompactList}\small\item\em Baseline used for comparison. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_benchmark_result}{Benchmark\+Result}} \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_regression_analysis_ac1c72c10f1b34dff1fed000da1763cc2}{current\+\_\+result}}
+\begin{DoxyCompactList}\small\item\em Current benchmark result. \end{DoxyCompactList}\item 
+std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_regression_analysis_a3c64639be445cd1f61efcc9b30c86af2}{analysis\+\_\+time}}
+\begin{DoxyCompactList}\small\item\em When analysis was performed. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Performance regression analysis result. 
+
+\label{doc-func-members}
+\Hypertarget{struct_solar_system_1_1_testing_1_1_regression_analysis_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{struct_solar_system_1_1_testing_1_1_regression_analysis_a6e624b9dc18f7f41b062e0f59ffef607}\index{SolarSystem::Testing::RegressionAnalysis@{SolarSystem::Testing::RegressionAnalysis}!exceeds\_threshold@{exceeds\_threshold}}
+\index{exceeds\_threshold@{exceeds\_threshold}!SolarSystem::Testing::RegressionAnalysis@{SolarSystem::Testing::RegressionAnalysis}}
+\doxysubsubsection{\texorpdfstring{exceeds\_threshold()}{exceeds\_threshold()}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_regression_analysis_a6e624b9dc18f7f41b062e0f59ffef607} 
+bool Solar\+System\+::\+Testing\+::\+Regression\+Analysis\+::exceeds\+\_\+threshold (\begin{DoxyParamCaption}\item[{double}]{threshold\+\_\+percentage}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Check if regression exceeds threshold. 
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_regression_analysis_a96e62d8fdd84464f88bdb3dff1835955}\index{SolarSystem::Testing::RegressionAnalysis@{SolarSystem::Testing::RegressionAnalysis}!generate\_report@{generate\_report}}
+\index{generate\_report@{generate\_report}!SolarSystem::Testing::RegressionAnalysis@{SolarSystem::Testing::RegressionAnalysis}}
+\doxysubsubsection{\texorpdfstring{generate\_report()}{generate\_report()}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_regression_analysis_a96e62d8fdd84464f88bdb3dff1835955} 
+std\+::string Solar\+System\+::\+Testing\+::\+Regression\+Analysis\+::generate\+\_\+report (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Generate human-\/readable report. 
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_regression_analysis_aac652c6e26fa184fad621d2dfb2b89d1}\index{SolarSystem::Testing::RegressionAnalysis@{SolarSystem::Testing::RegressionAnalysis}!to\_json@{to\_json}}
+\index{to\_json@{to\_json}!SolarSystem::Testing::RegressionAnalysis@{SolarSystem::Testing::RegressionAnalysis}}
+\doxysubsubsection{\texorpdfstring{to\_json()}{to\_json()}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_regression_analysis_aac652c6e26fa184fad621d2dfb2b89d1} 
+std\+::string Solar\+System\+::\+Testing\+::\+Regression\+Analysis\+::to\+\_\+json (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Convert to JSON for CI integration. 
+
+
+
+\label{doc-variable-members}
+\Hypertarget{struct_solar_system_1_1_testing_1_1_regression_analysis_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{struct_solar_system_1_1_testing_1_1_regression_analysis_a1d21f421a1fb34649dbc086fc2b40f5e}\index{SolarSystem::Testing::RegressionAnalysis@{SolarSystem::Testing::RegressionAnalysis}!alerts@{alerts}}
+\index{alerts@{alerts}!SolarSystem::Testing::RegressionAnalysis@{SolarSystem::Testing::RegressionAnalysis}}
+\doxysubsubsection{\texorpdfstring{alerts}{alerts}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_regression_analysis_a1d21f421a1fb34649dbc086fc2b40f5e} 
+std\+::vector$<$std\+::string$>$ Solar\+System\+::\+Testing\+::\+Regression\+Analysis\+::alerts}
+
+
+
+List of alert messages. 
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_regression_analysis_a3c64639be445cd1f61efcc9b30c86af2}\index{SolarSystem::Testing::RegressionAnalysis@{SolarSystem::Testing::RegressionAnalysis}!analysis\_time@{analysis\_time}}
+\index{analysis\_time@{analysis\_time}!SolarSystem::Testing::RegressionAnalysis@{SolarSystem::Testing::RegressionAnalysis}}
+\doxysubsubsection{\texorpdfstring{analysis\_time}{analysis\_time}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_regression_analysis_a3c64639be445cd1f61efcc9b30c86af2} 
+std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point Solar\+System\+::\+Testing\+::\+Regression\+Analysis\+::analysis\+\_\+time}
+
+
+
+When analysis was performed. 
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_regression_analysis_aec171eb4d9e40eb5420a77363d43c4c2}\index{SolarSystem::Testing::RegressionAnalysis@{SolarSystem::Testing::RegressionAnalysis}!baseline@{baseline}}
+\index{baseline@{baseline}!SolarSystem::Testing::RegressionAnalysis@{SolarSystem::Testing::RegressionAnalysis}}
+\doxysubsubsection{\texorpdfstring{baseline}{baseline}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_regression_analysis_aec171eb4d9e40eb5420a77363d43c4c2} 
+\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_performance_baseline}{Performance\+Baseline}} Solar\+System\+::\+Testing\+::\+Regression\+Analysis\+::baseline}
+
+
+
+Baseline used for comparison. 
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_regression_analysis_a5f041ae3840f27525c0c58af29a229dc}\index{SolarSystem::Testing::RegressionAnalysis@{SolarSystem::Testing::RegressionAnalysis}!benchmark\_name@{benchmark\_name}}
+\index{benchmark\_name@{benchmark\_name}!SolarSystem::Testing::RegressionAnalysis@{SolarSystem::Testing::RegressionAnalysis}}
+\doxysubsubsection{\texorpdfstring{benchmark\_name}{benchmark\_name}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_regression_analysis_a5f041ae3840f27525c0c58af29a229dc} 
+std\+::string Solar\+System\+::\+Testing\+::\+Regression\+Analysis\+::benchmark\+\_\+name}
+
+
+
+Name of the benchmark. 
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_regression_analysis_ac1c72c10f1b34dff1fed000da1763cc2}\index{SolarSystem::Testing::RegressionAnalysis@{SolarSystem::Testing::RegressionAnalysis}!current\_result@{current\_result}}
+\index{current\_result@{current\_result}!SolarSystem::Testing::RegressionAnalysis@{SolarSystem::Testing::RegressionAnalysis}}
+\doxysubsubsection{\texorpdfstring{current\_result}{current\_result}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_regression_analysis_ac1c72c10f1b34dff1fed000da1763cc2} 
+\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_benchmark_result}{Benchmark\+Result}} Solar\+System\+::\+Testing\+::\+Regression\+Analysis\+::current\+\_\+result}
+
+
+
+Current benchmark result. 
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_regression_analysis_ab26d33d26745381db2a4ad1b0b38c7ea}\index{SolarSystem::Testing::RegressionAnalysis@{SolarSystem::Testing::RegressionAnalysis}!has\_regression@{has\_regression}}
+\index{has\_regression@{has\_regression}!SolarSystem::Testing::RegressionAnalysis@{SolarSystem::Testing::RegressionAnalysis}}
+\doxysubsubsection{\texorpdfstring{has\_regression}{has\_regression}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_regression_analysis_ab26d33d26745381db2a4ad1b0b38c7ea} 
+bool Solar\+System\+::\+Testing\+::\+Regression\+Analysis\+::has\+\_\+regression = false}
+
+
+
+Whether regression was detected. 
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_regression_analysis_aa9a9b1014e6d86192b2badf77b002832}\index{SolarSystem::Testing::RegressionAnalysis@{SolarSystem::Testing::RegressionAnalysis}!memory\_regression\_percentage@{memory\_regression\_percentage}}
+\index{memory\_regression\_percentage@{memory\_regression\_percentage}!SolarSystem::Testing::RegressionAnalysis@{SolarSystem::Testing::RegressionAnalysis}}
+\doxysubsubsection{\texorpdfstring{memory\_regression\_percentage}{memory\_regression\_percentage}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_regression_analysis_aa9a9b1014e6d86192b2badf77b002832} 
+double Solar\+System\+::\+Testing\+::\+Regression\+Analysis\+::memory\+\_\+regression\+\_\+percentage = 0.\+0}
+
+
+
+Memory regression as percentage. 
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_regression_analysis_a48b5c3f03b7f7f019c60b3134030880e}\index{SolarSystem::Testing::RegressionAnalysis@{SolarSystem::Testing::RegressionAnalysis}!ops\_regression\_percentage@{ops\_regression\_percentage}}
+\index{ops\_regression\_percentage@{ops\_regression\_percentage}!SolarSystem::Testing::RegressionAnalysis@{SolarSystem::Testing::RegressionAnalysis}}
+\doxysubsubsection{\texorpdfstring{ops\_regression\_percentage}{ops\_regression\_percentage}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_regression_analysis_a48b5c3f03b7f7f019c60b3134030880e} 
+double Solar\+System\+::\+Testing\+::\+Regression\+Analysis\+::ops\+\_\+regression\+\_\+percentage = 0.\+0}
+
+
+
+Operations/sec regression as percentage. 
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_regression_analysis_ad6ec31528752663f96b4e098bee3c230}\index{SolarSystem::Testing::RegressionAnalysis@{SolarSystem::Testing::RegressionAnalysis}!severity@{severity}}
+\index{severity@{severity}!SolarSystem::Testing::RegressionAnalysis@{SolarSystem::Testing::RegressionAnalysis}}
+\doxysubsubsection{\texorpdfstring{severity}{severity}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_regression_analysis_ad6ec31528752663f96b4e098bee3c230} 
+std\+::string Solar\+System\+::\+Testing\+::\+Regression\+Analysis\+::severity}
+
+
+
+Regression severity (minor, major, critical) 
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_regression_analysis_a193964d7d06c1bafc7856f8af2837c02}\index{SolarSystem::Testing::RegressionAnalysis@{SolarSystem::Testing::RegressionAnalysis}!time\_regression\_percentage@{time\_regression\_percentage}}
+\index{time\_regression\_percentage@{time\_regression\_percentage}!SolarSystem::Testing::RegressionAnalysis@{SolarSystem::Testing::RegressionAnalysis}}
+\doxysubsubsection{\texorpdfstring{time\_regression\_percentage}{time\_regression\_percentage}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_regression_analysis_a193964d7d06c1bafc7856f8af2837c02} 
+double Solar\+System\+::\+Testing\+::\+Regression\+Analysis\+::time\+\_\+regression\+\_\+percentage = 0.\+0}
+
+
+
+Time regression as percentage. 
+
+
+
+The documentation for this struct was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+test/include/solar\+\_\+test/benchmarks/\mbox{\hyperlink{regression__detector_8hpp}{regression\+\_\+detector.\+hpp}}\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+test/src/benchmarks/\mbox{\hyperlink{regression__detector_8cpp}{regression\+\_\+detector.\+cpp}}\end{DoxyCompactItemize}

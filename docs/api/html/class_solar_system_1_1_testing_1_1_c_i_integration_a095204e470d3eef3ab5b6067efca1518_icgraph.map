@@ -1,0 +1,5 @@
+<map id="SolarSystem::Testing::CIIntegration::set_github_step_output" name="SolarSystem::Testing::CIIntegration::set_github_step_output">
+<area shape="rect" id="Node000001" title="Set GitHub Actions step output." alt="" coords="200,5,346,61"/>
+<area shape="rect" id="Node000002" href="$class_solar_system_1_1_testing_1_1_c_i_integration.html#a64a017d26c6d322e3ec5ec831528bf23" title="Exit with appropriate code for CI." alt="" coords="5,5,152,61"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="184,36,152,36,152,30,184,30"/>
+</map>

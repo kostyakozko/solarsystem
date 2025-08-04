@@ -1,0 +1,7 @@
+<map id="SolarSystem::Testing::BenchmarkSuite::add_benchmark" name="SolarSystem::Testing::BenchmarkSuite::add_benchmark">
+<area shape="rect" id="Node000001" title="Add benchmark to suite." alt="" coords="315,5,469,61"/>
+<area shape="rect" id="Node000002" href="$benchmark__execution__demo_8cpp.html#aec4c8d31831d95ff25a78fd8c09ad76b" title="Example benchmark suite." alt="" coords="103,13,267,54"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="299,36,268,36,268,30,299,30"/>
+<area shape="rect" id="Node000003" href="$benchmark__execution__demo_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title="Main demonstration function." alt="" coords="5,20,55,46"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="87,36,55,36,55,30,87,30"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="SolarSystem::Testing::Mocks::TimeMock::now_in_timezone" name="SolarSystem::Testing::Mocks::TimeMock::now_in_timezone">
+<area shape="rect" id="Node000001" title="Get current time in specified time zone." alt="" coords="5,34,175,90"/>
+<area shape="rect" id="Node000002" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock.html#aae726ffc5b25d10cdcf232ea25dff40d" title="Get current mock time." alt="" coords="223,5,392,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="175,45,207,40,208,45,175,50"/>
+<area shape="rect" id="Node000003" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock.html#a5c7d59c769644a1daffada2ea9846645" title="Convert time to specified time zone." alt="" coords="229,70,386,126"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="175,73,214,80,213,85,175,78"/>
+</map>

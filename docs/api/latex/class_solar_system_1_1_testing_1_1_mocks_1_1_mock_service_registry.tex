@@ -1,0 +1,560 @@
+\doxysection{Solar\+System\+::Testing\+::Mocks\+::Mock\+Service\+Registry Class Reference}
+\hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry}{}\label{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry}\index{SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}}
+
+
+Mock Service Registry Implementation.  
+
+
+
+
+{\ttfamily \#include $<$mock\+\_\+service\+\_\+registry.\+hpp$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a9f92908815518a1f1c19e7685a508273}{\texorpdfstring{$\sim$}{\string~}\+Mock\+Service\+Registry}} ()=default
+\begin{DoxyCompactList}\small\item\em Destructor. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a2474c9a8aba5cd14aa69f66789e84df2}{Mock\+Service\+Registry}} (const \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry}{Mock\+Service\+Registry}} \&)=delete
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry}{Mock\+Service\+Registry}} \& \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_ab48e786a00c76438a1b30897d41b00fa}{operator=}} (const \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry}{Mock\+Service\+Registry}} \&)=delete
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_ab1bd269fed13ed3fecde425e399119d0}{Mock\+Service\+Registry}} (\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry}{Mock\+Service\+Registry}} \&\&)=delete
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry}{Mock\+Service\+Registry}} \& \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a7578ae49dd387e668c6c68832b47e26d}{operator=}} (\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry}{Mock\+Service\+Registry}} \&\&)=delete
+\item 
+{\footnotesize template$<$typename TInterface, typename TImplementation$>$ }\\void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_af3969fb27db9e8ce435676d77cb06c8d}{register\+\_\+service}} (\mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a727a99e6656bf7685424beaec85cd228}{Service\+Lifetime}} lifetime=\mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a727a99e6656bf7685424beaec85cd228a6ff5f73c8b5ebd311406568c8ef50bfd}{Service\+Lifetime\+::\+Singleton}}, const std\+::string \&name="{}"{})
+\begin{DoxyCompactList}\small\item\em Register service with factory function. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename TInterface$>$ }\\void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a55e94ead61d4717db286ac0f2dda8304}{register\+\_\+service}} (std\+::function$<$ std\+::shared\+\_\+ptr$<$ TInterface $>$()$>$ factory, \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a727a99e6656bf7685424beaec85cd228}{Service\+Lifetime}} lifetime=\mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a727a99e6656bf7685424beaec85cd228a6ff5f73c8b5ebd311406568c8ef50bfd}{Service\+Lifetime\+::\+Singleton}}, const std\+::string \&name="{}"{})
+\begin{DoxyCompactList}\small\item\em Register service with custom factory. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename TInterface$>$ }\\void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a219149a2e8e91504dd3ccd101b4a4ffd}{register\+\_\+instance}} (std\+::shared\+\_\+ptr$<$ TInterface $>$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a449b026183046fbb50877dda6d7eea75}{instance}}, const std\+::string \&name="{}"{})
+\begin{DoxyCompactList}\small\item\em Register singleton instance. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename TInterface, typename TMock$>$ }\\void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a283e9b5459e86c55786fcd985c0a8f63}{register\+\_\+mock}} (\mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a727a99e6656bf7685424beaec85cd228}{Service\+Lifetime}} lifetime=\mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a727a99e6656bf7685424beaec85cd228a423f62fd0413b98ab4dd487ec060e628}{Service\+Lifetime\+::\+Scoped}}, const std\+::string \&name="{}"{})
+\begin{DoxyCompactList}\small\item\em Register mock service. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename TInterface$>$ }\\void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a20c8845971bb9487ca153c6192877b87}{register\+\_\+mock\+\_\+instance}} (std\+::shared\+\_\+ptr$<$ TInterface $>$ mock\+\_\+instance, const std\+::string \&name="{}"{})
+\begin{DoxyCompactList}\small\item\em Register mock instance. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T$>$ }\\std\+::shared\+\_\+ptr$<$ T $>$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a307022095af414c5cadff428a77e6b82}{resolve}} (const std\+::string \&name="{}"{})
+\begin{DoxyCompactList}\small\item\em Resolve service by type. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T$>$ }\\std\+::shared\+\_\+ptr$<$ T $>$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_abdfd434056e0cde7e0ffb3d756ffb525}{try\+\_\+resolve}} (const std\+::string \&name="{}"{})
+\begin{DoxyCompactList}\small\item\em Try to resolve service (returns nullptr if not found) \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T$>$ }\\bool \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_aa1be7b6b2d01e9718a70d98a3967ef2e}{is\+\_\+registered}} (const std\+::string \&name="{}"{}) const
+\begin{DoxyCompactList}\small\item\em Check if service is registered. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T$>$ }\\std\+::vector$<$ std\+::shared\+\_\+ptr$<$ T $>$ $>$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a0f03deba69bc67a827593b4fea16161f}{resolve\+\_\+all}} ()
+\begin{DoxyCompactList}\small\item\em Get all registered services of type. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a49ee23d748d40303a864affedb7d38fe}{install\+\_\+all\+\_\+mocks}} ()
+\begin{DoxyCompactList}\small\item\em Install all registered mocks. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a5288df4c85a4cb81feb18fe8166984cc}{remove\+\_\+all\+\_\+mocks}} ()
+\begin{DoxyCompactList}\small\item\em Remove all installed mocks. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T$>$ }\\void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a03d5ccc28626996236d37be48238ab03}{install\+\_\+mock}} (const std\+::string \&name="{}"{})
+\begin{DoxyCompactList}\small\item\em Install specific mock type. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T$>$ }\\void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_adf1e9a47e1d33bc042e6f9a795caa1f4}{remove\+\_\+mock}} (const std\+::string \&name="{}"{})
+\begin{DoxyCompactList}\small\item\em Remove specific mock type. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T$>$ }\\bool \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_add28e3c1cbb9f7800ab9e525a992ba65}{is\+\_\+mock\+\_\+installed}} (const std\+::string \&name="{}"{}) const
+\begin{DoxyCompactList}\small\item\em Check if mock is installed. \end{DoxyCompactList}\item 
+std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_service_scope}{Service\+Scope}} $>$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a46eb1dafdd8aa8397813f01619b2370a}{create\+\_\+scope}} ()
+\begin{DoxyCompactList}\small\item\em Create new service scope. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a738dcfeaa1a272f65073a0cce67b1a99}{set\+\_\+current\+\_\+scope}} (\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_service_scope}{Service\+Scope}} \texorpdfstring{$\ast$}{*}scope)
+\begin{DoxyCompactList}\small\item\em Set current scope (for scoped services) \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_service_scope}{Service\+Scope}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a7a927db23ec47a0b4035e791ad44b5ae}{get\+\_\+current\+\_\+scope}} () const
+\begin{DoxyCompactList}\small\item\em Get current scope. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T$>$ }\\void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_affe21a2a40c56b0cc9d741efe2c151a9}{unregister}} (const std\+::string \&name="{}"{})
+\begin{DoxyCompactList}\small\item\em Unregister service. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a2bc5252e83c0c79e13947768db289195}{clear\+\_\+all}} ()
+\begin{DoxyCompactList}\small\item\em Clear all registrations. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a69c9517558a90a48c096c31c7dc27a5c}{clear\+\_\+mocks}} ()
+\begin{DoxyCompactList}\small\item\em Clear all mock registrations. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T$>$ }\\std\+::optional$<$ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_service_registration}{Service\+Registration}} $>$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_ae27743dee265605a56c578249e83ee5a}{get\+\_\+registration\+\_\+info}} (const std\+::string \&name="{}"{}) const
+\begin{DoxyCompactList}\small\item\em Get registration information. \end{DoxyCompactList}\item 
+std\+::vector$<$ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_service_registration}{Service\+Registration}} $>$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_abf857ebc08047981f91c568d54ef8ec2}{get\+\_\+all\+\_\+registrations}} () const
+\begin{DoxyCompactList}\small\item\em Get all registrations. \end{DoxyCompactList}\item 
+std\+::vector$<$ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_service_registration}{Service\+Registration}} $>$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a97455d19d21c169526480e775faf3bd6}{get\+\_\+mock\+\_\+registrations}} () const
+\begin{DoxyCompactList}\small\item\em Get mock registrations only. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_abe6571ec052adba6e5f10a9dd0b33a79}{register\+\_\+common\+\_\+mocks}} ()
+\begin{DoxyCompactList}\small\item\em Register common mock services. \end{DoxyCompactList}\item 
+std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_service_scope}{Service\+Scope}} $>$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a93aed04eb715452bc02b733a9b8d9ae5}{create\+\_\+test\+\_\+environment}} ()
+\begin{DoxyCompactList}\small\item\em Create test environment with all mocks. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a93bc7c6b870eaa0f5a2af1e7818b654b}{validate\+\_\+dependencies}} () const
+\begin{DoxyCompactList}\small\item\em Validate service dependencies. \end{DoxyCompactList}\item 
+std\+::map$<$ std\+::string, std\+::vector$<$ std\+::string $>$ $>$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a265f2a0b2a5d118c5db819a253d0bdb9}{get\+\_\+dependency\+\_\+graph}} () const
+\begin{DoxyCompactList}\small\item\em Get dependency graph. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry}{Mock\+Service\+Registry}} \& \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a449b026183046fbb50877dda6d7eea75}{instance}} ()
+\begin{DoxyCompactList}\small\item\em Get global registry instance. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Mock Service Registry Implementation. 
+
+Provides centralized management of mock services for dependency injection. Supports automatic service resolution, lifecycle management, and cleanup. 
+
+\label{doc-constructors}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a9f92908815518a1f1c19e7685a508273}\index{SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}!````~MockServiceRegistry@{\texorpdfstring{$\sim$}{\string~}MockServiceRegistry}}
+\index{````~MockServiceRegistry@{\texorpdfstring{$\sim$}{\string~}MockServiceRegistry}!SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}MockServiceRegistry()}{\string~MockServiceRegistry()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a9f92908815518a1f1c19e7685a508273} 
+Solar\+System\+::\+Testing\+::\+Mocks\+::\+Mock\+Service\+Registry\+::\texorpdfstring{$\sim$}{\string~}\+Mock\+Service\+Registry (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}}
+
+
+
+Destructor. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a2474c9a8aba5cd14aa69f66789e84df2}\index{SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}!MockServiceRegistry@{MockServiceRegistry}}
+\index{MockServiceRegistry@{MockServiceRegistry}!SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}}
+\doxysubsubsection{\texorpdfstring{MockServiceRegistry()}{MockServiceRegistry()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a2474c9a8aba5cd14aa69f66789e84df2} 
+Solar\+System\+::\+Testing\+::\+Mocks\+::\+Mock\+Service\+Registry\+::\+Mock\+Service\+Registry (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry}{Mock\+Service\+Registry}} \&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=231pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a2474c9a8aba5cd14aa69f66789e84df2_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a2474c9a8aba5cd14aa69f66789e84df2_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_ab1bd269fed13ed3fecde425e399119d0}\index{SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}!MockServiceRegistry@{MockServiceRegistry}}
+\index{MockServiceRegistry@{MockServiceRegistry}!SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}}
+\doxysubsubsection{\texorpdfstring{MockServiceRegistry()}{MockServiceRegistry()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_ab1bd269fed13ed3fecde425e399119d0} 
+Solar\+System\+::\+Testing\+::\+Mocks\+::\+Mock\+Service\+Registry\+::\+Mock\+Service\+Registry (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry}{Mock\+Service\+Registry}} \&\&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_ab1bd269fed13ed3fecde425e399119d0_cgraph}
+\end{center}
+\end{figure}
+
+
+\label{doc-func-members}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a2bc5252e83c0c79e13947768db289195}\index{SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}!clear\_all@{clear\_all}}
+\index{clear\_all@{clear\_all}!SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}}
+\doxysubsubsection{\texorpdfstring{clear\_all()}{clear\_all()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a2bc5252e83c0c79e13947768db289195} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+Mock\+Service\+Registry\+::clear\+\_\+all (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Clear all registrations. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a69c9517558a90a48c096c31c7dc27a5c}\index{SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}!clear\_mocks@{clear\_mocks}}
+\index{clear\_mocks@{clear\_mocks}!SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}}
+\doxysubsubsection{\texorpdfstring{clear\_mocks()}{clear\_mocks()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a69c9517558a90a48c096c31c7dc27a5c} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+Mock\+Service\+Registry\+::clear\+\_\+mocks (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Clear all mock registrations. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a46eb1dafdd8aa8397813f01619b2370a}\index{SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}!create\_scope@{create\_scope}}
+\index{create\_scope@{create\_scope}!SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}}
+\doxysubsubsection{\texorpdfstring{create\_scope()}{create\_scope()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a46eb1dafdd8aa8397813f01619b2370a} 
+std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_service_scope}{Service\+Scope}} $>$ Solar\+System\+::\+Testing\+::\+Mocks\+::\+Mock\+Service\+Registry\+::create\+\_\+scope (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Create new service scope. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a46eb1dafdd8aa8397813f01619b2370a_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a93aed04eb715452bc02b733a9b8d9ae5}\index{SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}!create\_test\_environment@{create\_test\_environment}}
+\index{create\_test\_environment@{create\_test\_environment}!SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}}
+\doxysubsubsection{\texorpdfstring{create\_test\_environment()}{create\_test\_environment()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a93aed04eb715452bc02b733a9b8d9ae5} 
+std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_service_scope}{Service\+Scope}} $>$ Solar\+System\+::\+Testing\+::\+Mocks\+::\+Mock\+Service\+Registry\+::create\+\_\+test\+\_\+environment (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Create test environment with all mocks. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a93aed04eb715452bc02b733a9b8d9ae5_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_abf857ebc08047981f91c568d54ef8ec2}\index{SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}!get\_all\_registrations@{get\_all\_registrations}}
+\index{get\_all\_registrations@{get\_all\_registrations}!SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}}
+\doxysubsubsection{\texorpdfstring{get\_all\_registrations()}{get\_all\_registrations()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_abf857ebc08047981f91c568d54ef8ec2} 
+std\+::vector$<$ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_service_registration}{Service\+Registration}} $>$ Solar\+System\+::\+Testing\+::\+Mocks\+::\+Mock\+Service\+Registry\+::get\+\_\+all\+\_\+registrations (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Get all registrations. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a7a927db23ec47a0b4035e791ad44b5ae}\index{SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}!get\_current\_scope@{get\_current\_scope}}
+\index{get\_current\_scope@{get\_current\_scope}!SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}}
+\doxysubsubsection{\texorpdfstring{get\_current\_scope()}{get\_current\_scope()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a7a927db23ec47a0b4035e791ad44b5ae} 
+\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_service_scope}{Service\+Scope}} \texorpdfstring{$\ast$}{*} Solar\+System\+::\+Testing\+::\+Mocks\+::\+Mock\+Service\+Registry\+::get\+\_\+current\+\_\+scope (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Get current scope. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a265f2a0b2a5d118c5db819a253d0bdb9}\index{SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}!get\_dependency\_graph@{get\_dependency\_graph}}
+\index{get\_dependency\_graph@{get\_dependency\_graph}!SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}}
+\doxysubsubsection{\texorpdfstring{get\_dependency\_graph()}{get\_dependency\_graph()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a265f2a0b2a5d118c5db819a253d0bdb9} 
+std\+::map$<$ std\+::string, std\+::vector$<$ std\+::string $>$ $>$ Solar\+System\+::\+Testing\+::\+Mocks\+::\+Mock\+Service\+Registry\+::get\+\_\+dependency\+\_\+graph (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Get dependency graph. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a97455d19d21c169526480e775faf3bd6}\index{SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}!get\_mock\_registrations@{get\_mock\_registrations}}
+\index{get\_mock\_registrations@{get\_mock\_registrations}!SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}}
+\doxysubsubsection{\texorpdfstring{get\_mock\_registrations()}{get\_mock\_registrations()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a97455d19d21c169526480e775faf3bd6} 
+std\+::vector$<$ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_service_registration}{Service\+Registration}} $>$ Solar\+System\+::\+Testing\+::\+Mocks\+::\+Mock\+Service\+Registry\+::get\+\_\+mock\+\_\+registrations (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Get mock registrations only. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_ae27743dee265605a56c578249e83ee5a}\index{SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}!get\_registration\_info@{get\_registration\_info}}
+\index{get\_registration\_info@{get\_registration\_info}!SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}}
+\doxysubsubsection{\texorpdfstring{get\_registration\_info()}{get\_registration\_info()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_ae27743dee265605a56c578249e83ee5a} 
+template$<$typename T$>$ \\
+std\+::optional$<$ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_service_registration}{Service\+Registration}} $>$ Solar\+System\+::\+Testing\+::\+Mocks\+::\+Mock\+Service\+Registry\+::get\+\_\+registration\+\_\+info (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name}{ = {\ttfamily "{}"{}}}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Get registration information. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a49ee23d748d40303a864affedb7d38fe}\index{SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}!install\_all\_mocks@{install\_all\_mocks}}
+\index{install\_all\_mocks@{install\_all\_mocks}!SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}}
+\doxysubsubsection{\texorpdfstring{install\_all\_mocks()}{install\_all\_mocks()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a49ee23d748d40303a864affedb7d38fe} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+Mock\+Service\+Registry\+::install\+\_\+all\+\_\+mocks (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Install all registered mocks. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a03d5ccc28626996236d37be48238ab03}\index{SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}!install\_mock@{install\_mock}}
+\index{install\_mock@{install\_mock}!SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}}
+\doxysubsubsection{\texorpdfstring{install\_mock()}{install\_mock()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a03d5ccc28626996236d37be48238ab03} 
+template$<$typename T$>$ \\
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+Mock\+Service\+Registry\+::install\+\_\+mock (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name}{ = {\ttfamily "{}"{}}}\end{DoxyParamCaption})}
+
+
+
+Install specific mock type. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a449b026183046fbb50877dda6d7eea75}\index{SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}!instance@{instance}}
+\index{instance@{instance}!SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}}
+\doxysubsubsection{\texorpdfstring{instance()}{instance()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a449b026183046fbb50877dda6d7eea75} 
+\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry}{Mock\+Service\+Registry}} \& Solar\+System\+::\+Testing\+::\+Mocks\+::\+Mock\+Service\+Registry\+::instance (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Get global registry instance. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a449b026183046fbb50877dda6d7eea75_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a449b026183046fbb50877dda6d7eea75_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_add28e3c1cbb9f7800ab9e525a992ba65}\index{SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}!is\_mock\_installed@{is\_mock\_installed}}
+\index{is\_mock\_installed@{is\_mock\_installed}!SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}}
+\doxysubsubsection{\texorpdfstring{is\_mock\_installed()}{is\_mock\_installed()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_add28e3c1cbb9f7800ab9e525a992ba65} 
+template$<$typename T$>$ \\
+bool Solar\+System\+::\+Testing\+::\+Mocks\+::\+Mock\+Service\+Registry\+::is\+\_\+mock\+\_\+installed (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name}{ = {\ttfamily "{}"{}}}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Check if mock is installed. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_aa1be7b6b2d01e9718a70d98a3967ef2e}\index{SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}!is\_registered@{is\_registered}}
+\index{is\_registered@{is\_registered}!SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}}
+\doxysubsubsection{\texorpdfstring{is\_registered()}{is\_registered()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_aa1be7b6b2d01e9718a70d98a3967ef2e} 
+template$<$typename T$>$ \\
+bool Solar\+System\+::\+Testing\+::\+Mocks\+::\+Mock\+Service\+Registry\+::is\+\_\+registered (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name}{ = {\ttfamily "{}"{}}}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Check if service is registered. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_ab48e786a00c76438a1b30897d41b00fa}\index{SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}!operator=@{operator=}}
+\index{operator=@{operator=}!SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_ab48e786a00c76438a1b30897d41b00fa} 
+\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry}{Mock\+Service\+Registry}} \& Solar\+System\+::\+Testing\+::\+Mocks\+::\+Mock\+Service\+Registry\+::operator= (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry}{Mock\+Service\+Registry}} \&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_ab48e786a00c76438a1b30897d41b00fa_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a7578ae49dd387e668c6c68832b47e26d}\index{SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}!operator=@{operator=}}
+\index{operator=@{operator=}!SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a7578ae49dd387e668c6c68832b47e26d} 
+\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry}{Mock\+Service\+Registry}} \& Solar\+System\+::\+Testing\+::\+Mocks\+::\+Mock\+Service\+Registry\+::operator= (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry}{Mock\+Service\+Registry}} \&\&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a7578ae49dd387e668c6c68832b47e26d_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_abe6571ec052adba6e5f10a9dd0b33a79}\index{SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}!register\_common\_mocks@{register\_common\_mocks}}
+\index{register\_common\_mocks@{register\_common\_mocks}!SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}}
+\doxysubsubsection{\texorpdfstring{register\_common\_mocks()}{register\_common\_mocks()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_abe6571ec052adba6e5f10a9dd0b33a79} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+Mock\+Service\+Registry\+::register\+\_\+common\+\_\+mocks (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Register common mock services. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_abe6571ec052adba6e5f10a9dd0b33a79_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_abe6571ec052adba6e5f10a9dd0b33a79_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a219149a2e8e91504dd3ccd101b4a4ffd}\index{SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}!register\_instance@{register\_instance}}
+\index{register\_instance@{register\_instance}!SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}}
+\doxysubsubsection{\texorpdfstring{register\_instance()}{register\_instance()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a219149a2e8e91504dd3ccd101b4a4ffd} 
+template$<$typename TInterface$>$ \\
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+Mock\+Service\+Registry\+::register\+\_\+instance (\begin{DoxyParamCaption}\item[{std\+::shared\+\_\+ptr$<$ TInterface $>$}]{instance}{, }\item[{const std\+::string \&}]{name}{ = {\ttfamily "{}"{}}}\end{DoxyParamCaption})}
+
+
+
+Register singleton instance. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a219149a2e8e91504dd3ccd101b4a4ffd_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a283e9b5459e86c55786fcd985c0a8f63}\index{SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}!register\_mock@{register\_mock}}
+\index{register\_mock@{register\_mock}!SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}}
+\doxysubsubsection{\texorpdfstring{register\_mock()}{register\_mock()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a283e9b5459e86c55786fcd985c0a8f63} 
+template$<$typename TInterface, typename TMock$>$ \\
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+Mock\+Service\+Registry\+::register\+\_\+mock (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a727a99e6656bf7685424beaec85cd228}{Service\+Lifetime}}}]{lifetime}{ = {\ttfamily \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a727a99e6656bf7685424beaec85cd228a423f62fd0413b98ab4dd487ec060e628}{Service\+Lifetime\+::\+Scoped}}}, }\item[{const std\+::string \&}]{name}{ = {\ttfamily "{}"{}}}\end{DoxyParamCaption})}
+
+
+
+Register mock service. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a283e9b5459e86c55786fcd985c0a8f63_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a20c8845971bb9487ca153c6192877b87}\index{SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}!register\_mock\_instance@{register\_mock\_instance}}
+\index{register\_mock\_instance@{register\_mock\_instance}!SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}}
+\doxysubsubsection{\texorpdfstring{register\_mock\_instance()}{register\_mock\_instance()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a20c8845971bb9487ca153c6192877b87} 
+template$<$typename TInterface$>$ \\
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+Mock\+Service\+Registry\+::register\+\_\+mock\+\_\+instance (\begin{DoxyParamCaption}\item[{std\+::shared\+\_\+ptr$<$ TInterface $>$}]{mock\+\_\+instance}{, }\item[{const std\+::string \&}]{name}{ = {\ttfamily "{}"{}}}\end{DoxyParamCaption})}
+
+
+
+Register mock instance. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_af3969fb27db9e8ce435676d77cb06c8d}\index{SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}!register\_service@{register\_service}}
+\index{register\_service@{register\_service}!SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}}
+\doxysubsubsection{\texorpdfstring{register\_service()}{register\_service()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_af3969fb27db9e8ce435676d77cb06c8d} 
+template$<$typename TInterface, typename TImplementation$>$ \\
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+Mock\+Service\+Registry\+::register\+\_\+service (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a727a99e6656bf7685424beaec85cd228}{Service\+Lifetime}}}]{lifetime}{ = {\ttfamily \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a727a99e6656bf7685424beaec85cd228a6ff5f73c8b5ebd311406568c8ef50bfd}{Service\+Lifetime\+::\+Singleton}}}, }\item[{const std\+::string \&}]{name}{ = {\ttfamily "{}"{}}}\end{DoxyParamCaption})}
+
+
+
+Register service with factory function. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a55e94ead61d4717db286ac0f2dda8304}\index{SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}!register\_service@{register\_service}}
+\index{register\_service@{register\_service}!SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}}
+\doxysubsubsection{\texorpdfstring{register\_service()}{register\_service()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a55e94ead61d4717db286ac0f2dda8304} 
+template$<$typename TInterface$>$ \\
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+Mock\+Service\+Registry\+::register\+\_\+service (\begin{DoxyParamCaption}\item[{std\+::function$<$ std\+::shared\+\_\+ptr$<$ TInterface $>$()$>$}]{factory}{, }\item[{\mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a727a99e6656bf7685424beaec85cd228}{Service\+Lifetime}}}]{lifetime}{ = {\ttfamily \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a727a99e6656bf7685424beaec85cd228a6ff5f73c8b5ebd311406568c8ef50bfd}{Service\+Lifetime\+::\+Singleton}}}, }\item[{const std\+::string \&}]{name}{ = {\ttfamily "{}"{}}}\end{DoxyParamCaption})}
+
+
+
+Register service with custom factory. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a5288df4c85a4cb81feb18fe8166984cc}\index{SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}!remove\_all\_mocks@{remove\_all\_mocks}}
+\index{remove\_all\_mocks@{remove\_all\_mocks}!SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}}
+\doxysubsubsection{\texorpdfstring{remove\_all\_mocks()}{remove\_all\_mocks()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a5288df4c85a4cb81feb18fe8166984cc} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+Mock\+Service\+Registry\+::remove\+\_\+all\+\_\+mocks (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Remove all installed mocks. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_adf1e9a47e1d33bc042e6f9a795caa1f4}\index{SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}!remove\_mock@{remove\_mock}}
+\index{remove\_mock@{remove\_mock}!SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}}
+\doxysubsubsection{\texorpdfstring{remove\_mock()}{remove\_mock()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_adf1e9a47e1d33bc042e6f9a795caa1f4} 
+template$<$typename T$>$ \\
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+Mock\+Service\+Registry\+::remove\+\_\+mock (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name}{ = {\ttfamily "{}"{}}}\end{DoxyParamCaption})}
+
+
+
+Remove specific mock type. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a307022095af414c5cadff428a77e6b82}\index{SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}!resolve@{resolve}}
+\index{resolve@{resolve}!SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}}
+\doxysubsubsection{\texorpdfstring{resolve()}{resolve()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a307022095af414c5cadff428a77e6b82} 
+template$<$typename T$>$ \\
+std\+::shared\+\_\+ptr$<$ T $>$ Solar\+System\+::\+Testing\+::\+Mocks\+::\+Mock\+Service\+Registry\+::resolve (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name}{ = {\ttfamily "{}"{}}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Resolve service by type. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a307022095af414c5cadff428a77e6b82_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a0f03deba69bc67a827593b4fea16161f}\index{SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}!resolve\_all@{resolve\_all}}
+\index{resolve\_all@{resolve\_all}!SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}}
+\doxysubsubsection{\texorpdfstring{resolve\_all()}{resolve\_all()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a0f03deba69bc67a827593b4fea16161f} 
+template$<$typename T$>$ \\
+std\+::vector$<$ std\+::shared\+\_\+ptr$<$ T $>$ $>$ Solar\+System\+::\+Testing\+::\+Mocks\+::\+Mock\+Service\+Registry\+::resolve\+\_\+all (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Get all registered services of type. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a738dcfeaa1a272f65073a0cce67b1a99}\index{SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}!set\_current\_scope@{set\_current\_scope}}
+\index{set\_current\_scope@{set\_current\_scope}!SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}}
+\doxysubsubsection{\texorpdfstring{set\_current\_scope()}{set\_current\_scope()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a738dcfeaa1a272f65073a0cce67b1a99} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+Mock\+Service\+Registry\+::set\+\_\+current\+\_\+scope (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_service_scope}{Service\+Scope}} \texorpdfstring{$\ast$}{*}}]{scope}{}\end{DoxyParamCaption})}
+
+
+
+Set current scope (for scoped services) 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a738dcfeaa1a272f65073a0cce67b1a99_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_abdfd434056e0cde7e0ffb3d756ffb525}\index{SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}!try\_resolve@{try\_resolve}}
+\index{try\_resolve@{try\_resolve}!SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}}
+\doxysubsubsection{\texorpdfstring{try\_resolve()}{try\_resolve()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_abdfd434056e0cde7e0ffb3d756ffb525} 
+template$<$typename T$>$ \\
+std\+::shared\+\_\+ptr$<$ T $>$ Solar\+System\+::\+Testing\+::\+Mocks\+::\+Mock\+Service\+Registry\+::try\+\_\+resolve (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name}{ = {\ttfamily "{}"{}}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Try to resolve service (returns nullptr if not found) 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_abdfd434056e0cde7e0ffb3d756ffb525_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_affe21a2a40c56b0cc9d741efe2c151a9}\index{SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}!unregister@{unregister}}
+\index{unregister@{unregister}!SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}}
+\doxysubsubsection{\texorpdfstring{unregister()}{unregister()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_affe21a2a40c56b0cc9d741efe2c151a9} 
+template$<$typename T$>$ \\
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+Mock\+Service\+Registry\+::unregister (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name}{ = {\ttfamily "{}"{}}}\end{DoxyParamCaption})}
+
+
+
+Unregister service. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a93bc7c6b870eaa0f5a2af1e7818b654b}\index{SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}!validate\_dependencies@{validate\_dependencies}}
+\index{validate\_dependencies@{validate\_dependencies}!SolarSystem::Testing::Mocks::MockServiceRegistry@{SolarSystem::Testing::Mocks::MockServiceRegistry}}
+\doxysubsubsection{\texorpdfstring{validate\_dependencies()}{validate\_dependencies()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a93bc7c6b870eaa0f5a2af1e7818b654b} 
+bool Solar\+System\+::\+Testing\+::\+Mocks\+::\+Mock\+Service\+Registry\+::validate\+\_\+dependencies (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Validate service dependencies. 
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+test/include/solar\+\_\+test/mocks/\mbox{\hyperlink{mock__service__registry_8hpp}{mock\+\_\+service\+\_\+registry.\+hpp}}\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+test/src/mocks/\mbox{\hyperlink{mock__service__registry_8cpp}{mock\+\_\+service\+\_\+registry.\+cpp}}\end{DoxyCompactItemize}

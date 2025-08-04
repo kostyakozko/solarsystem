@@ -1,0 +1,16 @@
+<map id="SolarSystem::Core::Builders::BodySelector::build" name="SolarSystem::Core::Builders::BodySelector::build">
+<area shape="rect" id="Node000001" title="Build the body collection." alt="" coords="5,152,160,208"/>
+<area shape="rect" id="Node000002" href="$class_solar_system_1_1_bodies_1_1_body_collection.html#a67865f9c5671a4187cb98f3f8720b7b1" title=" " alt="" coords="208,37,390,78"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="116,150,158,119,206,89,220,82,222,87,209,93,161,123,120,154"/>
+<area shape="rect" id="Node000005" href="$class_solar_system_1_1_bodies_1_1_body_factory.html#aaff11393da75cbe9f81d56cbcc0f39c9" title=" " alt="" coords="208,127,390,167"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="159,166,192,161,193,166,160,171"/>
+<area shape="rect" id="Node000006" href="$namespace_solar_system_1_1_data.html#abe76ad724994a3f4fbccf7eff93ccdfb" title="Get ALL bodies from fallback data (all 27 bodies)" alt="" coords="219,192,379,233"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="160,189,204,196,203,201,159,194"/>
+<area shape="rect" id="Node000007" href="$class_solar_system_1_1_bodies_1_1_body_collection.html#aab8db2368ba1d22c6a6496d5fbd44040" title=" " alt="" coords="224,257,374,298"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="136,206,209,242,225,249,223,254,207,247,134,211"/>
+<area shape="rect" id="Node000003" href="$class_solar_system_1_1_bodies_1_1_body_collection.html#af82b22f9073d1d13df623cae6a22ad8e" title=" " alt="" coords="438,5,612,46"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="389,42,422,38,423,43,390,47"/>
+<area shape="rect" id="Node000004" href="$class_solar_system_1_1_bodies_1_1_celestial_body.html#a89dac8f57b8283b90172873399eb924f" title=" " alt="" coords="450,71,600,111"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="390,68,435,75,434,80,389,74"/>
+<area shape="poly" id="edge5_Node000005_Node000005" title=" " alt="" coords="258,127,256,117,263,108,277,102,299,100,322,102,336,109,334,113,321,108,299,105,278,107,266,112,261,118,263,125"/>
+</map>

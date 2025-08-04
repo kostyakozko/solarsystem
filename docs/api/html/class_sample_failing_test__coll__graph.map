@@ -1,0 +1,6 @@
+<map id="SampleFailingTest" name="SampleFailingTest">
+<area shape="rect" id="Node000001" title=" " alt="" coords="14,94,143,120"/>
+<area shape="rect" id="Node000002" href="$class_solar_system_1_1_testing_1_1_test_case.html" title="Base class for all test cases." alt="" coords="5,5,152,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="72,62,74,93,69,94,67,62"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="90,62,88,94,83,93,85,62"/>
+</map>

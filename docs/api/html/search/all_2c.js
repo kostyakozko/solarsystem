@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['📚_20references_0',['📚 References',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md83',1,'']]]
+  ['📋_20table_20of_20contents_0',['📋 Table of Contents',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md1',1,'']]]
 ];

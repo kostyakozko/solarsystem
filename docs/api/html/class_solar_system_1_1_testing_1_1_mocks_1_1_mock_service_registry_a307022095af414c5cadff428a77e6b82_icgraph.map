@@ -1,0 +1,17 @@
+<map id="SolarSystem::Testing::Mocks::MockServiceRegistry::resolve" name="SolarSystem::Testing::Mocks::MockServiceRegistry::resolve">
+<area shape="rect" id="Node000001" title="Resolve service by type." alt="" coords="516,223,717,278"/>
+<area shape="rect" id="Node000002" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_service_injector.html#a0fc4669aa7905334f58a0e06011740e2" title="Get injected service." alt="" coords="273,114,462,155"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="540,218,412,158,414,153,542,213"/>
+<area shape="rect" id="Node000006" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_service_scope.html#a77e3e8b8d2fd1aad61b64aa16cf5872c" title="Get service instance in this scope." alt="" coords="289,223,446,278"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="500,253,446,253,446,248,500,248"/>
+<area shape="rect" id="Node000008" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry.html#abdfd434056e0cde7e0ffb3d756ffb525" title="Try to resolve service (returns nullptr if not found)" alt="" coords="267,303,468,358"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="514,286,457,305,456,299,513,281"/>
+<area shape="rect" id="Node000003" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_service_injector.html#a18e18577900da0af2ab03cf31a99397a" title="Check if service is available." alt="" coords="30,5,194,61"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="302,110,218,76,188,64,190,59,220,71,304,105"/>
+<area shape="rect" id="Node000004" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_service_injector.html#ad9975501c2038dd038de79d48d537ffe" title="Operator* for dereferencing." alt="" coords="30,85,194,141"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="257,128,194,123,194,117,257,123"/>
+<area shape="rect" id="Node000005" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_service_injector.html#a37b710f9a052fe068c4e96e5a5dc414c" title="Operator&#45;&gt; for direct access." alt="" coords="30,165,194,221"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="262,161,195,177,194,172,261,156"/>
+<area shape="rect" id="Node000007" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_service_registry.html#a96ce6ed229cb90e8964d0e520e8a9a0a" title="Resolve service in this scope." alt="" coords="5,245,219,301"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="273,261,220,266,219,261,273,256"/>
+</map>

@@ -1,0 +1,37 @@
+\doxysection{constants.\+hpp}
+\hypertarget{constants_8hpp_source}{}\label{constants_8hpp_source}\index{/Users/kostiantyn.kozko/tmp/solarsystem/lib/solar\_core/include/solar\_core/math/constants.hpp@{/Users/kostiantyn.kozko/tmp/solarsystem/lib/solar\_core/include/solar\_core/math/constants.hpp}}
+\mbox{\hyperlink{constants_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespace_solar_system_1_1_math_1_1_constants}{SolarSystem::Math::Constants}}\ \{}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{comment}{//\ Gravitational\ constant\ (m³/kg/s²)}}
+\DoxyCodeLine{00006\ \textcolor{keyword}{inline}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{namespace_solar_system_1_1_math_1_1_constants_a2585f2e98e8dd714badb3a52f82c6283}{G}}\ =\ 6.67430e-\/11;}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{comment}{//\ Astronomical\ unit\ in\ meters}}
+\DoxyCodeLine{00009\ \textcolor{keyword}{inline}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{namespace_solar_system_1_1_math_1_1_constants_a4b261c322d5261e87ca4b6a5cfc55aee}{AU}}\ =\ 1.495978707e11;}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{comment}{//\ Time\ constants}}
+\DoxyCodeLine{00012\ \textcolor{keyword}{inline}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{namespace_solar_system_1_1_math_1_1_constants_a5d906a7476a936c47ce389593f88534c}{SECONDS\_PER\_MINUTE}}\ =\ 60.0;}
+\DoxyCodeLine{00013\ \textcolor{keyword}{inline}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{namespace_solar_system_1_1_math_1_1_constants_a124d3373ef1493ca97db15c16dcc72e1}{SECONDS\_PER\_HOUR}}\ =\ 3600.0;}
+\DoxyCodeLine{00014\ \textcolor{keyword}{inline}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{namespace_solar_system_1_1_math_1_1_constants_ade4d95bd66e5630d77407275a56e22f5}{SECONDS\_PER\_DAY}}\ =\ 86400.0;}
+\DoxyCodeLine{00015\ \textcolor{keyword}{inline}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{namespace_solar_system_1_1_math_1_1_constants_a412374131b968f1b6e92a4cb2f780eb7}{SECONDS\_PER\_YEAR}}\ =\ 31557600.0;\ \ \textcolor{comment}{//\ Julian\ year}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{comment}{//\ Mathematical\ constants}}
+\DoxyCodeLine{00018\ \textcolor{keyword}{inline}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{namespace_solar_system_1_1_math_1_1_constants_a243a2966c67a17874bbb1780aefae802}{PI}}\ =\ 3.141592653589793238462643383279502884;}
+\DoxyCodeLine{00019\ \textcolor{keyword}{inline}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{namespace_solar_system_1_1_math_1_1_constants_a26a806f4a3be98e94f4ca42bb34cb658}{TWO\_PI}}\ =\ 2.0\ *\ \mbox{\hyperlink{namespace_solar_system_1_1_math_1_1_constants_a243a2966c67a17874bbb1780aefae802}{PI}};}
+\DoxyCodeLine{00020\ \textcolor{keyword}{inline}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{namespace_solar_system_1_1_math_1_1_constants_a997c30c89dd4e25cbd0d03ab3189769d}{HALF\_PI}}\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_math_1_1_constants_a243a2966c67a17874bbb1780aefae802}{PI}}\ /\ 2.0;}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{comment}{//\ Conversion\ factors}}
+\DoxyCodeLine{00023\ \textcolor{keyword}{inline}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{namespace_solar_system_1_1_math_1_1_constants_ab359e9d07c3acb9dfdf83677fd8c3d6c}{DEG\_TO\_RAD}}\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_math_1_1_constants_a243a2966c67a17874bbb1780aefae802}{PI}}\ /\ 180.0;}
+\DoxyCodeLine{00024\ \textcolor{keyword}{inline}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{namespace_solar_system_1_1_math_1_1_constants_ac5004784410f506878b5767c7acd499e}{RAD\_TO\_DEG}}\ =\ 180.0\ /\ \mbox{\hyperlink{namespace_solar_system_1_1_math_1_1_constants_a243a2966c67a17874bbb1780aefae802}{PI}};}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{comment}{//\ Solar\ system\ specific\ constants}}
+\DoxyCodeLine{00027\ \textcolor{keyword}{inline}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{namespace_solar_system_1_1_math_1_1_constants_a0caf76d1e7cac0d9e1e56905f56308de}{SOLAR\_MASS}}\ =\ 1.98847e30;\ \ \textcolor{comment}{//\ kg}}
+\DoxyCodeLine{00028\ \textcolor{keyword}{inline}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{namespace_solar_system_1_1_math_1_1_constants_a2d1973416f887cd212b4a96700a7c286}{EARTH\_MASS}}\ =\ 5.97219e24;\ \ \textcolor{comment}{//\ kg}}
+\DoxyCodeLine{00029\ \textcolor{keyword}{inline}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{namespace_solar_system_1_1_math_1_1_constants_abd2ce19134df8b4e1623bc0d8354d0f7}{EARTH\_RADIUS}}\ =\ 6.371e6;\ \ \ \textcolor{comment}{//\ meters}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \}\ \ \textcolor{comment}{//\ namespace\ SolarSystem::Math::Constants}}
+
+\end{DoxyCode}

@@ -1,0 +1,160 @@
+\doxysection{simulation\+\_\+engine.\+hpp}
+\hypertarget{simulation__engine_8hpp_source}{}\label{simulation__engine_8hpp_source}\index{/Users/kostiantyn.kozko/tmp/solarsystem/lib/solar\_core/include/solar\_core/simulation/simulation\_engine.hpp@{/Users/kostiantyn.kozko/tmp/solarsystem/lib/solar\_core/include/solar\_core/simulation/simulation\_engine.hpp}}
+\mbox{\hyperlink{simulation__engine_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <chrono>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <functional>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <optional>}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{body__collection_8hpp}{solar\_core/bodies/body\_collection.hpp}}"{}}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{vector3_8hpp}{solar\_core/math/vector3.hpp}}"{}}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{expected_8hpp}{solar\_core/utils/expected.hpp}}"{}}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespace_solar_system_1_1_simulation}{SolarSystem::Simulation}}\ \{}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00017\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_solar_system_1_1_simulation_1_1_simulation_config}{SimulationConfig}}\ \{}
+\DoxyCodeLine{00018\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{struct_solar_system_1_1_simulation_1_1_simulation_config_a50648a8285f9c93b98fc4b10470efc11}{time\_step}}\ =\ 30.0;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Time\ step\ in\ seconds}}
+\DoxyCodeLine{00019\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{struct_solar_system_1_1_simulation_1_1_simulation_config_add516a8c604c1fbbea91a392651e6355}{gravitational\_constant}}\ =\ 6.67430e-\/11;\ \ \textcolor{comment}{//\ G\ in\ m³/kg/s²}}
+\DoxyCodeLine{00020\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_solar_system_1_1_simulation_1_1_simulation_config_a827a3bd470a3e310f468b1626221dcf0}{use\_adaptive\_timestep}}\ =\ \textcolor{keyword}{false};\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Adaptive\ time\ stepping}}
+\DoxyCodeLine{00021\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{struct_solar_system_1_1_simulation_1_1_simulation_config_ab6eee5f4f70dd3a926f8ad283fb47ad7}{max\_timestep}}\ =\ 3600.0;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Maximum\ timestep\ (1\ hour)}}
+\DoxyCodeLine{00022\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{struct_solar_system_1_1_simulation_1_1_simulation_config_a98d86e08f34b514cc370af016caaed5a}{min\_timestep}}\ =\ 1.0;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Minimum\ timestep\ (1\ second)}}
+\DoxyCodeLine{00023\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{struct_solar_system_1_1_simulation_1_1_simulation_config_adb2779b3b2f2cd59e01b2cf0ad0113bb}{tolerance}}\ =\ 1e-\/12;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Error\ tolerance\ for\ adaptive\ stepping}}
+\DoxyCodeLine{00024\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_solar_system_1_1_simulation_1_1_simulation_config_a2dafcfd16401428441c553ceaffe4591}{enable\_collision\_detection}}\ =\ \textcolor{keyword}{false};\ \ \ \ \ \ \textcolor{comment}{//\ Collision\ detection}}
+\DoxyCodeLine{00025\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{struct_solar_system_1_1_simulation_1_1_simulation_config_ac69b160c3607be74b5ed17ae972cc01f}{collision\_threshold}}\ =\ 1e6;\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Collision\ distance\ threshold\ (m)}}
+\DoxyCodeLine{00026\ \};}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00031\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_solar_system_1_1_simulation_1_1_simulation_state}{SimulationState}}\ \{}
+\DoxyCodeLine{00032\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{struct_solar_system_1_1_simulation_1_1_simulation_state_a249408d3c71775ca8a2d319eba2fe143}{current\_time}}\ =\ 0.0;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Current\ simulation\ time\ (seconds)}}
+\DoxyCodeLine{00033\ \ \ std::chrono::system\_clock::time\_point\ \mbox{\hyperlink{struct_solar_system_1_1_simulation_1_1_simulation_state_a8f75e0cb07f87d0e41bf752122a5b593}{reference\_time}};\ \ \textcolor{comment}{//\ Reference\ epoch}}
+\DoxyCodeLine{00034\ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{struct_solar_system_1_1_simulation_1_1_simulation_state_a7baf8b8c03816cc1b31db01fd47cdcde}{iteration\_count}}\ =\ 0;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Number\ of\ iterations\ performed}}
+\DoxyCodeLine{00035\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{struct_solar_system_1_1_simulation_1_1_simulation_state_a1d5afc2d639784c000fa5d434d5c2e1e}{total\_energy}}\ =\ 0.0;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Total\ system\ energy}}
+\DoxyCodeLine{00036\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{struct_solar_system_1_1_simulation_1_1_simulation_state_af98a38af17a720aa15fc0360b908f0a7}{kinetic\_energy}}\ =\ 0.0;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Total\ kinetic\ energy}}
+\DoxyCodeLine{00037\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{struct_solar_system_1_1_simulation_1_1_simulation_state_add09950dd9faf54ef3434036352d8fca}{potential\_energy}}\ =\ 0.0;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Total\ potential\ energy}}
+\DoxyCodeLine{00038\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_math_a58b613f1c9974f449ee706cd131b1f41}{Math::Vector3d}}\ \mbox{\hyperlink{struct_solar_system_1_1_simulation_1_1_simulation_state_a2df94cc815325907649e8854ac9f3ac2}{center\_of\_mass}}\{\};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ System\ center\ of\ mass}}
+\DoxyCodeLine{00039\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_math_a58b613f1c9974f449ee706cd131b1f41}{Math::Vector3d}}\ \mbox{\hyperlink{struct_solar_system_1_1_simulation_1_1_simulation_state_a362cd1c481bb3407806bd006601eccee}{total\_momentum}}\{\};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Total\ system\ momentum}}
+\DoxyCodeLine{00040\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{struct_solar_system_1_1_simulation_1_1_simulation_state_a1b3c34b552f0dbbdce213d5fc2445485}{largest\_timestep}}\ =\ 0.0;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Largest\ timestep\ used}}
+\DoxyCodeLine{00041\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{struct_solar_system_1_1_simulation_1_1_simulation_state_ab54c50fa6949d308790290fd8befefb5}{smallest\_timestep}}\ =\ 0.0;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Smallest\ timestep\ used}}
+\DoxyCodeLine{00042\ \};}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00047\ \textcolor{keyword}{using\ }\mbox{\hyperlink{namespace_solar_system_1_1_simulation_a4335b577d58f16a20c64bfb4eb77e216}{ProgressCallback}}\ =\ std::function<void(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_solar_system_1_1_simulation_1_1_simulation_state}{SimulationState}}\&)>;}
+\DoxyCodeLine{00048\ \textcolor{keyword}{using\ }\mbox{\hyperlink{namespace_solar_system_1_1_simulation_a4efe00270692d2913382ecb345ae8922}{CollisionCallback}}\ =}
+\DoxyCodeLine{00049\ \ \ \ \ std::function<void(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Bodies::CelestialBody}}\&,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Bodies::CelestialBody}}\&)>;}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00057\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_solar_system_1_1_simulation_1_1_simulation_engine_a1dd77ad42cdc237e81e3a426f79cabca}{SimulationEngine}}\ \{}
+\DoxyCodeLine{00058\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00059\ \ \ \textcolor{comment}{//\ Integration\ methods}}
+\DoxyCodeLine{00060\ \ \ \textcolor{keyword}{enum\ class}\ \mbox{\hyperlink{class_solar_system_1_1_simulation_1_1_simulation_engine_ab94f22e1cdb829ed1f60a18154927713}{IntegrationMethod}}\ \{}
+\DoxyCodeLine{00061\ \ \ \ \ \mbox{\hyperlink{class_solar_system_1_1_simulation_1_1_simulation_engine_ab94f22e1cdb829ed1f60a18154927713a678c1200011554fa94722938765910bf}{EULER}},\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Simple\ Euler\ method\ (fast,\ less\ accurate)}}
+\DoxyCodeLine{00062\ \ \ \ \ \mbox{\hyperlink{class_solar_system_1_1_simulation_1_1_simulation_engine_ab94f22e1cdb829ed1f60a18154927713a415ec8401c79768b018af21b65c40ef2}{LEAPFROG}},\ \ \ \ \ \ \ \textcolor{comment}{//\ Leapfrog\ integration\ (good\ for\ orbital\ mechanics)}}
+\DoxyCodeLine{00063\ \ \ \ \ \mbox{\hyperlink{class_solar_system_1_1_simulation_1_1_simulation_engine_ab94f22e1cdb829ed1f60a18154927713a693843d2c9e21562e2cc367c7d92f6a7}{RUNGE\_KUTTA\_4}},\ \ \textcolor{comment}{//\ 4th\ order\ Runge-\/Kutta\ (high\ accuracy)}}
+\DoxyCodeLine{00064\ \ \ \ \ \mbox{\hyperlink{class_solar_system_1_1_simulation_1_1_simulation_engine_ab94f22e1cdb829ed1f60a18154927713a0a03e368978699a6eead810806a99398}{VERLET}}\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Velocity\ Verlet\ (energy\ conserving)}}
+\DoxyCodeLine{00065\ \ \ \};}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \ \ \textcolor{comment}{//\ Constructor}}
+\DoxyCodeLine{00068\ \ \ \textcolor{keyword}{explicit}\ \mbox{\hyperlink{class_solar_system_1_1_simulation_1_1_simulation_engine_a1dd77ad42cdc237e81e3a426f79cabca}{SimulationEngine}}(\mbox{\hyperlink{struct_solar_system_1_1_simulation_1_1_simulation_config}{SimulationConfig}}\ config\ =\ \{\});}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \ \ \textcolor{comment}{//\ Copy\ and\ move\ semantics}}
+\DoxyCodeLine{00071\ \ \ \mbox{\hyperlink{class_solar_system_1_1_simulation_1_1_simulation_engine_a08f4082c67ac1bfa31a3fb574ba160e0}{SimulationEngine}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_solar_system_1_1_simulation_1_1_simulation_engine_a1dd77ad42cdc237e81e3a426f79cabca}{SimulationEngine}}\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00072\ \ \ \mbox{\hyperlink{class_solar_system_1_1_simulation_1_1_simulation_engine_ad6a328cca94367b8d6188becc579cc88}{SimulationEngine}}(\mbox{\hyperlink{class_solar_system_1_1_simulation_1_1_simulation_engine_a1dd77ad42cdc237e81e3a426f79cabca}{SimulationEngine}}\&\&)\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00073\ \ \ \mbox{\hyperlink{class_solar_system_1_1_simulation_1_1_simulation_engine_a1dd77ad42cdc237e81e3a426f79cabca}{SimulationEngine}}\&\ \mbox{\hyperlink{class_solar_system_1_1_simulation_1_1_simulation_engine_ad7e49e35b0be5d30874ce8724acba06a}{operator=}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_solar_system_1_1_simulation_1_1_simulation_engine_a1dd77ad42cdc237e81e3a426f79cabca}{SimulationEngine}}\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00074\ \ \ \mbox{\hyperlink{class_solar_system_1_1_simulation_1_1_simulation_engine_a1dd77ad42cdc237e81e3a426f79cabca}{SimulationEngine}}\&\ \mbox{\hyperlink{class_solar_system_1_1_simulation_1_1_simulation_engine_aaf305a81672e0d3489a0f3c2e9ca9eee}{operator=}}(\mbox{\hyperlink{class_solar_system_1_1_simulation_1_1_simulation_engine_a1dd77ad42cdc237e81e3a426f79cabca}{SimulationEngine}}\&\&)\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \ \ \textcolor{comment}{//\ Destructor}}
+\DoxyCodeLine{00077\ \ \ \mbox{\hyperlink{class_solar_system_1_1_simulation_1_1_simulation_engine_a66d0dd6cef8b54a74d78e7817c290d84}{\string~SimulationEngine}}()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \ \ \textcolor{comment}{//\ Configuration}}
+\DoxyCodeLine{00080\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_simulation_1_1_simulation_engine_a3bba5511fcdc076151f0f53b18cee5e4}{set\_config}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_solar_system_1_1_simulation_1_1_simulation_config}{SimulationConfig}}\&\ config)\ \{\ config\_\ =\ config;\ \}}
+\DoxyCodeLine{00081\ \ \ [[nodiscard]]\ \textcolor{keyword}{const}\ \mbox{\hyperlink{struct_solar_system_1_1_simulation_1_1_simulation_config}{SimulationConfig}}\&\ \mbox{\hyperlink{class_solar_system_1_1_simulation_1_1_simulation_engine_a09facb6d468c06aa8b043187ea92a4c4}{get\_config}}()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ config\_;\ \}}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_simulation_1_1_simulation_engine_a3852cc0109a7cacde55ccab278de5df8}{set\_integration\_method}}(\mbox{\hyperlink{class_solar_system_1_1_simulation_1_1_simulation_engine_ab94f22e1cdb829ed1f60a18154927713}{IntegrationMethod}}\ method)\ \{\ integration\_method\_\ =\ method;\ \}}
+\DoxyCodeLine{00084\ \ \ [[nodiscard]]\ \mbox{\hyperlink{class_solar_system_1_1_simulation_1_1_simulation_engine_ab94f22e1cdb829ed1f60a18154927713}{IntegrationMethod}}\ \mbox{\hyperlink{class_solar_system_1_1_simulation_1_1_simulation_engine_ac9848c5e21007ecc8831c909bb0fb2af}{get\_integration\_method}}()\ const\ noexcept\ \{}
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keywordflow}{return}\ integration\_method\_;}
+\DoxyCodeLine{00086\ \ \ \}}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ \ \ \textcolor{comment}{//\ Simulation\ control}}
+\DoxyCodeLine{00089\ \ \ [[nodiscard]]\ \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Utils::Expected<void,\ std::string>}}\ \mbox{\hyperlink{class_solar_system_1_1_simulation_1_1_simulation_engine_af0a228252f2efa02dfa947e200164562}{initialize}}(}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection}{Bodies::BodyCollection}}\ bodies,}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ std::chrono::system\_clock::time\_point\ reference\_time\ =\ std::chrono::system\_clock::now());}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ \ \ [[nodiscard]]\ \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Utils::Expected<void,\ std::string>}}\ \mbox{\hyperlink{class_solar_system_1_1_simulation_1_1_simulation_engine_a21013fa743097d8d68c9453e33ae3335}{step}}();}
+\DoxyCodeLine{00094\ \ \ [[nodiscard]]\ \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Utils::Expected<void,\ std::string>}}\ \mbox{\hyperlink{class_solar_system_1_1_simulation_1_1_simulation_engine_a21013fa743097d8d68c9453e33ae3335}{step}}(\textcolor{keywordtype}{double}\ custom\_timestep);}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ \ \ [[nodiscard]]\ \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Utils::Expected<void,\ std::string>}}\ \mbox{\hyperlink{class_solar_system_1_1_simulation_1_1_simulation_engine_abf8dbd9fe2203efda4b188be2d42947c}{simulate\_to\_time}}(\textcolor{keywordtype}{double}\ target\_time\_seconds);}
+\DoxyCodeLine{00097\ \ \ [[nodiscard]]\ \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Utils::Expected<void,\ std::string>}}\ \mbox{\hyperlink{class_solar_system_1_1_simulation_1_1_simulation_engine_ac07e95099ccbf0edf03e3dcf78b7c49f}{simulate\_to\_date}}(}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ std::chrono::system\_clock::time\_point\ target\_date);}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \ \ [[nodiscard]]\ \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Utils::Expected<void,\ std::string>}}\ \mbox{\hyperlink{class_solar_system_1_1_simulation_1_1_simulation_engine_a61d2ee120ebeba8a9f96e7699c604ec5}{simulate\_duration}}(\textcolor{keywordtype}{double}\ duration\_seconds);}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ \ \ \textcolor{comment}{//\ State\ access}}
+\DoxyCodeLine{00103\ \ \ [[nodiscard]]\ \textcolor{keyword}{const}\ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection}{Bodies::BodyCollection}}\&\ \mbox{\hyperlink{class_solar_system_1_1_simulation_1_1_simulation_engine_a9522c543548c0278229a49287a8d233a}{get\_bodies}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00104\ \ \ [[nodiscard]]\ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection}{Bodies::BodyCollection}}\&\ \mbox{\hyperlink{class_solar_system_1_1_simulation_1_1_simulation_engine_a9522c543548c0278229a49287a8d233a}{get\_bodies}}();}
+\DoxyCodeLine{00105\ \ \ [[nodiscard]]\ \textcolor{keyword}{const}\ \mbox{\hyperlink{struct_solar_system_1_1_simulation_1_1_simulation_state}{SimulationState}}\&\ \mbox{\hyperlink{class_solar_system_1_1_simulation_1_1_simulation_engine_aac4ecb26747aa857853418246269eb6c}{get\_state}}()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ state\_;\ \}}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_solar_system_1_1_simulation_1_1_simulation_engine_af4758c8cc10456d9c4e30f712321b33c}{is\_initialized}}()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ initialized\_;\ \}}
+\DoxyCodeLine{00108\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{class_solar_system_1_1_simulation_1_1_simulation_engine_a5a9effcae2de65f2e2e0ba103a16f1cc}{get\_current\_time}}()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ state\_.current\_time;\ \}}
+\DoxyCodeLine{00109\ \ \ [[nodiscard]]\ std::chrono::system\_clock::time\_point\ \mbox{\hyperlink{class_solar_system_1_1_simulation_1_1_simulation_engine_ae0b40fcc4d5cca7f7fe850c460c2cc67}{get\_current\_date}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00111\ \ \ \textcolor{comment}{//\ Callbacks}}
+\DoxyCodeLine{00112\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_simulation_1_1_simulation_engine_a139624d0503fe83591a754be0aef4da4}{set\_progress\_callback}}(\mbox{\hyperlink{namespace_solar_system_1_1_simulation_a4335b577d58f16a20c64bfb4eb77e216}{ProgressCallback}}\ callback)\ \{}
+\DoxyCodeLine{00113\ \ \ \ \ progress\_callback\_\ =\ std::move(callback);}
+\DoxyCodeLine{00114\ \ \ \}}
+\DoxyCodeLine{00115\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_simulation_1_1_simulation_engine_a2ed6ba5c9851459e5f14c730a1400c8c}{set\_collision\_callback}}(\mbox{\hyperlink{namespace_solar_system_1_1_simulation_a4efe00270692d2913382ecb345ae8922}{CollisionCallback}}\ callback)\ \{}
+\DoxyCodeLine{00116\ \ \ \ \ collision\_callback\_\ =\ std::move(callback);}
+\DoxyCodeLine{00117\ \ \ \}}
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00119\ \ \ \textcolor{comment}{//\ Analysis}}
+\DoxyCodeLine{00120\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_simulation_1_1_simulation_engine_ac25b4112f010765adc94d57866c3fbf5}{update\_statistics}}();}
+\DoxyCodeLine{00121\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{class_solar_system_1_1_simulation_1_1_simulation_engine_abcc82495f399adc73b94abe6d56243cf}{calculate\_total\_energy}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00122\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{class_solar_system_1_1_simulation_1_1_simulation_engine_aaa06b113cbc35a3094cf7378a43891b0}{calculate\_kinetic\_energy}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00123\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{class_solar_system_1_1_simulation_1_1_simulation_engine_abd465c827625b139e3d31d2a47a2b03d}{calculate\_potential\_energy}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00124\ \ \ [[nodiscard]]\ \mbox{\hyperlink{namespace_solar_system_1_1_math_a58b613f1c9974f449ee706cd131b1f41}{Math::Vector3d}}\ \mbox{\hyperlink{class_solar_system_1_1_simulation_1_1_simulation_engine_a616c03d093e6ba07dbe1f852dde4afbb}{calculate\_center\_of\_mass}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00125\ \ \ [[nodiscard]]\ \mbox{\hyperlink{namespace_solar_system_1_1_math_a58b613f1c9974f449ee706cd131b1f41}{Math::Vector3d}}\ \mbox{\hyperlink{class_solar_system_1_1_simulation_1_1_simulation_engine_a6fb8e8467a47798ccf4440045f239e2d}{calculate\_total\_momentum}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00126\ }
+\DoxyCodeLine{00127\ \ \ \textcolor{comment}{//\ Utility}}
+\DoxyCodeLine{00128\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_simulation_1_1_simulation_engine_a4712f567116295a60604a8f9eb7782ce}{reset}}();}
+\DoxyCodeLine{00129\ \ \ [[nodiscard]]\ std::string\ \mbox{\hyperlink{class_solar_system_1_1_simulation_1_1_simulation_engine_a69e39ebce785b4a960b272af15396341}{get\_status\_summary}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00130\ }
+\DoxyCodeLine{00131\ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00132\ \ \ \mbox{\hyperlink{struct_solar_system_1_1_simulation_1_1_simulation_config}{SimulationConfig}}\ config\_;}
+\DoxyCodeLine{00133\ \ \ \mbox{\hyperlink{class_solar_system_1_1_simulation_1_1_simulation_engine_ab94f22e1cdb829ed1f60a18154927713}{IntegrationMethod}}\ integration\_method\_\ =\ \mbox{\hyperlink{class_solar_system_1_1_simulation_1_1_simulation_engine_ab94f22e1cdb829ed1f60a18154927713a415ec8401c79768b018af21b65c40ef2}{IntegrationMethod::LEAPFROG}};}
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00135\ \ \ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection}{Bodies::BodyCollection}}\ bodies\_;}
+\DoxyCodeLine{00136\ \ \ \mbox{\hyperlink{struct_solar_system_1_1_simulation_1_1_simulation_state}{SimulationState}}\ state\_;}
+\DoxyCodeLine{00137\ \ \ \textcolor{keywordtype}{bool}\ initialized\_\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00139\ \ \ \textcolor{comment}{//\ Callbacks}}
+\DoxyCodeLine{00140\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_simulation_a4335b577d58f16a20c64bfb4eb77e216}{ProgressCallback}}\ progress\_callback\_;}
+\DoxyCodeLine{00141\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_simulation_a4efe00270692d2913382ecb345ae8922}{CollisionCallback}}\ collision\_callback\_;}
+\DoxyCodeLine{00142\ }
+\DoxyCodeLine{00143\ \ \ \textcolor{comment}{//\ Integration\ methods}}
+\DoxyCodeLine{00144\ \ \ [[nodiscard]]\ \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Utils::Expected<void,\ std::string>}}\ step\_euler(\textcolor{keywordtype}{double}\ dt);}
+\DoxyCodeLine{00145\ \ \ [[nodiscard]]\ \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Utils::Expected<void,\ std::string>}}\ step\_leapfrog(\textcolor{keywordtype}{double}\ dt);}
+\DoxyCodeLine{00146\ \ \ [[nodiscard]]\ \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Utils::Expected<void,\ std::string>}}\ step\_runge\_kutta\_4(\textcolor{keywordtype}{double}\ dt);}
+\DoxyCodeLine{00147\ \ \ [[nodiscard]]\ \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Utils::Expected<void,\ std::string>}}\ step\_verlet(\textcolor{keywordtype}{double}\ dt);}
+\DoxyCodeLine{00148\ }
+\DoxyCodeLine{00149\ \ \ \textcolor{comment}{//\ Force\ calculations}}
+\DoxyCodeLine{00150\ \ \ \textcolor{keywordtype}{void}\ calculate\_forces(std::vector<Math::Vector3d>\&\ forces)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00151\ \ \ [[nodiscard]]\ \mbox{\hyperlink{namespace_solar_system_1_1_math_a58b613f1c9974f449ee706cd131b1f41}{Math::Vector3d}}\ calculate\_gravitational\_force(}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Bodies::CelestialBody}}\&\ body1,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Bodies::CelestialBody}}\&\ body2)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00153\ }
+\DoxyCodeLine{00154\ \ \ \textcolor{comment}{//\ Adaptive\ timestep}}
+\DoxyCodeLine{00155\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{double}\ calculate\_adaptive\_timestep()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00156\ }
+\DoxyCodeLine{00157\ \ \ \textcolor{comment}{//\ Collision\ detection}}
+\DoxyCodeLine{00158\ \ \ \textcolor{keywordtype}{void}\ check\_collisions();}
+\DoxyCodeLine{00159\ }
+\DoxyCodeLine{00160\ \ \ \textcolor{comment}{//\ Validation}}
+\DoxyCodeLine{00161\ \ \ [[nodiscard]]\ \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Utils::Expected<void,\ std::string>}}\ validate\_state()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00162\ \};}
+\DoxyCodeLine{00163\ }
+\DoxyCodeLine{00164\ \textcolor{comment}{//\ Utility\ functions}}
+\DoxyCodeLine{00165\ [[nodiscard]]\ std::string\ \mbox{\hyperlink{namespace_solar_system_1_1_simulation_a09d714c1580f1ccfeefa0cfd5e690432}{to\_string}}(\mbox{\hyperlink{class_solar_system_1_1_simulation_1_1_simulation_engine_ab94f22e1cdb829ed1f60a18154927713}{SimulationEngine::IntegrationMethod}}\ method);}
+\DoxyCodeLine{00166\ [[nodiscard]]\ \mbox{\hyperlink{class_solar_system_1_1_simulation_1_1_simulation_engine_ab94f22e1cdb829ed1f60a18154927713}{SimulationEngine::IntegrationMethod}}\ \mbox{\hyperlink{namespace_solar_system_1_1_simulation_ac48c9178a173536d8a119e18f74e2994}{integration\_method\_from\_string}}(}
+\DoxyCodeLine{00167\ \ \ \ \ std::string\_view\ str);}
+\DoxyCodeLine{00168\ }
+\DoxyCodeLine{00169\ \}\ \ \textcolor{comment}{//\ namespace\ SolarSystem::Simulation}}
+
+\end{DoxyCode}

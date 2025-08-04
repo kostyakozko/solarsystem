@@ -1,0 +1,100 @@
+\doxysection{Solar\+System\+::Testing\+::Memory\+Tracker Class Reference}
+\hypertarget{class_solar_system_1_1_testing_1_1_memory_tracker}{}\label{class_solar_system_1_1_testing_1_1_memory_tracker}\index{SolarSystem::Testing::MemoryTracker@{SolarSystem::Testing::MemoryTracker}}
+
+
+Memory allocation tracker.  
+
+
+
+
+{\ttfamily \#include $<$performance\+\_\+monitor.\+hpp$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_memory_tracker_a326baf81a5f943358647b439c2d4ccf7}{start\+\_\+tracking}} ()
+\begin{DoxyCompactList}\small\item\em Start tracking memory allocations. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_performance_metrics}{Performance\+Metrics}} \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_memory_tracker_a9da753aee0cf32ebad64f0727f33bd35}{stop\+\_\+tracking}} ()
+\begin{DoxyCompactList}\small\item\em Stop tracking and return metrics. \end{DoxyCompactList}\item 
+size\+\_\+t \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_memory_tracker_ad7f3a850b82bf59263fade557cade9cb}{get\+\_\+current\+\_\+usage}} () const
+\begin{DoxyCompactList}\small\item\em Get current memory usage. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_memory_tracker_a795d7801797bc6cde1fa77f1842236c2}{reset}} ()
+\begin{DoxyCompactList}\small\item\em Reset tracking counters. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Memory allocation tracker. 
+
+\label{doc-func-members}
+\Hypertarget{class_solar_system_1_1_testing_1_1_memory_tracker_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_solar_system_1_1_testing_1_1_memory_tracker_ad7f3a850b82bf59263fade557cade9cb}\index{SolarSystem::Testing::MemoryTracker@{SolarSystem::Testing::MemoryTracker}!get\_current\_usage@{get\_current\_usage}}
+\index{get\_current\_usage@{get\_current\_usage}!SolarSystem::Testing::MemoryTracker@{SolarSystem::Testing::MemoryTracker}}
+\doxysubsubsection{\texorpdfstring{get\_current\_usage()}{get\_current\_usage()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_memory_tracker_ad7f3a850b82bf59263fade557cade9cb} 
+size\+\_\+t Solar\+System\+::\+Testing\+::\+Memory\+Tracker\+::get\+\_\+current\+\_\+usage (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Get current memory usage. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=342pt]{class_solar_system_1_1_testing_1_1_memory_tracker_ad7f3a850b82bf59263fade557cade9cb_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_memory_tracker_a795d7801797bc6cde1fa77f1842236c2}\index{SolarSystem::Testing::MemoryTracker@{SolarSystem::Testing::MemoryTracker}!reset@{reset}}
+\index{reset@{reset}!SolarSystem::Testing::MemoryTracker@{SolarSystem::Testing::MemoryTracker}}
+\doxysubsubsection{\texorpdfstring{reset()}{reset()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_memory_tracker_a795d7801797bc6cde1fa77f1842236c2} 
+void Solar\+System\+::\+Testing\+::\+Memory\+Tracker\+::reset (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Reset tracking counters. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_memory_tracker_a326baf81a5f943358647b439c2d4ccf7}\index{SolarSystem::Testing::MemoryTracker@{SolarSystem::Testing::MemoryTracker}!start\_tracking@{start\_tracking}}
+\index{start\_tracking@{start\_tracking}!SolarSystem::Testing::MemoryTracker@{SolarSystem::Testing::MemoryTracker}}
+\doxysubsubsection{\texorpdfstring{start\_tracking()}{start\_tracking()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_memory_tracker_a326baf81a5f943358647b439c2d4ccf7} 
+void Solar\+System\+::\+Testing\+::\+Memory\+Tracker\+::start\+\_\+tracking (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Start tracking memory allocations. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=342pt]{class_solar_system_1_1_testing_1_1_memory_tracker_a326baf81a5f943358647b439c2d4ccf7_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_memory_tracker_a9da753aee0cf32ebad64f0727f33bd35}\index{SolarSystem::Testing::MemoryTracker@{SolarSystem::Testing::MemoryTracker}!stop\_tracking@{stop\_tracking}}
+\index{stop\_tracking@{stop\_tracking}!SolarSystem::Testing::MemoryTracker@{SolarSystem::Testing::MemoryTracker}}
+\doxysubsubsection{\texorpdfstring{stop\_tracking()}{stop\_tracking()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_memory_tracker_a9da753aee0cf32ebad64f0727f33bd35} 
+\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_performance_metrics}{Performance\+Metrics}} Solar\+System\+::\+Testing\+::\+Memory\+Tracker\+::stop\+\_\+tracking (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Stop tracking and return metrics. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=341pt]{class_solar_system_1_1_testing_1_1_memory_tracker_a9da753aee0cf32ebad64f0727f33bd35_cgraph}
+\end{center}
+\end{figure}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+test/include/solar\+\_\+test/benchmarks/\mbox{\hyperlink{performance__monitor_8hpp}{performance\+\_\+monitor.\+hpp}}\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+test/src/benchmarks/\mbox{\hyperlink{performance__monitor_8cpp}{performance\+\_\+monitor.\+cpp}}\end{DoxyCompactItemize}

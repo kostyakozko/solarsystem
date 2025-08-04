@@ -1,0 +1,14 @@
+<map id="SolarSystem::Bodies::BodyFactory::create_solar_system" name="SolarSystem::Bodies::BodyFactory::create_solar_system">
+<area shape="rect" id="Node000001" title=" " alt="" coords="319,77,466,133"/>
+<area shape="poly" id="edge2_Node000001_Node000001" title=" " alt="" coords="425,65,413,58,393,56,375,58,363,63,357,69,357,77,352,77,353,67,360,58,373,53,393,51,414,53,428,60"/>
+<area shape="rect" id="Node000002" href="$class_solar_system_1_1_bodies_1_1_body_factory.html#abcd3695e32fa6c7d422b81254f7e2a0c" title=" " alt="" coords="113,5,260,61"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="303,77,260,62,262,57,305,72"/>
+<area shape="rect" id="Node000003" href="$class_solar_system_a_p_i.html#abe257a4d793daeece30ee45b2a4e5adb" title="Get solar system data." alt="" coords="105,85,269,126"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="303,108,269,108,269,102,303,102"/>
+<area shape="rect" id="Node000005" href="$solar__system_8cpp.html#a0a190e06a4d8642088546e14b6a1667b" title="Run HIGH&#45;PERFORMANCE simulation matching legacy speed." alt="" coords="103,150,271,175"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="305,132,236,152,235,147,303,127"/>
+<area shape="rect" id="Node000004" href="$web__server_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title="Modern main function with structured error handling." alt="" coords="5,92,55,118"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="89,108,55,108,55,102,89,102"/>
+<area shape="rect" id="Node000006" href="$solar__system_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title="Main application entry point &#45; OPTIMIZED FOR PERFORMANCE." alt="" coords="5,150,55,175"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="87,165,55,165,55,160,87,160"/>
+</map>

@@ -1,0 +1,77 @@
+\doxysection{Solar\+System\+::Testing\+::Mocks\+::Network\+Test\+Utils Class Reference}
+\hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_network_test_utils}{}\label{class_solar_system_1_1_testing_1_1_mocks_1_1_network_test_utils}\index{SolarSystem::Testing::Mocks::NetworkTestUtils@{SolarSystem::Testing::Mocks::NetworkTestUtils}}
+
+
+Network-\/based test utilities.  
+
+
+
+
+{\ttfamily \#include $<$network\+\_\+mock.\+hpp$>$}
+
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static bool \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_test_utils_aece889592cbf925046a9e401df0442be}{test\+\_\+network\+\_\+resilience}} (std\+::function$<$ bool()$>$ network\+\_\+operation, const std\+::vector$<$ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_condition}{Network\+Condition}} $>$ \&conditions, size\+\_\+t max\+\_\+retries=3)
+\begin{DoxyCompactList}\small\item\em Test network resilience with various conditions. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename Func$>$ }\\static std\+::chrono\+::milliseconds \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_test_utils_a64125a1f4fd99f48e1485ac5e4f453bc}{measure\+\_\+network\+\_\+operation\+\_\+time}} (Func \&\&func)
+\begin{DoxyCompactList}\small\item\em Measure network operation performance. \end{DoxyCompactList}\item 
+static std\+::vector$<$ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_condition}{Network\+Condition}} $>$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_test_utils_a64707594587b8e1f8a09ef0a1d0ff985}{create\+\_\+network\+\_\+condition\+\_\+sequence}} (const \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_condition}{Network\+Condition}} \&start\+\_\+condition, const \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_condition}{Network\+Condition}} \&end\+\_\+condition, size\+\_\+t steps)
+\begin{DoxyCompactList}\small\item\em Create network condition sequence for testing. \end{DoxyCompactList}\item 
+static bool \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_test_utils_ae1baa9cd2882ed46ebe39142c9635f74}{validate\+\_\+network\+\_\+error\+\_\+handling}} (std\+::function$<$ bool(\mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_ab046ba56c845277e12b055445c50e23f}{Mock\+Network\+Error}})$>$ error\+\_\+handler, const std\+::vector$<$ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_ab046ba56c845277e12b055445c50e23f}{Mock\+Network\+Error}} $>$ \&error\+\_\+types)
+\begin{DoxyCompactList}\small\item\em Validate network error handling. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Network-\/based test utilities. 
+
+\label{doc-func-members}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_network_test_utils_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_network_test_utils_a64707594587b8e1f8a09ef0a1d0ff985}\index{SolarSystem::Testing::Mocks::NetworkTestUtils@{SolarSystem::Testing::Mocks::NetworkTestUtils}!create\_network\_condition\_sequence@{create\_network\_condition\_sequence}}
+\index{create\_network\_condition\_sequence@{create\_network\_condition\_sequence}!SolarSystem::Testing::Mocks::NetworkTestUtils@{SolarSystem::Testing::Mocks::NetworkTestUtils}}
+\doxysubsubsection{\texorpdfstring{create\_network\_condition\_sequence()}{create\_network\_condition\_sequence()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_network_test_utils_a64707594587b8e1f8a09ef0a1d0ff985} 
+std\+::vector$<$ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_condition}{Network\+Condition}} $>$ Solar\+System\+::\+Testing\+::\+Mocks\+::\+Network\+Test\+Utils\+::create\+\_\+network\+\_\+condition\+\_\+sequence (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_condition}{Network\+Condition}} \&}]{start\+\_\+condition}{, }\item[{const \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_condition}{Network\+Condition}} \&}]{end\+\_\+condition}{, }\item[{size\+\_\+t}]{steps}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Create network condition sequence for testing. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_network_test_utils_a64125a1f4fd99f48e1485ac5e4f453bc}\index{SolarSystem::Testing::Mocks::NetworkTestUtils@{SolarSystem::Testing::Mocks::NetworkTestUtils}!measure\_network\_operation\_time@{measure\_network\_operation\_time}}
+\index{measure\_network\_operation\_time@{measure\_network\_operation\_time}!SolarSystem::Testing::Mocks::NetworkTestUtils@{SolarSystem::Testing::Mocks::NetworkTestUtils}}
+\doxysubsubsection{\texorpdfstring{measure\_network\_operation\_time()}{measure\_network\_operation\_time()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_network_test_utils_a64125a1f4fd99f48e1485ac5e4f453bc} 
+template$<$typename Func$>$ \\
+std\+::chrono\+::milliseconds Solar\+System\+::\+Testing\+::\+Mocks\+::\+Network\+Test\+Utils\+::measure\+\_\+network\+\_\+operation\+\_\+time (\begin{DoxyParamCaption}\item[{Func \&\&}]{func}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Measure network operation performance. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_network_test_utils_aece889592cbf925046a9e401df0442be}\index{SolarSystem::Testing::Mocks::NetworkTestUtils@{SolarSystem::Testing::Mocks::NetworkTestUtils}!test\_network\_resilience@{test\_network\_resilience}}
+\index{test\_network\_resilience@{test\_network\_resilience}!SolarSystem::Testing::Mocks::NetworkTestUtils@{SolarSystem::Testing::Mocks::NetworkTestUtils}}
+\doxysubsubsection{\texorpdfstring{test\_network\_resilience()}{test\_network\_resilience()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_network_test_utils_aece889592cbf925046a9e401df0442be} 
+bool Solar\+System\+::\+Testing\+::\+Mocks\+::\+Network\+Test\+Utils\+::test\+\_\+network\+\_\+resilience (\begin{DoxyParamCaption}\item[{std\+::function$<$ bool()$>$}]{network\+\_\+operation}{, }\item[{const std\+::vector$<$ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_condition}{Network\+Condition}} $>$ \&}]{conditions}{, }\item[{size\+\_\+t}]{max\+\_\+retries}{ = {\ttfamily 3}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Test network resilience with various conditions. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_network_test_utils_ae1baa9cd2882ed46ebe39142c9635f74}\index{SolarSystem::Testing::Mocks::NetworkTestUtils@{SolarSystem::Testing::Mocks::NetworkTestUtils}!validate\_network\_error\_handling@{validate\_network\_error\_handling}}
+\index{validate\_network\_error\_handling@{validate\_network\_error\_handling}!SolarSystem::Testing::Mocks::NetworkTestUtils@{SolarSystem::Testing::Mocks::NetworkTestUtils}}
+\doxysubsubsection{\texorpdfstring{validate\_network\_error\_handling()}{validate\_network\_error\_handling()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_network_test_utils_ae1baa9cd2882ed46ebe39142c9635f74} 
+bool Solar\+System\+::\+Testing\+::\+Mocks\+::\+Network\+Test\+Utils\+::validate\+\_\+network\+\_\+error\+\_\+handling (\begin{DoxyParamCaption}\item[{std\+::function$<$ bool(\mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_ab046ba56c845277e12b055445c50e23f}{Mock\+Network\+Error}})$>$}]{error\+\_\+handler}{, }\item[{const std\+::vector$<$ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_ab046ba56c845277e12b055445c50e23f}{Mock\+Network\+Error}} $>$ \&}]{error\+\_\+types}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Validate network error handling. 
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+test/include/solar\+\_\+test/mocks/\mbox{\hyperlink{network__mock_8hpp}{network\+\_\+mock.\+hpp}}\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+test/src/mocks/\mbox{\hyperlink{network__mock_8cpp}{network\+\_\+mock.\+cpp}}\end{DoxyCompactItemize}

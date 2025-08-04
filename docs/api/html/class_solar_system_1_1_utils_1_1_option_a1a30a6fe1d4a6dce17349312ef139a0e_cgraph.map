@@ -1,0 +1,11 @@
+<map id="SolarSystem::Utils::Option::requires_value" name="SolarSystem::Utils::Option::requires_value">
+<area shape="rect" id="Node000001" title="Set option as requiring a value." alt="" coords="5,71,165,111"/>
+<area shape="rect" id="Node000002" href="$class_solar_system_1_1_utils_1_1_option.html#a1d820a32ebee4260ad80ab6bb3830822" title=" " alt="" coords="213,71,344,111"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="165,88,197,88,197,94,165,94"/>
+<area shape="rect" id="Node000003" href="$class_solar_system_1_1_utils_1_1_option.html#aee65f5afe989806f5a7c9bbdf88487b3" title=" " alt="" coords="394,5,533,46"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="337,68,389,49,391,54,339,73"/>
+<area shape="rect" id="Node000004" href="$class_solar_system_1_1_utils_1_1_option.html#aa71998f77ea680ad960d1caa3639beb2" title=" " alt="" coords="394,71,533,111"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="345,88,379,88,379,94,345,94"/>
+<area shape="rect" id="Node000005" href="$class_solar_system_1_1_utils_1_1_option.html#a8edf092376bb3cf219090c20b131650a" title=" " alt="" coords="392,136,535,177"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="339,109,391,128,389,133,337,114"/>
+</map>

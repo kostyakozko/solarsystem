@@ -1,0 +1,7 @@
+<map id="SolarSystem::Simulation::SimulationEngine::initialize" name="SolarSystem::Simulation::SimulationEngine::initialize">
+<area shape="rect" id="Node000001" title=" " alt="" coords="319,5,504,46"/>
+<area shape="rect" id="Node000002" href="$solar__system_8cpp.html#a0a190e06a4d8642088546e14b6a1667b" title="Run HIGH&#45;PERFORMANCE simulation matching legacy speed." alt="" coords="103,13,271,38"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="304,28,271,28,271,23,304,23"/>
+<area shape="rect" id="Node000003" href="$solar__system_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title="Main application entry point &#45; OPTIMIZED FOR PERFORMANCE." alt="" coords="5,13,55,38"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="87,28,55,28,55,23,87,23"/>
+</map>

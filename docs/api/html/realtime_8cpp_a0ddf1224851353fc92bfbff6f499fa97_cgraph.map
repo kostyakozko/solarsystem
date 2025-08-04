@@ -1,0 +1,37 @@
+<map id="main" name="main">
+<area shape="rect" id="Node000001" title="Modern main function with structured error handling." alt="" coords="5,254,55,280"/>
+<area shape="rect" id="Node000002" href="$class_solar_system_1_1_utils_1_1_logger.html#a93b328387d8eea8f854b85a23b3847f8" title="Configure the logger." alt="" coords="125,5,256,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="29,254,34,216,45,164,66,107,82,81,101,57,110,49,113,53,105,61,86,84,71,110,50,165,39,217,35,254"/>
+<area shape="rect" id="Node000003" href="$class_solar_system_1_1_utils_1_1_logger.html#ad70e4c393422c969479b43b96e67173a" title="Get the global logger instance." alt="" coords="125,95,256,135"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="33,253,57,201,76,171,101,145,109,139,112,143,104,149,80,174,61,204,38,255"/>
+<area shape="rect" id="Node000004" href="$class_solar_system_1_1_utils_1_1_realtime_argument_parser.html#a556699f6a97a4a50a8f5dedf8208d8db" title="Parse arguments into RealtimeConfig." alt="" coords="103,159,278,215"/>
+<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="53,251,101,225,111,220,114,225,104,229,56,256"/>
+<area shape="rect" id="Node000005" href="$class_solar_system_1_1_utils_1_1_realtime_argument_parser.html#a610a5e9927bf1626b2be652c4666da6a" title="Print usage information with beautiful formatting." alt="" coords="103,239,278,295"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="55,264,87,264,87,270,55,270"/>
+<area shape="rect" id="Node000006" href="$realtime_8cpp.html#a3b527c56ed133ee6815bfbc625e757af" title="Modern signal handler for graceful shutdown." alt="" coords="138,320,242,345"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="53,278,104,305,124,312,122,317,102,309,51,283"/>
+<area shape="rect" id="Node000007" href="$class_realtime_monitor.html#a51cfd94fd06639f00d1a1af4e88cbf40" title="Start real&#45;time monitoring." alt="" coords="115,369,266,394"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="40,279,65,317,83,338,104,355,111,360,109,364,101,360,79,342,61,320,36,282"/>
+<area shape="rect" id="Node000017" href="$namespace_solar_system_1_1_utils.html#a4ae269edb40b2f73886ad9acf05ea3c5" title="Convert ArgumentError to string for error messages." alt="" coords="125,419,256,459"/>
+<area shape="poly" id="edge18_Node000001_Node000017" title=" " alt="" coords="37,279,59,339,78,374,105,405,113,412,110,416,101,409,74,377,54,342,32,281"/>
+<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="159,94,158,85,163,76,174,70,190,68,208,70,219,77,216,81,206,75,190,73,175,75,167,80,163,86,165,94"/>
+<area shape="rect" id="Node000008" href="$class_solar_system_1_1_bodies_1_1_body_factory.html#afd0c8632913113c333b702bf1aaccfdb" title=" " alt="" coords="334,246,501,302"/>
+<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="248,366,277,355,321,333,362,308,365,313,324,338,279,360,250,371"/>
+<area shape="rect" id="Node000014" href="$class_solar_system_1_1_bodies_1_1_body_factory.html#a199966bfeeb87cc771b0f0fe4463cd42" title=" " alt="" coords="328,354,507,410"/>
+<area shape="poly" id="edge15_Node000007_Node000014" title=" " alt="" coords="266,379,312,379,312,384,266,384"/>
+<area shape="rect" id="Node000016" href="$class_solar_system_1_1_bodies_1_1_body_factory.html#a4099a072977727f97cfaaa57cf74bf41" title=" " alt="" coords="326,433,508,474"/>
+<area shape="poly" id="edge17_Node000007_Node000016" title=" " alt="" coords="240,393,279,404,342,425,340,430,277,410,238,398"/>
+<area shape="rect" id="Node000009" href="$namespace_solar_system_1_1_j_p_l.html#aa87d1eae6faed2285995bb3f55e8bf4e" title="Helper to create error void result." alt="" coords="784,232,945,257"/>
+<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="436,243,485,188,518,161,555,141,604,124,646,119,687,125,737,141,769,156,798,176,844,218,840,222,795,180,766,160,735,145,686,130,646,125,606,129,557,145,521,165,489,192,440,247"/>
+<area shape="rect" id="Node000010" href="$namespace_solar_system_1_1_j_p_l.html#ab3c2444575b2bb169fc9aa27a6fee7c6" title="Helper to get error from failed result." alt="" coords="569,155,723,195"/>
+<area shape="poly" id="edge10_Node000008_Node000010" title=" " alt="" coords="475,243,555,206,572,199,574,204,557,211,477,248"/>
+<area shape="rect" id="Node000011" href="$namespace_solar_system_1_1_j_p_l.html#a605668a4c434918864026fc3a0216137" title="Helper to get value from successful result." alt="" coords="569,220,723,261"/>
+<area shape="poly" id="edge11_Node000008_Node000011" title=" " alt="" coords="501,259,553,251,554,256,502,264"/>
+<area shape="rect" id="Node000012" href="$namespace_solar_system_1_1_j_p_l.html#abb8eb67716801804e9c24e2a80dda44e" title="Helper to check if result is successful." alt="" coords="573,285,719,326"/>
+<area shape="poly" id="edge12_Node000008_Node000012" title=" " alt="" coords="502,283,559,291,558,296,501,288"/>
+<area shape="rect" id="Node000013" href="$namespace_solar_system_1_1_j_p_l_1_1_utils.html#a26fe3bf37cab4ce4fff30537465e2839" title="Convert JPL error to string." alt="" coords="565,351,727,391"/>
+<area shape="poly" id="edge13_Node000008_Node000013" title=" " alt="" coords="478,300,557,335,574,342,572,347,555,340,476,304"/>
+<area shape="poly" id="edge14_Node000013_Node000009" title=" " alt="" coords="708,348,734,335,789,300,835,265,838,269,792,305,737,340,710,353"/>
+<area shape="rect" id="Node000015" href="$class_solar_system_1_1_bodies_1_1_body_factory.html#af5d6d07a8a6ec10ea24be5fe7e03adf1" title=" " alt="" coords="556,415,736,471"/>
+<area shape="poly" id="edge16_Node000014_Node000015" title=" " alt="" coords="508,403,542,412,540,417,507,408"/>
+</map>

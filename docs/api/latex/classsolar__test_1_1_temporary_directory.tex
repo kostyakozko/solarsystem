@@ -1,0 +1,193 @@
+\doxysection{solar\+\_\+test\+::Temporary\+Directory Class Reference}
+\hypertarget{classsolar__test_1_1_temporary_directory}{}\label{classsolar__test_1_1_temporary_directory}\index{solar\_test::TemporaryDirectory@{solar\_test::TemporaryDirectory}}
+
+
+RAII class for creating isolated temporary directories for tests.  
+
+
+
+
+{\ttfamily \#include $<$test\+\_\+data\+\_\+manager.\+hpp$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classsolar__test_1_1_temporary_directory_a0c1cb805d7fd1ba845c03bf2e9f0bd3b}{Temporary\+Directory}} (const std\+::string \&prefix="{}solar\+\_\+test\+\_\+"{})
+\item 
+\mbox{\hyperlink{classsolar__test_1_1_temporary_directory_a247b17252d4441372bf816830f88e40e}{\texorpdfstring{$\sim$}{\string~}\+Temporary\+Directory}} ()
+\item 
+\mbox{\hyperlink{classsolar__test_1_1_temporary_directory_a2526feb4ef458529a1e7487eb2af5b82}{Temporary\+Directory}} (const \mbox{\hyperlink{classsolar__test_1_1_temporary_directory}{Temporary\+Directory}} \&)=delete
+\item 
+\mbox{\hyperlink{classsolar__test_1_1_temporary_directory}{Temporary\+Directory}} \& \mbox{\hyperlink{classsolar__test_1_1_temporary_directory_a83d7eaf0e0d40125f2107b4fff3c79da}{operator=}} (const \mbox{\hyperlink{classsolar__test_1_1_temporary_directory}{Temporary\+Directory}} \&)=delete
+\item 
+\mbox{\hyperlink{classsolar__test_1_1_temporary_directory_a7754d51fa922bfd252c8196fe23a891e}{Temporary\+Directory}} (\mbox{\hyperlink{classsolar__test_1_1_temporary_directory}{Temporary\+Directory}} \&\&) noexcept
+\item 
+\mbox{\hyperlink{classsolar__test_1_1_temporary_directory}{Temporary\+Directory}} \& \mbox{\hyperlink{classsolar__test_1_1_temporary_directory_a6f77ff2d33ebd53cbbc32e8fae87355e}{operator=}} (\mbox{\hyperlink{classsolar__test_1_1_temporary_directory}{Temporary\+Directory}} \&\&) noexcept
+\item 
+std\+::string \mbox{\hyperlink{classsolar__test_1_1_temporary_directory_a9f9e1edbb4f1766ec9a16c9b660c3ed1}{path}} () const
+\item 
+void \mbox{\hyperlink{classsolar__test_1_1_temporary_directory_afb7a023805b08e42ef4aabf35eb43722}{create\+\_\+file}} (const std\+::string \&name, const std\+::string \&content)
+\item 
+void \mbox{\hyperlink{classsolar__test_1_1_temporary_directory_a3737dc96a6cede97dda4b48030d04e90}{create\+\_\+subdirectory}} (const std\+::string \&name)
+\item 
+bool \mbox{\hyperlink{classsolar__test_1_1_temporary_directory_a6c8eec7de737684c3531a7b956530b98}{exists}} () const
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+RAII class for creating isolated temporary directories for tests. 
+
+\label{doc-constructors}
+\Hypertarget{classsolar__test_1_1_temporary_directory_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classsolar__test_1_1_temporary_directory_a0c1cb805d7fd1ba845c03bf2e9f0bd3b}\index{solar\_test::TemporaryDirectory@{solar\_test::TemporaryDirectory}!TemporaryDirectory@{TemporaryDirectory}}
+\index{TemporaryDirectory@{TemporaryDirectory}!solar\_test::TemporaryDirectory@{solar\_test::TemporaryDirectory}}
+\doxysubsubsection{\texorpdfstring{TemporaryDirectory()}{TemporaryDirectory()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily \label{classsolar__test_1_1_temporary_directory_a0c1cb805d7fd1ba845c03bf2e9f0bd3b} 
+solar\+\_\+test\+::\+Temporary\+Directory\+::\+Temporary\+Directory (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{prefix}{ = {\ttfamily "{}solar\+\_\+test\+\_\+"{}}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classsolar__test_1_1_temporary_directory_a0c1cb805d7fd1ba845c03bf2e9f0bd3b_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classsolar__test_1_1_temporary_directory_a0c1cb805d7fd1ba845c03bf2e9f0bd3b_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classsolar__test_1_1_temporary_directory_a247b17252d4441372bf816830f88e40e}\index{solar\_test::TemporaryDirectory@{solar\_test::TemporaryDirectory}!````~TemporaryDirectory@{\texorpdfstring{$\sim$}{\string~}TemporaryDirectory}}
+\index{````~TemporaryDirectory@{\texorpdfstring{$\sim$}{\string~}TemporaryDirectory}!solar\_test::TemporaryDirectory@{solar\_test::TemporaryDirectory}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}TemporaryDirectory()}{\string~TemporaryDirectory()}}
+{\footnotesize\ttfamily \label{classsolar__test_1_1_temporary_directory_a247b17252d4441372bf816830f88e40e} 
+solar\+\_\+test\+::\+Temporary\+Directory\+::\texorpdfstring{$\sim$}{\string~}\+Temporary\+Directory (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+\Hypertarget{classsolar__test_1_1_temporary_directory_a2526feb4ef458529a1e7487eb2af5b82}\index{solar\_test::TemporaryDirectory@{solar\_test::TemporaryDirectory}!TemporaryDirectory@{TemporaryDirectory}}
+\index{TemporaryDirectory@{TemporaryDirectory}!solar\_test::TemporaryDirectory@{solar\_test::TemporaryDirectory}}
+\doxysubsubsection{\texorpdfstring{TemporaryDirectory()}{TemporaryDirectory()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily \label{classsolar__test_1_1_temporary_directory_a2526feb4ef458529a1e7487eb2af5b82} 
+solar\+\_\+test\+::\+Temporary\+Directory\+::\+Temporary\+Directory (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classsolar__test_1_1_temporary_directory}{Temporary\+Directory}} \&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classsolar__test_1_1_temporary_directory_a2526feb4ef458529a1e7487eb2af5b82_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classsolar__test_1_1_temporary_directory_a7754d51fa922bfd252c8196fe23a891e}\index{solar\_test::TemporaryDirectory@{solar\_test::TemporaryDirectory}!TemporaryDirectory@{TemporaryDirectory}}
+\index{TemporaryDirectory@{TemporaryDirectory}!solar\_test::TemporaryDirectory@{solar\_test::TemporaryDirectory}}
+\doxysubsubsection{\texorpdfstring{TemporaryDirectory()}{TemporaryDirectory()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily \label{classsolar__test_1_1_temporary_directory_a7754d51fa922bfd252c8196fe23a891e} 
+solar\+\_\+test\+::\+Temporary\+Directory\+::\+Temporary\+Directory (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classsolar__test_1_1_temporary_directory}{Temporary\+Directory}} \&\&}]{other}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classsolar__test_1_1_temporary_directory_a7754d51fa922bfd252c8196fe23a891e_cgraph}
+\end{center}
+\end{figure}
+
+
+\label{doc-func-members}
+\Hypertarget{classsolar__test_1_1_temporary_directory_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classsolar__test_1_1_temporary_directory_afb7a023805b08e42ef4aabf35eb43722}\index{solar\_test::TemporaryDirectory@{solar\_test::TemporaryDirectory}!create\_file@{create\_file}}
+\index{create\_file@{create\_file}!solar\_test::TemporaryDirectory@{solar\_test::TemporaryDirectory}}
+\doxysubsubsection{\texorpdfstring{create\_file()}{create\_file()}}
+{\footnotesize\ttfamily \label{classsolar__test_1_1_temporary_directory_afb7a023805b08e42ef4aabf35eb43722} 
+void solar\+\_\+test\+::\+Temporary\+Directory\+::create\+\_\+file (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name}{, }\item[{const std\+::string \&}]{content}{}\end{DoxyParamCaption})}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classsolar__test_1_1_temporary_directory_afb7a023805b08e42ef4aabf35eb43722_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classsolar__test_1_1_temporary_directory_a3737dc96a6cede97dda4b48030d04e90}\index{solar\_test::TemporaryDirectory@{solar\_test::TemporaryDirectory}!create\_subdirectory@{create\_subdirectory}}
+\index{create\_subdirectory@{create\_subdirectory}!solar\_test::TemporaryDirectory@{solar\_test::TemporaryDirectory}}
+\doxysubsubsection{\texorpdfstring{create\_subdirectory()}{create\_subdirectory()}}
+{\footnotesize\ttfamily \label{classsolar__test_1_1_temporary_directory_a3737dc96a6cede97dda4b48030d04e90} 
+void solar\+\_\+test\+::\+Temporary\+Directory\+::create\+\_\+subdirectory (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name}{}\end{DoxyParamCaption})}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classsolar__test_1_1_temporary_directory_a3737dc96a6cede97dda4b48030d04e90_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classsolar__test_1_1_temporary_directory_a6c8eec7de737684c3531a7b956530b98}\index{solar\_test::TemporaryDirectory@{solar\_test::TemporaryDirectory}!exists@{exists}}
+\index{exists@{exists}!solar\_test::TemporaryDirectory@{solar\_test::TemporaryDirectory}}
+\doxysubsubsection{\texorpdfstring{exists()}{exists()}}
+{\footnotesize\ttfamily \label{classsolar__test_1_1_temporary_directory_a6c8eec7de737684c3531a7b956530b98} 
+bool solar\+\_\+test\+::\+Temporary\+Directory\+::exists (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classsolar__test_1_1_temporary_directory_a6c8eec7de737684c3531a7b956530b98_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classsolar__test_1_1_temporary_directory_a83d7eaf0e0d40125f2107b4fff3c79da}\index{solar\_test::TemporaryDirectory@{solar\_test::TemporaryDirectory}!operator=@{operator=}}
+\index{operator=@{operator=}!solar\_test::TemporaryDirectory@{solar\_test::TemporaryDirectory}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classsolar__test_1_1_temporary_directory_a83d7eaf0e0d40125f2107b4fff3c79da} 
+\mbox{\hyperlink{classsolar__test_1_1_temporary_directory}{Temporary\+Directory}} \& solar\+\_\+test\+::\+Temporary\+Directory\+::operator= (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classsolar__test_1_1_temporary_directory}{Temporary\+Directory}} \&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classsolar__test_1_1_temporary_directory_a83d7eaf0e0d40125f2107b4fff3c79da_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classsolar__test_1_1_temporary_directory_a6f77ff2d33ebd53cbbc32e8fae87355e}\index{solar\_test::TemporaryDirectory@{solar\_test::TemporaryDirectory}!operator=@{operator=}}
+\index{operator=@{operator=}!solar\_test::TemporaryDirectory@{solar\_test::TemporaryDirectory}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classsolar__test_1_1_temporary_directory_a6f77ff2d33ebd53cbbc32e8fae87355e} 
+\mbox{\hyperlink{classsolar__test_1_1_temporary_directory}{Temporary\+Directory}} \& solar\+\_\+test\+::\+Temporary\+Directory\+::operator= (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classsolar__test_1_1_temporary_directory}{Temporary\+Directory}} \&\&}]{other}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classsolar__test_1_1_temporary_directory_a6f77ff2d33ebd53cbbc32e8fae87355e_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classsolar__test_1_1_temporary_directory_a9f9e1edbb4f1766ec9a16c9b660c3ed1}\index{solar\_test::TemporaryDirectory@{solar\_test::TemporaryDirectory}!path@{path}}
+\index{path@{path}!solar\_test::TemporaryDirectory@{solar\_test::TemporaryDirectory}}
+\doxysubsubsection{\texorpdfstring{path()}{path()}}
+{\footnotesize\ttfamily \label{classsolar__test_1_1_temporary_directory_a9f9e1edbb4f1766ec9a16c9b660c3ed1} 
+std\+::string solar\+\_\+test\+::\+Temporary\+Directory\+::path (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classsolar__test_1_1_temporary_directory_a9f9e1edbb4f1766ec9a16c9b660c3ed1_icgraph}
+\end{center}
+\end{figure}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+test/include/solar\+\_\+test/framework/\mbox{\hyperlink{test__data__manager_8hpp}{test\+\_\+data\+\_\+manager.\+hpp}}\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+test/src/framework/\mbox{\hyperlink{test__data__manager_8cpp}{test\+\_\+data\+\_\+manager.\+cpp}}\end{DoxyCompactItemize}

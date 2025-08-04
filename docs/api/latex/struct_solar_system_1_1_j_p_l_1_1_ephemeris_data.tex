@@ -1,0 +1,104 @@
+\doxysection{Solar\+System\+::JPL\+::Ephemeris\+Data Struct Reference}
+\hypertarget{struct_solar_system_1_1_j_p_l_1_1_ephemeris_data}{}\label{struct_solar_system_1_1_j_p_l_1_1_ephemeris_data}\index{SolarSystem::JPL::EphemerisData@{SolarSystem::JPL::EphemerisData}}
+
+
+Ephemeris data for a single celestial body.  
+
+
+
+
+{\ttfamily \#include $<$jpl\+\_\+client.\+hpp$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Solar\+System\+::\+Bodies\+::\+Celestial\+Body}} \mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_ephemeris_data_a9ea3098087bde879230c9fc1019a3436}{to\+\_\+celestial\+\_\+body}} () const
+\begin{DoxyCompactList}\small\item\em Convert to modern Celestial\+Body. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::string \mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_ephemeris_data_a3d049b8d8c907ea2f930a595c9cccb40}{body\+\_\+name}}
+\item 
+int \mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_ephemeris_data_aa6a53a3f9c040f90b74c1428e36cd087}{jpl\+\_\+id}}
+\item 
+std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point \mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_ephemeris_data_a805cbafb3c1ec5aa375d264607b3f136}{epoch}}
+\item 
+\mbox{\hyperlink{namespace_solar_system_1_1_math_a58b613f1c9974f449ee706cd131b1f41}{Solar\+System\+::\+Math\+::\+Vector3d}} \mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_ephemeris_data_aa15d180a6b573e338b7f36cb62510ecd}{position}}
+\item 
+\mbox{\hyperlink{namespace_solar_system_1_1_math_a58b613f1c9974f449ee706cd131b1f41}{Solar\+System\+::\+Math\+::\+Vector3d}} \mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_ephemeris_data_ad244695378ae06eac6e47f14551ecca6}{velocity}}
+\item 
+long double \mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_ephemeris_data_a341032b4e8a52feaf94cb6ebbea90a9d}{mass}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Ephemeris data for a single celestial body. 
+
+\label{doc-func-members}
+\Hypertarget{struct_solar_system_1_1_j_p_l_1_1_ephemeris_data_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{struct_solar_system_1_1_j_p_l_1_1_ephemeris_data_a9ea3098087bde879230c9fc1019a3436}\index{SolarSystem::JPL::EphemerisData@{SolarSystem::JPL::EphemerisData}!to\_celestial\_body@{to\_celestial\_body}}
+\index{to\_celestial\_body@{to\_celestial\_body}!SolarSystem::JPL::EphemerisData@{SolarSystem::JPL::EphemerisData}}
+\doxysubsubsection{\texorpdfstring{to\_celestial\_body()}{to\_celestial\_body()}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_j_p_l_1_1_ephemeris_data_a9ea3098087bde879230c9fc1019a3436} 
+\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Solar\+System\+::\+Bodies\+::\+Celestial\+Body}} Solar\+System\+::\+JPL\+::\+Ephemeris\+Data\+::to\+\_\+celestial\+\_\+body (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Convert to modern Celestial\+Body. 
+
+Convert ephemeris data to celestial body. Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{struct_solar_system_1_1_j_p_l_1_1_ephemeris_data_a9ea3098087bde879230c9fc1019a3436_cgraph}
+\end{center}
+\end{figure}
+
+
+\label{doc-variable-members}
+\Hypertarget{struct_solar_system_1_1_j_p_l_1_1_ephemeris_data_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{struct_solar_system_1_1_j_p_l_1_1_ephemeris_data_a3d049b8d8c907ea2f930a595c9cccb40}\index{SolarSystem::JPL::EphemerisData@{SolarSystem::JPL::EphemerisData}!body\_name@{body\_name}}
+\index{body\_name@{body\_name}!SolarSystem::JPL::EphemerisData@{SolarSystem::JPL::EphemerisData}}
+\doxysubsubsection{\texorpdfstring{body\_name}{body\_name}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_j_p_l_1_1_ephemeris_data_a3d049b8d8c907ea2f930a595c9cccb40} 
+std\+::string Solar\+System\+::\+JPL\+::\+Ephemeris\+Data\+::body\+\_\+name}
+
+\Hypertarget{struct_solar_system_1_1_j_p_l_1_1_ephemeris_data_a805cbafb3c1ec5aa375d264607b3f136}\index{SolarSystem::JPL::EphemerisData@{SolarSystem::JPL::EphemerisData}!epoch@{epoch}}
+\index{epoch@{epoch}!SolarSystem::JPL::EphemerisData@{SolarSystem::JPL::EphemerisData}}
+\doxysubsubsection{\texorpdfstring{epoch}{epoch}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_j_p_l_1_1_ephemeris_data_a805cbafb3c1ec5aa375d264607b3f136} 
+std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point Solar\+System\+::\+JPL\+::\+Ephemeris\+Data\+::epoch}
+
+\Hypertarget{struct_solar_system_1_1_j_p_l_1_1_ephemeris_data_aa6a53a3f9c040f90b74c1428e36cd087}\index{SolarSystem::JPL::EphemerisData@{SolarSystem::JPL::EphemerisData}!jpl\_id@{jpl\_id}}
+\index{jpl\_id@{jpl\_id}!SolarSystem::JPL::EphemerisData@{SolarSystem::JPL::EphemerisData}}
+\doxysubsubsection{\texorpdfstring{jpl\_id}{jpl\_id}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_j_p_l_1_1_ephemeris_data_aa6a53a3f9c040f90b74c1428e36cd087} 
+int Solar\+System\+::\+JPL\+::\+Ephemeris\+Data\+::jpl\+\_\+id}
+
+\Hypertarget{struct_solar_system_1_1_j_p_l_1_1_ephemeris_data_a341032b4e8a52feaf94cb6ebbea90a9d}\index{SolarSystem::JPL::EphemerisData@{SolarSystem::JPL::EphemerisData}!mass@{mass}}
+\index{mass@{mass}!SolarSystem::JPL::EphemerisData@{SolarSystem::JPL::EphemerisData}}
+\doxysubsubsection{\texorpdfstring{mass}{mass}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_j_p_l_1_1_ephemeris_data_a341032b4e8a52feaf94cb6ebbea90a9d} 
+long double Solar\+System\+::\+JPL\+::\+Ephemeris\+Data\+::mass}
+
+\Hypertarget{struct_solar_system_1_1_j_p_l_1_1_ephemeris_data_aa15d180a6b573e338b7f36cb62510ecd}\index{SolarSystem::JPL::EphemerisData@{SolarSystem::JPL::EphemerisData}!position@{position}}
+\index{position@{position}!SolarSystem::JPL::EphemerisData@{SolarSystem::JPL::EphemerisData}}
+\doxysubsubsection{\texorpdfstring{position}{position}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_j_p_l_1_1_ephemeris_data_aa15d180a6b573e338b7f36cb62510ecd} 
+\mbox{\hyperlink{namespace_solar_system_1_1_math_a58b613f1c9974f449ee706cd131b1f41}{Solar\+System\+::\+Math\+::\+Vector3d}} Solar\+System\+::\+JPL\+::\+Ephemeris\+Data\+::position}
+
+\Hypertarget{struct_solar_system_1_1_j_p_l_1_1_ephemeris_data_ad244695378ae06eac6e47f14551ecca6}\index{SolarSystem::JPL::EphemerisData@{SolarSystem::JPL::EphemerisData}!velocity@{velocity}}
+\index{velocity@{velocity}!SolarSystem::JPL::EphemerisData@{SolarSystem::JPL::EphemerisData}}
+\doxysubsubsection{\texorpdfstring{velocity}{velocity}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_j_p_l_1_1_ephemeris_data_ad244695378ae06eac6e47f14551ecca6} 
+\mbox{\hyperlink{namespace_solar_system_1_1_math_a58b613f1c9974f449ee706cd131b1f41}{Solar\+System\+::\+Math\+::\+Vector3d}} Solar\+System\+::\+JPL\+::\+Ephemeris\+Data\+::velocity}
+
+
+
+The documentation for this struct was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+jpl/include/solar\+\_\+jpl/\mbox{\hyperlink{jpl__client_8hpp}{jpl\+\_\+client.\+hpp}}\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+jpl/src/\mbox{\hyperlink{jpl__client_8cpp}{jpl\+\_\+client.\+cpp}}\end{DoxyCompactItemize}

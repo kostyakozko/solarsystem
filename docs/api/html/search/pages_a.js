@@ -6,5 +6,5 @@ var searchData=
   ['features_20overview_3',['🌟 Features Overview',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md5',1,'']]],
   ['fetch_20jpl_20data_4',['&lt;b&gt;&quot;Failed to fetch JPL data&quot;&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md63',1,'']]],
   ['flags_5',['&lt;b&gt;Compilation Flags&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md46',1,'']]],
-  ['future_20considerations_20🌟_6',['&lt;b&gt;Future Considerations&lt;/b&gt; 🌟',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md80',1,'']]]
+  ['future_20considerations_20🌟_6',['&lt;b&gt;Future Considerations&lt;/b&gt; 🌟',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md81',1,'']]]
 ];

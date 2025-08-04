@@ -1,0 +1,38 @@
+<map id="SolarSystem::Bodies::BodyFactory::has_current_ephemeris_data" name="SolarSystem::Bodies::BodyFactory::has_current_ephemeris_data">
+<area shape="rect" id="Node000001" title=" " alt="" coords="550,251,730,307"/>
+<area shape="rect" id="Node000002" href="$class_data_management_step.html#a290fff50cbba93e3ec5f50695b4a0fa8" title="Execute the workflow step." alt="" coords="337,5,488,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="620,238,601,196,574,149,541,102,501,61,482,49,484,44,504,57,545,98,579,146,605,193,625,235"/>
+<area shape="rect" id="Node000003" href="$class_solar_system_a_p_i.html#a0f903ec3a89281e8e8bcb1b100774ca6" title="Get system status." alt="" coords="330,71,495,111"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="610,240,563,181,533,151,501,125,481,114,484,110,504,121,537,147,567,177,614,237"/>
+<area shape="rect" id="Node000005" href="$class_solar_system_1_1_bodies_1_1_body_factory.html#a199966bfeeb87cc771b0f0fe4463cd42" title=" " alt="" coords="323,135,502,191"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="569,246,468,194,470,189,571,241"/>
+<area shape="rect" id="Node000007" href="$solar__system_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title="Main application entry point &#45; OPTIMIZED FOR PERFORMANCE." alt="" coords="164,221,214,246"/>
+<area shape="poly" id="edge9_Node000001_Node000007" title=" " alt="" coords="535,261,502,256,338,242,214,237,214,232,338,237,503,251,535,256"/>
+<area shape="rect" id="Node000010" href="$class_launcher_u_i.html#a718fb64eda4f608ea95accf35188ec41" title="Print system status." alt="" coords="327,316,498,357"/>
+<area shape="poly" id="edge10_Node000001_Node000010" title=" " alt="" coords="536,308,497,318,495,313,534,303"/>
+<area shape="rect" id="Node000012" href="$solar__system_8cpp.html#a0a190e06a4d8642088546e14b6a1667b" title="Run HIGH&#45;PERFORMANCE simulation matching legacy speed." alt="" coords="328,266,497,292"/>
+<area shape="poly" id="edge12_Node000001_Node000012" title=" " alt="" coords="535,282,497,282,497,276,535,276"/>
+<area shape="rect" id="Node000013" href="$class_data_fetcher.html#ae5ca21c3de61bca83820fc3dcb6dce8f" title="Show current cache status with modern formatting." alt="" coords="325,381,500,406"/>
+<area shape="poly" id="edge14_Node000001_Node000013" title=" " alt="" coords="592,318,550,346,503,371,471,383,470,378,501,366,547,341,589,314"/>
+<area shape="rect" id="Node000015" href="$class_data_fetcher.html#a756d8cf8a7756343b9f1a1c9054fbd0a" title="Update ephemeris data with progress monitoring." alt="" coords="103,428,275,453"/>
+<area shape="poly" id="edge18_Node000001_Node000015" title=" " alt="" coords="614,321,567,376,537,401,503,421,447,441,387,451,328,455,275,453,275,448,328,449,386,446,445,436,501,417,534,397,564,372,610,318"/>
+<area shape="rect" id="Node000016" href="$class_data_fetcher.html#a5c2ef3b54efae0abd740b9d8a0d8e27f" title="Validate cache integrity with detailed reporting." alt="" coords="116,477,262,518"/>
+<area shape="poly" id="edge19_Node000001_Node000016" title=" " alt="" coords="622,322,602,357,575,395,542,431,504,460,444,486,380,500,317,506,262,506,262,501,317,501,379,495,442,481,501,455,539,427,571,391,597,354,617,319"/>
+<area shape="rect" id="Node000004" href="$web__server_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title="Modern main function with structured error handling." alt="" coords="164,73,214,98"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="315,91,214,89,214,84,315,86"/>
+<area shape="rect" id="Node000006" href="$class_auto_fetch_step.html#ad0c203ea5f21d311667deadbeeb3bb79" title="Execute the workflow step." alt="" coords="108,122,270,148"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="307,153,270,148,271,143,308,147"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="317,199,276,212,215,230,213,225,274,207,315,194"/>
+<area shape="rect" id="Node000008" href="$class_realtime_monitor.html#a51cfd94fd06639f00d1a1af4e88cbf40" title="Start real&#45;time monitoring." alt="" coords="114,172,264,197"/>
+<area shape="poly" id="edge7_Node000005_Node000008" title=" " alt="" coords="308,176,265,180,264,174,307,170"/>
+<area shape="rect" id="Node000009" href="$realtime_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title="Modern main function with structured error handling." alt="" coords="5,172,55,197"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="98,187,55,187,55,182,98,182"/>
+<area shape="rect" id="Node000011" href="$launcher_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title="Modern main function with structured workflow execution." alt="" coords="164,324,214,349"/>
+<area shape="poly" id="edge11_Node000010_Node000011" title=" " alt="" coords="311,339,214,339,214,334,311,334"/>
+<area shape="poly" id="edge13_Node000012_Node000007" title=" " alt="" coords="330,265,214,241,215,236,331,260"/>
+<area shape="rect" id="Node000014" href="$fetch_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title="Modern main function using RAII and structured error handling." alt="" coords="5,428,55,453"/>
+<area shape="poly" id="edge15_Node000013_Node000014" title=" " alt="" coords="310,396,209,402,103,418,56,433,54,427,102,412,209,397,309,391"/>
+<area shape="poly" id="edge16_Node000013_Node000015" title=" " alt="" coords="333,413,255,429,253,424,332,408"/>
+<area shape="poly" id="edge17_Node000015_Node000014" title=" " alt="" coords="87,443,55,443,55,438,87,438"/>
+<area shape="poly" id="edge20_Node000016_Node000014" title=" " alt="" coords="115,474,54,452,56,447,117,469"/>
+</map>

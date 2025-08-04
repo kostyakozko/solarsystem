@@ -1,0 +1,7 @@
+<map id="SolarSystem::Core::Builders::SimulationBuilder::build" name="SolarSystem::Core::Builders::SimulationBuilder::build">
+<area shape="rect" id="Node000001" title="Build the configured simulation engine." alt="" coords="5,45,183,101"/>
+<area shape="rect" id="Node000002" href="$class_solar_system_1_1_core_1_1_builders_1_1_simulation_builder.html#a15d78a48d83d7d811e725c5cc87130a3" title="Get current configuration summary." alt="" coords="231,5,408,61"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="182,55,215,49,216,54,183,60"/>
+<area shape="rect" id="Node000003" href="$class_solar_system_1_1_core_1_1_builders_1_1_simulation_builder.html#a281574809cd93ebaf15410e6e9a8f178" title="Validate current configuration." alt="" coords="231,85,408,141"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="183,86,216,92,215,97,182,91"/>
+</map>

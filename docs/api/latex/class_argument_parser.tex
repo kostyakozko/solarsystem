@@ -1,0 +1,115 @@
+\doxysection{Argument\+Parser Class Reference}
+\hypertarget{class_argument_parser}{}\label{class_argument_parser}\index{ArgumentParser@{ArgumentParser}}
+
+
+Modern command-\/line parser using structured approach.  
+
+
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static std\+::optional$<$ \mbox{\hyperlink{struct_fetch_options}{Fetch\+Options}} $>$ \mbox{\hyperlink{class_argument_parser_af9aac63f65780f58657d18b0bf762cb2}{parse}} (int argc, char \texorpdfstring{$\ast$}{*}argv\mbox{[}$\,$\mbox{]})
+\item 
+static void \mbox{\hyperlink{class_argument_parser_ab510079888bb5a8ec39c7b8c8dbc968a}{print\+\_\+usage}} (std\+::string\+\_\+view program\+\_\+name)
+\item 
+static std\+::optional$<$ \mbox{\hyperlink{struct_launcher_config}{Launcher\+Config}} $>$ \mbox{\hyperlink{class_argument_parser_a6aaeba947380be848d1a30d9ffdc83d9}{parse}} (int argc, char \texorpdfstring{$\ast$}{*}argv\mbox{[}$\,$\mbox{]})
+\item 
+static void \mbox{\hyperlink{class_argument_parser_ab510079888bb5a8ec39c7b8c8dbc968a}{print\+\_\+usage}} (std\+::string\+\_\+view program\+\_\+name)
+\item 
+static std\+::optional$<$ \mbox{\hyperlink{struct_web_server_config}{Web\+Server\+Config}} $>$ \mbox{\hyperlink{class_argument_parser_ac28da7e051e3c49f1894309810d6b856}{parse}} (int argc, char \texorpdfstring{$\ast$}{*}argv\mbox{[}$\,$\mbox{]})
+\item 
+static void \mbox{\hyperlink{class_argument_parser_ab510079888bb5a8ec39c7b8c8dbc968a}{print\+\_\+usage}} (std\+::string\+\_\+view program\+\_\+name)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Modern command-\/line parser using structured approach. 
+
+Modern command-\/line argument parser. 
+
+\label{doc-func-members}
+\Hypertarget{class_argument_parser_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_argument_parser_af9aac63f65780f58657d18b0bf762cb2}\index{ArgumentParser@{ArgumentParser}!parse@{parse}}
+\index{parse@{parse}!ArgumentParser@{ArgumentParser}}
+\doxysubsubsection{\texorpdfstring{parse()}{parse()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily \label{class_argument_parser_af9aac63f65780f58657d18b0bf762cb2} 
+std\+::optional$<$ \mbox{\hyperlink{struct_fetch_options}{Fetch\+Options}} $>$ Argument\+Parser\+::parse (\begin{DoxyParamCaption}\item[{int}]{argc}{, }\item[{char \texorpdfstring{$\ast$}{*}}]{argv}{\mbox{[}$\,$\mbox{]}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}, {\ttfamily [nodiscard]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=346pt]{class_argument_parser_af9aac63f65780f58657d18b0bf762cb2_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=270pt]{class_argument_parser_af9aac63f65780f58657d18b0bf762cb2_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_argument_parser_a6aaeba947380be848d1a30d9ffdc83d9}\index{ArgumentParser@{ArgumentParser}!parse@{parse}}
+\index{parse@{parse}!ArgumentParser@{ArgumentParser}}
+\doxysubsubsection{\texorpdfstring{parse()}{parse()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily \label{class_argument_parser_a6aaeba947380be848d1a30d9ffdc83d9} 
+std\+::optional$<$ \mbox{\hyperlink{struct_launcher_config}{Launcher\+Config}} $>$ Argument\+Parser\+::parse (\begin{DoxyParamCaption}\item[{int}]{argc}{, }\item[{char \texorpdfstring{$\ast$}{*}}]{argv}{\mbox{[}$\,$\mbox{]}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}, {\ttfamily [nodiscard]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=330pt]{class_argument_parser_a6aaeba947380be848d1a30d9ffdc83d9_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_argument_parser_ac28da7e051e3c49f1894309810d6b856}\index{ArgumentParser@{ArgumentParser}!parse@{parse}}
+\index{parse@{parse}!ArgumentParser@{ArgumentParser}}
+\doxysubsubsection{\texorpdfstring{parse()}{parse()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily \label{class_argument_parser_ac28da7e051e3c49f1894309810d6b856} 
+std\+::optional$<$ \mbox{\hyperlink{struct_web_server_config}{Web\+Server\+Config}} $>$ Argument\+Parser\+::parse (\begin{DoxyParamCaption}\item[{int}]{argc}{, }\item[{char \texorpdfstring{$\ast$}{*}}]{argv}{\mbox{[}$\,$\mbox{]}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}, {\ttfamily [nodiscard]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=345pt]{class_argument_parser_ac28da7e051e3c49f1894309810d6b856_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_argument_parser_ab510079888bb5a8ec39c7b8c8dbc968a}\index{ArgumentParser@{ArgumentParser}!print\_usage@{print\_usage}}
+\index{print\_usage@{print\_usage}!ArgumentParser@{ArgumentParser}}
+\doxysubsubsection{\texorpdfstring{print\_usage()}{print\_usage()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily \label{class_argument_parser_ab510079888bb5a8ec39c7b8c8dbc968a} 
+void Argument\+Parser\+::print\+\_\+usage (\begin{DoxyParamCaption}\item[{std\+::string\+\_\+view}]{program\+\_\+name}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=264pt]{class_argument_parser_ab510079888bb5a8ec39c7b8c8dbc968a_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_argument_parser_ab510079888bb5a8ec39c7b8c8dbc968a}\index{ArgumentParser@{ArgumentParser}!print\_usage@{print\_usage}}
+\index{print\_usage@{print\_usage}!ArgumentParser@{ArgumentParser}}
+\doxysubsubsection{\texorpdfstring{print\_usage()}{print\_usage()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily \label{class_argument_parser_ab510079888bb5a8ec39c7b8c8dbc968a} 
+void Argument\+Parser\+::print\+\_\+usage (\begin{DoxyParamCaption}\item[{std\+::string\+\_\+view}]{program\+\_\+name}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+\Hypertarget{class_argument_parser_ab510079888bb5a8ec39c7b8c8dbc968a}\index{ArgumentParser@{ArgumentParser}!print\_usage@{print\_usage}}
+\index{print\_usage@{print\_usage}!ArgumentParser@{ArgumentParser}}
+\doxysubsubsection{\texorpdfstring{print\_usage()}{print\_usage()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily \label{class_argument_parser_ab510079888bb5a8ec39c7b8c8dbc968a} 
+void Argument\+Parser\+::print\+\_\+usage (\begin{DoxyParamCaption}\item[{std\+::string\+\_\+view}]{program\+\_\+name}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/apps/solar\+\_\+system\+\_\+fetch/\mbox{\hyperlink{fetch_8cpp}{fetch.\+cpp}}\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/apps/solar\+\_\+system\+\_\+launcher/\mbox{\hyperlink{launcher_8cpp}{launcher.\+cpp}}\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/apps/solar\+\_\+system\+\_\+web/src/\mbox{\hyperlink{web__server_8cpp}{web\+\_\+server.\+cpp}}\end{DoxyCompactItemize}

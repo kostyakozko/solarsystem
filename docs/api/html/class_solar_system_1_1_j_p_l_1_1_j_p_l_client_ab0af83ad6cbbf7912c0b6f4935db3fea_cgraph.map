@@ -1,0 +1,9 @@
+<map id="SolarSystem::JPL::JPLClient::fetch_bodies_async" name="SolarSystem::JPL::JPLClient::fetch_bodies_async">
+<area shape="rect" id="Node000001" title="Fetch ephemeris data for multiple bodies." alt="" coords="5,71,198,111"/>
+<area shape="rect" id="Node000002" href="$namespace_solar_system_1_1_j_p_l.html#ab3c2444575b2bb169fc9aa27a6fee7c6" title="Helper to get error from failed result." alt="" coords="246,5,399,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="172,68,236,48,237,54,173,73"/>
+<area shape="rect" id="Node000003" href="$namespace_solar_system_1_1_j_p_l.html#a605668a4c434918864026fc3a0216137" title="Helper to get value from successful result." alt="" coords="246,71,399,111"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="198,88,230,88,230,94,198,94"/>
+<area shape="rect" id="Node000004" href="$namespace_solar_system_1_1_j_p_l.html#abb8eb67716801804e9c24e2a80dda44e" title="Helper to check if result is successful." alt="" coords="250,136,395,177"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="173,109,237,128,236,134,172,114"/>
+</map>

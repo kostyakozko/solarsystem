@@ -1,0 +1,15 @@
+<map id="SolarSystem::Core::Builders::BodySelector::essential" name="SolarSystem::Core::Builders::BodySelector::essential">
+<area shape="rect" id="Node000001" title="Include essential bodies (Sun, planets)" alt="" coords="322,81,476,137"/>
+<area shape="rect" id="Node000002" href="$class_simulation_step.html#a1179221d9a08b64d5aba7832972271ca" title="Execute the workflow step." alt="" coords="107,5,270,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="335,76,273,46,239,34,241,29,275,41,338,71"/>
+<area shape="rect" id="Node000003" href="$class_solar_system_a_p_i.html#ae62b5c5789c5e2880871005a9d244471" title="Handle simulation request." alt="" coords="106,55,270,96"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="306,97,270,91,271,86,307,92"/>
+<area shape="rect" id="Node000004" href="$class_launcher_u_i.html#a718fb64eda4f608ea95accf35188ec41" title="Print system status." alt="" coords="103,120,274,161"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="307,125,275,130,274,125,306,120"/>
+<area shape="rect" id="Node000006" href="$class_data_fetcher.html#a5c2ef3b54efae0abd740b9d8a0d8e27f" title="Validate cache integrity with detailed reporting." alt="" coords="115,186,262,226"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="334,146,275,175,246,188,244,183,273,170,332,142"/>
+<area shape="rect" id="Node000005" href="$launcher_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title="Modern main function with structured workflow execution." alt="" coords="5,128,55,154"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="87,144,55,144,55,138,87,138"/>
+<area shape="rect" id="Node000007" href="$fetch_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title="Modern main function using RAII and structured error handling." alt="" coords="5,193,55,219"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="100,209,55,209,55,204,100,204"/>
+</map>

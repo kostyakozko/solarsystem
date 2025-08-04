@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['🙏_20acknowledgments_0',['🙏 Acknowledgments',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md82',1,'']]]
+  ['🔧_0',['&lt;b&gt;Phase 2: Architecture Enhancement (v4.1)&lt;/b&gt; 🔧',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md78',1,'']]],
+  ['🔧_20advanced_20configuration_1',['🔧 Advanced Configuration',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md34',1,'']]]
 ];

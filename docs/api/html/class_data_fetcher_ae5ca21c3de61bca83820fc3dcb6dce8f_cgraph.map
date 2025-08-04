@@ -1,0 +1,32 @@
+<map id="DataFetcher::show_status" name="DataFetcher::show_status">
+<area shape="rect" id="Node000001" title="Show current cache status with modern formatting." alt="" coords="5,232,181,257"/>
+<area shape="rect" id="Node000002" href="$class_solar_system_1_1_core_1_1_builders_1_1_body_selector.html#a755d098574e0f4805925e26d4ebfbbb0" title="Include all available bodies." alt="" coords="238,80,413,121"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="105,229,156,182,190,154,227,130,237,125,239,130,230,135,193,158,159,186,109,233"/>
+<area shape="rect" id="Node000004" href="$class_solar_system_1_1_core_1_1_builders_1_1_body_selector.html#a75a4d0f97fc3314c8b6bb8dd4d17ad7d" title="Get count of selected bodies." alt="" coords="248,144,402,200"/>
+<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="136,228,232,198,234,203,138,234"/>
+<area shape="rect" id="Node000012" href="$class_solar_system_1_1_bodies_1_1_body_factory.html#a2015b71a09ad94d6edfc98c066876d3c" title=" " alt="" coords="229,224,422,265"/>
+<area shape="poly" id="edge14_Node000001_Node000012" title=" " alt="" coords="181,242,213,242,213,247,181,247"/>
+<area shape="rect" id="Node000013" href="$class_solar_system_1_1_bodies_1_1_body_factory.html#aa4afc0501e288c56fdcc9ad0413455a6" title=" " alt="" coords="250,288,401,344"/>
+<area shape="poly" id="edge15_Node000001_Node000013" title=" " alt="" coords="138,255,235,286,234,291,136,260"/>
+<area shape="rect" id="Node000014" href="$class_solar_system_1_1_bodies_1_1_body_factory.html#af5d6d07a8a6ec10ea24be5fe7e03adf1" title=" " alt="" coords="236,368,415,424"/>
+<area shape="poly" id="edge16_Node000001_Node000014" title=" " alt="" coords="109,256,160,302,230,354,238,359,235,363,227,359,157,306,106,260"/>
+<area shape="rect" id="Node000003" href="$class_solar_system_1_1_core_1_1_builders_1_1_body_selector.html#a9d8b58a374f886df340d540f6c91803a" title="Default constructor." alt="" coords="470,72,624,128"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="413,98,454,98,454,103,413,103"/>
+<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="505,72,505,62,513,53,527,48,547,46,570,48,584,55,582,60,569,54,547,51,528,53,516,58,510,64,510,72"/>
+<area shape="poly" id="edge5_Node000004_Node000003" title=" " alt="" coords="402,145,454,128,456,133,404,150"/>
+<area shape="rect" id="Node000005" href="$class_solar_system_1_1_core_1_1_builders_1_1_body_selector.html#a44bb73ba3b645bec61d1e1da1ebea0b5" title="Build the body collection." alt="" coords="470,152,624,208"/>
+<area shape="poly" id="edge6_Node000004_Node000005" title=" " alt="" coords="403,172,455,174,454,180,403,178"/>
+<area shape="rect" id="Node000006" href="$class_solar_system_1_1_bodies_1_1_body_collection.html#a67865f9c5671a4187cb98f3f8720b7b1" title=" " alt="" coords="673,37,854,78"/>
+<area shape="poly" id="edge7_Node000005_Node000006" title=" " alt="" coords="605,150,623,138,637,125,646,113,656,101,671,89,680,83,683,88,674,93,659,105,650,117,641,129,626,142,608,154"/>
+<area shape="rect" id="Node000009" href="$class_solar_system_1_1_bodies_1_1_body_factory.html#aaff11393da75cbe9f81d56cbcc0f39c9" title=" " alt="" coords="672,127,855,167"/>
+<area shape="poly" id="edge10_Node000005_Node000009" title=" " alt="" coords="624,166,657,161,657,166,625,171"/>
+<area shape="rect" id="Node000010" href="$namespace_solar_system_1_1_data.html#abe76ad724994a3f4fbccf7eff93ccdfb" title="Get ALL bodies from fallback data (all 27 bodies)" alt="" coords="683,192,844,233"/>
+<area shape="poly" id="edge12_Node000005_Node000010" title=" " alt="" coords="625,189,668,196,667,201,624,194"/>
+<area shape="rect" id="Node000011" href="$class_solar_system_1_1_bodies_1_1_body_collection.html#aab8db2368ba1d22c6a6496d5fbd44040" title=" " alt="" coords="689,257,838,298"/>
+<area shape="poly" id="edge13_Node000005_Node000011" title=" " alt="" coords="601,206,673,242,690,249,688,254,671,247,598,211"/>
+<area shape="rect" id="Node000007" href="$class_solar_system_1_1_bodies_1_1_body_collection.html#af82b22f9073d1d13df623cae6a22ad8e" title=" " alt="" coords="903,5,1077,46"/>
+<area shape="poly" id="edge8_Node000006_Node000007" title=" " alt="" coords="854,42,887,38,887,43,855,47"/>
+<area shape="rect" id="Node000008" href="$class_solar_system_1_1_bodies_1_1_celestial_body.html#a89dac8f57b8283b90172873399eb924f" title=" " alt="" coords="915,71,1065,111"/>
+<area shape="poly" id="edge9_Node000006_Node000008" title=" " alt="" coords="855,68,900,75,899,80,854,74"/>
+<area shape="poly" id="edge11_Node000009_Node000009" title=" " alt="" coords="723,127,721,117,727,108,742,102,764,100,787,102,801,109,799,113,786,108,763,105,743,107,730,112,726,118,728,125"/>
+</map>

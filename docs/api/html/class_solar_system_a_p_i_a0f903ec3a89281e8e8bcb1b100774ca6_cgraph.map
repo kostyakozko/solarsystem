@@ -1,0 +1,20 @@
+<map id="SolarSystemAPI::handle_status" name="SolarSystemAPI::handle_status">
+<area shape="rect" id="Node000001" title="Get system status." alt="" coords="5,208,170,249"/>
+<area shape="rect" id="Node000002" href="$class_solar_system_1_1_bodies_1_1_body_factory.html#a2015b71a09ad94d6edfc98c066876d3c" title=" " alt="" coords="218,5,411,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="97,206,142,133,176,92,216,56,222,52,225,56,219,60,180,95,146,136,101,209"/>
+<area shape="rect" id="Node000003" href="$class_solar_system_1_1_bodies_1_1_body_factory.html#aa4afc0501e288c56fdcc9ad0413455a6" title=" " alt="" coords="239,70,390,126"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="113,205,160,171,216,135,226,130,228,135,219,140,163,175,116,210"/>
+<area shape="rect" id="Node000004" href="$struct_http_response.html#afa97ee7bf317779f64d653bb46f54ed4" title="Create error response." alt="" coords="245,150,384,176"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="153,205,217,186,245,178,247,183,218,191,155,210"/>
+<area shape="rect" id="Node000006" href="$class_solar_system_1_1_bodies_1_1_body_factory.html#a443470bfec5df1a564b0f33e2f39652f" title=" " alt="" coords="221,200,408,256"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="170,226,205,226,205,231,170,231"/>
+<area shape="rect" id="Node000007" href="$class_solar_system_1_1_bodies_1_1_body_factory.html#a69cb5c8580eecdd8d49b6fb8b44738e0" title=" " alt="" coords="226,280,402,336"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="148,247,220,272,218,277,146,252"/>
+<area shape="rect" id="Node000008" href="$class_solar_system_1_1_bodies_1_1_body_factory.html#af5d6d07a8a6ec10ea24be5fe7e03adf1" title=" " alt="" coords="225,360,404,416"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="109,247,156,296,187,322,219,346,227,351,224,355,216,351,183,326,152,300,105,251"/>
+<area shape="rect" id="Node000009" href="$struct_http_response.html#aea0a4a9dee58b06be578490a8c3c357f" title="Create JSON response." alt="" coords="246,440,383,481"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="99,248,116,286,142,334,176,384,219,426,233,435,230,440,216,430,172,387,137,337,111,289,94,250"/>
+<area shape="rect" id="Node000005" href="$struct_http_response.html#aea837ca194606ed9197c2a4d11ca7296" title="Set JSON content type." alt="" coords="459,300,596,325"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="385,174,412,186,443,208,470,235,511,285,507,288,466,238,440,212,410,191,383,179"/>
+<area shape="poly" id="edge9_Node000009_Node000005" title=" " alt="" coords="382,440,410,426,438,405,464,382,505,336,509,339,468,386,441,410,412,431,385,444"/>
+</map>

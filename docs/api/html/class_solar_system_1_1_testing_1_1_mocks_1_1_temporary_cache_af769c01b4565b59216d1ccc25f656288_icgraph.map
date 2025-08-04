@@ -1,0 +1,10 @@
+<map id="SolarSystem::Testing::Mocks::TemporaryCache::json_cache_file" name="SolarSystem::Testing::Mocks::TemporaryCache::json_cache_file">
+<area shape="rect" id="Node000001" title="Get JSON cache file path." alt="" coords="461,85,636,141"/>
+<area shape="rect" id="Node000002" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_temporary_cache.html#a0a977b7eb3d4c25ae17eba9293b7ad14" title="Get cache file sizes." alt="" coords="238,5,413,61"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="454,82,404,64,406,59,456,77"/>
+<area shape="rect" id="Node000003" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_temporary_cache.html#a30156bb16707343f536ff6a9e3ea2988" title="Check if cache files exist." alt="" coords="238,85,413,141"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="446,116,413,116,413,110,446,110"/>
+<area shape="rect" id="Node000004" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_temporary_cache.html#a27fb30037f516575eb6bcb3b98d7749b" title="Simulate partial corruption." alt="" coords="5,119,190,174"/>
+<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="451,148,413,156,356,162,297,163,190,159,190,154,297,158,355,156,413,151,450,143"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="223,131,191,136,190,130,222,126"/>
+</map>

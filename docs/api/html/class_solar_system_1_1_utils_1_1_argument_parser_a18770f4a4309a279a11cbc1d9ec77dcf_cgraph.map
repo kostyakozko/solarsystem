@@ -1,0 +1,9 @@
+<map id="SolarSystem::Utils::ArgumentParser::add_option" name="SolarSystem::Utils::ArgumentParser::add_option">
+<area shape="rect" id="Node000001" title="Add an option to the parser." alt="" coords="5,77,158,133"/>
+<area shape="rect" id="Node000002" href="$class_solar_system_1_1_utils_1_1_argument_parser.html#a8d1a86d56d5b3dcfa6024c62794557c5" title=" " alt="" coords="206,5,393,61"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="157,77,198,64,200,69,159,83"/>
+<area shape="rect" id="Node000003" href="$class_solar_system_1_1_utils_1_1_option.html#aa71998f77ea680ad960d1caa3639beb2" title=" " alt="" coords="230,85,368,126"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="158,102,214,102,214,108,158,108"/>
+<area shape="rect" id="Node000004" href="$class_solar_system_1_1_utils_1_1_option.html#a8edf092376bb3cf219090c20b131650a" title=" " alt="" coords="228,150,371,191"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="159,125,215,143,214,148,157,131"/>
+</map>

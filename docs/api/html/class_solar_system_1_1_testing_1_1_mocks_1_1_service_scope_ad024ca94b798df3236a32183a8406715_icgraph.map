@@ -1,0 +1,5 @@
+<map id="SolarSystem::Testing::Mocks::ServiceScope::clear" name="SolarSystem::Testing::Mocks::ServiceScope::clear">
+<area shape="rect" id="Node000001" title="Clear all scoped services." alt="" coords="211,5,368,61"/>
+<area shape="rect" id="Node000002" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_service_scope.html#a2b85f1d17779e97da1539fa345c6d238" title="Destructor &#45; cleans up scoped services." alt="" coords="5,5,163,61"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="195,36,163,36,163,30,195,30"/>
+</map>

@@ -1,14 +1,19 @@
 \doxysection{/\+Users/kostiantyn.kozko/tmp/solarsystem/apps/solar\+\_\+system\+\_\+launcher/launcher.cpp File Reference}
 \hypertarget{launcher_8cpp}{}\label{launcher_8cpp}\index{/Users/kostiantyn.kozko/tmp/solarsystem/apps/solar\_system\_launcher/launcher.cpp@{/Users/kostiantyn.kozko/tmp/solarsystem/apps/solar\_system\_launcher/launcher.cpp}}
-{\ttfamily \#include $<$unistd.\+h$>$}\newline
-{\ttfamily \#include $<$cstdlib$>$}\newline
-{\ttfamily \#include $<$cstring$>$}\newline
-{\ttfamily \#include $<$ctime$>$}\newline
+{\ttfamily \#include $<$chrono$>$}\newline
+{\ttfamily \#include $<$filesystem$>$}\newline
+{\ttfamily \#include $<$future$>$}\newline
 {\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$map$>$}\newline
+{\ttfamily \#include $<$memory$>$}\newline
+{\ttfamily \#include $<$optional$>$}\newline
+{\ttfamily \#include $<$sstream$>$}\newline
 {\ttfamily \#include $<$string$>$}\newline
+{\ttfamily \#include $<$string\+\_\+view$>$}\newline
 {\ttfamily \#include $<$vector$>$}\newline
-{\ttfamily \#include "{}args.\+h"{}}\newline
-{\ttfamily \#include "{}jpl\+\_\+data.\+h"{}}\newline
+{\ttfamily \#include "{}solar\+\_\+core/bodies/body\+\_\+factory.\+hpp"{}}\newline
+{\ttfamily \#include "{}solar\+\_\+core/builders/simulation\+\_\+builder.\+hpp"{}}\newline
+{\ttfamily \#include "{}solar\+\_\+utils/logging.\+hpp"{}}\newline
 Include dependency graph for launcher.\+cpp\+:
 \nopagebreak
 \begin{figure}[H]
@@ -20,117 +25,51 @@ Include dependency graph for launcher.\+cpp\+:
 \doxysubsubsection*{Classes}
 \begin{DoxyCompactItemize}
 \item 
-struct \mbox{\hyperlink{struct_launcher_args}{Launcher\+Args}}
-\end{DoxyCompactItemize}
+struct \mbox{\hyperlink{struct_launcher_config}{Launcher\+Config}}
+\begin{DoxyCompactList}\small\item\em Configuration for launcher operations. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_launcher_u_i}{Launcher\+UI}}
+\begin{DoxyCompactList}\small\item\em Modern terminal UI for launcher. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_step_result}{Step\+Result}}
+\begin{DoxyCompactList}\small\item\em Result of a workflow step. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_workflow_step}{Workflow\+Step}}
+\begin{DoxyCompactList}\small\item\em Abstract base class for workflow steps. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_data_management_step}{Data\+Management\+Step}}
+\begin{DoxyCompactList}\small\item\em Data management workflow step. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_auto_fetch_step}{Auto\+Fetch\+Step}}
+\begin{DoxyCompactList}\small\item\em Auto-\/fetch workflow step. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_simulation_step}{Simulation\+Step}}
+\begin{DoxyCompactList}\small\item\em Simulation workflow step. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_workflow_orchestrator}{Workflow\+Orchestrator}}
+\begin{DoxyCompactList}\small\item\em Modern workflow orchestrator. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_workflow_factory}{Workflow\+Factory}}
+\begin{DoxyCompactList}\small\item\em Factory for creating standard workflows. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_argument_parser}{Argument\+Parser}}
+\begin{DoxyCompactList}\small\item\em Modern command-\/line parser using structured approach. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-void \mbox{\hyperlink{launcher_8cpp_a6e6c36841033a2432d28c44cffa851ed}{print\+\_\+launcher\+\_\+usage}} (const char \texorpdfstring{$\ast$}{*}program\+\_\+name)
-\item 
-bool \mbox{\hyperlink{launcher_8cpp_a93ada52aaf68491a9a32a8ecdb45cf43}{parse\+\_\+launcher\+\_\+args}} (int argc, const char \texorpdfstring{$\ast$}{*}const argv\mbox{[}$\,$\mbox{]}, \mbox{\hyperlink{struct_launcher_args}{Launcher\+Args}} \&args)
-\item 
-std\+::string \mbox{\hyperlink{launcher_8cpp_a306537a9be4f0d2099c1bc99561a9564}{get\+\_\+executable\+\_\+path}} ()
-\item 
-int \mbox{\hyperlink{launcher_8cpp_a0777aaf440764d41242d9f35b302448a}{execute\+\_\+command}} (const std\+::string \&command, bool quiet=false)
-\item 
-void \mbox{\hyperlink{launcher_8cpp_a773847ae9fdde81aa8801edb82aedb4c}{print\+\_\+system\+\_\+status}} ()
-\item 
-int \mbox{\hyperlink{launcher_8cpp_a814244b02f6701fd8ead246678bb3dae}{main}} (int argc, const char \texorpdfstring{$\ast$}{*}const argv\mbox{[}$\,$\mbox{]})
-\end{DoxyCompactItemize}
+int \mbox{\hyperlink{launcher_8cpp_a0ddf1224851353fc92bfbff6f499fa97}{main}} (int argc, char \texorpdfstring{$\ast$}{*}argv\mbox{[}$\,$\mbox{]})
+\begin{DoxyCompactList}\small\item\em Modern main function with structured workflow execution. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \label{doc-func-members}
 \Hypertarget{launcher_8cpp_doc-func-members}
 \doxysubsection{Function Documentation}
-\Hypertarget{launcher_8cpp_a0777aaf440764d41242d9f35b302448a}\index{launcher.cpp@{launcher.cpp}!execute\_command@{execute\_command}}
-\index{execute\_command@{execute\_command}!launcher.cpp@{launcher.cpp}}
-\doxysubsubsection{\texorpdfstring{execute\_command()}{execute\_command()}}
-{\footnotesize\ttfamily \label{launcher_8cpp_a0777aaf440764d41242d9f35b302448a} 
-int execute\+\_\+command (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{command}{, }\item[{bool}]{quiet}{ = {\ttfamily false}}\end{DoxyParamCaption})}
-
-Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=252pt]{launcher_8cpp_a0777aaf440764d41242d9f35b302448a_icgraph}
-\end{center}
-\end{figure}
-\Hypertarget{launcher_8cpp_a306537a9be4f0d2099c1bc99561a9564}\index{launcher.cpp@{launcher.cpp}!get\_executable\_path@{get\_executable\_path}}
-\index{get\_executable\_path@{get\_executable\_path}!launcher.cpp@{launcher.cpp}}
-\doxysubsubsection{\texorpdfstring{get\_executable\_path()}{get\_executable\_path()}}
-{\footnotesize\ttfamily \label{launcher_8cpp_a306537a9be4f0d2099c1bc99561a9564} 
-std\+::string get\+\_\+executable\+\_\+path (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
-
-Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=259pt]{launcher_8cpp_a306537a9be4f0d2099c1bc99561a9564_icgraph}
-\end{center}
-\end{figure}
-\Hypertarget{launcher_8cpp_a814244b02f6701fd8ead246678bb3dae}\index{launcher.cpp@{launcher.cpp}!main@{main}}
+\Hypertarget{launcher_8cpp_a0ddf1224851353fc92bfbff6f499fa97}\index{launcher.cpp@{launcher.cpp}!main@{main}}
 \index{main@{main}!launcher.cpp@{launcher.cpp}}
 \doxysubsubsection{\texorpdfstring{main()}{main()}}
-{\footnotesize\ttfamily \label{launcher_8cpp_a814244b02f6701fd8ead246678bb3dae} 
-int main (\begin{DoxyParamCaption}\item[{int}]{argc}{, }\item[{const char \texorpdfstring{$\ast$}{*}const}]{argv}{\mbox{[}$\,$\mbox{]}}\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{launcher_8cpp_a0ddf1224851353fc92bfbff6f499fa97} 
+int main (\begin{DoxyParamCaption}\item[{int}]{argc}{, }\item[{char \texorpdfstring{$\ast$}{*}}]{argv}{\mbox{[}$\,$\mbox{]}}\end{DoxyParamCaption})}
+
+
+
+Modern main function with structured workflow execution. 
 
 Here is the call graph for this function\+:
 \nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=350pt]{launcher_8cpp_a814244b02f6701fd8ead246678bb3dae_cgraph}
-\end{center}
-\end{figure}
-\Hypertarget{launcher_8cpp_a93ada52aaf68491a9a32a8ecdb45cf43}\index{launcher.cpp@{launcher.cpp}!parse\_launcher\_args@{parse\_launcher\_args}}
-\index{parse\_launcher\_args@{parse\_launcher\_args}!launcher.cpp@{launcher.cpp}}
-\doxysubsubsection{\texorpdfstring{parse\_launcher\_args()}{parse\_launcher\_args()}}
-{\footnotesize\ttfamily \label{launcher_8cpp_a93ada52aaf68491a9a32a8ecdb45cf43} 
-bool parse\+\_\+launcher\+\_\+args (\begin{DoxyParamCaption}\item[{int}]{argc}{, }\item[{const char \texorpdfstring{$\ast$}{*}const}]{argv}{\mbox{[}$\,$\mbox{]}, }\item[{\mbox{\hyperlink{struct_launcher_args}{Launcher\+Args}} \&}]{args}{}\end{DoxyParamCaption})}
-
-Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=259pt]{launcher_8cpp_a93ada52aaf68491a9a32a8ecdb45cf43_icgraph}
-\end{center}
-\end{figure}
-\Hypertarget{launcher_8cpp_a6e6c36841033a2432d28c44cffa851ed}\index{launcher.cpp@{launcher.cpp}!print\_launcher\_usage@{print\_launcher\_usage}}
-\index{print\_launcher\_usage@{print\_launcher\_usage}!launcher.cpp@{launcher.cpp}}
-\doxysubsubsection{\texorpdfstring{print\_launcher\_usage()}{print\_launcher\_usage()}}
-{\footnotesize\ttfamily \label{launcher_8cpp_a6e6c36841033a2432d28c44cffa851ed} 
-void print\+\_\+launcher\+\_\+usage (\begin{DoxyParamCaption}\item[{const char \texorpdfstring{$\ast$}{*}}]{program\+\_\+name}{}\end{DoxyParamCaption})}
-
-Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=261pt]{launcher_8cpp_a6e6c36841033a2432d28c44cffa851ed_icgraph}
-\end{center}
-\end{figure}
-\Hypertarget{launcher_8cpp_a773847ae9fdde81aa8801edb82aedb4c}\index{launcher.cpp@{launcher.cpp}!print\_system\_status@{print\_system\_status}}
-\index{print\_system\_status@{print\_system\_status}!launcher.cpp@{launcher.cpp}}
-\doxysubsubsection{\texorpdfstring{print\_system\_status()}{print\_system\_status()}}
-{\footnotesize\ttfamily \label{launcher_8cpp_a773847ae9fdde81aa8801edb82aedb4c} 
-void print\+\_\+system\+\_\+status (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
-
-Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{launcher_8cpp_a773847ae9fdde81aa8801edb82aedb4c_cgraph}
-\end{center}
-\end{figure}
-Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=258pt]{launcher_8cpp_a773847ae9fdde81aa8801edb82aedb4c_icgraph}
+\includegraphics[width=350pt]{launcher_8cpp_a0ddf1224851353fc92bfbff6f499fa97_cgraph}
 \end{center}
 \end{figure}

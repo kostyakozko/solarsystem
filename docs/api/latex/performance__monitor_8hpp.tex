@@ -1,0 +1,100 @@
+\doxysection{/\+Users/kostiantyn.kozko/tmp/solarsystem/lib/solar\+\_\+test/include/solar\+\_\+test/benchmarks/performance\+\_\+monitor.hpp File Reference}
+\hypertarget{performance__monitor_8hpp}{}\label{performance__monitor_8hpp}\index{/Users/kostiantyn.kozko/tmp/solarsystem/lib/solar\_test/include/solar\_test/benchmarks/performance\_monitor.hpp@{/Users/kostiantyn.kozko/tmp/solarsystem/lib/solar\_test/include/solar\_test/benchmarks/performance\_monitor.hpp}}
+
+
+Performance monitoring utilities for benchmarking.  
+
+
+{\ttfamily \#include $<$chrono$>$}\newline
+{\ttfamily \#include $<$functional$>$}\newline
+{\ttfamily \#include $<$map$>$}\newline
+{\ttfamily \#include $<$memory$>$}\newline
+{\ttfamily \#include $<$string$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+Include dependency graph for performance\+\_\+monitor.\+hpp\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{performance__monitor_8hpp__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{performance__monitor_8hpp__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_performance_metrics}{Solar\+System\+::\+Testing\+::\+Performance\+Metrics}}
+\begin{DoxyCompactList}\small\item\em System performance metrics. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_memory_tracker}{Solar\+System\+::\+Testing\+::\+Memory\+Tracker}}
+\begin{DoxyCompactList}\small\item\em Memory allocation tracker. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_cpu_monitor}{Solar\+System\+::\+Testing\+::\+Cpu\+Monitor}}
+\begin{DoxyCompactList}\small\item\em CPU usage monitor. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_performance_monitor}{Solar\+System\+::\+Testing\+::\+Performance\+Monitor}}
+\begin{DoxyCompactList}\small\item\em Comprehensive performance monitor. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_performance_monitor_1_1_configuration}{Solar\+System\+::\+Testing\+::\+Performance\+Monitor\+::\+Configuration}}
+\begin{DoxyCompactList}\small\item\em Monitor configuration. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_scoped_performance_monitor}{Solar\+System\+::\+Testing\+::\+Scoped\+Performance\+Monitor}}
+\begin{DoxyCompactList}\small\item\em RAII performance measurement helper. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_performance_profiler}{Solar\+System\+::\+Testing\+::\+Performance\+Profiler}}
+\begin{DoxyCompactList}\small\item\em Performance profiler for detailed analysis. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_performance_profiler_1_1_profile_point}{Solar\+System\+::\+Testing\+::\+Performance\+Profiler\+::\+Profile\+Point}}
+\begin{DoxyCompactList}\small\item\em Profile point data. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespace_solar_system}{Solar\+System}}
+\item 
+namespace \mbox{\hyperlink{namespace_solar_system_1_1_testing}{Solar\+System\+::\+Testing}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{performance__monitor_8hpp_a32ea8068227213462e572413b230f835}{SOLAR\+\_\+\+PROFILE\+\_\+\+SCOPE}}(profiler,  name)
+\item 
+\#define \mbox{\hyperlink{performance__monitor_8hpp_ac86fb8f000ed9e132f7f26e52830f271}{SOLAR\+\_\+\+MONITOR\+\_\+\+SCOPE}}(monitor)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Performance monitoring utilities for benchmarking. 
+
+This header provides utilities for monitoring system performance during benchmarks\+:
+\begin{DoxyItemize}
+\item CPU usage monitoring
+\item Memory allocation tracking
+\item System resource monitoring
+\item Performance profiling helpers 
+\end{DoxyItemize}
+
+\label{doc-define-members}
+\Hypertarget{performance__monitor_8hpp_doc-define-members}
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{performance__monitor_8hpp_ac86fb8f000ed9e132f7f26e52830f271}\index{performance\_monitor.hpp@{performance\_monitor.hpp}!SOLAR\_MONITOR\_SCOPE@{SOLAR\_MONITOR\_SCOPE}}
+\index{SOLAR\_MONITOR\_SCOPE@{SOLAR\_MONITOR\_SCOPE}!performance\_monitor.hpp@{performance\_monitor.hpp}}
+\doxysubsubsection{\texorpdfstring{SOLAR\_MONITOR\_SCOPE}{SOLAR\_MONITOR\_SCOPE}}
+{\footnotesize\ttfamily \label{performance__monitor_8hpp_ac86fb8f000ed9e132f7f26e52830f271} 
+\#define SOLAR\+\_\+\+MONITOR\+\_\+\+SCOPE(\begin{DoxyParamCaption}\item[{}]{monitor}{}\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_scoped_performance_monitor}{SolarSystem::Testing::ScopedPerformanceMonitor}}\ \_monitor\_scope(monitor)}
+
+\end{DoxyCode}
+\Hypertarget{performance__monitor_8hpp_a32ea8068227213462e572413b230f835}\index{performance\_monitor.hpp@{performance\_monitor.hpp}!SOLAR\_PROFILE\_SCOPE@{SOLAR\_PROFILE\_SCOPE}}
+\index{SOLAR\_PROFILE\_SCOPE@{SOLAR\_PROFILE\_SCOPE}!performance\_monitor.hpp@{performance\_monitor.hpp}}
+\doxysubsubsection{\texorpdfstring{SOLAR\_PROFILE\_SCOPE}{SOLAR\_PROFILE\_SCOPE}}
+{\footnotesize\ttfamily \label{performance__monitor_8hpp_a32ea8068227213462e572413b230f835} 
+\#define SOLAR\+\_\+\+PROFILE\+\_\+\+SCOPE(\begin{DoxyParamCaption}\item[{}]{profiler}{, }\item[{}]{name}{}\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{profiler.add\_profile\_point(name)}
+
+\end{DoxyCode}

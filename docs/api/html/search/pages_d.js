@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['improvements_20v3_201_0',['&lt;b&gt;Recent Improvements (v3.1)&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md6',1,'']]],
+  ['improvements_20v4_200_20modern_20c_2020_20architecture_0',['&lt;b&gt;Recent Improvements (v4.0 - Modern C++20 Architecture)&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md6',1,'']]],
   ['in_20web_20interface_1',['&lt;b&gt;Orbital Mechanics in Web Interface&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md33',1,'']]],
   ['individual_20applications_2',['&lt;b&gt;Individual Applications&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md23',1,'']]],
   ['install_3',['&lt;b&gt;Build and Install&lt;/b&gt;',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md18',1,'']]],

@@ -1,0 +1,240 @@
+\doxysection{Solar\+System\+::JPL Namespace Reference}
+\hypertarget{namespace_solar_system_1_1_j_p_l}{}\label{namespace_solar_system_1_1_j_p_l}\index{SolarSystem::JPL@{SolarSystem::JPL}}
+\doxysubsubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_1_1_utils}{Utils}}
+\begin{DoxyCompactList}\small\item\em Utility functions for \doxylink{namespace_solar_system_1_1_j_p_l}{JPL} data management. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_cache_metadata}{Cache\+Metadata}}
+\begin{DoxyCompactList}\small\item\em Cache metadata. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_ephemeris_data}{Ephemeris\+Data}}
+\begin{DoxyCompactList}\small\item\em Ephemeris data for a single celestial body. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_solar_system_1_1_j_p_l_1_1_j_p_l_client}{JPLClient}}
+\begin{DoxyCompactList}\small\item\em Modern \doxylink{namespace_solar_system_1_1_j_p_l}{JPL} HORIZONS API client. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_j_p_l_client_config}{JPLClient\+Config}}
+\begin{DoxyCompactList}\small\item\em Configuration for \doxylink{namespace_solar_system_1_1_j_p_l}{JPL} client. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_solar_system_1_1_j_p_l_1_1_j_p_l_client_factory}{JPLClient\+Factory}}
+\begin{DoxyCompactList}\small\item\em Factory for creating \doxylink{namespace_solar_system_1_1_j_p_l}{JPL} clients. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename T$>$ }\\using \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a1ae7174894acb8c6560a62a72f42d5cd}{JPLResult}} = std\+::variant$<$T, \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0d}{JPLError}}$>$
+\begin{DoxyCompactList}\small\item\em \doxylink{namespace_solar_system_1_1_j_p_l}{JPL} API result type (C++20 compatible) \end{DoxyCompactList}\item 
+using \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a9db0f8fc911088c5455067676ea1e99d}{JPLVoid\+Result}} = std\+::optional$<$\mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0d}{JPLError}}$>$
+\begin{DoxyCompactList}\small\item\em \doxylink{namespace_solar_system_1_1_j_p_l}{JPL} API result type for void operations. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum class \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0d}{JPLError}} \{ \newline
+\mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0da47423b8444592efbe331550c5620e821}{Network\+Error}}
+, \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0dae41199faa7290c167f70f314c5e6c165}{Parse\+Error}}
+, \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0dae01eb350d8cbf3af3eda4650e977649d}{Invalid\+Body}}
+, \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0da12aa93ef47e4f9c9ea04cb38930efb42}{Invalid\+Date}}
+, \newline
+\mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0da50ef7598e6d8e1f977ea8b4687079cbf}{Rate\+Limited}}
+, \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0da7d65c64901711bc2cd2a33ff2641fbe9}{Server\+Error}}
+, \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0da946f64a5553fd1f755f8a4615894cb8a}{Cache\+Error}}
+, \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0da8180c46099f957f51b2bc31f7f0f5c42}{Validation\+Error}}
+ \}
+\begin{DoxyCompactList}\small\item\em JPL HORIZONS API error types. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename T$>$ }\\bool \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_abb8eb67716801804e9c24e2a80dda44e}{is\+\_\+success}} (const \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a1ae7174894acb8c6560a62a72f42d5cd}{JPLResult}}$<$ T $>$ \&result)
+\begin{DoxyCompactList}\small\item\em Helper to check if result is successful. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T$>$ }\\const T \& \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a605668a4c434918864026fc3a0216137}{get\+\_\+value}} (const \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a1ae7174894acb8c6560a62a72f42d5cd}{JPLResult}}$<$ T $>$ \&result)
+\begin{DoxyCompactList}\small\item\em Helper to get value from successful result. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T$>$ }\\\mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0d}{JPLError}} \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_ab3c2444575b2bb169fc9aa27a6fee7c6}{get\+\_\+error}} (const \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a1ae7174894acb8c6560a62a72f42d5cd}{JPLResult}}$<$ T $>$ \&result)
+\begin{DoxyCompactList}\small\item\em Helper to get error from failed result. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a9db0f8fc911088c5455067676ea1e99d}{JPLVoid\+Result}} \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_ac75b9c75d52b5dcc91551918f6e7244f}{success}} ()
+\begin{DoxyCompactList}\small\item\em Helper to create successful void result. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a9db0f8fc911088c5455067676ea1e99d}{JPLVoid\+Result}} \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_aa87d1eae6faed2285995bb3f55e8bf4e}{error}} (\mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0d}{JPLError}} err)
+\begin{DoxyCompactList}\small\item\em Helper to create error void result. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a3319a9e22f392431aaf29e413c839433}{is\+\_\+success}} (const \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a9db0f8fc911088c5455067676ea1e99d}{JPLVoid\+Result}} \&result)
+\begin{DoxyCompactList}\small\item\em Helper to check if void result is successful. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\label{doc-typedef-members}
+\Hypertarget{namespace_solar_system_1_1_j_p_l_doc-typedef-members}
+\doxysubsection{Typedef Documentation}
+\Hypertarget{namespace_solar_system_1_1_j_p_l_a1ae7174894acb8c6560a62a72f42d5cd}\index{SolarSystem::JPL@{SolarSystem::JPL}!JPLResult@{JPLResult}}
+\index{JPLResult@{JPLResult}!SolarSystem::JPL@{SolarSystem::JPL}}
+\doxysubsubsection{\texorpdfstring{JPLResult}{JPLResult}}
+{\footnotesize\ttfamily \label{namespace_solar_system_1_1_j_p_l_a1ae7174894acb8c6560a62a72f42d5cd} 
+template$<$typename T$>$ \\
+using \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a1ae7174894acb8c6560a62a72f42d5cd}{Solar\+System\+::\+JPL\+::\+JPLResult}} = std\+::variant$<$T, \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0d}{JPLError}}$>$}
+
+
+
+\doxylink{namespace_solar_system_1_1_j_p_l}{JPL} API result type (C++20 compatible) 
+
+\Hypertarget{namespace_solar_system_1_1_j_p_l_a9db0f8fc911088c5455067676ea1e99d}\index{SolarSystem::JPL@{SolarSystem::JPL}!JPLVoidResult@{JPLVoidResult}}
+\index{JPLVoidResult@{JPLVoidResult}!SolarSystem::JPL@{SolarSystem::JPL}}
+\doxysubsubsection{\texorpdfstring{JPLVoidResult}{JPLVoidResult}}
+{\footnotesize\ttfamily \label{namespace_solar_system_1_1_j_p_l_a9db0f8fc911088c5455067676ea1e99d} 
+using \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a9db0f8fc911088c5455067676ea1e99d}{Solar\+System\+::\+JPL\+::\+JPLVoid\+Result}} = std\+::optional$<$\mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0d}{JPLError}}$>$}
+
+
+
+\doxylink{namespace_solar_system_1_1_j_p_l}{JPL} API result type for void operations. 
+
+
+
+\label{doc-enum-members}
+\Hypertarget{namespace_solar_system_1_1_j_p_l_doc-enum-members}
+\doxysubsection{Enumeration Type Documentation}
+\Hypertarget{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0d}\index{SolarSystem::JPL@{SolarSystem::JPL}!JPLError@{JPLError}}
+\index{JPLError@{JPLError}!SolarSystem::JPL@{SolarSystem::JPL}}
+\doxysubsubsection{\texorpdfstring{JPLError}{JPLError}}
+{\footnotesize\ttfamily \label{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0d} 
+enum class \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0d}{Solar\+System\+::\+JPL\+::\+JPLError}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+
+
+\doxylink{namespace_solar_system_1_1_j_p_l}{JPL} HORIZONS API error types. 
+
+\begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{NetworkError@{NetworkError}!SolarSystem::JPL@{SolarSystem::JPL}}\index{SolarSystem::JPL@{SolarSystem::JPL}!NetworkError@{NetworkError}}}\Hypertarget{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0da47423b8444592efbe331550c5620e821}\label{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0da47423b8444592efbe331550c5620e821} 
+Network\+Error&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ParseError@{ParseError}!SolarSystem::JPL@{SolarSystem::JPL}}\index{SolarSystem::JPL@{SolarSystem::JPL}!ParseError@{ParseError}}}\Hypertarget{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0dae41199faa7290c167f70f314c5e6c165}\label{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0dae41199faa7290c167f70f314c5e6c165} 
+Parse\+Error&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{InvalidBody@{InvalidBody}!SolarSystem::JPL@{SolarSystem::JPL}}\index{SolarSystem::JPL@{SolarSystem::JPL}!InvalidBody@{InvalidBody}}}\Hypertarget{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0dae01eb350d8cbf3af3eda4650e977649d}\label{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0dae01eb350d8cbf3af3eda4650e977649d} 
+Invalid\+Body&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{InvalidDate@{InvalidDate}!SolarSystem::JPL@{SolarSystem::JPL}}\index{SolarSystem::JPL@{SolarSystem::JPL}!InvalidDate@{InvalidDate}}}\Hypertarget{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0da12aa93ef47e4f9c9ea04cb38930efb42}\label{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0da12aa93ef47e4f9c9ea04cb38930efb42} 
+Invalid\+Date&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{RateLimited@{RateLimited}!SolarSystem::JPL@{SolarSystem::JPL}}\index{SolarSystem::JPL@{SolarSystem::JPL}!RateLimited@{RateLimited}}}\Hypertarget{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0da50ef7598e6d8e1f977ea8b4687079cbf}\label{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0da50ef7598e6d8e1f977ea8b4687079cbf} 
+Rate\+Limited&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ServerError@{ServerError}!SolarSystem::JPL@{SolarSystem::JPL}}\index{SolarSystem::JPL@{SolarSystem::JPL}!ServerError@{ServerError}}}\Hypertarget{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0da7d65c64901711bc2cd2a33ff2641fbe9}\label{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0da7d65c64901711bc2cd2a33ff2641fbe9} 
+Server\+Error&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CacheError@{CacheError}!SolarSystem::JPL@{SolarSystem::JPL}}\index{SolarSystem::JPL@{SolarSystem::JPL}!CacheError@{CacheError}}}\Hypertarget{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0da946f64a5553fd1f755f8a4615894cb8a}\label{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0da946f64a5553fd1f755f8a4615894cb8a} 
+Cache\+Error&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ValidationError@{ValidationError}!SolarSystem::JPL@{SolarSystem::JPL}}\index{SolarSystem::JPL@{SolarSystem::JPL}!ValidationError@{ValidationError}}}\Hypertarget{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0da8180c46099f957f51b2bc31f7f0f5c42}\label{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0da8180c46099f957f51b2bc31f7f0f5c42} 
+Validation\+Error&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\label{doc-func-members}
+\Hypertarget{namespace_solar_system_1_1_j_p_l_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{namespace_solar_system_1_1_j_p_l_aa87d1eae6faed2285995bb3f55e8bf4e}\index{SolarSystem::JPL@{SolarSystem::JPL}!error@{error}}
+\index{error@{error}!SolarSystem::JPL@{SolarSystem::JPL}}
+\doxysubsubsection{\texorpdfstring{error()}{error()}}
+{\footnotesize\ttfamily \label{namespace_solar_system_1_1_j_p_l_aa87d1eae6faed2285995bb3f55e8bf4e} 
+\mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a9db0f8fc911088c5455067676ea1e99d}{JPLVoid\+Result}} Solar\+System\+::\+JPL\+::error (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0d}{JPLError}}}]{err}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}}
+
+
+
+Helper to create error void result. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespace_solar_system_1_1_j_p_l_aa87d1eae6faed2285995bb3f55e8bf4e_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespace_solar_system_1_1_j_p_l_ab3c2444575b2bb169fc9aa27a6fee7c6}\index{SolarSystem::JPL@{SolarSystem::JPL}!get\_error@{get\_error}}
+\index{get\_error@{get\_error}!SolarSystem::JPL@{SolarSystem::JPL}}
+\doxysubsubsection{\texorpdfstring{get\_error()}{get\_error()}}
+{\footnotesize\ttfamily \label{namespace_solar_system_1_1_j_p_l_ab3c2444575b2bb169fc9aa27a6fee7c6} 
+template$<$typename T$>$ \\
+\mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0d}{JPLError}} Solar\+System\+::\+JPL\+::get\+\_\+error (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a1ae7174894acb8c6560a62a72f42d5cd}{JPLResult}}$<$ T $>$ \&}]{result}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Helper to get error from failed result. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespace_solar_system_1_1_j_p_l_ab3c2444575b2bb169fc9aa27a6fee7c6_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespace_solar_system_1_1_j_p_l_a605668a4c434918864026fc3a0216137}\index{SolarSystem::JPL@{SolarSystem::JPL}!get\_value@{get\_value}}
+\index{get\_value@{get\_value}!SolarSystem::JPL@{SolarSystem::JPL}}
+\doxysubsubsection{\texorpdfstring{get\_value()}{get\_value()}}
+{\footnotesize\ttfamily \label{namespace_solar_system_1_1_j_p_l_a605668a4c434918864026fc3a0216137} 
+template$<$typename T$>$ \\
+const T \& Solar\+System\+::\+JPL\+::get\+\_\+value (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a1ae7174894acb8c6560a62a72f42d5cd}{JPLResult}}$<$ T $>$ \&}]{result}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Helper to get value from successful result. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespace_solar_system_1_1_j_p_l_a605668a4c434918864026fc3a0216137_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespace_solar_system_1_1_j_p_l_abb8eb67716801804e9c24e2a80dda44e}\index{SolarSystem::JPL@{SolarSystem::JPL}!is\_success@{is\_success}}
+\index{is\_success@{is\_success}!SolarSystem::JPL@{SolarSystem::JPL}}
+\doxysubsubsection{\texorpdfstring{is\_success()}{is\_success()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{namespace_solar_system_1_1_j_p_l_abb8eb67716801804e9c24e2a80dda44e} 
+template$<$typename T$>$ \\
+bool Solar\+System\+::\+JPL\+::is\+\_\+success (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a1ae7174894acb8c6560a62a72f42d5cd}{JPLResult}}$<$ T $>$ \&}]{result}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Helper to check if result is successful. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespace_solar_system_1_1_j_p_l_abb8eb67716801804e9c24e2a80dda44e_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespace_solar_system_1_1_j_p_l_a3319a9e22f392431aaf29e413c839433}\index{SolarSystem::JPL@{SolarSystem::JPL}!is\_success@{is\_success}}
+\index{is\_success@{is\_success}!SolarSystem::JPL@{SolarSystem::JPL}}
+\doxysubsubsection{\texorpdfstring{is\_success()}{is\_success()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{namespace_solar_system_1_1_j_p_l_a3319a9e22f392431aaf29e413c839433} 
+bool Solar\+System\+::\+JPL\+::is\+\_\+success (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a9db0f8fc911088c5455067676ea1e99d}{JPLVoid\+Result}} \&}]{result}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}}
+
+
+
+Helper to check if void result is successful. 
+
+\Hypertarget{namespace_solar_system_1_1_j_p_l_ac75b9c75d52b5dcc91551918f6e7244f}\index{SolarSystem::JPL@{SolarSystem::JPL}!success@{success}}
+\index{success@{success}!SolarSystem::JPL@{SolarSystem::JPL}}
+\doxysubsubsection{\texorpdfstring{success()}{success()}}
+{\footnotesize\ttfamily \label{namespace_solar_system_1_1_j_p_l_ac75b9c75d52b5dcc91551918f6e7244f} 
+\mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a9db0f8fc911088c5455067676ea1e99d}{JPLVoid\+Result}} Solar\+System\+::\+JPL\+::success (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}}
+
+
+
+Helper to create successful void result. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespace_solar_system_1_1_j_p_l_ac75b9c75d52b5dcc91551918f6e7244f_icgraph}
+\end{center}
+\end{figure}

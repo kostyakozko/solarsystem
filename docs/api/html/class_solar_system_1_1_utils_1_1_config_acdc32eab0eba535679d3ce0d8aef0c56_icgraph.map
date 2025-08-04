@@ -1,0 +1,10 @@
+<map id="SolarSystem::Utils::Config::get_default" name="SolarSystem::Utils::Config::get_default">
+<area shape="rect" id="Node000001" title="Get default configuration." alt="" coords="394,63,533,103"/>
+<area shape="rect" id="Node000002" href="$class_solar_system_1_1_utils_1_1_global_config.html#a16110ec1550180477a73c29ee346e9d6" title=" " alt="" coords="185,5,346,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="378,61,337,49,338,44,379,56"/>
+<area shape="rect" id="Node000003" href="$class_solar_system_1_1_utils_1_1_config.html#aae6444cfe19bc26da1086502b7e74940" title="Load configuration from multiple sources." alt="" coords="5,92,137,133"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="379,92,137,110,137,105,378,87"/>
+<area shape="rect" id="Node000004" href="$class_solar_system_1_1_utils_1_1_config.html#aba5d7c5994aaa151c3e4e47b0ebb1355" title="Merge configurations (higher priority overwrites lower)" alt="" coords="200,120,331,161"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="380,110,332,124,330,119,378,105"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="184,131,137,124,138,119,185,126"/>
+</map>

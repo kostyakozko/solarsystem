@@ -1,0 +1,37 @@
+<map id="/Users/kostiantyn.kozko/tmp/solarsystem/lib/solar_test/src/benchmarks/ci_integration.cpp" name="/Users/kostiantyn.kozko/tmp/solarsystem/lib/solar_test/src/benchmarks/ci_integration.cpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="131,5,384,61"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,116,65,142"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="191,64,77,111,75,112,73,107,75,107,189,59"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="89,116,154,142"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="220,64,153,110,150,105,217,59"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="178,116,244,142"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="247,63,226,104,221,102,242,60"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="269,116,340,142"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="274,60,294,102,289,104,269,63"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="364,116,432,142"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="300,59,369,106,366,110,297,64"/>
+<area shape="rect" id="Node000007" href="$regression__detector_8hpp.html" title="Performance regression detection system." alt="" coords="456,109,619,150"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="339,59,466,101,464,106,338,64"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="252,271,312,297"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="503,153,420,200,315,265,312,260,418,195,501,148"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="336,271,382,297"/>
+<area shape="poly" id="edge8_Node000007_Node000009" title=" " alt="" coords="514,152,455,200,385,263,381,259,452,196,511,148"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="406,271,474,297"/>
+<area shape="poly" id="edge9_Node000007_Node000010" title=" " alt="" coords="515,152,493,174,473,199,459,228,449,257,444,255,454,226,469,196,489,170,512,148"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="600,271,667,297"/>
+<area shape="poly" id="edge10_Node000007_Node000011" title=" " alt="" coords="564,148,586,170,607,196,621,226,630,255,625,257,616,228,602,199,582,174,560,152"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="691,271,744,297"/>
+<area shape="poly" id="edge11_Node000007_Node000012" title=" " alt="" coords="568,148,631,196,697,258,694,262,628,200,565,152"/>
+<area shape="rect" id="Node000013" title=" " alt="" coords="769,271,826,297"/>
+<area shape="poly" id="edge12_Node000007_Node000013" title=" " alt="" coords="577,148,663,195,768,260,765,265,660,200,574,153"/>
+<area shape="rect" id="Node000014" href="$benchmark_8hpp.html" title="Performance benchmarking framework for Solar System Suite." alt="" coords="482,198,593,223"/>
+<area shape="poly" id="edge13_Node000007_Node000014" title=" " alt="" coords="540,150,540,182,535,182,535,150"/>
+<area shape="poly" id="edge14_Node000014_Node000008" title=" " alt="" coords="495,226,327,273,326,268,494,221"/>
+<area shape="poly" id="edge16_Node000014_Node000009" title=" " alt="" coords="508,226,398,270,396,265,506,221"/>
+<area shape="poly" id="edge17_Node000014_Node000010" title=" " alt="" coords="523,226,470,264,467,260,520,222"/>
+<area shape="poly" id="edge18_Node000014_Node000011" title=" " alt="" coords="556,222,607,260,604,264,552,226"/>
+<area shape="poly" id="edge19_Node000014_Node000012" title=" " alt="" coords="569,221,677,264,675,269,567,226"/>
+<area shape="poly" id="edge20_Node000014_Node000013" title=" " alt="" coords="583,221,755,268,754,273,582,227"/>
+<area shape="rect" id="Node000015" title=" " alt="" coords="499,271,576,297"/>
+<area shape="poly" id="edge15_Node000014_Node000015" title=" " alt="" coords="540,224,540,256,535,256,535,224"/>
+</map>

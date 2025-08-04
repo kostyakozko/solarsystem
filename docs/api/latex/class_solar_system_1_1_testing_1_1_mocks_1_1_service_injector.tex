@@ -1,0 +1,139 @@
+\doxysection{Solar\+System\+::Testing\+::Mocks\+::Service\+Injector\texorpdfstring{$<$}{<} T \texorpdfstring{$>$}{>} Class Template Reference}
+\hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_service_injector}{}\label{class_solar_system_1_1_testing_1_1_mocks_1_1_service_injector}\index{SolarSystem::Testing::Mocks::ServiceInjector$<$ T $>$@{SolarSystem::Testing::Mocks::ServiceInjector$<$ T $>$}}
+
+
+Service injection helpers.  
+
+
+
+
+{\ttfamily \#include $<$mock\+\_\+service\+\_\+registry.\+hpp$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_service_injector_a202c0762e958ec174495ab920e5ca220}{Service\+Injector}} (const std\+::string \&name="{}"{})
+\begin{DoxyCompactList}\small\item\em Inject service dependency. \end{DoxyCompactList}\item 
+std\+::shared\+\_\+ptr$<$ T $>$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_service_injector_a0fc4669aa7905334f58a0e06011740e2}{get}} () const
+\begin{DoxyCompactList}\small\item\em Get injected service. \end{DoxyCompactList}\item 
+T \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_service_injector_a37b710f9a052fe068c4e96e5a5dc414c}{operator-\/$>$}} () const
+\begin{DoxyCompactList}\small\item\em Operator-\/\texorpdfstring{$>$}{>} for direct access. \end{DoxyCompactList}\item 
+T \& \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_service_injector_ad9975501c2038dd038de79d48d537ffe}{operator\texorpdfstring{$\ast$}{*}}} () const
+\begin{DoxyCompactList}\small\item\em Operator\texorpdfstring{$\ast$}{*} for dereferencing. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_service_injector_a18e18577900da0af2ab03cf31a99397a}{is\+\_\+available}} () const
+\begin{DoxyCompactList}\small\item\em Check if service is available. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$typename T$>$\newline
+class Solar\+System\+::\+Testing\+::\+Mocks\+::\+Service\+Injector$<$ T $>$}
+Service injection helpers. 
+
+\label{doc-constructors}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_service_injector_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_service_injector_a202c0762e958ec174495ab920e5ca220}\index{SolarSystem::Testing::Mocks::ServiceInjector$<$ T $>$@{SolarSystem::Testing::Mocks::ServiceInjector$<$ T $>$}!ServiceInjector@{ServiceInjector}}
+\index{ServiceInjector@{ServiceInjector}!SolarSystem::Testing::Mocks::ServiceInjector$<$ T $>$@{SolarSystem::Testing::Mocks::ServiceInjector$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{ServiceInjector()}{ServiceInjector()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_service_injector_a202c0762e958ec174495ab920e5ca220} 
+template$<$typename T$>$ \\
+\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_service_injector}{Solar\+System\+::\+Testing\+::\+Mocks\+::\+Service\+Injector}}$<$ T $>$\+::\+Service\+Injector (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name}{ = {\ttfamily "{}"{}}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+
+
+Inject service dependency. 
+
+
+
+\label{doc-func-members}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_service_injector_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_service_injector_a0fc4669aa7905334f58a0e06011740e2}\index{SolarSystem::Testing::Mocks::ServiceInjector$<$ T $>$@{SolarSystem::Testing::Mocks::ServiceInjector$<$ T $>$}!get@{get}}
+\index{get@{get}!SolarSystem::Testing::Mocks::ServiceInjector$<$ T $>$@{SolarSystem::Testing::Mocks::ServiceInjector$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{get()}{get()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_service_injector_a0fc4669aa7905334f58a0e06011740e2} 
+template$<$typename T$>$ \\
+std\+::shared\+\_\+ptr$<$ T $>$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_service_injector}{Solar\+System\+::\+Testing\+::\+Mocks\+::\+Service\+Injector}}$<$ T $>$\+::get (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Get injected service. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_service_injector_a0fc4669aa7905334f58a0e06011740e2_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_service_injector_a0fc4669aa7905334f58a0e06011740e2_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_service_injector_a18e18577900da0af2ab03cf31a99397a}\index{SolarSystem::Testing::Mocks::ServiceInjector$<$ T $>$@{SolarSystem::Testing::Mocks::ServiceInjector$<$ T $>$}!is\_available@{is\_available}}
+\index{is\_available@{is\_available}!SolarSystem::Testing::Mocks::ServiceInjector$<$ T $>$@{SolarSystem::Testing::Mocks::ServiceInjector$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{is\_available()}{is\_available()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_service_injector_a18e18577900da0af2ab03cf31a99397a} 
+template$<$typename T$>$ \\
+bool \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_service_injector}{Solar\+System\+::\+Testing\+::\+Mocks\+::\+Service\+Injector}}$<$ T $>$\+::is\+\_\+available (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Check if service is available. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_service_injector_a18e18577900da0af2ab03cf31a99397a_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_service_injector_ad9975501c2038dd038de79d48d537ffe}\index{SolarSystem::Testing::Mocks::ServiceInjector$<$ T $>$@{SolarSystem::Testing::Mocks::ServiceInjector$<$ T $>$}!operator\texorpdfstring{$\ast$}{*}@{operator\texorpdfstring{$\ast$}{*}}}
+\index{operator\texorpdfstring{$\ast$}{*}@{operator\texorpdfstring{$\ast$}{*}}!SolarSystem::Testing::Mocks::ServiceInjector$<$ T $>$@{SolarSystem::Testing::Mocks::ServiceInjector$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{operator\texorpdfstring{$\ast$}{*}()}{operator*()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_service_injector_ad9975501c2038dd038de79d48d537ffe} 
+template$<$typename T$>$ \\
+T \& \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_service_injector}{Solar\+System\+::\+Testing\+::\+Mocks\+::\+Service\+Injector}}$<$ T $>$\+::operator\texorpdfstring{$\ast$}{*} (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Operator\texorpdfstring{$\ast$}{*} for dereferencing. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_service_injector_ad9975501c2038dd038de79d48d537ffe_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_service_injector_a37b710f9a052fe068c4e96e5a5dc414c}\index{SolarSystem::Testing::Mocks::ServiceInjector$<$ T $>$@{SolarSystem::Testing::Mocks::ServiceInjector$<$ T $>$}!operator-\/$>$@{operator-\/$>$}}
+\index{operator-\/$>$@{operator-\/$>$}!SolarSystem::Testing::Mocks::ServiceInjector$<$ T $>$@{SolarSystem::Testing::Mocks::ServiceInjector$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{operator-\/$>$()}{operator->()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_service_injector_a37b710f9a052fe068c4e96e5a5dc414c} 
+template$<$typename T$>$ \\
+T \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_service_injector}{Solar\+System\+::\+Testing\+::\+Mocks\+::\+Service\+Injector}}$<$ T $>$\+::operator-\/$>$ (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Operator-\/\texorpdfstring{$>$}{>} for direct access. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_service_injector_a37b710f9a052fe068c4e96e5a5dc414c_cgraph}
+\end{center}
+\end{figure}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+test/include/solar\+\_\+test/mocks/\mbox{\hyperlink{mock__service__registry_8hpp}{mock\+\_\+service\+\_\+registry.\+hpp}}\end{DoxyCompactItemize}

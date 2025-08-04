@@ -1,0 +1,5 @@
+<map id="SolarSystem::Testing::Mocks::JPLMock::generate_body_info_section" name="SolarSystem::Testing::Mocks::JPLMock::generate_body_info_section">
+<area shape="rect" id="Node000001" title="Generate body information section." alt="" coords="5,5,195,61"/>
+<area shape="rect" id="Node000002" href="$namespace_solar_system_1_1_bodies.html#a643d1f576850135f355e1f960d2ebde4" title="Get BodyType for JPL ID." alt="" coords="243,5,387,61"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="195,30,227,30,227,36,195,36"/>
+</map>

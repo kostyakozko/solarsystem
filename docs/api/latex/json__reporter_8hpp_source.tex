@@ -1,0 +1,73 @@
+\doxysection{json\+\_\+reporter.\+hpp}
+\hypertarget{json__reporter_8hpp_source}{}\label{json__reporter_8hpp_source}\index{/Users/kostiantyn.kozko/tmp/solarsystem/lib/solar\_test/include/solar\_test/reporters/json\_reporter.hpp@{/Users/kostiantyn.kozko/tmp/solarsystem/lib/solar\_test/include/solar\_test/reporters/json\_reporter.hpp}}
+\mbox{\hyperlink{json__reporter_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <fstream>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{test__reporter_8hpp}{test\_reporter.hpp}}"{}}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespace_solar_system_1_1_testing}{SolarSystem::Testing}}\ \{}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00013\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_json_reporter_a9f8581c31b44d960a7417a37bab1d512}{JsonReporter}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_reporter}{TestReporter}}\ \{}
+\DoxyCodeLine{00014\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00015\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_json_reporter_1_1_configuration}{Configuration}}\ \{}
+\DoxyCodeLine{00016\ \ \ \ \ std::string\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_json_reporter_1_1_configuration_aeeae74323bc21f466a8a955aa0e5f080}{output\_file}}\ =\ \textcolor{stringliteral}{"{}test\_results.json"{}};}
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_json_reporter_1_1_configuration_aba1eedc8fc504111070baf72ab5007ce}{pretty\_print}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_json_reporter_1_1_configuration_ab6110b5cedf4e946c3e2a832bb9f085d}{include\_metadata}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_json_reporter_1_1_configuration_af04d7524968fb6dccb4f6c052ee5a040}{include\_timing}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_json_reporter_1_1_configuration_a253fafc748e49c39c5bfad65050ef4cd}{include\_memory\_usage}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00021\ \ \ \};}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \ \ \textcolor{keyword}{explicit}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_json_reporter_a9f8581c31b44d960a7417a37bab1d512}{JsonReporter}}(\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_json_reporter_1_1_configuration}{Configuration}}\ config);}
+\DoxyCodeLine{00024\ \ \ \textcolor{keyword}{explicit}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_json_reporter_a9f8581c31b44d960a7417a37bab1d512}{JsonReporter}}(\textcolor{keyword}{const}\ std::string\&\ output\_file);}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \ \ \textcolor{comment}{//\ TestReporter\ interface\ implementation}}
+\DoxyCodeLine{00027\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_json_reporter_aa6cf94d54b4a5e47519cb8b07db1e235}{on\_suite\_started}}(\textcolor{keyword}{const}\ std::string\&\ suite\_name,\ \textcolor{keywordtype}{size\_t}\ total\_tests)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00028\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_json_reporter_a1e5de9ba978e75f0a228a275d21ad7b3}{on\_suite\_finished}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_suite_result}{TestSuiteResult}}\&\ result)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00029\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_json_reporter_a1d71d7ebaef2a211e1a0960cd09a4391}{on\_test\_started}}(\textcolor{keyword}{const}\ std::string\&\ test\_name)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00030\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_json_reporter_a8b514e2da15897c75cf40ada7e34f126}{on\_test\_finished}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_result}{TestResult}}\&\ result)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00031\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_json_reporter_aa9d18a8ee2a1eeb7ba66af3c7aab30f1}{on\_progress}}(\textcolor{keyword}{const}\ std::string\&\ message,\ \textcolor{keywordtype}{double}\ percentage)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00032\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_json_reporter_ae06f8b7725bc673b55776eae215d9f96}{on\_error}}(\textcolor{keyword}{const}\ std::string\&\ error\_message)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \ \ \textcolor{comment}{//\ Configuration}}
+\DoxyCodeLine{00035\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_json_reporter_a37e182a5890f5b9082d2df9e7cd4a11c}{set\_configuration}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_json_reporter_1_1_configuration}{Configuration}}\&\ config)\ \{\ config\_\ =\ config;\ \}}
+\DoxyCodeLine{00036\ \ \ [[nodiscard]]\ \textcolor{keyword}{const}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_json_reporter_1_1_configuration}{Configuration}}\&\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_json_reporter_a801f14626813cfd239184773a2854d57}{configuration}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ config\_;\ \}}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00039\ \ \ Configuration\ config\_;}
+\DoxyCodeLine{00040\ \ \ std::ofstream\ output\_file\_;}
+\DoxyCodeLine{00041\ \ \ std::string\ current\_suite\_name\_;}
+\DoxyCodeLine{00042\ \ \ std::vector<TestResult>\ current\_suite\_results\_;}
+\DoxyCodeLine{00043\ \ \ std::chrono::steady\_clock::time\_point\ suite\_start\_time\_;}
+\DoxyCodeLine{00044\ \ \ std::vector<std::string>\ progress\_messages\_;}
+\DoxyCodeLine{00045\ \ \ std::vector<std::string>\ error\_messages\_;}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \ \ \textcolor{comment}{//\ JSON\ generation\ methods}}
+\DoxyCodeLine{00048\ \ \ \textcolor{keywordtype}{void}\ write\_json\_header();}
+\DoxyCodeLine{00049\ \ \ \textcolor{keywordtype}{void}\ write\_json\_footer();}
+\DoxyCodeLine{00050\ \ \ \textcolor{keywordtype}{void}\ write\_test\_suite(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_suite_result}{TestSuiteResult}}\&\ result);}
+\DoxyCodeLine{00051\ \ \ \textcolor{keywordtype}{void}\ write\_test\_result(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_result}{TestResult}}\&\ result,\ \textcolor{keywordtype}{bool}\ is\_last\ =\ \textcolor{keyword}{false});}
+\DoxyCodeLine{00052\ \ \ \textcolor{keywordtype}{void}\ write\_metadata\_object(\textcolor{keyword}{const}\ std::map<std::string,\ std::string>\&\ metadata);}
+\DoxyCodeLine{00053\ \ \ \textcolor{keywordtype}{void}\ write\_progress\_array();}
+\DoxyCodeLine{00054\ \ \ \textcolor{keywordtype}{void}\ write\_errors\_array();}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \ \ \textcolor{comment}{//\ JSON\ utility\ methods}}
+\DoxyCodeLine{00057\ \ \ [[nodiscard]]\ std::string\ json\_escape(\textcolor{keyword}{const}\ std::string\&\ text)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00058\ \ \ [[nodiscard]]\ std::string\ status\_to\_string(\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_result_a2038ab3e6ab60e65e31352201fa99b25}{TestResult::Status}}\ status)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00059\ \ \ \textcolor{keywordtype}{void}\ write\_indented(\textcolor{keyword}{const}\ std::string\&\ content,\ \textcolor{keywordtype}{size\_t}\ indent\_level\ =\ 0);}
+\DoxyCodeLine{00060\ \ \ \textcolor{keywordtype}{void}\ write\_key\_value(\textcolor{keyword}{const}\ std::string\&\ key,\ \textcolor{keyword}{const}\ std::string\&\ value,\ \textcolor{keywordtype}{bool}\ is\_last\ =\ \textcolor{keyword}{false},}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ indent\_level\ =\ 0);}
+\DoxyCodeLine{00062\ \ \ \textcolor{keywordtype}{void}\ write\_key\_value(\textcolor{keyword}{const}\ std::string\&\ key,\ int64\_t\ value,\ \textcolor{keywordtype}{bool}\ is\_last\ =\ \textcolor{keyword}{false},}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ indent\_level\ =\ 0);}
+\DoxyCodeLine{00064\ \ \ \textcolor{keywordtype}{void}\ write\_key\_value(\textcolor{keyword}{const}\ std::string\&\ key,\ \textcolor{keywordtype}{double}\ value,\ \textcolor{keywordtype}{bool}\ is\_last\ =\ \textcolor{keyword}{false},}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ indent\_level\ =\ 0);}
+\DoxyCodeLine{00066\ \ \ \textcolor{keywordtype}{void}\ write\_key\_value(\textcolor{keyword}{const}\ std::string\&\ key,\ \textcolor{keywordtype}{bool}\ value,\ \textcolor{keywordtype}{bool}\ is\_last\ =\ \textcolor{keyword}{false},}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ indent\_level\ =\ 0);}
+\DoxyCodeLine{00068\ \};}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \}\ \ \textcolor{comment}{//\ namespace\ SolarSystem::Testing}}
+
+\end{DoxyCode}

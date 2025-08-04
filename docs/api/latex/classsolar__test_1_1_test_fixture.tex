@@ -1,0 +1,214 @@
+\doxysection{solar\+\_\+test\+::Test\+Fixture Class Reference}
+\hypertarget{classsolar__test_1_1_test_fixture}{}\label{classsolar__test_1_1_test_fixture}\index{solar\_test::TestFixture@{solar\_test::TestFixture}}
+
+
+Base class for test fixtures with setup/teardown lifecycle.  
+
+
+
+
+{\ttfamily \#include $<$test\+\_\+data\+\_\+manager.\+hpp$>$}
+
+
+
+Inheritance diagram for solar\+\_\+test\+::Test\+Fixture\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=194pt]{classsolar__test_1_1_test_fixture__inherit__graph}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classsolar__test_1_1_test_fixture_ab4a53625c60d57aed962b0d03ff8c090}{Test\+Fixture}} ()=default
+\item 
+virtual \mbox{\hyperlink{classsolar__test_1_1_test_fixture_ad1439f1e6971d0fe2e80aee4b7255c4f}{\texorpdfstring{$\sim$}{\string~}\+Test\+Fixture}} ()=default
+\item 
+\mbox{\hyperlink{classsolar__test_1_1_test_fixture_a850e6698bc511a7386e1cd038005b1c0}{Test\+Fixture}} (const \mbox{\hyperlink{classsolar__test_1_1_test_fixture}{Test\+Fixture}} \&)=delete
+\item 
+\mbox{\hyperlink{classsolar__test_1_1_test_fixture}{Test\+Fixture}} \& \mbox{\hyperlink{classsolar__test_1_1_test_fixture_addc4f95177ac431bfc0c9231e85b236a}{operator=}} (const \mbox{\hyperlink{classsolar__test_1_1_test_fixture}{Test\+Fixture}} \&)=delete
+\item 
+\mbox{\hyperlink{classsolar__test_1_1_test_fixture_a61ac48f9864a2a955b315845625b7b24}{Test\+Fixture}} (\mbox{\hyperlink{classsolar__test_1_1_test_fixture}{Test\+Fixture}} \&\&)=default
+\item 
+\mbox{\hyperlink{classsolar__test_1_1_test_fixture}{Test\+Fixture}} \& \mbox{\hyperlink{classsolar__test_1_1_test_fixture_a6692aa88579ace0494ccbfb94be37949}{operator=}} (\mbox{\hyperlink{classsolar__test_1_1_test_fixture}{Test\+Fixture}} \&\&)=default
+\item 
+virtual void \mbox{\hyperlink{classsolar__test_1_1_test_fixture_aa4645bf646769097581cd9f952ce1687}{setup}} ()
+\item 
+virtual void \mbox{\hyperlink{classsolar__test_1_1_test_fixture_adc6bf361d3239e0863e9977411d6477e}{teardown}} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classsolar__test_1_1_temporary_directory}{Temporary\+Directory}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{classsolar__test_1_1_test_fixture_a0163e5d15fa71ddd50438b1f27e4a174}{create\+\_\+temp\+\_\+directory}} (const std\+::string \&prefix="{}test\+\_\+"{})
+\item 
+\mbox{\hyperlink{classsolar__test_1_1_temporary_cache}{Temporary\+Cache}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{classsolar__test_1_1_test_fixture_a1b8972bc9efe7bfef8431162ac929202}{create\+\_\+temp\+\_\+cache}} (const std\+::string \&cache\+\_\+type="{}ephemeris"{})
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::vector$<$ std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classsolar__test_1_1_temporary_directory}{Temporary\+Directory}} $>$ $>$ \mbox{\hyperlink{classsolar__test_1_1_test_fixture_a34bc91238016400e0670ec8e434ef651}{temp\+\_\+directories\+\_\+}}
+\item 
+std\+::vector$<$ std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classsolar__test_1_1_temporary_cache}{Temporary\+Cache}} $>$ $>$ \mbox{\hyperlink{classsolar__test_1_1_test_fixture_a06a215c1e4412357e6f547c6999a5bed}{temp\+\_\+caches\+\_\+}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Base class for test fixtures with setup/teardown lifecycle. 
+
+\label{doc-constructors}
+\Hypertarget{classsolar__test_1_1_test_fixture_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classsolar__test_1_1_test_fixture_ab4a53625c60d57aed962b0d03ff8c090}\index{solar\_test::TestFixture@{solar\_test::TestFixture}!TestFixture@{TestFixture}}
+\index{TestFixture@{TestFixture}!solar\_test::TestFixture@{solar\_test::TestFixture}}
+\doxysubsubsection{\texorpdfstring{TestFixture()}{TestFixture()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily \label{classsolar__test_1_1_test_fixture_ab4a53625c60d57aed962b0d03ff8c090} 
+solar\+\_\+test\+::\+Test\+Fixture\+::\+Test\+Fixture (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=343pt]{classsolar__test_1_1_test_fixture_ab4a53625c60d57aed962b0d03ff8c090_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classsolar__test_1_1_test_fixture_ad1439f1e6971d0fe2e80aee4b7255c4f}\index{solar\_test::TestFixture@{solar\_test::TestFixture}!````~TestFixture@{\texorpdfstring{$\sim$}{\string~}TestFixture}}
+\index{````~TestFixture@{\texorpdfstring{$\sim$}{\string~}TestFixture}!solar\_test::TestFixture@{solar\_test::TestFixture}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}TestFixture()}{\string~TestFixture()}}
+{\footnotesize\ttfamily \label{classsolar__test_1_1_test_fixture_ad1439f1e6971d0fe2e80aee4b7255c4f} 
+virtual solar\+\_\+test\+::\+Test\+Fixture\+::\texorpdfstring{$\sim$}{\string~}\+Test\+Fixture (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}, {\ttfamily [default]}}
+
+\Hypertarget{classsolar__test_1_1_test_fixture_a850e6698bc511a7386e1cd038005b1c0}\index{solar\_test::TestFixture@{solar\_test::TestFixture}!TestFixture@{TestFixture}}
+\index{TestFixture@{TestFixture}!solar\_test::TestFixture@{solar\_test::TestFixture}}
+\doxysubsubsection{\texorpdfstring{TestFixture()}{TestFixture()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily \label{classsolar__test_1_1_test_fixture_a850e6698bc511a7386e1cd038005b1c0} 
+solar\+\_\+test\+::\+Test\+Fixture\+::\+Test\+Fixture (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classsolar__test_1_1_test_fixture}{Test\+Fixture}} \&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=343pt]{classsolar__test_1_1_test_fixture_a850e6698bc511a7386e1cd038005b1c0_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classsolar__test_1_1_test_fixture_a61ac48f9864a2a955b315845625b7b24}\index{solar\_test::TestFixture@{solar\_test::TestFixture}!TestFixture@{TestFixture}}
+\index{TestFixture@{TestFixture}!solar\_test::TestFixture@{solar\_test::TestFixture}}
+\doxysubsubsection{\texorpdfstring{TestFixture()}{TestFixture()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily \label{classsolar__test_1_1_test_fixture_a61ac48f9864a2a955b315845625b7b24} 
+solar\+\_\+test\+::\+Test\+Fixture\+::\+Test\+Fixture (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classsolar__test_1_1_test_fixture}{Test\+Fixture}} \&\&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=343pt]{classsolar__test_1_1_test_fixture_a61ac48f9864a2a955b315845625b7b24_cgraph}
+\end{center}
+\end{figure}
+
+
+\label{doc-func-members}
+\Hypertarget{classsolar__test_1_1_test_fixture_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classsolar__test_1_1_test_fixture_a1b8972bc9efe7bfef8431162ac929202}\index{solar\_test::TestFixture@{solar\_test::TestFixture}!create\_temp\_cache@{create\_temp\_cache}}
+\index{create\_temp\_cache@{create\_temp\_cache}!solar\_test::TestFixture@{solar\_test::TestFixture}}
+\doxysubsubsection{\texorpdfstring{create\_temp\_cache()}{create\_temp\_cache()}}
+{\footnotesize\ttfamily \label{classsolar__test_1_1_test_fixture_a1b8972bc9efe7bfef8431162ac929202} 
+\mbox{\hyperlink{classsolar__test_1_1_temporary_cache}{Temporary\+Cache}} \texorpdfstring{$\ast$}{*} solar\+\_\+test\+::\+Test\+Fixture\+::create\+\_\+temp\+\_\+cache (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{cache\+\_\+type}{ = {\ttfamily "{}ephemeris"{}}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classsolar__test_1_1_test_fixture_a1b8972bc9efe7bfef8431162ac929202_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classsolar__test_1_1_test_fixture_a0163e5d15fa71ddd50438b1f27e4a174}\index{solar\_test::TestFixture@{solar\_test::TestFixture}!create\_temp\_directory@{create\_temp\_directory}}
+\index{create\_temp\_directory@{create\_temp\_directory}!solar\_test::TestFixture@{solar\_test::TestFixture}}
+\doxysubsubsection{\texorpdfstring{create\_temp\_directory()}{create\_temp\_directory()}}
+{\footnotesize\ttfamily \label{classsolar__test_1_1_test_fixture_a0163e5d15fa71ddd50438b1f27e4a174} 
+\mbox{\hyperlink{classsolar__test_1_1_temporary_directory}{Temporary\+Directory}} \texorpdfstring{$\ast$}{*} solar\+\_\+test\+::\+Test\+Fixture\+::create\+\_\+temp\+\_\+directory (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{prefix}{ = {\ttfamily "{}test\+\_\+"{}}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classsolar__test_1_1_test_fixture_a0163e5d15fa71ddd50438b1f27e4a174_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classsolar__test_1_1_test_fixture_addc4f95177ac431bfc0c9231e85b236a}\index{solar\_test::TestFixture@{solar\_test::TestFixture}!operator=@{operator=}}
+\index{operator=@{operator=}!solar\_test::TestFixture@{solar\_test::TestFixture}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classsolar__test_1_1_test_fixture_addc4f95177ac431bfc0c9231e85b236a} 
+\mbox{\hyperlink{classsolar__test_1_1_test_fixture}{Test\+Fixture}} \& solar\+\_\+test\+::\+Test\+Fixture\+::operator= (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classsolar__test_1_1_test_fixture}{Test\+Fixture}} \&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=343pt]{classsolar__test_1_1_test_fixture_addc4f95177ac431bfc0c9231e85b236a_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classsolar__test_1_1_test_fixture_a6692aa88579ace0494ccbfb94be37949}\index{solar\_test::TestFixture@{solar\_test::TestFixture}!operator=@{operator=}}
+\index{operator=@{operator=}!solar\_test::TestFixture@{solar\_test::TestFixture}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classsolar__test_1_1_test_fixture_a6692aa88579ace0494ccbfb94be37949} 
+\mbox{\hyperlink{classsolar__test_1_1_test_fixture}{Test\+Fixture}} \& solar\+\_\+test\+::\+Test\+Fixture\+::operator= (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classsolar__test_1_1_test_fixture}{Test\+Fixture}} \&\&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=343pt]{classsolar__test_1_1_test_fixture_a6692aa88579ace0494ccbfb94be37949_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classsolar__test_1_1_test_fixture_aa4645bf646769097581cd9f952ce1687}\index{solar\_test::TestFixture@{solar\_test::TestFixture}!setup@{setup}}
+\index{setup@{setup}!solar\_test::TestFixture@{solar\_test::TestFixture}}
+\doxysubsubsection{\texorpdfstring{setup()}{setup()}}
+{\footnotesize\ttfamily \label{classsolar__test_1_1_test_fixture_aa4645bf646769097581cd9f952ce1687} 
+virtual void solar\+\_\+test\+::\+Test\+Fixture\+::setup (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented in \mbox{\hyperlink{class_cache_integrity_test_a0e27251c400b127b7195e39d44018c78}{Cache\+Integrity\+Test}}, and \mbox{\hyperlink{class_example_test_fixture_af8d17b0a75b45af6891455b460a187f6}{Example\+Test\+Fixture}}.
+
+\Hypertarget{classsolar__test_1_1_test_fixture_adc6bf361d3239e0863e9977411d6477e}\index{solar\_test::TestFixture@{solar\_test::TestFixture}!teardown@{teardown}}
+\index{teardown@{teardown}!solar\_test::TestFixture@{solar\_test::TestFixture}}
+\doxysubsubsection{\texorpdfstring{teardown()}{teardown()}}
+{\footnotesize\ttfamily \label{classsolar__test_1_1_test_fixture_adc6bf361d3239e0863e9977411d6477e} 
+virtual void solar\+\_\+test\+::\+Test\+Fixture\+::teardown (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented in \mbox{\hyperlink{class_cache_integrity_test_ac538b8cc4cc65b20b00c4f01c3e443b2}{Cache\+Integrity\+Test}}, and \mbox{\hyperlink{class_example_test_fixture_a44f1986aa089ab44f6b4556a48e7c235}{Example\+Test\+Fixture}}.
+
+
+
+\label{doc-variable-members}
+\Hypertarget{classsolar__test_1_1_test_fixture_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{classsolar__test_1_1_test_fixture_a06a215c1e4412357e6f547c6999a5bed}\index{solar\_test::TestFixture@{solar\_test::TestFixture}!temp\_caches\_@{temp\_caches\_}}
+\index{temp\_caches\_@{temp\_caches\_}!solar\_test::TestFixture@{solar\_test::TestFixture}}
+\doxysubsubsection{\texorpdfstring{temp\_caches\_}{temp\_caches\_}}
+{\footnotesize\ttfamily \label{classsolar__test_1_1_test_fixture_a06a215c1e4412357e6f547c6999a5bed} 
+std\+::vector$<$std\+::unique\+\_\+ptr$<$\mbox{\hyperlink{classsolar__test_1_1_temporary_cache}{Temporary\+Cache}}$>$ $>$ solar\+\_\+test\+::\+Test\+Fixture\+::temp\+\_\+caches\+\_\+\hspace{0.3cm}{\ttfamily [protected]}}
+
+\Hypertarget{classsolar__test_1_1_test_fixture_a34bc91238016400e0670ec8e434ef651}\index{solar\_test::TestFixture@{solar\_test::TestFixture}!temp\_directories\_@{temp\_directories\_}}
+\index{temp\_directories\_@{temp\_directories\_}!solar\_test::TestFixture@{solar\_test::TestFixture}}
+\doxysubsubsection{\texorpdfstring{temp\_directories\_}{temp\_directories\_}}
+{\footnotesize\ttfamily \label{classsolar__test_1_1_test_fixture_a34bc91238016400e0670ec8e434ef651} 
+std\+::vector$<$std\+::unique\+\_\+ptr$<$\mbox{\hyperlink{classsolar__test_1_1_temporary_directory}{Temporary\+Directory}}$>$ $>$ solar\+\_\+test\+::\+Test\+Fixture\+::temp\+\_\+directories\+\_\+\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+test/include/solar\+\_\+test/framework/\mbox{\hyperlink{test__data__manager_8hpp}{test\+\_\+data\+\_\+manager.\+hpp}}\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+test/src/framework/\mbox{\hyperlink{test__data__manager_8cpp}{test\+\_\+data\+\_\+manager.\+cpp}}\end{DoxyCompactItemize}

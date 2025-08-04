@@ -1,5 +1,15 @@
 \doxysection{Http\+Request Struct Reference}
 \hypertarget{struct_http_request}{}\label{struct_http_request}\index{HttpRequest@{HttpRequest}}
+
+
+HTTP request structure.  
+
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+std\+::optional$<$ std\+::string $>$ \mbox{\hyperlink{struct_http_request_a4cbaac657a3a1aac7109a22a9d9efd1e}{get\+\_\+query\+\_\+param}} (const std\+::string \&name) const
+\begin{DoxyCompactList}\small\item\em Get query parameter. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsubsection*{Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
@@ -7,12 +17,38 @@ std\+::string \mbox{\hyperlink{struct_http_request_a7932a5cbb2edde60e5bc9950bca8
 \item 
 std\+::string \mbox{\hyperlink{struct_http_request_a7ae4a6b64b8b890a4fe81c53a76e8a51}{path}}
 \item 
-std\+::string \mbox{\hyperlink{struct_http_request_a1279d00fe461ed76a5d8f156baec2544}{version}}
+std\+::string \mbox{\hyperlink{struct_http_request_ab05c7a6fcc108705b17f2c05cca1b467}{query\+\_\+string}}
 \item 
 std\+::map$<$ std\+::string, std\+::string $>$ \mbox{\hyperlink{struct_http_request_aabfd0e24348be7a4948a1bbd598d6f51}{headers}}
 \item 
 std\+::string \mbox{\hyperlink{struct_http_request_a61d8ed5d589f27f751832a9e08940e02}{body}}
 \end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+HTTP request structure. 
+
+\label{doc-func-members}
+\Hypertarget{struct_http_request_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{struct_http_request_a4cbaac657a3a1aac7109a22a9d9efd1e}\index{HttpRequest@{HttpRequest}!get\_query\_param@{get\_query\_param}}
+\index{get\_query\_param@{get\_query\_param}!HttpRequest@{HttpRequest}}
+\doxysubsubsection{\texorpdfstring{get\_query\_param()}{get\_query\_param()}}
+{\footnotesize\ttfamily \label{struct_http_request_a4cbaac657a3a1aac7109a22a9d9efd1e} 
+std\+::optional$<$ std\+::string $>$ Http\+Request\+::get\+\_\+query\+\_\+param (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}}
+
+
+
+Get query parameter. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{struct_http_request_a4cbaac657a3a1aac7109a22a9d9efd1e_icgraph}
+\end{center}
+\end{figure}
 
 
 \label{doc-variable-members}
@@ -42,11 +78,11 @@ std\+::string Http\+Request\+::method}
 {\footnotesize\ttfamily \label{struct_http_request_a7ae4a6b64b8b890a4fe81c53a76e8a51} 
 std\+::string Http\+Request\+::path}
 
-\Hypertarget{struct_http_request_a1279d00fe461ed76a5d8f156baec2544}\index{HttpRequest@{HttpRequest}!version@{version}}
-\index{version@{version}!HttpRequest@{HttpRequest}}
-\doxysubsubsection{\texorpdfstring{version}{version}}
-{\footnotesize\ttfamily \label{struct_http_request_a1279d00fe461ed76a5d8f156baec2544} 
-std\+::string Http\+Request\+::version}
+\Hypertarget{struct_http_request_ab05c7a6fcc108705b17f2c05cca1b467}\index{HttpRequest@{HttpRequest}!query\_string@{query\_string}}
+\index{query\_string@{query\_string}!HttpRequest@{HttpRequest}}
+\doxysubsubsection{\texorpdfstring{query\_string}{query\_string}}
+{\footnotesize\ttfamily \label{struct_http_request_ab05c7a6fcc108705b17f2c05cca1b467} 
+std\+::string Http\+Request\+::query\+\_\+string}
 
 
 

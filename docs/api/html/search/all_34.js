@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['🛠️_20development_0',['🛠️ Development',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md48',1,'']]]
+  ['🙏_20acknowledgments_0',['🙏 Acknowledgments',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md83',1,'']]]
 ];

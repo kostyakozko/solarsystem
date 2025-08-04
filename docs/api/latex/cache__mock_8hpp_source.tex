@@ -1,0 +1,376 @@
+\doxysection{cache\+\_\+mock.\+hpp}
+\hypertarget{cache__mock_8hpp_source}{}\label{cache__mock_8hpp_source}\index{/Users/kostiantyn.kozko/tmp/solarsystem/lib/solar\_test/include/solar\_test/mocks/cache\_mock.hpp@{/Users/kostiantyn.kozko/tmp/solarsystem/lib/solar\_test/include/solar\_test/mocks/cache\_mock.hpp}}
+\mbox{\hyperlink{cache__mock_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <chrono>}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <filesystem>}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ <functional>}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <map>}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ <mutex>}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ <optional>}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ <random>}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#include\ <unordered\_map>}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{jpl__client_8hpp}{solar\_jpl/jpl\_client.hpp}}"{}}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks}{SolarSystem::Testing::Mocks}}\ \{}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00034\ \textcolor{keyword}{enum\ class}\ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_aebdea943a0edba0bd54aac11293bf00f}{MockCacheOperationType}}\ \{}
+\DoxyCodeLine{00035\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_aebdea943a0edba0bd54aac11293bf00fa7a1a5f3e79fdc91edf2f5ead9d66abb4}{Read}},\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Cache\ read\ operation}}
+\DoxyCodeLine{00036\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_aebdea943a0edba0bd54aac11293bf00fa1129c0e4d43f2d121652a7302712cff6}{Write}},\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Cache\ write\ operation}}
+\DoxyCodeLine{00037\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_aebdea943a0edba0bd54aac11293bf00faad3d06d03d94223fa652babc913de686}{Validate}},\ \ \ \ \ \ \ \ \textcolor{comment}{//\ Cache\ validation\ operation}}
+\DoxyCodeLine{00038\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_aebdea943a0edba0bd54aac11293bf00fadc30bc0c7914db5918da4263fce93ad2}{Clear}},\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Cache\ clear\ operation}}
+\DoxyCodeLine{00039\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_aebdea943a0edba0bd54aac11293bf00fa89b0eeac885cf74653a291fa59cccf8d}{MetadataRead}},\ \ \ \ \textcolor{comment}{//\ Metadata\ read\ operation}}
+\DoxyCodeLine{00040\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_aebdea943a0edba0bd54aac11293bf00faec23d29d21be69a0eb55b0ebf4023bab}{MetadataWrite}},\ \ \ \textcolor{comment}{//\ Metadata\ write\ operation}}
+\DoxyCodeLine{00041\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_aebdea943a0edba0bd54aac11293bf00faf65b14f7e46f7bcdda5b878618ff8a91}{DirectoryCreate}}\ \ \textcolor{comment}{//\ Directory\ creation\ operation}}
+\DoxyCodeLine{00042\ \};}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00047\ \textcolor{keyword}{enum\ class}\ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a784a7c1ff19164109682c4ab6e6cb8f6}{MockCacheError}}\ \{}
+\DoxyCodeLine{00048\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a784a7c1ff19164109682c4ab6e6cb8f6a505a83f220c02df2f85c3810cd9ceb38}{Success}},\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Operation\ successful}}
+\DoxyCodeLine{00049\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a784a7c1ff19164109682c4ab6e6cb8f6a2767828026039e8ba7b38973cbb701f2}{FileNotFound}},\ \ \ \ \ \ \textcolor{comment}{//\ Cache\ file\ doesn't\ exist}}
+\DoxyCodeLine{00050\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a784a7c1ff19164109682c4ab6e6cb8f6a4b33a686be73bb172407d73b26356275}{PermissionDenied}},\ \ \textcolor{comment}{//\ No\ permission\ to\ access\ file}}
+\DoxyCodeLine{00051\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a784a7c1ff19164109682c4ab6e6cb8f6a4f080d03a8ddd688d27f7d7cd8e6d41e}{DiskFull}},\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Disk\ space\ exhausted}}
+\DoxyCodeLine{00052\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a784a7c1ff19164109682c4ab6e6cb8f6a14ce06721aa54faf8e86a779a37ada3f}{CorruptedData}},\ \ \ \ \ \textcolor{comment}{//\ Cache\ data\ is\ corrupted}}
+\DoxyCodeLine{00053\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a784a7c1ff19164109682c4ab6e6cb8f6ade236a235b4e8ffc9141676624753b2d}{InvalidFormat}},\ \ \ \ \ \textcolor{comment}{//\ Cache\ format\ is\ invalid}}
+\DoxyCodeLine{00054\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a784a7c1ff19164109682c4ab6e6cb8f6a5206bd7472156351d2d9a99633ac9580}{IOError}},\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ General\ I/O\ error}}
+\DoxyCodeLine{00055\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a784a7c1ff19164109682c4ab6e6cb8f6a47423b8444592efbe331550c5620e821}{NetworkError}},\ \ \ \ \ \ \textcolor{comment}{//\ Network-\/related\ cache\ error}}
+\DoxyCodeLine{00056\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a784a7c1ff19164109682c4ab6e6cb8f6a180b13250d9cde4f32c7e611c95789db}{ValidationFailed}}\ \ \ \textcolor{comment}{//\ Cache\ validation\ failed}}
+\DoxyCodeLine{00057\ \};}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00062\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_mock_cache_call_info}{MockCacheCallInfo}}\ \{}
+\DoxyCodeLine{00063\ \ \ std::chrono::system\_clock::time\_point\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_mock_cache_call_info_a20bdb608e9705ee414df6e7eace60fe8}{timestamp}};}
+\DoxyCodeLine{00064\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_aebdea943a0edba0bd54aac11293bf00f}{MockCacheOperationType}}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_mock_cache_call_info_a531800e2d8219cf5433e7a973105ff6f}{operation\_type}};}
+\DoxyCodeLine{00065\ \ \ std::filesystem::path\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_mock_cache_call_info_a5126fb799381237fa0f5bb2819c7d839}{file\_path}};}
+\DoxyCodeLine{00066\ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_mock_cache_call_info_ae84179dbd7b39719e3190cc636913421}{data\_size}};}
+\DoxyCodeLine{00067\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a784a7c1ff19164109682c4ab6e6cb8f6}{MockCacheError}}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_mock_cache_call_info_a673df3139e118e494ed76958d69d3890}{result}};}
+\DoxyCodeLine{00068\ \ \ std::chrono::milliseconds\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_mock_cache_call_info_a016e57da5ffb0f061ef15adb21d002d4}{operation\_duration}};}
+\DoxyCodeLine{00069\ \ \ std::string\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_mock_cache_call_info_a405ea5768a3ec11b5f1c3e3ff4180ee8}{operation\_details}};}
+\DoxyCodeLine{00070\ \};}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00075\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config}{CacheMockConfig}}\ \{}
+\DoxyCodeLine{00076\ \ \ \textcolor{comment}{//\ File\ system\ simulation}}
+\DoxyCodeLine{00077\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_a682fd984dc3078b75517d8c82fdbef69}{simulate\_file\_operations}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00078\ \ \ std::chrono::milliseconds\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_a5e56b50f6593ddf2c726d31e888ceb63}{min\_operation\_delay}}\ =\ std::chrono::milliseconds(1);}
+\DoxyCodeLine{00079\ \ \ std::chrono::milliseconds\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_ac0c870fdd1ed9dab65515e15bf73295d}{max\_operation\_delay}}\ =\ std::chrono::milliseconds(50);}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \ \ \textcolor{comment}{//\ Error\ simulation\ rates}}
+\DoxyCodeLine{00082\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_a4b90ddcafb01f4ddd35aab4cc9b748b8}{disk\_full\_rate}}\ =\ 0.0;\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 0.0\ =\ never\ full,\ 1.0\ =\ always\ full}}
+\DoxyCodeLine{00083\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_a0013730bab1230e602f6112f175fe5fd}{corruption\_rate}}\ =\ 0.0;\ \ \ \ \ \ \ \ \textcolor{comment}{//\ Rate\ of\ data\ corruption}}
+\DoxyCodeLine{00084\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_ae8d248b48de6206d368c91acef12c611}{permission\_error\_rate}}\ =\ 0.0;\ \ \textcolor{comment}{//\ Rate\ of\ permission\ errors}}
+\DoxyCodeLine{00085\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_a9261d8e4ca1a0527d0e7735282ddcb61}{io\_error\_rate}}\ =\ 0.0;\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Rate\ of\ general\ I/O\ errors}}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \ \ \textcolor{comment}{//\ Cache\ behavior}}
+\DoxyCodeLine{00088\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_a1010667d387edb001eec51b976806b27}{cache\_always\_exists}}\ =\ \textcolor{keyword}{false};\ \ \ \ \ \textcolor{comment}{//\ Cache\ files\ always\ exist}}
+\DoxyCodeLine{00089\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_a8e78685072c297d5ea6e993fd98dae6f}{cache\_never\_exists}}\ =\ \textcolor{keyword}{false};\ \ \ \ \ \ \textcolor{comment}{//\ Cache\ files\ never\ exist}}
+\DoxyCodeLine{00090\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_a0dce48801ca1c1306b39b397adbb4cff}{cache\_always\_valid}}\ =\ \textcolor{keyword}{false};\ \ \ \ \ \ \textcolor{comment}{//\ Cache\ is\ always\ valid}}
+\DoxyCodeLine{00091\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_ac0b1ff63795d674cf9b54380a547d5c5}{cache\_always\_invalid}}\ =\ \textcolor{keyword}{false};\ \ \ \ \textcolor{comment}{//\ Cache\ is\ always\ invalid}}
+\DoxyCodeLine{00092\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_aecdd91c3b33666d657ea53e5b170c6b1}{cache\_always\_corrupted}}\ =\ \textcolor{keyword}{false};\ \ \textcolor{comment}{//\ Cache\ is\ always\ corrupted}}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ \ \ \textcolor{comment}{//\ Performance\ simulation}}
+\DoxyCodeLine{00095\ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_a10fec487a73b008932642cf240a50c07}{max\_cache\_size}}\ =\ 100\ *\ 1024\ *\ 1024;\ \ \textcolor{comment}{//\ 100MB\ max\ cache\ size}}
+\DoxyCodeLine{00096\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_a26256d6f7f24efcea30ff439dee7b7db}{cache\_hit\_rate}}\ =\ 0.8;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Cache\ hit\ rate\ simulation}}
+\DoxyCodeLine{00097\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_aaa8ec61864a3371e490bddda14032fef}{simulate\_slow\_disk}}\ =\ \textcolor{keyword}{false};\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Simulate\ slow\ disk\ operations}}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \ \ \textcolor{comment}{//\ Call\ tracking}}
+\DoxyCodeLine{00100\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_a8c42d793da26fe866cfdf4c4bd682541}{enable\_call\_history}}\ =\ \textcolor{keyword}{true};\ \ \textcolor{comment}{//\ Track\ all\ calls\ for\ verification}}
+\DoxyCodeLine{00101\ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_ac7ee80b2f4a6005820a2734e9ffe0474}{max\_history\_size}}\ =\ 1000;\ \ \ \textcolor{comment}{//\ Maximum\ number\ of\ calls\ to\ remember}}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ \ \ \textcolor{comment}{//\ Temporary\ environment}}
+\DoxyCodeLine{00104\ \ \ std::string\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_a0d8eab0a3cb347e03471adc043079085}{temp\_directory\_prefix}}\ =\ \textcolor{stringliteral}{"{}solar\_test\_cache\_"{}};}
+\DoxyCodeLine{00105\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config_a1138a03fb3b9b65b4ba96d23fc4724a2}{auto\_cleanup}}\ =\ \textcolor{keyword}{true};\ \ \textcolor{comment}{//\ Automatically\ cleanup\ temporary\ files}}
+\DoxyCodeLine{00106\ \};}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00114\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a522edb5d49da1e0091b488a52137d5bd}{CacheMock}}\ \{}
+\DoxyCodeLine{00115\ \ \ \textcolor{keyword}{friend}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_abed8e5b36362fb6b3dc8c4bff87b71db}{TemporaryCache}};}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00117\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00121\ \ \ \textcolor{keyword}{explicit}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a522edb5d49da1e0091b488a52137d5bd}{CacheMock}}(\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config}{CacheMockConfig}}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a2e580f1ca9e7f926ad08c8e0c31520bd}{config}}\ =\ \{\});}
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00126\ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a6e34109c456f8146df2449503be29e9c}{\string~CacheMock}}();}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ \ \ \textcolor{comment}{//\ Non-\/copyable,\ non-\/movable\ (due\ to\ mutex\ and\ file\ handles)}}
+\DoxyCodeLine{00129\ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_afd97b4c92a798336c09f9f8f58ac14e1}{CacheMock}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a522edb5d49da1e0091b488a52137d5bd}{CacheMock}}\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00130\ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a522edb5d49da1e0091b488a52137d5bd}{CacheMock}}\&\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_ae93589630ec11c58e189de5cbf68b5c4}{operator=}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a522edb5d49da1e0091b488a52137d5bd}{CacheMock}}\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00131\ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a294e480b9251973a1ff4bc91a843e246}{CacheMock}}(\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a522edb5d49da1e0091b488a52137d5bd}{CacheMock}}\&\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00132\ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a522edb5d49da1e0091b488a52137d5bd}{CacheMock}}\&\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_aa9fdef9f9f069f4b84302e1157ff672c}{operator=}}(\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a522edb5d49da1e0091b488a52137d5bd}{CacheMock}}\&\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00133\ }
+\DoxyCodeLine{00134\ \ \ \textcolor{comment}{//\ ===\ Cache\ State\ Configuration\ ===}}
+\DoxyCodeLine{00135\ }
+\DoxyCodeLine{00139\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_ad9a574edb78b7fbca76ef8a59bce1750}{set\_cache\_exists}}(\textcolor{keywordtype}{bool}\ exists);}
+\DoxyCodeLine{00140\ }
+\DoxyCodeLine{00144\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a31491fc3d9e6e71b19b90244e1068f89}{set\_cache\_valid}}(\textcolor{keywordtype}{bool}\ valid);}
+\DoxyCodeLine{00145\ }
+\DoxyCodeLine{00149\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a15ca63a81c55d8c7ceb40fd2f238f382}{set\_cache\_data}}(\textcolor{keyword}{const}\ std::string\&\ data);}
+\DoxyCodeLine{00150\ }
+\DoxyCodeLine{00154\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a15ca63a81c55d8c7ceb40fd2f238f382}{set\_cache\_data}}(\textcolor{keyword}{const}\ std::vector<SolarSystem::JPL::EphemerisData>\&\ data);}
+\DoxyCodeLine{00155\ }
+\DoxyCodeLine{00159\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_abc36f08890d034bc15d1c71e3aced49f}{set\_cache\_metadata}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_cache_metadata}{SolarSystem::JPL::CacheMetadata}}\&\ metadata);}
+\DoxyCodeLine{00160\ }
+\DoxyCodeLine{00161\ \ \ \textcolor{comment}{//\ ===\ Error\ Simulation\ ===}}
+\DoxyCodeLine{00162\ }
+\DoxyCodeLine{00166\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a2887e4af2d7f852559e46b5ead1c984a}{simulate\_cache\_corruption}}();}
+\DoxyCodeLine{00167\ }
+\DoxyCodeLine{00171\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_ab91d8fbd2ad65f448876870fa4083428}{simulate\_disk\_full}}();}
+\DoxyCodeLine{00172\ }
+\DoxyCodeLine{00176\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a40e749d3eff16db5b198058455d2b789}{simulate\_permission\_denied}}();}
+\DoxyCodeLine{00177\ }
+\DoxyCodeLine{00181\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_acd2daf829c27f653dc31c49c62a27567}{simulate\_io\_error}}(\textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_aae76998553f78b179326a45d282fd395}{operation\_count}}\ =\ 1);}
+\DoxyCodeLine{00182\ }
+\DoxyCodeLine{00186\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_ad8ee2c5d56fb14baffbd6daa1379e1bc}{simulate\_partial\_corruption}}(\textcolor{keywordtype}{double}\ corruption\_percentage\ =\ 0.1);}
+\DoxyCodeLine{00187\ }
+\DoxyCodeLine{00191\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a75d6b5ae4ce1a20a132558dd331ab3cf}{simulate\_slow\_disk}}(std::chrono::milliseconds\ delay);}
+\DoxyCodeLine{00192\ }
+\DoxyCodeLine{00193\ \ \ \textcolor{comment}{//\ ===\ Cache\ Content\ Management\ ===}}
+\DoxyCodeLine{00194\ }
+\DoxyCodeLine{00198\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_aad3c1fff12a1f57f0331a8b38cdb1829}{populate\_with\_valid\_data}}();}
+\DoxyCodeLine{00199\ }
+\DoxyCodeLine{00203\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_afe5d2b35298afcde993bad66adf1031d}{populate\_with\_corrupted\_data}}();}
+\DoxyCodeLine{00204\ }
+\DoxyCodeLine{00208\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a44074ed875f1d27ff585d7679649fbcb}{populate\_with\_ephemeris\_data}}(\textcolor{keyword}{const}\ std::vector<SolarSystem::JPL::EphemerisData>\&\ data);}
+\DoxyCodeLine{00209\ }
+\DoxyCodeLine{00213\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a4769a319e4f096aeb428733df4f70af0}{clear\_cache\_data}}();}
+\DoxyCodeLine{00214\ }
+\DoxyCodeLine{00215\ \ \ \textcolor{comment}{//\ ===\ Mock\ Interface\ Implementation\ ===}}
+\DoxyCodeLine{00216\ }
+\DoxyCodeLine{00220\ \ \ [[nodiscard]]\ \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a1ae7174894acb8c6560a62a72f42d5cd}{SolarSystem::JPL::JPLResult<std::vector<SolarSystem::JPL::EphemerisData>}}>}
+\DoxyCodeLine{00221\ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a1972501492faa3427ae8f4d376437133}{mock\_load\_from\_cache}}();}
+\DoxyCodeLine{00222\ }
+\DoxyCodeLine{00226\ \ \ [[nodiscard]]\ \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a9db0f8fc911088c5455067676ea1e99d}{SolarSystem::JPL::JPLVoidResult}}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a97eead2c367c35f945e46fbf0ae2c291}{mock\_save\_to\_cache}}(}
+\DoxyCodeLine{00227\ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::vector<SolarSystem::JPL::EphemerisData>\&\ data);}
+\DoxyCodeLine{00228\ }
+\DoxyCodeLine{00232\ \ \ [[nodiscard]]\ \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a1ae7174894acb8c6560a62a72f42d5cd}{SolarSystem::JPL::JPLResult<bool>}}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a8b0a1100933d2d8222b006af7c9565f6}{mock\_validate\_cache}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00233\ }
+\DoxyCodeLine{00237\ \ \ [[nodiscard]]\ \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a9db0f8fc911088c5455067676ea1e99d}{SolarSystem::JPL::JPLVoidResult}}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a2013c77a6b2eaa00e5cefdf0999522ff}{mock\_clear\_cache}}();}
+\DoxyCodeLine{00238\ }
+\DoxyCodeLine{00242\ \ \ [[nodiscard]]\ std::optional<SolarSystem::JPL::CacheMetadata>\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_aeb0b3f6425841fa33c0e59c7b67cca93}{mock\_get\_cache\_metadata}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00243\ }
+\DoxyCodeLine{00247\ \ \ [[nodiscard]]\ \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a9db0f8fc911088c5455067676ea1e99d}{SolarSystem::JPL::JPLVoidResult}}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a9a26dc8538c947ca356b6f5c11f873e9}{mock\_rebuild\_cache}}();}
+\DoxyCodeLine{00248\ }
+\DoxyCodeLine{00249\ \ \ \textcolor{comment}{//\ ===\ File\ System\ Simulation\ ===}}
+\DoxyCodeLine{00250\ }
+\DoxyCodeLine{00254\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_ae25e5d5d40c19a310db60f9e798e26e5}{mock\_file\_exists}}(\textcolor{keyword}{const}\ std::filesystem::path\&\ path)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00255\ }
+\DoxyCodeLine{00259\ \ \ [[nodiscard]]\ std::optional<size\_t>\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a09414e1c7d685bdfb3dc270ae29090f2}{mock\_file\_size}}(\textcolor{keyword}{const}\ std::filesystem::path\&\ path)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00260\ }
+\DoxyCodeLine{00264\ \ \ [[nodiscard]]\ std::optional<std::string>\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_aeb2791bc68b6b3b1b9a899b27eef1a97}{mock\_read\_file}}(\textcolor{keyword}{const}\ std::filesystem::path\&\ path);}
+\DoxyCodeLine{00265\ }
+\DoxyCodeLine{00269\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_aec5c77b26b516774a4165e9537944464}{mock\_write\_file}}(\textcolor{keyword}{const}\ std::filesystem::path\&\ path,\ \textcolor{keyword}{const}\ std::string\&\ content);}
+\DoxyCodeLine{00270\ }
+\DoxyCodeLine{00274\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a69166e2787e23d9e1481788de3330f60}{mock\_create\_directory}}(\textcolor{keyword}{const}\ std::filesystem::path\&\ path);}
+\DoxyCodeLine{00275\ }
+\DoxyCodeLine{00279\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a283941cc4d301053d91b630b860df041}{mock\_remove\_file}}(\textcolor{keyword}{const}\ std::filesystem::path\&\ path);}
+\DoxyCodeLine{00280\ }
+\DoxyCodeLine{00281\ \ \ \textcolor{comment}{//\ ===\ Call\ Verification\ ===}}
+\DoxyCodeLine{00282\ }
+\DoxyCodeLine{00286\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a868d6c0681fd42a2a58dfc0a55a60d91}{was\_cache\_read}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00287\ }
+\DoxyCodeLine{00291\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_ae3fdb16a5d5f4034b20a697f29f57db0}{was\_cache\_written}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00292\ }
+\DoxyCodeLine{00296\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a74c6da438ce419c858fafaf0f787592f}{was\_cache\_validated}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00297\ }
+\DoxyCodeLine{00301\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_af9a3d1ca9d634444874b93b090ae119c}{was\_cache\_cleared}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00302\ }
+\DoxyCodeLine{00306\ \ \ [[nodiscard]]\ std::string\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_adf9fd730dd1075ae11b7b27a2c995976}{last\_written\_data}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00307\ }
+\DoxyCodeLine{00311\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_aae76998553f78b179326a45d282fd395}{operation\_count}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00312\ }
+\DoxyCodeLine{00316\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_aae76998553f78b179326a45d282fd395}{operation\_count}}(\mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_aebdea943a0edba0bd54aac11293bf00f}{MockCacheOperationType}}\ type)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00317\ }
+\DoxyCodeLine{00321\ \ \ [[nodiscard]]\ \textcolor{keyword}{const}\ std::vector<MockCacheCallInfo>\&\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_ac705731389317873ccc5700cc1b7debc}{operation\_history}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00322\ }
+\DoxyCodeLine{00326\ \ \ [[nodiscard]]\ std::vector<MockCacheCallInfo>\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a28309ef010926cca0066f0e9c5305d25}{operations\_of\_type}}(}
+\DoxyCodeLine{00327\ \ \ \ \ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_aebdea943a0edba0bd54aac11293bf00f}{MockCacheOperationType}}\ type)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00328\ }
+\DoxyCodeLine{00332\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a223ee2487d769bce223de74d90e9ab2c}{reset\_call\_history}}();}
+\DoxyCodeLine{00333\ }
+\DoxyCodeLine{00334\ \ \ \textcolor{comment}{//\ ===\ Configuration\ Access\ ===}}
+\DoxyCodeLine{00335\ }
+\DoxyCodeLine{00339\ \ \ [[nodiscard]]\ \textcolor{keyword}{const}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config}{CacheMockConfig}}\&\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a2e580f1ca9e7f926ad08c8e0c31520bd}{config}}()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ config\_;\ \}}
+\DoxyCodeLine{00340\ }
+\DoxyCodeLine{00344\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_aaafab43a7383d7c34807de094ea7987c}{update\_config}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config}{CacheMockConfig}}\&\ new\_config);}
+\DoxyCodeLine{00345\ }
+\DoxyCodeLine{00346\ \ \ \textcolor{comment}{//\ ===\ Utility\ Functions\ ===}}
+\DoxyCodeLine{00347\ }
+\DoxyCodeLine{00351\ \ \ [[nodiscard]]\ std::filesystem::path\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_ae83cea0968a3b51ba2f3bcfc0f9659a5}{cache\_directory}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00352\ }
+\DoxyCodeLine{00356\ \ \ [[nodiscard]]\ std::filesystem::path\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a8d72fffbde78183881c15c0cc60b6c5c}{binary\_cache\_path}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00357\ }
+\DoxyCodeLine{00361\ \ \ [[nodiscard]]\ std::filesystem::path\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a13d786bd59435856c1eb87418b8b7757}{json\_cache\_path}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00362\ }
+\DoxyCodeLine{00366\ \ \ [[nodiscard]]\ std::filesystem::path\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a76efa7594775234cec5aa211af46f97d}{metadata\_path}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00367\ }
+\DoxyCodeLine{00371\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a143aa29b6b311f1ad67991c563115377}{install\_as\_global\_mock}}();}
+\DoxyCodeLine{00372\ }
+\DoxyCodeLine{00376\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_a22e7ed268743d5cac31cbc75a3effee1}{remove\_global\_mock}}();}
+\DoxyCodeLine{00377\ }
+\DoxyCodeLine{00378\ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00379\ \ \ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config}{CacheMockConfig}}\ config\_;}
+\DoxyCodeLine{00380\ }
+\DoxyCodeLine{00381\ \ \ \textcolor{comment}{//\ Cache\ state}}
+\DoxyCodeLine{00382\ \ \ \textcolor{keywordtype}{bool}\ cache\_exists\_\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00383\ \ \ \textcolor{keywordtype}{bool}\ cache\_valid\_\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00384\ \ \ \textcolor{keywordtype}{bool}\ cache\_corrupted\_\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00385\ \ \ std::string\ cache\_data\_;}
+\DoxyCodeLine{00386\ \ \ std::vector<SolarSystem::JPL::EphemerisData>\ ephemeris\_data\_;}
+\DoxyCodeLine{00387\ \ \ std::optional<SolarSystem::JPL::CacheMetadata>\ metadata\_;}
+\DoxyCodeLine{00388\ }
+\DoxyCodeLine{00389\ \ \ \textcolor{comment}{//\ File\ system\ simulation}}
+\DoxyCodeLine{00390\ \ \ std::unordered\_map<std::string,\ std::string>\ mock\_files\_;}
+\DoxyCodeLine{00391\ \ \ std::unordered\_map<std::string,\ bool>\ file\_exists\_map\_;}
+\DoxyCodeLine{00392\ \ \ std::unordered\_map<std::string,\ size\_t>\ file\_sizes\_;}
+\DoxyCodeLine{00393\ }
+\DoxyCodeLine{00394\ \ \ \textcolor{comment}{//\ Error\ simulation\ state}}
+\DoxyCodeLine{00395\ \ \ \textcolor{keywordtype}{size\_t}\ remaining\_io\_errors\_\ =\ 0;}
+\DoxyCodeLine{00396\ \ \ \textcolor{keywordtype}{bool}\ disk\_full\_simulated\_\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00397\ \ \ \textcolor{keywordtype}{bool}\ permission\_denied\_simulated\_\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00398\ \ \ std::chrono::milliseconds\ slow\_disk\_delay\_\ =\ std::chrono::milliseconds(0);}
+\DoxyCodeLine{00399\ }
+\DoxyCodeLine{00400\ \ \ \textcolor{comment}{//\ Call\ tracking}}
+\DoxyCodeLine{00401\ \ \ \textcolor{keyword}{mutable}\ std::mutex\ call\_mutex\_;}
+\DoxyCodeLine{00402\ \ \ std::vector<MockCacheCallInfo>\ operation\_history\_;}
+\DoxyCodeLine{00403\ \ \ std::unordered\_map<MockCacheOperationType,\ size\_t>\ operation\_counts\_;}
+\DoxyCodeLine{00404\ \ \ std::string\ last\_written\_data\_;}
+\DoxyCodeLine{00405\ }
+\DoxyCodeLine{00406\ \ \ \textcolor{comment}{//\ Random\ number\ generation\ for\ simulation}}
+\DoxyCodeLine{00407\ \ \ \textcolor{keyword}{mutable}\ std::random\_device\ rd\_;}
+\DoxyCodeLine{00408\ \ \ \textcolor{keyword}{mutable}\ std::mt19937\ gen\_;}
+\DoxyCodeLine{00409\ \ \ \textcolor{keyword}{mutable}\ std::uniform\_real\_distribution<double>\ error\_dist\_;}
+\DoxyCodeLine{00410\ }
+\DoxyCodeLine{00411\ \ \ \textcolor{comment}{//\ Cache\ paths}}
+\DoxyCodeLine{00412\ \ \ std::filesystem::path\ cache\_directory\_;}
+\DoxyCodeLine{00413\ \ \ std::filesystem::path\ binary\_cache\_path\_;}
+\DoxyCodeLine{00414\ \ \ std::filesystem::path\ json\_cache\_path\_;}
+\DoxyCodeLine{00415\ \ \ std::filesystem::path\ metadata\_path\_;}
+\DoxyCodeLine{00416\ }
+\DoxyCodeLine{00417\ \ \ \textcolor{comment}{//\ ===\ Internal\ Helper\ Methods\ ===}}
+\DoxyCodeLine{00418\ }
+\DoxyCodeLine{00422\ \ \ \textcolor{keywordtype}{void}\ record\_operation(\mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_aebdea943a0edba0bd54aac11293bf00f}{MockCacheOperationType}}\ type,\ \textcolor{keyword}{const}\ std::filesystem::path\&\ path,}
+\DoxyCodeLine{00423\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ data\_size,\ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a784a7c1ff19164109682c4ab6e6cb8f6}{MockCacheError}}\ result,}
+\DoxyCodeLine{00424\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ details\ =\ \textcolor{stringliteral}{"{}"{}})\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00425\ }
+\DoxyCodeLine{00429\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ should\_simulate\_error(\textcolor{keywordtype}{double}\ error\_rate)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00430\ }
+\DoxyCodeLine{00434\ \ \ \textcolor{keywordtype}{void}\ simulate\_operation\_delay()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00435\ }
+\DoxyCodeLine{00439\ \ \ [[nodiscard]]\ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a784a7c1ff19164109682c4ab6e6cb8f6}{MockCacheError}}\ check\_operation\_errors()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00440\ }
+\DoxyCodeLine{00444\ \ \ [[nodiscard]]\ std::string\ generate\_corrupted\_data(\textcolor{keyword}{const}\ std::string\&\ original\_data,}
+\DoxyCodeLine{00445\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ corruption\_rate\ =\ 0.1)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00446\ }
+\DoxyCodeLine{00450\ \ \ [[nodiscard]]\ std::vector<SolarSystem::JPL::EphemerisData>\ generate\_valid\_test\_data()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00451\ }
+\DoxyCodeLine{00455\ \ \ [[nodiscard]]\ std::string\ ephemeris\_data\_to\_binary(}
+\DoxyCodeLine{00456\ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::vector<SolarSystem::JPL::EphemerisData>\&\ data)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00457\ }
+\DoxyCodeLine{00461\ \ \ [[nodiscard]]\ std::string\ ephemeris\_data\_to\_json(}
+\DoxyCodeLine{00462\ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::vector<SolarSystem::JPL::EphemerisData>\&\ data)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00463\ }
+\DoxyCodeLine{00467\ \ \ [[nodiscard]]\ std::optional<std::vector<SolarSystem::JPL::EphemerisData>>}
+\DoxyCodeLine{00468\ \ \ parse\_binary\_ephemeris\_data(\textcolor{keyword}{const}\ std::string\&\ binary\_data)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00469\ }
+\DoxyCodeLine{00473\ \ \ [[nodiscard]]\ std::optional<std::vector<SolarSystem::JPL::EphemerisData>>}
+\DoxyCodeLine{00474\ \ \ parse\_json\_ephemeris\_data(\textcolor{keyword}{const}\ std::string\&\ json\_data)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00475\ }
+\DoxyCodeLine{00479\ \ \ [[nodiscard]]\ std::string\ generate\_metadata\_json(}
+\DoxyCodeLine{00480\ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_cache_metadata}{SolarSystem::JPL::CacheMetadata}}\&\ metadata)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00481\ }
+\DoxyCodeLine{00485\ \ \ [[nodiscard]]\ std::optional<SolarSystem::JPL::CacheMetadata>\ parse\_metadata\_json(}
+\DoxyCodeLine{00486\ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ json\_data)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00487\ \};}
+\DoxyCodeLine{00488\ }
+\DoxyCodeLine{00495\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_temporary_cache_a2ca559ec9845dafd269a81dc97b8506c}{TemporaryCache}}\ \{}
+\DoxyCodeLine{00496\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00500\ \ \ \textcolor{keyword}{explicit}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_temporary_cache_a2ca559ec9845dafd269a81dc97b8506c}{TemporaryCache}}(\textcolor{keyword}{const}\ std::string\&\ cache\_type\ =\ \textcolor{stringliteral}{"{}ephemeris"{}});}
+\DoxyCodeLine{00501\ }
+\DoxyCodeLine{00505\ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_temporary_cache_a351333209d6e472b7160a62038aaf84b}{\string~TemporaryCache}}();}
+\DoxyCodeLine{00506\ }
+\DoxyCodeLine{00507\ \ \ \textcolor{comment}{//\ Non-\/copyable,\ non-\/movable}}
+\DoxyCodeLine{00508\ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_temporary_cache_ad2362ae5a58f787f332079deebee6d83}{TemporaryCache}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_temporary_cache_a2ca559ec9845dafd269a81dc97b8506c}{TemporaryCache}}\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00509\ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_temporary_cache_a2ca559ec9845dafd269a81dc97b8506c}{TemporaryCache}}\&\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_temporary_cache_ae34e30128ae81943e9eec1336df2d6c3}{operator=}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_temporary_cache_a2ca559ec9845dafd269a81dc97b8506c}{TemporaryCache}}\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00510\ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_temporary_cache_ad1c30b13e9653ea0c0b469cf42aa4e9f}{TemporaryCache}}(\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_temporary_cache_a2ca559ec9845dafd269a81dc97b8506c}{TemporaryCache}}\&\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00511\ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_temporary_cache_a2ca559ec9845dafd269a81dc97b8506c}{TemporaryCache}}\&\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_temporary_cache_a4b49b47fb8f6a8933370f843c78885f9}{operator=}}(\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_temporary_cache_a2ca559ec9845dafd269a81dc97b8506c}{TemporaryCache}}\&\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00512\ }
+\DoxyCodeLine{00516\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_temporary_cache_adbc4f8eb2b5435c96f0234e5c92123e7}{populate\_with\_valid\_data}}();}
+\DoxyCodeLine{00517\ }
+\DoxyCodeLine{00521\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_temporary_cache_a7b6ecc9b519295f3a3ac521f16323dcb}{populate\_with\_corrupted\_data}}();}
+\DoxyCodeLine{00522\ }
+\DoxyCodeLine{00526\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_temporary_cache_a27fb30037f516575eb6bcb3b98d7749b}{simulate\_partial\_corruption}}(\textcolor{keywordtype}{double}\ corruption\_percentage\ =\ 0.1);}
+\DoxyCodeLine{00527\ }
+\DoxyCodeLine{00531\ \ \ [[nodiscard]]\ std::filesystem::path\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_temporary_cache_a3c953684e069b9cd2f2434a6fa429670}{cache\_path}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00532\ }
+\DoxyCodeLine{00536\ \ \ [[nodiscard]]\ std::filesystem::path\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_temporary_cache_a537fbd973346f2fb5f73ed32413ceb3c}{binary\_cache\_file}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00537\ }
+\DoxyCodeLine{00541\ \ \ [[nodiscard]]\ std::filesystem::path\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_temporary_cache_af769c01b4565b59216d1ccc25f656288}{json\_cache\_file}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00542\ }
+\DoxyCodeLine{00546\ \ \ [[nodiscard]]\ std::filesystem::path\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_temporary_cache_a0f0d9dc310e3d3a2cd5ea0ed8dab9e71}{metadata\_file}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00547\ }
+\DoxyCodeLine{00551\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_temporary_cache_a30156bb16707343f536ff6a9e3ea2988}{cache\_files\_exist}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00552\ }
+\DoxyCodeLine{00556\ \ \ [[nodiscard]]\ std::map<std::string,\ size\_t>\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_temporary_cache_a0a977b7eb3d4c25ae17eba9293b7ad14}{cache\_file\_sizes}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00557\ }
+\DoxyCodeLine{00561\ \ \ [[nodiscard]]\ \mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_j_p_l_client_config}{SolarSystem::JPL::JPLClientConfig}}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_temporary_cache_add16316b84038cfcaf75a8ecb336803d}{create\_client\_config}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00562\ }
+\DoxyCodeLine{00563\ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00564\ \ \ std::string\ cache\_type\_;}
+\DoxyCodeLine{00565\ \ \ std::filesystem::path\ temp\_directory\_;}
+\DoxyCodeLine{00566\ \ \ std::filesystem::path\ cache\_directory\_;}
+\DoxyCodeLine{00567\ \ \ \textcolor{keywordtype}{bool}\ cleanup\_on\_destroy\_;}
+\DoxyCodeLine{00568\ }
+\DoxyCodeLine{00572\ \ \ \textcolor{keywordtype}{void}\ create\_directory\_structure();}
+\DoxyCodeLine{00573\ }
+\DoxyCodeLine{00577\ \ \ [[nodiscard]]\ std::vector<SolarSystem::JPL::EphemerisData>\ generate\_test\_data()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00578\ }
+\DoxyCodeLine{00582\ \ \ \textcolor{keywordtype}{void}\ write\_binary\_cache(\textcolor{keyword}{const}\ std::vector<SolarSystem::JPL::EphemerisData>\&\ data);}
+\DoxyCodeLine{00583\ }
+\DoxyCodeLine{00587\ \ \ \textcolor{keywordtype}{void}\ write\_json\_cache(\textcolor{keyword}{const}\ std::vector<SolarSystem::JPL::EphemerisData>\&\ data);}
+\DoxyCodeLine{00588\ }
+\DoxyCodeLine{00592\ \ \ \textcolor{keywordtype}{void}\ write\_metadata(\textcolor{keyword}{const}\ std::vector<SolarSystem::JPL::EphemerisData>\&\ data);}
+\DoxyCodeLine{00593\ }
+\DoxyCodeLine{00597\ \ \ \textcolor{keywordtype}{void}\ corrupt\_file(\textcolor{keyword}{const}\ std::filesystem::path\&\ file\_path,\ \textcolor{keywordtype}{double}\ corruption\_rate);}
+\DoxyCodeLine{00598\ \};}
+\DoxyCodeLine{00599\ }
+\DoxyCodeLine{00603\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_factory}{CacheMockFactory}}\ \{}
+\DoxyCodeLine{00604\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00608\ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ std::unique\_ptr<CacheMock>\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_factory_ac4cd0da267341d2af3cc0c9027eb356c}{create\_default}}();}
+\DoxyCodeLine{00609\ }
+\DoxyCodeLine{00613\ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ std::unique\_ptr<CacheMock>\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_factory_a974682f4f2cf1296baf4d6a90ccf82ee}{create}}(\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config}{CacheMockConfig}}\ config);}
+\DoxyCodeLine{00614\ }
+\DoxyCodeLine{00618\ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ std::unique\_ptr<CacheMock>\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_factory_a482cb909063849e13a8fbe2dbea2d1b8}{create\_for\_corruption\_testing}}();}
+\DoxyCodeLine{00619\ }
+\DoxyCodeLine{00623\ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ std::unique\_ptr<CacheMock>\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_factory_a79faabc7d3335f7e996953e56a4517ed}{create\_for\_disk\_full\_testing}}();}
+\DoxyCodeLine{00624\ }
+\DoxyCodeLine{00628\ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ std::unique\_ptr<CacheMock>\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_factory_ad5cd12b718456c2abccdd5d4fefd56fc}{create\_for\_performance\_testing}}();}
+\DoxyCodeLine{00629\ }
+\DoxyCodeLine{00633\ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ std::unique\_ptr<CacheMock>\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_factory_ae96a989e2ec4e0ad4e9aa9b8e7426f0e}{create\_with\_valid\_cache}}();}
+\DoxyCodeLine{00634\ }
+\DoxyCodeLine{00638\ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ std::unique\_ptr<CacheMock>\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_factory_a3377495cc3176a6b1c5f96fb8b88a5bf}{create\_with\_invalid\_cache}}();}
+\DoxyCodeLine{00639\ \};}
+\DoxyCodeLine{00640\ }
+\DoxyCodeLine{00644\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_cache_mock_a21513a7e1a64d1ac31a8f7669e75f007}{ScopedCacheMock}}\ \{}
+\DoxyCodeLine{00645\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00646\ \ \ \textcolor{keyword}{explicit}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_cache_mock_a21513a7e1a64d1ac31a8f7669e75f007}{ScopedCacheMock}}(std::unique\_ptr<CacheMock>\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_cache_mock_abb27a9e8cf4a2a204b7d9202cfa8b2b6}{mock}});}
+\DoxyCodeLine{00647\ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_cache_mock_a7c7936b5091b76093bfe81154443dba3}{\string~ScopedCacheMock}}();}
+\DoxyCodeLine{00648\ }
+\DoxyCodeLine{00649\ \ \ \textcolor{comment}{//\ Non-\/copyable,\ non-\/movable}}
+\DoxyCodeLine{00650\ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_cache_mock_a3449a6bc5579b9362f64285faefbd865}{ScopedCacheMock}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_cache_mock_a21513a7e1a64d1ac31a8f7669e75f007}{ScopedCacheMock}}\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00651\ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_cache_mock_a21513a7e1a64d1ac31a8f7669e75f007}{ScopedCacheMock}}\&\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_cache_mock_ae4bf83ece4fb5e0f17240ee86f53f4f3}{operator=}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_cache_mock_a21513a7e1a64d1ac31a8f7669e75f007}{ScopedCacheMock}}\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00652\ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_cache_mock_a34e89382c3e6d7c9b53b075499a1e071}{ScopedCacheMock}}(\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_cache_mock_a21513a7e1a64d1ac31a8f7669e75f007}{ScopedCacheMock}}\&\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00653\ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_cache_mock_a21513a7e1a64d1ac31a8f7669e75f007}{ScopedCacheMock}}\&\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_cache_mock_a48aa05e95b6ce3c1963958aad77ac130}{operator=}}(\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_cache_mock_a21513a7e1a64d1ac31a8f7669e75f007}{ScopedCacheMock}}\&\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00654\ }
+\DoxyCodeLine{00658\ \ \ [[nodiscard]]\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock}{CacheMock}}\&\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_cache_mock_abb27a9e8cf4a2a204b7d9202cfa8b2b6}{mock}}()\ \{\ \textcolor{keywordflow}{return}\ *mock\_;\ \}}
+\DoxyCodeLine{00659\ \ \ [[nodiscard]]\ \textcolor{keyword}{const}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock}{CacheMock}}\&\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_cache_mock_a840ac8e8e218c2296cfc654069bfc846}{mock}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ *mock\_;\ \}}
+\DoxyCodeLine{00660\ }
+\DoxyCodeLine{00661\ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00662\ \ \ std::unique\_ptr<CacheMock>\ mock\_;}
+\DoxyCodeLine{00663\ \};}
+\DoxyCodeLine{00664\ }
+\DoxyCodeLine{00665\ \}\ \ \textcolor{comment}{//\ namespace\ SolarSystem::Testing::Mocks}}
+
+\end{DoxyCode}

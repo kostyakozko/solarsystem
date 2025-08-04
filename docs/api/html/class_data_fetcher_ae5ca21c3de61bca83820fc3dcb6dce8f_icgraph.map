@@ -1,0 +1,8 @@
+<map id="DataFetcher::show_status" name="DataFetcher::show_status">
+<area shape="rect" id="Node000001" title="Show current cache status with modern formatting." alt="" coords="323,5,498,31"/>
+<area shape="rect" id="Node000002" href="$fetch_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title="Modern main function using RAII and structured error handling." alt="" coords="5,5,55,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="307,21,55,21,55,16,307,16"/>
+<area shape="rect" id="Node000003" href="$class_data_fetcher.html#a756d8cf8a7756343b9f1a1c9054fbd0a" title="Update ephemeris data with progress monitoring." alt="" coords="103,31,275,56"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="308,33,276,36,275,31,307,27"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="89,30,55,25,56,19,90,25"/>
+</map>

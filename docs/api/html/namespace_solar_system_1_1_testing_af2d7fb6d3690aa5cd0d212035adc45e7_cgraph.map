@@ -1,0 +1,24 @@
+<map id="SolarSystem::Testing::run_tests" name="SolarSystem::Testing::run_tests">
+<area shape="rect" id="Node000001" title="Main entry point for running tests." alt="" coords="5,302,152,343"/>
+<area shape="rect" id="Node000002" href="$struct_solar_system_1_1_testing_1_1_test_suite_result.html#a9b8f595623857de7f10581508028ffd0" title=" " alt="" coords="216,5,368,61"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="82,301,95,255,118,194,152,129,173,99,198,71,202,67,206,71,202,75,177,102,156,132,123,196,100,256,87,302"/>
+<area shape="rect" id="Node000003" href="$struct_solar_system_1_1_testing_1_1_test_suite_result.html#a1831e08c441b0c0558510ac4b9651d87" title=" " alt="" coords="219,85,365,141"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="88,300,130,229,161,188,198,151,204,146,207,151,201,155,165,191,134,232,92,303"/>
+<area shape="rect" id="Node000004" href="$class_solar_system_1_1_testing_1_1_test_registry.html#a04c09ceecc59922ee7c0b643d1d2c8f8" title=" " alt="" coords="218,165,366,221"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="103,299,146,266,198,231,207,226,209,231,201,235,149,270,106,304"/>
+<area shape="rect" id="Node000005" href="$class_solar_system_1_1_testing_1_1_test_registry.html#a38948c96a559c9b1c33f0c34bfc378ac" title=" " alt="" coords="212,269,372,310"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="152,308,196,301,196,307,153,314"/>
+<area shape="rect" id="Node000006" href="$namespace_solar_system_1_1_testing.html#a9480e914870360af716479644b1648e9" title="Parse command line arguments for test configuration." alt="" coords="213,334,371,375"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="153,331,198,338,197,343,152,336"/>
+<area shape="rect" id="Node000007" href="$struct_solar_system_1_1_testing_1_1_test_result.html#a76258cddcd64146cf97789cab6ef6f15" title=" " alt="" coords="219,400,365,440"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="117,341,201,384,217,391,215,396,199,389,115,346"/>
+<area shape="rect" id="Node000008" href="$struct_solar_system_1_1_testing_1_1_test_suite_result.html#a4ceff0d943e063958610929a6834b137" title=" " alt="" coords="200,465,384,506"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="96,342,140,395,169,424,201,450,210,455,207,460,198,454,165,428,136,399,92,345"/>
+<area shape="rect" id="Node000010" href="$struct_solar_system_1_1_testing_1_1_test_result.html#a078afd1b3a17ba06be609553e2ad7266" title=" " alt="" coords="217,532,367,572"/>
+<area shape="poly" id="edge10_Node000001_Node000010" title=" " alt="" coords="90,342,105,379,129,425,161,473,201,515,209,521,206,525,198,519,157,477,125,428,101,381,85,344"/>
+<area shape="poly" id="edge5_Node000005_Node000005" title=" " alt="" coords="251,269,249,259,256,250,270,244,292,242,315,245,329,251,327,256,314,250,292,247,272,249,259,254,255,260,257,268"/>
+<area shape="rect" id="Node000009" href="$struct_solar_system_1_1_testing_1_1_test_suite_result.html#a6533a7084863342e550f36ae01f58c8b" title=" " alt="" coords="432,462,640,503"/>
+<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="385,481,416,481,417,486,385,487"/>
+<area shape="rect" id="Node000011" href="$struct_solar_system_1_1_testing_1_1_test_result.html#a881e1672d7d9d3a8edca4307046246bd" title=" " alt="" coords="463,527,609,582"/>
+<area shape="poly" id="edge11_Node000010_Node000011" title=" " alt="" coords="368,550,448,551,448,556,368,555"/>
+</map>

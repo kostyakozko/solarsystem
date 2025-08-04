@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['jplbodyinfo_0',['JPLBodyInfo',['../struct_j_p_l_body_info.html',1,'']]]
+  ['globalconfig_0',['GlobalConfig',['../class_solar_system_1_1_utils_1_1_global_config.html',1,'SolarSystem::Utils']]]
 ];

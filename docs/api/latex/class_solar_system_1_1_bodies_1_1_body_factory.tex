@@ -1,0 +1,505 @@
+\doxysection{Solar\+System\+::Bodies\+::Body\+Factory Class Reference}
+\hypertarget{class_solar_system_1_1_bodies_1_1_body_factory}{}\label{class_solar_system_1_1_bodies_1_1_body_factory}\index{SolarSystem::Bodies::BodyFactory@{SolarSystem::Bodies::BodyFactory}}
+
+
+Factory for creating celestial bodies from various data sources.  
+
+
+
+
+{\ttfamily \#include $<$body\+\_\+factory.\+hpp$>$}
+
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_solar_system_1_1_bodies_1_1_body_factory_1_1_creation_options}{Creation\+Options}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+enum class \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_a65e3d3286dd5b210649ba310a2a66d3b}{Data\+Source}} \{ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_a65e3d3286dd5b210649ba310a2a66d3bace166f5abf98588252fd67de9d471209}{JPL\+\_\+\+HORIZONS}}
+, \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_a65e3d3286dd5b210649ba310a2a66d3ba089d1a42095b3742aee74d2a852fcc90}{CACHED\+\_\+\+DATA}}
+, \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_a65e3d3286dd5b210649ba310a2a66d3ba9a440d990671782050a90c9265b855e7}{FALLBACK\+\_\+\+DATA}}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_a2c37486fb3f0fa8844fac76c6b27f4f8}{Body\+Factory}} ()
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_a6e6c96b6b2cac1df055588fd19f45a50}{Body\+Factory}} (\mbox{\hyperlink{struct_solar_system_1_1_bodies_1_1_body_factory_1_1_creation_options}{Creation\+Options}} options)
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Utils\+::\+Expected}}$<$ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}}, std\+::string $>$ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_aaff11393da75cbe9f81d56cbcc0f39c9}{create\+\_\+body}} (std\+::string\+\_\+view name) const
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Utils\+::\+Expected}}$<$ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}}, std\+::string $>$ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_ac372e119e0c84805bda35630332bdf86}{create\+\_\+body}} (std\+::string\+\_\+view name, const \mbox{\hyperlink{struct_solar_system_1_1_bodies_1_1_body_factory_1_1_creation_options}{Creation\+Options}} \&options) const
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Utils\+::\+Expected}}$<$ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection}{Body\+Collection}}, std\+::string $>$ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_a5157d2d796f663861f2f4fef994e41e6}{create\+\_\+collection}} (const std\+::vector$<$ std\+::string $>$ \&body\+\_\+names) const
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Utils\+::\+Expected}}$<$ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection}{Body\+Collection}}, std\+::string $>$ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_a611b8b191329b880893347ab84bf3d95}{create\+\_\+collection}} (const std\+::vector$<$ std\+::string $>$ \&body\+\_\+names, const \mbox{\hyperlink{struct_solar_system_1_1_bodies_1_1_body_factory_1_1_creation_options}{Creation\+Options}} \&options) const
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Utils\+::\+Expected}}$<$ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection}{Body\+Collection}}, std\+::string $>$ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_a47bff147fbed33153af617c9b078176f}{create\+\_\+solar\+\_\+system}} () const
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Utils\+::\+Expected}}$<$ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection}{Body\+Collection}}, std\+::string $>$ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_a4ea71e80e9c673233cae31a4d9b6af98}{create\+\_\+solar\+\_\+system}} (const \mbox{\hyperlink{struct_solar_system_1_1_bodies_1_1_body_factory_1_1_creation_options}{Creation\+Options}} \&options) const
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Utils\+::\+Expected}}$<$ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection}{Body\+Collection}}, std\+::string $>$ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_a280d802527fac98ebfee125a2ed09e2d}{create\+\_\+inner\+\_\+planets}} () const
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Utils\+::\+Expected}}$<$ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection}{Body\+Collection}}, std\+::string $>$ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_aa4e6fb02314ad7c6e3999fd2d6fc7679}{create\+\_\+inner\+\_\+planets}} (const \mbox{\hyperlink{struct_solar_system_1_1_bodies_1_1_body_factory_1_1_creation_options}{Creation\+Options}} \&options) const
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Utils\+::\+Expected}}$<$ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection}{Body\+Collection}}, std\+::string $>$ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_aee95f12bf4d6b12373c64bf4abdf010c}{create\+\_\+essential\+\_\+bodies}} () const
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Utils\+::\+Expected}}$<$ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection}{Body\+Collection}}, std\+::string $>$ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_abcd3695e32fa6c7d422b81254f7e2a0c}{create\+\_\+essential\+\_\+bodies}} (const \mbox{\hyperlink{struct_solar_system_1_1_bodies_1_1_body_factory_1_1_creation_options}{Creation\+Options}} \&options) const
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Utils\+::\+Expected}}$<$ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}}, std\+::string $>$ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_ada6c7795436925ccdbd6a65e77b91c0a}{create\+\_\+from\+\_\+legacy\+\_\+data}} (std\+::string\+\_\+view name) const
+\item 
+std\+::vector$<$ std\+::string $>$ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_a443470bfec5df1a564b0f33e2f39652f}{get\+\_\+available\+\_\+bodies}} () const
+\item 
+bool \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_abfcbca8b1d6549002e88e891091a739b}{is\+\_\+body\+\_\+available}} (std\+::string\+\_\+view name, std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point time) const
+\item 
+bool \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_af5d6d07a8a6ec10ea24be5fe7e03adf1}{has\+\_\+current\+\_\+ephemeris\+\_\+data}} () const noexcept
+\item 
+std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_a2015b71a09ad94d6edfc98c066876d3c}{current\+\_\+epoch}} () const
+\item 
+const std\+::string \& \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_aa4afc0501e288c56fdcc9ad0413455a6}{current\+\_\+source}} () const
+\item 
+bool \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_a4099a072977727f97cfaaa57cf74bf41}{is\+\_\+initialized}} () const noexcept
+\item 
+bool \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_a199966bfeeb87cc771b0f0fe4463cd42}{has\+\_\+current\+\_\+year\+\_\+ephemeris\+\_\+data}} () const noexcept
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Solar\+System\+::\+Utils\+::\+Expected}}$<$ void, std\+::string $>$ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_aeb005f478e7ac87a4f961f2b9bf74478}{rebuild\+\_\+cache}} ()
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Solar\+System\+::\+Utils\+::\+Expected}}$<$ void, std\+::string $>$ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_afd0c8632913113c333b702bf1aaccfdb}{fetch\+\_\+current\+\_\+ephemeris\+\_\+data}} (std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point time=\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_a69cb5c8580eecdd8d49b6fb8b44738e0}{get\+\_\+current\+\_\+year\+\_\+epoch}}())
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Solar\+System\+::\+Utils\+::\+Expected}}$<$ void, std\+::string $>$ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_ab2bade067aaf2c1bee6bfaeca49abe9f}{test\+\_\+storage\+\_\+system}} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_a69cb5c8580eecdd8d49b6fb8b44738e0}{get\+\_\+current\+\_\+year\+\_\+epoch}} () noexcept
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Factory for creating celestial bodies from various data sources. 
+
+This class integrates with the existing \doxylink{namespace_solar_system_1_1_j_p_l}{JPL} data system and provides a modern C++ interface for creating bodies from\+:
+\begin{DoxyItemize}
+\item \doxylink{namespace_solar_system_1_1_j_p_l}{JPL} HORIZONS data (primary)
+\item Cached ephemeris data
+\item Hardcoded fallback data (from constants.\+cpp) 
+\end{DoxyItemize}
+
+\label{doc-enum-members}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_factory_doc-enum-members}
+\doxysubsection{Member Enumeration Documentation}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_factory_a65e3d3286dd5b210649ba310a2a66d3b}\index{SolarSystem::Bodies::BodyFactory@{SolarSystem::Bodies::BodyFactory}!DataSource@{DataSource}}
+\index{DataSource@{DataSource}!SolarSystem::Bodies::BodyFactory@{SolarSystem::Bodies::BodyFactory}}
+\doxysubsubsection{\texorpdfstring{DataSource}{DataSource}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_factory_a65e3d3286dd5b210649ba310a2a66d3b} 
+enum class \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_a65e3d3286dd5b210649ba310a2a66d3b}{Solar\+System\+::\+Bodies\+::\+Body\+Factory\+::\+Data\+Source}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+\begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{JPL\_HORIZONS@{JPL\_HORIZONS}!SolarSystem::Bodies::BodyFactory@{SolarSystem::Bodies::BodyFactory}}\index{SolarSystem::Bodies::BodyFactory@{SolarSystem::Bodies::BodyFactory}!JPL\_HORIZONS@{JPL\_HORIZONS}}}\Hypertarget{class_solar_system_1_1_bodies_1_1_body_factory_a65e3d3286dd5b210649ba310a2a66d3bace166f5abf98588252fd67de9d471209}\label{class_solar_system_1_1_bodies_1_1_body_factory_a65e3d3286dd5b210649ba310a2a66d3bace166f5abf98588252fd67de9d471209} 
+JPL\+\_\+\+HORIZONS&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CACHED\_DATA@{CACHED\_DATA}!SolarSystem::Bodies::BodyFactory@{SolarSystem::Bodies::BodyFactory}}\index{SolarSystem::Bodies::BodyFactory@{SolarSystem::Bodies::BodyFactory}!CACHED\_DATA@{CACHED\_DATA}}}\Hypertarget{class_solar_system_1_1_bodies_1_1_body_factory_a65e3d3286dd5b210649ba310a2a66d3ba089d1a42095b3742aee74d2a852fcc90}\label{class_solar_system_1_1_bodies_1_1_body_factory_a65e3d3286dd5b210649ba310a2a66d3ba089d1a42095b3742aee74d2a852fcc90} 
+CACHED\+\_\+\+DATA&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FALLBACK\_DATA@{FALLBACK\_DATA}!SolarSystem::Bodies::BodyFactory@{SolarSystem::Bodies::BodyFactory}}\index{SolarSystem::Bodies::BodyFactory@{SolarSystem::Bodies::BodyFactory}!FALLBACK\_DATA@{FALLBACK\_DATA}}}\Hypertarget{class_solar_system_1_1_bodies_1_1_body_factory_a65e3d3286dd5b210649ba310a2a66d3ba9a440d990671782050a90c9265b855e7}\label{class_solar_system_1_1_bodies_1_1_body_factory_a65e3d3286dd5b210649ba310a2a66d3ba9a440d990671782050a90c9265b855e7} 
+FALLBACK\+\_\+\+DATA&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\label{doc-constructors}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_factory_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_factory_a2c37486fb3f0fa8844fac76c6b27f4f8}\index{SolarSystem::Bodies::BodyFactory@{SolarSystem::Bodies::BodyFactory}!BodyFactory@{BodyFactory}}
+\index{BodyFactory@{BodyFactory}!SolarSystem::Bodies::BodyFactory@{SolarSystem::Bodies::BodyFactory}}
+\doxysubsubsection{\texorpdfstring{BodyFactory()}{BodyFactory()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_factory_a2c37486fb3f0fa8844fac76c6b27f4f8} 
+Solar\+System\+::\+Bodies\+::\+Body\+Factory\+::\+Body\+Factory (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_factory_a6e6c96b6b2cac1df055588fd19f45a50}\index{SolarSystem::Bodies::BodyFactory@{SolarSystem::Bodies::BodyFactory}!BodyFactory@{BodyFactory}}
+\index{BodyFactory@{BodyFactory}!SolarSystem::Bodies::BodyFactory@{SolarSystem::Bodies::BodyFactory}}
+\doxysubsubsection{\texorpdfstring{BodyFactory()}{BodyFactory()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_factory_a6e6c96b6b2cac1df055588fd19f45a50} 
+Solar\+System\+::\+Bodies\+::\+Body\+Factory\+::\+Body\+Factory (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_solar_system_1_1_bodies_1_1_body_factory_1_1_creation_options}{Creation\+Options}}}]{options}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+
+
+\label{doc-func-members}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_factory_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_factory_aaff11393da75cbe9f81d56cbcc0f39c9}\index{SolarSystem::Bodies::BodyFactory@{SolarSystem::Bodies::BodyFactory}!create\_body@{create\_body}}
+\index{create\_body@{create\_body}!SolarSystem::Bodies::BodyFactory@{SolarSystem::Bodies::BodyFactory}}
+\doxysubsubsection{\texorpdfstring{create\_body()}{create\_body()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_factory_aaff11393da75cbe9f81d56cbcc0f39c9} 
+\mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Utils\+::\+Expected}}$<$ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}}, std\+::string $>$ Solar\+System\+::\+Bodies\+::\+Body\+Factory\+::create\+\_\+body (\begin{DoxyParamCaption}\item[{std\+::string\+\_\+view}]{name}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=217pt]{class_solar_system_1_1_bodies_1_1_body_factory_aaff11393da75cbe9f81d56cbcc0f39c9_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_bodies_1_1_body_factory_aaff11393da75cbe9f81d56cbcc0f39c9_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_factory_ac372e119e0c84805bda35630332bdf86}\index{SolarSystem::Bodies::BodyFactory@{SolarSystem::Bodies::BodyFactory}!create\_body@{create\_body}}
+\index{create\_body@{create\_body}!SolarSystem::Bodies::BodyFactory@{SolarSystem::Bodies::BodyFactory}}
+\doxysubsubsection{\texorpdfstring{create\_body()}{create\_body()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_factory_ac372e119e0c84805bda35630332bdf86} 
+\mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Utils\+::\+Expected}}$<$ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}}, std\+::string $>$ Solar\+System\+::\+Bodies\+::\+Body\+Factory\+::create\+\_\+body (\begin{DoxyParamCaption}\item[{std\+::string\+\_\+view}]{name}{, }\item[{const \mbox{\hyperlink{struct_solar_system_1_1_bodies_1_1_body_factory_1_1_creation_options}{Creation\+Options}} \&}]{options}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_factory_a5157d2d796f663861f2f4fef994e41e6}\index{SolarSystem::Bodies::BodyFactory@{SolarSystem::Bodies::BodyFactory}!create\_collection@{create\_collection}}
+\index{create\_collection@{create\_collection}!SolarSystem::Bodies::BodyFactory@{SolarSystem::Bodies::BodyFactory}}
+\doxysubsubsection{\texorpdfstring{create\_collection()}{create\_collection()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_factory_a5157d2d796f663861f2f4fef994e41e6} 
+\mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Utils\+::\+Expected}}$<$ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection}{Body\+Collection}}, std\+::string $>$ Solar\+System\+::\+Bodies\+::\+Body\+Factory\+::create\+\_\+collection (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ std\+::string $>$ \&}]{body\+\_\+names}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=191pt]{class_solar_system_1_1_bodies_1_1_body_factory_a5157d2d796f663861f2f4fef994e41e6_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=337pt]{class_solar_system_1_1_bodies_1_1_body_factory_a5157d2d796f663861f2f4fef994e41e6_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_factory_a611b8b191329b880893347ab84bf3d95}\index{SolarSystem::Bodies::BodyFactory@{SolarSystem::Bodies::BodyFactory}!create\_collection@{create\_collection}}
+\index{create\_collection@{create\_collection}!SolarSystem::Bodies::BodyFactory@{SolarSystem::Bodies::BodyFactory}}
+\doxysubsubsection{\texorpdfstring{create\_collection()}{create\_collection()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_factory_a611b8b191329b880893347ab84bf3d95} 
+\mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Utils\+::\+Expected}}$<$ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection}{Body\+Collection}}, std\+::string $>$ Solar\+System\+::\+Bodies\+::\+Body\+Factory\+::create\+\_\+collection (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ std\+::string $>$ \&}]{body\+\_\+names}{, }\item[{const \mbox{\hyperlink{struct_solar_system_1_1_bodies_1_1_body_factory_1_1_creation_options}{Creation\+Options}} \&}]{options}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_bodies_1_1_body_factory_a611b8b191329b880893347ab84bf3d95_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_factory_aee95f12bf4d6b12373c64bf4abdf010c}\index{SolarSystem::Bodies::BodyFactory@{SolarSystem::Bodies::BodyFactory}!create\_essential\_bodies@{create\_essential\_bodies}}
+\index{create\_essential\_bodies@{create\_essential\_bodies}!SolarSystem::Bodies::BodyFactory@{SolarSystem::Bodies::BodyFactory}}
+\doxysubsubsection{\texorpdfstring{create\_essential\_bodies()}{create\_essential\_bodies()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_factory_aee95f12bf4d6b12373c64bf4abdf010c} 
+\mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Utils\+::\+Expected}}$<$ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection}{Body\+Collection}}, std\+::string $>$ Solar\+System\+::\+Bodies\+::\+Body\+Factory\+::create\+\_\+essential\+\_\+bodies (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=191pt]{class_solar_system_1_1_bodies_1_1_body_factory_aee95f12bf4d6b12373c64bf4abdf010c_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=191pt]{class_solar_system_1_1_bodies_1_1_body_factory_aee95f12bf4d6b12373c64bf4abdf010c_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_factory_abcd3695e32fa6c7d422b81254f7e2a0c}\index{SolarSystem::Bodies::BodyFactory@{SolarSystem::Bodies::BodyFactory}!create\_essential\_bodies@{create\_essential\_bodies}}
+\index{create\_essential\_bodies@{create\_essential\_bodies}!SolarSystem::Bodies::BodyFactory@{SolarSystem::Bodies::BodyFactory}}
+\doxysubsubsection{\texorpdfstring{create\_essential\_bodies()}{create\_essential\_bodies()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_factory_abcd3695e32fa6c7d422b81254f7e2a0c} 
+\mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Utils\+::\+Expected}}$<$ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection}{Body\+Collection}}, std\+::string $>$ Solar\+System\+::\+Bodies\+::\+Body\+Factory\+::create\+\_\+essential\+\_\+bodies (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_solar_system_1_1_bodies_1_1_body_factory_1_1_creation_options}{Creation\+Options}} \&}]{options}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=337pt]{class_solar_system_1_1_bodies_1_1_body_factory_abcd3695e32fa6c7d422b81254f7e2a0c_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_factory_ada6c7795436925ccdbd6a65e77b91c0a}\index{SolarSystem::Bodies::BodyFactory@{SolarSystem::Bodies::BodyFactory}!create\_from\_legacy\_data@{create\_from\_legacy\_data}}
+\index{create\_from\_legacy\_data@{create\_from\_legacy\_data}!SolarSystem::Bodies::BodyFactory@{SolarSystem::Bodies::BodyFactory}}
+\doxysubsubsection{\texorpdfstring{create\_from\_legacy\_data()}{create\_from\_legacy\_data()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_factory_ada6c7795436925ccdbd6a65e77b91c0a} 
+\mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Utils\+::\+Expected}}$<$ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}}, std\+::string $>$ Solar\+System\+::\+Bodies\+::\+Body\+Factory\+::create\+\_\+from\+\_\+legacy\+\_\+data (\begin{DoxyParamCaption}\item[{std\+::string\+\_\+view}]{name}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_factory_a280d802527fac98ebfee125a2ed09e2d}\index{SolarSystem::Bodies::BodyFactory@{SolarSystem::Bodies::BodyFactory}!create\_inner\_planets@{create\_inner\_planets}}
+\index{create\_inner\_planets@{create\_inner\_planets}!SolarSystem::Bodies::BodyFactory@{SolarSystem::Bodies::BodyFactory}}
+\doxysubsubsection{\texorpdfstring{create\_inner\_planets()}{create\_inner\_planets()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_factory_a280d802527fac98ebfee125a2ed09e2d} 
+\mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Utils\+::\+Expected}}$<$ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection}{Body\+Collection}}, std\+::string $>$ Solar\+System\+::\+Bodies\+::\+Body\+Factory\+::create\+\_\+inner\+\_\+planets (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=191pt]{class_solar_system_1_1_bodies_1_1_body_factory_a280d802527fac98ebfee125a2ed09e2d_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=191pt]{class_solar_system_1_1_bodies_1_1_body_factory_a280d802527fac98ebfee125a2ed09e2d_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_factory_aa4e6fb02314ad7c6e3999fd2d6fc7679}\index{SolarSystem::Bodies::BodyFactory@{SolarSystem::Bodies::BodyFactory}!create\_inner\_planets@{create\_inner\_planets}}
+\index{create\_inner\_planets@{create\_inner\_planets}!SolarSystem::Bodies::BodyFactory@{SolarSystem::Bodies::BodyFactory}}
+\doxysubsubsection{\texorpdfstring{create\_inner\_planets()}{create\_inner\_planets()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_factory_aa4e6fb02314ad7c6e3999fd2d6fc7679} 
+\mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Utils\+::\+Expected}}$<$ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection}{Body\+Collection}}, std\+::string $>$ Solar\+System\+::\+Bodies\+::\+Body\+Factory\+::create\+\_\+inner\+\_\+planets (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_solar_system_1_1_bodies_1_1_body_factory_1_1_creation_options}{Creation\+Options}} \&}]{options}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=337pt]{class_solar_system_1_1_bodies_1_1_body_factory_aa4e6fb02314ad7c6e3999fd2d6fc7679_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_factory_a47bff147fbed33153af617c9b078176f}\index{SolarSystem::Bodies::BodyFactory@{SolarSystem::Bodies::BodyFactory}!create\_solar\_system@{create\_solar\_system}}
+\index{create\_solar\_system@{create\_solar\_system}!SolarSystem::Bodies::BodyFactory@{SolarSystem::Bodies::BodyFactory}}
+\doxysubsubsection{\texorpdfstring{create\_solar\_system()}{create\_solar\_system()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_factory_a47bff147fbed33153af617c9b078176f} 
+\mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Utils\+::\+Expected}}$<$ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection}{Body\+Collection}}, std\+::string $>$ Solar\+System\+::\+Bodies\+::\+Body\+Factory\+::create\+\_\+solar\+\_\+system (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=191pt]{class_solar_system_1_1_bodies_1_1_body_factory_a47bff147fbed33153af617c9b078176f_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_bodies_1_1_body_factory_a47bff147fbed33153af617c9b078176f_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_factory_a4ea71e80e9c673233cae31a4d9b6af98}\index{SolarSystem::Bodies::BodyFactory@{SolarSystem::Bodies::BodyFactory}!create\_solar\_system@{create\_solar\_system}}
+\index{create\_solar\_system@{create\_solar\_system}!SolarSystem::Bodies::BodyFactory@{SolarSystem::Bodies::BodyFactory}}
+\doxysubsubsection{\texorpdfstring{create\_solar\_system()}{create\_solar\_system()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_factory_a4ea71e80e9c673233cae31a4d9b6af98} 
+\mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Utils\+::\+Expected}}$<$ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection}{Body\+Collection}}, std\+::string $>$ Solar\+System\+::\+Bodies\+::\+Body\+Factory\+::create\+\_\+solar\+\_\+system (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_solar_system_1_1_bodies_1_1_body_factory_1_1_creation_options}{Creation\+Options}} \&}]{options}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=347pt]{class_solar_system_1_1_bodies_1_1_body_factory_a4ea71e80e9c673233cae31a4d9b6af98_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_factory_a2015b71a09ad94d6edfc98c066876d3c}\index{SolarSystem::Bodies::BodyFactory@{SolarSystem::Bodies::BodyFactory}!current\_epoch@{current\_epoch}}
+\index{current\_epoch@{current\_epoch}!SolarSystem::Bodies::BodyFactory@{SolarSystem::Bodies::BodyFactory}}
+\doxysubsubsection{\texorpdfstring{current\_epoch()}{current\_epoch()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_factory_a2015b71a09ad94d6edfc98c066876d3c} 
+std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point Solar\+System\+::\+Bodies\+::\+Body\+Factory\+::current\+\_\+epoch (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_bodies_1_1_body_factory_a2015b71a09ad94d6edfc98c066876d3c_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_factory_aa4afc0501e288c56fdcc9ad0413455a6}\index{SolarSystem::Bodies::BodyFactory@{SolarSystem::Bodies::BodyFactory}!current\_source@{current\_source}}
+\index{current\_source@{current\_source}!SolarSystem::Bodies::BodyFactory@{SolarSystem::Bodies::BodyFactory}}
+\doxysubsubsection{\texorpdfstring{current\_source()}{current\_source()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_factory_aa4afc0501e288c56fdcc9ad0413455a6} 
+const std\+::string \& Solar\+System\+::\+Bodies\+::\+Body\+Factory\+::current\+\_\+source (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_bodies_1_1_body_factory_aa4afc0501e288c56fdcc9ad0413455a6_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_factory_afd0c8632913113c333b702bf1aaccfdb}\index{SolarSystem::Bodies::BodyFactory@{SolarSystem::Bodies::BodyFactory}!fetch\_current\_ephemeris\_data@{fetch\_current\_ephemeris\_data}}
+\index{fetch\_current\_ephemeris\_data@{fetch\_current\_ephemeris\_data}!SolarSystem::Bodies::BodyFactory@{SolarSystem::Bodies::BodyFactory}}
+\doxysubsubsection{\texorpdfstring{fetch\_current\_ephemeris\_data()}{fetch\_current\_ephemeris\_data()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_factory_afd0c8632913113c333b702bf1aaccfdb} 
+\mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Solar\+System\+::\+Utils\+::\+Expected}}$<$ void, std\+::string $>$ Solar\+System\+::\+Bodies\+::\+Body\+Factory\+::fetch\+\_\+current\+\_\+ephemeris\+\_\+data (\begin{DoxyParamCaption}\item[{std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point}]{time}{ = {\ttfamily \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_a69cb5c8580eecdd8d49b6fb8b44738e0}{get\+\_\+current\+\_\+year\+\_\+epoch}}()}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_bodies_1_1_body_factory_afd0c8632913113c333b702bf1aaccfdb_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_bodies_1_1_body_factory_afd0c8632913113c333b702bf1aaccfdb_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_factory_a443470bfec5df1a564b0f33e2f39652f}\index{SolarSystem::Bodies::BodyFactory@{SolarSystem::Bodies::BodyFactory}!get\_available\_bodies@{get\_available\_bodies}}
+\index{get\_available\_bodies@{get\_available\_bodies}!SolarSystem::Bodies::BodyFactory@{SolarSystem::Bodies::BodyFactory}}
+\doxysubsubsection{\texorpdfstring{get\_available\_bodies()}{get\_available\_bodies()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_factory_a443470bfec5df1a564b0f33e2f39652f} 
+std\+::vector$<$ std\+::string $>$ Solar\+System\+::\+Bodies\+::\+Body\+Factory\+::get\+\_\+available\+\_\+bodies (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_bodies_1_1_body_factory_a443470bfec5df1a564b0f33e2f39652f_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_factory_a69cb5c8580eecdd8d49b6fb8b44738e0}\index{SolarSystem::Bodies::BodyFactory@{SolarSystem::Bodies::BodyFactory}!get\_current\_year\_epoch@{get\_current\_year\_epoch}}
+\index{get\_current\_year\_epoch@{get\_current\_year\_epoch}!SolarSystem::Bodies::BodyFactory@{SolarSystem::Bodies::BodyFactory}}
+\doxysubsubsection{\texorpdfstring{get\_current\_year\_epoch()}{get\_current\_year\_epoch()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_factory_a69cb5c8580eecdd8d49b6fb8b44738e0} 
+std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point Solar\+System\+::\+Bodies\+::\+Body\+Factory\+::get\+\_\+current\+\_\+year\+\_\+epoch (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [nodiscard]}, {\ttfamily [noexcept]}}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_bodies_1_1_body_factory_a69cb5c8580eecdd8d49b6fb8b44738e0_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_factory_af5d6d07a8a6ec10ea24be5fe7e03adf1}\index{SolarSystem::Bodies::BodyFactory@{SolarSystem::Bodies::BodyFactory}!has\_current\_ephemeris\_data@{has\_current\_ephemeris\_data}}
+\index{has\_current\_ephemeris\_data@{has\_current\_ephemeris\_data}!SolarSystem::Bodies::BodyFactory@{SolarSystem::Bodies::BodyFactory}}
+\doxysubsubsection{\texorpdfstring{has\_current\_ephemeris\_data()}{has\_current\_ephemeris\_data()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_factory_af5d6d07a8a6ec10ea24be5fe7e03adf1} 
+bool Solar\+System\+::\+Bodies\+::\+Body\+Factory\+::has\+\_\+current\+\_\+ephemeris\+\_\+data (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}, {\ttfamily [noexcept]}}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_bodies_1_1_body_factory_af5d6d07a8a6ec10ea24be5fe7e03adf1_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_factory_a199966bfeeb87cc771b0f0fe4463cd42}\index{SolarSystem::Bodies::BodyFactory@{SolarSystem::Bodies::BodyFactory}!has\_current\_year\_ephemeris\_data@{has\_current\_year\_ephemeris\_data}}
+\index{has\_current\_year\_ephemeris\_data@{has\_current\_year\_ephemeris\_data}!SolarSystem::Bodies::BodyFactory@{SolarSystem::Bodies::BodyFactory}}
+\doxysubsubsection{\texorpdfstring{has\_current\_year\_ephemeris\_data()}{has\_current\_year\_ephemeris\_data()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_factory_a199966bfeeb87cc771b0f0fe4463cd42} 
+bool Solar\+System\+::\+Bodies\+::\+Body\+Factory\+::has\+\_\+current\+\_\+year\+\_\+ephemeris\+\_\+data (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [noexcept]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_bodies_1_1_body_factory_a199966bfeeb87cc771b0f0fe4463cd42_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_bodies_1_1_body_factory_a199966bfeeb87cc771b0f0fe4463cd42_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_factory_abfcbca8b1d6549002e88e891091a739b}\index{SolarSystem::Bodies::BodyFactory@{SolarSystem::Bodies::BodyFactory}!is\_body\_available@{is\_body\_available}}
+\index{is\_body\_available@{is\_body\_available}!SolarSystem::Bodies::BodyFactory@{SolarSystem::Bodies::BodyFactory}}
+\doxysubsubsection{\texorpdfstring{is\_body\_available()}{is\_body\_available()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_factory_abfcbca8b1d6549002e88e891091a739b} 
+bool Solar\+System\+::\+Bodies\+::\+Body\+Factory\+::is\+\_\+body\+\_\+available (\begin{DoxyParamCaption}\item[{std\+::string\+\_\+view}]{name}{, }\item[{std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point}]{time}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=339pt]{class_solar_system_1_1_bodies_1_1_body_factory_abfcbca8b1d6549002e88e891091a739b_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_factory_a4099a072977727f97cfaaa57cf74bf41}\index{SolarSystem::Bodies::BodyFactory@{SolarSystem::Bodies::BodyFactory}!is\_initialized@{is\_initialized}}
+\index{is\_initialized@{is\_initialized}!SolarSystem::Bodies::BodyFactory@{SolarSystem::Bodies::BodyFactory}}
+\doxysubsubsection{\texorpdfstring{is\_initialized()}{is\_initialized()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_factory_a4099a072977727f97cfaaa57cf74bf41} 
+bool Solar\+System\+::\+Bodies\+::\+Body\+Factory\+::is\+\_\+initialized (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}, {\ttfamily [noexcept]}}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_bodies_1_1_body_factory_a4099a072977727f97cfaaa57cf74bf41_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_factory_aeb005f478e7ac87a4f961f2b9bf74478}\index{SolarSystem::Bodies::BodyFactory@{SolarSystem::Bodies::BodyFactory}!rebuild\_cache@{rebuild\_cache}}
+\index{rebuild\_cache@{rebuild\_cache}!SolarSystem::Bodies::BodyFactory@{SolarSystem::Bodies::BodyFactory}}
+\doxysubsubsection{\texorpdfstring{rebuild\_cache()}{rebuild\_cache()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_factory_aeb005f478e7ac87a4f961f2b9bf74478} 
+\mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Solar\+System\+::\+Utils\+::\+Expected}}$<$ void, std\+::string $>$ Solar\+System\+::\+Bodies\+::\+Body\+Factory\+::rebuild\+\_\+cache (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_bodies_1_1_body_factory_aeb005f478e7ac87a4f961f2b9bf74478_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_bodies_1_1_body_factory_aeb005f478e7ac87a4f961f2b9bf74478_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_body_factory_ab2bade067aaf2c1bee6bfaeca49abe9f}\index{SolarSystem::Bodies::BodyFactory@{SolarSystem::Bodies::BodyFactory}!test\_storage\_system@{test\_storage\_system}}
+\index{test\_storage\_system@{test\_storage\_system}!SolarSystem::Bodies::BodyFactory@{SolarSystem::Bodies::BodyFactory}}
+\doxysubsubsection{\texorpdfstring{test\_storage\_system()}{test\_storage\_system()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_body_factory_ab2bade067aaf2c1bee6bfaeca49abe9f} 
+\mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Solar\+System\+::\+Utils\+::\+Expected}}$<$ void, std\+::string $>$ Solar\+System\+::\+Bodies\+::\+Body\+Factory\+::test\+\_\+storage\+\_\+system (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_bodies_1_1_body_factory_ab2bade067aaf2c1bee6bfaeca49abe9f_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_bodies_1_1_body_factory_ab2bade067aaf2c1bee6bfaeca49abe9f_icgraph}
+\end{center}
+\end{figure}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+core/include/solar\+\_\+core/bodies/\mbox{\hyperlink{body__factory_8hpp}{body\+\_\+factory.\+hpp}}\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+core/src/bodies/\mbox{\hyperlink{body__factory_8cpp}{body\+\_\+factory.\+cpp}}\end{DoxyCompactItemize}

@@ -1,0 +1,149 @@
+\doxysection{Solar\+System\+::Utils\+::Argument\+Parser Class Reference}
+\hypertarget{class_solar_system_1_1_utils_1_1_argument_parser}{}\label{class_solar_system_1_1_utils_1_1_argument_parser}\index{SolarSystem::Utils::ArgumentParser@{SolarSystem::Utils::ArgumentParser}}
+
+
+Modern C++20 argument parser.  
+
+
+
+
+{\ttfamily \#include $<$argument\+\_\+parser.\+hpp$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_utils_1_1_argument_parser_a8d1a86d56d5b3dcfa6024c62794557c5}{Argument\+Parser}} (std\+::string\+\_\+view program\+\_\+name)
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_utils_1_1_argument_parser}{Argument\+Parser}} \& \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_argument_parser_a18770f4a4309a279a11cbc1d9ec77dcf}{add\+\_\+option}} (\mbox{\hyperlink{class_solar_system_1_1_utils_1_1_option}{Option}} option)
+\begin{DoxyCompactList}\small\item\em Add an option to the parser. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{namespace_solar_system_1_1_utils_a6a2c73b32b32578d25a31c35a6749246}{Argument\+Result}}$<$ void $>$ \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_argument_parser_ae33b7d54a06e85940a026172725019a6}{parse}} (std\+::span$<$ const char \texorpdfstring{$\ast$}{*}const $>$ args)
+\begin{DoxyCompactList}\small\item\em Parse command line arguments. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{namespace_solar_system_1_1_utils_a6a2c73b32b32578d25a31c35a6749246}{Argument\+Result}}$<$ void $>$ \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_argument_parser_a8e63e2eacdd9f8f2a52a6ddd15ed695e}{parse}} (int argc, const char \texorpdfstring{$\ast$}{*}const argv\mbox{[}$\,$\mbox{]})
+\begin{DoxyCompactList}\small\item\em Parse command line arguments (traditional interface) \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_argument_parser_af623d906f8c0f201fb78bf4d9c0e117a}{help}} () const
+\begin{DoxyCompactList}\small\item\em Generate help text. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_argument_parser_a659342b3d55d5d907a6d5179f7417956}{print\+\_\+help}} () const
+\begin{DoxyCompactList}\small\item\em Print help to stdout. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Modern C++20 argument parser. 
+
+\label{doc-constructors}
+\Hypertarget{class_solar_system_1_1_utils_1_1_argument_parser_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_solar_system_1_1_utils_1_1_argument_parser_a8d1a86d56d5b3dcfa6024c62794557c5}\index{SolarSystem::Utils::ArgumentParser@{SolarSystem::Utils::ArgumentParser}!ArgumentParser@{ArgumentParser}}
+\index{ArgumentParser@{ArgumentParser}!SolarSystem::Utils::ArgumentParser@{SolarSystem::Utils::ArgumentParser}}
+\doxysubsubsection{\texorpdfstring{ArgumentParser()}{ArgumentParser()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_utils_1_1_argument_parser_a8d1a86d56d5b3dcfa6024c62794557c5} 
+Solar\+System\+::\+Utils\+::\+Argument\+Parser\+::\+Argument\+Parser (\begin{DoxyParamCaption}\item[{std\+::string\+\_\+view}]{program\+\_\+name}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [explicit]}}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_utils_1_1_argument_parser_a8d1a86d56d5b3dcfa6024c62794557c5_icgraph}
+\end{center}
+\end{figure}
+
+
+\label{doc-func-members}
+\Hypertarget{class_solar_system_1_1_utils_1_1_argument_parser_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_solar_system_1_1_utils_1_1_argument_parser_a18770f4a4309a279a11cbc1d9ec77dcf}\index{SolarSystem::Utils::ArgumentParser@{SolarSystem::Utils::ArgumentParser}!add\_option@{add\_option}}
+\index{add\_option@{add\_option}!SolarSystem::Utils::ArgumentParser@{SolarSystem::Utils::ArgumentParser}}
+\doxysubsubsection{\texorpdfstring{add\_option()}{add\_option()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_utils_1_1_argument_parser_a18770f4a4309a279a11cbc1d9ec77dcf} 
+\mbox{\hyperlink{class_solar_system_1_1_utils_1_1_argument_parser}{Argument\+Parser}} \& Argument\+Parser\+::add\+\_\+option (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_solar_system_1_1_utils_1_1_option}{Option}}}]{option}{}\end{DoxyParamCaption})}
+
+
+
+Add an option to the parser. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_utils_1_1_argument_parser_a18770f4a4309a279a11cbc1d9ec77dcf_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_utils_1_1_argument_parser_af623d906f8c0f201fb78bf4d9c0e117a}\index{SolarSystem::Utils::ArgumentParser@{SolarSystem::Utils::ArgumentParser}!help@{help}}
+\index{help@{help}!SolarSystem::Utils::ArgumentParser@{SolarSystem::Utils::ArgumentParser}}
+\doxysubsubsection{\texorpdfstring{help()}{help()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_utils_1_1_argument_parser_af623d906f8c0f201fb78bf4d9c0e117a} 
+std\+::string Argument\+Parser\+::help (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const}
+
+
+
+Generate help text. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_utils_1_1_argument_parser_af623d906f8c0f201fb78bf4d9c0e117a_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_utils_1_1_argument_parser_a8e63e2eacdd9f8f2a52a6ddd15ed695e}\index{SolarSystem::Utils::ArgumentParser@{SolarSystem::Utils::ArgumentParser}!parse@{parse}}
+\index{parse@{parse}!SolarSystem::Utils::ArgumentParser@{SolarSystem::Utils::ArgumentParser}}
+\doxysubsubsection{\texorpdfstring{parse()}{parse()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_utils_1_1_argument_parser_a8e63e2eacdd9f8f2a52a6ddd15ed695e} 
+\mbox{\hyperlink{namespace_solar_system_1_1_utils_a6a2c73b32b32578d25a31c35a6749246}{Argument\+Result}}$<$ void $>$ Argument\+Parser\+::parse (\begin{DoxyParamCaption}\item[{int}]{argc}{, }\item[{const char \texorpdfstring{$\ast$}{*}const}]{argv}{\mbox{[}$\,$\mbox{]}}\end{DoxyParamCaption})}
+
+
+
+Parse command line arguments (traditional interface) 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_utils_1_1_argument_parser_a8e63e2eacdd9f8f2a52a6ddd15ed695e_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_utils_1_1_argument_parser_ae33b7d54a06e85940a026172725019a6}\index{SolarSystem::Utils::ArgumentParser@{SolarSystem::Utils::ArgumentParser}!parse@{parse}}
+\index{parse@{parse}!SolarSystem::Utils::ArgumentParser@{SolarSystem::Utils::ArgumentParser}}
+\doxysubsubsection{\texorpdfstring{parse()}{parse()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_utils_1_1_argument_parser_ae33b7d54a06e85940a026172725019a6} 
+\mbox{\hyperlink{namespace_solar_system_1_1_utils_a6a2c73b32b32578d25a31c35a6749246}{Argument\+Result}}$<$ void $>$ Argument\+Parser\+::parse (\begin{DoxyParamCaption}\item[{std\+::span$<$ const char \texorpdfstring{$\ast$}{*}const $>$}]{args}{}\end{DoxyParamCaption})}
+
+
+
+Parse command line arguments. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_utils_1_1_argument_parser_ae33b7d54a06e85940a026172725019a6_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_utils_1_1_argument_parser_a659342b3d55d5d907a6d5179f7417956}\index{SolarSystem::Utils::ArgumentParser@{SolarSystem::Utils::ArgumentParser}!print\_help@{print\_help}}
+\index{print\_help@{print\_help}!SolarSystem::Utils::ArgumentParser@{SolarSystem::Utils::ArgumentParser}}
+\doxysubsubsection{\texorpdfstring{print\_help()}{print\_help()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_utils_1_1_argument_parser_a659342b3d55d5d907a6d5179f7417956} 
+void Argument\+Parser\+::print\+\_\+help (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const}
+
+
+
+Print help to stdout. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_utils_1_1_argument_parser_a659342b3d55d5d907a6d5179f7417956_cgraph}
+\end{center}
+\end{figure}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+utils/include/solar\+\_\+utils/\mbox{\hyperlink{argument__parser_8hpp}{argument\+\_\+parser.\+hpp}}\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+utils/src/\mbox{\hyperlink{argument__parser_8cpp}{argument\+\_\+parser.\+cpp}}\end{DoxyCompactItemize}

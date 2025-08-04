@@ -1,0 +1,16 @@
+<map id="SolarSystem::Testing::Mocks::CacheMock::config" name="SolarSystem::Testing::Mocks::CacheMock::config">
+<area shape="rect" id="Node000001" title="Get current configuration." alt="" coords="550,152,739,193"/>
+<area shape="rect" id="Node000002" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock.html#a522edb5d49da1e0091b488a52137d5bd" title="Construct cache mock with configuration." alt="" coords="278,104,502,145"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="534,154,501,148,502,143,535,149"/>
+<area shape="rect" id="Node000007" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock.html#abed8e5b36362fb6b3dc8c4bff87b71db" title=" " alt="" coords="282,192,498,248"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="535,196,498,203,497,197,534,190"/>
+<area shape="rect" id="Node000003" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock.html#a294e480b9251973a1ff4bc91a843e246" title=" " alt="" coords="5,5,230,46"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="326,100,229,62,191,49,193,44,231,56,328,95"/>
+<area shape="rect" id="Node000004" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock.html#afd97b4c92a798336c09f9f8f58ac14e1" title=" " alt="" coords="5,71,230,111"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="262,111,230,107,231,102,263,106"/>
+<area shape="rect" id="Node000005" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock.html#aa9fdef9f9f069f4b84302e1157ff672c" title=" " alt="" coords="13,136,222,177"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="263,142,223,147,222,141,262,137"/>
+<area shape="rect" id="Node000006" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock.html#ae93589630ec11c58e189de5cbf68b5c4" title=" " alt="" coords="13,201,222,242"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="292,153,279,159,255,175,231,191,200,203,198,198,228,186,252,170,276,154,290,148"/>
+<area shape="poly" id="edge7_Node000007_Node000007" title=" " alt="" coords="431,180,415,174,390,171,367,173,353,178,346,184,345,192,340,192,341,182,350,173,366,168,390,166,417,168,433,175"/>
+</map>

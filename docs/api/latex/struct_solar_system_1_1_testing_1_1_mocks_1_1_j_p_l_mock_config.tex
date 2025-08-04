@@ -1,0 +1,163 @@
+\doxysection{Solar\+System\+::Testing\+::Mocks\+::JPLMock\+Config Struct Reference}
+\hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config}{}\label{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config}\index{SolarSystem::Testing::Mocks::JPLMockConfig@{SolarSystem::Testing::Mocks::JPLMockConfig}}
+
+
+Configuration for \doxylink{namespace_solar_system_1_1_j_p_l}{JPL} mock behavior.  
+
+
+
+
+{\ttfamily \#include $<$jpl\+\_\+mock.\+hpp$>$}
+
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config_a11a1769ca81acedcd3d43ba720de857f}{simulate\+\_\+network\+\_\+delays}} = false
+\item 
+std\+::chrono\+::milliseconds \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config_a15a0655154a331297a1836cd58d70bd2}{min\+\_\+response\+\_\+delay}} = std\+::chrono\+::milliseconds(50)
+\item 
+std\+::chrono\+::milliseconds \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config_afd30e91aa106b4ad69fcf05f11e98194}{max\+\_\+response\+\_\+delay}} = std\+::chrono\+::milliseconds(500)
+\item 
+double \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config_a76d2a7d4866e599b705374847480fe7a}{network\+\_\+failure\+\_\+rate}} = 0.\+0
+\item 
+double \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config_a057d626efbdb153cc61596979bd459eb}{timeout\+\_\+rate}} = 0.\+0
+\item 
+double \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config_a509d2e11e2cb3485023cfda3fadfce9b}{server\+\_\+error\+\_\+rate}} = 0.\+0
+\item 
+double \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config_a761bf59dd6c0800320d06e6cf004ccca}{parse\+\_\+error\+\_\+rate}} = 0.\+0
+\item 
+bool \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config_a6d77586e7a432c1b49d4365dd83d0201}{use\+\_\+realistic\+\_\+responses}} = true
+\item 
+std\+::string \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config_a2fff21e3b0af08f68ec1799dfdfe1f06}{mock\+\_\+data\+\_\+directory}} = "{}tests/data/jpl\+\_\+responses/"{}
+\item 
+bool \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config_a562e7ffb018694dd5f2f0d27103d2a80}{enable\+\_\+call\+\_\+history}} = true
+\item 
+size\+\_\+t \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config_a688d2ec73f1735cc90cb21a3b3436e91}{max\+\_\+history\+\_\+size}} = 1000
+\item 
+bool \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config_a8415af01f87e2ae6ab731bc0ae95fc71}{simulate\+\_\+rate\+\_\+limiting}} = false
+\item 
+std\+::chrono\+::milliseconds \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config_a95a9841355b10643b32a0f5fa1b0e3f5}{rate\+\_\+limit\+\_\+delay}} = std\+::chrono\+::milliseconds(200)
+\item 
+size\+\_\+t \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config_a66b177aee2716dd84e9af5bac21abb4e}{max\+\_\+concurrent\+\_\+requests}} = 3
+\item 
+bool \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config_ab5b5cf93205ff12446045d4492f4a334}{simulate\+\_\+cache\+\_\+operations}} = true
+\item 
+bool \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config_a230bd2481e248a93b8797be7db55389b}{cache\+\_\+always\+\_\+valid}} = false
+\item 
+bool \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config_aeee850302337aebdf62738477eb14ed9}{cache\+\_\+always\+\_\+invalid}} = false
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Configuration for \doxylink{namespace_solar_system_1_1_j_p_l}{JPL} mock behavior. 
+
+\label{doc-variable-members}
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config_aeee850302337aebdf62738477eb14ed9}\index{SolarSystem::Testing::Mocks::JPLMockConfig@{SolarSystem::Testing::Mocks::JPLMockConfig}!cache\_always\_invalid@{cache\_always\_invalid}}
+\index{cache\_always\_invalid@{cache\_always\_invalid}!SolarSystem::Testing::Mocks::JPLMockConfig@{SolarSystem::Testing::Mocks::JPLMockConfig}}
+\doxysubsubsection{\texorpdfstring{cache\_always\_invalid}{cache\_always\_invalid}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config_aeee850302337aebdf62738477eb14ed9} 
+bool Solar\+System\+::\+Testing\+::\+Mocks\+::\+JPLMock\+Config\+::cache\+\_\+always\+\_\+invalid = false}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config_a230bd2481e248a93b8797be7db55389b}\index{SolarSystem::Testing::Mocks::JPLMockConfig@{SolarSystem::Testing::Mocks::JPLMockConfig}!cache\_always\_valid@{cache\_always\_valid}}
+\index{cache\_always\_valid@{cache\_always\_valid}!SolarSystem::Testing::Mocks::JPLMockConfig@{SolarSystem::Testing::Mocks::JPLMockConfig}}
+\doxysubsubsection{\texorpdfstring{cache\_always\_valid}{cache\_always\_valid}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config_a230bd2481e248a93b8797be7db55389b} 
+bool Solar\+System\+::\+Testing\+::\+Mocks\+::\+JPLMock\+Config\+::cache\+\_\+always\+\_\+valid = false}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config_a562e7ffb018694dd5f2f0d27103d2a80}\index{SolarSystem::Testing::Mocks::JPLMockConfig@{SolarSystem::Testing::Mocks::JPLMockConfig}!enable\_call\_history@{enable\_call\_history}}
+\index{enable\_call\_history@{enable\_call\_history}!SolarSystem::Testing::Mocks::JPLMockConfig@{SolarSystem::Testing::Mocks::JPLMockConfig}}
+\doxysubsubsection{\texorpdfstring{enable\_call\_history}{enable\_call\_history}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config_a562e7ffb018694dd5f2f0d27103d2a80} 
+bool Solar\+System\+::\+Testing\+::\+Mocks\+::\+JPLMock\+Config\+::enable\+\_\+call\+\_\+history = true}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config_a66b177aee2716dd84e9af5bac21abb4e}\index{SolarSystem::Testing::Mocks::JPLMockConfig@{SolarSystem::Testing::Mocks::JPLMockConfig}!max\_concurrent\_requests@{max\_concurrent\_requests}}
+\index{max\_concurrent\_requests@{max\_concurrent\_requests}!SolarSystem::Testing::Mocks::JPLMockConfig@{SolarSystem::Testing::Mocks::JPLMockConfig}}
+\doxysubsubsection{\texorpdfstring{max\_concurrent\_requests}{max\_concurrent\_requests}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config_a66b177aee2716dd84e9af5bac21abb4e} 
+size\+\_\+t Solar\+System\+::\+Testing\+::\+Mocks\+::\+JPLMock\+Config\+::max\+\_\+concurrent\+\_\+requests = 3}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config_a688d2ec73f1735cc90cb21a3b3436e91}\index{SolarSystem::Testing::Mocks::JPLMockConfig@{SolarSystem::Testing::Mocks::JPLMockConfig}!max\_history\_size@{max\_history\_size}}
+\index{max\_history\_size@{max\_history\_size}!SolarSystem::Testing::Mocks::JPLMockConfig@{SolarSystem::Testing::Mocks::JPLMockConfig}}
+\doxysubsubsection{\texorpdfstring{max\_history\_size}{max\_history\_size}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config_a688d2ec73f1735cc90cb21a3b3436e91} 
+size\+\_\+t Solar\+System\+::\+Testing\+::\+Mocks\+::\+JPLMock\+Config\+::max\+\_\+history\+\_\+size = 1000}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config_afd30e91aa106b4ad69fcf05f11e98194}\index{SolarSystem::Testing::Mocks::JPLMockConfig@{SolarSystem::Testing::Mocks::JPLMockConfig}!max\_response\_delay@{max\_response\_delay}}
+\index{max\_response\_delay@{max\_response\_delay}!SolarSystem::Testing::Mocks::JPLMockConfig@{SolarSystem::Testing::Mocks::JPLMockConfig}}
+\doxysubsubsection{\texorpdfstring{max\_response\_delay}{max\_response\_delay}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config_afd30e91aa106b4ad69fcf05f11e98194} 
+std\+::chrono\+::milliseconds Solar\+System\+::\+Testing\+::\+Mocks\+::\+JPLMock\+Config\+::max\+\_\+response\+\_\+delay = std\+::chrono\+::milliseconds(500)}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config_a15a0655154a331297a1836cd58d70bd2}\index{SolarSystem::Testing::Mocks::JPLMockConfig@{SolarSystem::Testing::Mocks::JPLMockConfig}!min\_response\_delay@{min\_response\_delay}}
+\index{min\_response\_delay@{min\_response\_delay}!SolarSystem::Testing::Mocks::JPLMockConfig@{SolarSystem::Testing::Mocks::JPLMockConfig}}
+\doxysubsubsection{\texorpdfstring{min\_response\_delay}{min\_response\_delay}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config_a15a0655154a331297a1836cd58d70bd2} 
+std\+::chrono\+::milliseconds Solar\+System\+::\+Testing\+::\+Mocks\+::\+JPLMock\+Config\+::min\+\_\+response\+\_\+delay = std\+::chrono\+::milliseconds(50)}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config_a2fff21e3b0af08f68ec1799dfdfe1f06}\index{SolarSystem::Testing::Mocks::JPLMockConfig@{SolarSystem::Testing::Mocks::JPLMockConfig}!mock\_data\_directory@{mock\_data\_directory}}
+\index{mock\_data\_directory@{mock\_data\_directory}!SolarSystem::Testing::Mocks::JPLMockConfig@{SolarSystem::Testing::Mocks::JPLMockConfig}}
+\doxysubsubsection{\texorpdfstring{mock\_data\_directory}{mock\_data\_directory}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config_a2fff21e3b0af08f68ec1799dfdfe1f06} 
+std\+::string Solar\+System\+::\+Testing\+::\+Mocks\+::\+JPLMock\+Config\+::mock\+\_\+data\+\_\+directory = "{}tests/data/jpl\+\_\+responses/"{}}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config_a76d2a7d4866e599b705374847480fe7a}\index{SolarSystem::Testing::Mocks::JPLMockConfig@{SolarSystem::Testing::Mocks::JPLMockConfig}!network\_failure\_rate@{network\_failure\_rate}}
+\index{network\_failure\_rate@{network\_failure\_rate}!SolarSystem::Testing::Mocks::JPLMockConfig@{SolarSystem::Testing::Mocks::JPLMockConfig}}
+\doxysubsubsection{\texorpdfstring{network\_failure\_rate}{network\_failure\_rate}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config_a76d2a7d4866e599b705374847480fe7a} 
+double Solar\+System\+::\+Testing\+::\+Mocks\+::\+JPLMock\+Config\+::network\+\_\+failure\+\_\+rate = 0.\+0}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config_a761bf59dd6c0800320d06e6cf004ccca}\index{SolarSystem::Testing::Mocks::JPLMockConfig@{SolarSystem::Testing::Mocks::JPLMockConfig}!parse\_error\_rate@{parse\_error\_rate}}
+\index{parse\_error\_rate@{parse\_error\_rate}!SolarSystem::Testing::Mocks::JPLMockConfig@{SolarSystem::Testing::Mocks::JPLMockConfig}}
+\doxysubsubsection{\texorpdfstring{parse\_error\_rate}{parse\_error\_rate}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config_a761bf59dd6c0800320d06e6cf004ccca} 
+double Solar\+System\+::\+Testing\+::\+Mocks\+::\+JPLMock\+Config\+::parse\+\_\+error\+\_\+rate = 0.\+0}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config_a95a9841355b10643b32a0f5fa1b0e3f5}\index{SolarSystem::Testing::Mocks::JPLMockConfig@{SolarSystem::Testing::Mocks::JPLMockConfig}!rate\_limit\_delay@{rate\_limit\_delay}}
+\index{rate\_limit\_delay@{rate\_limit\_delay}!SolarSystem::Testing::Mocks::JPLMockConfig@{SolarSystem::Testing::Mocks::JPLMockConfig}}
+\doxysubsubsection{\texorpdfstring{rate\_limit\_delay}{rate\_limit\_delay}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config_a95a9841355b10643b32a0f5fa1b0e3f5} 
+std\+::chrono\+::milliseconds Solar\+System\+::\+Testing\+::\+Mocks\+::\+JPLMock\+Config\+::rate\+\_\+limit\+\_\+delay = std\+::chrono\+::milliseconds(200)}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config_a509d2e11e2cb3485023cfda3fadfce9b}\index{SolarSystem::Testing::Mocks::JPLMockConfig@{SolarSystem::Testing::Mocks::JPLMockConfig}!server\_error\_rate@{server\_error\_rate}}
+\index{server\_error\_rate@{server\_error\_rate}!SolarSystem::Testing::Mocks::JPLMockConfig@{SolarSystem::Testing::Mocks::JPLMockConfig}}
+\doxysubsubsection{\texorpdfstring{server\_error\_rate}{server\_error\_rate}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config_a509d2e11e2cb3485023cfda3fadfce9b} 
+double Solar\+System\+::\+Testing\+::\+Mocks\+::\+JPLMock\+Config\+::server\+\_\+error\+\_\+rate = 0.\+0}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config_ab5b5cf93205ff12446045d4492f4a334}\index{SolarSystem::Testing::Mocks::JPLMockConfig@{SolarSystem::Testing::Mocks::JPLMockConfig}!simulate\_cache\_operations@{simulate\_cache\_operations}}
+\index{simulate\_cache\_operations@{simulate\_cache\_operations}!SolarSystem::Testing::Mocks::JPLMockConfig@{SolarSystem::Testing::Mocks::JPLMockConfig}}
+\doxysubsubsection{\texorpdfstring{simulate\_cache\_operations}{simulate\_cache\_operations}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config_ab5b5cf93205ff12446045d4492f4a334} 
+bool Solar\+System\+::\+Testing\+::\+Mocks\+::\+JPLMock\+Config\+::simulate\+\_\+cache\+\_\+operations = true}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config_a11a1769ca81acedcd3d43ba720de857f}\index{SolarSystem::Testing::Mocks::JPLMockConfig@{SolarSystem::Testing::Mocks::JPLMockConfig}!simulate\_network\_delays@{simulate\_network\_delays}}
+\index{simulate\_network\_delays@{simulate\_network\_delays}!SolarSystem::Testing::Mocks::JPLMockConfig@{SolarSystem::Testing::Mocks::JPLMockConfig}}
+\doxysubsubsection{\texorpdfstring{simulate\_network\_delays}{simulate\_network\_delays}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config_a11a1769ca81acedcd3d43ba720de857f} 
+bool Solar\+System\+::\+Testing\+::\+Mocks\+::\+JPLMock\+Config\+::simulate\+\_\+network\+\_\+delays = false}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config_a8415af01f87e2ae6ab731bc0ae95fc71}\index{SolarSystem::Testing::Mocks::JPLMockConfig@{SolarSystem::Testing::Mocks::JPLMockConfig}!simulate\_rate\_limiting@{simulate\_rate\_limiting}}
+\index{simulate\_rate\_limiting@{simulate\_rate\_limiting}!SolarSystem::Testing::Mocks::JPLMockConfig@{SolarSystem::Testing::Mocks::JPLMockConfig}}
+\doxysubsubsection{\texorpdfstring{simulate\_rate\_limiting}{simulate\_rate\_limiting}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config_a8415af01f87e2ae6ab731bc0ae95fc71} 
+bool Solar\+System\+::\+Testing\+::\+Mocks\+::\+JPLMock\+Config\+::simulate\+\_\+rate\+\_\+limiting = false}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config_a057d626efbdb153cc61596979bd459eb}\index{SolarSystem::Testing::Mocks::JPLMockConfig@{SolarSystem::Testing::Mocks::JPLMockConfig}!timeout\_rate@{timeout\_rate}}
+\index{timeout\_rate@{timeout\_rate}!SolarSystem::Testing::Mocks::JPLMockConfig@{SolarSystem::Testing::Mocks::JPLMockConfig}}
+\doxysubsubsection{\texorpdfstring{timeout\_rate}{timeout\_rate}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config_a057d626efbdb153cc61596979bd459eb} 
+double Solar\+System\+::\+Testing\+::\+Mocks\+::\+JPLMock\+Config\+::timeout\+\_\+rate = 0.\+0}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config_a6d77586e7a432c1b49d4365dd83d0201}\index{SolarSystem::Testing::Mocks::JPLMockConfig@{SolarSystem::Testing::Mocks::JPLMockConfig}!use\_realistic\_responses@{use\_realistic\_responses}}
+\index{use\_realistic\_responses@{use\_realistic\_responses}!SolarSystem::Testing::Mocks::JPLMockConfig@{SolarSystem::Testing::Mocks::JPLMockConfig}}
+\doxysubsubsection{\texorpdfstring{use\_realistic\_responses}{use\_realistic\_responses}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config_a6d77586e7a432c1b49d4365dd83d0201} 
+bool Solar\+System\+::\+Testing\+::\+Mocks\+::\+JPLMock\+Config\+::use\+\_\+realistic\+\_\+responses = true}
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+test/include/solar\+\_\+test/mocks/\mbox{\hyperlink{jpl__mock_8hpp}{jpl\+\_\+mock.\+hpp}}\end{DoxyCompactItemize}

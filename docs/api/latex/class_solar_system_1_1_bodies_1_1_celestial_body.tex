@@ -1,0 +1,455 @@
+\doxysection{Solar\+System\+::Bodies\+::Celestial\+Body Class Reference}
+\hypertarget{class_solar_system_1_1_bodies_1_1_celestial_body}{}\label{class_solar_system_1_1_bodies_1_1_celestial_body}\index{SolarSystem::Bodies::CelestialBody@{SolarSystem::Bodies::CelestialBody}}
+
+
+Modern celestial body class with RAII and strong typing.  
+
+
+
+
+{\ttfamily \#include $<$celestial\+\_\+body.\+hpp$>$}
+
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_solar_system_1_1_bodies_1_1_celestial_body_1_1_properties}{Properties}}
+\begin{DoxyCompactList}\small\item\em \doxylink{struct_solar_system_1_1_bodies_1_1_celestial_body_1_1_properties}{Properties} structure for celestial body construction. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body_a2d1b1c9580cbd5c36d1dc9ee7013ccc5}{Celestial\+Body}} (\mbox{\hyperlink{struct_solar_system_1_1_bodies_1_1_celestial_body_1_1_properties}{Properties}} props)
+\begin{DoxyCompactList}\small\item\em Construct celestial body with properties. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body_a65ffad577bdf5a4c7f400c8441183961}{Celestial\+Body}} (const \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}} \&)=default
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body_a54be65143e63876d555c9e1dbe698221}{Celestial\+Body}} (\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}} \&\&)=default
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}} \& \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body_a03c1ec87d3c09480d128d1440b810f2b}{operator=}} (const \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}} \&)=default
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}} \& \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body_a2991c5b2f880780d60c64678b668a413}{operator=}} (\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}} \&\&)=default
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body_a069b37ca7b6cc9f05a316f632920c718}{\texorpdfstring{$\sim$}{\string~}\+Celestial\+Body}} ()=default
+\item 
+std\+::string\+\_\+view \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body_a89dac8f57b8283b90172873399eb924f}{name}} () const noexcept
+\item 
+long double \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body_a1c41e8b18e7412bda9be5a1afa2eeaaa}{mass}} () const noexcept
+\item 
+const \mbox{\hyperlink{namespace_solar_system_1_1_math_a58b613f1c9974f449ee706cd131b1f41}{Math\+::\+Vector3d}} \& \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body_a082409044958f3a12355fff96bdaa031}{position}} () const noexcept
+\item 
+const \mbox{\hyperlink{namespace_solar_system_1_1_math_a58b613f1c9974f449ee706cd131b1f41}{Math\+::\+Vector3d}} \& \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body_a214725d4ecae1e8f62b3bfd5fda0ff06}{velocity}} () const noexcept
+\item 
+const \mbox{\hyperlink{namespace_solar_system_1_1_math_a58b613f1c9974f449ee706cd131b1f41}{Math\+::\+Vector3d}} \& \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body_a3863beeaaa265482ff0eee1f22003e25}{acceleration}} () const noexcept
+\item 
+\mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdc}{Body\+Type}} \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body_a95a490a444c20312cfc4596f4be18305}{type}} () const noexcept
+\item 
+\mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121}{Body\+Priority}} \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body_a98dbc650fe3cad42a0f86ebab3af6a62}{priority}} () const noexcept
+\item 
+const std\+::optional$<$ std\+::string $>$ \& \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body_abc639a63ee40b2bd606bf3b916fe4552}{jpl\+\_\+id}} () const noexcept
+\item 
+const std\+::optional$<$ std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point $>$ \& \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body_aa1b16d702fc0f4b82a1d28b8d100ea56}{creation\+\_\+date}} () const noexcept
+\item 
+void \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body_ad38142334db915c83f485be58e6a79df}{set\+\_\+position}} (const \mbox{\hyperlink{namespace_solar_system_1_1_math_a58b613f1c9974f449ee706cd131b1f41}{Math\+::\+Vector3d}} \&\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body_a082409044958f3a12355fff96bdaa031}{position}}) noexcept
+\item 
+void \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body_ad90b2e8141a10dd7a0f46f1710158678}{set\+\_\+velocity}} (const \mbox{\hyperlink{namespace_solar_system_1_1_math_a58b613f1c9974f449ee706cd131b1f41}{Math\+::\+Vector3d}} \&\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body_a214725d4ecae1e8f62b3bfd5fda0ff06}{velocity}}) noexcept
+\item 
+void \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body_a539b04ab16f34b8661c8b26c3eb7fd49}{set\+\_\+state}} (const \mbox{\hyperlink{namespace_solar_system_1_1_math_a58b613f1c9974f449ee706cd131b1f41}{Math\+::\+Vector3d}} \&\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body_a082409044958f3a12355fff96bdaa031}{position}}, const \mbox{\hyperlink{namespace_solar_system_1_1_math_a58b613f1c9974f449ee706cd131b1f41}{Math\+::\+Vector3d}} \&\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body_a214725d4ecae1e8f62b3bfd5fda0ff06}{velocity}}) noexcept
+\item 
+void \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body_a4d7df1372694735f79544f1af3db5ff5}{apply\+\_\+force}} (const \mbox{\hyperlink{namespace_solar_system_1_1_math_a58b613f1c9974f449ee706cd131b1f41}{Math\+::\+Vector3d}} \&force, double dt) noexcept
+\item 
+void \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body_a4740594f76574d5689fbeaae74e1fdf9}{update\+\_\+position}} (double dt) noexcept
+\item 
+void \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body_a86f8701eb990b925986885f875f61c79}{reset\+\_\+acceleration}} () noexcept
+\item 
+\mbox{\hyperlink{namespace_solar_system_1_1_math_a58b613f1c9974f449ee706cd131b1f41}{Math\+::\+Vector3d}} \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body_a4bed9fc3ed8c3bfb266c87c6dd208ea8}{gravitational\+\_\+force\+\_\+to}} (const \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}} \&other) const noexcept
+\item 
+long double \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body_a6dba6038ff32e86816430cfa99f57073}{distance\+\_\+to}} (const \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}} \&other) const noexcept
+\item 
+long double \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body_a7bb130fbb5eccc6b9b1053ca4e0030f1}{distance\+\_\+squared\+\_\+to}} (const \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}} \&other) const noexcept
+\item 
+bool \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body_af818d3a745c873d75a3023006cbda004}{is\+\_\+available\+\_\+at}} (std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point time) const noexcept
+\item 
+std\+::string \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body_a8b12faa03289287656a44bf7254c5388}{to\+\_\+string}} () const
+\item 
+bool \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body_a60e888efab43f99dad172ce8fc275a3d}{operator==}} (const \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}} \&other) const noexcept
+\item 
+bool \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body_a094f69c7a52c936e935f3367445758d6}{operator!=}} (const \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}} \&other) const noexcept
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Modern celestial body class with RAII and strong typing. 
+
+\label{doc-constructors}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_celestial_body_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_celestial_body_a2d1b1c9580cbd5c36d1dc9ee7013ccc5}\index{SolarSystem::Bodies::CelestialBody@{SolarSystem::Bodies::CelestialBody}!CelestialBody@{CelestialBody}}
+\index{CelestialBody@{CelestialBody}!SolarSystem::Bodies::CelestialBody@{SolarSystem::Bodies::CelestialBody}}
+\doxysubsubsection{\texorpdfstring{CelestialBody()}{CelestialBody()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_celestial_body_a2d1b1c9580cbd5c36d1dc9ee7013ccc5} 
+Solar\+System\+::\+Bodies\+::\+Celestial\+Body\+::\+Celestial\+Body (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_solar_system_1_1_bodies_1_1_celestial_body_1_1_properties}{Properties}}}]{props}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+
+
+Construct celestial body with properties. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em props} & Body properties \\
+\hline
+\end{DoxyParams}
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_bodies_1_1_celestial_body_a2d1b1c9580cbd5c36d1dc9ee7013ccc5_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_bodies_1_1_celestial_body_a2d1b1c9580cbd5c36d1dc9ee7013ccc5_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_celestial_body_a65ffad577bdf5a4c7f400c8441183961}\index{SolarSystem::Bodies::CelestialBody@{SolarSystem::Bodies::CelestialBody}!CelestialBody@{CelestialBody}}
+\index{CelestialBody@{CelestialBody}!SolarSystem::Bodies::CelestialBody@{SolarSystem::Bodies::CelestialBody}}
+\doxysubsubsection{\texorpdfstring{CelestialBody()}{CelestialBody()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_celestial_body_a65ffad577bdf5a4c7f400c8441183961} 
+Solar\+System\+::\+Bodies\+::\+Celestial\+Body\+::\+Celestial\+Body (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}} \&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_bodies_1_1_celestial_body_a65ffad577bdf5a4c7f400c8441183961_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_celestial_body_a54be65143e63876d555c9e1dbe698221}\index{SolarSystem::Bodies::CelestialBody@{SolarSystem::Bodies::CelestialBody}!CelestialBody@{CelestialBody}}
+\index{CelestialBody@{CelestialBody}!SolarSystem::Bodies::CelestialBody@{SolarSystem::Bodies::CelestialBody}}
+\doxysubsubsection{\texorpdfstring{CelestialBody()}{CelestialBody()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_celestial_body_a54be65143e63876d555c9e1dbe698221} 
+Solar\+System\+::\+Bodies\+::\+Celestial\+Body\+::\+Celestial\+Body (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}} \&\&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_bodies_1_1_celestial_body_a54be65143e63876d555c9e1dbe698221_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_celestial_body_a069b37ca7b6cc9f05a316f632920c718}\index{SolarSystem::Bodies::CelestialBody@{SolarSystem::Bodies::CelestialBody}!````~CelestialBody@{\texorpdfstring{$\sim$}{\string~}CelestialBody}}
+\index{````~CelestialBody@{\texorpdfstring{$\sim$}{\string~}CelestialBody}!SolarSystem::Bodies::CelestialBody@{SolarSystem::Bodies::CelestialBody}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}CelestialBody()}{\string~CelestialBody()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_celestial_body_a069b37ca7b6cc9f05a316f632920c718} 
+Solar\+System\+::\+Bodies\+::\+Celestial\+Body\+::\texorpdfstring{$\sim$}{\string~}\+Celestial\+Body (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}}
+
+
+
+\label{doc-func-members}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_celestial_body_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_celestial_body_a3863beeaaa265482ff0eee1f22003e25}\index{SolarSystem::Bodies::CelestialBody@{SolarSystem::Bodies::CelestialBody}!acceleration@{acceleration}}
+\index{acceleration@{acceleration}!SolarSystem::Bodies::CelestialBody@{SolarSystem::Bodies::CelestialBody}}
+\doxysubsubsection{\texorpdfstring{acceleration()}{acceleration()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_celestial_body_a3863beeaaa265482ff0eee1f22003e25} 
+const \mbox{\hyperlink{namespace_solar_system_1_1_math_a58b613f1c9974f449ee706cd131b1f41}{Math\+::\+Vector3d}} \& Solar\+System\+::\+Bodies\+::\+Celestial\+Body\+::acceleration (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}, {\ttfamily [noexcept]}}
+
+\Hypertarget{class_solar_system_1_1_bodies_1_1_celestial_body_a4d7df1372694735f79544f1af3db5ff5}\index{SolarSystem::Bodies::CelestialBody@{SolarSystem::Bodies::CelestialBody}!apply\_force@{apply\_force}}
+\index{apply\_force@{apply\_force}!SolarSystem::Bodies::CelestialBody@{SolarSystem::Bodies::CelestialBody}}
+\doxysubsubsection{\texorpdfstring{apply\_force()}{apply\_force()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_celestial_body_a4d7df1372694735f79544f1af3db5ff5} 
+void Solar\+System\+::\+Bodies\+::\+Celestial\+Body\+::apply\+\_\+force (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{namespace_solar_system_1_1_math_a58b613f1c9974f449ee706cd131b1f41}{Math\+::\+Vector3d}} \&}]{force}{, }\item[{double}]{dt}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+\Hypertarget{class_solar_system_1_1_bodies_1_1_celestial_body_aa1b16d702fc0f4b82a1d28b8d100ea56}\index{SolarSystem::Bodies::CelestialBody@{SolarSystem::Bodies::CelestialBody}!creation\_date@{creation\_date}}
+\index{creation\_date@{creation\_date}!SolarSystem::Bodies::CelestialBody@{SolarSystem::Bodies::CelestialBody}}
+\doxysubsubsection{\texorpdfstring{creation\_date()}{creation\_date()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_celestial_body_aa1b16d702fc0f4b82a1d28b8d100ea56} 
+const std\+::optional$<$ std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point $>$ \& Solar\+System\+::\+Bodies\+::\+Celestial\+Body\+::creation\+\_\+date (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}, {\ttfamily [noexcept]}}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_bodies_1_1_celestial_body_aa1b16d702fc0f4b82a1d28b8d100ea56_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_celestial_body_a7bb130fbb5eccc6b9b1053ca4e0030f1}\index{SolarSystem::Bodies::CelestialBody@{SolarSystem::Bodies::CelestialBody}!distance\_squared\_to@{distance\_squared\_to}}
+\index{distance\_squared\_to@{distance\_squared\_to}!SolarSystem::Bodies::CelestialBody@{SolarSystem::Bodies::CelestialBody}}
+\doxysubsubsection{\texorpdfstring{distance\_squared\_to()}{distance\_squared\_to()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_celestial_body_a7bb130fbb5eccc6b9b1053ca4e0030f1} 
+long double Solar\+System\+::\+Bodies\+::\+Celestial\+Body\+::distance\+\_\+squared\+\_\+to (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}} \&}]{other}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [noexcept]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_bodies_1_1_celestial_body_a7bb130fbb5eccc6b9b1053ca4e0030f1_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_celestial_body_a6dba6038ff32e86816430cfa99f57073}\index{SolarSystem::Bodies::CelestialBody@{SolarSystem::Bodies::CelestialBody}!distance\_to@{distance\_to}}
+\index{distance\_to@{distance\_to}!SolarSystem::Bodies::CelestialBody@{SolarSystem::Bodies::CelestialBody}}
+\doxysubsubsection{\texorpdfstring{distance\_to()}{distance\_to()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_celestial_body_a6dba6038ff32e86816430cfa99f57073} 
+long double Solar\+System\+::\+Bodies\+::\+Celestial\+Body\+::distance\+\_\+to (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}} \&}]{other}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [noexcept]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_bodies_1_1_celestial_body_a6dba6038ff32e86816430cfa99f57073_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_celestial_body_a4bed9fc3ed8c3bfb266c87c6dd208ea8}\index{SolarSystem::Bodies::CelestialBody@{SolarSystem::Bodies::CelestialBody}!gravitational\_force\_to@{gravitational\_force\_to}}
+\index{gravitational\_force\_to@{gravitational\_force\_to}!SolarSystem::Bodies::CelestialBody@{SolarSystem::Bodies::CelestialBody}}
+\doxysubsubsection{\texorpdfstring{gravitational\_force\_to()}{gravitational\_force\_to()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_celestial_body_a4bed9fc3ed8c3bfb266c87c6dd208ea8} 
+\mbox{\hyperlink{namespace_solar_system_1_1_math_a58b613f1c9974f449ee706cd131b1f41}{Math\+::\+Vector3d}} Solar\+System\+::\+Bodies\+::\+Celestial\+Body\+::gravitational\+\_\+force\+\_\+to (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}} \&}]{other}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [noexcept]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_bodies_1_1_celestial_body_a4bed9fc3ed8c3bfb266c87c6dd208ea8_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_celestial_body_af818d3a745c873d75a3023006cbda004}\index{SolarSystem::Bodies::CelestialBody@{SolarSystem::Bodies::CelestialBody}!is\_available\_at@{is\_available\_at}}
+\index{is\_available\_at@{is\_available\_at}!SolarSystem::Bodies::CelestialBody@{SolarSystem::Bodies::CelestialBody}}
+\doxysubsubsection{\texorpdfstring{is\_available\_at()}{is\_available\_at()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_celestial_body_af818d3a745c873d75a3023006cbda004} 
+bool Solar\+System\+::\+Bodies\+::\+Celestial\+Body\+::is\+\_\+available\+\_\+at (\begin{DoxyParamCaption}\item[{std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point}]{time}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [noexcept]}}
+
+\Hypertarget{class_solar_system_1_1_bodies_1_1_celestial_body_abc639a63ee40b2bd606bf3b916fe4552}\index{SolarSystem::Bodies::CelestialBody@{SolarSystem::Bodies::CelestialBody}!jpl\_id@{jpl\_id}}
+\index{jpl\_id@{jpl\_id}!SolarSystem::Bodies::CelestialBody@{SolarSystem::Bodies::CelestialBody}}
+\doxysubsubsection{\texorpdfstring{jpl\_id()}{jpl\_id()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_celestial_body_abc639a63ee40b2bd606bf3b916fe4552} 
+const std\+::optional$<$ std\+::string $>$ \& Solar\+System\+::\+Bodies\+::\+Celestial\+Body\+::jpl\+\_\+id (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}, {\ttfamily [noexcept]}}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_bodies_1_1_celestial_body_abc639a63ee40b2bd606bf3b916fe4552_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_celestial_body_a1c41e8b18e7412bda9be5a1afa2eeaaa}\index{SolarSystem::Bodies::CelestialBody@{SolarSystem::Bodies::CelestialBody}!mass@{mass}}
+\index{mass@{mass}!SolarSystem::Bodies::CelestialBody@{SolarSystem::Bodies::CelestialBody}}
+\doxysubsubsection{\texorpdfstring{mass()}{mass()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_celestial_body_a1c41e8b18e7412bda9be5a1afa2eeaaa} 
+long double Solar\+System\+::\+Bodies\+::\+Celestial\+Body\+::mass (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}, {\ttfamily [noexcept]}}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_bodies_1_1_celestial_body_a1c41e8b18e7412bda9be5a1afa2eeaaa_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_celestial_body_a89dac8f57b8283b90172873399eb924f}\index{SolarSystem::Bodies::CelestialBody@{SolarSystem::Bodies::CelestialBody}!name@{name}}
+\index{name@{name}!SolarSystem::Bodies::CelestialBody@{SolarSystem::Bodies::CelestialBody}}
+\doxysubsubsection{\texorpdfstring{name()}{name()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_celestial_body_a89dac8f57b8283b90172873399eb924f} 
+std\+::string\+\_\+view Solar\+System\+::\+Bodies\+::\+Celestial\+Body\+::name (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}, {\ttfamily [noexcept]}}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_bodies_1_1_celestial_body_a89dac8f57b8283b90172873399eb924f_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_celestial_body_a094f69c7a52c936e935f3367445758d6}\index{SolarSystem::Bodies::CelestialBody@{SolarSystem::Bodies::CelestialBody}!operator"!=@{operator"!=}}
+\index{operator"!=@{operator"!=}!SolarSystem::Bodies::CelestialBody@{SolarSystem::Bodies::CelestialBody}}
+\doxysubsubsection{\texorpdfstring{operator"!=()}{operator!=()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_celestial_body_a094f69c7a52c936e935f3367445758d6} 
+bool Solar\+System\+::\+Bodies\+::\+Celestial\+Body\+::operator!= (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}} \&}]{other}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_bodies_1_1_celestial_body_a094f69c7a52c936e935f3367445758d6_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_celestial_body_a2991c5b2f880780d60c64678b668a413}\index{SolarSystem::Bodies::CelestialBody@{SolarSystem::Bodies::CelestialBody}!operator=@{operator=}}
+\index{operator=@{operator=}!SolarSystem::Bodies::CelestialBody@{SolarSystem::Bodies::CelestialBody}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_celestial_body_a2991c5b2f880780d60c64678b668a413} 
+\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}} \& Solar\+System\+::\+Bodies\+::\+Celestial\+Body\+::operator= (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}} \&\&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_bodies_1_1_celestial_body_a2991c5b2f880780d60c64678b668a413_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_celestial_body_a03c1ec87d3c09480d128d1440b810f2b}\index{SolarSystem::Bodies::CelestialBody@{SolarSystem::Bodies::CelestialBody}!operator=@{operator=}}
+\index{operator=@{operator=}!SolarSystem::Bodies::CelestialBody@{SolarSystem::Bodies::CelestialBody}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_celestial_body_a03c1ec87d3c09480d128d1440b810f2b} 
+\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}} \& Solar\+System\+::\+Bodies\+::\+Celestial\+Body\+::operator= (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}} \&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_bodies_1_1_celestial_body_a03c1ec87d3c09480d128d1440b810f2b_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_celestial_body_a60e888efab43f99dad172ce8fc275a3d}\index{SolarSystem::Bodies::CelestialBody@{SolarSystem::Bodies::CelestialBody}!operator==@{operator==}}
+\index{operator==@{operator==}!SolarSystem::Bodies::CelestialBody@{SolarSystem::Bodies::CelestialBody}}
+\doxysubsubsection{\texorpdfstring{operator==()}{operator==()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_celestial_body_a60e888efab43f99dad172ce8fc275a3d} 
+bool Solar\+System\+::\+Bodies\+::\+Celestial\+Body\+::operator== (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}} \&}]{other}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_bodies_1_1_celestial_body_a60e888efab43f99dad172ce8fc275a3d_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_celestial_body_a082409044958f3a12355fff96bdaa031}\index{SolarSystem::Bodies::CelestialBody@{SolarSystem::Bodies::CelestialBody}!position@{position}}
+\index{position@{position}!SolarSystem::Bodies::CelestialBody@{SolarSystem::Bodies::CelestialBody}}
+\doxysubsubsection{\texorpdfstring{position()}{position()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_celestial_body_a082409044958f3a12355fff96bdaa031} 
+const \mbox{\hyperlink{namespace_solar_system_1_1_math_a58b613f1c9974f449ee706cd131b1f41}{Math\+::\+Vector3d}} \& Solar\+System\+::\+Bodies\+::\+Celestial\+Body\+::position (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}, {\ttfamily [noexcept]}}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_bodies_1_1_celestial_body_a082409044958f3a12355fff96bdaa031_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_celestial_body_a98dbc650fe3cad42a0f86ebab3af6a62}\index{SolarSystem::Bodies::CelestialBody@{SolarSystem::Bodies::CelestialBody}!priority@{priority}}
+\index{priority@{priority}!SolarSystem::Bodies::CelestialBody@{SolarSystem::Bodies::CelestialBody}}
+\doxysubsubsection{\texorpdfstring{priority()}{priority()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_celestial_body_a98dbc650fe3cad42a0f86ebab3af6a62} 
+\mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121}{Body\+Priority}} Solar\+System\+::\+Bodies\+::\+Celestial\+Body\+::priority (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}, {\ttfamily [noexcept]}}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_bodies_1_1_celestial_body_a98dbc650fe3cad42a0f86ebab3af6a62_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_celestial_body_a86f8701eb990b925986885f875f61c79}\index{SolarSystem::Bodies::CelestialBody@{SolarSystem::Bodies::CelestialBody}!reset\_acceleration@{reset\_acceleration}}
+\index{reset\_acceleration@{reset\_acceleration}!SolarSystem::Bodies::CelestialBody@{SolarSystem::Bodies::CelestialBody}}
+\doxysubsubsection{\texorpdfstring{reset\_acceleration()}{reset\_acceleration()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_celestial_body_a86f8701eb990b925986885f875f61c79} 
+void Solar\+System\+::\+Bodies\+::\+Celestial\+Body\+::reset\+\_\+acceleration (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+\Hypertarget{class_solar_system_1_1_bodies_1_1_celestial_body_ad38142334db915c83f485be58e6a79df}\index{SolarSystem::Bodies::CelestialBody@{SolarSystem::Bodies::CelestialBody}!set\_position@{set\_position}}
+\index{set\_position@{set\_position}!SolarSystem::Bodies::CelestialBody@{SolarSystem::Bodies::CelestialBody}}
+\doxysubsubsection{\texorpdfstring{set\_position()}{set\_position()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_celestial_body_ad38142334db915c83f485be58e6a79df} 
+void Solar\+System\+::\+Bodies\+::\+Celestial\+Body\+::set\+\_\+position (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{namespace_solar_system_1_1_math_a58b613f1c9974f449ee706cd131b1f41}{Math\+::\+Vector3d}} \&}]{position}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=347pt]{class_solar_system_1_1_bodies_1_1_celestial_body_ad38142334db915c83f485be58e6a79df_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_celestial_body_a539b04ab16f34b8661c8b26c3eb7fd49}\index{SolarSystem::Bodies::CelestialBody@{SolarSystem::Bodies::CelestialBody}!set\_state@{set\_state}}
+\index{set\_state@{set\_state}!SolarSystem::Bodies::CelestialBody@{SolarSystem::Bodies::CelestialBody}}
+\doxysubsubsection{\texorpdfstring{set\_state()}{set\_state()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_celestial_body_a539b04ab16f34b8661c8b26c3eb7fd49} 
+void Solar\+System\+::\+Bodies\+::\+Celestial\+Body\+::set\+\_\+state (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{namespace_solar_system_1_1_math_a58b613f1c9974f449ee706cd131b1f41}{Math\+::\+Vector3d}} \&}]{position}{, }\item[{const \mbox{\hyperlink{namespace_solar_system_1_1_math_a58b613f1c9974f449ee706cd131b1f41}{Math\+::\+Vector3d}} \&}]{velocity}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_bodies_1_1_celestial_body_a539b04ab16f34b8661c8b26c3eb7fd49_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_celestial_body_ad90b2e8141a10dd7a0f46f1710158678}\index{SolarSystem::Bodies::CelestialBody@{SolarSystem::Bodies::CelestialBody}!set\_velocity@{set\_velocity}}
+\index{set\_velocity@{set\_velocity}!SolarSystem::Bodies::CelestialBody@{SolarSystem::Bodies::CelestialBody}}
+\doxysubsubsection{\texorpdfstring{set\_velocity()}{set\_velocity()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_celestial_body_ad90b2e8141a10dd7a0f46f1710158678} 
+void Solar\+System\+::\+Bodies\+::\+Celestial\+Body\+::set\+\_\+velocity (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{namespace_solar_system_1_1_math_a58b613f1c9974f449ee706cd131b1f41}{Math\+::\+Vector3d}} \&}]{velocity}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=347pt]{class_solar_system_1_1_bodies_1_1_celestial_body_ad90b2e8141a10dd7a0f46f1710158678_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_celestial_body_a8b12faa03289287656a44bf7254c5388}\index{SolarSystem::Bodies::CelestialBody@{SolarSystem::Bodies::CelestialBody}!to\_string@{to\_string}}
+\index{to\_string@{to\_string}!SolarSystem::Bodies::CelestialBody@{SolarSystem::Bodies::CelestialBody}}
+\doxysubsubsection{\texorpdfstring{to\_string()}{to\_string()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_celestial_body_a8b12faa03289287656a44bf7254c5388} 
+std\+::string Solar\+System\+::\+Bodies\+::\+Celestial\+Body\+::to\+\_\+string (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_bodies_1_1_celestial_body_a8b12faa03289287656a44bf7254c5388_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_celestial_body_a95a490a444c20312cfc4596f4be18305}\index{SolarSystem::Bodies::CelestialBody@{SolarSystem::Bodies::CelestialBody}!type@{type}}
+\index{type@{type}!SolarSystem::Bodies::CelestialBody@{SolarSystem::Bodies::CelestialBody}}
+\doxysubsubsection{\texorpdfstring{type()}{type()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_celestial_body_a95a490a444c20312cfc4596f4be18305} 
+\mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdc}{Body\+Type}} Solar\+System\+::\+Bodies\+::\+Celestial\+Body\+::type (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}, {\ttfamily [noexcept]}}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_bodies_1_1_celestial_body_a95a490a444c20312cfc4596f4be18305_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_bodies_1_1_celestial_body_a4740594f76574d5689fbeaae74e1fdf9}\index{SolarSystem::Bodies::CelestialBody@{SolarSystem::Bodies::CelestialBody}!update\_position@{update\_position}}
+\index{update\_position@{update\_position}!SolarSystem::Bodies::CelestialBody@{SolarSystem::Bodies::CelestialBody}}
+\doxysubsubsection{\texorpdfstring{update\_position()}{update\_position()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_celestial_body_a4740594f76574d5689fbeaae74e1fdf9} 
+void Solar\+System\+::\+Bodies\+::\+Celestial\+Body\+::update\+\_\+position (\begin{DoxyParamCaption}\item[{double}]{dt}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+\Hypertarget{class_solar_system_1_1_bodies_1_1_celestial_body_a214725d4ecae1e8f62b3bfd5fda0ff06}\index{SolarSystem::Bodies::CelestialBody@{SolarSystem::Bodies::CelestialBody}!velocity@{velocity}}
+\index{velocity@{velocity}!SolarSystem::Bodies::CelestialBody@{SolarSystem::Bodies::CelestialBody}}
+\doxysubsubsection{\texorpdfstring{velocity()}{velocity()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_bodies_1_1_celestial_body_a214725d4ecae1e8f62b3bfd5fda0ff06} 
+const \mbox{\hyperlink{namespace_solar_system_1_1_math_a58b613f1c9974f449ee706cd131b1f41}{Math\+::\+Vector3d}} \& Solar\+System\+::\+Bodies\+::\+Celestial\+Body\+::velocity (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}, {\ttfamily [noexcept]}}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_bodies_1_1_celestial_body_a214725d4ecae1e8f62b3bfd5fda0ff06_icgraph}
+\end{center}
+\end{figure}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+core/include/solar\+\_\+core/bodies/\mbox{\hyperlink{celestial__body_8hpp}{celestial\+\_\+body.\+hpp}}\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+core/src/bodies/\mbox{\hyperlink{celestial__body_8cpp}{celestial\+\_\+body.\+cpp}}\end{DoxyCompactItemize}

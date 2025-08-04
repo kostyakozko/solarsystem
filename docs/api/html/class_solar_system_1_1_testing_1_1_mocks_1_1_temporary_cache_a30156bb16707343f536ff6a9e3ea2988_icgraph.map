@@ -1,0 +1,5 @@
+<map id="SolarSystem::Testing::Mocks::TemporaryCache::cache_files_exist" name="SolarSystem::Testing::Mocks::TemporaryCache::cache_files_exist">
+<area shape="rect" id="Node000001" title="Check if cache files exist." alt="" coords="238,5,413,61"/>
+<area shape="rect" id="Node000002" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_temporary_cache.html#a27fb30037f516575eb6bcb3b98d7749b" title="Simulate partial corruption." alt="" coords="5,5,190,61"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="223,36,190,36,190,30,223,30"/>
+</map>

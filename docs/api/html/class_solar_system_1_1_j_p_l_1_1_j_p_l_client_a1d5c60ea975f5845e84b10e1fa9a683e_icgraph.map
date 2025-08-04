@@ -1,0 +1,5 @@
+<map id="SolarSystem::JPL::JPLClient::fetch_all_bodies_async" name="SolarSystem::JPL::JPLClient::fetch_all_bodies_async">
+<area shape="rect" id="Node000001" title="Fetch ephemeris data for all known bodies." alt="" coords="246,5,438,46"/>
+<area shape="rect" id="Node000002" href="$class_solar_system_1_1_j_p_l_1_1_j_p_l_client.html#a11e686e5082403828c206aeb13cf2442" title=" " alt="" coords="5,5,198,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="230,28,198,28,198,23,230,23"/>
+</map>

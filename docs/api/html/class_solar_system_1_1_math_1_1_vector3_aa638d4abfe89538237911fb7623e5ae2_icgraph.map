@@ -1,0 +1,20 @@
+<map id="SolarSystem::Math::Vector3::z" name="SolarSystem::Math::Vector3::z">
+<area shape="rect" id="Node000001" title=" " alt="" coords="877,50,1018,91"/>
+<area shape="rect" id="Node000002" href="$class_solar_system_1_1_bodies_1_1_body_collection.html#acd291494f4ab1b23c0c8419b16fc6fa0" title=" " alt="" coords="478,5,640,61"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="861,65,640,44,640,38,862,60"/>
+<area shape="rect" id="Node000006" href="$namespace_solar_system_1_1_math.html#a6875bd0b4d6c15ab9d8ba3b8fa53f2d7" title=" " alt="" coords="688,78,829,119"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="862,86,830,91,829,85,861,81"/>
+<area shape="rect" id="Node000003" href="$solar__system_8cpp.html#ad7d02cf46392ccfa264d0aec23317bea" title="Print all bodies in exact legacy format." alt="" coords="319,54,430,79"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="463,53,431,59,430,54,462,48"/>
+<area shape="rect" id="Node000004" href="$solar__system_8cpp.html#a0a190e06a4d8642088546e14b6a1667b" title="Run HIGH&#45;PERFORMANCE simulation matching legacy speed." alt="" coords="103,54,271,79"/>
+<area shape="poly" id="edge5_Node000002_Node000004" title=" " alt="" coords="463,36,319,44,248,56,247,50,319,39,463,30"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="304,69,272,69,272,64,304,64"/>
+<area shape="rect" id="Node000005" href="$solar__system_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title="Main application entry point &#45; OPTIMIZED FOR PERFORMANCE." alt="" coords="5,54,55,79"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="87,69,55,69,55,64,87,64"/>
+<area shape="rect" id="Node000007" href="$solar__system_8cpp.html#a8f2d45f2ae9f5338530050f0dd86ae81" title="Print barycenter information (matching legacy format)" alt="" coords="502,86,616,111"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="672,101,616,101,616,96,672,96"/>
+<area shape="rect" id="Node000008" href="$class_solar_system_1_1_bodies_1_1_celestial_body.html#a8b12faa03289287656a44bf7254c5388" title=" " alt="" coords="487,136,631,192"/>
+<area shape="poly" id="edge10_Node000006_Node000008" title=" " alt="" coords="681,127,633,143,631,138,679,122"/>
+<area shape="poly" id="edge8_Node000007_Node000003" title=" " alt="" coords="486,89,430,79,431,73,487,83"/>
+<area shape="poly" id="edge9_Node000007_Node000004" title=" " alt="" coords="487,102,406,101,319,94,246,83,247,77,319,89,406,95,487,97"/>
+</map>

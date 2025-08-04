@@ -1,0 +1,15 @@
+<map id="SolarSystem::Testing::Mocks::ScopedServiceRegistry::ScopedServiceRegistry" name="SolarSystem::Testing::Mocks::ScopedServiceRegistry::ScopedServiceRegistry">
+<area shape="rect" id="Node000001" title="Create scoped registry with automatic cleanup." alt="" coords="5,109,219,165"/>
+<area shape="rect" id="Node000002" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry.html#a449b026183046fbb50877dda6d7eea75" title="Get global registry instance." alt="" coords="267,29,468,85"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="202,106,261,88,263,93,204,111"/>
+<area shape="rect" id="Node000004" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry.html#abe6571ec052adba6e5f10a9dd0b33a79" title="Register common mock services." alt="" coords="267,109,468,165"/>
+<area shape="poly" id="edge5_Node000001_Node000004" title=" " alt="" coords="219,134,251,134,251,140,219,140"/>
+<area shape="rect" id="Node000006" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry.html#a738dcfeaa1a272f65073a0cce67b1a99" title="Set current scope (for scoped services)" alt="" coords="267,189,468,245"/>
+<area shape="poly" id="edge7_Node000001_Node000006" title=" " alt="" coords="204,163,263,182,261,187,202,168"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="319,29,319,19,328,10,344,5,367,3,393,5,409,12,407,17,392,10,367,8,345,10,331,15,324,21,324,29"/>
+<area shape="rect" id="Node000003" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry.html#a2474c9a8aba5cd14aa69f66789e84df2" title=" " alt="" coords="516,29,717,85"/>
+<area shape="poly" id="edge3_Node000002_Node000003" title=" " alt="" coords="469,54,501,54,501,60,469,60"/>
+<area shape="poly" id="edge4_Node000003_Node000003" title=" " alt="" coords="568,29,569,19,577,10,594,5,617,3,643,5,659,12,657,17,641,10,617,8,595,10,580,15,573,21,573,29"/>
+<area shape="rect" id="Node000005" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry.html#a283e9b5459e86c55786fcd985c0a8f63" title="Register mock service." alt="" coords="516,109,717,165"/>
+<area shape="poly" id="edge6_Node000004_Node000005" title=" " alt="" coords="469,134,501,134,501,140,469,140"/>
+</map>

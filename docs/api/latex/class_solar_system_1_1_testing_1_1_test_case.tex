@@ -1,0 +1,460 @@
+\doxysection{Solar\+System\+::Testing\+::Test\+Case Class Reference}
+\hypertarget{class_solar_system_1_1_testing_1_1_test_case}{}\label{class_solar_system_1_1_testing_1_1_test_case}\index{SolarSystem::Testing::TestCase@{SolarSystem::Testing::TestCase}}
+
+
+Base class for all test cases.  
+
+
+
+
+{\ttfamily \#include $<$test\+\_\+case.\+hpp$>$}
+
+
+
+Inheritance diagram for Solar\+System\+::Testing\+::Test\+Case\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=550pt]{class_solar_system_1_1_testing_1_1_test_case__inherit__graph}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_case_1_1_test_info}{Test\+Info}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_case_a4bbd0c140d269b58a8935459558e07d9}{Test\+Case}} (\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_case_1_1_test_info}{Test\+Info}} \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_case_a3bd52268b41923e445f7873f243da22d}{info}})
+\item 
+virtual \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_case_a86a5997220af0ee4ce4b5a453ba2cd29}{\texorpdfstring{$\sim$}{\string~}\+Test\+Case}} ()=default
+\item 
+virtual void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_case_ad48e9fda0bcb242f0121cb80fd79cbd5}{setup}} ()
+\item 
+virtual void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_case_a13df7675ef19ce8948fe4fdc032a2723}{run}} ()=0
+\item 
+virtual void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_case_a954d344c8a77bc6363bcfb4f48aca1bb}{teardown}} ()
+\item 
+const \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_case_1_1_test_info}{Test\+Info}} \& \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_case_a3bd52268b41923e445f7873f243da22d}{info}} () const
+\item 
+const \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_result}{Test\+Result}} \& \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_case_a57fce4e1503c6d131a5560a3e0711503}{result}} () const
+\item 
+\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_result}{Test\+Result}} \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_case_a8dc3fe58d234096ae319b17766872ec6}{execute}} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_case_ada06a5e5ce50a0d8f22246d826ee1d32}{assert\+\_\+true}} (bool condition, const std\+::string \&message="{}"{})
+\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_case_abd444cba48a24ee6b7095c0c1dd31a9b}{assert\+\_\+false}} (bool condition, const std\+::string \&message="{}"{})
+\item 
+{\footnotesize template$<$typename T$>$ }\\void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_case_a3a440323f83279648bea0e5aea6dc9f2}{assert\+\_\+equals}} (const T \&expected, const T \&actual, const std\+::string \&message="{}"{})
+\item 
+{\footnotesize template$<$typename T$>$ }\\void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_case_ac575f82c7b58b72aa7180c166ff49538}{assert\+\_\+not\+\_\+equals}} (const T \&expected, const T \&actual, const std\+::string \&message="{}"{})
+\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_case_afe27efb6acf2497919d845174414e8ed}{assert\+\_\+throws}} (const std\+::function$<$ void()$>$ \&func, const std\+::string \&message="{}"{})
+\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_case_ab4dbf2c372fdee3e8c9afedc08430d6d}{assert\+\_\+no\+\_\+throw}} (const std\+::function$<$ void()$>$ \&func, const std\+::string \&message="{}"{})
+\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_case_a7fb6bcf9f85f51150b240977e1333a80}{assert\+\_\+contains}} (const std\+::string \&haystack, const std\+::string \&needle, const std\+::string \&message="{}"{})
+\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_case_a92521b9bb19e4b2115928b0e08ffb697}{assert\+\_\+starts\+\_\+with}} (const std\+::string \&str, const std\+::string \&prefix, const std\+::string \&message="{}"{})
+\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_case_a2c0dedab45afc6adab9a762ebe57c9f6}{assert\+\_\+ends\+\_\+with}} (const std\+::string \&str, const std\+::string \&suffix, const std\+::string \&message="{}"{})
+\item 
+{\footnotesize template$<$typename T$>$ }\\void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_case_aa1a029a7f449d936afb139bdcdd785cc}{assert\+\_\+near}} (const T \&expected, const T \&actual, const T \&tolerance, const std\+::string \&message="{}"{})
+\item 
+{\footnotesize template$<$typename T$>$ }\\void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_case_a3647c2b2aab9a3c0adfe2a857126990a}{assert\+\_\+greater\+\_\+than}} (const T \&actual, const T \&threshold, const std\+::string \&message="{}"{})
+\item 
+{\footnotesize template$<$typename T$>$ }\\void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_case_a5eea494969ea120432c230626ad5b617}{assert\+\_\+less\+\_\+than}} (const T \&actual, const T \&threshold, const std\+::string \&message="{}"{})
+\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_case_a3ef33096a74f5c82a8a63f20762904a5}{assert\+\_\+execution\+\_\+time\+\_\+less\+\_\+than}} (const std\+::function$<$ void()$>$ \&func, std\+::chrono\+::milliseconds max\+\_\+time)
+\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_case_a2c7a9a22ed69b485d9f59fab0d2bed24}{assert\+\_\+memory\+\_\+usage\+\_\+less\+\_\+than}} (const std\+::function$<$ void()$>$ \&func, size\+\_\+t max\+\_\+bytes)
+\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_case_a0aeeed6246046396a67e4637dc8bc636}{skip\+\_\+test}} (const std\+::string \&reason)
+\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_case_af7a9863be58338eeda09be7cacc7e75f}{add\+\_\+metadata}} (const std\+::string \&key, const std\+::string \&value)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Base class for all test cases. 
+
+\label{doc-constructors}
+\Hypertarget{class_solar_system_1_1_testing_1_1_test_case_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_solar_system_1_1_testing_1_1_test_case_a4bbd0c140d269b58a8935459558e07d9}\index{SolarSystem::Testing::TestCase@{SolarSystem::Testing::TestCase}!TestCase@{TestCase}}
+\index{TestCase@{TestCase}!SolarSystem::Testing::TestCase@{SolarSystem::Testing::TestCase}}
+\doxysubsubsection{\texorpdfstring{TestCase()}{TestCase()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_test_case_a4bbd0c140d269b58a8935459558e07d9} 
+Solar\+System\+::\+Testing\+::\+Test\+Case\+::\+Test\+Case (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_case_1_1_test_info}{Test\+Info}}}]{info}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=338pt]{class_solar_system_1_1_testing_1_1_test_case_a4bbd0c140d269b58a8935459558e07d9_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=550pt]{class_solar_system_1_1_testing_1_1_test_case_a4bbd0c140d269b58a8935459558e07d9_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_test_case_a86a5997220af0ee4ce4b5a453ba2cd29}\index{SolarSystem::Testing::TestCase@{SolarSystem::Testing::TestCase}!````~TestCase@{\texorpdfstring{$\sim$}{\string~}TestCase}}
+\index{````~TestCase@{\texorpdfstring{$\sim$}{\string~}TestCase}!SolarSystem::Testing::TestCase@{SolarSystem::Testing::TestCase}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}TestCase()}{\string~TestCase()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_test_case_a86a5997220af0ee4ce4b5a453ba2cd29} 
+virtual Solar\+System\+::\+Testing\+::\+Test\+Case\+::\texorpdfstring{$\sim$}{\string~}\+Test\+Case (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}, {\ttfamily [default]}}
+
+
+
+\label{doc-func-members}
+\Hypertarget{class_solar_system_1_1_testing_1_1_test_case_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_solar_system_1_1_testing_1_1_test_case_af7a9863be58338eeda09be7cacc7e75f}\index{SolarSystem::Testing::TestCase@{SolarSystem::Testing::TestCase}!add\_metadata@{add\_metadata}}
+\index{add\_metadata@{add\_metadata}!SolarSystem::Testing::TestCase@{SolarSystem::Testing::TestCase}}
+\doxysubsubsection{\texorpdfstring{add\_metadata()}{add\_metadata()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_test_case_af7a9863be58338eeda09be7cacc7e75f} 
+void Solar\+System\+::\+Testing\+::\+Test\+Case\+::add\+\_\+metadata (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{key}{, }\item[{const std\+::string \&}]{value}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_test_case_a7fb6bcf9f85f51150b240977e1333a80}\index{SolarSystem::Testing::TestCase@{SolarSystem::Testing::TestCase}!assert\_contains@{assert\_contains}}
+\index{assert\_contains@{assert\_contains}!SolarSystem::Testing::TestCase@{SolarSystem::Testing::TestCase}}
+\doxysubsubsection{\texorpdfstring{assert\_contains()}{assert\_contains()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_test_case_a7fb6bcf9f85f51150b240977e1333a80} 
+void Solar\+System\+::\+Testing\+::\+Test\+Case\+::assert\+\_\+contains (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{haystack}{, }\item[{const std\+::string \&}]{needle}{, }\item[{const std\+::string \&}]{message}{ = {\ttfamily "{}"{}}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_test_case_a7fb6bcf9f85f51150b240977e1333a80_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_test_case_a2c0dedab45afc6adab9a762ebe57c9f6}\index{SolarSystem::Testing::TestCase@{SolarSystem::Testing::TestCase}!assert\_ends\_with@{assert\_ends\_with}}
+\index{assert\_ends\_with@{assert\_ends\_with}!SolarSystem::Testing::TestCase@{SolarSystem::Testing::TestCase}}
+\doxysubsubsection{\texorpdfstring{assert\_ends\_with()}{assert\_ends\_with()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_test_case_a2c0dedab45afc6adab9a762ebe57c9f6} 
+void Solar\+System\+::\+Testing\+::\+Test\+Case\+::assert\+\_\+ends\+\_\+with (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{str}{, }\item[{const std\+::string \&}]{suffix}{, }\item[{const std\+::string \&}]{message}{ = {\ttfamily "{}"{}}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_test_case_a2c0dedab45afc6adab9a762ebe57c9f6_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_test_case_a3a440323f83279648bea0e5aea6dc9f2}\index{SolarSystem::Testing::TestCase@{SolarSystem::Testing::TestCase}!assert\_equals@{assert\_equals}}
+\index{assert\_equals@{assert\_equals}!SolarSystem::Testing::TestCase@{SolarSystem::Testing::TestCase}}
+\doxysubsubsection{\texorpdfstring{assert\_equals()}{assert\_equals()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_test_case_a3a440323f83279648bea0e5aea6dc9f2} 
+template$<$typename T$>$ \\
+template void Solar\+System\+::\+Testing\+::\+Test\+Case\+::assert\+\_\+equals$<$ size\+\_\+t $>$ (\begin{DoxyParamCaption}\item[{const T \&}]{expected}{, }\item[{const T \&}]{actual}{, }\item[{const std\+::string \&}]{message}{ = {\ttfamily "{}"{}}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_test_case_a3a440323f83279648bea0e5aea6dc9f2_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_test_case_a3a440323f83279648bea0e5aea6dc9f2_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_test_case_a3ef33096a74f5c82a8a63f20762904a5}\index{SolarSystem::Testing::TestCase@{SolarSystem::Testing::TestCase}!assert\_execution\_time\_less\_than@{assert\_execution\_time\_less\_than}}
+\index{assert\_execution\_time\_less\_than@{assert\_execution\_time\_less\_than}!SolarSystem::Testing::TestCase@{SolarSystem::Testing::TestCase}}
+\doxysubsubsection{\texorpdfstring{assert\_execution\_time\_less\_than()}{assert\_execution\_time\_less\_than()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_test_case_a3ef33096a74f5c82a8a63f20762904a5} 
+void Solar\+System\+::\+Testing\+::\+Test\+Case\+::assert\+\_\+execution\+\_\+time\+\_\+less\+\_\+than (\begin{DoxyParamCaption}\item[{const std\+::function$<$ void()$>$ \&}]{func}{, }\item[{std\+::chrono\+::milliseconds}]{max\+\_\+time}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_test_case_a3ef33096a74f5c82a8a63f20762904a5_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_test_case_abd444cba48a24ee6b7095c0c1dd31a9b}\index{SolarSystem::Testing::TestCase@{SolarSystem::Testing::TestCase}!assert\_false@{assert\_false}}
+\index{assert\_false@{assert\_false}!SolarSystem::Testing::TestCase@{SolarSystem::Testing::TestCase}}
+\doxysubsubsection{\texorpdfstring{assert\_false()}{assert\_false()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_test_case_abd444cba48a24ee6b7095c0c1dd31a9b} 
+void Solar\+System\+::\+Testing\+::\+Test\+Case\+::assert\+\_\+false (\begin{DoxyParamCaption}\item[{bool}]{condition}{, }\item[{const std\+::string \&}]{message}{ = {\ttfamily "{}"{}}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_test_case_abd444cba48a24ee6b7095c0c1dd31a9b_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_test_case_abd444cba48a24ee6b7095c0c1dd31a9b_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_test_case_a3647c2b2aab9a3c0adfe2a857126990a}\index{SolarSystem::Testing::TestCase@{SolarSystem::Testing::TestCase}!assert\_greater\_than@{assert\_greater\_than}}
+\index{assert\_greater\_than@{assert\_greater\_than}!SolarSystem::Testing::TestCase@{SolarSystem::Testing::TestCase}}
+\doxysubsubsection{\texorpdfstring{assert\_greater\_than()}{assert\_greater\_than()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_test_case_a3647c2b2aab9a3c0adfe2a857126990a} 
+template$<$typename T$>$ \\
+template void Solar\+System\+::\+Testing\+::\+Test\+Case\+::assert\+\_\+greater\+\_\+than$<$ int $>$ (\begin{DoxyParamCaption}\item[{const T \&}]{actual}{, }\item[{const T \&}]{threshold}{, }\item[{const std\+::string \&}]{message}{ = {\ttfamily "{}"{}}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_test_case_a3647c2b2aab9a3c0adfe2a857126990a_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_test_case_a5eea494969ea120432c230626ad5b617}\index{SolarSystem::Testing::TestCase@{SolarSystem::Testing::TestCase}!assert\_less\_than@{assert\_less\_than}}
+\index{assert\_less\_than@{assert\_less\_than}!SolarSystem::Testing::TestCase@{SolarSystem::Testing::TestCase}}
+\doxysubsubsection{\texorpdfstring{assert\_less\_than()}{assert\_less\_than()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_test_case_a5eea494969ea120432c230626ad5b617} 
+template$<$typename T$>$ \\
+template void Solar\+System\+::\+Testing\+::\+Test\+Case\+::assert\+\_\+less\+\_\+than$<$ int $>$ (\begin{DoxyParamCaption}\item[{const T \&}]{actual}{, }\item[{const T \&}]{threshold}{, }\item[{const std\+::string \&}]{message}{ = {\ttfamily "{}"{}}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_test_case_a5eea494969ea120432c230626ad5b617_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_test_case_a2c7a9a22ed69b485d9f59fab0d2bed24}\index{SolarSystem::Testing::TestCase@{SolarSystem::Testing::TestCase}!assert\_memory\_usage\_less\_than@{assert\_memory\_usage\_less\_than}}
+\index{assert\_memory\_usage\_less\_than@{assert\_memory\_usage\_less\_than}!SolarSystem::Testing::TestCase@{SolarSystem::Testing::TestCase}}
+\doxysubsubsection{\texorpdfstring{assert\_memory\_usage\_less\_than()}{assert\_memory\_usage\_less\_than()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_test_case_a2c7a9a22ed69b485d9f59fab0d2bed24} 
+void Solar\+System\+::\+Testing\+::\+Test\+Case\+::assert\+\_\+memory\+\_\+usage\+\_\+less\+\_\+than (\begin{DoxyParamCaption}\item[{const std\+::function$<$ void()$>$ \&}]{func}{, }\item[{size\+\_\+t}]{max\+\_\+bytes}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_test_case_aa1a029a7f449d936afb139bdcdd785cc}\index{SolarSystem::Testing::TestCase@{SolarSystem::Testing::TestCase}!assert\_near@{assert\_near}}
+\index{assert\_near@{assert\_near}!SolarSystem::Testing::TestCase@{SolarSystem::Testing::TestCase}}
+\doxysubsubsection{\texorpdfstring{assert\_near()}{assert\_near()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_test_case_aa1a029a7f449d936afb139bdcdd785cc} 
+template$<$typename T$>$ \\
+template void Solar\+System\+::\+Testing\+::\+Test\+Case\+::assert\+\_\+near$<$ int $>$ (\begin{DoxyParamCaption}\item[{const T \&}]{expected}{, }\item[{const T \&}]{actual}{, }\item[{const T \&}]{tolerance}{, }\item[{const std\+::string \&}]{message}{ = {\ttfamily "{}"{}}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_test_case_aa1a029a7f449d936afb139bdcdd785cc_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_test_case_ab4dbf2c372fdee3e8c9afedc08430d6d}\index{SolarSystem::Testing::TestCase@{SolarSystem::Testing::TestCase}!assert\_no\_throw@{assert\_no\_throw}}
+\index{assert\_no\_throw@{assert\_no\_throw}!SolarSystem::Testing::TestCase@{SolarSystem::Testing::TestCase}}
+\doxysubsubsection{\texorpdfstring{assert\_no\_throw()}{assert\_no\_throw()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_test_case_ab4dbf2c372fdee3e8c9afedc08430d6d} 
+void Solar\+System\+::\+Testing\+::\+Test\+Case\+::assert\+\_\+no\+\_\+throw (\begin{DoxyParamCaption}\item[{const std\+::function$<$ void()$>$ \&}]{func}{, }\item[{const std\+::string \&}]{message}{ = {\ttfamily "{}"{}}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_test_case_ab4dbf2c372fdee3e8c9afedc08430d6d_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_test_case_ab4dbf2c372fdee3e8c9afedc08430d6d_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_test_case_ac575f82c7b58b72aa7180c166ff49538}\index{SolarSystem::Testing::TestCase@{SolarSystem::Testing::TestCase}!assert\_not\_equals@{assert\_not\_equals}}
+\index{assert\_not\_equals@{assert\_not\_equals}!SolarSystem::Testing::TestCase@{SolarSystem::Testing::TestCase}}
+\doxysubsubsection{\texorpdfstring{assert\_not\_equals()}{assert\_not\_equals()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_test_case_ac575f82c7b58b72aa7180c166ff49538} 
+template$<$typename T$>$ \\
+template void Solar\+System\+::\+Testing\+::\+Test\+Case\+::assert\+\_\+not\+\_\+equals$<$ float $>$ (\begin{DoxyParamCaption}\item[{const T \&}]{expected}{, }\item[{const T \&}]{actual}{, }\item[{const std\+::string \&}]{message}{ = {\ttfamily "{}"{}}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=342pt]{class_solar_system_1_1_testing_1_1_test_case_ac575f82c7b58b72aa7180c166ff49538_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=342pt]{class_solar_system_1_1_testing_1_1_test_case_ac575f82c7b58b72aa7180c166ff49538_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_test_case_a92521b9bb19e4b2115928b0e08ffb697}\index{SolarSystem::Testing::TestCase@{SolarSystem::Testing::TestCase}!assert\_starts\_with@{assert\_starts\_with}}
+\index{assert\_starts\_with@{assert\_starts\_with}!SolarSystem::Testing::TestCase@{SolarSystem::Testing::TestCase}}
+\doxysubsubsection{\texorpdfstring{assert\_starts\_with()}{assert\_starts\_with()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_test_case_a92521b9bb19e4b2115928b0e08ffb697} 
+void Solar\+System\+::\+Testing\+::\+Test\+Case\+::assert\+\_\+starts\+\_\+with (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{str}{, }\item[{const std\+::string \&}]{prefix}{, }\item[{const std\+::string \&}]{message}{ = {\ttfamily "{}"{}}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_test_case_a92521b9bb19e4b2115928b0e08ffb697_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_test_case_afe27efb6acf2497919d845174414e8ed}\index{SolarSystem::Testing::TestCase@{SolarSystem::Testing::TestCase}!assert\_throws@{assert\_throws}}
+\index{assert\_throws@{assert\_throws}!SolarSystem::Testing::TestCase@{SolarSystem::Testing::TestCase}}
+\doxysubsubsection{\texorpdfstring{assert\_throws()}{assert\_throws()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_test_case_afe27efb6acf2497919d845174414e8ed} 
+void Solar\+System\+::\+Testing\+::\+Test\+Case\+::assert\+\_\+throws (\begin{DoxyParamCaption}\item[{const std\+::function$<$ void()$>$ \&}]{func}{, }\item[{const std\+::string \&}]{message}{ = {\ttfamily "{}"{}}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_test_case_afe27efb6acf2497919d845174414e8ed_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_test_case_ada06a5e5ce50a0d8f22246d826ee1d32}\index{SolarSystem::Testing::TestCase@{SolarSystem::Testing::TestCase}!assert\_true@{assert\_true}}
+\index{assert\_true@{assert\_true}!SolarSystem::Testing::TestCase@{SolarSystem::Testing::TestCase}}
+\doxysubsubsection{\texorpdfstring{assert\_true()}{assert\_true()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_test_case_ada06a5e5ce50a0d8f22246d826ee1d32} 
+void Solar\+System\+::\+Testing\+::\+Test\+Case\+::assert\+\_\+true (\begin{DoxyParamCaption}\item[{bool}]{condition}{, }\item[{const std\+::string \&}]{message}{ = {\ttfamily "{}"{}}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_test_case_ada06a5e5ce50a0d8f22246d826ee1d32_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=550pt]{class_solar_system_1_1_testing_1_1_test_case_ada06a5e5ce50a0d8f22246d826ee1d32_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_test_case_a8dc3fe58d234096ae319b17766872ec6}\index{SolarSystem::Testing::TestCase@{SolarSystem::Testing::TestCase}!execute@{execute}}
+\index{execute@{execute}!SolarSystem::Testing::TestCase@{SolarSystem::Testing::TestCase}}
+\doxysubsubsection{\texorpdfstring{execute()}{execute()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_test_case_a8dc3fe58d234096ae319b17766872ec6} 
+\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_result}{Test\+Result}} Solar\+System\+::\+Testing\+::\+Test\+Case\+::execute (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=345pt]{class_solar_system_1_1_testing_1_1_test_case_a8dc3fe58d234096ae319b17766872ec6_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_test_case_a3bd52268b41923e445f7873f243da22d}\index{SolarSystem::Testing::TestCase@{SolarSystem::Testing::TestCase}!info@{info}}
+\index{info@{info}!SolarSystem::Testing::TestCase@{SolarSystem::Testing::TestCase}}
+\doxysubsubsection{\texorpdfstring{info()}{info()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_test_case_a3bd52268b41923e445f7873f243da22d} 
+const \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_case_1_1_test_info}{Test\+Info}} \& Solar\+System\+::\+Testing\+::\+Test\+Case\+::info (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=550pt]{class_solar_system_1_1_testing_1_1_test_case_a3bd52268b41923e445f7873f243da22d_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_test_case_a57fce4e1503c6d131a5560a3e0711503}\index{SolarSystem::Testing::TestCase@{SolarSystem::Testing::TestCase}!result@{result}}
+\index{result@{result}!SolarSystem::Testing::TestCase@{SolarSystem::Testing::TestCase}}
+\doxysubsubsection{\texorpdfstring{result()}{result()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_test_case_a57fce4e1503c6d131a5560a3e0711503} 
+const \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_result}{Test\+Result}} \& Solar\+System\+::\+Testing\+::\+Test\+Case\+::result (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}}
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_test_case_a13df7675ef19ce8948fe4fdc032a2723}\index{SolarSystem::Testing::TestCase@{SolarSystem::Testing::TestCase}!run@{run}}
+\index{run@{run}!SolarSystem::Testing::TestCase@{SolarSystem::Testing::TestCase}}
+\doxysubsubsection{\texorpdfstring{run()}{run()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_test_case_a13df7675ef19ce8948fe4fdc032a2723} 
+virtual void Solar\+System\+::\+Testing\+::\+Test\+Case\+::run (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Implemented in \mbox{\hyperlink{class_basic_math_test_a59b9b59250ca1a3de27601f414661086}{Basic\+Math\+Test}}, \mbox{\hyperlink{class_cache_integrity_test_a1ef9f737e0c8bb8451bf71000eda9b62}{Cache\+Integrity\+Test}}, \mbox{\hyperlink{class_edge_case_test_a60c2f202d1ff339faf825c0494a6042e}{Edge\+Case\+Test}}, \mbox{\hyperlink{class_error_handling_test_a3c6256be367482b4801359d66b8b5b9a}{Error\+Handling\+Test}}, \mbox{\hyperlink{class_exception_handling_test_aac1d4a687438fb09fde903d1f015b5d3}{Exception\+Handling\+Test}}, \mbox{\hyperlink{class_exception_handling_test_aac1d4a687438fb09fde903d1f015b5d3}{Exception\+Handling\+Test}}, \mbox{\hyperlink{class_exception_test_a02379744a1e554944fa886227d1e28aa}{Exception\+Test}}, \mbox{\hyperlink{class_expected_exception_test_aa71f1419d821ca6fe3fa2bad2b926f8a}{Expected\+Exception\+Test}}, \mbox{\hyperlink{class_expected_failing_test_a27b52c3eb22098ca64bb65884fdbeceb}{Expected\+Failing\+Test}}, \mbox{\hyperlink{class_expected_timeout_test_a7729ac7020aaf0f113fb906c8794c0f0}{Expected\+Timeout\+Test}}, \mbox{\hyperlink{class_failing_test_a66c29191a3f0c9fab6e241feb31bf8d2}{Failing\+Test}}, \mbox{\hyperlink{class_math_operations_test_ac4deba49bb1d7cd35cff30e2e81c8452}{Math\+Operations\+Test}}, \mbox{\hyperlink{class_output_test_a422eff6bce1286ffb844b19a92d6c14d}{Output\+Test}}, \mbox{\hyperlink{class_output_test_a422eff6bce1286ffb844b19a92d6c14d}{Output\+Test}}, \mbox{\hyperlink{class_performance_test_a7ffe19820f97e01f580f905e0a8a5a6e}{Performance\+Test}}, \mbox{\hyperlink{class_performance_test_a7ffe19820f97e01f580f905e0a8a5a6e}{Performance\+Test}}, \mbox{\hyperlink{class_quick_passing_test_a1b0964e691543b85bb29fdddd5ac22e5}{Quick\+Passing\+Test}}, \mbox{\hyperlink{class_quick_passing_test_a1b0964e691543b85bb29fdddd5ac22e5}{Quick\+Passing\+Test}}, \mbox{\hyperlink{class_realistic_data_test_aa22af09f1a7703431e9a8f09fdb15f6a}{Realistic\+Data\+Test}}, \mbox{\hyperlink{class_sample_failing_test_ae91c89d75334f15dd0e0f957ed39d121}{Sample\+Failing\+Test}}, \mbox{\hyperlink{class_sample_failing_test_ae91c89d75334f15dd0e0f957ed39d121}{Sample\+Failing\+Test}}, \mbox{\hyperlink{class_sample_passing_test_ac452fe0fcc45018f561c119c8e0cb83f}{Sample\+Passing\+Test}}, \mbox{\hyperlink{class_sample_passing_test_ac452fe0fcc45018f561c119c8e0cb83f}{Sample\+Passing\+Test}}, \mbox{\hyperlink{class_sample_skipped_test_a1bff32920b1c5da2843b1bd38d2bdf53}{Sample\+Skipped\+Test}}, \mbox{\hyperlink{class_sample_skipped_test_a1bff32920b1c5da2843b1bd38d2bdf53}{Sample\+Skipped\+Test}}, \mbox{\hyperlink{class_sample_slow_test_a7dfbd048a0c483c76818854cdd23ee63}{Sample\+Slow\+Test}}, \mbox{\hyperlink{class_string_test_a7789ce83695615e41cfd2c0f8b35cbac}{String\+Test}}, \mbox{\hyperlink{class_string_utils_test_a7fb109a9f137d1ceb0797ccf531db89b}{String\+Utils\+Test}}, \mbox{\hyperlink{class_test_data_management_example_a6140b53d0c8a1353aa07567086977d1c}{Test\+Data\+Management\+Example}}, \mbox{\hyperlink{class_timeout_handling_test_a15e1dab1232460b4db19738acf3296d8}{Timeout\+Handling\+Test}}, \mbox{\hyperlink{class_timeout_test_a114f99f3017554f072cfb5d198af39b1}{Timeout\+Test}}, \mbox{\hyperlink{class_unexpected_pass_test_a57efe79564d119887f6a7bd98c30082c}{Unexpected\+Pass\+Test}}, \mbox{\hyperlink{class_vector_operations_test_ae642ad8f82626550d3dc12d60aa55422}{Vector\+Operations\+Test}}, \mbox{\hyperlink{class_work_test1_a721ad4f2a8ac07abb3c20110149d7ef5}{Work\+Test1}}, \mbox{\hyperlink{class_work_test2_aae2f42b305a2b5c9b203de96ef85f37b}{Work\+Test2}}, \mbox{\hyperlink{class_work_test3_ae0631b735eefc812c76e746f6f9721a4}{Work\+Test3}}, and \mbox{\hyperlink{class_work_test4_aaa038e8d096bb49dadc59568d311d42d}{Work\+Test4}}.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=336pt]{class_solar_system_1_1_testing_1_1_test_case_a13df7675ef19ce8948fe4fdc032a2723_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_test_case_ad48e9fda0bcb242f0121cb80fd79cbd5}\index{SolarSystem::Testing::TestCase@{SolarSystem::Testing::TestCase}!setup@{setup}}
+\index{setup@{setup}!SolarSystem::Testing::TestCase@{SolarSystem::Testing::TestCase}}
+\doxysubsubsection{\texorpdfstring{setup()}{setup()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_test_case_ad48e9fda0bcb242f0121cb80fd79cbd5} 
+virtual void Solar\+System\+::\+Testing\+::\+Test\+Case\+::setup (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented in \mbox{\hyperlink{class_cache_integrity_test_a0e27251c400b127b7195e39d44018c78}{Cache\+Integrity\+Test}}.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=336pt]{class_solar_system_1_1_testing_1_1_test_case_ad48e9fda0bcb242f0121cb80fd79cbd5_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_test_case_a0aeeed6246046396a67e4637dc8bc636}\index{SolarSystem::Testing::TestCase@{SolarSystem::Testing::TestCase}!skip\_test@{skip\_test}}
+\index{skip\_test@{skip\_test}!SolarSystem::Testing::TestCase@{SolarSystem::Testing::TestCase}}
+\doxysubsubsection{\texorpdfstring{skip\_test()}{skip\_test()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_test_case_a0aeeed6246046396a67e4637dc8bc636} 
+void Solar\+System\+::\+Testing\+::\+Test\+Case\+::skip\+\_\+test (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{reason}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_test_case_a954d344c8a77bc6363bcfb4f48aca1bb}\index{SolarSystem::Testing::TestCase@{SolarSystem::Testing::TestCase}!teardown@{teardown}}
+\index{teardown@{teardown}!SolarSystem::Testing::TestCase@{SolarSystem::Testing::TestCase}}
+\doxysubsubsection{\texorpdfstring{teardown()}{teardown()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_test_case_a954d344c8a77bc6363bcfb4f48aca1bb} 
+virtual void Solar\+System\+::\+Testing\+::\+Test\+Case\+::teardown (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented in \mbox{\hyperlink{class_cache_integrity_test_ac538b8cc4cc65b20b00c4f01c3e443b2}{Cache\+Integrity\+Test}}.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=336pt]{class_solar_system_1_1_testing_1_1_test_case_a954d344c8a77bc6363bcfb4f48aca1bb_icgraph}
+\end{center}
+\end{figure}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+test/include/solar\+\_\+test/framework/\mbox{\hyperlink{test__case_8hpp}{test\+\_\+case.\+hpp}}\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+test/src/framework/\mbox{\hyperlink{test__case_8cpp}{test\+\_\+case.\+cpp}}\end{DoxyCompactItemize}

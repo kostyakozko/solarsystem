@@ -1,53 +1,54 @@
 \doxysection{/\+Users/kostiantyn.kozko/tmp/solarsystem/apps/solar\+\_\+system\+\_\+fetch/fetch.cpp File Reference}
 \hypertarget{fetch_8cpp}{}\label{fetch_8cpp}\index{/Users/kostiantyn.kozko/tmp/solarsystem/apps/solar\_system\_fetch/fetch.cpp@{/Users/kostiantyn.kozko/tmp/solarsystem/apps/solar\_system\_fetch/fetch.cpp}}
-{\ttfamily \#include $<$ctime$>$}\newline
+{\ttfamily \#include $<$chrono$>$}\newline
 {\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$memory$>$}\newline
+{\ttfamily \#include $<$optional$>$}\newline
 {\ttfamily \#include $<$string$>$}\newline
-{\ttfamily \#include "{}args.\+h"{}}\newline
-{\ttfamily \#include "{}jpl\+\_\+data.\+h"{}}\newline
+{\ttfamily \#include $<$string\+\_\+view$>$}\newline
+{\ttfamily \#include $<$thread$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include "{}solar\+\_\+core/bodies/body\+\_\+factory.\+hpp"{}}\newline
+{\ttfamily \#include "{}solar\+\_\+core/builders/simulation\+\_\+builder.\+hpp"{}}\newline
+{\ttfamily \#include "{}solar\+\_\+utils/logging.\+hpp"{}}\newline
 Include dependency graph for fetch.\+cpp\+:
 \nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=331pt]{fetch_8cpp__incl}
+\includegraphics[width=350pt]{fetch_8cpp__incl}
 \end{center}
 \end{figure}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_fetch_options}{Fetch\+Options}}
+\begin{DoxyCompactList}\small\item\em Modern command-\/line argument parser using structured approach. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_data_fetcher}{Data\+Fetcher}}
+\begin{DoxyCompactList}\small\item\em Modern data fetcher using builder pattern and RAII. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_data_fetcher_1_1_config}{Data\+Fetcher\+::\+Config}}
+\begin{DoxyCompactList}\small\item\em Configuration for data fetching operations. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_argument_parser}{Argument\+Parser}}
+\begin{DoxyCompactList}\small\item\em Modern command-\/line parser using structured approach. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-void \mbox{\hyperlink{fetch_8cpp_a39be59e1c55c9cec5a5b5e4e66c754fb}{print\+\_\+fetch\+\_\+usage}} (const char \texorpdfstring{$\ast$}{*}program\+\_\+name)
-\item 
-void \mbox{\hyperlink{fetch_8cpp_a8008fbbb8f369eeb0f452863fe664355}{print\+\_\+status}} ()
-\item 
-bool \mbox{\hyperlink{fetch_8cpp_a8a0f743e0897b5ef1cccce7480a5c3cd}{clean\+\_\+cache}} ()
-\item 
 int \mbox{\hyperlink{fetch_8cpp_a0ddf1224851353fc92bfbff6f499fa97}{main}} (int argc, char \texorpdfstring{$\ast$}{*}argv\mbox{[}$\,$\mbox{]})
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Modern main function using RAII and structured error handling. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \label{doc-func-members}
 \Hypertarget{fetch_8cpp_doc-func-members}
 \doxysubsection{Function Documentation}
-\Hypertarget{fetch_8cpp_a8a0f743e0897b5ef1cccce7480a5c3cd}\index{fetch.cpp@{fetch.cpp}!clean\_cache@{clean\_cache}}
-\index{clean\_cache@{clean\_cache}!fetch.cpp@{fetch.cpp}}
-\doxysubsubsection{\texorpdfstring{clean\_cache()}{clean\_cache()}}
-{\footnotesize\ttfamily \label{fetch_8cpp_a8a0f743e0897b5ef1cccce7480a5c3cd} 
-bool clean\+\_\+cache (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
-
-Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=224pt]{fetch_8cpp_a8a0f743e0897b5ef1cccce7480a5c3cd_icgraph}
-\end{center}
-\end{figure}
 \Hypertarget{fetch_8cpp_a0ddf1224851353fc92bfbff6f499fa97}\index{fetch.cpp@{fetch.cpp}!main@{main}}
 \index{main@{main}!fetch.cpp@{fetch.cpp}}
 \doxysubsubsection{\texorpdfstring{main()}{main()}}
 {\footnotesize\ttfamily \label{fetch_8cpp_a0ddf1224851353fc92bfbff6f499fa97} 
 int main (\begin{DoxyParamCaption}\item[{int}]{argc}{, }\item[{char \texorpdfstring{$\ast$}{*}}]{argv}{\mbox{[}$\,$\mbox{]}}\end{DoxyParamCaption})}
+
+
+
+Modern main function using RAII and structured error handling. 
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -55,43 +56,5 @@ Here is the call graph for this function\+:
 \begin{center}
 \leavevmode
 \includegraphics[width=350pt]{fetch_8cpp_a0ddf1224851353fc92bfbff6f499fa97_cgraph}
-\end{center}
-\end{figure}
-\Hypertarget{fetch_8cpp_a39be59e1c55c9cec5a5b5e4e66c754fb}\index{fetch.cpp@{fetch.cpp}!print\_fetch\_usage@{print\_fetch\_usage}}
-\index{print\_fetch\_usage@{print\_fetch\_usage}!fetch.cpp@{fetch.cpp}}
-\doxysubsubsection{\texorpdfstring{print\_fetch\_usage()}{print\_fetch\_usage()}}
-{\footnotesize\ttfamily \label{fetch_8cpp_a39be59e1c55c9cec5a5b5e4e66c754fb} 
-void print\+\_\+fetch\+\_\+usage (\begin{DoxyParamCaption}\item[{const char \texorpdfstring{$\ast$}{*}}]{program\+\_\+name}{}\end{DoxyParamCaption})}
-
-Solar System Data Fetcher
-
-Dedicated utility for fetching and managing JPL HORIZONS ephemeris data. This application handles all network operations and data caching, allowing the main simulation to focus purely on computation. Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=246pt]{fetch_8cpp_a39be59e1c55c9cec5a5b5e4e66c754fb_icgraph}
-\end{center}
-\end{figure}
-\Hypertarget{fetch_8cpp_a8008fbbb8f369eeb0f452863fe664355}\index{fetch.cpp@{fetch.cpp}!print\_status@{print\_status}}
-\index{print\_status@{print\_status}!fetch.cpp@{fetch.cpp}}
-\doxysubsubsection{\texorpdfstring{print\_status()}{print\_status()}}
-{\footnotesize\ttfamily \label{fetch_8cpp_a8008fbbb8f369eeb0f452863fe664355} 
-void print\+\_\+status (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
-
-Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=324pt]{fetch_8cpp_a8008fbbb8f369eeb0f452863fe664355_cgraph}
-\end{center}
-\end{figure}
-Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=220pt]{fetch_8cpp_a8008fbbb8f369eeb0f452863fe664355_icgraph}
 \end{center}
 \end{figure}

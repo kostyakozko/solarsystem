@@ -1,0 +1,22 @@
+<map id="SolarSystem::Core::Builders::ConfigurationBuilder::ConfigurationBuilder" name="SolarSystem::Core::Builders::ConfigurationBuilder::ConfigurationBuilder">
+<area shape="rect" id="Node000001" title="Start with default configuration." alt="" coords="247,349,440,405"/>
+<area shape="rect" id="Node000002" href="$class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder.html#a093b107dab75428f34f88434fb0bb029" title="Balanced preset." alt="" coords="5,5,199,61"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="330,335,313,277,285,208,247,137,224,104,197,75,182,64,185,59,200,71,228,101,252,134,290,206,318,275,335,333"/>
+<area shape="rect" id="Node000003" href="$class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder.html#a24deaac3fcef4ffe40df7118be4e5263" title="Set convergence threshold." alt="" coords="5,85,199,141"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="322,336,301,294,273,246,238,198,197,155,181,144,184,139,200,151,243,194,278,243,306,292,327,334"/>
+<area shape="rect" id="Node000004" href="$class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder.html#a57c6ea36e8389eab22398e143867ed6a" title="Set gravitational constant." alt="" coords="5,189,199,245"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="301,341,253,299,197,259,176,248,179,243,200,255,256,295,304,337"/>
+<area shape="rect" id="Node000005" href="$class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder.html#aa2c1679a6b68be5416e8567cf38be379" title="High accuracy preset." alt="" coords="5,269,199,325"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="242,346,187,328,189,323,244,341"/>
+<area shape="rect" id="Node000006" href="$class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder.html#a5a9b3ea91b00d4d8e399b554f720c655" title="High performance preset." alt="" coords="5,349,199,405"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="231,380,199,380,199,374,231,374"/>
+<area shape="rect" id="Node000007" href="$class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder.html#a0b40c22daac06e35d4ab2ccb1388bc66" title="Real&#45;time preset." alt="" coords="5,429,199,485"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="244,413,189,431,187,426,242,408"/>
+<area shape="rect" id="Node000008" href="$class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder.html#a5009817e5043c6a57dbe6bb3a9c2e501" title="Set timestep in seconds." alt="" coords="5,509,199,565"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="304,418,256,459,200,499,179,511,176,506,197,495,253,455,301,414"/>
+<area shape="rect" id="Node000009" href="$class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder.html#ab4ddb87aaac4920b56f2b4c89f46e588" title="Set timestep in hours." alt="" coords="5,589,199,645"/>
+<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="323,420,274,500,240,542,200,579,183,591,180,587,197,575,236,538,269,497,319,418"/>
+<area shape="rect" id="Node000010" href="$class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder.html#a741b70d28cc37addc98973a4307f262d" title="Set timestep in minutes." alt="" coords="5,669,199,725"/>
+<area shape="poly" id="edge10_Node000001_Node000010" title=" " alt="" coords="333,421,315,474,287,538,249,602,226,632,200,659,185,671,182,667,197,655,222,629,245,599,282,535,310,472,328,419"/>
+<area shape="poly" id="edge4_Node000004_Node000004" title=" " alt="" coords="141,177,126,170,102,168,81,170,67,175,60,181,60,189,55,189,55,179,64,170,80,165,102,163,127,165,143,172"/>
+</map>

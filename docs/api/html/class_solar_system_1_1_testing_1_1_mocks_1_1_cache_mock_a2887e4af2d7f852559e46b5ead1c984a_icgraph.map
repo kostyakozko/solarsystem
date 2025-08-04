@@ -1,0 +1,5 @@
+<map id="SolarSystem::Testing::Mocks::CacheMock::simulate_cache_corruption" name="SolarSystem::Testing::Mocks::CacheMock::simulate_cache_corruption">
+<area shape="rect" id="Node000001" title="Simulate cache corruption." alt="" coords="257,5,460,61"/>
+<area shape="rect" id="Node000002" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock.html#afe5d2b35298afcde993bad66adf1031d" title="Populate cache with corrupted test data." alt="" coords="5,5,209,61"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="241,36,209,36,209,30,241,30"/>
+</map>

@@ -1,0 +1,150 @@
+\doxysection{Solar\+System\+::Testing\+::Test\+Dependency\+Manager Class Reference}
+\hypertarget{class_solar_system_1_1_testing_1_1_test_dependency_manager}{}\label{class_solar_system_1_1_testing_1_1_test_dependency_manager}\index{SolarSystem::Testing::TestDependencyManager@{SolarSystem::Testing::TestDependencyManager}}
+
+
+Test dependency management for execution order.  
+
+
+
+
+{\ttfamily \#include $<$test\+\_\+runner.\+hpp$>$}
+
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_dependency_manager_1_1_test_dependency}{Test\+Dependency}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_dependency_manager_afb067a51d19b605302c5b7dbec268800}{Test\+Dependency\+Manager}} ()
+\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_dependency_manager_ae27840f00af8cda430fc0c11cd3557ec}{add\+\_\+dependency}} (const std\+::string \&test\+\_\+name, const std\+::string \&depends\+\_\+on)
+\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_dependency_manager_a6041873e739b397d32bcca892280bb43}{add\+\_\+dependencies}} (const std\+::string \&test\+\_\+name, const std\+::vector$<$ std\+::string $>$ \&depends\+\_\+on)
+\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_dependency_manager_ae0e21fba3bca8ac12cb8dbec438090a8}{set\+\_\+test\+\_\+resources}} (const std\+::string \&test\+\_\+name, const std\+::vector$<$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_resource_manager_a810cb17c20b027bf46fdbac83bf571ff}{Test\+Resource\+Manager\+::\+Resource\+Type}} $>$ \&resources)
+\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_dependency_manager_ac6bb51d1f5067f0d70f1badd0e685bd6}{set\+\_\+test\+\_\+priority}} (const std\+::string \&test\+\_\+name, int priority)
+\item 
+std\+::vector$<$ std\+::vector$<$ std\+::string $>$ $>$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_dependency_manager_aa407f22a809bdeb8053224236ec2dc72}{resolve\+\_\+execution\+\_\+order}} (const std\+::vector$<$ std\+::string $>$ \&test\+\_\+names) const
+\item 
+bool \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_dependency_manager_aadc76ff6bfaa6a30065c3121c02bc7a9}{has\+\_\+circular\+\_\+dependency}} (const std\+::vector$<$ std\+::string $>$ \&test\+\_\+names) const
+\item 
+std\+::vector$<$ std\+::string $>$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_dependency_manager_acd5fea1b1db410b625a532c680ec321e}{get\+\_\+ready\+\_\+tests}} (const std\+::vector$<$ std\+::string $>$ \&all\+\_\+tests, const std\+::set$<$ std\+::string $>$ \&completed\+\_\+tests) const
+\item 
+bool \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_dependency_manager_aed3cef28352ff1228bf9a42cf8ef4fbc}{validate\+\_\+dependencies}} (const std\+::vector$<$ std\+::string $>$ \&test\+\_\+names) const
+\item 
+std\+::vector$<$ std\+::string $>$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_dependency_manager_a8f52ff1451d7f8e261cd1b15fe9aa052}{find\+\_\+missing\+\_\+dependencies}} (const std\+::vector$<$ std\+::string $>$ \&test\+\_\+names) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_dependency_manager_aafadf6ae355f1f8145df3d4586311cfa}{Parallel\+Test\+Executor}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Test dependency management for execution order. 
+
+\label{doc-constructors}
+\Hypertarget{class_solar_system_1_1_testing_1_1_test_dependency_manager_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_solar_system_1_1_testing_1_1_test_dependency_manager_afb067a51d19b605302c5b7dbec268800}\index{SolarSystem::Testing::TestDependencyManager@{SolarSystem::Testing::TestDependencyManager}!TestDependencyManager@{TestDependencyManager}}
+\index{TestDependencyManager@{TestDependencyManager}!SolarSystem::Testing::TestDependencyManager@{SolarSystem::Testing::TestDependencyManager}}
+\doxysubsubsection{\texorpdfstring{TestDependencyManager()}{TestDependencyManager()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_test_dependency_manager_afb067a51d19b605302c5b7dbec268800} 
+Solar\+System\+::\+Testing\+::\+Test\+Dependency\+Manager\+::\+Test\+Dependency\+Manager (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}}
+
+
+
+\label{doc-func-members}
+\Hypertarget{class_solar_system_1_1_testing_1_1_test_dependency_manager_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_solar_system_1_1_testing_1_1_test_dependency_manager_a6041873e739b397d32bcca892280bb43}\index{SolarSystem::Testing::TestDependencyManager@{SolarSystem::Testing::TestDependencyManager}!add\_dependencies@{add\_dependencies}}
+\index{add\_dependencies@{add\_dependencies}!SolarSystem::Testing::TestDependencyManager@{SolarSystem::Testing::TestDependencyManager}}
+\doxysubsubsection{\texorpdfstring{add\_dependencies()}{add\_dependencies()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_test_dependency_manager_a6041873e739b397d32bcca892280bb43} 
+void Solar\+System\+::\+Testing\+::\+Test\+Dependency\+Manager\+::add\+\_\+dependencies (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{test\+\_\+name}{, }\item[{const std\+::vector$<$ std\+::string $>$ \&}]{depends\+\_\+on}{}\end{DoxyParamCaption})}
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_test_dependency_manager_ae27840f00af8cda430fc0c11cd3557ec}\index{SolarSystem::Testing::TestDependencyManager@{SolarSystem::Testing::TestDependencyManager}!add\_dependency@{add\_dependency}}
+\index{add\_dependency@{add\_dependency}!SolarSystem::Testing::TestDependencyManager@{SolarSystem::Testing::TestDependencyManager}}
+\doxysubsubsection{\texorpdfstring{add\_dependency()}{add\_dependency()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_test_dependency_manager_ae27840f00af8cda430fc0c11cd3557ec} 
+void Solar\+System\+::\+Testing\+::\+Test\+Dependency\+Manager\+::add\+\_\+dependency (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{test\+\_\+name}{, }\item[{const std\+::string \&}]{depends\+\_\+on}{}\end{DoxyParamCaption})}
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_test_dependency_manager_a8f52ff1451d7f8e261cd1b15fe9aa052}\index{SolarSystem::Testing::TestDependencyManager@{SolarSystem::Testing::TestDependencyManager}!find\_missing\_dependencies@{find\_missing\_dependencies}}
+\index{find\_missing\_dependencies@{find\_missing\_dependencies}!SolarSystem::Testing::TestDependencyManager@{SolarSystem::Testing::TestDependencyManager}}
+\doxysubsubsection{\texorpdfstring{find\_missing\_dependencies()}{find\_missing\_dependencies()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_test_dependency_manager_a8f52ff1451d7f8e261cd1b15fe9aa052} 
+std\+::vector$<$ std\+::string $>$ Solar\+System\+::\+Testing\+::\+Test\+Dependency\+Manager\+::find\+\_\+missing\+\_\+dependencies (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ std\+::string $>$ \&}]{test\+\_\+names}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_test_dependency_manager_acd5fea1b1db410b625a532c680ec321e}\index{SolarSystem::Testing::TestDependencyManager@{SolarSystem::Testing::TestDependencyManager}!get\_ready\_tests@{get\_ready\_tests}}
+\index{get\_ready\_tests@{get\_ready\_tests}!SolarSystem::Testing::TestDependencyManager@{SolarSystem::Testing::TestDependencyManager}}
+\doxysubsubsection{\texorpdfstring{get\_ready\_tests()}{get\_ready\_tests()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_test_dependency_manager_acd5fea1b1db410b625a532c680ec321e} 
+std\+::vector$<$ std\+::string $>$ Solar\+System\+::\+Testing\+::\+Test\+Dependency\+Manager\+::get\+\_\+ready\+\_\+tests (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ std\+::string $>$ \&}]{all\+\_\+tests}{, }\item[{const std\+::set$<$ std\+::string $>$ \&}]{completed\+\_\+tests}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_test_dependency_manager_aadc76ff6bfaa6a30065c3121c02bc7a9}\index{SolarSystem::Testing::TestDependencyManager@{SolarSystem::Testing::TestDependencyManager}!has\_circular\_dependency@{has\_circular\_dependency}}
+\index{has\_circular\_dependency@{has\_circular\_dependency}!SolarSystem::Testing::TestDependencyManager@{SolarSystem::Testing::TestDependencyManager}}
+\doxysubsubsection{\texorpdfstring{has\_circular\_dependency()}{has\_circular\_dependency()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_test_dependency_manager_aadc76ff6bfaa6a30065c3121c02bc7a9} 
+bool Solar\+System\+::\+Testing\+::\+Test\+Dependency\+Manager\+::has\+\_\+circular\+\_\+dependency (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ std\+::string $>$ \&}]{test\+\_\+names}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_test_dependency_manager_aadc76ff6bfaa6a30065c3121c02bc7a9_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_test_dependency_manager_aa407f22a809bdeb8053224236ec2dc72}\index{SolarSystem::Testing::TestDependencyManager@{SolarSystem::Testing::TestDependencyManager}!resolve\_execution\_order@{resolve\_execution\_order}}
+\index{resolve\_execution\_order@{resolve\_execution\_order}!SolarSystem::Testing::TestDependencyManager@{SolarSystem::Testing::TestDependencyManager}}
+\doxysubsubsection{\texorpdfstring{resolve\_execution\_order()}{resolve\_execution\_order()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_test_dependency_manager_aa407f22a809bdeb8053224236ec2dc72} 
+std\+::vector$<$ std\+::vector$<$ std\+::string $>$ $>$ Solar\+System\+::\+Testing\+::\+Test\+Dependency\+Manager\+::resolve\+\_\+execution\+\_\+order (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ std\+::string $>$ \&}]{test\+\_\+names}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_test_dependency_manager_ac6bb51d1f5067f0d70f1badd0e685bd6}\index{SolarSystem::Testing::TestDependencyManager@{SolarSystem::Testing::TestDependencyManager}!set\_test\_priority@{set\_test\_priority}}
+\index{set\_test\_priority@{set\_test\_priority}!SolarSystem::Testing::TestDependencyManager@{SolarSystem::Testing::TestDependencyManager}}
+\doxysubsubsection{\texorpdfstring{set\_test\_priority()}{set\_test\_priority()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_test_dependency_manager_ac6bb51d1f5067f0d70f1badd0e685bd6} 
+void Solar\+System\+::\+Testing\+::\+Test\+Dependency\+Manager\+::set\+\_\+test\+\_\+priority (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{test\+\_\+name}{, }\item[{int}]{priority}{}\end{DoxyParamCaption})}
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_test_dependency_manager_ae0e21fba3bca8ac12cb8dbec438090a8}\index{SolarSystem::Testing::TestDependencyManager@{SolarSystem::Testing::TestDependencyManager}!set\_test\_resources@{set\_test\_resources}}
+\index{set\_test\_resources@{set\_test\_resources}!SolarSystem::Testing::TestDependencyManager@{SolarSystem::Testing::TestDependencyManager}}
+\doxysubsubsection{\texorpdfstring{set\_test\_resources()}{set\_test\_resources()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_test_dependency_manager_ae0e21fba3bca8ac12cb8dbec438090a8} 
+void Solar\+System\+::\+Testing\+::\+Test\+Dependency\+Manager\+::set\+\_\+test\+\_\+resources (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{test\+\_\+name}{, }\item[{const std\+::vector$<$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_resource_manager_a810cb17c20b027bf46fdbac83bf571ff}{Test\+Resource\+Manager\+::\+Resource\+Type}} $>$ \&}]{resources}{}\end{DoxyParamCaption})}
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_test_dependency_manager_aed3cef28352ff1228bf9a42cf8ef4fbc}\index{SolarSystem::Testing::TestDependencyManager@{SolarSystem::Testing::TestDependencyManager}!validate\_dependencies@{validate\_dependencies}}
+\index{validate\_dependencies@{validate\_dependencies}!SolarSystem::Testing::TestDependencyManager@{SolarSystem::Testing::TestDependencyManager}}
+\doxysubsubsection{\texorpdfstring{validate\_dependencies()}{validate\_dependencies()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_test_dependency_manager_aed3cef28352ff1228bf9a42cf8ef4fbc} 
+bool Solar\+System\+::\+Testing\+::\+Test\+Dependency\+Manager\+::validate\+\_\+dependencies (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ std\+::string $>$ \&}]{test\+\_\+names}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_test_dependency_manager_aed3cef28352ff1228bf9a42cf8ef4fbc_cgraph}
+\end{center}
+\end{figure}
+
+
+\label{doc-related-members}
+\Hypertarget{class_solar_system_1_1_testing_1_1_test_dependency_manager_doc-related-members}
+\doxysubsection{Friends And Related Symbol Documentation}
+\Hypertarget{class_solar_system_1_1_testing_1_1_test_dependency_manager_aafadf6ae355f1f8145df3d4586311cfa}\index{SolarSystem::Testing::TestDependencyManager@{SolarSystem::Testing::TestDependencyManager}!ParallelTestExecutor@{ParallelTestExecutor}}
+\index{ParallelTestExecutor@{ParallelTestExecutor}!SolarSystem::Testing::TestDependencyManager@{SolarSystem::Testing::TestDependencyManager}}
+\doxysubsubsection{\texorpdfstring{ParallelTestExecutor}{ParallelTestExecutor}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_test_dependency_manager_aafadf6ae355f1f8145df3d4586311cfa} 
+friend class \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_parallel_test_executor}{Parallel\+Test\+Executor}}\hspace{0.3cm}{\ttfamily [friend]}}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+test/include/solar\+\_\+test/framework/\mbox{\hyperlink{test__runner_8hpp}{test\+\_\+runner.\+hpp}}\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+test/src/framework/\mbox{\hyperlink{test__runner_8cpp}{test\+\_\+runner.\+cpp}}\end{DoxyCompactItemize}

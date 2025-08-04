@@ -1,6 +1,28 @@
 var searchData=
 [
-  ['initialize_5fjpl_5fdata_0',['initialize_jpl_data',['../jpl__data_8cpp.html#a4089bff84229849353c05d77c7bd04b2',1,'initialize_jpl_data():&#160;jpl_data.cpp'],['../jpl__data_8h.html#a4089bff84229849353c05d77c7bd04b2',1,'initialize_jpl_data():&#160;jpl_data.cpp']]],
-  ['initialize_5fsimulation_5fstate_1',['initialize_simulation_state',['../web__server_8cpp.html#aa5b130bed9b8f20a3bcb4a92fbb9ef94',1,'web_server.cpp']]],
-  ['initialize_5fsimulation_5fto_5fcurrent_5ftime_2',['initialize_simulation_to_current_time',['../simulation_8cpp.html#afadc206cce91e2e701eaef2cbbdb820d',1,'initialize_simulation_to_current_time():&#160;simulation.cpp'],['../simulation_8h.html#afadc206cce91e2e701eaef2cbbdb820d',1,'initialize_simulation_to_current_time():&#160;simulation.cpp']]]
+  ['handle_0',['handle',['../class_http_server.html#a0950c519c2730e0d7f2dcb670ffcb098',1,'HttpServer']]],
+  ['handle_5fhealth_1',['handle_health',['../class_solar_system_a_p_i.html#ac14ea5554e9ee36c4cadd03b59997c22',1,'SolarSystemAPI']]],
+  ['handle_5fjpl_5foperations_2',['handle_jpl_operations',['../solar__system_8cpp.html#a6894103c8a4192ac0fb7d4f3fb97d3b3',1,'solar_system.cpp']]],
+  ['handle_5fsimulate_3',['handle_simulate',['../class_solar_system_a_p_i.html#ae62b5c5789c5e2880871005a9d244471',1,'SolarSystemAPI']]],
+  ['handle_5fsolar_5fsystem_4',['handle_solar_system',['../class_solar_system_a_p_i.html#abe257a4d793daeece30ee45b2a4e5adb',1,'SolarSystemAPI']]],
+  ['handle_5fstatus_5',['handle_status',['../class_solar_system_a_p_i.html#a0f903ec3a89281e8e8bcb1b100774ca6',1,'SolarSystemAPI']]],
+  ['has_5fcircular_5fdependency_6',['has_circular_dependency',['../class_solar_system_1_1_testing_1_1_test_dependency_manager.html#aadc76ff6bfaa6a30065c3121c02bc7a9',1,'SolarSystem::Testing::TestDependencyManager']]],
+  ['has_5fcpu_5flimit_7',['has_cpu_limit',['../class_solar_system_1_1_testing_1_1_container_environment.html#af76101cfe1b24b884e1d358ed1e8b296',1,'SolarSystem::Testing::ContainerEnvironment']]],
+  ['has_5fcritical_5fregressions_8',['has_critical_regressions',['../class_solar_system_1_1_testing_1_1_regression_detector.html#a3c737e99861be49b840004cb581eefaf',1,'SolarSystem::Testing::RegressionDetector']]],
+  ['has_5fcurrent_5fephemeris_5fdata_9',['has_current_ephemeris_data',['../class_solar_system_1_1_bodies_1_1_body_factory.html#af5d6d07a8a6ec10ea24be5fe7e03adf1',1,'SolarSystem::Bodies::BodyFactory']]],
+  ['has_5fcurrent_5fyear_5fdata_10',['has_current_year_data',['../class_solar_system_1_1_j_p_l_1_1_j_p_l_client.html#a31f2e55918e2efa76de4c25546592739',1,'SolarSystem::JPL::JPLClient']]],
+  ['has_5fcurrent_5fyear_5fephemeris_5fdata_11',['has_current_year_ephemeris_data',['../class_solar_system_1_1_bodies_1_1_body_factory.html#a199966bfeeb87cc771b0f0fe4463cd42',1,'SolarSystem::Bodies::BodyFactory']]],
+  ['has_5fmemory_5flimit_12',['has_memory_limit',['../class_solar_system_1_1_testing_1_1_container_environment.html#a9f37f35772094ad93faf107403312b9b',1,'SolarSystem::Testing::ContainerEnvironment']]],
+  ['has_5fmetadata_13',['has_metadata',['../struct_solar_system_1_1_testing_1_1_test_result.html#a8445a6fda5657a5decba55be1f2790c0',1,'SolarSystem::Testing::TestResult']]],
+  ['has_5fresource_5fconflict_14',['has_resource_conflict',['../class_solar_system_1_1_testing_1_1_test_resource_manager.html#ac929059f2efec1d9d5200e6f3b979733',1,'SolarSystem::Testing::TestResourceManager']]],
+  ['has_5fservice_15',['has_service',['../class_solar_system_1_1_testing_1_1_mocks_1_1_service_scope.html#aec70b2e10e8279732487710cd80decf1',1,'SolarSystem::Testing::Mocks::ServiceScope']]],
+  ['has_5ftest_16',['has_test',['../class_solar_system_1_1_testing_1_1_test_discovery.html#ac62027613c63cc1e7c26cda302b94e8d',1,'SolarSystem::Testing::TestDiscovery']]],
+  ['has_5fvalue_17',['has_value',['../class_solar_system_1_1_utils_1_1_expected.html#a59753acc1598465940419e5cd1bd8d62',1,'SolarSystem::Utils::Expected::has_value()'],['../class_solar_system_1_1_utils_1_1_expected_3_01void_00_01_e_01_4.html#ae26b278348eaa04e6bb6b689062b7e50',1,'SolarSystem::Utils::Expected&lt; void, E &gt;::has_value()']]],
+  ['help_18',['help',['../class_solar_system_1_1_utils_1_1_argument_parser.html#af623d906f8c0f201fb78bf4d9c0e117a',1,'SolarSystem::Utils::ArgumentParser']]],
+  ['hide_5fcursor_19',['hide_cursor',['../class_terminal_u_i.html#a66bfb42177f419d456432e17fd3cfba3',1,'TerminalUI']]],
+  ['high_5faccuracy_20',['high_accuracy',['../class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder.html#aa2c1679a6b68be5416e8567cf38be379',1,'SolarSystem::Core::Builders::ConfigurationBuilder']]],
+  ['high_5fperformance_21',['high_performance',['../class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder.html#a5a9b3ea91b00d4d8e399b554f720c655',1,'SolarSystem::Core::Builders::ConfigurationBuilder']]],
+  ['high_5fres_5fnow_22',['high_res_now',['../class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock.html#a6cd275da6ded649ab332cfbed4553161',1,'SolarSystem::Testing::Mocks::TimeMock']]],
+  ['html_23',['html',['../struct_http_response.html#a5b3668e60c09bc43e283aa5700e97b6d',1,'HttpResponse']]],
+  ['httpserver_24',['HttpServer',['../class_http_server.html#aaa152d698aebce12d4994ad084f7d897',1,'HttpServer']]]
 ];

@@ -1,0 +1,574 @@
+\doxysection{Solar\+System\+::Testing\+::Mocks\+::JPLMock Class Reference}
+\hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock}{}\label{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock}\index{SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}}
+
+
+\doxylink{namespace_solar_system_1_1_j_p_l}{JPL} API Mock Implementation.  
+
+
+
+
+{\ttfamily \#include $<$jpl\+\_\+mock.\+hpp$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a5262146fb4b11751ddafc34f8378ae65}{JPLMock}} (\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config}{JPLMock\+Config}} \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_ac43416f2e494e0615094445f40b61688}{config}}=\{\})
+\begin{DoxyCompactList}\small\item\em Construct \doxylink{namespace_solar_system_1_1_j_p_l}{JPL} mock with configuration. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_ae89ecc04561550b70c5d1f6f8b4e1972}{\texorpdfstring{$\sim$}{\string~}\+JPLMock}} ()=default
+\begin{DoxyCompactList}\small\item\em Destructor. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a8f74e1ee9f854f63b12f5a98274cc198}{JPLMock}} (const \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock}{JPLMock}} \&)=delete
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock}{JPLMock}} \& \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_aecbe73e4c411790f8547f3f44fa0fcf8}{operator=}} (const \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock}{JPLMock}} \&)=delete
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_aa616a5ac715dcf40ba09e11cd322a9af}{JPLMock}} (\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock}{JPLMock}} \&\&)=delete
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock}{JPLMock}} \& \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a7df72ab8d90fd905cd16b506dff8f6a2}{operator=}} (\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock}{JPLMock}} \&\&)=delete
+\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a8aca08278bcefbd518cb62c9dfbc8bd0}{set\+\_\+response\+\_\+for\+\_\+body}} (int jpl\+\_\+id, const std\+::string \&response)
+\begin{DoxyCompactList}\small\item\em Set specific response for a \doxylink{namespace_solar_system_1_1_j_p_l}{JPL} body ID. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a7b922f2312e69086ad38d18064fcd838}{set\+\_\+response\+\_\+type\+\_\+for\+\_\+body}} (int jpl\+\_\+id, \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a82c133f802f6b76bd05714fcd46a4e5f}{Mock\+Response\+Type}} type)
+\begin{DoxyCompactList}\small\item\em Set response type for a specific body. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_aa3735a6ada94839405042986a63092f1}{set\+\_\+default\+\_\+response\+\_\+type}} (\mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a82c133f802f6b76bd05714fcd46a4e5f}{Mock\+Response\+Type}} type)
+\begin{DoxyCompactList}\small\item\em Set default response type for all bodies. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a868c2eca7502d39da363302febc749a0}{set\+\_\+error\+\_\+response}} (int http\+\_\+code, const std\+::string \&error\+\_\+message)
+\begin{DoxyCompactList}\small\item\em Set custom error response. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a55d68d4ebcfbdd39d295b9e4f1e2e067}{load\+\_\+mock\+\_\+responses\+\_\+from\+\_\+directory}} (const std\+::string \&directory\+\_\+path)
+\begin{DoxyCompactList}\small\item\em Load mock responses from directory. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a7ec0ec3d3488d3f01fd01c6b0d7d25e3}{simulate\+\_\+network\+\_\+failure}} (size\+\_\+t request\+\_\+count=1)
+\begin{DoxyCompactList}\small\item\em Simulate network failure for next N requests. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a6aa57fa5b97893d8b11704b0a15d969b}{simulate\+\_\+timeout}} (size\+\_\+t request\+\_\+count=1)
+\begin{DoxyCompactList}\small\item\em Simulate timeout for next N requests. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a5d953dc0c5c7a5b8e0cadb05bd46df54}{simulate\+\_\+server\+\_\+error}} (size\+\_\+t request\+\_\+count=1)
+\begin{DoxyCompactList}\small\item\em Simulate server error for next N requests. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a2481a9956b7574cf80f0e3332c4e9861}{set\+\_\+network\+\_\+delay\+\_\+range}} (std\+::chrono\+::milliseconds min\+\_\+delay, std\+::chrono\+::milliseconds max\+\_\+delay)
+\begin{DoxyCompactList}\small\item\em Set network delay range. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a872ad76ecbe3d7f29bf60ec03f55f11b}{enable\+\_\+network\+\_\+delays}} (bool enabled)
+\begin{DoxyCompactList}\small\item\em Enable/disable network delay simulation. \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a4109529676038a14ad737b690ed534f6}{generate\+\_\+realistic\+\_\+response}} (int jpl\+\_\+id, std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point epoch) const
+\begin{DoxyCompactList}\small\item\em Generate realistic \doxylink{namespace_solar_system_1_1_j_p_l}{JPL} HORIZONS response for body. \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_ab8bd6dea35295bf903adad884d9402e1}{generate\+\_\+ephemeris\+\_\+section}} (int jpl\+\_\+id, std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point epoch) const
+\begin{DoxyCompactList}\small\item\em Generate ephemeris data section. \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a6f3c92211560b48ad6d7cb996c1de32e}{generate\+\_\+body\+\_\+info\+\_\+section}} (int jpl\+\_\+id) const
+\begin{DoxyCompactList}\small\item\em Generate body information section. \end{DoxyCompactList}\item 
+size\+\_\+t \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_aaf1f107ab9a78a7305797bc6d499a60a}{call\+\_\+count}} () const
+\begin{DoxyCompactList}\small\item\em Get total number of calls made. \end{DoxyCompactList}\item 
+size\+\_\+t \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_ac0a3e4e7ecddc6ca29e82b54fe534248}{call\+\_\+count\+\_\+for\+\_\+body}} (int jpl\+\_\+id) const
+\begin{DoxyCompactList}\small\item\em Get number of calls for specific body. \end{DoxyCompactList}\item 
+std\+::vector$<$ int $>$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a6f1631f179a2a49421452c671917d072}{requested\+\_\+bodies}} () const
+\begin{DoxyCompactList}\small\item\em Get list of all requested body IDs. \end{DoxyCompactList}\item 
+const std\+::vector$<$ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_mock_call_info}{Mock\+Call\+Info}} $>$ \& \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_ace11aa0a9e74b6638e05916df44eb6ee}{call\+\_\+history}} () const
+\begin{DoxyCompactList}\small\item\em Get complete call history. \end{DoxyCompactList}\item 
+std\+::vector$<$ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_mock_call_info}{Mock\+Call\+Info}} $>$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a45ace3b27d5d8cd5c25461d7ba9c9e91}{calls\+\_\+for\+\_\+body}} (int jpl\+\_\+id) const
+\begin{DoxyCompactList}\small\item\em Get calls for specific body. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_ab7a388a43d893715bb85ef27ea879b43}{was\+\_\+body\+\_\+requested}} (int jpl\+\_\+id) const
+\begin{DoxyCompactList}\small\item\em Check if body was requested. \end{DoxyCompactList}\item 
+std\+::optional$<$ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_mock_call_info}{Mock\+Call\+Info}} $>$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a90a474d8fae4b8ea05013b1e46338ac5}{last\+\_\+call}} () const
+\begin{DoxyCompactList}\small\item\em Get last call information. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a1c38f37ecee96db7059d8c60f13b18a9}{reset\+\_\+call\+\_\+history}} ()
+\begin{DoxyCompactList}\small\item\em Reset call history and counters. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a1ae7174894acb8c6560a62a72f42d5cd}{Solar\+System\+::\+JPL\+::\+JPLResult}}$<$ std\+::string $>$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_aba6cf7d71996ffd9a396a1ae16027d97}{mock\+\_\+request}} (const std\+::string \&url, const std\+::string \&params)
+\begin{DoxyCompactList}\small\item\em Mock implementation of \doxylink{namespace_solar_system_1_1_j_p_l}{JPL} API request This is called by the mocked \doxylink{namespace_solar_system_1_1_j_p_l}{JPL} client. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a1ae7174894acb8c6560a62a72f42d5cd}{Solar\+System\+::\+JPL\+::\+JPLResult}}$<$ std\+::vector$<$ \mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_ephemeris_data}{Solar\+System\+::\+JPL\+::\+Ephemeris\+Data}} $>$ $>$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a2c0210e3042db8851edd284080917bae}{mock\+\_\+load\+\_\+from\+\_\+cache}} ()
+\begin{DoxyCompactList}\small\item\em Mock implementation of cache operations. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a9db0f8fc911088c5455067676ea1e99d}{Solar\+System\+::\+JPL\+::\+JPLVoid\+Result}} \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_ac29c179d400c708b6bded1e57435a934}{mock\+\_\+save\+\_\+to\+\_\+cache}} (const std\+::vector$<$ \mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_ephemeris_data}{Solar\+System\+::\+JPL\+::\+Ephemeris\+Data}} $>$ \&data)
+\begin{DoxyCompactList}\small\item\em Mock implementation of cache save. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a1ae7174894acb8c6560a62a72f42d5cd}{Solar\+System\+::\+JPL\+::\+JPLResult}}$<$ bool $>$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a722716b6936fd093553918faac0589b6}{mock\+\_\+validate\+\_\+cache}} () const
+\begin{DoxyCompactList}\small\item\em Mock implementation of cache validation. \end{DoxyCompactList}\item 
+const \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config}{JPLMock\+Config}} \& \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_ac43416f2e494e0615094445f40b61688}{config}} () const noexcept
+\begin{DoxyCompactList}\small\item\em Get current configuration. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_aece5b1e6284682a5c2d6b9e9d942692b}{update\+\_\+config}} (const \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config}{JPLMock\+Config}} \&new\+\_\+config)
+\begin{DoxyCompactList}\small\item\em Update configuration. \end{DoxyCompactList}\item 
+std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{class_solar_system_1_1_j_p_l_1_1_j_p_l_client}{Solar\+System\+::\+JPL\+::\+JPLClient}} $>$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a71de5e8abf9d30e7d3efa25af08d80a5}{create\+\_\+mock\+\_\+client}} ()
+\begin{DoxyCompactList}\small\item\em Create mock \doxylink{namespace_solar_system_1_1_j_p_l}{JPL} client that uses this mock. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_ac462c8c47c88e143ff1bb8a471d96730}{install\+\_\+as\+\_\+global\+\_\+mock}} ()
+\begin{DoxyCompactList}\small\item\em Install this mock as global \doxylink{namespace_solar_system_1_1_j_p_l}{JPL} mock (for dependency injection) \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a45ab12ed40721dbd5f6fe97f376df1fa}{remove\+\_\+global\+\_\+mock}} ()
+\begin{DoxyCompactList}\small\item\em Remove global mock installation. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\doxylink{namespace_solar_system_1_1_j_p_l}{JPL} API Mock Implementation. 
+
+Provides comprehensive mocking of \doxylink{namespace_solar_system_1_1_j_p_l}{JPL} HORIZONS API for testing purposes. Can simulate various network conditions, response types, and failure scenarios. 
+
+\label{doc-constructors}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a5262146fb4b11751ddafc34f8378ae65}\index{SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}!JPLMock@{JPLMock}}
+\index{JPLMock@{JPLMock}!SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}}
+\doxysubsubsection{\texorpdfstring{JPLMock()}{JPLMock()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a5262146fb4b11751ddafc34f8378ae65} 
+Solar\+System\+::\+Testing\+::\+Mocks\+::\+JPLMock\+::\+JPLMock (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config}{JPLMock\+Config}}}]{config}{ = {\ttfamily \{\}}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+
+
+Construct \doxylink{namespace_solar_system_1_1_j_p_l}{JPL} mock with configuration. 
+
+\doxylink{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock}{JPLMock} constructor. Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a5262146fb4b11751ddafc34f8378ae65_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a5262146fb4b11751ddafc34f8378ae65_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_ae89ecc04561550b70c5d1f6f8b4e1972}\index{SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}!````~JPLMock@{\texorpdfstring{$\sim$}{\string~}JPLMock}}
+\index{````~JPLMock@{\texorpdfstring{$\sim$}{\string~}JPLMock}!SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}JPLMock()}{\string~JPLMock()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_ae89ecc04561550b70c5d1f6f8b4e1972} 
+Solar\+System\+::\+Testing\+::\+Mocks\+::\+JPLMock\+::\texorpdfstring{$\sim$}{\string~}\+JPLMock (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}}
+
+
+
+Destructor. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a8f74e1ee9f854f63b12f5a98274cc198}\index{SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}!JPLMock@{JPLMock}}
+\index{JPLMock@{JPLMock}!SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}}
+\doxysubsubsection{\texorpdfstring{JPLMock()}{JPLMock()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a8f74e1ee9f854f63b12f5a98274cc198} 
+Solar\+System\+::\+Testing\+::\+Mocks\+::\+JPLMock\+::\+JPLMock (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock}{JPLMock}} \&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a8f74e1ee9f854f63b12f5a98274cc198_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_aa616a5ac715dcf40ba09e11cd322a9af}\index{SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}!JPLMock@{JPLMock}}
+\index{JPLMock@{JPLMock}!SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}}
+\doxysubsubsection{\texorpdfstring{JPLMock()}{JPLMock()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_aa616a5ac715dcf40ba09e11cd322a9af} 
+Solar\+System\+::\+Testing\+::\+Mocks\+::\+JPLMock\+::\+JPLMock (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock}{JPLMock}} \&\&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_aa616a5ac715dcf40ba09e11cd322a9af_cgraph}
+\end{center}
+\end{figure}
+
+
+\label{doc-func-members}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_aaf1f107ab9a78a7305797bc6d499a60a}\index{SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}!call\_count@{call\_count}}
+\index{call\_count@{call\_count}!SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}}
+\doxysubsubsection{\texorpdfstring{call\_count()}{call\_count()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_aaf1f107ab9a78a7305797bc6d499a60a} 
+size\+\_\+t Solar\+System\+::\+Testing\+::\+Mocks\+::\+JPLMock\+::call\+\_\+count (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Get total number of calls made. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_ac0a3e4e7ecddc6ca29e82b54fe534248}\index{SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}!call\_count\_for\_body@{call\_count\_for\_body}}
+\index{call\_count\_for\_body@{call\_count\_for\_body}!SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}}
+\doxysubsubsection{\texorpdfstring{call\_count\_for\_body()}{call\_count\_for\_body()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_ac0a3e4e7ecddc6ca29e82b54fe534248} 
+size\+\_\+t Solar\+System\+::\+Testing\+::\+Mocks\+::\+JPLMock\+::call\+\_\+count\+\_\+for\+\_\+body (\begin{DoxyParamCaption}\item[{int}]{jpl\+\_\+id}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Get number of calls for specific body. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_ace11aa0a9e74b6638e05916df44eb6ee}\index{SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}!call\_history@{call\_history}}
+\index{call\_history@{call\_history}!SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}}
+\doxysubsubsection{\texorpdfstring{call\_history()}{call\_history()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_ace11aa0a9e74b6638e05916df44eb6ee} 
+const std\+::vector$<$ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_mock_call_info}{Mock\+Call\+Info}} $>$ \& Solar\+System\+::\+Testing\+::\+Mocks\+::\+JPLMock\+::call\+\_\+history (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Get complete call history. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a45ace3b27d5d8cd5c25461d7ba9c9e91}\index{SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}!calls\_for\_body@{calls\_for\_body}}
+\index{calls\_for\_body@{calls\_for\_body}!SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}}
+\doxysubsubsection{\texorpdfstring{calls\_for\_body()}{calls\_for\_body()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a45ace3b27d5d8cd5c25461d7ba9c9e91} 
+std\+::vector$<$ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_mock_call_info}{Mock\+Call\+Info}} $>$ Solar\+System\+::\+Testing\+::\+Mocks\+::\+JPLMock\+::calls\+\_\+for\+\_\+body (\begin{DoxyParamCaption}\item[{int}]{jpl\+\_\+id}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Get calls for specific body. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_ac43416f2e494e0615094445f40b61688}\index{SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}!config@{config}}
+\index{config@{config}!SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}}
+\doxysubsubsection{\texorpdfstring{config()}{config()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_ac43416f2e494e0615094445f40b61688} 
+const \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config}{JPLMock\+Config}} \& Solar\+System\+::\+Testing\+::\+Mocks\+::\+JPLMock\+::config (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}, {\ttfamily [noexcept]}}
+
+
+
+Get current configuration. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_ac43416f2e494e0615094445f40b61688_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a71de5e8abf9d30e7d3efa25af08d80a5}\index{SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}!create\_mock\_client@{create\_mock\_client}}
+\index{create\_mock\_client@{create\_mock\_client}!SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}}
+\doxysubsubsection{\texorpdfstring{create\_mock\_client()}{create\_mock\_client()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a71de5e8abf9d30e7d3efa25af08d80a5} 
+std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{class_solar_system_1_1_j_p_l_1_1_j_p_l_client}{Solar\+System\+::\+JPL\+::\+JPLClient}} $>$ Solar\+System\+::\+Testing\+::\+Mocks\+::\+JPLMock\+::create\+\_\+mock\+\_\+client (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Create mock \doxylink{namespace_solar_system_1_1_j_p_l}{JPL} client that uses this mock. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a872ad76ecbe3d7f29bf60ec03f55f11b}\index{SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}!enable\_network\_delays@{enable\_network\_delays}}
+\index{enable\_network\_delays@{enable\_network\_delays}!SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}}
+\doxysubsubsection{\texorpdfstring{enable\_network\_delays()}{enable\_network\_delays()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a872ad76ecbe3d7f29bf60ec03f55f11b} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+JPLMock\+::enable\+\_\+network\+\_\+delays (\begin{DoxyParamCaption}\item[{bool}]{enabled}{}\end{DoxyParamCaption})}
+
+
+
+Enable/disable network delay simulation. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a6f3c92211560b48ad6d7cb996c1de32e}\index{SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}!generate\_body\_info\_section@{generate\_body\_info\_section}}
+\index{generate\_body\_info\_section@{generate\_body\_info\_section}!SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}}
+\doxysubsubsection{\texorpdfstring{generate\_body\_info\_section()}{generate\_body\_info\_section()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a6f3c92211560b48ad6d7cb996c1de32e} 
+std\+::string Solar\+System\+::\+Testing\+::\+Mocks\+::\+JPLMock\+::generate\+\_\+body\+\_\+info\+\_\+section (\begin{DoxyParamCaption}\item[{int}]{jpl\+\_\+id}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Generate body information section. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a6f3c92211560b48ad6d7cb996c1de32e_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a6f3c92211560b48ad6d7cb996c1de32e_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_ab8bd6dea35295bf903adad884d9402e1}\index{SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}!generate\_ephemeris\_section@{generate\_ephemeris\_section}}
+\index{generate\_ephemeris\_section@{generate\_ephemeris\_section}!SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}}
+\doxysubsubsection{\texorpdfstring{generate\_ephemeris\_section()}{generate\_ephemeris\_section()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_ab8bd6dea35295bf903adad884d9402e1} 
+std\+::string Solar\+System\+::\+Testing\+::\+Mocks\+::\+JPLMock\+::generate\+\_\+ephemeris\+\_\+section (\begin{DoxyParamCaption}\item[{int}]{jpl\+\_\+id}{, }\item[{std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point}]{epoch}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Generate ephemeris data section. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_ab8bd6dea35295bf903adad884d9402e1_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a4109529676038a14ad737b690ed534f6}\index{SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}!generate\_realistic\_response@{generate\_realistic\_response}}
+\index{generate\_realistic\_response@{generate\_realistic\_response}!SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}}
+\doxysubsubsection{\texorpdfstring{generate\_realistic\_response()}{generate\_realistic\_response()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a4109529676038a14ad737b690ed534f6} 
+std\+::string Solar\+System\+::\+Testing\+::\+Mocks\+::\+JPLMock\+::generate\+\_\+realistic\+\_\+response (\begin{DoxyParamCaption}\item[{int}]{jpl\+\_\+id}{, }\item[{std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point}]{epoch}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Generate realistic \doxylink{namespace_solar_system_1_1_j_p_l}{JPL} HORIZONS response for body. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a4109529676038a14ad737b690ed534f6_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a4109529676038a14ad737b690ed534f6_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_ac462c8c47c88e143ff1bb8a471d96730}\index{SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}!install\_as\_global\_mock@{install\_as\_global\_mock}}
+\index{install\_as\_global\_mock@{install\_as\_global\_mock}!SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}}
+\doxysubsubsection{\texorpdfstring{install\_as\_global\_mock()}{install\_as\_global\_mock()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_ac462c8c47c88e143ff1bb8a471d96730} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+JPLMock\+::install\+\_\+as\+\_\+global\+\_\+mock (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Install this mock as global \doxylink{namespace_solar_system_1_1_j_p_l}{JPL} mock (for dependency injection) 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a90a474d8fae4b8ea05013b1e46338ac5}\index{SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}!last\_call@{last\_call}}
+\index{last\_call@{last\_call}!SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}}
+\doxysubsubsection{\texorpdfstring{last\_call()}{last\_call()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a90a474d8fae4b8ea05013b1e46338ac5} 
+std\+::optional$<$ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_mock_call_info}{Mock\+Call\+Info}} $>$ Solar\+System\+::\+Testing\+::\+Mocks\+::\+JPLMock\+::last\+\_\+call (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Get last call information. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a55d68d4ebcfbdd39d295b9e4f1e2e067}\index{SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}!load\_mock\_responses\_from\_directory@{load\_mock\_responses\_from\_directory}}
+\index{load\_mock\_responses\_from\_directory@{load\_mock\_responses\_from\_directory}!SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}}
+\doxysubsubsection{\texorpdfstring{load\_mock\_responses\_from\_directory()}{load\_mock\_responses\_from\_directory()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a55d68d4ebcfbdd39d295b9e4f1e2e067} 
+bool Solar\+System\+::\+Testing\+::\+Mocks\+::\+JPLMock\+::load\+\_\+mock\+\_\+responses\+\_\+from\+\_\+directory (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{directory\+\_\+path}{}\end{DoxyParamCaption})}
+
+
+
+Load mock responses from directory. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a2c0210e3042db8851edd284080917bae}\index{SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}!mock\_load\_from\_cache@{mock\_load\_from\_cache}}
+\index{mock\_load\_from\_cache@{mock\_load\_from\_cache}!SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}}
+\doxysubsubsection{\texorpdfstring{mock\_load\_from\_cache()}{mock\_load\_from\_cache()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a2c0210e3042db8851edd284080917bae} 
+\mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a1ae7174894acb8c6560a62a72f42d5cd}{Solar\+System\+::\+JPL\+::\+JPLResult}}$<$ std\+::vector$<$ \mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_ephemeris_data}{Solar\+System\+::\+JPL\+::\+Ephemeris\+Data}} $>$ $>$ Solar\+System\+::\+Testing\+::\+Mocks\+::\+JPLMock\+::mock\+\_\+load\+\_\+from\+\_\+cache (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Mock implementation of cache operations. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_aba6cf7d71996ffd9a396a1ae16027d97}\index{SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}!mock\_request@{mock\_request}}
+\index{mock\_request@{mock\_request}!SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}}
+\doxysubsubsection{\texorpdfstring{mock\_request()}{mock\_request()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_aba6cf7d71996ffd9a396a1ae16027d97} 
+\mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a1ae7174894acb8c6560a62a72f42d5cd}{Solar\+System\+::\+JPL\+::\+JPLResult}}$<$ std\+::string $>$ Solar\+System\+::\+Testing\+::\+Mocks\+::\+JPLMock\+::mock\+\_\+request (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{url}{, }\item[{const std\+::string \&}]{params}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Mock implementation of \doxylink{namespace_solar_system_1_1_j_p_l}{JPL} API request This is called by the mocked \doxylink{namespace_solar_system_1_1_j_p_l}{JPL} client. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_aba6cf7d71996ffd9a396a1ae16027d97_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_ac29c179d400c708b6bded1e57435a934}\index{SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}!mock\_save\_to\_cache@{mock\_save\_to\_cache}}
+\index{mock\_save\_to\_cache@{mock\_save\_to\_cache}!SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}}
+\doxysubsubsection{\texorpdfstring{mock\_save\_to\_cache()}{mock\_save\_to\_cache()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_ac29c179d400c708b6bded1e57435a934} 
+\mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a9db0f8fc911088c5455067676ea1e99d}{Solar\+System\+::\+JPL\+::\+JPLVoid\+Result}} Solar\+System\+::\+Testing\+::\+Mocks\+::\+JPLMock\+::mock\+\_\+save\+\_\+to\+\_\+cache (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ \mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_ephemeris_data}{Solar\+System\+::\+JPL\+::\+Ephemeris\+Data}} $>$ \&}]{data}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Mock implementation of cache save. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_ac29c179d400c708b6bded1e57435a934_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a722716b6936fd093553918faac0589b6}\index{SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}!mock\_validate\_cache@{mock\_validate\_cache}}
+\index{mock\_validate\_cache@{mock\_validate\_cache}!SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}}
+\doxysubsubsection{\texorpdfstring{mock\_validate\_cache()}{mock\_validate\_cache()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a722716b6936fd093553918faac0589b6} 
+\mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a1ae7174894acb8c6560a62a72f42d5cd}{Solar\+System\+::\+JPL\+::\+JPLResult}}$<$ bool $>$ Solar\+System\+::\+Testing\+::\+Mocks\+::\+JPLMock\+::mock\+\_\+validate\+\_\+cache (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Mock implementation of cache validation. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_aecbe73e4c411790f8547f3f44fa0fcf8}\index{SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}!operator=@{operator=}}
+\index{operator=@{operator=}!SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_aecbe73e4c411790f8547f3f44fa0fcf8} 
+\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock}{JPLMock}} \& Solar\+System\+::\+Testing\+::\+Mocks\+::\+JPLMock\+::operator= (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock}{JPLMock}} \&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_aecbe73e4c411790f8547f3f44fa0fcf8_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a7df72ab8d90fd905cd16b506dff8f6a2}\index{SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}!operator=@{operator=}}
+\index{operator=@{operator=}!SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a7df72ab8d90fd905cd16b506dff8f6a2} 
+\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock}{JPLMock}} \& Solar\+System\+::\+Testing\+::\+Mocks\+::\+JPLMock\+::operator= (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock}{JPLMock}} \&\&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a7df72ab8d90fd905cd16b506dff8f6a2_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a45ab12ed40721dbd5f6fe97f376df1fa}\index{SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}!remove\_global\_mock@{remove\_global\_mock}}
+\index{remove\_global\_mock@{remove\_global\_mock}!SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}}
+\doxysubsubsection{\texorpdfstring{remove\_global\_mock()}{remove\_global\_mock()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a45ab12ed40721dbd5f6fe97f376df1fa} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+JPLMock\+::remove\+\_\+global\+\_\+mock (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Remove global mock installation. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a45ab12ed40721dbd5f6fe97f376df1fa_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a6f1631f179a2a49421452c671917d072}\index{SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}!requested\_bodies@{requested\_bodies}}
+\index{requested\_bodies@{requested\_bodies}!SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}}
+\doxysubsubsection{\texorpdfstring{requested\_bodies()}{requested\_bodies()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a6f1631f179a2a49421452c671917d072} 
+std\+::vector$<$ int $>$ Solar\+System\+::\+Testing\+::\+Mocks\+::\+JPLMock\+::requested\+\_\+bodies (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Get list of all requested body IDs. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a1c38f37ecee96db7059d8c60f13b18a9}\index{SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}!reset\_call\_history@{reset\_call\_history}}
+\index{reset\_call\_history@{reset\_call\_history}!SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}}
+\doxysubsubsection{\texorpdfstring{reset\_call\_history()}{reset\_call\_history()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a1c38f37ecee96db7059d8c60f13b18a9} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+JPLMock\+::reset\+\_\+call\+\_\+history (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Reset call history and counters. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_aa3735a6ada94839405042986a63092f1}\index{SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}!set\_default\_response\_type@{set\_default\_response\_type}}
+\index{set\_default\_response\_type@{set\_default\_response\_type}!SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}}
+\doxysubsubsection{\texorpdfstring{set\_default\_response\_type()}{set\_default\_response\_type()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_aa3735a6ada94839405042986a63092f1} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+JPLMock\+::set\+\_\+default\+\_\+response\+\_\+type (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a82c133f802f6b76bd05714fcd46a4e5f}{Mock\+Response\+Type}}}]{type}{}\end{DoxyParamCaption})}
+
+
+
+Set default response type for all bodies. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a868c2eca7502d39da363302febc749a0}\index{SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}!set\_error\_response@{set\_error\_response}}
+\index{set\_error\_response@{set\_error\_response}!SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}}
+\doxysubsubsection{\texorpdfstring{set\_error\_response()}{set\_error\_response()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a868c2eca7502d39da363302febc749a0} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+JPLMock\+::set\+\_\+error\+\_\+response (\begin{DoxyParamCaption}\item[{int}]{http\+\_\+code}{, }\item[{const std\+::string \&}]{error\+\_\+message}{}\end{DoxyParamCaption})}
+
+
+
+Set custom error response. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a2481a9956b7574cf80f0e3332c4e9861}\index{SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}!set\_network\_delay\_range@{set\_network\_delay\_range}}
+\index{set\_network\_delay\_range@{set\_network\_delay\_range}!SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}}
+\doxysubsubsection{\texorpdfstring{set\_network\_delay\_range()}{set\_network\_delay\_range()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a2481a9956b7574cf80f0e3332c4e9861} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+JPLMock\+::set\+\_\+network\+\_\+delay\+\_\+range (\begin{DoxyParamCaption}\item[{std\+::chrono\+::milliseconds}]{min\+\_\+delay}{, }\item[{std\+::chrono\+::milliseconds}]{max\+\_\+delay}{}\end{DoxyParamCaption})}
+
+
+
+Set network delay range. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a8aca08278bcefbd518cb62c9dfbc8bd0}\index{SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}!set\_response\_for\_body@{set\_response\_for\_body}}
+\index{set\_response\_for\_body@{set\_response\_for\_body}!SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}}
+\doxysubsubsection{\texorpdfstring{set\_response\_for\_body()}{set\_response\_for\_body()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a8aca08278bcefbd518cb62c9dfbc8bd0} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+JPLMock\+::set\+\_\+response\+\_\+for\+\_\+body (\begin{DoxyParamCaption}\item[{int}]{jpl\+\_\+id}{, }\item[{const std\+::string \&}]{response}{}\end{DoxyParamCaption})}
+
+
+
+Set specific response for a \doxylink{namespace_solar_system_1_1_j_p_l}{JPL} body ID. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a7b922f2312e69086ad38d18064fcd838}\index{SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}!set\_response\_type\_for\_body@{set\_response\_type\_for\_body}}
+\index{set\_response\_type\_for\_body@{set\_response\_type\_for\_body}!SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}}
+\doxysubsubsection{\texorpdfstring{set\_response\_type\_for\_body()}{set\_response\_type\_for\_body()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a7b922f2312e69086ad38d18064fcd838} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+JPLMock\+::set\+\_\+response\+\_\+type\+\_\+for\+\_\+body (\begin{DoxyParamCaption}\item[{int}]{jpl\+\_\+id}{, }\item[{\mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a82c133f802f6b76bd05714fcd46a4e5f}{Mock\+Response\+Type}}}]{type}{}\end{DoxyParamCaption})}
+
+
+
+Set response type for a specific body. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a7ec0ec3d3488d3f01fd01c6b0d7d25e3}\index{SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}!simulate\_network\_failure@{simulate\_network\_failure}}
+\index{simulate\_network\_failure@{simulate\_network\_failure}!SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}}
+\doxysubsubsection{\texorpdfstring{simulate\_network\_failure()}{simulate\_network\_failure()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a7ec0ec3d3488d3f01fd01c6b0d7d25e3} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+JPLMock\+::simulate\+\_\+network\+\_\+failure (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{request\+\_\+count}{ = {\ttfamily 1}}\end{DoxyParamCaption})}
+
+
+
+Simulate network failure for next N requests. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a5d953dc0c5c7a5b8e0cadb05bd46df54}\index{SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}!simulate\_server\_error@{simulate\_server\_error}}
+\index{simulate\_server\_error@{simulate\_server\_error}!SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}}
+\doxysubsubsection{\texorpdfstring{simulate\_server\_error()}{simulate\_server\_error()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a5d953dc0c5c7a5b8e0cadb05bd46df54} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+JPLMock\+::simulate\+\_\+server\+\_\+error (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{request\+\_\+count}{ = {\ttfamily 1}}\end{DoxyParamCaption})}
+
+
+
+Simulate server error for next N requests. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a6aa57fa5b97893d8b11704b0a15d969b}\index{SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}!simulate\_timeout@{simulate\_timeout}}
+\index{simulate\_timeout@{simulate\_timeout}!SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}}
+\doxysubsubsection{\texorpdfstring{simulate\_timeout()}{simulate\_timeout()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_a6aa57fa5b97893d8b11704b0a15d969b} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+JPLMock\+::simulate\+\_\+timeout (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{request\+\_\+count}{ = {\ttfamily 1}}\end{DoxyParamCaption})}
+
+
+
+Simulate timeout for next N requests. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_aece5b1e6284682a5c2d6b9e9d942692b}\index{SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}!update\_config@{update\_config}}
+\index{update\_config@{update\_config}!SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}}
+\doxysubsubsection{\texorpdfstring{update\_config()}{update\_config()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_aece5b1e6284682a5c2d6b9e9d942692b} 
+void Solar\+System\+::\+Testing\+::\+Mocks\+::\+JPLMock\+::update\+\_\+config (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config}{JPLMock\+Config}} \&}]{new\+\_\+config}{}\end{DoxyParamCaption})}
+
+
+
+Update configuration. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_ab7a388a43d893715bb85ef27ea879b43}\index{SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}!was\_body\_requested@{was\_body\_requested}}
+\index{was\_body\_requested@{was\_body\_requested}!SolarSystem::Testing::Mocks::JPLMock@{SolarSystem::Testing::Mocks::JPLMock}}
+\doxysubsubsection{\texorpdfstring{was\_body\_requested()}{was\_body\_requested()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_ab7a388a43d893715bb85ef27ea879b43} 
+bool Solar\+System\+::\+Testing\+::\+Mocks\+::\+JPLMock\+::was\+\_\+body\+\_\+requested (\begin{DoxyParamCaption}\item[{int}]{jpl\+\_\+id}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Check if body was requested. 
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+test/include/solar\+\_\+test/mocks/\mbox{\hyperlink{jpl__mock_8hpp}{jpl\+\_\+mock.\+hpp}}\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+test/src/mocks/\mbox{\hyperlink{jpl__mock_8cpp}{jpl\+\_\+mock.\+cpp}}\end{DoxyCompactItemize}

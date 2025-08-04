@@ -1,0 +1,9 @@
+<map id="SolarSystem::Testing::Mocks::TemporaryCache::cache_file_sizes" name="SolarSystem::Testing::Mocks::TemporaryCache::cache_file_sizes">
+<area shape="rect" id="Node000001" title="Get cache file sizes." alt="" coords="5,85,181,141"/>
+<area shape="rect" id="Node000002" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_temporary_cache.html#a537fbd973346f2fb5f73ed32413ceb3c" title="Get binary cache file path." alt="" coords="229,5,404,61"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="172,82,221,64,223,69,174,87"/>
+<area shape="rect" id="Node000003" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_temporary_cache.html#af769c01b4565b59216d1ccc25f656288" title="Get JSON cache file path." alt="" coords="229,85,404,141"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="181,110,213,110,213,116,181,116"/>
+<area shape="rect" id="Node000004" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_temporary_cache.html#a0f0d9dc310e3d3a2cd5ea0ed8dab9e71" title="Get metadata file path." alt="" coords="229,165,404,221"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="174,139,223,157,221,162,172,144"/>
+</map>

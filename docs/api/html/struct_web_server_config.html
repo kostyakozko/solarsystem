@@ -92,21 +92,35 @@ $(function(){initNavTree('struct_web_server_config.html','','struct_web_server_c
   <div class="headertitle"><div class="title">WebServerConfig Struct Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Type-safe web server configuration.  
+ <a href="#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aa62d4dc2ca726588df2a4c4e2cd81007" id="r_aa62d4dc2ca726588df2a4c4e2cd81007"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa62d4dc2ca726588df2a4c4e2cd81007">WebServerConfig</a> ()</td></tr>
+<tr class="memitem:adbc40bf51f05cbc6d6fdee45e5c6fe0f" id="r_adbc40bf51f05cbc6d6fdee45e5c6fe0f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adbc40bf51f05cbc6d6fdee45e5c6fe0f">is_valid</a> (std::string *error=nullptr) const</td></tr>
+<tr class="memdesc:adbc40bf51f05cbc6d6fdee45e5c6fe0f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Validate configuration.  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:aa00092e0e6bb7535b75a9b9a4705ab90" id="r_aa00092e0e6bb7535b75a9b9a4705ab90"><td class="memItemLeft" align="right" valign="top">static std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa00092e0e6bb7535b75a9b9a4705ab90">get_default_web_root</a> ()</td></tr>
+<tr class="memdesc:aa00092e0e6bb7535b75a9b9a4705ab90"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get default web root path.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a87fc2c351a54971b5b5100f4b8adc588" id="r_a87fc2c351a54971b5b5100f4b8adc588"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a87fc2c351a54971b5b5100f4b8adc588">port</a></td></tr>
-<tr class="memitem:aa44e972a07e46fa705e87b7c457d6648" id="r_aa44e972a07e46fa705e87b7c457d6648"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa44e972a07e46fa705e87b7c457d6648">web_root</a></td></tr>
-<tr class="memitem:a3ab54a35feb8fd4175b79eb25dea4952" id="r_a3ab54a35feb8fd4175b79eb25dea4952"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3ab54a35feb8fd4175b79eb25dea4952">enable_cors</a></td></tr>
-<tr class="memitem:afd2fb4f6ea540df6926e7676824f7bcf" id="r_afd2fb4f6ea540df6926e7676824f7bcf"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afd2fb4f6ea540df6926e7676824f7bcf">verbose</a></td></tr>
+<tr class="memitem:a453a8c5bc2f0e1e12636094368e57677" id="r_a453a8c5bc2f0e1e12636094368e57677"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a453a8c5bc2f0e1e12636094368e57677">port</a> = 8080</td></tr>
+<tr class="memitem:aed495336a06cb4b45038c347642d3a5d" id="r_aed495336a06cb4b45038c347642d3a5d"><td class="memItemLeft" align="right" valign="top">std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aed495336a06cb4b45038c347642d3a5d">web_root</a> = &quot;./web&quot;</td></tr>
+<tr class="memitem:a3ab54a35feb8fd4175b79eb25dea4952" id="r_a3ab54a35feb8fd4175b79eb25dea4952"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3ab54a35feb8fd4175b79eb25dea4952">enable_cors</a> = true</td></tr>
+<tr class="memitem:a514091ff11802afa672bc1615e92c728" id="r_a514091ff11802afa672bc1615e92c728"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a514091ff11802afa672bc1615e92c728">verbose_output</a> = false</td></tr>
+<tr class="memitem:a7b9d0c170df9f832d2f09ef224f5363d" id="r_a7b9d0c170df9f832d2f09ef224f5363d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7b9d0c170df9f832d2f09ef224f5363d">enable_logging</a> = true</td></tr>
+<tr class="memitem:af94a12b6682c4f915c15de32abcb5149" id="r_af94a12b6682c4f915c15de32abcb5149"><td class="memItemLeft" align="right" valign="top">std::chrono::seconds&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af94a12b6682c4f915c15de32abcb5149">request_timeout</a> = 30s</td></tr>
+<tr class="memitem:af9584111ca4079ac5e0980608174ed43" id="r_af9584111ca4079ac5e0980608174ed43"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af9584111ca4079ac5e0980608174ed43">max_connections</a> = 100</td></tr>
 </table>
-<a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="aa62d4dc2ca726588df2a4c4e2cd81007" name="aa62d4dc2ca726588df2a4c4e2cd81007"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa62d4dc2ca726588df2a4c4e2cd81007">&#9670;&#160;</a></span>WebServerConfig()</h2>
+<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Type-safe web server configuration. </p>
+</div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
+<a id="aa00092e0e6bb7535b75a9b9a4705ab90" name="aa00092e0e6bb7535b75a9b9a4705ab90"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa00092e0e6bb7535b75a9b9a4705ab90">&#9670;&#160;</a></span>get_default_web_root()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -115,7 +129,7 @@ Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">WebServerConfig::WebServerConfig </td>
+          <td class="memname">std::filesystem::path WebServerConfig::get_default_web_root </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -123,18 +137,57 @@ Public Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Get default web root path. </p>
 <div class="dynheader">
-Here is the call graph for this function:</div>
+Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="struct_web_server_config_aa62d4dc2ca726588df2a4c4e2cd81007_cgraph.png" border="0" usemap="#astruct_web_server_config_aa62d4dc2ca726588df2a4c4e2cd81007_cgraph" loading="lazy" alt=""/></div>
-<map name="astruct_web_server_config_aa62d4dc2ca726588df2a4c4e2cd81007_cgraph" id="astruct_web_server_config_aa62d4dc2ca726588df2a4c4e2cd81007_cgraph">
-<area shape="rect" title=" " alt="" coords="5,5,201,46"/>
-<area shape="rect" href="web__server_8cpp.html#ace2eeea0e8bbb3b04ee320a79fa2d180" title=" " alt="" coords="249,13,394,38"/>
-<area shape="poly" title=" " alt="" coords="201,23,233,23,233,28,201,28"/>
+<div class="center"><img src="struct_web_server_config_aa00092e0e6bb7535b75a9b9a4705ab90_icgraph.png" border="0" usemap="#astruct_web_server_config_aa00092e0e6bb7535b75a9b9a4705ab90_icgraph" loading="lazy" alt=""/></div>
+<map name="astruct_web_server_config_aa00092e0e6bb7535b75a9b9a4705ab90_icgraph" id="astruct_web_server_config_aa00092e0e6bb7535b75a9b9a4705ab90_icgraph">
+<area shape="rect" title="Get default web root path." alt="" coords="209,5,358,46"/>
+<area shape="rect" href="class_argument_parser.html#ac28da7e051e3c49f1894309810d6b856" title=" " alt="" coords="5,13,161,38"/>
+<area shape="poly" title=" " alt="" coords="193,28,161,28,161,23,193,23"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="adbc40bf51f05cbc6d6fdee45e5c6fe0f" name="adbc40bf51f05cbc6d6fdee45e5c6fe0f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adbc40bf51f05cbc6d6fdee45e5c6fe0f">&#9670;&#160;</a></span>is_valid()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool WebServerConfig::is_valid </td>
+          <td>(</td>
+          <td class="paramtype">std::string *</td>          <td class="paramname"><span class="paramname"><em>error</em></span><span class="paramdefsep"> = </span><span class="paramdefval">nullptr</span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Validate configuration. </p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="struct_web_server_config_adbc40bf51f05cbc6d6fdee45e5c6fe0f_icgraph.png" border="0" usemap="#astruct_web_server_config_adbc40bf51f05cbc6d6fdee45e5c6fe0f_icgraph" loading="lazy" alt=""/></div>
+<map name="astruct_web_server_config_adbc40bf51f05cbc6d6fdee45e5c6fe0f_icgraph" id="astruct_web_server_config_adbc40bf51f05cbc6d6fdee45e5c6fe0f_icgraph">
+<area shape="rect" title="Validate configuration." alt="" coords="209,5,350,46"/>
+<area shape="rect" href="class_argument_parser.html#ac28da7e051e3c49f1894309810d6b856" title=" " alt="" coords="5,13,161,38"/>
+<area shape="poly" title=" " alt="" coords="193,28,161,28,161,23,193,23"/>
 </map>
 </div>
 
@@ -148,49 +201,91 @@ Here is the call graph for this function:</div>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool WebServerConfig::enable_cors</td>
+          <td class="memname">bool WebServerConfig::enable_cors = true</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a87fc2c351a54971b5b5100f4b8adc588" name="a87fc2c351a54971b5b5100f4b8adc588"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a87fc2c351a54971b5b5100f4b8adc588">&#9670;&#160;</a></span>port</h2>
+<a id="a7b9d0c170df9f832d2f09ef224f5363d" name="a7b9d0c170df9f832d2f09ef224f5363d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7b9d0c170df9f832d2f09ef224f5363d">&#9670;&#160;</a></span>enable_logging</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int WebServerConfig::port</td>
+          <td class="memname">bool WebServerConfig::enable_logging = true</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="afd2fb4f6ea540df6926e7676824f7bcf" name="afd2fb4f6ea540df6926e7676824f7bcf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afd2fb4f6ea540df6926e7676824f7bcf">&#9670;&#160;</a></span>verbose</h2>
+<a id="af9584111ca4079ac5e0980608174ed43" name="af9584111ca4079ac5e0980608174ed43"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af9584111ca4079ac5e0980608174ed43">&#9670;&#160;</a></span>max_connections</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool WebServerConfig::verbose</td>
+          <td class="memname">size_t WebServerConfig::max_connections = 100</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="aa44e972a07e46fa705e87b7c457d6648" name="aa44e972a07e46fa705e87b7c457d6648"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa44e972a07e46fa705e87b7c457d6648">&#9670;&#160;</a></span>web_root</h2>
+<a id="a453a8c5bc2f0e1e12636094368e57677" name="a453a8c5bc2f0e1e12636094368e57677"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a453a8c5bc2f0e1e12636094368e57677">&#9670;&#160;</a></span>port</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::string WebServerConfig::web_root</td>
+          <td class="memname">uint16_t WebServerConfig::port = 8080</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af94a12b6682c4f915c15de32abcb5149" name="af94a12b6682c4f915c15de32abcb5149"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af94a12b6682c4f915c15de32abcb5149">&#9670;&#160;</a></span>request_timeout</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::chrono::seconds WebServerConfig::request_timeout = 30s</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a514091ff11802afa672bc1615e92c728" name="a514091ff11802afa672bc1615e92c728"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a514091ff11802afa672bc1615e92c728">&#9670;&#160;</a></span>verbose_output</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool WebServerConfig::verbose_output = false</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aed495336a06cb4b45038c347642d3a5d" name="aed495336a06cb4b45038c347642d3a5d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aed495336a06cb4b45038c347642d3a5d">&#9670;&#160;</a></span>web_root</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::filesystem::path WebServerConfig::web_root = &quot;./web&quot;</td>
         </tr>
       </table>
 </div><div class="memdoc">

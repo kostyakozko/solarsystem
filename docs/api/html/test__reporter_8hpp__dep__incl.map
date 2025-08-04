@@ -1,0 +1,65 @@
+<map id="/Users/kostiantyn.kozko/tmp/solarsystem/lib/solar_test/include/solar_test/reporters/test_reporter.hpp" name="/Users/kostiantyn.kozko/tmp/solarsystem/lib/solar_test/include/solar_test/reporters/test_reporter.hpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="1767,5,1944,76"/>
+<area shape="rect" id="Node000002" href="$test__runner_8hpp.html" title=" " alt="" coords="817,124,996,195"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1752,57,997,150,996,144,1751,52"/>
+<area shape="rect" id="Node000008" href="$solar__test_8hpp.html" title="Main header for Solar System Testing Framework." alt="" coords="1521,243,1692,313"/>
+<area shape="poly" id="edge36_Node000001_Node000008" title=" " alt="" coords="1753,59,1720,69,1688,83,1659,102,1634,126,1618,153,1609,183,1605,214,1605,242,1600,242,1600,214,1604,182,1613,151,1630,122,1655,98,1686,79,1718,64,1751,54"/>
+<area shape="rect" id="Node000016" href="$console__reporter_8hpp.html" title=" " alt="" coords="1369,124,1569,195"/>
+<area shape="poly" id="edge15_Node000001_Node000016" title=" " alt="" coords="1753,76,1570,130,1569,125,1751,71"/>
+<area shape="rect" id="Node000018" href="$test__reporter_8cpp.html" title=" " alt="" coords="2119,243,2291,313"/>
+<area shape="poly" id="edge37_Node000001_Node000018" title=" " alt="" coords="1960,46,2104,57,2262,74,2395,96,2440,108,2465,122,2477,140,2481,159,2477,177,2466,196,2449,215,2431,226,2413,233,2394,235,2353,237,2304,245,2292,249,2290,244,2303,240,2352,231,2393,230,2412,227,2429,222,2445,211,2462,193,2472,175,2476,159,2473,142,2462,126,2438,113,2394,101,2261,79,2104,63,1960,51"/>
+<area shape="rect" id="Node000019" href="$coverage__reporter_8hpp.html" title=" " alt="" coords="1644,124,1852,195"/>
+<area shape="poly" id="edge20_Node000001_Node000019" title=" " alt="" coords="1816,89,1782,125,1778,122,1812,85"/>
+<area shape="rect" id="Node000021" href="$json__reporter_8hpp.html" title=" " alt="" coords="1875,124,2055,195"/>
+<area shape="poly" id="edge24_Node000001_Node000021" title=" " alt="" coords="1900,85,1935,122,1931,125,1896,89"/>
+<area shape="rect" id="Node000023" href="$tap__reporter_8hpp.html" title=" " alt="" coords="2278,124,2452,195"/>
+<area shape="poly" id="edge28_Node000001_Node000023" title=" " alt="" coords="1960,56,2106,84,2267,121,2279,125,2277,130,2266,127,2105,89,1959,61"/>
+<area shape="rect" id="Node000025" href="$xml__reporter_8hpp.html" title=" " alt="" coords="2078,124,2254,195"/>
+<area shape="poly" id="edge32_Node000001_Node000025" title=" " alt="" coords="1960,78,2079,122,2077,127,1958,83"/>
+<area shape="rect" id="Node000003" href="$comprehensive__demo_8cpp.html" title=" " alt="" coords="229,243,432,313"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="802,178,633,206,443,245,433,248,431,243,442,240,632,201,801,173"/>
+<area shape="rect" id="Node000004" href="$expected__failure__demo_8cpp.html" title=" " alt="" coords="455,243,664,313"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="803,198,664,245,662,240,801,193"/>
+<area shape="rect" id="Node000005" href="$parallel__execution__test_8cpp.html" title=" " alt="" coords="688,243,906,313"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="866,208,831,244,827,241,862,204"/>
+<area shape="rect" id="Node000006" href="$realistic__test__suite_8cpp.html" title=" " alt="" coords="930,243,1101,313"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="951,204,985,241,981,244,947,208"/>
+<area shape="rect" id="Node000007" href="$test__execution__engine__demo_8cpp.html" title=" " alt="" coords="5,243,205,313"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="801,170,535,195,376,217,218,245,205,248,204,243,216,240,375,212,534,190,801,165"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="1012,166,1242,191,1376,213,1510,240,1521,243,1519,248,1508,245,1375,218,1241,197,1011,171"/>
+<area shape="rect" id="Node000015" href="$test__runner_8cpp.html" title=" " alt="" coords="1126,243,1297,313"/>
+<area shape="poly" id="edge14_Node000002_Node000015" title=" " alt="" coords="1011,198,1126,241,1125,246,1009,203"/>
+<area shape="rect" id="Node000009" href="$benchmark__execution__demo_8cpp.html" title="Demonstration of the benchmark execution engine." alt="" coords="945,361,1124,432"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="1506,316,1402,334,1319,340,1238,346,1136,364,1125,367,1123,362,1135,359,1237,341,1319,335,1401,329,1505,311"/>
+<area shape="rect" id="Node000010" href="$console__reporter__demo_8cpp.html" title="Demonstration of the console reporter functionality." alt="" coords="1148,361,1358,432"/>
+<area shape="poly" id="edge9_Node000008_Node000010" title=" " alt="" coords="1507,317,1359,365,1358,360,1505,312"/>
+<area shape="rect" id="Node000011" href="$example__tests_8cpp.html" title=" " alt="" coords="1382,369,1606,424"/>
+<area shape="poly" id="edge10_Node000008_Node000011" title=" " alt="" coords="1565,326,1522,370,1518,367,1561,323"/>
+<area shape="rect" id="Node000012" href="$regression__detection__demo_8cpp.html" title="Demonstration of the performance regression detection system." alt="" coords="1631,361,1806,432"/>
+<area shape="poly" id="edge11_Node000008_Node000012" title=" " alt="" coords="1652,323,1687,359,1683,363,1648,326"/>
+<area shape="rect" id="Node000013" href="$structured__reporters__demo_8cpp.html" title="Demonstration of structured output reporters (XML, JSON, TAP, Coverage)" alt="" coords="1830,361,2002,432"/>
+<area shape="poly" id="edge12_Node000008_Node000013" title=" " alt="" coords="1708,314,1830,360,1828,365,1706,319"/>
+<area shape="rect" id="Node000014" href="$solar__test__main_8cpp.html" title=" " alt="" coords="2026,369,2219,424"/>
+<area shape="poly" id="edge13_Node000008_Node000014" title=" " alt="" coords="1708,311,1794,328,1862,336,1930,343,2015,359,2041,366,2040,371,2014,364,1929,348,1862,341,1793,333,1707,317"/>
+<area shape="poly" id="edge16_Node000016_Node000008" title=" " alt="" coords="1523,203,1567,240,1564,244,1520,207"/>
+<area shape="poly" id="edge17_Node000016_Node000015" title=" " alt="" coords="1379,204,1289,245,1287,240,1377,199"/>
+<area shape="rect" id="Node000017" href="$console__reporter_8cpp.html" title=" " alt="" coords="1321,243,1497,313"/>
+<area shape="poly" id="edge18_Node000016_Node000017" title=" " alt="" coords="1447,210,1429,244,1424,241,1442,207"/>
+<area shape="poly" id="edge19_Node000016_Node000018" title=" " alt="" coords="1585,184,1632,192,1765,207,1870,211,1975,218,2107,240,2119,243,2118,248,2106,245,1974,223,1870,216,1765,212,1631,197,1584,189"/>
+<area shape="poly" id="edge21_Node000019_Node000008" title=" " alt="" coords="1696,207,1650,244,1647,240,1692,203"/>
+<area shape="poly" id="edge23_Node000019_Node000018" title=" " alt="" coords="1867,193,1989,215,2042,225,2107,240,2120,244,2118,249,2106,245,2040,230,1988,221,1866,198"/>
+<area shape="rect" id="Node000020" href="$coverage__reporter_8cpp.html" title=" " alt="" coords="1716,243,1900,313"/>
+<area shape="poly" id="edge22_Node000019_Node000020" title=" " alt="" coords="1775,207,1792,241,1788,244,1770,210"/>
+<area shape="poly" id="edge25_Node000021_Node000008" title=" " alt="" coords="1862,198,1704,245,1693,249,1691,244,1703,240,1860,193"/>
+<area shape="poly" id="edge27_Node000021_Node000018" title=" " alt="" coords="2051,199,2135,240,2132,245,2049,204"/>
+<area shape="rect" id="Node000022" href="$json__reporter_8cpp.html" title=" " alt="" coords="1923,243,2095,313"/>
+<area shape="poly" id="edge26_Node000021_Node000022" title=" " alt="" coords="1986,208,1998,241,1993,243,1981,210"/>
+<area shape="poly" id="edge29_Node000023_Node000008" title=" " alt="" coords="2264,198,2179,212,2106,219,1982,221,1858,223,1787,231,1704,245,1693,248,1692,243,1703,240,1786,225,1858,218,1982,215,2106,213,2178,206,2263,192"/>
+<area shape="poly" id="edge31_Node000023_Node000018" title=" " alt="" coords="2307,206,2254,244,2251,240,2304,202"/>
+<area shape="rect" id="Node000024" href="$tap__reporter_8cpp.html" title=" " alt="" coords="2566,250,2790,306"/>
+<area shape="poly" id="edge30_Node000023_Node000024" title=" " alt="" coords="2467,196,2606,247,2604,252,2465,201"/>
+<area shape="poly" id="edge33_Node000025_Node000008" title=" " alt="" coords="2064,198,1962,215,1882,221,1803,227,1704,245,1693,248,1692,243,1703,240,1802,222,1882,216,1962,210,2063,193"/>
+<area shape="poly" id="edge34_Node000025_Node000018" title=" " alt="" coords="2185,208,2196,241,2191,243,2180,210"/>
+<area shape="rect" id="Node000026" href="$xml__reporter_8cpp.html" title=" " alt="" coords="2315,250,2543,306"/>
+<area shape="poly" id="edge35_Node000025_Node000026" title=" " alt="" coords="2259,199,2369,247,2367,252,2257,204"/>
+</map>

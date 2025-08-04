@@ -92,21 +92,38 @@ $(function(){initNavTree('struct_http_response.html','','struct_http_response-me
   <div class="headertitle"><div class="title">HttpResponse Struct Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>HTTP response structure.  
+ <a href="#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a874c1f8cd46efed44d146ee826c6b4a8" id="r_a874c1f8cd46efed44d146ee826c6b4a8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a874c1f8cd46efed44d146ee826c6b4a8">HttpResponse</a> (int code=200, const std::string &amp;text=&quot;OK&quot;)</td></tr>
+<tr class="memitem:aea837ca194606ed9197c2a4d11ca7296" id="r_aea837ca194606ed9197c2a4d11ca7296"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_http_response.html">HttpResponse</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aea837ca194606ed9197c2a4d11ca7296">json</a> ()</td></tr>
+<tr class="memdesc:aea837ca194606ed9197c2a4d11ca7296"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set JSON content type.  <br /></td></tr>
+<tr class="memitem:a5b3668e60c09bc43e283aa5700e97b6d" id="r_a5b3668e60c09bc43e283aa5700e97b6d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_http_response.html">HttpResponse</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5b3668e60c09bc43e283aa5700e97b6d">html</a> ()</td></tr>
+<tr class="memdesc:a5b3668e60c09bc43e283aa5700e97b6d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set HTML content type.  <br /></td></tr>
+<tr class="memitem:abf84f36263ac4c109a1aa64743fb54fc" id="r_abf84f36263ac4c109a1aa64743fb54fc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_http_response.html">HttpResponse</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abf84f36263ac4c109a1aa64743fb54fc">cors</a> ()</td></tr>
+<tr class="memdesc:abf84f36263ac4c109a1aa64743fb54fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set CORS headers.  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:afa97ee7bf317779f64d653bb46f54ed4" id="r_afa97ee7bf317779f64d653bb46f54ed4"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="struct_http_response.html">HttpResponse</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afa97ee7bf317779f64d653bb46f54ed4">error</a> (int code, const std::string &amp;message)</td></tr>
+<tr class="memdesc:afa97ee7bf317779f64d653bb46f54ed4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create error response.  <br /></td></tr>
+<tr class="memitem:aea0a4a9dee58b06be578490a8c3c357f" id="r_aea0a4a9dee58b06be578490a8c3c357f"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="struct_http_response.html">HttpResponse</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aea0a4a9dee58b06be578490a8c3c357f">json_response</a> (const std::string &amp;json_body)</td></tr>
+<tr class="memdesc:aea0a4a9dee58b06be578490a8c3c357f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create JSON response.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a08a2a1b268cf4a38b530d08117369b5e" id="r_a08a2a1b268cf4a38b530d08117369b5e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a08a2a1b268cf4a38b530d08117369b5e">status_code</a></td></tr>
-<tr class="memitem:aa414897bda5d37c79f2815d7a6b76957" id="r_aa414897bda5d37c79f2815d7a6b76957"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa414897bda5d37c79f2815d7a6b76957">status_text</a></td></tr>
+<tr class="memitem:a08a2a1b268cf4a38b530d08117369b5e" id="r_a08a2a1b268cf4a38b530d08117369b5e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a08a2a1b268cf4a38b530d08117369b5e">status_code</a> = 200</td></tr>
+<tr class="memitem:aa414897bda5d37c79f2815d7a6b76957" id="r_aa414897bda5d37c79f2815d7a6b76957"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa414897bda5d37c79f2815d7a6b76957">status_text</a> = &quot;OK&quot;</td></tr>
 <tr class="memitem:ad1375a15cb4041004c534596e57dd354" id="r_ad1375a15cb4041004c534596e57dd354"><td class="memItemLeft" align="right" valign="top">std::map&lt; std::string, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad1375a15cb4041004c534596e57dd354">headers</a></td></tr>
 <tr class="memitem:ab59b82bffe1ab9a8e2741d5f4f94d12a" id="r_ab59b82bffe1ab9a8e2741d5f4f94d12a"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab59b82bffe1ab9a8e2741d5f4f94d12a">body</a></td></tr>
 </table>
-<a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a874c1f8cd46efed44d146ee826c6b4a8" name="a874c1f8cd46efed44d146ee826c6b4a8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a874c1f8cd46efed44d146ee826c6b4a8">&#9670;&#160;</a></span>HttpResponse()</h2>
+<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>HTTP response structure. </p>
+</div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
+<a id="abf84f36263ac4c109a1aa64743fb54fc" name="abf84f36263ac4c109a1aa64743fb54fc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abf84f36263ac4c109a1aa64743fb54fc">&#9670;&#160;</a></span>cors()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -115,22 +132,220 @@ Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">HttpResponse::HttpResponse </td>
+          <td class="memname"><a class="el" href="struct_http_response.html">HttpResponse</a> &amp; HttpResponse::cors </td>
           <td>(</td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>code</em></span><span class="paramdefsep"> = </span><span class="paramdefval">200</span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>text</em></span><span class="paramdefsep"> = </span><span class="paramdefval">&quot;OK&quot;</span>&#160;)</td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel explicit">explicit</span></span>  </td>
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Set CORS headers. </p>
+
+</div>
+</div>
+<a id="afa97ee7bf317779f64d653bb46f54ed4" name="afa97ee7bf317779f64d653bb46f54ed4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afa97ee7bf317779f64d653bb46f54ed4">&#9670;&#160;</a></span>error()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="struct_http_response.html">HttpResponse</a> HttpResponse::error </td>
+          <td>(</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>code</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>message</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Create error response. </p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="struct_http_response_afa97ee7bf317779f64d653bb46f54ed4_cgraph.png" border="0" usemap="#astruct_http_response_afa97ee7bf317779f64d653bb46f54ed4_cgraph" loading="lazy" alt=""/></div>
+<map name="astruct_http_response_afa97ee7bf317779f64d653bb46f54ed4_cgraph" id="astruct_http_response_afa97ee7bf317779f64d653bb46f54ed4_cgraph">
+<area shape="rect" title="Create error response." alt="" coords="5,5,145,31"/>
+<area shape="rect" href="struct_http_response.html#aea837ca194606ed9197c2a4d11ca7296" title="Set JSON content type." alt="" coords="193,5,330,31"/>
+<area shape="poly" title=" " alt="" coords="145,16,177,16,177,21,145,21"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="struct_http_response_afa97ee7bf317779f64d653bb46f54ed4_icgraph.png" border="0" usemap="#astruct_http_response_afa97ee7bf317779f64d653bb46f54ed4_icgraph" loading="lazy" alt=""/></div>
+<map name="astruct_http_response_afa97ee7bf317779f64d653bb46f54ed4_icgraph" id="astruct_http_response_afa97ee7bf317779f64d653bb46f54ed4_icgraph">
+<area shape="rect" title="Create error response." alt="" coords="315,112,454,137"/>
+<area shape="rect" href="class_solar_system_a_p_i.html#ac14ea5554e9ee36c4cadd03b59997c22" title="Simple health check endpoint." alt="" coords="103,5,267,46"/>
+<area shape="poly" title=" " alt="" coords="347,106,266,61,239,49,241,44,268,57,350,101"/>
+<area shape="rect" href="class_solar_system_a_p_i.html#ae62b5c5789c5e2880871005a9d244471" title="Handle simulation request." alt="" coords="103,71,267,111"/>
+<area shape="poly" title=" " alt="" coords="299,113,267,107,268,102,300,108"/>
+<area shape="rect" href="class_solar_system_a_p_i.html#abe257a4d793daeece30ee45b2a4e5adb" title="Get solar system data." alt="" coords="103,136,267,177"/>
+<area shape="poly" title=" " alt="" coords="300,141,268,146,267,140,299,135"/>
+<area shape="rect" href="class_solar_system_a_p_i.html#a0f903ec3a89281e8e8bcb1b100774ca6" title="Get system status." alt="" coords="103,201,267,242"/>
+<area shape="poly" title=" " alt="" coords="349,148,268,191,240,203,238,198,266,186,347,143"/>
+<area shape="rect" href="web__server_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title="Modern main function with structured error handling." alt="" coords="5,144,55,169"/>
+<area shape="poly" title=" " alt="" coords="111,56,104,61,83,81,65,104,40,144,36,141,61,101,79,77,101,57,108,52"/>
+<area shape="poly" title=" " alt="" coords="87,159,55,159,55,154,87,154"/>
+<area shape="poly" title=" " alt="" coords="117,197,102,191,54,170,56,165,104,186,119,192"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a5b3668e60c09bc43e283aa5700e97b6d" name="a5b3668e60c09bc43e283aa5700e97b6d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5b3668e60c09bc43e283aa5700e97b6d">&#9670;&#160;</a></span>html()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="struct_http_response.html">HttpResponse</a> &amp; HttpResponse::html </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Set HTML content type. </p>
+
+</div>
+</div>
+<a id="aea837ca194606ed9197c2a4d11ca7296" name="aea837ca194606ed9197c2a4d11ca7296"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aea837ca194606ed9197c2a4d11ca7296">&#9670;&#160;</a></span>json()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="struct_http_response.html">HttpResponse</a> &amp; HttpResponse::json </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Set JSON content type. </p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="struct_http_response_aea837ca194606ed9197c2a4d11ca7296_icgraph.png" border="0" usemap="#astruct_http_response_aea837ca194606ed9197c2a4d11ca7296_icgraph" loading="lazy" alt=""/></div>
+<map name="astruct_http_response_aea837ca194606ed9197c2a4d11ca7296_icgraph" id="astruct_http_response_aea837ca194606ed9197c2a4d11ca7296_icgraph">
+<area shape="rect" title="Set JSON content type." alt="" coords="502,112,640,137"/>
+<area shape="rect" href="struct_http_response.html#afa97ee7bf317779f64d653bb46f54ed4" title="Create error response." alt="" coords="315,82,454,108"/>
+<area shape="poly" title=" " alt="" coords="486,114,454,109,455,103,487,108"/>
+<area shape="rect" href="struct_http_response.html#aea0a4a9dee58b06be578490a8c3c357f" title="Create JSON response." alt="" coords="316,132,453,173"/>
+<area shape="poly" title=" " alt="" coords="487,140,454,145,453,139,486,134"/>
+<area shape="rect" href="class_solar_system_a_p_i.html#ac14ea5554e9ee36c4cadd03b59997c22" title="Simple health check endpoint." alt="" coords="103,136,267,177"/>
+<area shape="poly" title=" " alt="" coords="327,115,254,138,253,133,325,110"/>
+<area shape="rect" href="class_solar_system_a_p_i.html#ae62b5c5789c5e2880871005a9d244471" title="Handle simulation request." alt="" coords="103,71,267,111"/>
+<area shape="poly" title=" " alt="" coords="299,96,268,95,268,90,299,91"/>
+<area shape="rect" href="class_solar_system_a_p_i.html#abe257a4d793daeece30ee45b2a4e5adb" title="Get solar system data." alt="" coords="103,201,267,242"/>
+<area shape="poly" title=" " alt="" coords="324,117,317,122,301,139,293,155,285,173,269,190,249,203,246,199,265,186,280,170,288,153,297,136,313,118,321,113"/>
+<area shape="rect" href="class_solar_system_a_p_i.html#a0f903ec3a89281e8e8bcb1b100774ca6" title="Get system status." alt="" coords="103,5,267,46"/>
+<area shape="poly" title=" " alt="" coords="330,79,245,49,247,44,332,74"/>
+<area shape="rect" href="web__server_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title="Modern main function with structured error handling." alt="" coords="5,144,55,169"/>
+<area shape="poly" title=" " alt="" coords="87,159,55,159,55,154,87,154"/>
+<area shape="poly" title=" " alt="" coords="117,197,102,191,54,170,56,165,104,186,119,192"/>
+<area shape="poly" title=" " alt="" coords="111,56,104,61,83,81,65,104,40,144,36,141,61,101,79,77,101,57,108,52"/>
+<area shape="poly" title=" " alt="" coords="300,157,267,157,267,152,300,151"/>
+<area shape="poly" title=" " alt="" coords="301,129,253,114,254,109,302,124"/>
+<area shape="poly" title=" " alt="" coords="310,181,247,203,245,198,309,176"/>
+<area shape="poly" title=" " alt="" coords="317,125,313,122,298,106,289,91,280,76,265,61,245,49,248,44,269,57,284,73,293,88,302,103,317,118,321,121"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="aea0a4a9dee58b06be578490a8c3c357f" name="aea0a4a9dee58b06be578490a8c3c357f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aea0a4a9dee58b06be578490a8c3c357f">&#9670;&#160;</a></span>json_response()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="struct_http_response.html">HttpResponse</a> HttpResponse::json_response </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>json_body</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Create JSON response. </p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="struct_http_response_aea0a4a9dee58b06be578490a8c3c357f_cgraph.png" border="0" usemap="#astruct_http_response_aea0a4a9dee58b06be578490a8c3c357f_cgraph" loading="lazy" alt=""/></div>
+<map name="astruct_http_response_aea0a4a9dee58b06be578490a8c3c357f_cgraph" id="astruct_http_response_aea0a4a9dee58b06be578490a8c3c357f_cgraph">
+<area shape="rect" title="Create JSON response." alt="" coords="5,5,143,46"/>
+<area shape="rect" href="struct_http_response.html#aea837ca194606ed9197c2a4d11ca7296" title="Set JSON content type." alt="" coords="191,13,328,38"/>
+<area shape="poly" title=" " alt="" coords="143,23,175,23,175,28,143,28"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="struct_http_response_aea0a4a9dee58b06be578490a8c3c357f_icgraph.png" border="0" usemap="#astruct_http_response_aea0a4a9dee58b06be578490a8c3c357f_icgraph" loading="lazy" alt=""/></div>
+<map name="astruct_http_response_aea0a4a9dee58b06be578490a8c3c357f_icgraph" id="astruct_http_response_aea0a4a9dee58b06be578490a8c3c357f_icgraph">
+<area shape="rect" title="Create JSON response." alt="" coords="315,104,452,145"/>
+<area shape="rect" href="class_solar_system_a_p_i.html#ac14ea5554e9ee36c4cadd03b59997c22" title="Simple health check endpoint." alt="" coords="103,5,267,46"/>
+<area shape="poly" title=" " alt="" coords="334,98,266,61,239,49,241,44,268,57,336,94"/>
+<area shape="rect" href="class_solar_system_a_p_i.html#ae62b5c5789c5e2880871005a9d244471" title="Handle simulation request." alt="" coords="103,71,267,111"/>
+<area shape="poly" title=" " alt="" coords="299,113,267,107,268,102,300,108"/>
+<area shape="rect" href="class_solar_system_a_p_i.html#abe257a4d793daeece30ee45b2a4e5adb" title="Get solar system data." alt="" coords="103,136,267,177"/>
+<area shape="poly" title=" " alt="" coords="300,140,268,146,267,140,299,135"/>
+<area shape="rect" href="class_solar_system_a_p_i.html#a0f903ec3a89281e8e8bcb1b100774ca6" title="Get system status." alt="" coords="103,201,267,242"/>
+<area shape="poly" title=" " alt="" coords="335,155,268,191,240,203,238,198,266,186,333,150"/>
+<area shape="rect" href="web__server_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title="Modern main function with structured error handling." alt="" coords="5,144,55,169"/>
+<area shape="poly" title=" " alt="" coords="111,56,104,61,83,81,65,104,40,144,36,141,61,101,79,77,101,57,108,52"/>
+<area shape="poly" title=" " alt="" coords="87,159,55,159,55,154,87,154"/>
+<area shape="poly" title=" " alt="" coords="117,197,102,191,54,170,56,165,104,186,119,192"/>
+</map>
+</div>
 
 </div>
 </div>
@@ -170,7 +385,7 @@ Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int HttpResponse::status_code</td>
+          <td class="memname">int HttpResponse::status_code = 200</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -184,7 +399,7 @@ Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::string HttpResponse::status_text</td>
+          <td class="memname">std::string HttpResponse::status_text = &quot;OK&quot;</td>
         </tr>
       </table>
 </div><div class="memdoc">

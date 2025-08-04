@@ -1,0 +1,245 @@
+\doxysection{Solar\+System\+::Testing\+::Benchmark Class Reference}
+\hypertarget{class_solar_system_1_1_testing_1_1_benchmark}{}\label{class_solar_system_1_1_testing_1_1_benchmark}\index{SolarSystem::Testing::Benchmark@{SolarSystem::Testing::Benchmark}}
+
+
+High-\/precision benchmark execution engine.  
+
+
+
+
+{\ttfamily \#include $<$benchmark.\+hpp$>$}
+
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_benchmark_1_1_configuration}{Configuration}}
+\begin{DoxyCompactList}\small\item\em \doxylink{class_solar_system_1_1_testing_1_1_benchmark}{Benchmark} configuration. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_benchmark_abcf7e61fcc714fa207892533476c5b0b}{Benchmark}} (const std\+::string \&\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_benchmark_ae6097d9df3201c7acb5f5b6f8c201b5f}{name}})
+\begin{DoxyCompactList}\small\item\em Create benchmark with name and default configuration. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_benchmark_adab4fddd4a67f9a42d09e23916449b7f}{Benchmark}} (const std\+::string \&\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_benchmark_ae6097d9df3201c7acb5f5b6f8c201b5f}{name}}, \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_benchmark_1_1_configuration}{Configuration}} \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_benchmark_acacf6168af6a8609682bd74ea6d5cc71}{config}})
+\begin{DoxyCompactList}\small\item\em Create benchmark with name and custom configuration. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_benchmark_a9a0fca86748d9e311a948c2bbe927b2d}{set\+\_\+thresholds}} (const \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_performance_thresholds}{Performance\+Thresholds}} \&thresholds)
+\begin{DoxyCompactList}\small\item\em Set performance thresholds for validation. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename Func$>$ }\\\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_benchmark_result}{Benchmark\+Result}} \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_benchmark_abaf4832f07880851220e70685f31ae51}{measure}} (Func \&\&func, size\+\_\+t iterations=0)
+\begin{DoxyCompactList}\small\item\em Measure execution time of a function. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename Setup\+Func, typename Func, typename Teardown\+Func$>$ }\\\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_benchmark_result}{Benchmark\+Result}} \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_benchmark_ad61214c38f9e02561aa64fd30e0ffccc}{measure\+\_\+with\+\_\+lifecycle}} (Setup\+Func \&\&setup, Func \&\&func, Teardown\+Func \&\&teardown, size\+\_\+t iterations=0)
+\begin{DoxyCompactList}\small\item\em Measure with setup and teardown functions. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename Func$>$ }\\size\+\_\+t \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_benchmark_a4521ec577e0c1eae18cf667d6245c0d6}{measure\+\_\+memory\+\_\+usage}} (Func \&\&func)
+\begin{DoxyCompactList}\small\item\em Measure memory usage during function execution. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_benchmark_ae57486b0511b04d2c38b5af0f67e1a47}{add\+\_\+metadata}} (const std\+::string \&key, const std\+::string \&value)
+\begin{DoxyCompactList}\small\item\em Add metadata to benchmark results. \end{DoxyCompactList}\item 
+const std\+::string \& \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_benchmark_ae6097d9df3201c7acb5f5b6f8c201b5f}{name}} () const
+\begin{DoxyCompactList}\small\item\em Get benchmark name. \end{DoxyCompactList}\item 
+const \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_benchmark_1_1_configuration}{Configuration}} \& \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_benchmark_acacf6168af6a8609682bd74ea6d5cc71}{config}} () const
+\begin{DoxyCompactList}\small\item\em Get benchmark configuration. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+High-\/precision benchmark execution engine. 
+
+\label{doc-constructors}
+\Hypertarget{class_solar_system_1_1_testing_1_1_benchmark_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_solar_system_1_1_testing_1_1_benchmark_abcf7e61fcc714fa207892533476c5b0b}\index{SolarSystem::Testing::Benchmark@{SolarSystem::Testing::Benchmark}!Benchmark@{Benchmark}}
+\index{Benchmark@{Benchmark}!SolarSystem::Testing::Benchmark@{SolarSystem::Testing::Benchmark}}
+\doxysubsubsection{\texorpdfstring{Benchmark()}{Benchmark()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_benchmark_abcf7e61fcc714fa207892533476c5b0b} 
+Solar\+System\+::\+Testing\+::\+Benchmark\+::\+Benchmark (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+
+
+Create benchmark with name and default configuration. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_benchmark_abcf7e61fcc714fa207892533476c5b0b_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_benchmark_adab4fddd4a67f9a42d09e23916449b7f}\index{SolarSystem::Testing::Benchmark@{SolarSystem::Testing::Benchmark}!Benchmark@{Benchmark}}
+\index{Benchmark@{Benchmark}!SolarSystem::Testing::Benchmark@{SolarSystem::Testing::Benchmark}}
+\doxysubsubsection{\texorpdfstring{Benchmark()}{Benchmark()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_benchmark_adab4fddd4a67f9a42d09e23916449b7f} 
+Solar\+System\+::\+Testing\+::\+Benchmark\+::\+Benchmark (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name}{, }\item[{\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_benchmark_1_1_configuration}{Configuration}}}]{config}{}\end{DoxyParamCaption})}
+
+
+
+Create benchmark with name and custom configuration. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_benchmark_adab4fddd4a67f9a42d09e23916449b7f_cgraph}
+\end{center}
+\end{figure}
+
+
+\label{doc-func-members}
+\Hypertarget{class_solar_system_1_1_testing_1_1_benchmark_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_solar_system_1_1_testing_1_1_benchmark_ae57486b0511b04d2c38b5af0f67e1a47}\index{SolarSystem::Testing::Benchmark@{SolarSystem::Testing::Benchmark}!add\_metadata@{add\_metadata}}
+\index{add\_metadata@{add\_metadata}!SolarSystem::Testing::Benchmark@{SolarSystem::Testing::Benchmark}}
+\doxysubsubsection{\texorpdfstring{add\_metadata()}{add\_metadata()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_benchmark_ae57486b0511b04d2c38b5af0f67e1a47} 
+void Solar\+System\+::\+Testing\+::\+Benchmark\+::add\+\_\+metadata (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{key}{, }\item[{const std\+::string \&}]{value}{}\end{DoxyParamCaption})}
+
+
+
+Add metadata to benchmark results. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_benchmark_ae57486b0511b04d2c38b5af0f67e1a47_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_benchmark_acacf6168af6a8609682bd74ea6d5cc71}\index{SolarSystem::Testing::Benchmark@{SolarSystem::Testing::Benchmark}!config@{config}}
+\index{config@{config}!SolarSystem::Testing::Benchmark@{SolarSystem::Testing::Benchmark}}
+\doxysubsubsection{\texorpdfstring{config()}{config()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_benchmark_acacf6168af6a8609682bd74ea6d5cc71} 
+const \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_benchmark_1_1_configuration}{Configuration}} \& Solar\+System\+::\+Testing\+::\+Benchmark\+::config (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}}
+
+
+
+Get benchmark configuration. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_benchmark_acacf6168af6a8609682bd74ea6d5cc71_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_benchmark_abaf4832f07880851220e70685f31ae51}\index{SolarSystem::Testing::Benchmark@{SolarSystem::Testing::Benchmark}!measure@{measure}}
+\index{measure@{measure}!SolarSystem::Testing::Benchmark@{SolarSystem::Testing::Benchmark}}
+\doxysubsubsection{\texorpdfstring{measure()}{measure()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_benchmark_abaf4832f07880851220e70685f31ae51} 
+template$<$typename Func$>$ \\
+\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_benchmark_result}{Benchmark\+Result}} Solar\+System\+::\+Testing\+::\+Benchmark\+::measure (\begin{DoxyParamCaption}\item[{Func \&\&}]{func}{, }\item[{size\+\_\+t}]{iterations}{ = {\ttfamily 0}}\end{DoxyParamCaption})}
+
+
+
+Measure execution time of a function. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em func} & Function to benchmark \\
+\hline
+{\em iterations} & Number of iterations (0 = use default) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\doxylink{class_solar_system_1_1_testing_1_1_benchmark}{Benchmark} result with timing statistics 
+\end{DoxyReturn}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_benchmark_abaf4832f07880851220e70685f31ae51_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_benchmark_a4521ec577e0c1eae18cf667d6245c0d6}\index{SolarSystem::Testing::Benchmark@{SolarSystem::Testing::Benchmark}!measure\_memory\_usage@{measure\_memory\_usage}}
+\index{measure\_memory\_usage@{measure\_memory\_usage}!SolarSystem::Testing::Benchmark@{SolarSystem::Testing::Benchmark}}
+\doxysubsubsection{\texorpdfstring{measure\_memory\_usage()}{measure\_memory\_usage()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_benchmark_a4521ec577e0c1eae18cf667d6245c0d6} 
+template$<$typename Func$>$ \\
+size\+\_\+t Solar\+System\+::\+Testing\+::\+Benchmark\+::measure\+\_\+memory\+\_\+usage (\begin{DoxyParamCaption}\item[{Func \&\&}]{func}{}\end{DoxyParamCaption})}
+
+
+
+Measure memory usage during function execution. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em func} & Function to measure \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Peak memory usage in bytes 
+\end{DoxyReturn}
+\Hypertarget{class_solar_system_1_1_testing_1_1_benchmark_ad61214c38f9e02561aa64fd30e0ffccc}\index{SolarSystem::Testing::Benchmark@{SolarSystem::Testing::Benchmark}!measure\_with\_lifecycle@{measure\_with\_lifecycle}}
+\index{measure\_with\_lifecycle@{measure\_with\_lifecycle}!SolarSystem::Testing::Benchmark@{SolarSystem::Testing::Benchmark}}
+\doxysubsubsection{\texorpdfstring{measure\_with\_lifecycle()}{measure\_with\_lifecycle()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_benchmark_ad61214c38f9e02561aa64fd30e0ffccc} 
+template$<$typename Setup\+Func, typename Func, typename Teardown\+Func$>$ \\
+\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_benchmark_result}{Benchmark\+Result}} Solar\+System\+::\+Testing\+::\+Benchmark\+::measure\+\_\+with\+\_\+lifecycle (\begin{DoxyParamCaption}\item[{Setup\+Func \&\&}]{setup}{, }\item[{Func \&\&}]{func}{, }\item[{Teardown\+Func \&\&}]{teardown}{, }\item[{size\+\_\+t}]{iterations}{ = {\ttfamily 0}}\end{DoxyParamCaption})}
+
+
+
+Measure with setup and teardown functions. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em setup} & Setup function called before each iteration \\
+\hline
+{\em func} & Function to benchmark \\
+\hline
+{\em teardown} & Teardown function called after each iteration \\
+\hline
+{\em iterations} & Number of iterations (0 = use default) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\doxylink{class_solar_system_1_1_testing_1_1_benchmark}{Benchmark} result 
+\end{DoxyReturn}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_benchmark_ad61214c38f9e02561aa64fd30e0ffccc_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_benchmark_ae6097d9df3201c7acb5f5b6f8c201b5f}\index{SolarSystem::Testing::Benchmark@{SolarSystem::Testing::Benchmark}!name@{name}}
+\index{name@{name}!SolarSystem::Testing::Benchmark@{SolarSystem::Testing::Benchmark}}
+\doxysubsubsection{\texorpdfstring{name()}{name()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_benchmark_ae6097d9df3201c7acb5f5b6f8c201b5f} 
+const std\+::string \& Solar\+System\+::\+Testing\+::\+Benchmark\+::name (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}}
+
+
+
+Get benchmark name. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_benchmark_ae6097d9df3201c7acb5f5b6f8c201b5f_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_benchmark_a9a0fca86748d9e311a948c2bbe927b2d}\index{SolarSystem::Testing::Benchmark@{SolarSystem::Testing::Benchmark}!set\_thresholds@{set\_thresholds}}
+\index{set\_thresholds@{set\_thresholds}!SolarSystem::Testing::Benchmark@{SolarSystem::Testing::Benchmark}}
+\doxysubsubsection{\texorpdfstring{set\_thresholds()}{set\_thresholds()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_benchmark_a9a0fca86748d9e311a948c2bbe927b2d} 
+void Solar\+System\+::\+Testing\+::\+Benchmark\+::set\+\_\+thresholds (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_performance_thresholds}{Performance\+Thresholds}} \&}]{thresholds}{}\end{DoxyParamCaption})}
+
+
+
+Set performance thresholds for validation. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_benchmark_a9a0fca86748d9e311a948c2bbe927b2d_icgraph}
+\end{center}
+\end{figure}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+test/include/solar\+\_\+test/benchmarks/\mbox{\hyperlink{benchmark_8hpp}{benchmark.\+hpp}}\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+test/src/benchmarks/\mbox{\hyperlink{benchmark_8cpp}{benchmark.\+cpp}}\end{DoxyCompactItemize}

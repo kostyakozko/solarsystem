@@ -1,0 +1,7 @@
+<map id="solar_test::TestFixture" name="solar_test::TestFixture">
+<area shape="rect" id="Node000001" title="Base class for test fixtures with setup/teardown lifecycle." alt="" coords="5,5,157,31"/>
+<area shape="rect" id="Node000002" href="$class_example_test_fixture.html" title="Example test fixture demonstrating test environment management." alt="" coords="12,79,150,105"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="84,46,84,79,78,79,78,46"/>
+<area shape="rect" id="Node000003" href="$class_cache_integrity_test.html" title="Example test case using the test fixture." alt="" coords="15,153,147,178"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="84,120,84,152,78,152,78,120"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="SolarSystem::Data::get_essential_bodies" name="SolarSystem::Data::get_essential_bodies">
+<area shape="rect" id="Node000001" title="Get all essential bodies from fallback data." alt="" coords="5,5,149,46"/>
+<area shape="rect" id="Node000002" href="$namespace_solar_system_1_1_data.html#a3eb7af1e0db9b1c203fd855344511bd6" title="Get all bodies of a specific priority from fallback data." alt="" coords="197,5,348,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="149,23,181,23,181,28,149,28"/>
+</map>

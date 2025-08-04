@@ -1,0 +1,19 @@
+<map id="SolarSystem::Simulation::SimulationEngine::initialize" name="SolarSystem::Simulation::SimulationEngine::initialize">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,108,191,148"/>
+<area shape="rect" id="Node000002" href="$class_solar_system_1_1_bodies_1_1_body_collection.html#a973a85e240c688f175d4ad4a6e232313" title=" " alt="" coords="247,72,408,112"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="190,111,231,104,232,110,191,116"/>
+<area shape="rect" id="Node000003" href="$class_solar_system_1_1_simulation_1_1_simulation_engine.html#ac25b4112f010765adc94d57866c3fbf5" title=" " alt="" coords="239,136,416,192"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="191,140,224,145,223,150,190,145"/>
+<area shape="rect" id="Node000004" href="$class_solar_system_1_1_simulation_1_1_simulation_engine.html#a616c03d093e6ba07dbe1f852dde4afbb" title=" " alt="" coords="464,5,654,61"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="395,133,414,122,438,100,462,78,480,67,483,71,466,82,442,104,418,126,397,138"/>
+<area shape="rect" id="Node000005" href="$class_solar_system_1_1_simulation_1_1_simulation_engine.html#aaa06b113cbc35a3094cf7378a43891b0" title=" " alt="" coords="702,84,893,140"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="413,133,464,121,578,109,686,106,687,112,579,115,464,126,414,138"/>
+<area shape="rect" id="Node000006" href="$class_solar_system_1_1_simulation_1_1_simulation_engine.html#abd465c827625b139e3d31d2a47a2b03d" title=" " alt="" coords="702,176,893,232"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="412,190,464,201,579,210,687,209,687,214,578,215,464,206,411,195"/>
+<area shape="rect" id="Node000007" href="$class_solar_system_1_1_simulation_1_1_simulation_engine.html#abcc82495f399adc73b94abe6d56243cf" title=" " alt="" coords="464,136,654,192"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="417,161,449,161,449,166,417,166"/>
+<area shape="rect" id="Node000008" href="$class_solar_system_1_1_simulation_1_1_simulation_engine.html#a6fb8e8467a47798ccf4440045f239e2d" title=" " alt="" coords="464,267,654,322"/>
+<area shape="poly" id="edge9_Node000003_Node000008" title=" " alt="" coords="373,190,465,246,487,257,484,262,463,250,371,194"/>
+<area shape="poly" id="edge7_Node000007_Node000005" title=" " alt="" coords="654,140,687,133,688,138,656,146"/>
+<area shape="poly" id="edge8_Node000007_Node000006" title=" " alt="" coords="655,177,687,183,687,188,655,183"/>
+</map>

@@ -1,4 +1,11 @@
 <map id="/Users/kostiantyn.kozko/tmp/solarsystem/lib/solar_utils" name="/Users/kostiantyn.kozko/tmp/solarsystem/lib/solar_utils">
-<area shape="rect" id="node1" href="dir_f8c563827ff62cf040943e0d14fbb8b2.html" title="solar_utils" alt="" coords="26,52,107,78"/>
-<area shape="rect" id="clust1" href="dir_97aefd0d527b934f1d99a682da8fe6a9.html" title="lib" alt="" coords="16,16,117,89"/>
+<area shape="rect" id="node1" href="dir_b8b8d470377f782e6e5c9dbcaf27edd8.html" title="solar_core" alt="" coords="110,210,191,236"/>
+<area shape="rect" id="node3" href="dir_cbe62a0b5e1d876914ff11a9bfff4c0f.html" title="include" alt="" coords="120,137,182,162"/>
+<area shape="poly" id="edge1" href="dir_000015_000025.html" alt="" coords="153,163,153,195,148,195,148,163"/>
+<area shape="rect" id="edge1-headlabel" href="dir_000015_000025.html" title="2" alt="" coords="156,184,163,199"/>
+<area shape="rect" id="node4" href="dir_3c8a346a34936bc2b89c84ca372334a0.html" title="src" alt="" coords="142,63,181,89"/>
+<area shape="poly" id="edge2" href="dir_000042_000015.html" alt="" coords="162,89,157,122,152,121,157,88"/>
+<area shape="rect" id="edge2-headlabel" href="dir_000042_000015.html" title="3" alt="" coords="160,112,167,127"/>
+<area shape="rect" id="clust2" href="dir_f8c563827ff62cf040943e0d14fbb8b2.html" alt="" coords="27,52,192,173"/>
+<area shape="rect" id="clust1" href="dir_97aefd0d527b934f1d99a682da8fe6a9.html" title="lib" alt="" coords="16,16,203,247"/>
 </map>

@@ -1,0 +1,5 @@
+<map id="SolarSystem::Testing::Mocks::TimeMock::set_time" name="SolarSystem::Testing::Mocks::TimeMock::set_time">
+<area shape="rect" id="Node000001" title="Set the current mock time." alt="" coords="235,13,430,54"/>
+<area shape="rect" id="Node000002" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock.html#a6fb6ccc00dbde9704c2df830610e4dc9" title="Create time&#45;dependent test scenario." alt="" coords="5,5,187,61"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="219,36,187,36,187,30,219,30"/>
+</map>

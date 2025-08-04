@@ -1,0 +1,7 @@
+<map id="SolarSystem::Utils::Date::now" name="SolarSystem::Utils::Date::now">
+<area shape="rect" id="Node000001" title="Get current date." alt="" coords="202,53,333,94"/>
+<area shape="rect" id="Node000002" href="$struct_solar_system_1_1_utils_1_1_extended_config.html#a75d3d2860bb21e1897bb1788c8558856" title="Get effective target date (current if not specified)" alt="" coords="5,5,154,61"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="186,59,154,52,155,46,187,53"/>
+<area shape="rect" id="Node000003" href="$struct_solar_system_1_1_utils_1_1_simulation_config.html#a1bfec2d62d9e0c50ecdad269a8dd92dc" title="Get effective target date (current if not specified)" alt="" coords="11,85,148,141"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="187,93,148,101,147,96,186,88"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="SolarSystem::Testing::Mocks::NetworkMock::reset_to_normal_conditions" name="SolarSystem::Testing::Mocks::NetworkMock::reset_to_normal_conditions">
+<area shape="rect" id="Node000001" title="Reset to normal network conditions." alt="" coords="5,5,194,61"/>
+<area shape="rect" id="Node000002" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock.html#a380f6663a15b1c8d9d48610697432139" title="Set network condition for all requests." alt="" coords="242,5,401,61"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="194,30,226,30,226,36,194,36"/>
+</map>

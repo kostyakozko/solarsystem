@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['📋_20table_20of_20contents_0',['📋 Table of Contents',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md1',1,'']]]
+  ['📈_20roadmap_0',['📈 Roadmap',['..//Users/kostiantyn.kozko/tmp/solarsystem/README.md#autotoc_md74',1,'']]]
 ];

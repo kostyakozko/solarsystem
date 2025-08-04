@@ -1,0 +1,7 @@
+<map id="demonstrate_ci_integration" name="demonstrate_ci_integration">
+<area shape="rect" id="Node000001" title="Demonstrate CI integration features." alt="" coords="5,60,183,86"/>
+<area shape="rect" id="Node000002" href="$class_solar_system_1_1_testing_1_1_c_i_integration.html#abace4015f8c6a0b17c5afed8e59d49c7" title="Generate GitHub Actions output." alt="" coords="231,5,393,61"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="167,57,215,48,216,53,168,62"/>
+<area shape="rect" id="Node000003" href="$class_solar_system_1_1_testing_1_1_c_i_integration.html#a959ac935741479115caff5ded6e7e65e" title="Generate performance badge data." alt="" coords="231,85,393,141"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="168,84,216,93,215,98,167,89"/>
+</map>

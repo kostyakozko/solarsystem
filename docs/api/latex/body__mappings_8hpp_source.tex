@@ -1,0 +1,124 @@
+\doxysection{body\+\_\+mappings.\+hpp}
+\hypertarget{body__mappings_8hpp_source}{}\label{body__mappings_8hpp_source}\index{/Users/kostiantyn.kozko/tmp/solarsystem/lib/solar\_core/include/solar\_core/bodies/body\_mappings.hpp@{/Users/kostiantyn.kozko/tmp/solarsystem/lib/solar\_core/include/solar\_core/bodies/body\_mappings.hpp}}
+\mbox{\hyperlink{body__mappings_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <unordered\_map>}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{celestial__body_8hpp}{solar\_core/bodies/celestial\_body.hpp}}"{}}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespace_solar_system_1_1_bodies}{SolarSystem::Bodies}}\ \{}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00013\ \textcolor{keyword}{inline}\ \textcolor{keyword}{const}\ std::unordered\_map<int,\ BodyType>\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_ab82c422d14abb4a3454760512b2d8337}{JPL\_ID\_TO\_TYPE}}\ =\ \{}
+\DoxyCodeLine{00014\ \ \ \ \ \textcolor{comment}{//\ Stars}}
+\DoxyCodeLine{00015\ \ \ \ \ \{10,\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca26f93e6e68e28a698377e941cb59f29a}{BodyType::Star}}\},\ \ \textcolor{comment}{//\ Sun}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{comment}{//\ Planets}}
+\DoxyCodeLine{00018\ \ \ \ \ \{199,\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca9ffc5da794071c4508a5bc2fe0422e46}{BodyType::Planet}}\},\ \ \textcolor{comment}{//\ Mercury}}
+\DoxyCodeLine{00019\ \ \ \ \ \{299,\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca9ffc5da794071c4508a5bc2fe0422e46}{BodyType::Planet}}\},\ \ \textcolor{comment}{//\ Venus}}
+\DoxyCodeLine{00020\ \ \ \ \ \{399,\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca9ffc5da794071c4508a5bc2fe0422e46}{BodyType::Planet}}\},\ \ \textcolor{comment}{//\ Earth}}
+\DoxyCodeLine{00021\ \ \ \ \ \{499,\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca9ffc5da794071c4508a5bc2fe0422e46}{BodyType::Planet}}\},\ \ \textcolor{comment}{//\ Mars}}
+\DoxyCodeLine{00022\ \ \ \ \ \{599,\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca9ffc5da794071c4508a5bc2fe0422e46}{BodyType::Planet}}\},\ \ \textcolor{comment}{//\ Jupiter}}
+\DoxyCodeLine{00023\ \ \ \ \ \{699,\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca9ffc5da794071c4508a5bc2fe0422e46}{BodyType::Planet}}\},\ \ \textcolor{comment}{//\ Saturn}}
+\DoxyCodeLine{00024\ \ \ \ \ \{799,\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca9ffc5da794071c4508a5bc2fe0422e46}{BodyType::Planet}}\},\ \ \textcolor{comment}{//\ Uranus}}
+\DoxyCodeLine{00025\ \ \ \ \ \{899,\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca9ffc5da794071c4508a5bc2fe0422e46}{BodyType::Planet}}\},\ \ \textcolor{comment}{//\ Neptune}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{comment}{//\ Moons}}
+\DoxyCodeLine{00028\ \ \ \ \ \{301,\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdcad502a50ed945d5fca74e0105575b5b34}{BodyType::Moon}}\},\ \ \textcolor{comment}{//\ Moon}}
+\DoxyCodeLine{00029\ \ \ \ \ \{501,\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdcad502a50ed945d5fca74e0105575b5b34}{BodyType::Moon}}\},\ \ \textcolor{comment}{//\ Io}}
+\DoxyCodeLine{00030\ \ \ \ \ \{502,\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdcad502a50ed945d5fca74e0105575b5b34}{BodyType::Moon}}\},\ \ \textcolor{comment}{//\ Europa}}
+\DoxyCodeLine{00031\ \ \ \ \ \{503,\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdcad502a50ed945d5fca74e0105575b5b34}{BodyType::Moon}}\},\ \ \textcolor{comment}{//\ Ganymede}}
+\DoxyCodeLine{00032\ \ \ \ \ \{504,\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdcad502a50ed945d5fca74e0105575b5b34}{BodyType::Moon}}\},\ \ \textcolor{comment}{//\ Callisto}}
+\DoxyCodeLine{00033\ \ \ \ \ \{606,\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdcad502a50ed945d5fca74e0105575b5b34}{BodyType::Moon}}\},\ \ \textcolor{comment}{//\ Titan}}
+\DoxyCodeLine{00034\ \ \ \ \ \{605,\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdcad502a50ed945d5fca74e0105575b5b34}{BodyType::Moon}}\},\ \ \textcolor{comment}{//\ Rhea}}
+\DoxyCodeLine{00035\ \ \ \ \ \{608,\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdcad502a50ed945d5fca74e0105575b5b34}{BodyType::Moon}}\},\ \ \textcolor{comment}{//\ Iapetus}}
+\DoxyCodeLine{00036\ \ \ \ \ \{703,\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdcad502a50ed945d5fca74e0105575b5b34}{BodyType::Moon}}\},\ \ \textcolor{comment}{//\ Titania}}
+\DoxyCodeLine{00037\ \ \ \ \ \{704,\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdcad502a50ed945d5fca74e0105575b5b34}{BodyType::Moon}}\},\ \ \textcolor{comment}{//\ Oberon}}
+\DoxyCodeLine{00038\ \ \ \ \ \{801,\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdcad502a50ed945d5fca74e0105575b5b34}{BodyType::Moon}}\},\ \ \textcolor{comment}{//\ Triton}}
+\DoxyCodeLine{00039\ \ \ \ \ \{901,\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdcad502a50ed945d5fca74e0105575b5b34}{BodyType::Moon}}\},\ \ \textcolor{comment}{//\ Charon}}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{comment}{//\ Dwarf\ Planets}}
+\DoxyCodeLine{00042\ \ \ \ \ \{999,\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca678839b1336623a3763d5e3d2697dfc7}{BodyType::DwarfPlanet}}\},\ \ \ \ \ \textcolor{comment}{//\ Pluto}}
+\DoxyCodeLine{00043\ \ \ \ \ \{50000,\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca678839b1336623a3763d5e3d2697dfc7}{BodyType::DwarfPlanet}}\},\ \ \ \textcolor{comment}{//\ Quaoar}}
+\DoxyCodeLine{00044\ \ \ \ \ \{136108,\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca678839b1336623a3763d5e3d2697dfc7}{BodyType::DwarfPlanet}}\},\ \ \textcolor{comment}{//\ Haumea}}
+\DoxyCodeLine{00045\ \ \ \ \ \{136199,\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca678839b1336623a3763d5e3d2697dfc7}{BodyType::DwarfPlanet}}\},\ \ \textcolor{comment}{//\ Eris}}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{comment}{//\ Spacecraft}}
+\DoxyCodeLine{00048\ \ \ \ \ \{-\/98,\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca0978cd0d2a59acbc551a384e4f639985}{BodyType::Spacecraft}}\},\ \ \ \ \ \ \textcolor{comment}{//\ New\ Horizons}}
+\DoxyCodeLine{00049\ \ \ \ \ \{-\/143205,\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca0978cd0d2a59acbc551a384e4f639985}{BodyType::Spacecraft}}\},\ \ \textcolor{comment}{//\ SpaceX\ Roadster}}
+\DoxyCodeLine{00050\ \};}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00056\ \textcolor{keyword}{inline}\ \textcolor{keyword}{const}\ std::unordered\_map<std::string,\ int>\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a06c363c6776fa272ed96ead9d7967934}{BODY\_NAME\_TO\_JPL\_ID}}\ =\ \{}
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{comment}{//\ Stars}}
+\DoxyCodeLine{00058\ \ \ \ \ \{\textcolor{stringliteral}{"{}Sun"{}},\ 10\},}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{comment}{//\ Planets}}
+\DoxyCodeLine{00061\ \ \ \ \ \{\textcolor{stringliteral}{"{}Mercury"{}},\ 199\},}
+\DoxyCodeLine{00062\ \ \ \ \ \{\textcolor{stringliteral}{"{}Venus"{}},\ 299\},}
+\DoxyCodeLine{00063\ \ \ \ \ \{\textcolor{stringliteral}{"{}Earth"{}},\ 399\},}
+\DoxyCodeLine{00064\ \ \ \ \ \{\textcolor{stringliteral}{"{}Mars"{}},\ 499\},}
+\DoxyCodeLine{00065\ \ \ \ \ \{\textcolor{stringliteral}{"{}Jupiter"{}},\ 599\},}
+\DoxyCodeLine{00066\ \ \ \ \ \{\textcolor{stringliteral}{"{}Saturn"{}},\ 699\},}
+\DoxyCodeLine{00067\ \ \ \ \ \{\textcolor{stringliteral}{"{}Uranus"{}},\ 799\},}
+\DoxyCodeLine{00068\ \ \ \ \ \{\textcolor{stringliteral}{"{}Neptune"{}},\ 899\},}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{comment}{//\ Moons}}
+\DoxyCodeLine{00071\ \ \ \ \ \{\textcolor{stringliteral}{"{}Moon"{}},\ 301\},}
+\DoxyCodeLine{00072\ \ \ \ \ \{\textcolor{stringliteral}{"{}Io"{}},\ 501\},}
+\DoxyCodeLine{00073\ \ \ \ \ \{\textcolor{stringliteral}{"{}Europa"{}},\ 502\},}
+\DoxyCodeLine{00074\ \ \ \ \ \{\textcolor{stringliteral}{"{}Ganymede"{}},\ 503\},}
+\DoxyCodeLine{00075\ \ \ \ \ \{\textcolor{stringliteral}{"{}Callisto"{}},\ 504\},}
+\DoxyCodeLine{00076\ \ \ \ \ \{\textcolor{stringliteral}{"{}Titan"{}},\ 606\},}
+\DoxyCodeLine{00077\ \ \ \ \ \{\textcolor{stringliteral}{"{}Rhea"{}},\ 605\},}
+\DoxyCodeLine{00078\ \ \ \ \ \{\textcolor{stringliteral}{"{}Iapetus"{}},\ 608\},}
+\DoxyCodeLine{00079\ \ \ \ \ \{\textcolor{stringliteral}{"{}Titania"{}},\ 703\},}
+\DoxyCodeLine{00080\ \ \ \ \ \{\textcolor{stringliteral}{"{}Oberon"{}},\ 704\},}
+\DoxyCodeLine{00081\ \ \ \ \ \{\textcolor{stringliteral}{"{}Triton"{}},\ 801\},}
+\DoxyCodeLine{00082\ \ \ \ \ \{\textcolor{stringliteral}{"{}Charon"{}},\ 901\},}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ \ \ \ \ \textcolor{comment}{//\ Dwarf\ Planets}}
+\DoxyCodeLine{00085\ \ \ \ \ \{\textcolor{stringliteral}{"{}Pluto"{}},\ 999\},}
+\DoxyCodeLine{00086\ \ \ \ \ \{\textcolor{stringliteral}{"{}Quaoar"{}},\ 50000\},}
+\DoxyCodeLine{00087\ \ \ \ \ \{\textcolor{stringliteral}{"{}Haumea"{}},\ 136108\},}
+\DoxyCodeLine{00088\ \ \ \ \ \{\textcolor{stringliteral}{"{}Eris"{}},\ 136199\},}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \ \ \ \ \textcolor{comment}{//\ Spacecraft}}
+\DoxyCodeLine{00091\ \ \ \ \ \{\textcolor{stringliteral}{"{}New\ Horizons"{}},\ -\/98\},}
+\DoxyCodeLine{00092\ \ \ \ \ \{\textcolor{stringliteral}{"{}SpaceX\ Roadster"{}},\ -\/143205\},}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ \ \ \ \ \textcolor{comment}{//\ Alternative\ names\ for\ compatibility}}
+\DoxyCodeLine{00095\ \ \ \ \ \{\textcolor{stringliteral}{"{}Io/JI"{}},\ 501\},}
+\DoxyCodeLine{00096\ \ \ \ \ \{\textcolor{stringliteral}{"{}Europa/JII"{}},\ 502\},}
+\DoxyCodeLine{00097\ \ \ \ \ \{\textcolor{stringliteral}{"{}Ganymede/JIII"{}},\ 503\},}
+\DoxyCodeLine{00098\ \ \ \ \ \{\textcolor{stringliteral}{"{}Callisto/JIV"{}},\ 504\},}
+\DoxyCodeLine{00099\ \};}
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00104\ [[nodiscard]]\ \textcolor{keyword}{inline}\ std::optional<int>\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a9ebc51ae94d5b88aa23a6a473fc76095}{get\_jpl\_id\_for\_body\_name}}(std::string\_view\ name)\ \textcolor{keyword}{noexcept}\ \{}
+\DoxyCodeLine{00105\ \ \ \textcolor{keyword}{auto}\ it\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a06c363c6776fa272ed96ead9d7967934}{BODY\_NAME\_TO\_JPL\_ID}}.find(std::string(name));}
+\DoxyCodeLine{00106\ \ \ \textcolor{keywordflow}{return}\ (it\ !=\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a06c363c6776fa272ed96ead9d7967934}{BODY\_NAME\_TO\_JPL\_ID}}.end())\ ?\ std::make\_optional(it-\/>second)\ :\ std::nullopt;}
+\DoxyCodeLine{00107\ \}}
+\DoxyCodeLine{00108\ }
+\DoxyCodeLine{00112\ [[nodiscard]]\ \textcolor{keyword}{inline}\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdc}{BodyType}}\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a643d1f576850135f355e1f960d2ebde4}{get\_body\_type\_for\_jpl\_id}}(\textcolor{keywordtype}{int}\ jpl\_id)\ \textcolor{keyword}{noexcept}\ \{}
+\DoxyCodeLine{00113\ \ \ \textcolor{keyword}{auto}\ it\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_ab82c422d14abb4a3454760512b2d8337}{JPL\_ID\_TO\_TYPE}}.find(jpl\_id);}
+\DoxyCodeLine{00114\ \ \ \textcolor{keywordflow}{return}\ (it\ !=\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_ab82c422d14abb4a3454760512b2d8337}{JPL\_ID\_TO\_TYPE}}.end())\ ?\ it-\/>second\ :\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca9ffc5da794071c4508a5bc2fe0422e46}{BodyType::Planet}};\ \ \textcolor{comment}{//\ Default\ fallback}}
+\DoxyCodeLine{00115\ \}}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00121\ \textcolor{keyword}{inline}\ \textcolor{keyword}{const}\ std::unordered\_map<BodyType,\ BodyPriority>\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a07f157fa67e2d21c4d1dd3ec4693d56d}{TYPE\_TO\_PRIORITY}}\ =\ \{}
+\DoxyCodeLine{00122\ \ \ \ \ \{\mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca26f93e6e68e28a698377e941cb59f29a}{BodyType::Star}},\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121ae3c1a1af4e04e769b2afd0e68645a308}{BodyPriority::Essential}}\},\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Sun\ -\/\ always\ needed}}
+\DoxyCodeLine{00123\ \ \ \ \ \{\mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca9ffc5da794071c4508a5bc2fe0422e46}{BodyType::Planet}},\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121ae3c1a1af4e04e769b2afd0e68645a308}{BodyPriority::Essential}}\},\ \ \ \ \ \ \ \textcolor{comment}{//\ Planets\ -\/\ always\ needed}}
+\DoxyCodeLine{00124\ \ \ \ \ \{\mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdcad502a50ed945d5fca74e0105575b5b34}{BodyType::Moon}},\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121a0ab984d91ab0a037bdf692bf0e73c349}{BodyPriority::Important}}\},\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Moons\ -\/\ usually\ needed}}
+\DoxyCodeLine{00125\ \ \ \ \ \{\mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca678839b1336623a3763d5e3d2697dfc7}{BodyType::DwarfPlanet}},\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121a0ab984d91ab0a037bdf692bf0e73c349}{BodyPriority::Important}}\},\ \ \textcolor{comment}{//\ Dwarf\ planets\ -\/\ usually\ needed}}
+\DoxyCodeLine{00126\ \ \ \ \ \{\mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca7bf3c00aa34e8bfd212a5ae503d54ecf}{BodyType::Asteroid}},\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121aebb061953c0454b2c8ee7b0ac615ebcd}{BodyPriority::Optional}}\},\ \ \ \ \ \ \textcolor{comment}{//\ Asteroids\ -\/\ optional}}
+\DoxyCodeLine{00127\ \ \ \ \ \{\mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca0978cd0d2a59acbc551a384e4f639985}{BodyType::Spacecraft}},\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121aebb061953c0454b2c8ee7b0ac615ebcd}{BodyPriority::Optional}}\},\ \ \ \ \textcolor{comment}{//\ Spacecraft\ -\/\ optional\ (historical\ issues)}}
+\DoxyCodeLine{00128\ \ \ \ \ \{\mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca88183b946cc5f0e8c96b2e66e1c74a7e}{BodyType::Unknown}},\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121aebb061953c0454b2c8ee7b0ac615ebcd}{BodyPriority::Optional}}\}\ \ \ \ \ \ \ \ \textcolor{comment}{//\ Unknown\ objects\ -\/\ optional}}
+\DoxyCodeLine{00129\ \};}
+\DoxyCodeLine{00130\ }
+\DoxyCodeLine{00134\ [[nodiscard]]\ \textcolor{keyword}{inline}\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121}{BodyPriority}}\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a515be53c365a51885a9059134f1b047b}{get\_priority\_for\_body\_type}}(\mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdc}{BodyType}}\ type)\ \textcolor{keyword}{noexcept}\ \{}
+\DoxyCodeLine{00135\ \ \ \textcolor{keyword}{auto}\ it\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a07f157fa67e2d21c4d1dd3ec4693d56d}{TYPE\_TO\_PRIORITY}}.find(type);}
+\DoxyCodeLine{00136\ \ \ \textcolor{keywordflow}{return}\ (it\ !=\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a07f157fa67e2d21c4d1dd3ec4693d56d}{TYPE\_TO\_PRIORITY}}.end())\ ?\ it-\/>second\ :\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121a0ab984d91ab0a037bdf692bf0e73c349}{BodyPriority::Important}};\ \ \textcolor{comment}{//\ Default\ fallback}}
+\DoxyCodeLine{00137\ \}}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00139\ \}\ \ \textcolor{comment}{//\ namespace\ SolarSystem::Bodies}}
+
+\end{DoxyCode}

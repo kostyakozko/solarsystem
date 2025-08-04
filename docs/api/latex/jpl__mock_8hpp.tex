@@ -1,0 +1,84 @@
+\doxysection{/\+Users/kostiantyn.kozko/tmp/solarsystem/lib/solar\+\_\+test/include/solar\+\_\+test/mocks/jpl\+\_\+mock.hpp File Reference}
+\hypertarget{jpl__mock_8hpp}{}\label{jpl__mock_8hpp}\index{/Users/kostiantyn.kozko/tmp/solarsystem/lib/solar\_test/include/solar\_test/mocks/jpl\_mock.hpp@{/Users/kostiantyn.kozko/tmp/solarsystem/lib/solar\_test/include/solar\_test/mocks/jpl\_mock.hpp}}
+
+
+JPL API Mock System for Testing.  
+
+
+{\ttfamily \#include $<$chrono$>$}\newline
+{\ttfamily \#include $<$functional$>$}\newline
+{\ttfamily \#include $<$map$>$}\newline
+{\ttfamily \#include $<$memory$>$}\newline
+{\ttfamily \#include $<$mutex$>$}\newline
+{\ttfamily \#include $<$optional$>$}\newline
+{\ttfamily \#include $<$random$>$}\newline
+{\ttfamily \#include $<$string$>$}\newline
+{\ttfamily \#include $<$unordered\+\_\+map$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include "{}solar\+\_\+jpl/jpl\+\_\+client.\+hpp"{}}\newline
+Include dependency graph for jpl\+\_\+mock.\+hpp\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{jpl__mock_8hpp__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{jpl__mock_8hpp__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_mock_call_info}{Solar\+System\+::\+Testing\+::\+Mocks\+::\+Mock\+Call\+Info}}
+\begin{DoxyCompactList}\small\item\em Mock call information for verification. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config}{Solar\+System\+::\+Testing\+::\+Mocks\+::\+JPLMock\+Config}}
+\begin{DoxyCompactList}\small\item\em Configuration for \doxylink{namespace_solar_system_1_1_j_p_l}{JPL} mock behavior. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock}{Solar\+System\+::\+Testing\+::\+Mocks\+::\+JPLMock}}
+\begin{DoxyCompactList}\small\item\em \doxylink{namespace_solar_system_1_1_j_p_l}{JPL} API Mock Implementation. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_factory}{Solar\+System\+::\+Testing\+::\+Mocks\+::\+JPLMock\+Factory}}
+\begin{DoxyCompactList}\small\item\em Factory for creating \doxylink{namespace_solar_system_1_1_j_p_l}{JPL} mocks. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_j_p_l_mock}{Solar\+System\+::\+Testing\+::\+Mocks\+::\+Scoped\+JPLMock}}
+\begin{DoxyCompactList}\small\item\em RAII helper for installing/removing global mock. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespace_solar_system}{Solar\+System}}
+\item 
+namespace \mbox{\hyperlink{namespace_solar_system_1_1_testing}{Solar\+System\+::\+Testing}}
+\item 
+namespace \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks}{Solar\+System\+::\+Testing\+::\+Mocks}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum class \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a82c133f802f6b76bd05714fcd46a4e5f}{Solar\+System\+::\+Testing\+::\+Mocks\+::\+Mock\+Response\+Type}} \{ \newline
+\mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a82c133f802f6b76bd05714fcd46a4e5fa505a83f220c02df2f85c3810cd9ceb38}{Solar\+System\+::\+Testing\+::\+Mocks\+::\+Success}}
+, \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a82c133f802f6b76bd05714fcd46a4e5fa47423b8444592efbe331550c5620e821}{Solar\+System\+::\+Testing\+::\+Mocks\+::\+Network\+Error}}
+, \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a82c133f802f6b76bd05714fcd46a4e5fac85a251cc457840f1e032f1b733e9398}{Solar\+System\+::\+Testing\+::\+Mocks\+::\+Timeout}}
+, \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a82c133f802f6b76bd05714fcd46a4e5fa7d65c64901711bc2cd2a33ff2641fbe9}{Solar\+System\+::\+Testing\+::\+Mocks\+::\+Server\+Error}}
+, \newline
+\mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a82c133f802f6b76bd05714fcd46a4e5fae01eb350d8cbf3af3eda4650e977649d}{Solar\+System\+::\+Testing\+::\+Mocks\+::\+Invalid\+Body}}
+, \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a82c133f802f6b76bd05714fcd46a4e5fae41199faa7290c167f70f314c5e6c165}{Solar\+System\+::\+Testing\+::\+Mocks\+::\+Parse\+Error}}
+, \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a82c133f802f6b76bd05714fcd46a4e5fa50ef7598e6d8e1f977ea8b4687079cbf}{Solar\+System\+::\+Testing\+::\+Mocks\+::\+Rate\+Limited}}
+, \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a82c133f802f6b76bd05714fcd46a4e5fa72fea830a1dcdfe1bb0b90d89acd47c2}{Solar\+System\+::\+Testing\+::\+Mocks\+::\+Custom\+Response}}
+ \}
+\begin{DoxyCompactList}\small\item\em Mock response types for different scenarios. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+JPL API Mock System for Testing. 
+
+Provides comprehensive mocking capabilities for JPL HORIZONS API testing\+:
+\begin{DoxyItemize}
+\item Configurable response simulation
+\item Network delay and failure simulation
+\item Realistic JPL HORIZONS response generation
+\item Call verification and history tracking
+\item Integration with existing JPL client interface 
+\end{DoxyItemize}

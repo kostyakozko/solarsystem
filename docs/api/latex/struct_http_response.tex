@@ -1,16 +1,32 @@
 \doxysection{Http\+Response Struct Reference}
 \hypertarget{struct_http_response}{}\label{struct_http_response}\index{HttpResponse@{HttpResponse}}
+
+
+HTTP response structure.  
+
+
 \doxysubsubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\hyperlink{struct_http_response_a874c1f8cd46efed44d146ee826c6b4a8}{Http\+Response}} (int code=200, const std\+::string \&text="{}OK"{})
-\end{DoxyCompactItemize}
+\mbox{\hyperlink{struct_http_response}{Http\+Response}} \& \mbox{\hyperlink{struct_http_response_aea837ca194606ed9197c2a4d11ca7296}{json}} ()
+\begin{DoxyCompactList}\small\item\em Set JSON content type. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{struct_http_response}{Http\+Response}} \& \mbox{\hyperlink{struct_http_response_a5b3668e60c09bc43e283aa5700e97b6d}{html}} ()
+\begin{DoxyCompactList}\small\item\em Set HTML content type. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{struct_http_response}{Http\+Response}} \& \mbox{\hyperlink{struct_http_response_abf84f36263ac4c109a1aa64743fb54fc}{cors}} ()
+\begin{DoxyCompactList}\small\item\em Set CORS headers. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{struct_http_response}{Http\+Response}} \mbox{\hyperlink{struct_http_response_afa97ee7bf317779f64d653bb46f54ed4}{error}} (int code, const std\+::string \&message)
+\begin{DoxyCompactList}\small\item\em Create error response. \end{DoxyCompactList}\item 
+static \mbox{\hyperlink{struct_http_response}{Http\+Response}} \mbox{\hyperlink{struct_http_response_aea0a4a9dee58b06be578490a8c3c357f}{json\+\_\+response}} (const std\+::string \&json\+\_\+body)
+\begin{DoxyCompactList}\small\item\em Create JSON response. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsubsection*{Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
-int \mbox{\hyperlink{struct_http_response_a08a2a1b268cf4a38b530d08117369b5e}{status\+\_\+code}}
+int \mbox{\hyperlink{struct_http_response_a08a2a1b268cf4a38b530d08117369b5e}{status\+\_\+code}} = 200
 \item 
-std\+::string \mbox{\hyperlink{struct_http_response_aa414897bda5d37c79f2815d7a6b76957}{status\+\_\+text}}
+std\+::string \mbox{\hyperlink{struct_http_response_aa414897bda5d37c79f2815d7a6b76957}{status\+\_\+text}} = "{}OK"{}
 \item 
 std\+::map$<$ std\+::string, std\+::string $>$ \mbox{\hyperlink{struct_http_response_ad1375a15cb4041004c534596e57dd354}{headers}}
 \item 
@@ -18,15 +34,102 @@ std\+::string \mbox{\hyperlink{struct_http_response_ab59b82bffe1ab9a8e2741d5f4f9
 \end{DoxyCompactItemize}
 
 
-\label{doc-constructors}
-\Hypertarget{struct_http_response_doc-constructors}
-\doxysubsection{Constructor \& Destructor Documentation}
-\Hypertarget{struct_http_response_a874c1f8cd46efed44d146ee826c6b4a8}\index{HttpResponse@{HttpResponse}!HttpResponse@{HttpResponse}}
-\index{HttpResponse@{HttpResponse}!HttpResponse@{HttpResponse}}
-\doxysubsubsection{\texorpdfstring{HttpResponse()}{HttpResponse()}}
-{\footnotesize\ttfamily \label{struct_http_response_a874c1f8cd46efed44d146ee826c6b4a8} 
-Http\+Response\+::\+Http\+Response (\begin{DoxyParamCaption}\item[{int}]{code}{ = {\ttfamily 200}, }\item[{const std\+::string \&}]{text}{ = {\ttfamily "{}OK"{}}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [explicit]}}
+\doxysubsection{Detailed Description}
+HTTP response structure. 
 
+\label{doc-func-members}
+\Hypertarget{struct_http_response_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{struct_http_response_abf84f36263ac4c109a1aa64743fb54fc}\index{HttpResponse@{HttpResponse}!cors@{cors}}
+\index{cors@{cors}!HttpResponse@{HttpResponse}}
+\doxysubsubsection{\texorpdfstring{cors()}{cors()}}
+{\footnotesize\ttfamily \label{struct_http_response_abf84f36263ac4c109a1aa64743fb54fc} 
+\mbox{\hyperlink{struct_http_response}{Http\+Response}} \& Http\+Response\+::cors (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Set CORS headers. 
+
+\Hypertarget{struct_http_response_afa97ee7bf317779f64d653bb46f54ed4}\index{HttpResponse@{HttpResponse}!error@{error}}
+\index{error@{error}!HttpResponse@{HttpResponse}}
+\doxysubsubsection{\texorpdfstring{error()}{error()}}
+{\footnotesize\ttfamily \label{struct_http_response_afa97ee7bf317779f64d653bb46f54ed4} 
+\mbox{\hyperlink{struct_http_response}{Http\+Response}} Http\+Response\+::error (\begin{DoxyParamCaption}\item[{int}]{code}{, }\item[{const std\+::string \&}]{message}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+
+
+Create error response. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=324pt]{struct_http_response_afa97ee7bf317779f64d653bb46f54ed4_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{struct_http_response_afa97ee7bf317779f64d653bb46f54ed4_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{struct_http_response_a5b3668e60c09bc43e283aa5700e97b6d}\index{HttpResponse@{HttpResponse}!html@{html}}
+\index{html@{html}!HttpResponse@{HttpResponse}}
+\doxysubsubsection{\texorpdfstring{html()}{html()}}
+{\footnotesize\ttfamily \label{struct_http_response_a5b3668e60c09bc43e283aa5700e97b6d} 
+\mbox{\hyperlink{struct_http_response}{Http\+Response}} \& Http\+Response\+::html (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Set HTML content type. 
+
+\Hypertarget{struct_http_response_aea837ca194606ed9197c2a4d11ca7296}\index{HttpResponse@{HttpResponse}!json@{json}}
+\index{json@{json}!HttpResponse@{HttpResponse}}
+\doxysubsubsection{\texorpdfstring{json()}{json()}}
+{\footnotesize\ttfamily \label{struct_http_response_aea837ca194606ed9197c2a4d11ca7296} 
+\mbox{\hyperlink{struct_http_response}{Http\+Response}} \& Http\+Response\+::json (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Set JSON content type. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{struct_http_response_aea837ca194606ed9197c2a4d11ca7296_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{struct_http_response_aea0a4a9dee58b06be578490a8c3c357f}\index{HttpResponse@{HttpResponse}!json\_response@{json\_response}}
+\index{json\_response@{json\_response}!HttpResponse@{HttpResponse}}
+\doxysubsubsection{\texorpdfstring{json\_response()}{json\_response()}}
+{\footnotesize\ttfamily \label{struct_http_response_aea0a4a9dee58b06be578490a8c3c357f} 
+\mbox{\hyperlink{struct_http_response}{Http\+Response}} Http\+Response\+::json\+\_\+response (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{json\+\_\+body}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+
+
+Create JSON response. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=322pt]{struct_http_response_aea0a4a9dee58b06be578490a8c3c357f_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{struct_http_response_aea0a4a9dee58b06be578490a8c3c357f_icgraph}
+\end{center}
+\end{figure}
 
 
 \label{doc-variable-members}
@@ -48,13 +151,13 @@ std\+::map$<$std\+::string, std\+::string$>$ Http\+Response\+::headers}
 \index{status\_code@{status\_code}!HttpResponse@{HttpResponse}}
 \doxysubsubsection{\texorpdfstring{status\_code}{status\_code}}
 {\footnotesize\ttfamily \label{struct_http_response_a08a2a1b268cf4a38b530d08117369b5e} 
-int Http\+Response\+::status\+\_\+code}
+int Http\+Response\+::status\+\_\+code = 200}
 
 \Hypertarget{struct_http_response_aa414897bda5d37c79f2815d7a6b76957}\index{HttpResponse@{HttpResponse}!status\_text@{status\_text}}
 \index{status\_text@{status\_text}!HttpResponse@{HttpResponse}}
 \doxysubsubsection{\texorpdfstring{status\_text}{status\_text}}
 {\footnotesize\ttfamily \label{struct_http_response_aa414897bda5d37c79f2815d7a6b76957} 
-std\+::string Http\+Response\+::status\+\_\+text}
+std\+::string Http\+Response\+::status\+\_\+text = "{}OK"{}}
 
 
 

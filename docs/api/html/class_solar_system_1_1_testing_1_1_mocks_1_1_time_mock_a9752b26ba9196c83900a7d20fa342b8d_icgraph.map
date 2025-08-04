@@ -1,0 +1,13 @@
+<map id="SolarSystem::Testing::Mocks::TimeMock::sleep_for" name="SolarSystem::Testing::Mocks::TimeMock::sleep_for">
+<area shape="rect" id="Node000001" title="Mock sleep for specified duration." alt="" coords="261,136,459,177"/>
+<area shape="rect" id="Node000002" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock.html#a41be962d5629522e30c99ff422ed9ab8" title="Mock nanosleep." alt="" coords="7,5,211,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="319,129,269,94,211,61,182,49,184,44,214,57,272,90,322,124"/>
+<area shape="rect" id="Node000003" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock.html#a2e3902342f5be110b63bd3b3b3a8de07" title="Mock millisecond sleep." alt="" coords="8,71,210,111"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="264,134,189,115,191,109,265,129"/>
+<area shape="rect" id="Node000004" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock.html#a325a50a6f063af2d4b06d98d7018ab5e" title="Mock second sleep." alt="" coords="14,136,204,177"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="245,159,205,159,205,154,245,154"/>
+<area shape="rect" id="Node000005" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock.html#adad60f1f26a955a8630dd9f03f78fb43" title="Mock sleep until specified time point." alt="" coords="5,201,213,242"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="265,184,191,203,189,198,264,179"/>
+<area shape="rect" id="Node000006" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock.html#a0cb3bcbcb9de09ce445dc5a1d624e1be" title="Mock usleep (microseconds)" alt="" coords="17,267,201,307"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="322,188,272,223,214,256,184,269,182,264,211,251,269,218,319,184"/>
+</map>

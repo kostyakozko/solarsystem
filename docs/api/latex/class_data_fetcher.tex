@@ -1,0 +1,217 @@
+\doxysection{Data\+Fetcher Class Reference}
+\hypertarget{class_data_fetcher}{}\label{class_data_fetcher}\index{DataFetcher@{DataFetcher}}
+
+
+Modern data fetcher using builder pattern and RAII.  
+
+
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_data_fetcher_1_1_config}{Config}}
+\begin{DoxyCompactList}\small\item\em Configuration for data fetching operations. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_data_fetcher_aa42354787a2075294fb8f4f1a8bc765e}{Data\+Fetcher}} (\mbox{\hyperlink{struct_data_fetcher_1_1_config}{Config}} config)
+\begin{DoxyCompactList}\small\item\em Construct fetcher with configuration. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_data_fetcher_ac84127fead7f1d7542f02166bb38d267}{Data\+Fetcher}} ()
+\begin{DoxyCompactList}\small\item\em Default constructor. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_data_fetcher_ae5ca21c3de61bca83820fc3dcb6dce8f}{show\+\_\+status}} (\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory}{Solar\+System\+::\+Bodies\+::\+Body\+Factory}} \&factory) const
+\begin{DoxyCompactList}\small\item\em Show current cache status with modern formatting. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_data_fetcher_a756d8cf8a7756343b9f1a1c9054fbd0a}{update\+\_\+data}} (\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory}{Solar\+System\+::\+Bodies\+::\+Body\+Factory}} \&factory, bool force=false, std\+::optional$<$ int $>$ year=std\+::nullopt)
+\begin{DoxyCompactList}\small\item\em Update ephemeris data with progress monitoring. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_data_fetcher_a5c2ef3b54efae0abd740b9d8a0d8e27f}{validate\+\_\+cache}} (\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory}{Solar\+System\+::\+Bodies\+::\+Body\+Factory}} \&factory) const
+\begin{DoxyCompactList}\small\item\em Validate cache integrity with detailed reporting. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_data_fetcher_a2a80768296b3e62154d0a66016d342d8}{test\+\_\+storage}} (\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory}{Solar\+System\+::\+Bodies\+::\+Body\+Factory}} \&factory) const
+\begin{DoxyCompactList}\small\item\em Test storage system with modern error handling. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_data_fetcher_a7c9e1118f47a913fae67c4a5495232e7}{rebuild\+\_\+cache}} (\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory}{Solar\+System\+::\+Bodies\+::\+Body\+Factory}} \&factory) const
+\begin{DoxyCompactList}\small\item\em Rebuild binary cache with progress indication. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_data_fetcher_a7a5aa3feef03396004950f6ba7d4b32f}{clean\+\_\+cache}} () const
+\begin{DoxyCompactList}\small\item\em Clean cache files with confirmation. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Modern data fetcher using builder pattern and RAII. 
+
+\label{doc-constructors}
+\Hypertarget{class_data_fetcher_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_data_fetcher_aa42354787a2075294fb8f4f1a8bc765e}\index{DataFetcher@{DataFetcher}!DataFetcher@{DataFetcher}}
+\index{DataFetcher@{DataFetcher}!DataFetcher@{DataFetcher}}
+\doxysubsubsection{\texorpdfstring{DataFetcher()}{DataFetcher()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_data_fetcher_aa42354787a2075294fb8f4f1a8bc765e} 
+Data\+Fetcher\+::\+Data\+Fetcher (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_data_fetcher_1_1_config}{Config}}}]{config}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [explicit]}}
+
+
+
+Construct fetcher with configuration. 
+
+\Hypertarget{class_data_fetcher_ac84127fead7f1d7542f02166bb38d267}\index{DataFetcher@{DataFetcher}!DataFetcher@{DataFetcher}}
+\index{DataFetcher@{DataFetcher}!DataFetcher@{DataFetcher}}
+\doxysubsubsection{\texorpdfstring{DataFetcher()}{DataFetcher()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_data_fetcher_ac84127fead7f1d7542f02166bb38d267} 
+Data\+Fetcher\+::\+Data\+Fetcher (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Default constructor. 
+
+
+
+\label{doc-func-members}
+\Hypertarget{class_data_fetcher_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_data_fetcher_a7a5aa3feef03396004950f6ba7d4b32f}\index{DataFetcher@{DataFetcher}!clean\_cache@{clean\_cache}}
+\index{clean\_cache@{clean\_cache}!DataFetcher@{DataFetcher}}
+\doxysubsubsection{\texorpdfstring{clean\_cache()}{clean\_cache()}}
+{\footnotesize\ttfamily \label{class_data_fetcher_a7a5aa3feef03396004950f6ba7d4b32f} 
+bool Data\+Fetcher\+::clean\+\_\+cache (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}}
+
+
+
+Clean cache files with confirmation. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=252pt]{class_data_fetcher_a7a5aa3feef03396004950f6ba7d4b32f_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_data_fetcher_a7c9e1118f47a913fae67c4a5495232e7}\index{DataFetcher@{DataFetcher}!rebuild\_cache@{rebuild\_cache}}
+\index{rebuild\_cache@{rebuild\_cache}!DataFetcher@{DataFetcher}}
+\doxysubsubsection{\texorpdfstring{rebuild\_cache()}{rebuild\_cache()}}
+{\footnotesize\ttfamily \label{class_data_fetcher_a7c9e1118f47a913fae67c4a5495232e7} 
+bool Data\+Fetcher\+::rebuild\+\_\+cache (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory}{Solar\+System\+::\+Bodies\+::\+Body\+Factory}} \&}]{factory}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}}
+
+
+
+Rebuild binary cache with progress indication. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_data_fetcher_a7c9e1118f47a913fae67c4a5495232e7_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=258pt]{class_data_fetcher_a7c9e1118f47a913fae67c4a5495232e7_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_data_fetcher_ae5ca21c3de61bca83820fc3dcb6dce8f}\index{DataFetcher@{DataFetcher}!show\_status@{show\_status}}
+\index{show\_status@{show\_status}!DataFetcher@{DataFetcher}}
+\doxysubsubsection{\texorpdfstring{show\_status()}{show\_status()}}
+{\footnotesize\ttfamily \label{class_data_fetcher_ae5ca21c3de61bca83820fc3dcb6dce8f} 
+void Data\+Fetcher\+::show\+\_\+status (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory}{Solar\+System\+::\+Bodies\+::\+Body\+Factory}} \&}]{factory}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Show current cache status with modern formatting. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_data_fetcher_ae5ca21c3de61bca83820fc3dcb6dce8f_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_data_fetcher_ae5ca21c3de61bca83820fc3dcb6dce8f_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_data_fetcher_a2a80768296b3e62154d0a66016d342d8}\index{DataFetcher@{DataFetcher}!test\_storage@{test\_storage}}
+\index{test\_storage@{test\_storage}!DataFetcher@{DataFetcher}}
+\doxysubsubsection{\texorpdfstring{test\_storage()}{test\_storage()}}
+{\footnotesize\ttfamily \label{class_data_fetcher_a2a80768296b3e62154d0a66016d342d8} 
+bool Data\+Fetcher\+::test\+\_\+storage (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory}{Solar\+System\+::\+Bodies\+::\+Body\+Factory}} \&}]{factory}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}}
+
+
+
+Test storage system with modern error handling. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_data_fetcher_a2a80768296b3e62154d0a66016d342d8_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=283pt]{class_data_fetcher_a2a80768296b3e62154d0a66016d342d8_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_data_fetcher_a756d8cf8a7756343b9f1a1c9054fbd0a}\index{DataFetcher@{DataFetcher}!update\_data@{update\_data}}
+\index{update\_data@{update\_data}!DataFetcher@{DataFetcher}}
+\doxysubsubsection{\texorpdfstring{update\_data()}{update\_data()}}
+{\footnotesize\ttfamily \label{class_data_fetcher_a756d8cf8a7756343b9f1a1c9054fbd0a} 
+bool Data\+Fetcher\+::update\+\_\+data (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory}{Solar\+System\+::\+Bodies\+::\+Body\+Factory}} \&}]{factory}{, }\item[{bool}]{force}{ = {\ttfamily false}, }\item[{std\+::optional$<$ int $>$}]{year}{ = {\ttfamily std\+:\+:nullopt}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}}
+
+
+
+Update ephemeris data with progress monitoring. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_data_fetcher_a756d8cf8a7756343b9f1a1c9054fbd0a_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=282pt]{class_data_fetcher_a756d8cf8a7756343b9f1a1c9054fbd0a_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_data_fetcher_a5c2ef3b54efae0abd740b9d8a0d8e27f}\index{DataFetcher@{DataFetcher}!validate\_cache@{validate\_cache}}
+\index{validate\_cache@{validate\_cache}!DataFetcher@{DataFetcher}}
+\doxysubsubsection{\texorpdfstring{validate\_cache()}{validate\_cache()}}
+{\footnotesize\ttfamily \label{class_data_fetcher_a5c2ef3b54efae0abd740b9d8a0d8e27f} 
+bool Data\+Fetcher\+::validate\+\_\+cache (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory}{Solar\+System\+::\+Bodies\+::\+Body\+Factory}} \&}]{factory}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}}
+
+
+
+Validate cache integrity with detailed reporting. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_data_fetcher_a5c2ef3b54efae0abd740b9d8a0d8e27f_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=263pt]{class_data_fetcher_a5c2ef3b54efae0abd740b9d8a0d8e27f_icgraph}
+\end{center}
+\end{figure}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/apps/solar\+\_\+system\+\_\+fetch/\mbox{\hyperlink{fetch_8cpp}{fetch.\+cpp}}\end{DoxyCompactItemize}

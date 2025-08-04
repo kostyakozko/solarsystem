@@ -1,0 +1,125 @@
+\doxysection{body\+\_\+factory.\+hpp}
+\hypertarget{body__factory_8hpp_source}{}\label{body__factory_8hpp_source}\index{/Users/kostiantyn.kozko/tmp/solarsystem/lib/solar\_core/include/solar\_core/bodies/body\_factory.hpp@{/Users/kostiantyn.kozko/tmp/solarsystem/lib/solar\_core/include/solar\_core/bodies/body\_factory.hpp}}
+\mbox{\hyperlink{body__factory_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <chrono>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <string\_view>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{body__collection_8hpp}{solar\_core/bodies/body\_collection.hpp}}"{}}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{celestial__body_8hpp}{solar\_core/bodies/celestial\_body.hpp}}"{}}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{body__definitions_8hpp}{solar\_core/data/body\_definitions.hpp}}"{}}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{expected_8hpp}{solar\_core/utils/expected.hpp}}"{}}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{jpl__client_8hpp}{solar\_jpl/jpl\_client.hpp}}"{}}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespace_solar_system_1_1_bodies}{SolarSystem::Bodies}}\ \{}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_a2c37486fb3f0fa8844fac76c6b27f4f8}{BodyFactory}}\ \{}
+\DoxyCodeLine{00027\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00028\ \ \ \textcolor{keyword}{enum\ class}\ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_a65e3d3286dd5b210649ba310a2a66d3b}{DataSource}}\ \{}
+\DoxyCodeLine{00029\ \ \ \ \ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_a65e3d3286dd5b210649ba310a2a66d3bace166f5abf98588252fd67de9d471209}{JPL\_HORIZONS}},\ \ \textcolor{comment}{//\ Fetch\ from\ JPL\ API}}
+\DoxyCodeLine{00030\ \ \ \ \ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_a65e3d3286dd5b210649ba310a2a66d3ba089d1a42095b3742aee74d2a852fcc90}{CACHED\_DATA}},\ \ \ \textcolor{comment}{//\ Use\ cached\ ephemeris\ data}}
+\DoxyCodeLine{00031\ \ \ \ \ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_a65e3d3286dd5b210649ba310a2a66d3ba9a440d990671782050a90c9265b855e7}{FALLBACK\_DATA}}\ \ \textcolor{comment}{//\ Use\ hardcoded\ constants}}
+\DoxyCodeLine{00032\ \ \ \};}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_solar_system_1_1_bodies_1_1_body_factory_1_1_creation_options}{CreationOptions}}\ \{}
+\DoxyCodeLine{00035\ \ \ \ \ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_a65e3d3286dd5b210649ba310a2a66d3b}{DataSource}}\ \mbox{\hyperlink{struct_solar_system_1_1_bodies_1_1_body_factory_1_1_creation_options_ab84da2abdf6219dd4958decfaa6ed8fe}{preferred\_source}}\ =\ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_a65e3d3286dd5b210649ba310a2a66d3bace166f5abf98588252fd67de9d471209}{DataSource::JPL\_HORIZONS}};}
+\DoxyCodeLine{00036\ \ \ \ \ std::chrono::system\_clock::time\_point\ \mbox{\hyperlink{struct_solar_system_1_1_bodies_1_1_body_factory_1_1_creation_options_a2f63dce1a1eafa6d951f2faa5529c983}{reference\_time}}\ =\ std::chrono::system\_clock::now();}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_solar_system_1_1_bodies_1_1_body_factory_1_1_creation_options_ab152452b024188248f3aad64d79db0d8}{allow\_fallback}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_solar_system_1_1_bodies_1_1_body_factory_1_1_creation_options_adaaaa92ee97293074c3fe93d6bf035fc}{validate\_data}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00039\ \ \ \};}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \ \ \textcolor{comment}{//\ Constructor}}
+\DoxyCodeLine{00042\ \ \ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_a2c37486fb3f0fa8844fac76c6b27f4f8}{BodyFactory}}()\ :\ current\_source\_(\textcolor{stringliteral}{"{}UNINITIALIZED"{}}),\ data\_initialized\_(false)\ \{}
+\DoxyCodeLine{00043\ \ \ \ \ initialize\_internal\_data();}
+\DoxyCodeLine{00044\ \ \ \}}
+\DoxyCodeLine{00045\ \ \ \textcolor{keyword}{explicit}\ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_a2c37486fb3f0fa8844fac76c6b27f4f8}{BodyFactory}}(CreationOptions\ options);}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \ \ \textcolor{comment}{//\ Single\ body\ creation}}
+\DoxyCodeLine{00048\ \ \ [[nodiscard]]\ \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Utils::Expected<CelestialBody,\ std::string>}}\ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_aaff11393da75cbe9f81d56cbcc0f39c9}{create\_body}}(}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ std::string\_view\ name)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00050\ \ \ [[nodiscard]]\ \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Utils::Expected<CelestialBody,\ std::string>}}\ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_aaff11393da75cbe9f81d56cbcc0f39c9}{create\_body}}(}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ std::string\_view\ name,\ \textcolor{keyword}{const}\ CreationOptions\&\ options)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \ \ \textcolor{comment}{//\ Bulk\ body\ creation}}
+\DoxyCodeLine{00054\ \ \ [[nodiscard]]\ \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Utils::Expected<BodyCollection,\ std::string>}}\ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_a5157d2d796f663861f2f4fef994e41e6}{create\_collection}}(}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::vector<std::string>\&\ body\_names)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00056\ \ \ [[nodiscard]]\ \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Utils::Expected<BodyCollection,\ std::string>}}\ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_a5157d2d796f663861f2f4fef994e41e6}{create\_collection}}(}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::vector<std::string>\&\ body\_names,\ \textcolor{keyword}{const}\ CreationOptions\&\ options)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \ \ \textcolor{comment}{//\ Predefined\ collections\ (using\ existing\ JPL/cache\ system)}}
+\DoxyCodeLine{00060\ \ \ [[nodiscard]]\ \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Utils::Expected<BodyCollection,\ std::string>}}\ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_a47bff147fbed33153af617c9b078176f}{create\_solar\_system}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00061\ \ \ [[nodiscard]]\ \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Utils::Expected<BodyCollection,\ std::string>}}\ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_a47bff147fbed33153af617c9b078176f}{create\_solar\_system}}(}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \textcolor{keyword}{const}\ CreationOptions\&\ options)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \ \ [[nodiscard]]\ \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Utils::Expected<BodyCollection,\ std::string>}}\ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_a280d802527fac98ebfee125a2ed09e2d}{create\_inner\_planets}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00065\ \ \ [[nodiscard]]\ \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Utils::Expected<BodyCollection,\ std::string>}}\ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_a280d802527fac98ebfee125a2ed09e2d}{create\_inner\_planets}}(}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \textcolor{keyword}{const}\ CreationOptions\&\ options)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \ \ [[nodiscard]]\ \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Utils::Expected<BodyCollection,\ std::string>}}\ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_aee95f12bf4d6b12373c64bf4abdf010c}{create\_essential\_bodies}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00069\ \ \ [[nodiscard]]\ \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Utils::Expected<BodyCollection,\ std::string>}}\ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_aee95f12bf4d6b12373c64bf4abdf010c}{create\_essential\_bodies}}(}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \textcolor{keyword}{const}\ CreationOptions\&\ options)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \ \ \textcolor{comment}{//\ Integration\ with\ existing\ system}}
+\DoxyCodeLine{00073\ \ \ [[nodiscard]]\ \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Utils::Expected<CelestialBody,\ std::string>}}\ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_ada6c7795436925ccdbd6a65e77b91c0a}{create\_from\_legacy\_data}}(}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ std::string\_view\ name)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \ \ \textcolor{comment}{//\ Utility\ functions}}
+\DoxyCodeLine{00077\ \ \ [[nodiscard]]\ std::vector<std::string>\ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_a443470bfec5df1a564b0f33e2f39652f}{get\_available\_bodies}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00078\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_abfcbca8b1d6549002e88e891091a739b}{is\_body\_available}}(std::string\_view\ name,}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::chrono::system\_clock::time\_point\ time)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_af5d6d07a8a6ec10ea24be5fe7e03adf1}{has\_current\_ephemeris\_data}}()\ const\ noexcept\ \{}
+\DoxyCodeLine{00082\ \ \ \ \ \textcolor{keywordflow}{return}\ current\_source\_\ !=\ \textcolor{stringliteral}{"{}ORIGINAL\_DATA"{}};}
+\DoxyCodeLine{00083\ \ \ \}}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \ \ [[nodiscard]]\ std::chrono::system\_clock::time\_point\ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_a2015b71a09ad94d6edfc98c066876d3c}{current\_epoch}}()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00086\ \ \ \ \ \textcolor{keywordflow}{return}\ current\_epoch\_;}
+\DoxyCodeLine{00087\ \ \ \}}
+\DoxyCodeLine{00088\ \ \ [[nodiscard]]\ \textcolor{keyword}{const}\ std::string\&\ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_aa4afc0501e288c56fdcc9ad0413455a6}{current\_source}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ current\_source\_;\ \}}
+\DoxyCodeLine{00089\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_a4099a072977727f97cfaaa57cf74bf41}{is\_initialized}}()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ data\_initialized\_;\ \}}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_a199966bfeeb87cc771b0f0fe4463cd42}{has\_current\_year\_ephemeris\_data}}()\ const\ noexcept;}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ \ \ [[nodiscard]]\ \mbox{\hyperlink{namespace_solar_system}{SolarSystem}}::\mbox{\hyperlink{namespace_solar_system_1_1_utils}{Utils}}::Expected<\textcolor{keywordtype}{void},\ std::\textcolor{keywordtype}{string}>\ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_aeb005f478e7ac87a4f961f2b9bf74478}{rebuild\_cache}}();}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ \ \ [[nodiscard]]\ \mbox{\hyperlink{namespace_solar_system}{SolarSystem}}::\mbox{\hyperlink{namespace_solar_system_1_1_utils}{Utils}}::Expected<\textcolor{keywordtype}{void},\ std::\textcolor{keywordtype}{string}>\ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_afd0c8632913113c333b702bf1aaccfdb}{fetch\_current\_ephemeris\_data}}(}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ std::chrono::system\_clock::time\_point\ time\ =\ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_a69cb5c8580eecdd8d49b6fb8b44738e0}{get\_current\_year\_epoch}}());}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00098\ \ \ [[nodiscard]]\ \mbox{\hyperlink{namespace_solar_system}{SolarSystem}}::\mbox{\hyperlink{namespace_solar_system_1_1_utils}{Utils}}::Expected<\textcolor{keywordtype}{void},\ std::\textcolor{keywordtype}{string}>\ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_ab2bade067aaf2c1bee6bfaeca49abe9f}{test\_storage\_system}}();}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \ \ [[nodiscard]]\ static\ std::chrono::system\_clock::time\_point\ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory_a69cb5c8580eecdd8d49b6fb8b44738e0}{get\_current\_year\_epoch}}()\ noexcept;}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ \ private:}
+\DoxyCodeLine{00103\ \ \ CreationOptions\ default\_options\_;}
+\DoxyCodeLine{00104\ \ \ std::unique\_ptr<\mbox{\hyperlink{namespace_solar_system}{SolarSystem}}::\mbox{\hyperlink{namespace_solar_system_1_1_j_p_l}{JPL}}::JPLClient>\ jpl\_client\_;}
+\DoxyCodeLine{00105\ \ \ std::chrono::system\_clock::time\_point\ current\_epoch\_;}
+\DoxyCodeLine{00106\ \ \ std::\textcolor{keywordtype}{string}\ current\_source\_;}
+\DoxyCodeLine{00107\ \ \ \textcolor{keywordtype}{bool}\ data\_initialized\_;}
+\DoxyCodeLine{00108\ \ \ std::vector<\mbox{\hyperlink{namespace_solar_system}{SolarSystem}}::\mbox{\hyperlink{namespace_solar_system_1_1_j_p_l}{JPL}}::EphemerisData>\ cached\_ephemeris\_;}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00110\ \ \ \textcolor{comment}{//\ Integration\ with\ existing\ JPL\ system}}
+\DoxyCodeLine{00111\ \ \ [[nodiscard]]\ \mbox{\hyperlink{namespace_solar_system_1_1_utils}{Utils}}::Expected<\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{CelestialBody}},\ std::\textcolor{keywordtype}{string}>\ create\_from\_jpl(}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ std::string\_view\ name,\ std::chrono::system\_clock::time\_point\ time)\ const;}
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00114\ \ \ [[nodiscard]]\ \mbox{\hyperlink{namespace_solar_system_1_1_utils}{Utils}}::Expected<\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{CelestialBody}},\ std::\textcolor{keywordtype}{string}>\ create\_from\_cache(}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ std::string\_view\ name,\ std::chrono::system\_clock::time\_point\ time)\ const;}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00117\ \ \ [[nodiscard]]\ \mbox{\hyperlink{namespace_solar_system_1_1_utils}{Utils}}::Expected<\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{CelestialBody}},\ std::\textcolor{keywordtype}{string}>\ create\_from\_fallback(}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ std::string\_view\ name)\ const;}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00120\ \ \ \textcolor{comment}{//\ Helper\ functions}}
+\DoxyCodeLine{00121\ \ \ [[nodiscard]]\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdc}{BodyType}}\ determine\_body\_type(std::string\_view\ name)\ const;}
+\DoxyCodeLine{00122\ \ \ [[nodiscard]]\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121}{BodyPriority}}\ determine\_body\_priority(std::string\_view\ name)\ const;}
+\DoxyCodeLine{00123\ \ \ [[nodiscard]]\ std::optional<\textcolor{keywordtype}{int}>\ get\_jpl\_id(std::string\_view\ name)\ const;}
+\DoxyCodeLine{00124\ }
+\DoxyCodeLine{00125\ \ \ \textcolor{keywordtype}{void}\ initialize\_internal\_data();}
+\DoxyCodeLine{00126\ \};}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ \}\ \ \textcolor{comment}{//\ namespace\ SolarSystem::Bodies}}
+
+\end{DoxyCode}

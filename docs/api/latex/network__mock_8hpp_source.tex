@@ -1,0 +1,425 @@
+\doxysection{network\+\_\+mock.\+hpp}
+\hypertarget{network__mock_8hpp_source}{}\label{network__mock_8hpp_source}\index{/Users/kostiantyn.kozko/tmp/solarsystem/lib/solar\_test/include/solar\_test/mocks/network\_mock.hpp@{/Users/kostiantyn.kozko/tmp/solarsystem/lib/solar\_test/include/solar\_test/mocks/network\_mock.hpp}}
+\mbox{\hyperlink{network__mock_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <atomic>}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <chrono>}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ <functional>}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <map>}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ <mutex>}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ <optional>}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ <queue>}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#include\ <random>}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#include\ <thread>}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#include\ <unordered\_map>}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks}{SolarSystem::Testing::Mocks}}\ \{}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00034\ \textcolor{keyword}{enum\ class}\ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a12b11640d0831f51787f444547a177a9}{MockNetworkOperationType}}\ \{}
+\DoxyCodeLine{00035\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a12b11640d0831f51787f444547a177a9ad069d15a81e0200d02b6ae2dcfe57564}{HttpGet}},\ \ \ \ \ \textcolor{comment}{//\ HTTP\ GET\ request}}
+\DoxyCodeLine{00036\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a12b11640d0831f51787f444547a177a9a680c21a88f3c1534eb7de947b98ae8b6}{HttpPost}},\ \ \ \ \textcolor{comment}{//\ HTTP\ POST\ request}}
+\DoxyCodeLine{00037\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a12b11640d0831f51787f444547a177a9ae72fbcca8750a967037e07150b523762}{HttpPut}},\ \ \ \ \ \textcolor{comment}{//\ HTTP\ PUT\ request}}
+\DoxyCodeLine{00038\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a12b11640d0831f51787f444547a177a9a8c8d5948aca0eb98969d1be0e7b28381}{HttpDelete}},\ \ \textcolor{comment}{//\ HTTP\ DELETE\ request}}
+\DoxyCodeLine{00039\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a12b11640d0831f51787f444547a177a9a49ab28040dfa07f53544970c6d147e1e}{Connect}},\ \ \ \ \ \textcolor{comment}{//\ Connection\ establishment}}
+\DoxyCodeLine{00040\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a12b11640d0831f51787f444547a177a9a42ae25231906c83927831e0ef7c317ac}{Disconnect}},\ \ \textcolor{comment}{//\ Connection\ termination}}
+\DoxyCodeLine{00041\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a12b11640d0831f51787f444547a177a9a94966d90747b97d1f0f206c98a8b1ac3}{Send}},\ \ \ \ \ \ \ \ \textcolor{comment}{//\ Data\ send\ operation}}
+\DoxyCodeLine{00042\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a12b11640d0831f51787f444547a177a9a5639d3df5aea3d9e78027b843ee3cbb2}{Receive}},\ \ \ \ \ \textcolor{comment}{//\ Data\ receive\ operation}}
+\DoxyCodeLine{00043\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a12b11640d0831f51787f444547a177a9a05d26e7d7c53744b903ae1f6f8a8c7ed}{Resolve}},\ \ \ \ \ \textcolor{comment}{//\ DNS\ resolution}}
+\DoxyCodeLine{00044\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a82c133f802f6b76bd05714fcd46a4e5fac85a251cc457840f1e032f1b733e9398}{Timeout}},\ \ \ \ \ \textcolor{comment}{//\ Operation\ timeout}}
+\DoxyCodeLine{00045\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a12b11640d0831f51787f444547a177a9a6327b4e59f58137083214a1fec358855}{Retry}}\ \ \ \ \ \ \ \ \textcolor{comment}{//\ Retry\ operation}}
+\DoxyCodeLine{00046\ \};}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00051\ \textcolor{keyword}{enum\ class}\ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_ab046ba56c845277e12b055445c50e23f}{MockNetworkError}}\ \{}
+\DoxyCodeLine{00052\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a784a7c1ff19164109682c4ab6e6cb8f6a505a83f220c02df2f85c3810cd9ceb38}{Success}},\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Operation\ successful}}
+\DoxyCodeLine{00053\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_ab046ba56c845277e12b055445c50e23faaf98071f760be899f4fcf1d53a29ba17}{ConnectionFailed}},\ \ \ \ \textcolor{comment}{//\ Failed\ to\ establish\ connection}}
+\DoxyCodeLine{00054\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_ab046ba56c845277e12b055445c50e23fa10682640c96d005f79a5662874e893b7}{ConnectionTimeout}},\ \ \ \textcolor{comment}{//\ Connection\ timed\ out}}
+\DoxyCodeLine{00055\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_ab046ba56c845277e12b055445c50e23faa6157935f33a07a4f46d0d07faf00213}{ConnectionReset}},\ \ \ \ \ \textcolor{comment}{//\ Connection\ reset\ by\ peer}}
+\DoxyCodeLine{00056\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_ab046ba56c845277e12b055445c50e23fafadea6847567986b6b3ba99c3db06640}{HostNotFound}},\ \ \ \ \ \ \ \ \textcolor{comment}{//\ DNS\ resolution\ failed}}
+\DoxyCodeLine{00057\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_ab046ba56c845277e12b055445c50e23fa77c67a4c8e6768deafb51aaed893a456}{NetworkUnreachable}},\ \ \textcolor{comment}{//\ Network\ is\ unreachable}}
+\DoxyCodeLine{00058\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_ab046ba56c845277e12b055445c50e23fa2a4581043d849bcb0e4747970ef1489b}{ServiceUnavailable}},\ \ \textcolor{comment}{//\ Service\ temporarily\ unavailable}}
+\DoxyCodeLine{00059\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_ab046ba56c845277e12b055445c50e23fab00b00233255c3551697fe613001265d}{TooManyRequests}},\ \ \ \ \ \textcolor{comment}{//\ Rate\ limited\ (HTTP\ 429)}}
+\DoxyCodeLine{00060\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a82c133f802f6b76bd05714fcd46a4e5fa7d65c64901711bc2cd2a33ff2641fbe9}{ServerError}},\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Server\ error\ (HTTP\ 5xx)}}
+\DoxyCodeLine{00061\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_ab046ba56c845277e12b055445c50e23faa4097a97f20ebb7212625084936abcee}{ClientError}},\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Client\ error\ (HTTP\ 4xx)}}
+\DoxyCodeLine{00062\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_ab046ba56c845277e12b055445c50e23fa25c1ae1ede35f9d2f2931c4d3241282f}{SSLError}},\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ SSL/TLS\ error}}
+\DoxyCodeLine{00063\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_ab046ba56c845277e12b055445c50e23fa55f238b4ee3aa6f8c91f41dad635fbe0}{DataCorrupted}},\ \ \ \ \ \ \ \textcolor{comment}{//\ Data\ corruption\ during\ transfer}}
+\DoxyCodeLine{00064\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_ab046ba56c845277e12b055445c50e23fa1ae601d13e012f95448de27c49960201}{PartialTransfer}},\ \ \ \ \ \textcolor{comment}{//\ Incomplete\ data\ transfer}}
+\DoxyCodeLine{00065\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_ab046ba56c845277e12b055445c50e23fade7c0b6e1645aaace4218d55fce61335}{BandwidthExceeded}},\ \ \ \textcolor{comment}{//\ Bandwidth\ limit\ exceeded}}
+\DoxyCodeLine{00066\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_ab046ba56c845277e12b055445c50e23fa29d53232683ad9b6698bd368ef020d84}{CustomError}}\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ User-\/defined\ error}}
+\DoxyCodeLine{00067\ \};}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00072\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_mock_http_response}{MockHttpResponse}}\ \{}
+\DoxyCodeLine{00073\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_mock_http_response_a9f349652204054b49225c9d341ae0ad0}{status\_code}}\ =\ 200;}
+\DoxyCodeLine{00074\ \ \ std::string\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_mock_http_response_a29217c83660c5d33f2582ddade3714d1}{status\_message}}\ =\ \textcolor{stringliteral}{"{}OK"{}};}
+\DoxyCodeLine{00075\ \ \ std::map<std::string,\ std::string>\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_mock_http_response_af5ef4608188dca015de109aa4a099e70}{headers}};}
+\DoxyCodeLine{00076\ \ \ std::string\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_mock_http_response_a4cb2da73d20ba162ebfab0ff837fe9df}{body}};}
+\DoxyCodeLine{00077\ \ \ std::chrono::milliseconds\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_mock_http_response_a305b5bcdc0391fe9c35a32eab396c488}{response\_time}}\ =\ std::chrono::milliseconds(100);}
+\DoxyCodeLine{00078\ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_mock_http_response_a08e35c647963009a3099fa508343a8ef}{bytes\_transferred}}\ =\ 0;}
+\DoxyCodeLine{00079\ \};}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00084\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_mock_network_call_info}{MockNetworkCallInfo}}\ \{}
+\DoxyCodeLine{00085\ \ \ std::chrono::system\_clock::time\_point\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_mock_network_call_info_ac533036d673e16e73b73d83c5da17d30}{timestamp}};}
+\DoxyCodeLine{00086\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a12b11640d0831f51787f444547a177a9}{MockNetworkOperationType}}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_mock_network_call_info_a7aa41ec681f41f78f3187bbb50bd2389}{operation\_type}};}
+\DoxyCodeLine{00087\ \ \ std::string\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_mock_network_call_info_a1e73670f211818b1a9bfec28760cecb2}{url}};}
+\DoxyCodeLine{00088\ \ \ std::string\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_mock_network_call_info_aca57a0bb266b7548e92eaa8330caade0}{method}};}
+\DoxyCodeLine{00089\ \ \ std::map<std::string,\ std::string>\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_mock_network_call_info_af808fa29a1ffdf7f45891cef5eb4b562}{headers}};}
+\DoxyCodeLine{00090\ \ \ std::string\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_mock_network_call_info_af44dd425ca4e9034597e86bef7e765a9}{request\_body}};}
+\DoxyCodeLine{00091\ \ \ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_mock_http_response}{MockHttpResponse}}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_mock_network_call_info_a5448bdbcb80395ebdaacfc98fefff675}{response}};}
+\DoxyCodeLine{00092\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_ab046ba56c845277e12b055445c50e23f}{MockNetworkError}}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_mock_network_call_info_ae3746809ebdef19d4b519e86d8ef1d0d}{error}};}
+\DoxyCodeLine{00093\ \ \ std::chrono::milliseconds\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_mock_network_call_info_accbe3226c540faa9e1ddeab34c9155da}{duration}};}
+\DoxyCodeLine{00094\ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_mock_network_call_info_acb22c38393b404abaf65c839e3b576e3}{bytes\_sent}}\ =\ 0;}
+\DoxyCodeLine{00095\ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_mock_network_call_info_aedda7f07883d4142987351b6183e21ed}{bytes\_received}}\ =\ 0;}
+\DoxyCodeLine{00096\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_mock_network_call_info_a3413579215c294eb0c428de40fcd504e}{retry\_count}}\ =\ 0;}
+\DoxyCodeLine{00097\ \ \ std::string\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_mock_network_call_info_ae487d098ce479db55a26117813edad48}{operation\_details}};}
+\DoxyCodeLine{00098\ \};}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00103\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_condition}{NetworkCondition}}\ \{}
+\DoxyCodeLine{00104\ \ \ \textcolor{comment}{//\ Bandwidth\ simulation}}
+\DoxyCodeLine{00105\ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_condition_a42775fc1cc4a3811e06c474b66c7a1d0}{bandwidth\_bps}}\ =\ 1000000;\ \ \textcolor{comment}{//\ Bytes\ per\ second}}
+\DoxyCodeLine{00106\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_condition_a191c42152c447fa3ffa8d03db20592ea}{simulate\_bandwidth\_limit}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \ \ \textcolor{comment}{//\ Latency\ simulation}}
+\DoxyCodeLine{00109\ \ \ std::chrono::milliseconds\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_condition_af8a07a90bcea634b7b99988a36620478}{base\_latency}}\ =\ std::chrono::milliseconds(50);}
+\DoxyCodeLine{00110\ \ \ std::chrono::milliseconds\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_condition_ab8aa3182f7f6027e518c26073d3063ab}{latency\_variance}}\ =\ std::chrono::milliseconds(10);}
+\DoxyCodeLine{00111\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_condition_a78455764838f4ce1389ccb54f38a56d5}{simulate\_variable\_latency}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00113\ \ \ \textcolor{comment}{//\ Packet\ loss\ simulation}}
+\DoxyCodeLine{00114\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_condition_a0976c1ffd166107bad0abdf988600dc4}{packet\_loss\_rate}}\ =\ 0.0;\ \ \textcolor{comment}{//\ 0.0\ =\ no\ loss,\ 1.0\ =\ 100\%\ loss}}
+\DoxyCodeLine{00115\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_condition_a45531e2215a0f58c03847523ac5e89d7}{simulate\_packet\_loss}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00117\ \ \ \textcolor{comment}{//\ Connection\ stability}}
+\DoxyCodeLine{00118\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_condition_aa6fa5ac379073ffd1df9d49338831695}{connection\_drop\_rate}}\ =\ 0.0;\ \ \textcolor{comment}{//\ Rate\ of\ connection\ drops}}
+\DoxyCodeLine{00119\ \ \ std::chrono::milliseconds\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_condition_a751b5638155cc35721454b2153f535ff}{connection\_timeout}}\ =\ std::chrono::seconds(30);}
+\DoxyCodeLine{00120\ }
+\DoxyCodeLine{00121\ \ \ \textcolor{comment}{//\ Error\ rates}}
+\DoxyCodeLine{00122\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_condition_a98333811aa0f0370a2d15b4a73c867a2}{dns\_failure\_rate}}\ =\ 0.0;\ \ \ \textcolor{comment}{//\ DNS\ resolution\ failure\ rate}}
+\DoxyCodeLine{00123\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_condition_abbf8bde1dd98d7df6bdf80202a9024b6}{server\_error\_rate}}\ =\ 0.0;\ \ \textcolor{comment}{//\ Server\ error\ rate}}
+\DoxyCodeLine{00124\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_condition_a1643f157acbed9f7ef42c3fe8602a24d}{timeout\_rate}}\ =\ 0.0;\ \ \ \ \ \ \ \textcolor{comment}{//\ Request\ timeout\ rate}}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00126\ \ \ \textcolor{comment}{//\ Quality\ simulation}}
+\DoxyCodeLine{00127\ \ \ std::string\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_condition_a0216ae8b228e424f78c7b049c098dd1b}{connection\_type}}\ =\ \textcolor{stringliteral}{"{}broadband"{}};\ \ \textcolor{comment}{//\ "{}dial-\/up"{},\ "{}broadband"{},\ "{}mobile"{},\ "{}satellite"{}}}
+\DoxyCodeLine{00128\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_condition_aabc3f68216a31dd334f47a3cd86ddb1c}{simulate\_congestion}}\ =\ \textcolor{keyword}{false};\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Network\ congestion\ simulation}}
+\DoxyCodeLine{00129\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_condition_a0887b1e364091d2f874fa959d9627858}{congestion\_factor}}\ =\ 1.0;\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Congestion\ multiplier}}
+\DoxyCodeLine{00130\ \};}
+\DoxyCodeLine{00131\ }
+\DoxyCodeLine{00135\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config}{NetworkMockConfig}}\ \{}
+\DoxyCodeLine{00136\ \ \ \textcolor{comment}{//\ Default\ network\ conditions}}
+\DoxyCodeLine{00137\ \ \ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_condition}{NetworkCondition}}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_a3aa1f59848e0940a05207da96495afa5}{default\_condition}};}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00139\ \ \ \textcolor{comment}{//\ Response\ behavior}}
+\DoxyCodeLine{00140\ \ \ std::chrono::milliseconds\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_a801b447591984df05ac219efc6c039d1}{default\_response\_delay}}\ =\ std::chrono::milliseconds(100);}
+\DoxyCodeLine{00141\ \ \ std::chrono::milliseconds\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_ab11f10258deacc9b6f86baf4efd39ff9}{max\_response\_delay}}\ =\ std::chrono::seconds(30);}
+\DoxyCodeLine{00142\ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_a97be6fff73b04e9f4a73ef97d3d523fc}{max\_response\_size}}\ =\ 10\ *\ 1024\ *\ 1024;\ \ \textcolor{comment}{//\ 10MB}}
+\DoxyCodeLine{00143\ }
+\DoxyCodeLine{00144\ \ \ \textcolor{comment}{//\ Retry\ behavior}}
+\DoxyCodeLine{00145\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_a03bf80a87a4fc2d6d61603db81bf799d}{enable\_automatic\_retries}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00146\ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_a94943fdd7a3d6d6ac63936fb23dd4bed}{max\_retry\_attempts}}\ =\ 3;}
+\DoxyCodeLine{00147\ \ \ std::chrono::milliseconds\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_a34f58c1a5fe1d16d22fe93b5c68b34c8}{retry\_delay}}\ =\ std::chrono::milliseconds(1000);}
+\DoxyCodeLine{00148\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_a132223a3043ca6b89557a74121c719e7}{retry\_backoff\_factor}}\ =\ 2.0;}
+\DoxyCodeLine{00149\ }
+\DoxyCodeLine{00150\ \ \ \textcolor{comment}{//\ Connection\ pooling\ simulation}}
+\DoxyCodeLine{00151\ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_ad32d906d5ec9b079dc7c5ac9763d0ebc}{max\_concurrent\_connections}}\ =\ 10;}
+\DoxyCodeLine{00152\ \ \ std::chrono::milliseconds\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_a1ff868289c1f9c158bfe7def6ac9ad6c}{connection\_reuse\_timeout}}\ =\ std::chrono::minutes(5);}
+\DoxyCodeLine{00153\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_a76609bb17391ba506ae49e466673bc0d}{simulate\_connection\_pooling}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00154\ }
+\DoxyCodeLine{00155\ \ \ \textcolor{comment}{//\ SSL/TLS\ simulation}}
+\DoxyCodeLine{00156\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_a33a89d53c2a7e670222abc8db771bbe2}{simulate\_ssl\_handshake}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00157\ \ \ std::chrono::milliseconds\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_abc9eaf77991c0222c364c1f34e4ba54f}{ssl\_handshake\_delay}}\ =\ std::chrono::milliseconds(200);}
+\DoxyCodeLine{00158\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_ad41ba2f7fe1c308c3750e2c9f0bf17fd}{ssl\_error\_rate}}\ =\ 0.0;}
+\DoxyCodeLine{00159\ }
+\DoxyCodeLine{00160\ \ \ \textcolor{comment}{//\ Call\ tracking}}
+\DoxyCodeLine{00161\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_afc4a2cac3dd646bd098455524a132ffd}{enable\_call\_history}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00162\ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_ab93882002cd5fd13b4470e2c80bbad60}{max\_history\_size}}\ =\ 10000;}
+\DoxyCodeLine{00163\ }
+\DoxyCodeLine{00164\ \ \ \textcolor{comment}{//\ Mock\ data}}
+\DoxyCodeLine{00165\ \ \ std::string\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_aa07751410ca458bb3362f9244eec9c84}{mock\_data\_directory}}\ =\ \textcolor{stringliteral}{"{}tests/data/network\_responses/"{}};}
+\DoxyCodeLine{00166\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_a375d33fd95f56c42df349b013b5597b7}{use\_realistic\_responses}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00167\ }
+\DoxyCodeLine{00168\ \ \ \textcolor{comment}{//\ Performance\ simulation}}
+\DoxyCodeLine{00169\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_a3af99b29026efdf1cc9e75344e4e3728}{simulate\_real\_delays}}\ =\ \textcolor{keyword}{true};\ \ \ \textcolor{comment}{//\ Actually\ delay\ during\ network\ operations}}
+\DoxyCodeLine{00170\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_adb2a6d90825488913d429d6f3680085b}{high\_precision\_timing}}\ =\ \textcolor{keyword}{true};\ \ \textcolor{comment}{//\ Use\ high\ precision\ timing}}
+\DoxyCodeLine{00171\ \};}
+\DoxyCodeLine{00172\ }
+\DoxyCodeLine{00179\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_a461a3fba5581ca3c6d0d7dffeecee063}{NetworkMock}}\ \{}
+\DoxyCodeLine{00180\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00184\ \ \ \textcolor{keyword}{explicit}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_a461a3fba5581ca3c6d0d7dffeecee063}{NetworkMock}}(\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config}{NetworkMockConfig}}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_a29b26620b9a760ee924171bb927786a5}{config}}\ =\ \{\});}
+\DoxyCodeLine{00185\ }
+\DoxyCodeLine{00189\ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_af8ee888052d0771bb9b295ffd62b1ad7}{\string~NetworkMock}}();}
+\DoxyCodeLine{00190\ }
+\DoxyCodeLine{00191\ \ \ \textcolor{comment}{//\ Non-\/copyable,\ non-\/movable\ (due\ to\ mutex\ and\ thread\ management)}}
+\DoxyCodeLine{00192\ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_a64af8a3cbc4b8e37fdcd2a765ba4c440}{NetworkMock}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_a461a3fba5581ca3c6d0d7dffeecee063}{NetworkMock}}\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00193\ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_a461a3fba5581ca3c6d0d7dffeecee063}{NetworkMock}}\&\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_a3274b241c695279ce396a997779c8c0c}{operator=}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_a461a3fba5581ca3c6d0d7dffeecee063}{NetworkMock}}\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00194\ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_aed6e30a59cfe42f627ab96cd0fed9442}{NetworkMock}}(\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_a461a3fba5581ca3c6d0d7dffeecee063}{NetworkMock}}\&\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00195\ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_a461a3fba5581ca3c6d0d7dffeecee063}{NetworkMock}}\&\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_ad0a4ae28800e20b0bbcd211523281c51}{operator=}}(\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_a461a3fba5581ca3c6d0d7dffeecee063}{NetworkMock}}\&\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00196\ }
+\DoxyCodeLine{00197\ \ \ \textcolor{comment}{//\ ===\ Network\ Condition\ Control\ ===}}
+\DoxyCodeLine{00198\ }
+\DoxyCodeLine{00202\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_a380f6663a15b1c8d9d48610697432139}{set\_network\_condition}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_condition}{NetworkCondition}}\&\ condition);}
+\DoxyCodeLine{00203\ }
+\DoxyCodeLine{00207\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_ab158baf73aaed8b715d8f625fcb856a6}{set\_network\_condition\_for\_url}}(\textcolor{keyword}{const}\ std::string\&\ url\_pattern,}
+\DoxyCodeLine{00208\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_condition}{NetworkCondition}}\&\ condition);}
+\DoxyCodeLine{00209\ }
+\DoxyCodeLine{00213\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_a3b05c40033f4e3e27c33e81353cbb0f6}{simulate\_slow\_network}}(\textcolor{keywordtype}{size\_t}\ bandwidth\_bps\ =\ 56000);\ \ \textcolor{comment}{//\ 56k\ modem\ speed}}
+\DoxyCodeLine{00214\ }
+\DoxyCodeLine{00218\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_abda031c933ac4ce2e4b15e0dda06b5d4}{simulate\_high\_latency}}(std::chrono::milliseconds\ latency);}
+\DoxyCodeLine{00219\ }
+\DoxyCodeLine{00223\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_ae06f4313ab4a0dc72f1a7cfb4285d0f9}{simulate\_unstable\_network}}(\textcolor{keywordtype}{double}\ packet\_loss\_rate\ =\ 0.1);}
+\DoxyCodeLine{00224\ }
+\DoxyCodeLine{00228\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_ac1c8ff6e9822cae36d6c93d7f7ad84d7}{simulate\_network\_congestion}}(\textcolor{keywordtype}{double}\ congestion\_factor\ =\ 3.0);}
+\DoxyCodeLine{00229\ }
+\DoxyCodeLine{00233\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_aefd902031694fb15fc2589f1a87131c6}{simulate\_mobile\_network}}();}
+\DoxyCodeLine{00234\ }
+\DoxyCodeLine{00238\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_a438bab8da4519c97c079cd518735ad23}{simulate\_satellite\_network}}();}
+\DoxyCodeLine{00239\ }
+\DoxyCodeLine{00243\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_a0678a7104d680aafa259530d0fecb994}{reset\_to\_normal\_conditions}}();}
+\DoxyCodeLine{00244\ }
+\DoxyCodeLine{00245\ \ \ \textcolor{comment}{//\ ===\ Connection\ Control\ ===}}
+\DoxyCodeLine{00246\ }
+\DoxyCodeLine{00250\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_add8e97be93e3b0eba60eaf0f2f60f321}{simulate\_connection\_failure}}(\textcolor{keywordtype}{size\_t}\ request\_count\ =\ 1);}
+\DoxyCodeLine{00251\ }
+\DoxyCodeLine{00255\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_afc0b6f9719314d18a22bd69c0bcf6068}{simulate\_connection\_timeout}}(\textcolor{keywordtype}{size\_t}\ request\_count\ =\ 1);}
+\DoxyCodeLine{00256\ }
+\DoxyCodeLine{00260\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_a32866121a240ed626b18cd4998444443}{simulate\_connection\_reset}}(\textcolor{keywordtype}{size\_t}\ request\_count\ =\ 1);}
+\DoxyCodeLine{00261\ }
+\DoxyCodeLine{00265\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_aa4edbda24965b2e4773a64ff0b87c3c2}{simulate\_dns\_failure}}(\textcolor{keywordtype}{size\_t}\ request\_count\ =\ 1);}
+\DoxyCodeLine{00266\ }
+\DoxyCodeLine{00270\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_a12d72e45dae6e9f9076dcfb64b0121b8}{simulate\_server\_unavailable}}(\textcolor{keywordtype}{size\_t}\ request\_count\ =\ 1);}
+\DoxyCodeLine{00271\ }
+\DoxyCodeLine{00275\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_a17d679c9b08e9f134e090b3bfe179097}{simulate\_rate\_limiting}}(\textcolor{keywordtype}{size\_t}\ request\_count\ =\ 1,}
+\DoxyCodeLine{00276\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::chrono::milliseconds\ retry\_after\ =\ std::chrono::seconds(60));}
+\DoxyCodeLine{00277\ }
+\DoxyCodeLine{00278\ \ \ \textcolor{comment}{//\ ===\ Response\ Configuration\ ===}}
+\DoxyCodeLine{00279\ }
+\DoxyCodeLine{00283\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_a3cafed1d45ceb4533971d6b7371c6546}{set\_response\_for\_url}}(\textcolor{keyword}{const}\ std::string\&\ url,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_mock_http_response}{MockHttpResponse}}\&\ response);}
+\DoxyCodeLine{00284\ }
+\DoxyCodeLine{00288\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_aa046d04c2c1745a47fc2c00f640c1879}{set\_response\_for\_pattern}}(\textcolor{keyword}{const}\ std::string\&\ url\_pattern,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_mock_http_response}{MockHttpResponse}}\&\ response);}
+\DoxyCodeLine{00289\ }
+\DoxyCodeLine{00293\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_a900d8de7ff557dc653d4931da1470df4}{set\_default\_response}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_mock_http_response}{MockHttpResponse}}\&\ response);}
+\DoxyCodeLine{00294\ }
+\DoxyCodeLine{00298\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_a5c5b57b885c3ce046d8998c91cfacc28}{load\_mock\_responses\_from\_directory}}(\textcolor{keyword}{const}\ std::string\&\ directory\_path);}
+\DoxyCodeLine{00299\ }
+\DoxyCodeLine{00303\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_a4ba3686647bc6a8c569161617e9a2886}{set\_error\_response}}(\mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_ab046ba56c845277e12b055445c50e23f}{MockNetworkError}}\ error\_type,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_mock_http_response}{MockHttpResponse}}\&\ response);}
+\DoxyCodeLine{00304\ }
+\DoxyCodeLine{00305\ \ \ \textcolor{comment}{//\ ===\ HTTP\ Mock\ Interface\ ===}}
+\DoxyCodeLine{00306\ }
+\DoxyCodeLine{00310\ \ \ [[nodiscard]]\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_mock_http_response}{MockHttpResponse}}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_a4c0937ac393fd351bfa5c7e91335e916}{mock\_http\_get}}(}
+\DoxyCodeLine{00311\ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ url,\ \textcolor{keyword}{const}\ std::map<std::string,\ std::string>\&\ headers\ =\ \{\});}
+\DoxyCodeLine{00312\ }
+\DoxyCodeLine{00316\ \ \ [[nodiscard]]\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_mock_http_response}{MockHttpResponse}}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_abb4359630260bd3783634b617366dc10}{mock\_http\_post}}(}
+\DoxyCodeLine{00317\ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ url,\ \textcolor{keyword}{const}\ std::string\&\ body,}
+\DoxyCodeLine{00318\ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::map<std::string,\ std::string>\&\ headers\ =\ \{\});}
+\DoxyCodeLine{00319\ }
+\DoxyCodeLine{00323\ \ \ [[nodiscard]]\ MockHttpResponse\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_a3efda5b8d10551f0e21c3c04adacd02b}{mock\_http\_put}}(}
+\DoxyCodeLine{00324\ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ url,\ \textcolor{keyword}{const}\ std::string\&\ body,}
+\DoxyCodeLine{00325\ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::map<std::string,\ std::string>\&\ headers\ =\ \{\});}
+\DoxyCodeLine{00326\ }
+\DoxyCodeLine{00330\ \ \ [[nodiscard]]\ MockHttpResponse\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_a16b20ea7cde0ef74e15b32be707deeb1}{mock\_http\_delete}}(}
+\DoxyCodeLine{00331\ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ url,\ \textcolor{keyword}{const}\ std::map<std::string,\ std::string>\&\ headers\ =\ \{\});}
+\DoxyCodeLine{00332\ }
+\DoxyCodeLine{00336\ \ \ [[nodiscard]]\ MockHttpResponse\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_aec64d2f797339b07ac410b470d2a1867}{mock\_http\_request}}(}
+\DoxyCodeLine{00337\ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ method,\ \textcolor{keyword}{const}\ std::string\&\ url,\ \textcolor{keyword}{const}\ std::string\&\ body\ =\ \textcolor{stringliteral}{"{}"{}},}
+\DoxyCodeLine{00338\ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::map<std::string,\ std::string>\&\ headers\ =\ \{\});}
+\DoxyCodeLine{00339\ }
+\DoxyCodeLine{00340\ \ \ \textcolor{comment}{//\ ===\ Connection\ Management\ ===}}
+\DoxyCodeLine{00341\ }
+\DoxyCodeLine{00345\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_a8fd717b9fb035975ad35f3015479d96a}{mock\_connect}}(\textcolor{keyword}{const}\ std::string\&\ host,\ \textcolor{keywordtype}{int}\ port);}
+\DoxyCodeLine{00346\ }
+\DoxyCodeLine{00350\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_acf33f5e9e90bbbd045c45cbfedb16241}{mock\_disconnect}}(\textcolor{keyword}{const}\ std::string\&\ host,\ \textcolor{keywordtype}{int}\ port);}
+\DoxyCodeLine{00351\ }
+\DoxyCodeLine{00355\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_a1ee1bfe15fce0bf05a9f4a9844d72821}{is\_connected}}(\textcolor{keyword}{const}\ std::string\&\ host,\ \textcolor{keywordtype}{int}\ port)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00356\ }
+\DoxyCodeLine{00360\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_a0cc5cf1198fce65d3ac71a800050a4c8}{active\_connection\_count}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00361\ }
+\DoxyCodeLine{00362\ \ \ \textcolor{comment}{//\ ===\ Data\ Transfer\ Simulation\ ===}}
+\DoxyCodeLine{00363\ }
+\DoxyCodeLine{00367\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_a764a18807fc4382bd9b9d8fa5704b55b}{mock\_send\_data}}(\textcolor{keyword}{const}\ std::string\&\ data);}
+\DoxyCodeLine{00368\ }
+\DoxyCodeLine{00372\ \ \ [[nodiscard]]\ std::string\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_a98bda1d0a38e1c26a88be85f6939bf52}{mock\_receive\_data}}(\textcolor{keywordtype}{size\_t}\ max\_bytes);}
+\DoxyCodeLine{00373\ }
+\DoxyCodeLine{00377\ \ \ [[nodiscard]]\ std::chrono::milliseconds\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_a8965480b42bb84b0e71e925069e49499}{calculate\_transfer\_time}}(\textcolor{keywordtype}{size\_t}\ bytes)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00378\ }
+\DoxyCodeLine{00382\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_a797da68ab60b0877d34701400af05044}{simulate\_bandwidth\_limited\_transfer}}(\textcolor{keywordtype}{size\_t}\ bytes)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00383\ }
+\DoxyCodeLine{00384\ \ \ \textcolor{comment}{//\ ===\ Call\ Verification\ ===}}
+\DoxyCodeLine{00385\ }
+\DoxyCodeLine{00389\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_ac5308094b40a7a4a0934dd8c1583897a}{operation\_count}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00390\ }
+\DoxyCodeLine{00394\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_ac5308094b40a7a4a0934dd8c1583897a}{operation\_count}}(\mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a12b11640d0831f51787f444547a177a9}{MockNetworkOperationType}}\ type)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00395\ }
+\DoxyCodeLine{00399\ \ \ [[nodiscard]]\ \textcolor{keyword}{const}\ std::vector<MockNetworkCallInfo>\&\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_a33bb50a919690f79eada08efbb1349d9}{operation\_history}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00400\ }
+\DoxyCodeLine{00404\ \ \ [[nodiscard]]\ std::vector<MockNetworkCallInfo>\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_a6303cacc38ace965a11a56cd72ec23d7}{operations\_of\_type}}(}
+\DoxyCodeLine{00405\ \ \ \ \ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a12b11640d0831f51787f444547a177a9}{MockNetworkOperationType}}\ type)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00406\ }
+\DoxyCodeLine{00410\ \ \ [[nodiscard]]\ std::vector<MockNetworkCallInfo>\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_a6fe94186b2521abe5e347b124342e95b}{operations\_for\_url}}(\textcolor{keyword}{const}\ std::string\&\ url)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00411\ }
+\DoxyCodeLine{00415\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_a682bc13119a043a27164a984e17d9a82}{was\_url\_requested}}(\textcolor{keyword}{const}\ std::string\&\ url)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00416\ }
+\DoxyCodeLine{00420\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_ae7a8e742fe937f5a49e830cc4b47d4b6}{total\_bytes\_transferred}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00421\ }
+\DoxyCodeLine{00425\ \ \ [[nodiscard]]\ std::chrono::milliseconds\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_a2583331b8953983f9f6193f36ed73954}{total\_operation\_time}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00426\ }
+\DoxyCodeLine{00430\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_aad7e17324b12cabe5cae3d6249d7ba22}{reset\_call\_history}}();}
+\DoxyCodeLine{00431\ }
+\DoxyCodeLine{00432\ \ \ \textcolor{comment}{//\ ===\ Configuration\ Access\ ===}}
+\DoxyCodeLine{00433\ }
+\DoxyCodeLine{00437\ \ \ [[nodiscard]]\ \textcolor{keyword}{const}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config}{NetworkMockConfig}}\&\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_a29b26620b9a760ee924171bb927786a5}{config}}()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ config\_;\ \}}
+\DoxyCodeLine{00438\ }
+\DoxyCodeLine{00442\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_a1a4c2447c65faee2bd0c54b4f7004a7c}{update\_config}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config}{NetworkMockConfig}}\&\ new\_config);}
+\DoxyCodeLine{00443\ }
+\DoxyCodeLine{00447\ \ \ [[nodiscard]]\ \textcolor{keyword}{const}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_condition}{NetworkCondition}}\&\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_ac870ceb594d4ebaf5839a422b13fd7ad}{current\_condition}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00448\ }
+\DoxyCodeLine{00449\ \ \ \textcolor{comment}{//\ ===\ Utility\ Functions\ ===}}
+\DoxyCodeLine{00450\ }
+\DoxyCodeLine{00454\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_a6a969fe5dd6061a3b4d7b6d5b1c29f5a}{install\_as\_global\_mock}}();}
+\DoxyCodeLine{00455\ }
+\DoxyCodeLine{00459\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_a594a6a8763201c7b612a9e44b7a81905}{remove\_global\_mock}}();}
+\DoxyCodeLine{00460\ }
+\DoxyCodeLine{00464\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_a5c2e1ca9cb10f9a1b783195acc72dbf3}{create\_test\_scenario}}(\textcolor{keyword}{const}\ std::string\&\ scenario\_name,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_condition}{NetworkCondition}}\&\ condition,}
+\DoxyCodeLine{00465\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::chrono::duration<double>\ duration);}
+\DoxyCodeLine{00466\ }
+\DoxyCodeLine{00470\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Func>}
+\DoxyCodeLine{00471\ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_aa19db14c71eaea4e135fee14b8411d31}{execute\_with\_network\_condition}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_condition}{NetworkCondition}}\&\ condition,\ Func\&\&\ func)}
+\DoxyCodeLine{00472\ \ \ \ \ \ \ -\/>\ \textcolor{keyword}{decltype}(func());}
+\DoxyCodeLine{00473\ }
+\DoxyCodeLine{00474\ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00475\ \ \ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config}{NetworkMockConfig}}\ config\_;}
+\DoxyCodeLine{00476\ }
+\DoxyCodeLine{00477\ \ \ \textcolor{comment}{//\ Network\ state}}
+\DoxyCodeLine{00478\ \ \ \textcolor{keyword}{mutable}\ std::mutex\ network\_mutex\_;}
+\DoxyCodeLine{00479\ \ \ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_condition}{NetworkCondition}}\ current\_condition\_;}
+\DoxyCodeLine{00480\ \ \ std::map<std::string,\ NetworkCondition>\ url\_conditions\_;}
+\DoxyCodeLine{00481\ }
+\DoxyCodeLine{00482\ \ \ \textcolor{comment}{//\ Connection\ tracking}}
+\DoxyCodeLine{00483\ \ \ std::map<std::pair<std::string,\ int>,\ std::chrono::system\_clock::time\_point>\ active\_connections\_;}
+\DoxyCodeLine{00484\ \ \ std::atomic<size\_t>\ connection\_counter\_;}
+\DoxyCodeLine{00485\ }
+\DoxyCodeLine{00486\ \ \ \textcolor{comment}{//\ Response\ storage}}
+\DoxyCodeLine{00487\ \ \ std::map<std::string,\ MockHttpResponse>\ url\_responses\_;}
+\DoxyCodeLine{00488\ \ \ std::map<std::string,\ MockHttpResponse>\ pattern\_responses\_;}
+\DoxyCodeLine{00489\ \ \ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_mock_http_response}{MockHttpResponse}}\ default\_response\_;}
+\DoxyCodeLine{00490\ \ \ std::map<MockNetworkError,\ MockHttpResponse>\ error\_responses\_;}
+\DoxyCodeLine{00491\ }
+\DoxyCodeLine{00492\ \ \ \textcolor{comment}{//\ Error\ simulation\ state}}
+\DoxyCodeLine{00493\ \ \ \textcolor{keyword}{mutable}\ std::atomic<size\_t>\ remaining\_connection\_failures\_;}
+\DoxyCodeLine{00494\ \ \ \textcolor{keyword}{mutable}\ std::atomic<size\_t>\ remaining\_timeouts\_;}
+\DoxyCodeLine{00495\ \ \ \textcolor{keyword}{mutable}\ std::atomic<size\_t>\ remaining\_resets\_;}
+\DoxyCodeLine{00496\ \ \ \textcolor{keyword}{mutable}\ std::atomic<size\_t>\ remaining\_dns\_failures\_;}
+\DoxyCodeLine{00497\ \ \ \textcolor{keyword}{mutable}\ std::atomic<size\_t>\ remaining\_server\_unavailable\_;}
+\DoxyCodeLine{00498\ \ \ \textcolor{keyword}{mutable}\ std::atomic<size\_t>\ remaining\_rate\_limits\_;}
+\DoxyCodeLine{00499\ }
+\DoxyCodeLine{00500\ \ \ \textcolor{comment}{//\ Call\ tracking}}
+\DoxyCodeLine{00501\ \ \ \textcolor{keyword}{mutable}\ std::mutex\ call\_mutex\_;}
+\DoxyCodeLine{00502\ \ \ std::vector<MockNetworkCallInfo>\ operation\_history\_;}
+\DoxyCodeLine{00503\ \ \ std::map<MockNetworkOperationType,\ size\_t>\ operation\_counts\_;}
+\DoxyCodeLine{00504\ \ \ std::atomic<size\_t>\ total\_bytes\_sent\_;}
+\DoxyCodeLine{00505\ \ \ std::atomic<size\_t>\ total\_bytes\_received\_;}
+\DoxyCodeLine{00506\ \ \ std::atomic<std::chrono::milliseconds::rep>\ total\_operation\_time\_;}
+\DoxyCodeLine{00507\ }
+\DoxyCodeLine{00508\ \ \ \textcolor{comment}{//\ Random\ number\ generation\ for\ simulation}}
+\DoxyCodeLine{00509\ \ \ \textcolor{keyword}{mutable}\ std::random\_device\ rd\_;}
+\DoxyCodeLine{00510\ \ \ \textcolor{keyword}{mutable}\ std::mt19937\ gen\_;}
+\DoxyCodeLine{00511\ \ \ \textcolor{keyword}{mutable}\ std::uniform\_real\_distribution<double>\ error\_dist\_;}
+\DoxyCodeLine{00512\ \ \ \textcolor{keyword}{mutable}\ std::uniform\_int\_distribution<int>\ latency\_dist\_;}
+\DoxyCodeLine{00513\ }
+\DoxyCodeLine{00514\ \ \ \textcolor{comment}{//\ Bandwidth\ simulation}}
+\DoxyCodeLine{00515\ \ \ \textcolor{keyword}{mutable}\ std::mutex\ bandwidth\_mutex\_;}
+\DoxyCodeLine{00516\ \ \ \textcolor{keyword}{mutable}\ std::queue<std::pair<std::chrono::steady\_clock::time\_point,\ size\_t>>\ bandwidth\_queue\_;}
+\DoxyCodeLine{00517\ }
+\DoxyCodeLine{00518\ \ \ \textcolor{comment}{//\ ===\ Internal\ Helper\ Methods\ ===}}
+\DoxyCodeLine{00519\ }
+\DoxyCodeLine{00523\ \ \ \textcolor{keywordtype}{void}\ record\_operation(\mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a12b11640d0831f51787f444547a177a9}{MockNetworkOperationType}}\ type,\ \textcolor{keyword}{const}\ std::string\&\ url,}
+\DoxyCodeLine{00524\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ method,}
+\DoxyCodeLine{00525\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::map<std::string,\ std::string>\&\ headers,}
+\DoxyCodeLine{00526\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ request\_body,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_mock_http_response}{MockHttpResponse}}\&\ response,}
+\DoxyCodeLine{00527\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_ab046ba56c845277e12b055445c50e23f}{MockNetworkError}}\ error,\ std::chrono::milliseconds\ duration,}
+\DoxyCodeLine{00528\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ details\ =\ \textcolor{stringliteral}{"{}"{}});}
+\DoxyCodeLine{00529\ }
+\DoxyCodeLine{00533\ \ \ [[nodiscard]]\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_condition}{NetworkCondition}}\ get\_condition\_for\_url(\textcolor{keyword}{const}\ std::string\&\ url)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00534\ }
+\DoxyCodeLine{00538\ \ \ [[nodiscard]]\ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_ab046ba56c845277e12b055445c50e23f}{MockNetworkError}}\ check\_for\_simulated\_errors()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00539\ }
+\DoxyCodeLine{00543\ \ \ \textcolor{keywordtype}{void}\ simulate\_network\_latency(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_condition}{NetworkCondition}}\&\ condition)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00544\ }
+\DoxyCodeLine{00548\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ simulate\_packet\_loss(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_condition}{NetworkCondition}}\&\ condition)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00549\ }
+\DoxyCodeLine{00553\ \ \ [[nodiscard]]\ std::optional<MockHttpResponse>\ find\_response\_for\_url(\textcolor{keyword}{const}\ std::string\&\ url)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00554\ }
+\DoxyCodeLine{00558\ \ \ [[nodiscard]]\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_mock_http_response}{MockHttpResponse}}\ generate\_realistic\_response(\textcolor{keyword}{const}\ std::string\&\ url,}
+\DoxyCodeLine{00559\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ method)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00560\ }
+\DoxyCodeLine{00564\ \ \ [[nodiscard]]\ std::tuple<std::string,\ std::string,\ int,\ std::string>\ parse\_url(}
+\DoxyCodeLine{00565\ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ url)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00566\ }
+\DoxyCodeLine{00570\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ matches\_pattern(\textcolor{keyword}{const}\ std::string\&\ url,\ \textcolor{keyword}{const}\ std::string\&\ pattern)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00571\ }
+\DoxyCodeLine{00575\ \ \ \textcolor{keywordtype}{void}\ update\_bandwidth\_tracking(\textcolor{keywordtype}{size\_t}\ bytes)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00576\ }
+\DoxyCodeLine{00580\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{size\_t}\ calculate\_current\_bandwidth\_usage()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00581\ }
+\DoxyCodeLine{00585\ \ \ [[nodiscard]]\ std::pair<std::string,\ int>\ make\_connection\_key(\textcolor{keyword}{const}\ std::string\&\ host,}
+\DoxyCodeLine{00586\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ port)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00587\ \};}
+\DoxyCodeLine{00588\ }
+\DoxyCodeLine{00592\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_factory}{NetworkMockFactory}}\ \{}
+\DoxyCodeLine{00593\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00597\ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ std::unique\_ptr<NetworkMock>\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_factory_a9411cb8f01d0b79031a005b347567ea1}{create\_default}}();}
+\DoxyCodeLine{00598\ }
+\DoxyCodeLine{00602\ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ std::unique\_ptr<NetworkMock>\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_factory_ac110bf6dcdadf2f28c3f37f3c0426b06}{create}}(\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config}{NetworkMockConfig}}\ config);}
+\DoxyCodeLine{00603\ }
+\DoxyCodeLine{00607\ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ std::unique\_ptr<NetworkMock>\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_factory_a01256743cf2f5a9e9ddcc36ca35430f5}{create\_for\_connection\_failure\_testing}}();}
+\DoxyCodeLine{00608\ }
+\DoxyCodeLine{00612\ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ std::unique\_ptr<NetworkMock>\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_factory_a32d0ce98d18c4c83a174c616772d06f8}{create\_for\_slow\_network\_testing}}();}
+\DoxyCodeLine{00613\ }
+\DoxyCodeLine{00617\ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ std::unique\_ptr<NetworkMock>\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_factory_ab410ece14c8156728b37dc78663f34fd}{create\_for\_timeout\_testing}}();}
+\DoxyCodeLine{00618\ }
+\DoxyCodeLine{00622\ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ std::unique\_ptr<NetworkMock>\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_factory_ab46b2ba3bfe5931d23f02877bc830808}{create\_for\_mobile\_network}}();}
+\DoxyCodeLine{00623\ }
+\DoxyCodeLine{00627\ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ std::unique\_ptr<NetworkMock>\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_factory_a6ed4d27face7de239c96e407b994ee6e}{create\_for\_satellite\_network}}();}
+\DoxyCodeLine{00628\ }
+\DoxyCodeLine{00632\ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ std::unique\_ptr<NetworkMock>\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_factory_ab1fb1fff88cf606709ff81b6ccbcf6f8}{create\_with\_perfect\_conditions}}();}
+\DoxyCodeLine{00633\ \};}
+\DoxyCodeLine{00634\ }
+\DoxyCodeLine{00638\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_network_mock_ac2565a7acf769d96f5d92ba62c800c15}{ScopedNetworkMock}}\ \{}
+\DoxyCodeLine{00639\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00640\ \ \ \textcolor{keyword}{explicit}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_network_mock_ac2565a7acf769d96f5d92ba62c800c15}{ScopedNetworkMock}}(std::unique\_ptr<NetworkMock>\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_network_mock_ab6d938344bb19b8a7b8201bb12fdc4e6}{mock}});}
+\DoxyCodeLine{00641\ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_network_mock_af0274f2533592f359f3947e6435b4025}{\string~ScopedNetworkMock}}();}
+\DoxyCodeLine{00642\ }
+\DoxyCodeLine{00643\ \ \ \textcolor{comment}{//\ Non-\/copyable,\ non-\/movable}}
+\DoxyCodeLine{00644\ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_network_mock_a7f0b0ac9a26d27f0c71d5ff1f88e72dc}{ScopedNetworkMock}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_network_mock_ac2565a7acf769d96f5d92ba62c800c15}{ScopedNetworkMock}}\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00645\ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_network_mock_ac2565a7acf769d96f5d92ba62c800c15}{ScopedNetworkMock}}\&\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_network_mock_aa14c6ff500275b0ae190ae0c7849e7c6}{operator=}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_network_mock_ac2565a7acf769d96f5d92ba62c800c15}{ScopedNetworkMock}}\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00646\ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_network_mock_a3c6b9f8d0f142351ffc2fef90571eecb}{ScopedNetworkMock}}(\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_network_mock_ac2565a7acf769d96f5d92ba62c800c15}{ScopedNetworkMock}}\&\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00647\ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_network_mock_ac2565a7acf769d96f5d92ba62c800c15}{ScopedNetworkMock}}\&\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_network_mock_a14a8543b9405a7991faa3abf394ed306}{operator=}}(\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_network_mock_ac2565a7acf769d96f5d92ba62c800c15}{ScopedNetworkMock}}\&\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00648\ }
+\DoxyCodeLine{00652\ \ \ [[nodiscard]]\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock}{NetworkMock}}\&\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_network_mock_ab6d938344bb19b8a7b8201bb12fdc4e6}{mock}}()\ \{\ \textcolor{keywordflow}{return}\ *mock\_;\ \}}
+\DoxyCodeLine{00653\ \ \ [[nodiscard]]\ \textcolor{keyword}{const}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock}{NetworkMock}}\&\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_network_mock_a7be91efc040eb1c0ed255cbd1cd0a870}{mock}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ *mock\_;\ \}}
+\DoxyCodeLine{00654\ }
+\DoxyCodeLine{00655\ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00656\ \ \ std::unique\_ptr<NetworkMock>\ mock\_;}
+\DoxyCodeLine{00657\ \};}
+\DoxyCodeLine{00658\ }
+\DoxyCodeLine{00662\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_test_utils}{NetworkTestUtils}}\ \{}
+\DoxyCodeLine{00663\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00667\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_test_utils_aece889592cbf925046a9e401df0442be}{test\_network\_resilience}}(std::function<\textcolor{keywordtype}{bool}()>\ network\_operation,}
+\DoxyCodeLine{00668\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::vector<NetworkCondition>\&\ conditions,}
+\DoxyCodeLine{00669\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ max\_retries\ =\ 3);}
+\DoxyCodeLine{00670\ }
+\DoxyCodeLine{00674\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Func>}
+\DoxyCodeLine{00675\ \ \ \textcolor{keyword}{static}\ std::chrono::milliseconds\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_test_utils_a64125a1f4fd99f48e1485ac5e4f453bc}{measure\_network\_operation\_time}}(Func\&\&\ func);}
+\DoxyCodeLine{00676\ }
+\DoxyCodeLine{00680\ \ \ \textcolor{keyword}{static}\ std::vector<NetworkCondition>\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_test_utils_a64707594587b8e1f8a09ef0a1d0ff985}{create\_network\_condition\_sequence}}(}
+\DoxyCodeLine{00681\ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_condition}{NetworkCondition}}\&\ start\_condition,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_condition}{NetworkCondition}}\&\ end\_condition,\ \textcolor{keywordtype}{size\_t}\ steps);}
+\DoxyCodeLine{00682\ }
+\DoxyCodeLine{00686\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_network_test_utils_ae1baa9cd2882ed46ebe39142c9635f74}{validate\_network\_error\_handling}}(std::function<\textcolor{keywordtype}{bool}(\mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_ab046ba56c845277e12b055445c50e23f}{MockNetworkError}})>\ error\_handler,}
+\DoxyCodeLine{00687\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::vector<MockNetworkError>\&\ error\_types);}
+\DoxyCodeLine{00688\ \};}
+\DoxyCodeLine{00689\ }
+\DoxyCodeLine{00690\ \}\ \ \textcolor{comment}{//\ namespace\ SolarSystem::Testing::Mocks}}
+
+\end{DoxyCode}

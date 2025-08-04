@@ -1,0 +1,23 @@
+<map id="SolarSystem::Bodies::CelestialBody::distance_to" name="SolarSystem::Bodies::CelestialBody::distance_to">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,268,191,309"/>
+<area shape="rect" id="Node000002" href="$class_solar_system_1_1_bodies_1_1_celestial_body.html#a2d1b1c9580cbd5c36d1dc9ee7013ccc5" title="Construct celestial body with properties." alt="" coords="239,235,438,275"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="191,273,223,268,224,274,192,278"/>
+<area shape="rect" id="Node000011" href="$namespace_solar_system_1_1_math.html#abf8bee8732f253fc11dad8553b6c5795" title=" " alt="" coords="268,300,409,341"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="192,298,253,306,252,312,191,303"/>
+<area shape="rect" id="Node000003" href="$class_solar_system_1_1_bodies_1_1_celestial_body.html#aa1b16d702fc0f4b82a1d28b8d100ea56" title=" " alt="" coords="486,5,682,46"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="348,233,368,195,399,148,438,99,484,57,493,51,496,56,488,61,442,103,403,151,373,198,352,235"/>
+<area shape="rect" id="Node000004" href="$class_solar_system_1_1_bodies_1_1_celestial_body.html#abc639a63ee40b2bd606bf3b916fe4552" title=" " alt="" coords="510,71,658,111"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="356,232,410,178,446,148,485,122,496,116,499,120,487,127,449,152,414,182,360,236"/>
+<area shape="rect" id="Node000005" href="$class_solar_system_1_1_bodies_1_1_celestial_body.html#a1c41e8b18e7412bda9be5a1afa2eeaaa" title=" " alt="" coords="509,136,659,177"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="382,232,485,187,504,180,506,185,487,192,384,237"/>
+<area shape="rect" id="Node000006" href="$class_solar_system_1_1_bodies_1_1_celestial_body.html#a89dac8f57b8283b90172873399eb924f" title=" " alt="" coords="509,201,659,242"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="438,239,493,231,494,237,439,244"/>
+<area shape="rect" id="Node000007" href="$class_solar_system_1_1_bodies_1_1_celestial_body.html#a082409044958f3a12355fff96bdaa031" title=" " alt="" coords="502,267,666,307"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="439,265,487,272,487,277,438,271"/>
+<area shape="rect" id="Node000008" href="$class_solar_system_1_1_bodies_1_1_celestial_body.html#a98dbc650fe3cad42a0f86ebab3af6a62" title=" " alt="" coords="506,332,663,373"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="409,273,439,286,463,301,487,317,502,323,500,328,485,321,461,306,437,291,407,278"/>
+<area shape="rect" id="Node000009" href="$class_solar_system_1_1_bodies_1_1_celestial_body.html#a95a490a444c20312cfc4596f4be18305" title=" " alt="" coords="512,397,656,438"/>
+<area shape="poly" id="edge8_Node000002_Node000009" title=" " alt="" coords="421,274,440,286,458,311,465,336,471,359,488,382,500,391,497,395,484,386,466,362,459,337,453,313,436,290,418,278"/>
+<area shape="rect" id="Node000010" href="$class_solar_system_1_1_bodies_1_1_celestial_body.html#a214725d4ecae1e8f62b3bfd5fda0ff06" title=" " alt="" coords="502,463,666,503"/>
+<area shape="poly" id="edge9_Node000002_Node000010" title=" " alt="" coords="424,274,440,286,455,307,463,328,465,369,467,409,474,428,488,448,491,451,488,455,484,451,469,431,461,410,459,369,457,329,450,310,436,290,421,278"/>
+</map>

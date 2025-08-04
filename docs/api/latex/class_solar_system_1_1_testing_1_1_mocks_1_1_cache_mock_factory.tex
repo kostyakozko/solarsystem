@@ -1,0 +1,112 @@
+\doxysection{Solar\+System\+::Testing\+::Mocks\+::Cache\+Mock\+Factory Class Reference}
+\hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_factory}{}\label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_factory}\index{SolarSystem::Testing::Mocks::CacheMockFactory@{SolarSystem::Testing::Mocks::CacheMockFactory}}
+
+
+Factory for creating cache mocks.  
+
+
+
+
+{\ttfamily \#include $<$cache\+\_\+mock.\+hpp$>$}
+
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock}{Cache\+Mock}} $>$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_factory_ac4cd0da267341d2af3cc0c9027eb356c}{create\+\_\+default}} ()
+\begin{DoxyCompactList}\small\item\em Create default cache mock. \end{DoxyCompactList}\item 
+static std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock}{Cache\+Mock}} $>$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_factory_a974682f4f2cf1296baf4d6a90ccf82ee}{create}} (\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config}{Cache\+Mock\+Config}} config)
+\begin{DoxyCompactList}\small\item\em Create cache mock with custom configuration. \end{DoxyCompactList}\item 
+static std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock}{Cache\+Mock}} $>$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_factory_a482cb909063849e13a8fbe2dbea2d1b8}{create\+\_\+for\+\_\+corruption\+\_\+testing}} ()
+\begin{DoxyCompactList}\small\item\em Create cache mock for corruption testing. \end{DoxyCompactList}\item 
+static std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock}{Cache\+Mock}} $>$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_factory_a79faabc7d3335f7e996953e56a4517ed}{create\+\_\+for\+\_\+disk\+\_\+full\+\_\+testing}} ()
+\begin{DoxyCompactList}\small\item\em Create cache mock for disk full testing. \end{DoxyCompactList}\item 
+static std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock}{Cache\+Mock}} $>$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_factory_ad5cd12b718456c2abccdd5d4fefd56fc}{create\+\_\+for\+\_\+performance\+\_\+testing}} ()
+\begin{DoxyCompactList}\small\item\em Create cache mock for performance testing. \end{DoxyCompactList}\item 
+static std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock}{Cache\+Mock}} $>$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_factory_ae96a989e2ec4e0ad4e9aa9b8e7426f0e}{create\+\_\+with\+\_\+valid\+\_\+cache}} ()
+\begin{DoxyCompactList}\small\item\em Create cache mock with always valid cache. \end{DoxyCompactList}\item 
+static std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock}{Cache\+Mock}} $>$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_factory_a3377495cc3176a6b1c5f96fb8b88a5bf}{create\+\_\+with\+\_\+invalid\+\_\+cache}} ()
+\begin{DoxyCompactList}\small\item\em Create cache mock with always invalid cache. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Factory for creating cache mocks. 
+
+\label{doc-func-members}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_factory_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_factory_a974682f4f2cf1296baf4d6a90ccf82ee}\index{SolarSystem::Testing::Mocks::CacheMockFactory@{SolarSystem::Testing::Mocks::CacheMockFactory}!create@{create}}
+\index{create@{create}!SolarSystem::Testing::Mocks::CacheMockFactory@{SolarSystem::Testing::Mocks::CacheMockFactory}}
+\doxysubsubsection{\texorpdfstring{create()}{create()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_factory_a974682f4f2cf1296baf4d6a90ccf82ee} 
+std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock}{Cache\+Mock}} $>$ Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+Factory\+::create (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config}{Cache\+Mock\+Config}}}]{config}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [nodiscard]}}
+
+
+
+Create cache mock with custom configuration. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_factory_ac4cd0da267341d2af3cc0c9027eb356c}\index{SolarSystem::Testing::Mocks::CacheMockFactory@{SolarSystem::Testing::Mocks::CacheMockFactory}!create\_default@{create\_default}}
+\index{create\_default@{create\_default}!SolarSystem::Testing::Mocks::CacheMockFactory@{SolarSystem::Testing::Mocks::CacheMockFactory}}
+\doxysubsubsection{\texorpdfstring{create\_default()}{create\_default()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_factory_ac4cd0da267341d2af3cc0c9027eb356c} 
+std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock}{Cache\+Mock}} $>$ Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+Factory\+::create\+\_\+default (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [nodiscard]}}
+
+
+
+Create default cache mock. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_factory_a482cb909063849e13a8fbe2dbea2d1b8}\index{SolarSystem::Testing::Mocks::CacheMockFactory@{SolarSystem::Testing::Mocks::CacheMockFactory}!create\_for\_corruption\_testing@{create\_for\_corruption\_testing}}
+\index{create\_for\_corruption\_testing@{create\_for\_corruption\_testing}!SolarSystem::Testing::Mocks::CacheMockFactory@{SolarSystem::Testing::Mocks::CacheMockFactory}}
+\doxysubsubsection{\texorpdfstring{create\_for\_corruption\_testing()}{create\_for\_corruption\_testing()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_factory_a482cb909063849e13a8fbe2dbea2d1b8} 
+std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock}{Cache\+Mock}} $>$ Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+Factory\+::create\+\_\+for\+\_\+corruption\+\_\+testing (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [nodiscard]}}
+
+
+
+Create cache mock for corruption testing. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_factory_a79faabc7d3335f7e996953e56a4517ed}\index{SolarSystem::Testing::Mocks::CacheMockFactory@{SolarSystem::Testing::Mocks::CacheMockFactory}!create\_for\_disk\_full\_testing@{create\_for\_disk\_full\_testing}}
+\index{create\_for\_disk\_full\_testing@{create\_for\_disk\_full\_testing}!SolarSystem::Testing::Mocks::CacheMockFactory@{SolarSystem::Testing::Mocks::CacheMockFactory}}
+\doxysubsubsection{\texorpdfstring{create\_for\_disk\_full\_testing()}{create\_for\_disk\_full\_testing()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_factory_a79faabc7d3335f7e996953e56a4517ed} 
+std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock}{Cache\+Mock}} $>$ Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+Factory\+::create\+\_\+for\+\_\+disk\+\_\+full\+\_\+testing (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [nodiscard]}}
+
+
+
+Create cache mock for disk full testing. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_factory_ad5cd12b718456c2abccdd5d4fefd56fc}\index{SolarSystem::Testing::Mocks::CacheMockFactory@{SolarSystem::Testing::Mocks::CacheMockFactory}!create\_for\_performance\_testing@{create\_for\_performance\_testing}}
+\index{create\_for\_performance\_testing@{create\_for\_performance\_testing}!SolarSystem::Testing::Mocks::CacheMockFactory@{SolarSystem::Testing::Mocks::CacheMockFactory}}
+\doxysubsubsection{\texorpdfstring{create\_for\_performance\_testing()}{create\_for\_performance\_testing()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_factory_ad5cd12b718456c2abccdd5d4fefd56fc} 
+std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock}{Cache\+Mock}} $>$ Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+Factory\+::create\+\_\+for\+\_\+performance\+\_\+testing (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [nodiscard]}}
+
+
+
+Create cache mock for performance testing. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_factory_a3377495cc3176a6b1c5f96fb8b88a5bf}\index{SolarSystem::Testing::Mocks::CacheMockFactory@{SolarSystem::Testing::Mocks::CacheMockFactory}!create\_with\_invalid\_cache@{create\_with\_invalid\_cache}}
+\index{create\_with\_invalid\_cache@{create\_with\_invalid\_cache}!SolarSystem::Testing::Mocks::CacheMockFactory@{SolarSystem::Testing::Mocks::CacheMockFactory}}
+\doxysubsubsection{\texorpdfstring{create\_with\_invalid\_cache()}{create\_with\_invalid\_cache()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_factory_a3377495cc3176a6b1c5f96fb8b88a5bf} 
+std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock}{Cache\+Mock}} $>$ Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+Factory\+::create\+\_\+with\+\_\+invalid\+\_\+cache (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [nodiscard]}}
+
+
+
+Create cache mock with always invalid cache. 
+
+\Hypertarget{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_factory_ae96a989e2ec4e0ad4e9aa9b8e7426f0e}\index{SolarSystem::Testing::Mocks::CacheMockFactory@{SolarSystem::Testing::Mocks::CacheMockFactory}!create\_with\_valid\_cache@{create\_with\_valid\_cache}}
+\index{create\_with\_valid\_cache@{create\_with\_valid\_cache}!SolarSystem::Testing::Mocks::CacheMockFactory@{SolarSystem::Testing::Mocks::CacheMockFactory}}
+\doxysubsubsection{\texorpdfstring{create\_with\_valid\_cache()}{create\_with\_valid\_cache()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_factory_ae96a989e2ec4e0ad4e9aa9b8e7426f0e} 
+std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock}{Cache\+Mock}} $>$ Solar\+System\+::\+Testing\+::\+Mocks\+::\+Cache\+Mock\+Factory\+::create\+\_\+with\+\_\+valid\+\_\+cache (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [nodiscard]}}
+
+
+
+Create cache mock with always valid cache. 
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+test/include/solar\+\_\+test/mocks/\mbox{\hyperlink{cache__mock_8hpp}{cache\+\_\+mock.\+hpp}}\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+test/src/mocks/\mbox{\hyperlink{cache__mock_8cpp}{cache\+\_\+mock.\+cpp}}\end{DoxyCompactItemize}

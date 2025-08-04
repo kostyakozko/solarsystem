@@ -1,0 +1,9 @@
+<map id="demonstrate_baseline_management" name="demonstrate_baseline_management">
+<area shape="rect" id="Node000001" title="Demonstrate baseline creation and storage." alt="" coords="5,46,154,87"/>
+<area shape="rect" id="Node000002" href="$class_solar_system_1_1_testing_1_1_regression_detector.html#a352533cd8ba36727c845e1949534fc98" title="Set baseline for a benchmark." alt="" coords="202,5,348,61"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="154,51,186,46,187,51,155,56"/>
+<area shape="rect" id="Node000004" href="$regression__detection__demo_8cpp.html#a3b46d38b942ff3678adc52dfd07abf2e" title="Simulate a benchmark with variable performance." alt="" coords="204,86,346,111"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="155,76,189,82,189,87,154,81"/>
+<area shape="rect" id="Node000003" href="$class_solar_system_1_1_testing_1_1_regression_detector.html#a5749878607dd588ad869bef6a06475e3" title="Save baseline data to storage." alt="" coords="396,5,542,61"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="349,30,381,30,381,36,349,36"/>
+</map>

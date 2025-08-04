@@ -1,0 +1,39 @@
+<map id="SolarSystem::Core::Builders::SimulationBuilder::SimulationBuilder" name="SolarSystem::Core::Builders::SimulationBuilder::SimulationBuilder">
+<area shape="rect" id="Node000001" title="Default constructor with sensible defaults." alt="" coords="460,525,637,581"/>
+<area shape="rect" id="Node000002" href="$class_solar_system_1_1_core_1_1_builders_1_1_simulation_builder.html#a95ba04a87575c5f8326431aa12652e9f" title="Use configuration from global config." alt="" coords="226,5,404,61"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="544,510,538,421,518,306,501,244,478,184,448,126,410,75,397,64,401,60,414,71,453,123,483,181,506,242,524,304,543,420,550,509"/>
+<area shape="rect" id="Node000003" href="$class_solar_system_1_1_core_1_1_builders_1_1_simulation_builder.html#a8347cfaaf7c336b7d3b156dc1511a95a" title="Use configuration from specific config." alt="" coords="226,85,404,141"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="542,510,531,435,508,341,491,291,470,242,443,196,410,155,397,143,400,139,414,151,447,193,474,240,496,289,514,339,536,434,547,509"/>
+<area shape="rect" id="Node000004" href="$class_solar_system_1_1_core_1_1_builders_1_1_simulation_builder.html#aeae74025b8c8c570d34c8b7fb1c09501" title="Reset to default configuration." alt="" coords="226,165,404,221"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="537,510,523,450,498,376,461,301,437,266,410,235,396,224,399,219,414,231,442,263,465,299,503,374,528,448,542,509"/>
+<area shape="rect" id="Node000005" href="$class_solar_system_1_1_core_1_1_builders_1_1_simulation_builder.html#a213483a5f3601e3fd6ffa75fcf9a00ff" title="Set the celestial bodies for simulation." alt="" coords="226,245,404,301"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="531,512,512,466,486,414,452,361,410,315,395,304,398,299,414,311,456,358,491,411,517,464,536,510"/>
+<area shape="rect" id="Node000008" href="$class_solar_system_1_1_core_1_1_builders_1_1_simulation_builder.html#aed6e37f38ec8539486b1e9e52de17a7b" title="Set convergence threshold for simulation accuracy." alt="" coords="218,485,412,541"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="444,538,412,532,413,527,445,533"/>
+<area shape="rect" id="Node000009" href="$class_solar_system_1_1_core_1_1_builders_1_1_simulation_builder.html#a62cdbd53bf25f1492c179cf8e5770d94" title="Set the maximum number of iterations." alt="" coords="226,325,404,381"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="519,514,472,454,443,423,410,395,392,384,395,379,414,391,446,419,476,450,523,511"/>
+<area shape="rect" id="Node000010" href="$class_solar_system_1_1_core_1_1_builders_1_1_simulation_builder.html#ae44a2ec74d389f54cc6261f2fca8d883" title="Enable or disable progress reporting." alt="" coords="226,565,404,621"/>
+<area shape="poly" id="edge11_Node000001_Node000010" title=" " alt="" coords="446,573,405,581,404,575,445,568"/>
+<area shape="rect" id="Node000011" href="$class_solar_system_1_1_core_1_1_builders_1_1_simulation_builder.html#aff058da04aa820c99fb01dbf00e8ff15" title="Set custom progress callback." alt="" coords="226,645,404,701"/>
+<area shape="poly" id="edge12_Node000001_Node000011" title=" " alt="" coords="492,592,413,636,388,647,386,642,411,631,489,587"/>
+<area shape="rect" id="Node000012" href="$class_solar_system_1_1_core_1_1_builders_1_1_simulation_builder.html#ad4e72643428428f87232e16a0720294c" title="Set the target date for simulation." alt="" coords="226,725,404,781"/>
+<area shape="poly" id="edge13_Node000001_Node000012" title=" " alt="" coords="523,596,476,656,446,688,414,715,395,727,392,723,410,711,443,684,472,653,519,592"/>
+<area shape="rect" id="Node000013" href="$class_solar_system_1_1_core_1_1_builders_1_1_simulation_builder.html#a58d157c810f39b3650777e78ae373f46" title="Set the target date using chrono time_point." alt="" coords="226,805,404,861"/>
+<area shape="poly" id="edge14_Node000001_Node000013" title=" " alt="" coords="536,597,517,642,491,695,456,748,414,795,398,807,395,803,410,791,452,745,486,692,512,640,531,595"/>
+<area shape="rect" id="Node000014" href="$class_solar_system_1_1_core_1_1_builders_1_1_simulation_builder.html#a7070ef5e3994d1a75f175d8a74fd7754" title="Set the target date using time_t." alt="" coords="226,885,404,941"/>
+<area shape="poly" id="edge15_Node000001_Node000014" title=" " alt="" coords="542,597,528,658,503,732,465,808,442,843,414,875,399,887,396,883,410,871,437,840,461,805,498,730,523,657,537,596"/>
+<area shape="rect" id="Node000015" href="$class_solar_system_1_1_core_1_1_builders_1_1_simulation_builder.html#a3b0b7ccab51057d80004d813573e983d" title="Set the simulation timestep in seconds." alt="" coords="226,405,404,461"/>
+<area shape="poly" id="edge16_Node000001_Node000015" title=" " alt="" coords="489,519,411,476,386,464,388,459,413,471,492,515"/>
+<area shape="rect" id="Node000016" href="$class_solar_system_1_1_core_1_1_builders_1_1_simulation_builder.html#adb33047fbc85e3065f80668308df4e1e" title="Set custom validation callback." alt="" coords="226,965,404,1021"/>
+<area shape="poly" id="edge19_Node000001_Node000016" title=" " alt="" coords="547,597,536,672,514,767,496,817,474,867,447,913,414,955,400,967,397,963,410,951,443,910,470,864,491,815,508,766,531,671,542,596"/>
+<area shape="rect" id="Node000017" href="$class_solar_system_1_1_core_1_1_builders_1_1_simulation_builder.html#a84d2a9c735d5857a2183806b78527ad0" title="Enable verbose output." alt="" coords="226,1045,404,1101"/>
+<area shape="poly" id="edge20_Node000001_Node000017" title=" " alt="" coords="550,597,543,686,524,802,506,864,483,925,453,983,414,1035,401,1047,397,1043,410,1031,448,980,478,923,501,862,518,801,538,685,544,596"/>
+<area shape="rect" id="Node000006" href="$class_simulation_step.html#a1179221d9a08b64d5aba7832972271ca" title="Execute the workflow step." alt="" coords="6,312,169,338"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="212,299,148,314,146,309,211,294"/>
+<area shape="rect" id="Node000007" href="$class_solar_system_a_p_i.html#ae62b5c5789c5e2880871005a9d244471" title="Handle simulation request." alt="" coords="5,362,170,403"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="227,311,219,315,195,334,171,353,149,364,146,359,168,348,192,330,216,311,225,306"/>
+<area shape="poly" id="edge9_Node000009_Node000006" title=" " alt="" coords="211,343,169,338,170,333,211,338"/>
+<area shape="poly" id="edge10_Node000009_Node000007" title=" " alt="" coords="212,369,171,375,170,369,211,364"/>
+<area shape="poly" id="edge17_Node000015_Node000006" title=" " alt="" coords="224,400,216,395,192,373,182,363,168,353,142,341,144,336,171,348,186,359,196,370,219,391,227,395"/>
+<area shape="poly" id="edge18_Node000015_Node000007" title=" " alt="" coords="211,413,170,403,171,398,212,407"/>
+</map>

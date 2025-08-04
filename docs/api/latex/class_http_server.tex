@@ -1,0 +1,144 @@
+\doxysection{Http\+Server Class Reference}
+\hypertarget{class_http_server}{}\label{class_http_server}\index{HttpServer@{HttpServer}}
+
+
+Modern HTTP server with RAII.  
+
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_http_server_aaa152d698aebce12d4994ad084f7d897}{Http\+Server}} (\mbox{\hyperlink{struct_web_server_config}{Web\+Server\+Config}} config, std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory}{Solar\+System\+::\+Bodies\+::\+Body\+Factory}} $>$ factory)
+\begin{DoxyCompactList}\small\item\em Construct server with configuration. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory}{Solar\+System\+::\+Bodies\+::\+Body\+Factory}} \& \mbox{\hyperlink{class_http_server_a7c35db5873aa88b1df40a440fdb68fec}{get\+\_\+factory}} ()
+\item 
+\mbox{\hyperlink{class_http_server_a5e9887bc9a815fc4b2b506a335d916af}{\texorpdfstring{$\sim$}{\string~}\+Http\+Server}} ()
+\begin{DoxyCompactList}\small\item\em Destructor ensures cleanup. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_http_server}{Http\+Server}} \& \mbox{\hyperlink{class_http_server_a0950c519c2730e0d7f2dcb670ffcb098}{handle}} (const std\+::string \&path, \mbox{\hyperlink{web__server_8cpp_a63fde991ffae78f145a6a79cf3706678}{Request\+Handler}} handler)
+\begin{DoxyCompactList}\small\item\em Register request handler. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_http_server_aef3dd49e7c73327b346470fd047885cd}{start}} ()
+\begin{DoxyCompactList}\small\item\em Start the server. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_http_server_aad9c63d3f8cda248e3c87067ac3ac5a5}{stop}} ()
+\begin{DoxyCompactList}\small\item\em Stop the server. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Modern HTTP server with RAII. 
+
+\label{doc-constructors}
+\Hypertarget{class_http_server_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_http_server_aaa152d698aebce12d4994ad084f7d897}\index{HttpServer@{HttpServer}!HttpServer@{HttpServer}}
+\index{HttpServer@{HttpServer}!HttpServer@{HttpServer}}
+\doxysubsubsection{\texorpdfstring{HttpServer()}{HttpServer()}}
+{\footnotesize\ttfamily \label{class_http_server_aaa152d698aebce12d4994ad084f7d897} 
+Http\+Server\+::\+Http\+Server (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_web_server_config}{Web\+Server\+Config}}}]{config}{, }\item[{std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory}{Solar\+System\+::\+Bodies\+::\+Body\+Factory}} $>$}]{factory}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [explicit]}}
+
+
+
+Construct server with configuration. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_http_server_aaa152d698aebce12d4994ad084f7d897_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_http_server_a5e9887bc9a815fc4b2b506a335d916af}\index{HttpServer@{HttpServer}!````~HttpServer@{\texorpdfstring{$\sim$}{\string~}HttpServer}}
+\index{````~HttpServer@{\texorpdfstring{$\sim$}{\string~}HttpServer}!HttpServer@{HttpServer}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}HttpServer()}{\string~HttpServer()}}
+{\footnotesize\ttfamily \label{class_http_server_a5e9887bc9a815fc4b2b506a335d916af} 
+Http\+Server\+::\texorpdfstring{$\sim$}{\string~}\+Http\+Server (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Destructor ensures cleanup. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=327pt]{class_http_server_a5e9887bc9a815fc4b2b506a335d916af_cgraph}
+\end{center}
+\end{figure}
+
+
+\label{doc-func-members}
+\Hypertarget{class_http_server_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_http_server_a7c35db5873aa88b1df40a440fdb68fec}\index{HttpServer@{HttpServer}!get\_factory@{get\_factory}}
+\index{get\_factory@{get\_factory}!HttpServer@{HttpServer}}
+\doxysubsubsection{\texorpdfstring{get\_factory()}{get\_factory()}}
+{\footnotesize\ttfamily \label{class_http_server_a7c35db5873aa88b1df40a440fdb68fec} 
+\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory}{Solar\+System\+::\+Bodies\+::\+Body\+Factory}} \& Http\+Server\+::get\+\_\+factory (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{class_http_server_a0950c519c2730e0d7f2dcb670ffcb098}\index{HttpServer@{HttpServer}!handle@{handle}}
+\index{handle@{handle}!HttpServer@{HttpServer}}
+\doxysubsubsection{\texorpdfstring{handle()}{handle()}}
+{\footnotesize\ttfamily \label{class_http_server_a0950c519c2730e0d7f2dcb670ffcb098} 
+\mbox{\hyperlink{class_http_server}{Http\+Server}} \& Http\+Server\+::handle (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{path}{, }\item[{\mbox{\hyperlink{web__server_8cpp_a63fde991ffae78f145a6a79cf3706678}{Request\+Handler}}}]{handler}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Register request handler. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=330pt]{class_http_server_a0950c519c2730e0d7f2dcb670ffcb098_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=251pt]{class_http_server_a0950c519c2730e0d7f2dcb670ffcb098_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_http_server_aef3dd49e7c73327b346470fd047885cd}\index{HttpServer@{HttpServer}!start@{start}}
+\index{start@{start}!HttpServer@{HttpServer}}
+\doxysubsubsection{\texorpdfstring{start()}{start()}}
+{\footnotesize\ttfamily \label{class_http_server_aef3dd49e7c73327b346470fd047885cd} 
+bool Http\+Server\+::start (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}}
+
+
+
+Start the server. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=242pt]{class_http_server_aef3dd49e7c73327b346470fd047885cd_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_http_server_aad9c63d3f8cda248e3c87067ac3ac5a5}\index{HttpServer@{HttpServer}!stop@{stop}}
+\index{stop@{stop}!HttpServer@{HttpServer}}
+\doxysubsubsection{\texorpdfstring{stop()}{stop()}}
+{\footnotesize\ttfamily \label{class_http_server_aad9c63d3f8cda248e3c87067ac3ac5a5} 
+void Http\+Server\+::stop (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Stop the server. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=327pt]{class_http_server_aad9c63d3f8cda248e3c87067ac3ac5a5_icgraph}
+\end{center}
+\end{figure}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/apps/solar\+\_\+system\+\_\+web/src/\mbox{\hyperlink{web__server_8cpp}{web\+\_\+server.\+cpp}}\end{DoxyCompactItemize}

@@ -1,0 +1,33 @@
+<map id="SolarSystem::JPL::get_value" name="SolarSystem::JPL::get_value">
+<area shape="rect" id="Node000001" title="Helper to get value from successful result." alt="" coords="726,228,880,269"/>
+<area shape="rect" id="Node000002" href="$class_solar_system_1_1_j_p_l_1_1_j_p_l_client.html#ab0af83ad6cbbf7912c0b6f4935db3fea" title="Fetch ephemeris data for multiple bodies." alt="" coords="486,5,678,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="784,215,742,141,712,101,677,66,648,49,651,44,680,62,716,98,746,138,789,213"/>
+<area shape="rect" id="Node000004" href="$class_solar_system_1_1_j_p_l_1_1_j_p_l_client.html#a11e686e5082403828c206aeb13cf2442" title=" " alt="" coords="5,35,198,75"/>
+<area shape="poly" id="edge13_Node000001_Node000004" title=" " alt="" coords="742,224,604,167,522,137,437,111,313,84,198,67,199,62,314,79,439,106,523,132,606,162,744,219"/>
+<area shape="rect" id="Node000005" href="$class_solar_system_1_1_bodies_1_1_body_factory.html#afd0c8632913113c333b702bf1aaccfdb" title=" " alt="" coords="498,220,666,276"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="711,251,666,251,666,246,711,246"/>
+<area shape="rect" id="Node000014" href="$class_solar_system_1_1_j_p_l_1_1_j_p_l_client.html#a20c3a5c8255e5e0f8beb69e5a5e41c8a" title=" " alt="" coords="246,384,438,425"/>
+<area shape="poly" id="edge14_Node000001_Node000014" title=" " alt="" coords="727,277,439,375,406,386,405,381,437,370,726,272"/>
+<area shape="rect" id="Node000015" href="$class_solar_system_1_1_j_p_l_1_1_j_p_l_client.html#ae5aca8bf9076f444ccc6661acefb007f" title="Validate cache integrity." alt="" coords="486,375,678,415"/>
+<area shape="poly" id="edge15_Node000001_Node000015" title=" " alt="" coords="766,280,680,343,623,376,621,372,677,338,763,276"/>
+<area shape="rect" id="Node000003" href="$class_solar_system_1_1_j_p_l_1_1_j_p_l_client.html#a1d5c60ea975f5845e84b10e1fa9a683e" title="Fetch ephemeris data for all known bodies." alt="" coords="246,5,438,46"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="471,28,438,28,438,23,471,23"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="231,42,198,46,198,41,230,37"/>
+<area shape="rect" id="Node000006" href="$class_auto_fetch_step.html#ad0c203ea5f21d311667deadbeeb3bb79" title="Execute the workflow step." alt="" coords="261,121,423,146"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="529,214,485,186,437,161,403,150,405,145,439,157,488,181,532,209"/>
+<area shape="rect" id="Node000007" href="$class_data_management_step.html#a290fff50cbba93e3ec5f50695b4a0fa8" title="Execute the workflow step." alt="" coords="266,171,418,211"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="483,228,417,212,419,206,485,222"/>
+<area shape="rect" id="Node000008" href="$solar__system_8cpp.html#a6894103c8a4192ac0fb7d4f3fb97d3b3" title="Handle JPL data operations (modern config)" alt="" coords="269,236,415,261"/>
+<area shape="poly" id="edge7_Node000005_Node000008" title=" " alt="" coords="484,251,416,251,416,246,484,246"/>
+<area shape="rect" id="Node000010" href="$class_realtime_monitor.html#a51cfd94fd06639f00d1a1af4e88cbf40" title="Start real&#45;time monitoring." alt="" coords="267,285,417,310"/>
+<area shape="poly" id="edge9_Node000005_Node000010" title=" " alt="" coords="484,271,408,287,407,282,483,266"/>
+<area shape="rect" id="Node000012" href="$class_data_fetcher.html#a756d8cf8a7756343b9f1a1c9054fbd0a" title="Update ephemeris data with progress monitoring." alt="" coords="256,334,428,360"/>
+<area shape="poly" id="edge11_Node000005_Node000012" title=" " alt="" coords="521,287,439,325,406,336,404,331,437,321,519,282"/>
+<area shape="rect" id="Node000009" href="$solar__system_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title="Main application entry point &#45; OPTIMIZED FOR PERFORMANCE." alt="" coords="77,236,126,261"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="253,251,127,251,127,246,253,246"/>
+<area shape="rect" id="Node000011" href="$realtime_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title="Modern main function with structured error handling." alt="" coords="77,285,126,310"/>
+<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="252,300,127,300,127,295,252,295"/>
+<area shape="rect" id="Node000013" href="$fetch_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title="Modern main function using RAII and structured error handling." alt="" coords="77,334,126,360"/>
+<area shape="poly" id="edge12_Node000012_Node000013" title=" " alt="" coords="240,350,126,350,126,344,240,344"/>
+<area shape="poly" id="edge16_Node000015_Node000014" title=" " alt="" coords="471,402,439,403,438,398,470,397"/>
+</map>

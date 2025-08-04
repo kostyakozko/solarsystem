@@ -1,0 +1,179 @@
+\doxysection{Solar\+System\+::Testing\+::Mocks\+::Time\+Mock\+Config Struct Reference}
+\hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config}{}\label{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config}\index{SolarSystem::Testing::Mocks::TimeMockConfig@{SolarSystem::Testing::Mocks::TimeMockConfig}}
+
+
+Configuration for time mock behavior.  
+
+
+
+
+{\ttfamily \#include $<$time\+\_\+mock.\+hpp$>$}
+
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::optional$<$ std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point $>$ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config_ae9cb4c9d6bc9530bac4293db240117b2}{initial\+\_\+time}}
+\item 
+bool \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config_a76873784d2fe8b713be706e6bc612f7c}{start\+\_\+frozen}} = false
+\item 
+double \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config_aafa3065772bfcfeece25fe070d99c0df}{initial\+\_\+time\+\_\+scale}} = 1.\+0
+\item 
+bool \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config_a95a97a90e595cc99ef5f32495c69794f}{allow\+\_\+negative\+\_\+time}} = false
+\item 
+bool \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config_a1c3214ae284159606dc5dc2cdcd2b06b}{wrap\+\_\+around\+\_\+epochs}} = false
+\item 
+std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config_a13babafdd4ed40f4046438db17b556c2}{min\+\_\+time}} = std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point\+::min()
+\item 
+std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config_a43f2f1e84624fde8cfb2f72a811f04aa}{max\+\_\+time}} = std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point\+::max()
+\item 
+std\+::chrono\+::nanoseconds \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config_ab592bd5735a2ea5e251f8396b3c5a995}{time\+\_\+resolution}} = std\+::chrono\+::microseconds(1)
+\item 
+bool \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config_a495fd002cc7e37fd593b478cc995710e}{high\+\_\+precision\+\_\+mode}} = true
+\item 
+bool \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config_a17a3bbc3db070c4c745f0bf22a245b23}{simulate\+\_\+sleep\+\_\+delays}} = true
+\item 
+double \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config_aca8d2c223dc0caecb07b332526908e66}{sleep\+\_\+accuracy}} = 1.\+0
+\item 
+std\+::chrono\+::milliseconds \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config_a1b16a05125fd176e117042550289abdd}{max\+\_\+sleep\+\_\+duration}} = std\+::chrono\+::hours(24)
+\item 
+bool \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config_af5c064d3974b20f2011042a3572bf6b6}{enable\+\_\+call\+\_\+history}} = true
+\item 
+size\+\_\+t \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config_ade95cd82e262a795668fca86551d7ea3}{max\+\_\+history\+\_\+size}} = 10000
+\item 
+std\+::string \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config_a89d387dacea12f6d3db7564a6c38567d}{default\+\_\+timezone}} = "{}UTC"{}
+\item 
+bool \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config_a961261ee654e9cf1932990064ab432fe}{support\+\_\+timezones}} = true
+\item 
+std\+::chrono\+::nanoseconds \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config_ad6b4543ff2ccf93c69e5d07aaeb0d859}{operation\+\_\+delay}} = std\+::chrono\+::nanoseconds(0)
+\item 
+bool \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config_aeec4df6e9515c66796989e17c8d8074d}{simulate\+\_\+clock\+\_\+drift}} = false
+\item 
+double \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config_a9a36847a84917c439a91fd28b47d5432}{drift\+\_\+rate\+\_\+ppm}} = 0.\+0
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Configuration for time mock behavior. 
+
+\label{doc-variable-members}
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config_a95a97a90e595cc99ef5f32495c69794f}\index{SolarSystem::Testing::Mocks::TimeMockConfig@{SolarSystem::Testing::Mocks::TimeMockConfig}!allow\_negative\_time@{allow\_negative\_time}}
+\index{allow\_negative\_time@{allow\_negative\_time}!SolarSystem::Testing::Mocks::TimeMockConfig@{SolarSystem::Testing::Mocks::TimeMockConfig}}
+\doxysubsubsection{\texorpdfstring{allow\_negative\_time}{allow\_negative\_time}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config_a95a97a90e595cc99ef5f32495c69794f} 
+bool Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+Config\+::allow\+\_\+negative\+\_\+time = false}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config_a89d387dacea12f6d3db7564a6c38567d}\index{SolarSystem::Testing::Mocks::TimeMockConfig@{SolarSystem::Testing::Mocks::TimeMockConfig}!default\_timezone@{default\_timezone}}
+\index{default\_timezone@{default\_timezone}!SolarSystem::Testing::Mocks::TimeMockConfig@{SolarSystem::Testing::Mocks::TimeMockConfig}}
+\doxysubsubsection{\texorpdfstring{default\_timezone}{default\_timezone}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config_a89d387dacea12f6d3db7564a6c38567d} 
+std\+::string Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+Config\+::default\+\_\+timezone = "{}UTC"{}}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config_a9a36847a84917c439a91fd28b47d5432}\index{SolarSystem::Testing::Mocks::TimeMockConfig@{SolarSystem::Testing::Mocks::TimeMockConfig}!drift\_rate\_ppm@{drift\_rate\_ppm}}
+\index{drift\_rate\_ppm@{drift\_rate\_ppm}!SolarSystem::Testing::Mocks::TimeMockConfig@{SolarSystem::Testing::Mocks::TimeMockConfig}}
+\doxysubsubsection{\texorpdfstring{drift\_rate\_ppm}{drift\_rate\_ppm}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config_a9a36847a84917c439a91fd28b47d5432} 
+double Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+Config\+::drift\+\_\+rate\+\_\+ppm = 0.\+0}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config_af5c064d3974b20f2011042a3572bf6b6}\index{SolarSystem::Testing::Mocks::TimeMockConfig@{SolarSystem::Testing::Mocks::TimeMockConfig}!enable\_call\_history@{enable\_call\_history}}
+\index{enable\_call\_history@{enable\_call\_history}!SolarSystem::Testing::Mocks::TimeMockConfig@{SolarSystem::Testing::Mocks::TimeMockConfig}}
+\doxysubsubsection{\texorpdfstring{enable\_call\_history}{enable\_call\_history}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config_af5c064d3974b20f2011042a3572bf6b6} 
+bool Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+Config\+::enable\+\_\+call\+\_\+history = true}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config_a495fd002cc7e37fd593b478cc995710e}\index{SolarSystem::Testing::Mocks::TimeMockConfig@{SolarSystem::Testing::Mocks::TimeMockConfig}!high\_precision\_mode@{high\_precision\_mode}}
+\index{high\_precision\_mode@{high\_precision\_mode}!SolarSystem::Testing::Mocks::TimeMockConfig@{SolarSystem::Testing::Mocks::TimeMockConfig}}
+\doxysubsubsection{\texorpdfstring{high\_precision\_mode}{high\_precision\_mode}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config_a495fd002cc7e37fd593b478cc995710e} 
+bool Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+Config\+::high\+\_\+precision\+\_\+mode = true}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config_ae9cb4c9d6bc9530bac4293db240117b2}\index{SolarSystem::Testing::Mocks::TimeMockConfig@{SolarSystem::Testing::Mocks::TimeMockConfig}!initial\_time@{initial\_time}}
+\index{initial\_time@{initial\_time}!SolarSystem::Testing::Mocks::TimeMockConfig@{SolarSystem::Testing::Mocks::TimeMockConfig}}
+\doxysubsubsection{\texorpdfstring{initial\_time}{initial\_time}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config_ae9cb4c9d6bc9530bac4293db240117b2} 
+std\+::optional$<$std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point$>$ Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+Config\+::initial\+\_\+time}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config_aafa3065772bfcfeece25fe070d99c0df}\index{SolarSystem::Testing::Mocks::TimeMockConfig@{SolarSystem::Testing::Mocks::TimeMockConfig}!initial\_time\_scale@{initial\_time\_scale}}
+\index{initial\_time\_scale@{initial\_time\_scale}!SolarSystem::Testing::Mocks::TimeMockConfig@{SolarSystem::Testing::Mocks::TimeMockConfig}}
+\doxysubsubsection{\texorpdfstring{initial\_time\_scale}{initial\_time\_scale}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config_aafa3065772bfcfeece25fe070d99c0df} 
+double Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+Config\+::initial\+\_\+time\+\_\+scale = 1.\+0}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config_ade95cd82e262a795668fca86551d7ea3}\index{SolarSystem::Testing::Mocks::TimeMockConfig@{SolarSystem::Testing::Mocks::TimeMockConfig}!max\_history\_size@{max\_history\_size}}
+\index{max\_history\_size@{max\_history\_size}!SolarSystem::Testing::Mocks::TimeMockConfig@{SolarSystem::Testing::Mocks::TimeMockConfig}}
+\doxysubsubsection{\texorpdfstring{max\_history\_size}{max\_history\_size}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config_ade95cd82e262a795668fca86551d7ea3} 
+size\+\_\+t Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+Config\+::max\+\_\+history\+\_\+size = 10000}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config_a1b16a05125fd176e117042550289abdd}\index{SolarSystem::Testing::Mocks::TimeMockConfig@{SolarSystem::Testing::Mocks::TimeMockConfig}!max\_sleep\_duration@{max\_sleep\_duration}}
+\index{max\_sleep\_duration@{max\_sleep\_duration}!SolarSystem::Testing::Mocks::TimeMockConfig@{SolarSystem::Testing::Mocks::TimeMockConfig}}
+\doxysubsubsection{\texorpdfstring{max\_sleep\_duration}{max\_sleep\_duration}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config_a1b16a05125fd176e117042550289abdd} 
+std\+::chrono\+::milliseconds Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+Config\+::max\+\_\+sleep\+\_\+duration = std\+::chrono\+::hours(24)}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config_a43f2f1e84624fde8cfb2f72a811f04aa}\index{SolarSystem::Testing::Mocks::TimeMockConfig@{SolarSystem::Testing::Mocks::TimeMockConfig}!max\_time@{max\_time}}
+\index{max\_time@{max\_time}!SolarSystem::Testing::Mocks::TimeMockConfig@{SolarSystem::Testing::Mocks::TimeMockConfig}}
+\doxysubsubsection{\texorpdfstring{max\_time}{max\_time}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config_a43f2f1e84624fde8cfb2f72a811f04aa} 
+std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+Config\+::max\+\_\+time = std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point\+::max()}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config_a13babafdd4ed40f4046438db17b556c2}\index{SolarSystem::Testing::Mocks::TimeMockConfig@{SolarSystem::Testing::Mocks::TimeMockConfig}!min\_time@{min\_time}}
+\index{min\_time@{min\_time}!SolarSystem::Testing::Mocks::TimeMockConfig@{SolarSystem::Testing::Mocks::TimeMockConfig}}
+\doxysubsubsection{\texorpdfstring{min\_time}{min\_time}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config_a13babafdd4ed40f4046438db17b556c2} 
+std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+Config\+::min\+\_\+time = std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point\+::min()}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config_ad6b4543ff2ccf93c69e5d07aaeb0d859}\index{SolarSystem::Testing::Mocks::TimeMockConfig@{SolarSystem::Testing::Mocks::TimeMockConfig}!operation\_delay@{operation\_delay}}
+\index{operation\_delay@{operation\_delay}!SolarSystem::Testing::Mocks::TimeMockConfig@{SolarSystem::Testing::Mocks::TimeMockConfig}}
+\doxysubsubsection{\texorpdfstring{operation\_delay}{operation\_delay}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config_ad6b4543ff2ccf93c69e5d07aaeb0d859} 
+std\+::chrono\+::nanoseconds Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+Config\+::operation\+\_\+delay = std\+::chrono\+::nanoseconds(0)}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config_aeec4df6e9515c66796989e17c8d8074d}\index{SolarSystem::Testing::Mocks::TimeMockConfig@{SolarSystem::Testing::Mocks::TimeMockConfig}!simulate\_clock\_drift@{simulate\_clock\_drift}}
+\index{simulate\_clock\_drift@{simulate\_clock\_drift}!SolarSystem::Testing::Mocks::TimeMockConfig@{SolarSystem::Testing::Mocks::TimeMockConfig}}
+\doxysubsubsection{\texorpdfstring{simulate\_clock\_drift}{simulate\_clock\_drift}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config_aeec4df6e9515c66796989e17c8d8074d} 
+bool Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+Config\+::simulate\+\_\+clock\+\_\+drift = false}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config_a17a3bbc3db070c4c745f0bf22a245b23}\index{SolarSystem::Testing::Mocks::TimeMockConfig@{SolarSystem::Testing::Mocks::TimeMockConfig}!simulate\_sleep\_delays@{simulate\_sleep\_delays}}
+\index{simulate\_sleep\_delays@{simulate\_sleep\_delays}!SolarSystem::Testing::Mocks::TimeMockConfig@{SolarSystem::Testing::Mocks::TimeMockConfig}}
+\doxysubsubsection{\texorpdfstring{simulate\_sleep\_delays}{simulate\_sleep\_delays}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config_a17a3bbc3db070c4c745f0bf22a245b23} 
+bool Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+Config\+::simulate\+\_\+sleep\+\_\+delays = true}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config_aca8d2c223dc0caecb07b332526908e66}\index{SolarSystem::Testing::Mocks::TimeMockConfig@{SolarSystem::Testing::Mocks::TimeMockConfig}!sleep\_accuracy@{sleep\_accuracy}}
+\index{sleep\_accuracy@{sleep\_accuracy}!SolarSystem::Testing::Mocks::TimeMockConfig@{SolarSystem::Testing::Mocks::TimeMockConfig}}
+\doxysubsubsection{\texorpdfstring{sleep\_accuracy}{sleep\_accuracy}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config_aca8d2c223dc0caecb07b332526908e66} 
+double Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+Config\+::sleep\+\_\+accuracy = 1.\+0}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config_a76873784d2fe8b713be706e6bc612f7c}\index{SolarSystem::Testing::Mocks::TimeMockConfig@{SolarSystem::Testing::Mocks::TimeMockConfig}!start\_frozen@{start\_frozen}}
+\index{start\_frozen@{start\_frozen}!SolarSystem::Testing::Mocks::TimeMockConfig@{SolarSystem::Testing::Mocks::TimeMockConfig}}
+\doxysubsubsection{\texorpdfstring{start\_frozen}{start\_frozen}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config_a76873784d2fe8b713be706e6bc612f7c} 
+bool Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+Config\+::start\+\_\+frozen = false}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config_a961261ee654e9cf1932990064ab432fe}\index{SolarSystem::Testing::Mocks::TimeMockConfig@{SolarSystem::Testing::Mocks::TimeMockConfig}!support\_timezones@{support\_timezones}}
+\index{support\_timezones@{support\_timezones}!SolarSystem::Testing::Mocks::TimeMockConfig@{SolarSystem::Testing::Mocks::TimeMockConfig}}
+\doxysubsubsection{\texorpdfstring{support\_timezones}{support\_timezones}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config_a961261ee654e9cf1932990064ab432fe} 
+bool Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+Config\+::support\+\_\+timezones = true}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config_ab592bd5735a2ea5e251f8396b3c5a995}\index{SolarSystem::Testing::Mocks::TimeMockConfig@{SolarSystem::Testing::Mocks::TimeMockConfig}!time\_resolution@{time\_resolution}}
+\index{time\_resolution@{time\_resolution}!SolarSystem::Testing::Mocks::TimeMockConfig@{SolarSystem::Testing::Mocks::TimeMockConfig}}
+\doxysubsubsection{\texorpdfstring{time\_resolution}{time\_resolution}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config_ab592bd5735a2ea5e251f8396b3c5a995} 
+std\+::chrono\+::nanoseconds Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+Config\+::time\+\_\+resolution = std\+::chrono\+::microseconds(1)}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config_a1c3214ae284159606dc5dc2cdcd2b06b}\index{SolarSystem::Testing::Mocks::TimeMockConfig@{SolarSystem::Testing::Mocks::TimeMockConfig}!wrap\_around\_epochs@{wrap\_around\_epochs}}
+\index{wrap\_around\_epochs@{wrap\_around\_epochs}!SolarSystem::Testing::Mocks::TimeMockConfig@{SolarSystem::Testing::Mocks::TimeMockConfig}}
+\doxysubsubsection{\texorpdfstring{wrap\_around\_epochs}{wrap\_around\_epochs}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config_a1c3214ae284159606dc5dc2cdcd2b06b} 
+bool Solar\+System\+::\+Testing\+::\+Mocks\+::\+Time\+Mock\+Config\+::wrap\+\_\+around\+\_\+epochs = false}
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+test/include/solar\+\_\+test/mocks/\mbox{\hyperlink{time__mock_8hpp}{time\+\_\+mock.\+hpp}}\end{DoxyCompactItemize}

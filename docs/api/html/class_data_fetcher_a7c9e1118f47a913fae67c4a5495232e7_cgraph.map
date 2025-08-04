@@ -1,0 +1,12 @@
+<map id="DataFetcher::rebuild_cache" name="DataFetcher::rebuild_cache">
+<area shape="rect" id="Node000001" title="Rebuild binary cache with progress indication." alt="" coords="5,24,145,65"/>
+<area shape="rect" id="Node000002" href="$class_solar_system_1_1_bodies_1_1_body_factory.html#aeb005f478e7ac87a4f961f2b9bf74478" title=" " alt="" coords="193,24,384,65"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="145,42,177,42,177,47,145,47"/>
+<area shape="rect" id="Node000003" href="$namespace_solar_system_1_1_j_p_l.html#aa87d1eae6faed2285995bb3f55e8bf4e" title="Helper to create error void result." alt="" coords="642,35,804,61"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="368,21,432,10,513,3,595,10,671,28,669,33,594,15,513,8,432,15,369,26"/>
+<area shape="rect" id="Node000004" href="$namespace_solar_system_1_1_j_p_l.html#abb8eb67716801804e9c24e2a80dda44e" title="Helper to check if result is successful." alt="" coords="440,24,586,65"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="385,42,425,42,425,47,385,47"/>
+<area shape="rect" id="Node000005" href="$namespace_solar_system_1_1_j_p_l_1_1_utils.html#a26fe3bf37cab4ce4fff30537465e2839" title="Convert JPL error to string." alt="" coords="432,89,594,130"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="361,63,427,82,425,87,360,68"/>
+<area shape="poly" id="edge5_Node000005_Node000003" title=" " alt="" coords="584,86,661,63,663,68,586,91"/>
+</map>

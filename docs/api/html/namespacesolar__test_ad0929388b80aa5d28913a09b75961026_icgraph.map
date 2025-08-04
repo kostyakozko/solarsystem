@@ -1,0 +1,11 @@
+<map id="solar_test::create_valid_cache_header" name="solar_test::create_valid_cache_header">
+<area shape="rect" id="Node000001" title=" " alt="" coords="569,35,713,75"/>
+<area shape="rect" id="Node000002" href="$classsolar__test_1_1_temporary_cache.html#a89aecbb207e7a16e5cba008b2f916a24" title=" " alt="" coords="336,35,521,75"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="554,58,522,58,522,52,554,52"/>
+<area shape="rect" id="Node000003" href="$classsolar__test_1_1_temporary_cache.html#aa4b3a7c214cfb34b7adc93a8eba8522b" title=" " alt="" coords="103,5,288,46"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="320,44,288,40,289,35,321,39"/>
+<area shape="rect" id="Node000004" href="$class_cache_integrity_test.html#a1ef9f737e0c8bb8451bf71000eda9b62" title=" " alt="" coords="117,70,274,96"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="321,71,275,76,274,71,320,65"/>
+<area shape="rect" id="Node000005" href="$test__fixture__example_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="5,70,55,96"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="101,86,55,86,55,80,101,80"/>
+</map>

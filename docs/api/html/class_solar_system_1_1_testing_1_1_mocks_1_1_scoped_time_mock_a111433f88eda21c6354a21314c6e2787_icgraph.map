@@ -1,0 +1,13 @@
+<map id="SolarSystem::Testing::Mocks::ScopedTimeMock::mock" name="SolarSystem::Testing::Mocks::ScopedTimeMock::mock">
+<area shape="rect" id="Node000001" title="Get access to the mock." alt="" coords="464,133,685,174"/>
+<area shape="rect" id="Node000002" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_time_mock.html#a08564da842a5391d29969a35be21601d" title=" " alt="" coords="235,125,416,181"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="448,156,416,156,416,150,448,150"/>
+<area shape="rect" id="Node000003" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_time_mock.html#a760ce0d38a00ac32648e8b7b0df009df" title=" " alt="" coords="5,5,187,61"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="264,120,185,76,162,64,164,59,188,71,267,115"/>
+<area shape="rect" id="Node000004" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_time_mock.html#ac5bf3506ca51f8d969fe236c13fc1577" title=" " alt="" coords="5,85,187,141"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="219,137,187,132,187,126,220,132"/>
+<area shape="rect" id="Node000005" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_time_mock.html#af3a6f5b666571197c98b266a201064dd" title=" " alt="" coords="5,165,187,221"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="220,174,187,180,187,175,219,169"/>
+<area shape="rect" id="Node000006" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_time_mock.html#a7a4fe1a115648fc0c227c0dd6ef50a82" title=" " alt="" coords="5,245,187,301"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="267,191,188,236,164,247,162,242,185,231,264,187"/>
+</map>

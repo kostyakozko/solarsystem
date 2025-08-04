@@ -1,0 +1,13 @@
+<map id="solar_test::TestDataManager::register_cleanup_handler" name="solar_test::TestDataManager::register_cleanup_handler">
+<area shape="rect" id="Node000001" title=" " alt="" coords="502,104,691,145"/>
+<area shape="rect" id="Node000002" href="$classsolar__test_1_1_temporary_directory.html#a0c1cb805d7fd1ba845c03bf2e9f0bd3b" title=" " alt="" coords="254,104,454,145"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="486,127,455,127,455,122,486,122"/>
+<area shape="rect" id="Node000003" href="$classsolar__test_1_1_temporary_directory.html#a83d7eaf0e0d40125f2107b4fff3c79da" title=" " alt="" coords="5,5,206,46"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="294,100,205,61,171,49,172,44,207,57,296,95"/>
+<area shape="rect" id="Node000004" href="$classsolar__test_1_1_temporary_directory.html#a6f77ff2d33ebd53cbbc32e8fae87355e" title=" " alt="" coords="5,71,206,111"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="238,111,206,107,206,102,239,106"/>
+<area shape="rect" id="Node000005" href="$classsolar__test_1_1_temporary_directory.html#a2526feb4ef458529a1e7487eb2af5b82" title=" " alt="" coords="5,136,206,177"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="239,142,206,146,206,141,238,137"/>
+<area shape="rect" id="Node000006" href="$classsolar__test_1_1_temporary_directory.html#a7754d51fa922bfd252c8196fe23a891e" title=" " alt="" coords="5,201,206,242"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="295,154,207,191,172,203,171,198,205,186,292,149"/>
+</map>

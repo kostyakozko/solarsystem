@@ -1,0 +1,279 @@
+\doxysection{Solar\+System\+::Core\+::Builders\+::Configuration\+Builder Class Reference}
+\hypertarget{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder}{}\label{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder}\index{SolarSystem::Core::Builders::ConfigurationBuilder@{SolarSystem::Core::Builders::ConfigurationBuilder}}
+
+
+Configuration builder for simulation parameters.  
+
+
+
+
+{\ttfamily \#include $<$simulation\+\_\+builder.\+hpp$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder_a760d23f9c3d58d1d80894a3f7b7ad9e4}{Configuration\+Builder}} ()
+\begin{DoxyCompactList}\small\item\em Start with default configuration. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder_acc6a1b9c878e5997fef28d7cd80fee14}{Configuration\+Builder}} (const \mbox{\hyperlink{struct_solar_system_1_1_simulation_1_1_simulation_config}{Simulation\+::\+Simulation\+Config}} \&base)
+\begin{DoxyCompactList}\small\item\em Start with existing configuration. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder}{Configuration\+Builder}} \& \mbox{\hyperlink{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder_a5009817e5043c6a57dbe6bb3a9c2e501}{timestep}} (double seconds)
+\begin{DoxyCompactList}\small\item\em Set timestep in seconds. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder}{Configuration\+Builder}} \& \mbox{\hyperlink{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder_a741b70d28cc37addc98973a4307f262d}{timestep\+\_\+minutes}} (double minutes)
+\begin{DoxyCompactList}\small\item\em Set timestep in minutes. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder}{Configuration\+Builder}} \& \mbox{\hyperlink{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder_ab4ddb87aaac4920b56f2b4c89f46e588}{timestep\+\_\+hours}} (double hours)
+\begin{DoxyCompactList}\small\item\em Set timestep in hours. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder}{Configuration\+Builder}} \& \mbox{\hyperlink{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder_a57c6ea36e8389eab22398e143867ed6a}{gravitational\+\_\+constant}} (double G)
+\begin{DoxyCompactList}\small\item\em Set gravitational constant. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder}{Configuration\+Builder}} \& \mbox{\hyperlink{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder_a24deaac3fcef4ffe40df7118be4e5263}{convergence\+\_\+threshold}} (double threshold)
+\begin{DoxyCompactList}\small\item\em Set convergence threshold. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder}{Configuration\+Builder}} \& \mbox{\hyperlink{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder_aa2c1679a6b68be5416e8567cf38be379}{high\+\_\+accuracy}} ()
+\begin{DoxyCompactList}\small\item\em High accuracy preset. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder}{Configuration\+Builder}} \& \mbox{\hyperlink{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder_a5a9b3ea91b00d4d8e399b554f720c655}{high\+\_\+performance}} ()
+\begin{DoxyCompactList}\small\item\em High performance preset. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder}{Configuration\+Builder}} \& \mbox{\hyperlink{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder_a093b107dab75428f34f88434fb0bb029}{balanced}} ()
+\begin{DoxyCompactList}\small\item\em Balanced preset. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder}{Configuration\+Builder}} \& \mbox{\hyperlink{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder_a0b40c22daac06e35d4ab2ccb1388bc66}{real\+\_\+time}} ()
+\begin{DoxyCompactList}\small\item\em Real-\/time preset. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{struct_solar_system_1_1_simulation_1_1_simulation_config}{Simulation\+::\+Simulation\+Config}} \mbox{\hyperlink{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder_aff4d5df81da1c61a4c5b05c528a556cd}{build}} () const
+\begin{DoxyCompactList}\small\item\em Build the configuration. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder_a9784e906986bd030bdc8b70946df955c}{validate}} (std\+::string \texorpdfstring{$\ast$}{*}error\+\_\+message=nullptr) const
+\begin{DoxyCompactList}\small\item\em Validate configuration. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Configuration builder for simulation parameters. 
+
+Provides a fluent interface for building simulation configurations that can be used with \doxylink{class_solar_system_1_1_core_1_1_builders_1_1_simulation_builder}{Simulation\+Builder}. 
+
+\label{doc-constructors}
+\Hypertarget{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder_a760d23f9c3d58d1d80894a3f7b7ad9e4}\index{SolarSystem::Core::Builders::ConfigurationBuilder@{SolarSystem::Core::Builders::ConfigurationBuilder}!ConfigurationBuilder@{ConfigurationBuilder}}
+\index{ConfigurationBuilder@{ConfigurationBuilder}!SolarSystem::Core::Builders::ConfigurationBuilder@{SolarSystem::Core::Builders::ConfigurationBuilder}}
+\doxysubsubsection{\texorpdfstring{ConfigurationBuilder()}{ConfigurationBuilder()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder_a760d23f9c3d58d1d80894a3f7b7ad9e4} 
+Solar\+System\+::\+Core\+::\+Builders\+::\+Configuration\+Builder\+::\+Configuration\+Builder (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Start with default configuration. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder_a760d23f9c3d58d1d80894a3f7b7ad9e4_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder_acc6a1b9c878e5997fef28d7cd80fee14}\index{SolarSystem::Core::Builders::ConfigurationBuilder@{SolarSystem::Core::Builders::ConfigurationBuilder}!ConfigurationBuilder@{ConfigurationBuilder}}
+\index{ConfigurationBuilder@{ConfigurationBuilder}!SolarSystem::Core::Builders::ConfigurationBuilder@{SolarSystem::Core::Builders::ConfigurationBuilder}}
+\doxysubsubsection{\texorpdfstring{ConfigurationBuilder()}{ConfigurationBuilder()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder_acc6a1b9c878e5997fef28d7cd80fee14} 
+Solar\+System\+::\+Core\+::\+Builders\+::\+Configuration\+Builder\+::\+Configuration\+Builder (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_solar_system_1_1_simulation_1_1_simulation_config}{Simulation\+::\+Simulation\+Config}} \&}]{base}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+
+
+Start with existing configuration. 
+
+
+
+\label{doc-func-members}
+\Hypertarget{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder_a093b107dab75428f34f88434fb0bb029}\index{SolarSystem::Core::Builders::ConfigurationBuilder@{SolarSystem::Core::Builders::ConfigurationBuilder}!balanced@{balanced}}
+\index{balanced@{balanced}!SolarSystem::Core::Builders::ConfigurationBuilder@{SolarSystem::Core::Builders::ConfigurationBuilder}}
+\doxysubsubsection{\texorpdfstring{balanced()}{balanced()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder_a093b107dab75428f34f88434fb0bb029} 
+\mbox{\hyperlink{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder}{Configuration\+Builder}} \& Solar\+System\+::\+Core\+::\+Builders\+::\+Configuration\+Builder\+::balanced (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Balanced preset. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder_a093b107dab75428f34f88434fb0bb029_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder_aff4d5df81da1c61a4c5b05c528a556cd}\index{SolarSystem::Core::Builders::ConfigurationBuilder@{SolarSystem::Core::Builders::ConfigurationBuilder}!build@{build}}
+\index{build@{build}!SolarSystem::Core::Builders::ConfigurationBuilder@{SolarSystem::Core::Builders::ConfigurationBuilder}}
+\doxysubsubsection{\texorpdfstring{build()}{build()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder_aff4d5df81da1c61a4c5b05c528a556cd} 
+\mbox{\hyperlink{struct_solar_system_1_1_simulation_1_1_simulation_config}{Simulation\+::\+Simulation\+Config}} Solar\+System\+::\+Core\+::\+Builders\+::\+Configuration\+Builder\+::build (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const}
+
+
+
+Build the configuration. 
+
+\Hypertarget{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder_a24deaac3fcef4ffe40df7118be4e5263}\index{SolarSystem::Core::Builders::ConfigurationBuilder@{SolarSystem::Core::Builders::ConfigurationBuilder}!convergence\_threshold@{convergence\_threshold}}
+\index{convergence\_threshold@{convergence\_threshold}!SolarSystem::Core::Builders::ConfigurationBuilder@{SolarSystem::Core::Builders::ConfigurationBuilder}}
+\doxysubsubsection{\texorpdfstring{convergence\_threshold()}{convergence\_threshold()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder_a24deaac3fcef4ffe40df7118be4e5263} 
+\mbox{\hyperlink{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder}{Configuration\+Builder}} \& Solar\+System\+::\+Core\+::\+Builders\+::\+Configuration\+Builder\+::convergence\+\_\+threshold (\begin{DoxyParamCaption}\item[{double}]{threshold}{}\end{DoxyParamCaption})}
+
+
+
+Set convergence threshold. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder_a24deaac3fcef4ffe40df7118be4e5263_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder_a57c6ea36e8389eab22398e143867ed6a}\index{SolarSystem::Core::Builders::ConfigurationBuilder@{SolarSystem::Core::Builders::ConfigurationBuilder}!gravitational\_constant@{gravitational\_constant}}
+\index{gravitational\_constant@{gravitational\_constant}!SolarSystem::Core::Builders::ConfigurationBuilder@{SolarSystem::Core::Builders::ConfigurationBuilder}}
+\doxysubsubsection{\texorpdfstring{gravitational\_constant()}{gravitational\_constant()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder_a57c6ea36e8389eab22398e143867ed6a} 
+\mbox{\hyperlink{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder}{Configuration\+Builder}} \& Solar\+System\+::\+Core\+::\+Builders\+::\+Configuration\+Builder\+::gravitational\+\_\+constant (\begin{DoxyParamCaption}\item[{double}]{G}{}\end{DoxyParamCaption})}
+
+
+
+Set gravitational constant. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder_a57c6ea36e8389eab22398e143867ed6a_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=225pt]{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder_a57c6ea36e8389eab22398e143867ed6a_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder_aa2c1679a6b68be5416e8567cf38be379}\index{SolarSystem::Core::Builders::ConfigurationBuilder@{SolarSystem::Core::Builders::ConfigurationBuilder}!high\_accuracy@{high\_accuracy}}
+\index{high\_accuracy@{high\_accuracy}!SolarSystem::Core::Builders::ConfigurationBuilder@{SolarSystem::Core::Builders::ConfigurationBuilder}}
+\doxysubsubsection{\texorpdfstring{high\_accuracy()}{high\_accuracy()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder_aa2c1679a6b68be5416e8567cf38be379} 
+\mbox{\hyperlink{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder}{Configuration\+Builder}} \& Solar\+System\+::\+Core\+::\+Builders\+::\+Configuration\+Builder\+::high\+\_\+accuracy (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+High accuracy preset. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder_aa2c1679a6b68be5416e8567cf38be379_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder_a5a9b3ea91b00d4d8e399b554f720c655}\index{SolarSystem::Core::Builders::ConfigurationBuilder@{SolarSystem::Core::Builders::ConfigurationBuilder}!high\_performance@{high\_performance}}
+\index{high\_performance@{high\_performance}!SolarSystem::Core::Builders::ConfigurationBuilder@{SolarSystem::Core::Builders::ConfigurationBuilder}}
+\doxysubsubsection{\texorpdfstring{high\_performance()}{high\_performance()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder_a5a9b3ea91b00d4d8e399b554f720c655} 
+\mbox{\hyperlink{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder}{Configuration\+Builder}} \& Solar\+System\+::\+Core\+::\+Builders\+::\+Configuration\+Builder\+::high\+\_\+performance (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+High performance preset. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder_a5a9b3ea91b00d4d8e399b554f720c655_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder_a0b40c22daac06e35d4ab2ccb1388bc66}\index{SolarSystem::Core::Builders::ConfigurationBuilder@{SolarSystem::Core::Builders::ConfigurationBuilder}!real\_time@{real\_time}}
+\index{real\_time@{real\_time}!SolarSystem::Core::Builders::ConfigurationBuilder@{SolarSystem::Core::Builders::ConfigurationBuilder}}
+\doxysubsubsection{\texorpdfstring{real\_time()}{real\_time()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder_a0b40c22daac06e35d4ab2ccb1388bc66} 
+\mbox{\hyperlink{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder}{Configuration\+Builder}} \& Solar\+System\+::\+Core\+::\+Builders\+::\+Configuration\+Builder\+::real\+\_\+time (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Real-\/time preset. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder_a0b40c22daac06e35d4ab2ccb1388bc66_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder_a5009817e5043c6a57dbe6bb3a9c2e501}\index{SolarSystem::Core::Builders::ConfigurationBuilder@{SolarSystem::Core::Builders::ConfigurationBuilder}!timestep@{timestep}}
+\index{timestep@{timestep}!SolarSystem::Core::Builders::ConfigurationBuilder@{SolarSystem::Core::Builders::ConfigurationBuilder}}
+\doxysubsubsection{\texorpdfstring{timestep()}{timestep()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder_a5009817e5043c6a57dbe6bb3a9c2e501} 
+\mbox{\hyperlink{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder}{Configuration\+Builder}} \& Solar\+System\+::\+Core\+::\+Builders\+::\+Configuration\+Builder\+::timestep (\begin{DoxyParamCaption}\item[{double}]{seconds}{}\end{DoxyParamCaption})}
+
+
+
+Set timestep in seconds. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder_a5009817e5043c6a57dbe6bb3a9c2e501_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder_ab4ddb87aaac4920b56f2b4c89f46e588}\index{SolarSystem::Core::Builders::ConfigurationBuilder@{SolarSystem::Core::Builders::ConfigurationBuilder}!timestep\_hours@{timestep\_hours}}
+\index{timestep\_hours@{timestep\_hours}!SolarSystem::Core::Builders::ConfigurationBuilder@{SolarSystem::Core::Builders::ConfigurationBuilder}}
+\doxysubsubsection{\texorpdfstring{timestep\_hours()}{timestep\_hours()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder_ab4ddb87aaac4920b56f2b4c89f46e588} 
+\mbox{\hyperlink{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder}{Configuration\+Builder}} \& Solar\+System\+::\+Core\+::\+Builders\+::\+Configuration\+Builder\+::timestep\+\_\+hours (\begin{DoxyParamCaption}\item[{double}]{hours}{}\end{DoxyParamCaption})}
+
+
+
+Set timestep in hours. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder_ab4ddb87aaac4920b56f2b4c89f46e588_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder_a741b70d28cc37addc98973a4307f262d}\index{SolarSystem::Core::Builders::ConfigurationBuilder@{SolarSystem::Core::Builders::ConfigurationBuilder}!timestep\_minutes@{timestep\_minutes}}
+\index{timestep\_minutes@{timestep\_minutes}!SolarSystem::Core::Builders::ConfigurationBuilder@{SolarSystem::Core::Builders::ConfigurationBuilder}}
+\doxysubsubsection{\texorpdfstring{timestep\_minutes()}{timestep\_minutes()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder_a741b70d28cc37addc98973a4307f262d} 
+\mbox{\hyperlink{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder}{Configuration\+Builder}} \& Solar\+System\+::\+Core\+::\+Builders\+::\+Configuration\+Builder\+::timestep\+\_\+minutes (\begin{DoxyParamCaption}\item[{double}]{minutes}{}\end{DoxyParamCaption})}
+
+
+
+Set timestep in minutes. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder_a741b70d28cc37addc98973a4307f262d_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder_a9784e906986bd030bdc8b70946df955c}\index{SolarSystem::Core::Builders::ConfigurationBuilder@{SolarSystem::Core::Builders::ConfigurationBuilder}!validate@{validate}}
+\index{validate@{validate}!SolarSystem::Core::Builders::ConfigurationBuilder@{SolarSystem::Core::Builders::ConfigurationBuilder}}
+\doxysubsubsection{\texorpdfstring{validate()}{validate()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder_a9784e906986bd030bdc8b70946df955c} 
+bool Solar\+System\+::\+Core\+::\+Builders\+::\+Configuration\+Builder\+::validate (\begin{DoxyParamCaption}\item[{std\+::string \texorpdfstring{$\ast$}{*}}]{error\+\_\+message}{ = {\ttfamily nullptr}}\end{DoxyParamCaption}) const}
+
+
+
+Validate configuration. 
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+core/include/solar\+\_\+core/builders/\mbox{\hyperlink{simulation__builder_8hpp}{simulation\+\_\+builder.\+hpp}}\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+core/src/builders/\mbox{\hyperlink{simulation__builder_8cpp}{simulation\+\_\+builder.\+cpp}}\end{DoxyCompactItemize}

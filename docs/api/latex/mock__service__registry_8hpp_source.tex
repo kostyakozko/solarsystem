@@ -1,0 +1,492 @@
+\doxysection{mock\+\_\+service\+\_\+registry.\+hpp}
+\hypertarget{mock__service__registry_8hpp_source}{}\label{mock__service__registry_8hpp_source}\index{/Users/kostiantyn.kozko/tmp/solarsystem/lib/solar\_test/include/solar\_test/mocks/mock\_service\_registry.hpp@{/Users/kostiantyn.kozko/tmp/solarsystem/lib/solar\_test/include/solar\_test/mocks/mock\_service\_registry.hpp}}
+\mbox{\hyperlink{mock__service__registry_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <any>}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <functional>}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ <map>}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ <mutex>}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ <optional>}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ <typeindex>}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#include\ <typeinfo>}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#include\ <unordered\_map>}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{cache__mock_8hpp}{solar\_test/mocks/cache\_mock.hpp}}"{}}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{jpl__mock_8hpp}{solar\_test/mocks/jpl\_mock.hpp}}"{}}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{network__mock_8hpp}{solar\_test/mocks/network\_mock.hpp}}"{}}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{time__mock_8hpp}{solar\_test/mocks/time\_mock.hpp}}"{}}}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks}{SolarSystem::Testing::Mocks}}\ \{}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00037\ \textcolor{keyword}{enum\ class}\ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a727a99e6656bf7685424beaec85cd228}{ServiceLifetime}}\ \{}
+\DoxyCodeLine{00038\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a727a99e6656bf7685424beaec85cd228a6ff5f73c8b5ebd311406568c8ef50bfd}{Singleton}},\ \ \textcolor{comment}{//\ Single\ instance\ for\ entire\ application}}
+\DoxyCodeLine{00039\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a727a99e6656bf7685424beaec85cd228a423f62fd0413b98ab4dd487ec060e628}{Scoped}},\ \ \ \ \ \textcolor{comment}{//\ Single\ instance\ per\ scope/test}}
+\DoxyCodeLine{00040\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a727a99e6656bf7685424beaec85cd228ab1f023eff9a6b5308d6024e4c6b3d475}{Transient}}\ \ \ \textcolor{comment}{//\ New\ instance\ every\ time}}
+\DoxyCodeLine{00041\ \};}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00046\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_service_registration_a5b667c97ccf94d8472c8c98dd9a40394}{ServiceRegistration}}\ \{}
+\DoxyCodeLine{00047\ \ \ std::type\_index\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_service_registration_a6b84ae92d6c1fa8bd3d93e73842abe39}{service\_type}};}
+\DoxyCodeLine{00048\ \ \ std::string\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_service_registration_a9f20f053cdc02e5548a4ea2a110e3586}{service\_name}};}
+\DoxyCodeLine{00049\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a727a99e6656bf7685424beaec85cd228}{ServiceLifetime}}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_service_registration_a7e90d9456130f85cd0e91c8d40cb3f45}{lifetime}};}
+\DoxyCodeLine{00050\ \ \ std::function<std::any()>\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_service_registration_ac2d80b90f9a0118a3cbadf9e688f602b}{factory}};}
+\DoxyCodeLine{00051\ \ \ std::any\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_service_registration_a3af85064f433a49f5d0c21c59433bb23}{singleton\_instance}};}
+\DoxyCodeLine{00052\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_service_registration_aba703351fdac5d62f0065678e29bc665}{is\_mock}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00053\ \ \ std::string\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_service_registration_ab02bc8268bfcad934655b9a2898268bc}{description}};}
+\DoxyCodeLine{00054\ \ \ std::vector<std::type\_index>\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_service_registration_a5290718997101c440471fdefe0519958}{dependencies}};}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \ \ \textcolor{comment}{//\ Constructor\ to\ initialize\ service\_type}}
+\DoxyCodeLine{00057\ \ \ \textcolor{keyword}{explicit}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_service_registration_a5b667c97ccf94d8472c8c98dd9a40394}{ServiceRegistration}}(std::type\_index\ type)\ :\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_service_registration_a6b84ae92d6c1fa8bd3d93e73842abe39}{service\_type}}(type)\ \{\}}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \ \ \textcolor{comment}{//\ Default\ constructor\ for\ map\ operations}}
+\DoxyCodeLine{00060\ \ \ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_service_registration_af25b495593b2eb44c408b9170e72495f}{ServiceRegistration}}()\ :\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_service_registration_a6b84ae92d6c1fa8bd3d93e73842abe39}{service\_type}}(typeid(void))\ \{\}}
+\DoxyCodeLine{00061\ \};}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00066\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_service_scope_af89e0a1c1a4c2c1a6dde25fb87dff326}{ServiceScope}}\ \{}
+\DoxyCodeLine{00067\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00071\ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_service_scope_af89e0a1c1a4c2c1a6dde25fb87dff326}{ServiceScope}}();}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00076\ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_service_scope_a2b85f1d17779e97da1539fa345c6d238}{\string~ServiceScope}}();}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \ \ \textcolor{comment}{//\ Non-\/copyable,\ non-\/movable}}
+\DoxyCodeLine{00079\ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_service_scope_a6fc63aebae291059112ae44dbd801e3d}{ServiceScope}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_service_scope_af89e0a1c1a4c2c1a6dde25fb87dff326}{ServiceScope}}\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00080\ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_service_scope_af89e0a1c1a4c2c1a6dde25fb87dff326}{ServiceScope}}\&\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_service_scope_a5bc9bd635d8c5fece1badb5ef9aac693}{operator=}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_service_scope_af89e0a1c1a4c2c1a6dde25fb87dff326}{ServiceScope}}\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00081\ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_service_scope_a2f74c6c1b35d4bef7ff5a367dcf4c674}{ServiceScope}}(\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_service_scope_af89e0a1c1a4c2c1a6dde25fb87dff326}{ServiceScope}}\&\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00082\ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_service_scope_af89e0a1c1a4c2c1a6dde25fb87dff326}{ServiceScope}}\&\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_service_scope_afb299837b5c024c6e0c55d9ca6f228c1}{operator=}}(\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_service_scope_af89e0a1c1a4c2c1a6dde25fb87dff326}{ServiceScope}}\&\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00087\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00088\ \ \ [[nodiscard]]\ std::shared\_ptr<T>\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_service_scope_a77e3e8b8d2fd1aad61b64aa16cf5872c}{get\_service}}();}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00093\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00094\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_service_scope_aec70b2e10e8279732487710cd80decf1}{has\_service}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00099\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_service_scope_ad024ca94b798df3236a32183a8406715}{clear}}();}
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00101\ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00102\ \ \ std::unordered\_map<std::type\_index,\ std::any>\ scoped\_instances\_;}
+\DoxyCodeLine{00103\ \ \ \textcolor{keyword}{mutable}\ std::mutex\ scope\_mutex\_;}
+\DoxyCodeLine{00104\ \ \ \textcolor{keyword}{friend}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_service_scope_a4b80e9f3394c400ba6a886a784f0ec04}{MockServiceRegistry}};}
+\DoxyCodeLine{00105\ \};}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00113\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a2474c9a8aba5cd14aa69f66789e84df2}{MockServiceRegistry}}\ \{}
+\DoxyCodeLine{00114\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00118\ \ \ \textcolor{keyword}{static}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a2474c9a8aba5cd14aa69f66789e84df2}{MockServiceRegistry}}\&\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a449b026183046fbb50877dda6d7eea75}{instance}}();}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00123\ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a9f92908815518a1f1c19e7685a508273}{\string~MockServiceRegistry}}()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00124\ }
+\DoxyCodeLine{00125\ \ \ \textcolor{comment}{//\ Non-\/copyable,\ non-\/movable\ (singleton)}}
+\DoxyCodeLine{00126\ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a2474c9a8aba5cd14aa69f66789e84df2}{MockServiceRegistry}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a2474c9a8aba5cd14aa69f66789e84df2}{MockServiceRegistry}}\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00127\ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a2474c9a8aba5cd14aa69f66789e84df2}{MockServiceRegistry}}\&\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_ab48e786a00c76438a1b30897d41b00fa}{operator=}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a2474c9a8aba5cd14aa69f66789e84df2}{MockServiceRegistry}}\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00128\ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_ab1bd269fed13ed3fecde425e399119d0}{MockServiceRegistry}}(\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a2474c9a8aba5cd14aa69f66789e84df2}{MockServiceRegistry}}\&\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00129\ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a2474c9a8aba5cd14aa69f66789e84df2}{MockServiceRegistry}}\&\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a7578ae49dd387e668c6c68832b47e26d}{operator=}}(\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a2474c9a8aba5cd14aa69f66789e84df2}{MockServiceRegistry}}\&\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00130\ }
+\DoxyCodeLine{00131\ \ \ \textcolor{comment}{//\ ===\ Service\ Registration\ ===}}
+\DoxyCodeLine{00132\ }
+\DoxyCodeLine{00136\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ TInterface,\ \textcolor{keyword}{typename}\ TImplementation>}
+\DoxyCodeLine{00137\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_af3969fb27db9e8ce435676d77cb06c8d}{register\_service}}(\mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a727a99e6656bf7685424beaec85cd228}{ServiceLifetime}}\ lifetime\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a727a99e6656bf7685424beaec85cd228a6ff5f73c8b5ebd311406568c8ef50bfd}{ServiceLifetime::Singleton}},}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ name\ =\ \textcolor{stringliteral}{"{}"{}});}
+\DoxyCodeLine{00139\ }
+\DoxyCodeLine{00143\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ TInterface>}
+\DoxyCodeLine{00144\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_af3969fb27db9e8ce435676d77cb06c8d}{register\_service}}(std::function<std::shared\_ptr<TInterface>()>\ factory,}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a727a99e6656bf7685424beaec85cd228}{ServiceLifetime}}\ lifetime\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a727a99e6656bf7685424beaec85cd228a6ff5f73c8b5ebd311406568c8ef50bfd}{ServiceLifetime::Singleton}},}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ name\ =\ \textcolor{stringliteral}{"{}"{}});}
+\DoxyCodeLine{00147\ }
+\DoxyCodeLine{00151\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ TInterface>}
+\DoxyCodeLine{00152\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a219149a2e8e91504dd3ccd101b4a4ffd}{register\_instance}}(std::shared\_ptr<TInterface>\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a449b026183046fbb50877dda6d7eea75}{instance}},\ \textcolor{keyword}{const}\ std::string\&\ name\ =\ \textcolor{stringliteral}{"{}"{}});}
+\DoxyCodeLine{00153\ }
+\DoxyCodeLine{00157\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ TInterface,\ \textcolor{keyword}{typename}\ TMock>}
+\DoxyCodeLine{00158\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a283e9b5459e86c55786fcd985c0a8f63}{register\_mock}}(\mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a727a99e6656bf7685424beaec85cd228}{ServiceLifetime}}\ lifetime\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a727a99e6656bf7685424beaec85cd228a423f62fd0413b98ab4dd487ec060e628}{ServiceLifetime::Scoped}},}
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ name\ =\ \textcolor{stringliteral}{"{}"{}});}
+\DoxyCodeLine{00160\ }
+\DoxyCodeLine{00164\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ TInterface>}
+\DoxyCodeLine{00165\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a20c8845971bb9487ca153c6192877b87}{register\_mock\_instance}}(std::shared\_ptr<TInterface>\ mock\_instance,}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ name\ =\ \textcolor{stringliteral}{"{}"{}});}
+\DoxyCodeLine{00167\ }
+\DoxyCodeLine{00168\ \ \ \textcolor{comment}{//\ ===\ Service\ Resolution\ ===}}
+\DoxyCodeLine{00169\ }
+\DoxyCodeLine{00173\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00174\ \ \ [[nodiscard]]\ std::shared\_ptr<T>\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a307022095af414c5cadff428a77e6b82}{resolve}}(\textcolor{keyword}{const}\ std::string\&\ name\ =\ \textcolor{stringliteral}{"{}"{}});}
+\DoxyCodeLine{00175\ }
+\DoxyCodeLine{00179\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00180\ \ \ [[nodiscard]]\ std::shared\_ptr<T>\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_abdfd434056e0cde7e0ffb3d756ffb525}{try\_resolve}}(\textcolor{keyword}{const}\ std::string\&\ name\ =\ \textcolor{stringliteral}{"{}"{}});}
+\DoxyCodeLine{00181\ }
+\DoxyCodeLine{00185\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00186\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_aa1be7b6b2d01e9718a70d98a3967ef2e}{is\_registered}}(\textcolor{keyword}{const}\ std::string\&\ name\ =\ \textcolor{stringliteral}{"{}"{}})\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00187\ }
+\DoxyCodeLine{00191\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00192\ \ \ [[nodiscard]]\ std::vector<std::shared\_ptr<T>>\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a0f03deba69bc67a827593b4fea16161f}{resolve\_all}}();}
+\DoxyCodeLine{00193\ }
+\DoxyCodeLine{00194\ \ \ \textcolor{comment}{//\ ===\ Mock\ Management\ ===}}
+\DoxyCodeLine{00195\ }
+\DoxyCodeLine{00199\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a49ee23d748d40303a864affedb7d38fe}{install\_all\_mocks}}();}
+\DoxyCodeLine{00200\ }
+\DoxyCodeLine{00204\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a5288df4c85a4cb81feb18fe8166984cc}{remove\_all\_mocks}}();}
+\DoxyCodeLine{00205\ }
+\DoxyCodeLine{00209\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00210\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a03d5ccc28626996236d37be48238ab03}{install\_mock}}(\textcolor{keyword}{const}\ std::string\&\ name\ =\ \textcolor{stringliteral}{"{}"{}});}
+\DoxyCodeLine{00211\ }
+\DoxyCodeLine{00215\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00216\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_adf1e9a47e1d33bc042e6f9a795caa1f4}{remove\_mock}}(\textcolor{keyword}{const}\ std::string\&\ name\ =\ \textcolor{stringliteral}{"{}"{}});}
+\DoxyCodeLine{00217\ }
+\DoxyCodeLine{00221\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00222\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_add28e3c1cbb9f7800ab9e525a992ba65}{is\_mock\_installed}}(\textcolor{keyword}{const}\ std::string\&\ name\ =\ \textcolor{stringliteral}{"{}"{}})\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00223\ }
+\DoxyCodeLine{00224\ \ \ \textcolor{comment}{//\ ===\ Scope\ Management\ ===}}
+\DoxyCodeLine{00225\ }
+\DoxyCodeLine{00229\ \ \ [[nodiscard]]\ std::unique\_ptr<ServiceScope>\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a46eb1dafdd8aa8397813f01619b2370a}{create\_scope}}();}
+\DoxyCodeLine{00230\ }
+\DoxyCodeLine{00234\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a738dcfeaa1a272f65073a0cce67b1a99}{set\_current\_scope}}(\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_service_scope}{ServiceScope}}*\ scope);}
+\DoxyCodeLine{00235\ }
+\DoxyCodeLine{00239\ \ \ [[nodiscard]]\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_service_scope}{ServiceScope}}*\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a7a927db23ec47a0b4035e791ad44b5ae}{get\_current\_scope}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00240\ }
+\DoxyCodeLine{00241\ \ \ \textcolor{comment}{//\ ===\ Registry\ Management\ ===}}
+\DoxyCodeLine{00242\ }
+\DoxyCodeLine{00246\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00247\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_affe21a2a40c56b0cc9d741efe2c151a9}{unregister}}(\textcolor{keyword}{const}\ std::string\&\ name\ =\ \textcolor{stringliteral}{"{}"{}});}
+\DoxyCodeLine{00248\ }
+\DoxyCodeLine{00252\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a2bc5252e83c0c79e13947768db289195}{clear\_all}}();}
+\DoxyCodeLine{00253\ }
+\DoxyCodeLine{00257\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a69c9517558a90a48c096c31c7dc27a5c}{clear\_mocks}}();}
+\DoxyCodeLine{00258\ }
+\DoxyCodeLine{00262\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00263\ \ \ [[nodiscard]]\ std::optional<ServiceRegistration>\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_ae27743dee265605a56c578249e83ee5a}{get\_registration\_info}}(}
+\DoxyCodeLine{00264\ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ name\ =\ \textcolor{stringliteral}{"{}"{}})\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00265\ }
+\DoxyCodeLine{00269\ \ \ [[nodiscard]]\ std::vector<ServiceRegistration>\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_abf857ebc08047981f91c568d54ef8ec2}{get\_all\_registrations}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00270\ }
+\DoxyCodeLine{00274\ \ \ [[nodiscard]]\ std::vector<ServiceRegistration>\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a97455d19d21c169526480e775faf3bd6}{get\_mock\_registrations}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00275\ }
+\DoxyCodeLine{00276\ \ \ \textcolor{comment}{//\ ===\ Utility\ Functions\ ===}}
+\DoxyCodeLine{00277\ }
+\DoxyCodeLine{00281\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_abe6571ec052adba6e5f10a9dd0b33a79}{register\_common\_mocks}}();}
+\DoxyCodeLine{00282\ }
+\DoxyCodeLine{00286\ \ \ [[nodiscard]]\ std::unique\_ptr<ServiceScope>\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a93aed04eb715452bc02b733a9b8d9ae5}{create\_test\_environment}}();}
+\DoxyCodeLine{00287\ }
+\DoxyCodeLine{00291\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a93bc7c6b870eaa0f5a2af1e7818b654b}{validate\_dependencies}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00292\ }
+\DoxyCodeLine{00296\ \ \ [[nodiscard]]\ std::map<std::string,\ std::vector<std::string>>\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a265f2a0b2a5d118c5db819a253d0bdb9}{get\_dependency\_graph}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00297\ }
+\DoxyCodeLine{00298\ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00302\ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a2474c9a8aba5cd14aa69f66789e84df2}{MockServiceRegistry}}()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00303\ }
+\DoxyCodeLine{00304\ \ \ \textcolor{comment}{//\ Service\ storage}}
+\DoxyCodeLine{00305\ \ \ \textcolor{keyword}{mutable}\ std::mutex\ registry\_mutex\_;}
+\DoxyCodeLine{00306\ \ \ std::unordered\_map<std::string,\ ServiceRegistration>\ services\_;}
+\DoxyCodeLine{00307\ \ \ std::unordered\_map<std::string,\ std::any>\ singleton\_instances\_;}
+\DoxyCodeLine{00308\ \ \ std::unordered\_map<std::string,\ bool>\ installed\_mocks\_;}
+\DoxyCodeLine{00309\ }
+\DoxyCodeLine{00310\ \ \ \textcolor{comment}{//\ Scope\ management}}
+\DoxyCodeLine{00311\ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_service_scope}{ServiceScope}}*\ current\_scope\_\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00312\ }
+\DoxyCodeLine{00313\ \ \ \textcolor{comment}{//\ ===\ Internal\ Helper\ Methods\ ===}}
+\DoxyCodeLine{00314\ }
+\DoxyCodeLine{00318\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00319\ \ \ [[nodiscard]]\ std::string\ make\_service\_key(\textcolor{keyword}{const}\ std::string\&\ name\ =\ \textcolor{stringliteral}{"{}"{}})\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00320\ }
+\DoxyCodeLine{00324\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00325\ \ \ [[nodiscard]]\ std::shared\_ptr<T>\ create\_service\_instance(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_service_registration}{ServiceRegistration}}\&\ registration);}
+\DoxyCodeLine{00326\ }
+\DoxyCodeLine{00330\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00331\ \ \ [[nodiscard]]\ std::shared\_ptr<T>\ get\_or\_create\_singleton(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_service_registration}{ServiceRegistration}}\&\ registration);}
+\DoxyCodeLine{00332\ }
+\DoxyCodeLine{00336\ \ \ \textcolor{keywordtype}{void}\ install\_mock\_service(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_service_registration}{ServiceRegistration}}\&\ registration);}
+\DoxyCodeLine{00337\ }
+\DoxyCodeLine{00341\ \ \ \textcolor{keywordtype}{void}\ remove\_mock\_service(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_service_registration}{ServiceRegistration}}\&\ registration);}
+\DoxyCodeLine{00342\ }
+\DoxyCodeLine{00346\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ resolve\_dependencies(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_service_registration}{ServiceRegistration}}\&\ registration)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00347\ \};}
+\DoxyCodeLine{00348\ }
+\DoxyCodeLine{00352\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_service_registry_a5836d27c99a6a3c1a7fefdce31d7088b}{ScopedServiceRegistry}}\ \{}
+\DoxyCodeLine{00353\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00357\ \ \ \textcolor{keyword}{explicit}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_service_registry_a5836d27c99a6a3c1a7fefdce31d7088b}{ScopedServiceRegistry}}(\textcolor{keywordtype}{bool}\ install\_common\_mocks\ =\ \textcolor{keyword}{true});}
+\DoxyCodeLine{00358\ }
+\DoxyCodeLine{00362\ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_service_registry_a95224f7ea98b8dc9f8c4d34e9cfa2b1f}{\string~ScopedServiceRegistry}}();}
+\DoxyCodeLine{00363\ }
+\DoxyCodeLine{00364\ \ \ \textcolor{comment}{//\ Non-\/copyable,\ non-\/movable}}
+\DoxyCodeLine{00365\ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_service_registry_a07c1ac05459b7769a1ef2123ced3252a}{ScopedServiceRegistry}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_service_registry_a5836d27c99a6a3c1a7fefdce31d7088b}{ScopedServiceRegistry}}\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00366\ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_service_registry_a5836d27c99a6a3c1a7fefdce31d7088b}{ScopedServiceRegistry}}\&\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_service_registry_a692a3044c3414a4a8082280d38573a36}{operator=}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_service_registry_a5836d27c99a6a3c1a7fefdce31d7088b}{ScopedServiceRegistry}}\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00367\ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_service_registry_afca47fa6650e5e6813d5c463d3af2c07}{ScopedServiceRegistry}}(\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_service_registry_a5836d27c99a6a3c1a7fefdce31d7088b}{ScopedServiceRegistry}}\&\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00368\ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_service_registry_a5836d27c99a6a3c1a7fefdce31d7088b}{ScopedServiceRegistry}}\&\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_service_registry_ab8be82cb90c641edddaf3c628f9a31ef}{operator=}}(\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_service_registry_a5836d27c99a6a3c1a7fefdce31d7088b}{ScopedServiceRegistry}}\&\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00369\ }
+\DoxyCodeLine{00373\ \ \ [[nodiscard]]\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_service_scope}{ServiceScope}}\&\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_service_registry_afb57027b1dfb9a8634dec0bb2e74f6ca}{scope}}()\ \{\ \textcolor{keywordflow}{return}\ *scope\_;\ \}}
+\DoxyCodeLine{00374\ }
+\DoxyCodeLine{00378\ \ \ [[nodiscard]]\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry}{MockServiceRegistry}}\&\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_service_registry_aeb53573d04656926c61a0a38f7010c1a}{registry}}()\ \{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a449b026183046fbb50877dda6d7eea75}{MockServiceRegistry::instance}}();\ \}}
+\DoxyCodeLine{00379\ }
+\DoxyCodeLine{00383\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ TInterface,\ \textcolor{keyword}{typename}\ TMock>}
+\DoxyCodeLine{00384\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_service_registry_a36be2a6f96dd841975e9d6e093806949}{register\_mock}}(\textcolor{keyword}{const}\ std::string\&\ name\ =\ \textcolor{stringliteral}{"{}"{}});}
+\DoxyCodeLine{00385\ }
+\DoxyCodeLine{00389\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00390\ \ \ [[nodiscard]]\ std::shared\_ptr<T>\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_service_registry_a96ce6ed229cb90e8964d0e520e8a9a0a}{resolve}}(\textcolor{keyword}{const}\ std::string\&\ name\ =\ \textcolor{stringliteral}{"{}"{}});}
+\DoxyCodeLine{00391\ }
+\DoxyCodeLine{00392\ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00393\ \ \ std::unique\_ptr<ServiceScope>\ scope\_;}
+\DoxyCodeLine{00394\ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_service_scope}{ServiceScope}}*\ previous\_scope\_;}
+\DoxyCodeLine{00395\ \};}
+\DoxyCodeLine{00396\ }
+\DoxyCodeLine{00400\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_factory}{MockServiceFactory}}\ \{}
+\DoxyCodeLine{00401\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00405\ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ std::shared\_ptr<JPLMock>\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_factory_a61316289e512c1d91f3b99a05135ecef}{create\_jpl\_mock}}(\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config}{JPLMockConfig}}\ config\ =\ \{\});}
+\DoxyCodeLine{00406\ }
+\DoxyCodeLine{00410\ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ std::shared\_ptr<CacheMock>\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_factory_a0690452aa701915e791343a2c062a305}{create\_cache\_mock}}(\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock_config}{CacheMockConfig}}\ config\ =\ \{\});}
+\DoxyCodeLine{00411\ }
+\DoxyCodeLine{00415\ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ std::shared\_ptr<TimeMock>\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_factory_ae135cd0e7304f9ced039c4cbf72dfde0}{create\_time\_mock}}(\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_time_mock_config}{TimeMockConfig}}\ config\ =\ \{\});}
+\DoxyCodeLine{00416\ }
+\DoxyCodeLine{00420\ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ std::shared\_ptr<NetworkMock>\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_factory_aeae5b127416fe47ad571eef71238a13b}{create\_network\_mock}}(}
+\DoxyCodeLine{00421\ \ \ \ \ \ \ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config}{NetworkMockConfig}}\ config\ =\ \{\});}
+\DoxyCodeLine{00422\ }
+\DoxyCodeLine{00426\ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ std::map<std::string,\ std::any>\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_factory_a970045670ae72344638ed813dd00aae0}{create\_all\_common\_mocks}}();}
+\DoxyCodeLine{00427\ \};}
+\DoxyCodeLine{00428\ }
+\DoxyCodeLine{00432\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00433\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_service_injector_a202c0762e958ec174495ab920e5ca220}{ServiceInjector}}\ \{}
+\DoxyCodeLine{00434\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00438\ \ \ \textcolor{keyword}{explicit}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_service_injector_a202c0762e958ec174495ab920e5ca220}{ServiceInjector}}(\textcolor{keyword}{const}\ std::string\&\ name\ =\ \textcolor{stringliteral}{"{}"{}});}
+\DoxyCodeLine{00439\ }
+\DoxyCodeLine{00443\ \ \ [[nodiscard]]\ std::shared\_ptr<T>\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_service_injector_a0fc4669aa7905334f58a0e06011740e2}{get}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00444\ }
+\DoxyCodeLine{00448\ \ \ [[nodiscard]]\ T*\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_service_injector_a37b710f9a052fe068c4e96e5a5dc414c}{operator-\/>}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00449\ }
+\DoxyCodeLine{00453\ \ \ [[nodiscard]]\ T\&\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_service_injector_ad9975501c2038dd038de79d48d537ffe}{operator*}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00454\ }
+\DoxyCodeLine{00458\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_service_injector_a18e18577900da0af2ab03cf31a99397a}{is\_available}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00459\ }
+\DoxyCodeLine{00460\ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00461\ \ \ std::string\ service\_name\_;}
+\DoxyCodeLine{00462\ \ \ \textcolor{keyword}{mutable}\ std::shared\_ptr<T>\ cached\_service\_;}
+\DoxyCodeLine{00463\ \};}
+\DoxyCodeLine{00464\ }
+\DoxyCodeLine{00465\ \textcolor{comment}{//\ ===\ Template\ Implementation\ ===}}
+\DoxyCodeLine{00466\ }
+\DoxyCodeLine{00467\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00468\ std::shared\_ptr<T>\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_service_scope_a77e3e8b8d2fd1aad61b64aa16cf5872c}{ServiceScope::get\_service}}()\ \{}
+\DoxyCodeLine{00469\ \ \ std::lock\_guard<std::mutex>\ lock(scope\_mutex\_);}
+\DoxyCodeLine{00470\ }
+\DoxyCodeLine{00471\ \ \ \textcolor{keyword}{auto}\ type\_key\ =\ std::type\_index(\textcolor{keyword}{typeid}(T));}
+\DoxyCodeLine{00472\ \ \ \textcolor{keyword}{auto}\ it\ =\ scoped\_instances\_.find(type\_key);}
+\DoxyCodeLine{00473\ }
+\DoxyCodeLine{00474\ \ \ \textcolor{keywordflow}{if}\ (it\ !=\ scoped\_instances\_.end())\ \{}
+\DoxyCodeLine{00475\ \ \ \ \ \textcolor{keywordflow}{return}\ std::any\_cast<std::shared\_ptr<T>>(it-\/>second);}
+\DoxyCodeLine{00476\ \ \ \}}
+\DoxyCodeLine{00477\ }
+\DoxyCodeLine{00478\ \ \ \textcolor{comment}{//\ Get\ from\ registry}}
+\DoxyCodeLine{00479\ \ \ \textcolor{keyword}{auto}\ service\ =\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a449b026183046fbb50877dda6d7eea75}{MockServiceRegistry::instance}}().\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a307022095af414c5cadff428a77e6b82}{resolve}}<T>();}
+\DoxyCodeLine{00480\ \ \ \textcolor{keywordflow}{if}\ (service)\ \{}
+\DoxyCodeLine{00481\ \ \ \ \ scoped\_instances\_[type\_key]\ =\ service;}
+\DoxyCodeLine{00482\ \ \ \}}
+\DoxyCodeLine{00483\ }
+\DoxyCodeLine{00484\ \ \ \textcolor{keywordflow}{return}\ service;}
+\DoxyCodeLine{00485\ \}}
+\DoxyCodeLine{00486\ }
+\DoxyCodeLine{00487\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00488\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_service_scope_aec70b2e10e8279732487710cd80decf1}{ServiceScope::has\_service}}()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00489\ \ \ std::lock\_guard<std::mutex>\ lock(scope\_mutex\_);}
+\DoxyCodeLine{00490\ \ \ \textcolor{keyword}{auto}\ type\_key\ =\ std::type\_index(\textcolor{keyword}{typeid}(T));}
+\DoxyCodeLine{00491\ \ \ \textcolor{keywordflow}{return}\ scoped\_instances\_.find(type\_key)\ !=\ scoped\_instances\_.end();}
+\DoxyCodeLine{00492\ \}}
+\DoxyCodeLine{00493\ }
+\DoxyCodeLine{00494\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ TInterface,\ \textcolor{keyword}{typename}\ TImplementation>}
+\DoxyCodeLine{00495\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_af3969fb27db9e8ce435676d77cb06c8d}{MockServiceRegistry::register\_service}}(\mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a727a99e6656bf7685424beaec85cd228}{ServiceLifetime}}\ lifetime,\ \textcolor{keyword}{const}\ std::string\&\ name)\ \{}
+\DoxyCodeLine{00496\ \ \ \textcolor{keyword}{auto}\ factory\ =\ []()\ -\/>\ std::any\ \{}
+\DoxyCodeLine{00497\ \ \ \ \ \textcolor{keywordflow}{return}\ std::static\_pointer\_cast<TInterface>(std::make\_shared<TImplementation>());}
+\DoxyCodeLine{00498\ \ \ \};}
+\DoxyCodeLine{00499\ }
+\DoxyCodeLine{00500\ \ \ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_service_registration}{ServiceRegistration}}\ registration(std::type\_index(\textcolor{keyword}{typeid}(TInterface)));}
+\DoxyCodeLine{00501\ \ \ registration.\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_service_registration_a9f20f053cdc02e5548a4ea2a110e3586}{service\_name}}\ =\ name;}
+\DoxyCodeLine{00502\ \ \ registration.\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_service_registration_a7e90d9456130f85cd0e91c8d40cb3f45}{lifetime}}\ =\ lifetime;}
+\DoxyCodeLine{00503\ \ \ registration.\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_service_registration_ac2d80b90f9a0118a3cbadf9e688f602b}{factory}}\ =\ factory;}
+\DoxyCodeLine{00504\ \ \ registration.\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_service_registration_aba703351fdac5d62f0065678e29bc665}{is\_mock}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00505\ \ \ registration.\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_service_registration_ab02bc8268bfcad934655b9a2898268bc}{description}}\ =\ \textcolor{stringliteral}{"{}Service:\ "{}}\ +\ std::string(\textcolor{keyword}{typeid}(TInterface).name());}
+\DoxyCodeLine{00506\ }
+\DoxyCodeLine{00507\ \ \ std::lock\_guard<std::mutex>\ lock(registry\_mutex\_);}
+\DoxyCodeLine{00508\ \ \ services\_[make\_service\_key<TInterface>(name)]\ =\ registration;}
+\DoxyCodeLine{00509\ \}}
+\DoxyCodeLine{00510\ }
+\DoxyCodeLine{00511\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ TInterface>}
+\DoxyCodeLine{00512\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_af3969fb27db9e8ce435676d77cb06c8d}{MockServiceRegistry::register\_service}}(std::function<std::shared\_ptr<TInterface>()>\ factory,}
+\DoxyCodeLine{00513\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a727a99e6656bf7685424beaec85cd228}{ServiceLifetime}}\ lifetime,\ \textcolor{keyword}{const}\ std::string\&\ name)\ \{}
+\DoxyCodeLine{00514\ \ \ \textcolor{keyword}{auto}\ any\_factory\ =\ [factory]()\ -\/>\ std::any\ \{\ \textcolor{keywordflow}{return}\ factory();\ \};}
+\DoxyCodeLine{00515\ }
+\DoxyCodeLine{00516\ \ \ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_service_registration}{ServiceRegistration}}\ registration(std::type\_index(\textcolor{keyword}{typeid}(TInterface)));}
+\DoxyCodeLine{00517\ \ \ registration.\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_service_registration_a9f20f053cdc02e5548a4ea2a110e3586}{service\_name}}\ =\ name;}
+\DoxyCodeLine{00518\ \ \ registration.\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_service_registration_a7e90d9456130f85cd0e91c8d40cb3f45}{lifetime}}\ =\ lifetime;}
+\DoxyCodeLine{00519\ \ \ registration.\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_service_registration_ac2d80b90f9a0118a3cbadf9e688f602b}{factory}}\ =\ any\_factory;}
+\DoxyCodeLine{00520\ \ \ registration.\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_service_registration_aba703351fdac5d62f0065678e29bc665}{is\_mock}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00521\ \ \ registration.\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_service_registration_ab02bc8268bfcad934655b9a2898268bc}{description}}\ =\ \textcolor{stringliteral}{"{}Custom\ Service:\ "{}}\ +\ std::string(\textcolor{keyword}{typeid}(TInterface).name());}
+\DoxyCodeLine{00522\ }
+\DoxyCodeLine{00523\ \ \ std::lock\_guard<std::mutex>\ lock(registry\_mutex\_);}
+\DoxyCodeLine{00524\ \ \ services\_[make\_service\_key<TInterface>(name)]\ =\ registration;}
+\DoxyCodeLine{00525\ \}}
+\DoxyCodeLine{00526\ }
+\DoxyCodeLine{00527\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ TInterface>}
+\DoxyCodeLine{00528\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a219149a2e8e91504dd3ccd101b4a4ffd}{MockServiceRegistry::register\_instance}}(std::shared\_ptr<TInterface>\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a449b026183046fbb50877dda6d7eea75}{instance}},}
+\DoxyCodeLine{00529\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ name)\ \{}
+\DoxyCodeLine{00530\ \ \ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_service_registration}{ServiceRegistration}}\ registration(std::type\_index(\textcolor{keyword}{typeid}(TInterface)));}
+\DoxyCodeLine{00531\ \ \ registration.\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_service_registration_a9f20f053cdc02e5548a4ea2a110e3586}{service\_name}}\ =\ name;}
+\DoxyCodeLine{00532\ \ \ registration.\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_service_registration_a7e90d9456130f85cd0e91c8d40cb3f45}{lifetime}}\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a727a99e6656bf7685424beaec85cd228a6ff5f73c8b5ebd311406568c8ef50bfd}{ServiceLifetime::Singleton}};}
+\DoxyCodeLine{00533\ \ \ registration.\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_service_registration_a3af85064f433a49f5d0c21c59433bb23}{singleton\_instance}}\ =\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a449b026183046fbb50877dda6d7eea75}{instance}};}
+\DoxyCodeLine{00534\ \ \ registration.\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_service_registration_aba703351fdac5d62f0065678e29bc665}{is\_mock}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00535\ \ \ registration.\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_service_registration_ab02bc8268bfcad934655b9a2898268bc}{description}}\ =\ \textcolor{stringliteral}{"{}Instance:\ "{}}\ +\ std::string(\textcolor{keyword}{typeid}(TInterface).name());}
+\DoxyCodeLine{00536\ }
+\DoxyCodeLine{00537\ \ \ std::lock\_guard<std::mutex>\ lock(registry\_mutex\_);}
+\DoxyCodeLine{00538\ \ \ services\_[make\_service\_key<TInterface>(name)]\ =\ registration;}
+\DoxyCodeLine{00539\ \ \ singleton\_instances\_[make\_service\_key<TInterface>(name)]\ =\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a449b026183046fbb50877dda6d7eea75}{instance}};}
+\DoxyCodeLine{00540\ \}}
+\DoxyCodeLine{00541\ }
+\DoxyCodeLine{00542\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ TInterface,\ \textcolor{keyword}{typename}\ TMock>}
+\DoxyCodeLine{00543\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a283e9b5459e86c55786fcd985c0a8f63}{MockServiceRegistry::register\_mock}}(\mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a727a99e6656bf7685424beaec85cd228}{ServiceLifetime}}\ lifetime,\ \textcolor{keyword}{const}\ std::string\&\ name)\ \{}
+\DoxyCodeLine{00544\ \ \ \textcolor{keyword}{auto}\ factory\ =\ []()\ -\/>\ std::any\ \{}
+\DoxyCodeLine{00545\ \ \ \ \ \textcolor{keywordflow}{return}\ std::static\_pointer\_cast<TInterface>(std::make\_shared<TMock>());}
+\DoxyCodeLine{00546\ \ \ \};}
+\DoxyCodeLine{00547\ }
+\DoxyCodeLine{00548\ \ \ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_service_registration}{ServiceRegistration}}\ registration(std::type\_index(\textcolor{keyword}{typeid}(TInterface)));}
+\DoxyCodeLine{00549\ \ \ registration.\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_service_registration_a9f20f053cdc02e5548a4ea2a110e3586}{service\_name}}\ =\ name;}
+\DoxyCodeLine{00550\ \ \ registration.\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_service_registration_a7e90d9456130f85cd0e91c8d40cb3f45}{lifetime}}\ =\ lifetime;}
+\DoxyCodeLine{00551\ \ \ registration.\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_service_registration_ac2d80b90f9a0118a3cbadf9e688f602b}{factory}}\ =\ factory;}
+\DoxyCodeLine{00552\ \ \ registration.\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_service_registration_aba703351fdac5d62f0065678e29bc665}{is\_mock}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00553\ \ \ registration.\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_service_registration_ab02bc8268bfcad934655b9a2898268bc}{description}}\ =\ \textcolor{stringliteral}{"{}Mock:\ "{}}\ +\ std::string(\textcolor{keyword}{typeid}(TMock).name());}
+\DoxyCodeLine{00554\ }
+\DoxyCodeLine{00555\ \ \ std::lock\_guard<std::mutex>\ lock(registry\_mutex\_);}
+\DoxyCodeLine{00556\ \ \ services\_[make\_service\_key<TInterface>(name)]\ =\ registration;}
+\DoxyCodeLine{00557\ \}}
+\DoxyCodeLine{00558\ }
+\DoxyCodeLine{00559\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ TInterface>}
+\DoxyCodeLine{00560\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a20c8845971bb9487ca153c6192877b87}{MockServiceRegistry::register\_mock\_instance}}(std::shared\_ptr<TInterface>\ mock\_instance,}
+\DoxyCodeLine{00561\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ name)\ \{}
+\DoxyCodeLine{00562\ \ \ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_service_registration}{ServiceRegistration}}\ registration(std::type\_index(\textcolor{keyword}{typeid}(TInterface)));}
+\DoxyCodeLine{00563\ \ \ registration.\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_service_registration_a9f20f053cdc02e5548a4ea2a110e3586}{service\_name}}\ =\ name;}
+\DoxyCodeLine{00564\ \ \ registration.\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_service_registration_a7e90d9456130f85cd0e91c8d40cb3f45}{lifetime}}\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a727a99e6656bf7685424beaec85cd228a6ff5f73c8b5ebd311406568c8ef50bfd}{ServiceLifetime::Singleton}};}
+\DoxyCodeLine{00565\ \ \ registration.\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_service_registration_a3af85064f433a49f5d0c21c59433bb23}{singleton\_instance}}\ =\ mock\_instance;}
+\DoxyCodeLine{00566\ \ \ registration.\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_service_registration_aba703351fdac5d62f0065678e29bc665}{is\_mock}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00567\ \ \ registration.\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_service_registration_ab02bc8268bfcad934655b9a2898268bc}{description}}\ =\ \textcolor{stringliteral}{"{}Mock\ Instance:\ "{}}\ +\ std::string(\textcolor{keyword}{typeid}(TInterface).name());}
+\DoxyCodeLine{00568\ }
+\DoxyCodeLine{00569\ \ \ std::lock\_guard<std::mutex>\ lock(registry\_mutex\_);}
+\DoxyCodeLine{00570\ \ \ services\_[make\_service\_key<TInterface>(name)]\ =\ registration;}
+\DoxyCodeLine{00571\ \ \ singleton\_instances\_[make\_service\_key<TInterface>(name)]\ =\ mock\_instance;}
+\DoxyCodeLine{00572\ \}}
+\DoxyCodeLine{00573\ }
+\DoxyCodeLine{00574\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00575\ std::shared\_ptr<T>\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a307022095af414c5cadff428a77e6b82}{MockServiceRegistry::resolve}}(\textcolor{keyword}{const}\ std::string\&\ name)\ \{}
+\DoxyCodeLine{00576\ \ \ std::lock\_guard<std::mutex>\ lock(registry\_mutex\_);}
+\DoxyCodeLine{00577\ }
+\DoxyCodeLine{00578\ \ \ \textcolor{keyword}{auto}\ key\ =\ make\_service\_key<T>(name);}
+\DoxyCodeLine{00579\ \ \ \textcolor{keyword}{auto}\ it\ =\ services\_.find(key);}
+\DoxyCodeLine{00580\ }
+\DoxyCodeLine{00581\ \ \ \textcolor{keywordflow}{if}\ (it\ ==\ services\_.end())\ \{}
+\DoxyCodeLine{00582\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00583\ \ \ \}}
+\DoxyCodeLine{00584\ }
+\DoxyCodeLine{00585\ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ registration\ =\ it-\/>second;}
+\DoxyCodeLine{00586\ }
+\DoxyCodeLine{00587\ \ \ \textcolor{keywordflow}{switch}\ (registration.lifetime)\ \{}
+\DoxyCodeLine{00588\ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a727a99e6656bf7685424beaec85cd228a6ff5f73c8b5ebd311406568c8ef50bfd}{ServiceLifetime::Singleton}}:}
+\DoxyCodeLine{00589\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ get\_or\_create\_singleton<T>(registration);}
+\DoxyCodeLine{00590\ }
+\DoxyCodeLine{00591\ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a727a99e6656bf7685424beaec85cd228a423f62fd0413b98ab4dd487ec060e628}{ServiceLifetime::Scoped}}:}
+\DoxyCodeLine{00592\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (current\_scope\_)\ \{}
+\DoxyCodeLine{00593\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ current\_scope\_-\/>get\_service<T>();}
+\DoxyCodeLine{00594\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00595\ \ \ \ \ \ \ \textcolor{comment}{//\ Fall\ through\ to\ transient\ if\ no\ scope}}
+\DoxyCodeLine{00596\ \ \ \ \ \ \ [[fallthrough]];}
+\DoxyCodeLine{00597\ }
+\DoxyCodeLine{00598\ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a727a99e6656bf7685424beaec85cd228ab1f023eff9a6b5308d6024e4c6b3d475}{ServiceLifetime::Transient}}:}
+\DoxyCodeLine{00599\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ create\_service\_instance<T>(registration);}
+\DoxyCodeLine{00600\ \ \ \}}
+\DoxyCodeLine{00601\ }
+\DoxyCodeLine{00602\ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00603\ \}}
+\DoxyCodeLine{00604\ }
+\DoxyCodeLine{00605\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00606\ std::shared\_ptr<T>\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_abdfd434056e0cde7e0ffb3d756ffb525}{MockServiceRegistry::try\_resolve}}(\textcolor{keyword}{const}\ std::string\&\ name)\ \{}
+\DoxyCodeLine{00607\ \ \ \textcolor{keywordflow}{try}\ \{}
+\DoxyCodeLine{00608\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a307022095af414c5cadff428a77e6b82}{resolve<T>}}(name);}
+\DoxyCodeLine{00609\ \ \ \}\ \textcolor{keywordflow}{catch}\ (...)\ \{}
+\DoxyCodeLine{00610\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00611\ \ \ \}}
+\DoxyCodeLine{00612\ \}}
+\DoxyCodeLine{00613\ }
+\DoxyCodeLine{00614\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00615\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_aa1be7b6b2d01e9718a70d98a3967ef2e}{MockServiceRegistry::is\_registered}}(\textcolor{keyword}{const}\ std::string\&\ name)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00616\ \ \ std::lock\_guard<std::mutex>\ lock(registry\_mutex\_);}
+\DoxyCodeLine{00617\ \ \ \textcolor{keyword}{auto}\ key\ =\ make\_service\_key<T>(name);}
+\DoxyCodeLine{00618\ \ \ \textcolor{keywordflow}{return}\ services\_.find(key)\ !=\ services\_.end();}
+\DoxyCodeLine{00619\ \}}
+\DoxyCodeLine{00620\ }
+\DoxyCodeLine{00621\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00622\ std::string\ MockServiceRegistry::make\_service\_key(\textcolor{keyword}{const}\ std::string\&\ name)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00623\ \ \ std::string\ type\_name\ =\ \textcolor{keyword}{typeid}(T).name();}
+\DoxyCodeLine{00624\ \ \ \textcolor{keywordflow}{return}\ name.empty()\ ?\ type\_name\ :\ type\_name\ +\ \textcolor{stringliteral}{"{}:"{}}\ +\ name;}
+\DoxyCodeLine{00625\ \}}
+\DoxyCodeLine{00626\ }
+\DoxyCodeLine{00627\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00628\ std::shared\_ptr<T>\ MockServiceRegistry::create\_service\_instance(}
+\DoxyCodeLine{00629\ \ \ \ \ \textcolor{keyword}{const}\ ServiceRegistration\&\ registration)\ \{}
+\DoxyCodeLine{00630\ \ \ \textcolor{keywordflow}{if}\ (registration.factory)\ \{}
+\DoxyCodeLine{00631\ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a449b026183046fbb50877dda6d7eea75}{instance}}\ =\ registration.factory();}
+\DoxyCodeLine{00632\ \ \ \ \ \textcolor{keywordflow}{return}\ std::any\_cast<std::shared\_ptr<T>>(\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a449b026183046fbb50877dda6d7eea75}{instance}});}
+\DoxyCodeLine{00633\ \ \ \}}
+\DoxyCodeLine{00634\ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00635\ \}}
+\DoxyCodeLine{00636\ }
+\DoxyCodeLine{00637\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00638\ std::shared\_ptr<T>\ MockServiceRegistry::get\_or\_create\_singleton(}
+\DoxyCodeLine{00639\ \ \ \ \ \textcolor{keyword}{const}\ ServiceRegistration\&\ registration)\ \{}
+\DoxyCodeLine{00640\ \ \ \textcolor{keyword}{auto}\ key\ =\ make\_service\_key<T>(registration.service\_name);}
+\DoxyCodeLine{00641\ \ \ \textcolor{keyword}{auto}\ it\ =\ singleton\_instances\_.find(key);}
+\DoxyCodeLine{00642\ }
+\DoxyCodeLine{00643\ \ \ \textcolor{keywordflow}{if}\ (it\ !=\ singleton\_instances\_.end())\ \{}
+\DoxyCodeLine{00644\ \ \ \ \ \textcolor{keywordflow}{return}\ std::any\_cast<std::shared\_ptr<T>>(it-\/>second);}
+\DoxyCodeLine{00645\ \ \ \}}
+\DoxyCodeLine{00646\ }
+\DoxyCodeLine{00647\ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a449b026183046fbb50877dda6d7eea75}{instance}}\ =\ create\_service\_instance<T>(registration);}
+\DoxyCodeLine{00648\ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a449b026183046fbb50877dda6d7eea75}{instance}})\ \{}
+\DoxyCodeLine{00649\ \ \ \ \ singleton\_instances\_[key]\ =\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a449b026183046fbb50877dda6d7eea75}{instance}};}
+\DoxyCodeLine{00650\ \ \ \}}
+\DoxyCodeLine{00651\ }
+\DoxyCodeLine{00652\ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a449b026183046fbb50877dda6d7eea75}{instance}};}
+\DoxyCodeLine{00653\ \}}
+\DoxyCodeLine{00654\ }
+\DoxyCodeLine{00655\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ TInterface,\ \textcolor{keyword}{typename}\ TMock>}
+\DoxyCodeLine{00656\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_service_registry_a36be2a6f96dd841975e9d6e093806949}{ScopedServiceRegistry::register\_mock}}(\textcolor{keyword}{const}\ std::string\&\ name)\ \{}
+\DoxyCodeLine{00657\ \ \ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_service_registry_aeb53573d04656926c61a0a38f7010c1a}{registry}}().\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a283e9b5459e86c55786fcd985c0a8f63}{register\_mock}}<TInterface,\ TMock>(\mbox{\hyperlink{namespace_solar_system_1_1_testing_1_1_mocks_a727a99e6656bf7685424beaec85cd228a423f62fd0413b98ab4dd487ec060e628}{ServiceLifetime::Scoped}},\ name);}
+\DoxyCodeLine{00658\ \}}
+\DoxyCodeLine{00659\ }
+\DoxyCodeLine{00660\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00661\ std::shared\_ptr<T>\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_service_registry_a96ce6ed229cb90e8964d0e520e8a9a0a}{ScopedServiceRegistry::resolve}}(\textcolor{keyword}{const}\ std::string\&)\ \{}
+\DoxyCodeLine{00662\ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_service_registry_afb57027b1dfb9a8634dec0bb2e74f6ca}{scope}}().\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_service_scope_a77e3e8b8d2fd1aad61b64aa16cf5872c}{get\_service}}<T>();}
+\DoxyCodeLine{00663\ \}}
+\DoxyCodeLine{00664\ }
+\DoxyCodeLine{00665\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00666\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_service_injector_a202c0762e958ec174495ab920e5ca220}{ServiceInjector<T>::ServiceInjector}}(\textcolor{keyword}{const}\ std::string\&\ name)\ :\ service\_name\_(name)\ \{\}}
+\DoxyCodeLine{00667\ }
+\DoxyCodeLine{00668\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00669\ std::shared\_ptr<T>\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_service_injector_a0fc4669aa7905334f58a0e06011740e2}{ServiceInjector<T>::get}}()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00670\ \ \ \textcolor{keywordflow}{if}\ (!cached\_service\_)\ \{}
+\DoxyCodeLine{00671\ \ \ \ \ cached\_service\_\ =\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a449b026183046fbb50877dda6d7eea75}{MockServiceRegistry::instance}}().\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry_a307022095af414c5cadff428a77e6b82}{resolve}}<T>(service\_name\_);}
+\DoxyCodeLine{00672\ \ \ \}}
+\DoxyCodeLine{00673\ \ \ \textcolor{keywordflow}{return}\ cached\_service\_;}
+\DoxyCodeLine{00674\ \}}
+\DoxyCodeLine{00675\ }
+\DoxyCodeLine{00676\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00677\ T*\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_service_injector_a37b710f9a052fe068c4e96e5a5dc414c}{ServiceInjector<T>::operator-\/>}}()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00678\ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_service_injector_a0fc4669aa7905334f58a0e06011740e2}{get}}().get();}
+\DoxyCodeLine{00679\ \}}
+\DoxyCodeLine{00680\ }
+\DoxyCodeLine{00681\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00682\ T\&\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_service_injector_ad9975501c2038dd038de79d48d537ffe}{ServiceInjector<T>::operator*}}()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00683\ \ \ \textcolor{keywordflow}{return}\ *\mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_service_injector_a0fc4669aa7905334f58a0e06011740e2}{get}}();}
+\DoxyCodeLine{00684\ \}}
+\DoxyCodeLine{00685\ }
+\DoxyCodeLine{00686\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00687\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_service_injector_a18e18577900da0af2ab03cf31a99397a}{ServiceInjector<T>::is\_available}}()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00688\ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_mocks_1_1_service_injector_a0fc4669aa7905334f58a0e06011740e2}{get}}()\ !=\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00689\ \}}
+\DoxyCodeLine{00690\ }
+\DoxyCodeLine{00691\ \}\ \ \textcolor{comment}{//\ namespace\ SolarSystem::Testing::Mocks}}
+
+\end{DoxyCode}

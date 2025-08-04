@@ -1,0 +1,5 @@
+<map id="SolarSystem::Testing::RegressionDetector::load_baselines" name="SolarSystem::Testing::RegressionDetector::load_baselines">
+<area shape="rect" id="Node000001" title="Load baseline data from storage." alt="" coords="5,5,152,61"/>
+<area shape="rect" id="Node000002" href="$struct_solar_system_1_1_testing_1_1_performance_baseline.html#a3a3e7c90fb469be99a4f5467eed6e8ca" title="Create from JSON string." alt="" coords="200,5,353,61"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="152,30,184,30,184,36,152,36"/>
+</map>

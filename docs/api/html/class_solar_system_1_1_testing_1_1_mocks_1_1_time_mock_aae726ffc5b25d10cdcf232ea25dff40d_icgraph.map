@@ -1,0 +1,23 @@
+<map id="SolarSystem::Testing::Mocks::TimeMock::now" name="SolarSystem::Testing::Mocks::TimeMock::now">
+<area shape="rect" id="Node000001" title="Get current mock time." alt="" coords="515,197,684,238"/>
+<area shape="rect" id="Node000002" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock.html#ac5a1c88a768cd24b204cba48cecd0bc5" title="Get current time in specified time zone." alt="" coords="279,5,448,61"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="573,186,527,130,497,101,465,75,446,64,449,59,469,71,501,97,531,126,577,182"/>
+<area shape="rect" id="Node000003" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock.html#adfda91994da37296328e7cc791466183" title="Get current mock time in milliseconds since epoch." alt="" coords="266,85,460,126"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="555,190,512,164,466,140,438,129,440,124,468,135,515,159,557,185"/>
+<area shape="rect" id="Node000004" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock.html#a1d98389bdca2082a1b17aea0abde9360" title="Get current mock time in seconds since epoch." alt="" coords="279,149,448,205"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="499,203,448,194,449,189,500,198"/>
+<area shape="rect" id="Node000005" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock.html#afcfdac59293e0ab37fa1e192d4793bda" title="Get current mock time as time_t." alt="" coords="279,229,448,285"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="500,237,449,245,448,240,499,231"/>
+<area shape="rect" id="Node000006" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock.html#adad60f1f26a955a8630dd9f03f78fb43" title="Mock sleep until specified time point." alt="" coords="260,309,467,350"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="557,249,515,275,468,300,440,311,438,306,466,295,512,270,555,244"/>
+<area shape="rect" id="Node000007" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock.html#a86e935365ba7b638f668ceda24743bd5" title="Construct time mock with configuration." alt="" coords="260,374,466,415"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="578,252,532,309,502,338,468,363,444,376,442,371,466,359,498,334,528,305,574,249"/>
+<area shape="rect" id="Node000008" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock.html#a816b30d5f2894e7c5e2b1931495a4b60" title=" " alt="" coords="8,276,209,316"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="274,371,258,364,234,347,210,332,181,319,183,314,213,327,237,343,261,359,276,366"/>
+<area shape="rect" id="Node000009" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock.html#a16fef7ce8e204673fe4f6c61a3bf2630" title=" " alt="" coords="8,341,209,382"/>
+<area shape="poly" id="edge8_Node000007_Node000009" title=" " alt="" coords="244,382,209,377,210,372,245,376"/>
+<area shape="rect" id="Node000010" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock.html#a5824b8c0b5277143cc0757176d0bea1b" title=" " alt="" coords="5,406,212,447"/>
+<area shape="poly" id="edge9_Node000007_Node000010" title=" " alt="" coords="245,412,213,416,212,411,244,407"/>
+<area shape="rect" id="Node000011" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock.html#af353329b574b2901729a486c223452a8" title=" " alt="" coords="5,472,212,512"/>
+<area shape="poly" id="edge10_Node000007_Node000011" title=" " alt="" coords="303,424,213,461,177,473,176,468,211,456,301,419"/>
+</map>

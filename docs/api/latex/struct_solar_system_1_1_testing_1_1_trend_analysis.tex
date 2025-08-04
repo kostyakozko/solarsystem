@@ -1,0 +1,132 @@
+\doxysection{Solar\+System\+::Testing\+::Trend\+Analysis Struct Reference}
+\hypertarget{struct_solar_system_1_1_testing_1_1_trend_analysis}{}\label{struct_solar_system_1_1_testing_1_1_trend_analysis}\index{SolarSystem::Testing::TrendAnalysis@{SolarSystem::Testing::TrendAnalysis}}
+
+
+Performance trend analysis.  
+
+
+
+
+{\ttfamily \#include $<$regression\+\_\+detector.\+hpp$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+std\+::string \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_trend_analysis_a9228a86f0f73cf6e0556b059427a7d67}{generate\+\_\+report}} () const
+\begin{DoxyCompactList}\small\item\em Generate trend report. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::string \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_trend_analysis_a9b47c6fca09b78fd61078c536a9b2ee0}{benchmark\+\_\+name}}
+\item 
+std\+::vector$<$ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_trend_data_point}{Trend\+Data\+Point}} $>$ \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_trend_analysis_af2cdd0e5a68ef870a3da91d5228fa4ed}{data\+\_\+points}}
+\item 
+double \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_trend_analysis_a2c40d7e5e6135a77fead703799bdba66}{time\+\_\+trend\+\_\+slope}} = 0.\+0
+\begin{DoxyCompactList}\small\item\em Trend slope for execution time. \end{DoxyCompactList}\item 
+double \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_trend_analysis_af6352a8455c75761382ba78a4f53e441}{memory\+\_\+trend\+\_\+slope}} = 0.\+0
+\begin{DoxyCompactList}\small\item\em Trend slope for memory usage. \end{DoxyCompactList}\item 
+double \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_trend_analysis_ab320cd1b67cfefeacef71d7f3dc0c68c}{ops\+\_\+trend\+\_\+slope}} = 0.\+0
+\begin{DoxyCompactList}\small\item\em Trend slope for operations/sec. \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_trend_analysis_acdb3f4b79b2f47e3697b6a729b70ac3e}{trend\+\_\+direction}}
+\begin{DoxyCompactList}\small\item\em "{}improving"{}, "{}stable"{}, "{}degrading"{} \end{DoxyCompactList}\item 
+double \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_trend_analysis_a626b59359a3914ba8caa02525dbce586}{confidence\+\_\+level}} = 0.\+0
+\begin{DoxyCompactList}\small\item\em Statistical confidence in trend. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Performance trend analysis. 
+
+\label{doc-func-members}
+\Hypertarget{struct_solar_system_1_1_testing_1_1_trend_analysis_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{struct_solar_system_1_1_testing_1_1_trend_analysis_a9228a86f0f73cf6e0556b059427a7d67}\index{SolarSystem::Testing::TrendAnalysis@{SolarSystem::Testing::TrendAnalysis}!generate\_report@{generate\_report}}
+\index{generate\_report@{generate\_report}!SolarSystem::Testing::TrendAnalysis@{SolarSystem::Testing::TrendAnalysis}}
+\doxysubsubsection{\texorpdfstring{generate\_report()}{generate\_report()}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_trend_analysis_a9228a86f0f73cf6e0556b059427a7d67} 
+std\+::string Solar\+System\+::\+Testing\+::\+Trend\+Analysis\+::generate\+\_\+report (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Generate trend report. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{struct_solar_system_1_1_testing_1_1_trend_analysis_a9228a86f0f73cf6e0556b059427a7d67_icgraph}
+\end{center}
+\end{figure}
+
+
+\label{doc-variable-members}
+\Hypertarget{struct_solar_system_1_1_testing_1_1_trend_analysis_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{struct_solar_system_1_1_testing_1_1_trend_analysis_a9b47c6fca09b78fd61078c536a9b2ee0}\index{SolarSystem::Testing::TrendAnalysis@{SolarSystem::Testing::TrendAnalysis}!benchmark\_name@{benchmark\_name}}
+\index{benchmark\_name@{benchmark\_name}!SolarSystem::Testing::TrendAnalysis@{SolarSystem::Testing::TrendAnalysis}}
+\doxysubsubsection{\texorpdfstring{benchmark\_name}{benchmark\_name}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_trend_analysis_a9b47c6fca09b78fd61078c536a9b2ee0} 
+std\+::string Solar\+System\+::\+Testing\+::\+Trend\+Analysis\+::benchmark\+\_\+name}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_trend_analysis_a626b59359a3914ba8caa02525dbce586}\index{SolarSystem::Testing::TrendAnalysis@{SolarSystem::Testing::TrendAnalysis}!confidence\_level@{confidence\_level}}
+\index{confidence\_level@{confidence\_level}!SolarSystem::Testing::TrendAnalysis@{SolarSystem::Testing::TrendAnalysis}}
+\doxysubsubsection{\texorpdfstring{confidence\_level}{confidence\_level}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_trend_analysis_a626b59359a3914ba8caa02525dbce586} 
+double Solar\+System\+::\+Testing\+::\+Trend\+Analysis\+::confidence\+\_\+level = 0.\+0}
+
+
+
+Statistical confidence in trend. 
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_trend_analysis_af2cdd0e5a68ef870a3da91d5228fa4ed}\index{SolarSystem::Testing::TrendAnalysis@{SolarSystem::Testing::TrendAnalysis}!data\_points@{data\_points}}
+\index{data\_points@{data\_points}!SolarSystem::Testing::TrendAnalysis@{SolarSystem::Testing::TrendAnalysis}}
+\doxysubsubsection{\texorpdfstring{data\_points}{data\_points}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_trend_analysis_af2cdd0e5a68ef870a3da91d5228fa4ed} 
+std\+::vector$<$\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_trend_data_point}{Trend\+Data\+Point}}$>$ Solar\+System\+::\+Testing\+::\+Trend\+Analysis\+::data\+\_\+points}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_trend_analysis_af6352a8455c75761382ba78a4f53e441}\index{SolarSystem::Testing::TrendAnalysis@{SolarSystem::Testing::TrendAnalysis}!memory\_trend\_slope@{memory\_trend\_slope}}
+\index{memory\_trend\_slope@{memory\_trend\_slope}!SolarSystem::Testing::TrendAnalysis@{SolarSystem::Testing::TrendAnalysis}}
+\doxysubsubsection{\texorpdfstring{memory\_trend\_slope}{memory\_trend\_slope}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_trend_analysis_af6352a8455c75761382ba78a4f53e441} 
+double Solar\+System\+::\+Testing\+::\+Trend\+Analysis\+::memory\+\_\+trend\+\_\+slope = 0.\+0}
+
+
+
+Trend slope for memory usage. 
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_trend_analysis_ab320cd1b67cfefeacef71d7f3dc0c68c}\index{SolarSystem::Testing::TrendAnalysis@{SolarSystem::Testing::TrendAnalysis}!ops\_trend\_slope@{ops\_trend\_slope}}
+\index{ops\_trend\_slope@{ops\_trend\_slope}!SolarSystem::Testing::TrendAnalysis@{SolarSystem::Testing::TrendAnalysis}}
+\doxysubsubsection{\texorpdfstring{ops\_trend\_slope}{ops\_trend\_slope}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_trend_analysis_ab320cd1b67cfefeacef71d7f3dc0c68c} 
+double Solar\+System\+::\+Testing\+::\+Trend\+Analysis\+::ops\+\_\+trend\+\_\+slope = 0.\+0}
+
+
+
+Trend slope for operations/sec. 
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_trend_analysis_a2c40d7e5e6135a77fead703799bdba66}\index{SolarSystem::Testing::TrendAnalysis@{SolarSystem::Testing::TrendAnalysis}!time\_trend\_slope@{time\_trend\_slope}}
+\index{time\_trend\_slope@{time\_trend\_slope}!SolarSystem::Testing::TrendAnalysis@{SolarSystem::Testing::TrendAnalysis}}
+\doxysubsubsection{\texorpdfstring{time\_trend\_slope}{time\_trend\_slope}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_trend_analysis_a2c40d7e5e6135a77fead703799bdba66} 
+double Solar\+System\+::\+Testing\+::\+Trend\+Analysis\+::time\+\_\+trend\+\_\+slope = 0.\+0}
+
+
+
+Trend slope for execution time. 
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_trend_analysis_acdb3f4b79b2f47e3697b6a729b70ac3e}\index{SolarSystem::Testing::TrendAnalysis@{SolarSystem::Testing::TrendAnalysis}!trend\_direction@{trend\_direction}}
+\index{trend\_direction@{trend\_direction}!SolarSystem::Testing::TrendAnalysis@{SolarSystem::Testing::TrendAnalysis}}
+\doxysubsubsection{\texorpdfstring{trend\_direction}{trend\_direction}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_trend_analysis_acdb3f4b79b2f47e3697b6a729b70ac3e} 
+std\+::string Solar\+System\+::\+Testing\+::\+Trend\+Analysis\+::trend\+\_\+direction}
+
+
+
+"{}improving"{}, "{}stable"{}, "{}degrading"{} 
+
+
+
+The documentation for this struct was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+test/include/solar\+\_\+test/benchmarks/\mbox{\hyperlink{regression__detector_8hpp}{regression\+\_\+detector.\+hpp}}\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+test/src/benchmarks/\mbox{\hyperlink{regression__detector_8cpp}{regression\+\_\+detector.\+cpp}}\end{DoxyCompactItemize}

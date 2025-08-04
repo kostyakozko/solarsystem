@@ -1,0 +1,172 @@
+\doxysection{Solar\+System\+::Utils Namespace Reference}
+\hypertarget{namespace_solar_system_1_1_utils}{}\label{namespace_solar_system_1_1_utils}\index{SolarSystem::Utils@{SolarSystem::Utils}}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_argument_parser}{Argument\+Parser}}
+\begin{DoxyCompactList}\small\item\em Modern C++20 argument parser. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_config}{Config}}
+\begin{DoxyCompactList}\small\item\em Modern configuration system with YAML/\+JSON support. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_date}{Date}}
+\begin{DoxyCompactList}\small\item\em \doxylink{class_solar_system_1_1_utils_1_1_date}{Date} representation with parsing capabilities. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Expected}}
+\begin{DoxyCompactList}\small\item\em C++20 compatible \doxylink{class_solar_system_1_1_utils_1_1_expected}{Expected} type for error handling without exceptions. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected_3_01void_00_01_e_01_4}{Expected$<$ void, E $>$}}
+\item 
+class \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_extended_argument_parser}{Extended\+Argument\+Parser}}
+\begin{DoxyCompactList}\small\item\em Builder for extended argument parser. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_solar_system_1_1_utils_1_1_extended_config}{Extended\+Config}}
+\begin{DoxyCompactList}\small\item\em Extended configuration for specialized applications. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_global_config}{Global\+Config}}
+\begin{DoxyCompactList}\small\item\em Global configuration instance. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_logger}{Logger}}
+\begin{DoxyCompactList}\small\item\em Modern structured logging system. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_option}{Option}}
+\begin{DoxyCompactList}\small\item\em \doxylink{class_solar_system_1_1_utils_1_1_option}{Option} definition for argument parser. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_realtime_argument_parser}{Realtime\+Argument\+Parser}}
+\begin{DoxyCompactList}\small\item\em Builder for realtime argument parser. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_solar_system_1_1_utils_1_1_realtime_config}{Realtime\+Config}}
+\begin{DoxyCompactList}\small\item\em Configuration for real-\/time monitoring applications. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_simulation_argument_parser}{Simulation\+Argument\+Parser}}
+\begin{DoxyCompactList}\small\item\em Builder for simulation argument parser. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_solar_system_1_1_utils_1_1_simulation_config}{Simulation\+Config}}
+\begin{DoxyCompactList}\small\item\em Configuration structure for simulation arguments. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Concepts}
+\begin{DoxyCompactItemize}
+\item 
+concept \mbox{\hyperlink{concept_solar_system_1_1_utils_1_1_parseable}{Parseable}}
+\begin{DoxyCompactList}\small\item\em Concept for types that can be parsed from string. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename T$>$ }\\using \mbox{\hyperlink{namespace_solar_system_1_1_utils_a6a2c73b32b32578d25a31c35a6749246}{Argument\+Result}} = \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Expected}}$<$T, \mbox{\hyperlink{namespace_solar_system_1_1_utils_adaea2113d068dabb4c3eda97382cc885}{Argument\+Error}}$>$
+\begin{DoxyCompactList}\small\item\em Result type for argument parsing operations. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum class \mbox{\hyperlink{namespace_solar_system_1_1_utils_adaea2113d068dabb4c3eda97382cc885}{Argument\+Error}} \{ \newline
+\mbox{\hyperlink{namespace_solar_system_1_1_utils_adaea2113d068dabb4c3eda97382cc885ab5f7e90896ca9ad4c2983e09b345b7c6}{Unknown\+Option}}
+, \mbox{\hyperlink{namespace_solar_system_1_1_utils_adaea2113d068dabb4c3eda97382cc885a1e5e4b43c87e3153f897a9734fbf5b35}{Missing\+Value}}
+, \mbox{\hyperlink{namespace_solar_system_1_1_utils_adaea2113d068dabb4c3eda97382cc885a223e81e8afa42c41346a6696560ecc7b}{Invalid\+Value}}
+, \mbox{\hyperlink{namespace_solar_system_1_1_utils_adaea2113d068dabb4c3eda97382cc885adfe10f44b546423473f1f139a37fd10d}{Invalid\+Date\+Format}}
+, \newline
+\mbox{\hyperlink{namespace_solar_system_1_1_utils_adaea2113d068dabb4c3eda97382cc885a621adb59f4d55f97b64574b6fed60b20}{Date\+Out\+Of\+Range}}
+, \mbox{\hyperlink{namespace_solar_system_1_1_utils_adaea2113d068dabb4c3eda97382cc885a171b6cfecf7529fa9ae83bb49854fffa}{Conflicting\+Options}}
+, \mbox{\hyperlink{namespace_solar_system_1_1_utils_adaea2113d068dabb4c3eda97382cc885aa86dd928e717b3b96831afa8157391d5}{Missing\+Required\+Option}}
+ \}
+\begin{DoxyCompactList}\small\item\em Error types for argument parsing. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename T$>$ }\\\mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Expected}}$<$ std\+::decay\+\_\+t$<$ T $>$, void $>$ \mbox{\hyperlink{namespace_solar_system_1_1_utils_a40fdc55a1661421bca01da21189dafed}{make\+\_\+expected}} (T \&\&value)
+\item 
+{\footnotesize template$<$typename E, typename T = void$>$ }\\\mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Expected}}$<$ T, std\+::decay\+\_\+t$<$ E $>$ $>$ \mbox{\hyperlink{namespace_solar_system_1_1_utils_a14dd7202350ce6df040a32584df9424d}{make\+\_\+unexpected}} (E \&\&error)
+\item 
+std\+::string \mbox{\hyperlink{namespace_solar_system_1_1_utils_a4ae269edb40b2f73886ad9acf05ea3c5}{to\+\_\+string}} (\mbox{\hyperlink{namespace_solar_system_1_1_utils_adaea2113d068dabb4c3eda97382cc885}{Argument\+Error}} error)
+\begin{DoxyCompactList}\small\item\em Convert \doxylink{namespace_solar_system_1_1_utils_adaea2113d068dabb4c3eda97382cc885}{Argument\+Error} to string for error messages. \end{DoxyCompactList}\item 
+template std\+::optional$<$ std\+::string $>$ \mbox{\hyperlink{namespace_solar_system_1_1_utils_a3462be91b789b1ed66ee0dcbc07f93bb}{Config\+::get\+\_\+value$<$ std\+::string $>$}} (const Config\+Map \&, const std\+::string \&)
+\end{DoxyCompactItemize}
+
+
+\label{doc-typedef-members}
+\Hypertarget{namespace_solar_system_1_1_utils_doc-typedef-members}
+\doxysubsection{Typedef Documentation}
+\Hypertarget{namespace_solar_system_1_1_utils_a6a2c73b32b32578d25a31c35a6749246}\index{SolarSystem::Utils@{SolarSystem::Utils}!ArgumentResult@{ArgumentResult}}
+\index{ArgumentResult@{ArgumentResult}!SolarSystem::Utils@{SolarSystem::Utils}}
+\doxysubsubsection{\texorpdfstring{ArgumentResult}{ArgumentResult}}
+{\footnotesize\ttfamily \label{namespace_solar_system_1_1_utils_a6a2c73b32b32578d25a31c35a6749246} 
+template$<$typename T$>$ \\
+using \mbox{\hyperlink{namespace_solar_system_1_1_utils_a6a2c73b32b32578d25a31c35a6749246}{Solar\+System\+::\+Utils\+::\+Argument\+Result}} = \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Expected}}$<$T, \mbox{\hyperlink{namespace_solar_system_1_1_utils_adaea2113d068dabb4c3eda97382cc885}{Argument\+Error}}$>$}
+
+
+
+Result type for argument parsing operations. 
+
+
+
+\label{doc-enum-members}
+\Hypertarget{namespace_solar_system_1_1_utils_doc-enum-members}
+\doxysubsection{Enumeration Type Documentation}
+\Hypertarget{namespace_solar_system_1_1_utils_adaea2113d068dabb4c3eda97382cc885}\index{SolarSystem::Utils@{SolarSystem::Utils}!ArgumentError@{ArgumentError}}
+\index{ArgumentError@{ArgumentError}!SolarSystem::Utils@{SolarSystem::Utils}}
+\doxysubsubsection{\texorpdfstring{ArgumentError}{ArgumentError}}
+{\footnotesize\ttfamily \label{namespace_solar_system_1_1_utils_adaea2113d068dabb4c3eda97382cc885} 
+enum class \mbox{\hyperlink{namespace_solar_system_1_1_utils_adaea2113d068dabb4c3eda97382cc885}{Solar\+System\+::\+Utils\+::\+Argument\+Error}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+
+
+Error types for argument parsing. 
+
+\begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{UnknownOption@{UnknownOption}!SolarSystem::Utils@{SolarSystem::Utils}}\index{SolarSystem::Utils@{SolarSystem::Utils}!UnknownOption@{UnknownOption}}}\Hypertarget{namespace_solar_system_1_1_utils_adaea2113d068dabb4c3eda97382cc885ab5f7e90896ca9ad4c2983e09b345b7c6}\label{namespace_solar_system_1_1_utils_adaea2113d068dabb4c3eda97382cc885ab5f7e90896ca9ad4c2983e09b345b7c6} 
+Unknown\+Option&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{MissingValue@{MissingValue}!SolarSystem::Utils@{SolarSystem::Utils}}\index{SolarSystem::Utils@{SolarSystem::Utils}!MissingValue@{MissingValue}}}\Hypertarget{namespace_solar_system_1_1_utils_adaea2113d068dabb4c3eda97382cc885a1e5e4b43c87e3153f897a9734fbf5b35}\label{namespace_solar_system_1_1_utils_adaea2113d068dabb4c3eda97382cc885a1e5e4b43c87e3153f897a9734fbf5b35} 
+Missing\+Value&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{InvalidValue@{InvalidValue}!SolarSystem::Utils@{SolarSystem::Utils}}\index{SolarSystem::Utils@{SolarSystem::Utils}!InvalidValue@{InvalidValue}}}\Hypertarget{namespace_solar_system_1_1_utils_adaea2113d068dabb4c3eda97382cc885a223e81e8afa42c41346a6696560ecc7b}\label{namespace_solar_system_1_1_utils_adaea2113d068dabb4c3eda97382cc885a223e81e8afa42c41346a6696560ecc7b} 
+Invalid\+Value&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{InvalidDateFormat@{InvalidDateFormat}!SolarSystem::Utils@{SolarSystem::Utils}}\index{SolarSystem::Utils@{SolarSystem::Utils}!InvalidDateFormat@{InvalidDateFormat}}}\Hypertarget{namespace_solar_system_1_1_utils_adaea2113d068dabb4c3eda97382cc885adfe10f44b546423473f1f139a37fd10d}\label{namespace_solar_system_1_1_utils_adaea2113d068dabb4c3eda97382cc885adfe10f44b546423473f1f139a37fd10d} 
+Invalid\+Date\+Format&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{DateOutOfRange@{DateOutOfRange}!SolarSystem::Utils@{SolarSystem::Utils}}\index{SolarSystem::Utils@{SolarSystem::Utils}!DateOutOfRange@{DateOutOfRange}}}\Hypertarget{namespace_solar_system_1_1_utils_adaea2113d068dabb4c3eda97382cc885a621adb59f4d55f97b64574b6fed60b20}\label{namespace_solar_system_1_1_utils_adaea2113d068dabb4c3eda97382cc885a621adb59f4d55f97b64574b6fed60b20} 
+Date\+Out\+Of\+Range&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ConflictingOptions@{ConflictingOptions}!SolarSystem::Utils@{SolarSystem::Utils}}\index{SolarSystem::Utils@{SolarSystem::Utils}!ConflictingOptions@{ConflictingOptions}}}\Hypertarget{namespace_solar_system_1_1_utils_adaea2113d068dabb4c3eda97382cc885a171b6cfecf7529fa9ae83bb49854fffa}\label{namespace_solar_system_1_1_utils_adaea2113d068dabb4c3eda97382cc885a171b6cfecf7529fa9ae83bb49854fffa} 
+Conflicting\+Options&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{MissingRequiredOption@{MissingRequiredOption}!SolarSystem::Utils@{SolarSystem::Utils}}\index{SolarSystem::Utils@{SolarSystem::Utils}!MissingRequiredOption@{MissingRequiredOption}}}\Hypertarget{namespace_solar_system_1_1_utils_adaea2113d068dabb4c3eda97382cc885aa86dd928e717b3b96831afa8157391d5}\label{namespace_solar_system_1_1_utils_adaea2113d068dabb4c3eda97382cc885aa86dd928e717b3b96831afa8157391d5} 
+Missing\+Required\+Option&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\label{doc-func-members}
+\Hypertarget{namespace_solar_system_1_1_utils_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{namespace_solar_system_1_1_utils_a3462be91b789b1ed66ee0dcbc07f93bb}\index{SolarSystem::Utils@{SolarSystem::Utils}!Config::get\_value$<$ std::string $>$@{Config::get\_value$<$ std::string $>$}}
+\index{Config::get\_value$<$ std::string $>$@{Config::get\_value$<$ std::string $>$}!SolarSystem::Utils@{SolarSystem::Utils}}
+\doxysubsubsection{\texorpdfstring{Config::get\_value$<$ std::string $>$()}{Config::get\_value< std::string >()}}
+{\footnotesize\ttfamily \label{namespace_solar_system_1_1_utils_a3462be91b789b1ed66ee0dcbc07f93bb} 
+template std\+::optional$<$ std\+::string $>$ Solar\+System\+::\+Utils\+::\+Config\+::get\+\_\+value$<$ std\+::string $>$ (\begin{DoxyParamCaption}\item[{const Config\+Map \&}]{}{, }\item[{const std\+::string \&}]{}{}\end{DoxyParamCaption})}
+
+\Hypertarget{namespace_solar_system_1_1_utils_a40fdc55a1661421bca01da21189dafed}\index{SolarSystem::Utils@{SolarSystem::Utils}!make\_expected@{make\_expected}}
+\index{make\_expected@{make\_expected}!SolarSystem::Utils@{SolarSystem::Utils}}
+\doxysubsubsection{\texorpdfstring{make\_expected()}{make\_expected()}}
+{\footnotesize\ttfamily \label{namespace_solar_system_1_1_utils_a40fdc55a1661421bca01da21189dafed} 
+template$<$typename T$>$ \\
+\mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Expected}}$<$ std\+::decay\+\_\+t$<$ T $>$, void $>$ Solar\+System\+::\+Utils\+::make\+\_\+expected (\begin{DoxyParamCaption}\item[{T \&\&}]{value}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+\Hypertarget{namespace_solar_system_1_1_utils_a14dd7202350ce6df040a32584df9424d}\index{SolarSystem::Utils@{SolarSystem::Utils}!make\_unexpected@{make\_unexpected}}
+\index{make\_unexpected@{make\_unexpected}!SolarSystem::Utils@{SolarSystem::Utils}}
+\doxysubsubsection{\texorpdfstring{make\_unexpected()}{make\_unexpected()}}
+{\footnotesize\ttfamily \label{namespace_solar_system_1_1_utils_a14dd7202350ce6df040a32584df9424d} 
+template$<$typename E, typename T = void$>$ \\
+\mbox{\hyperlink{class_solar_system_1_1_utils_1_1_expected}{Expected}}$<$ T, std\+::decay\+\_\+t$<$ E $>$ $>$ Solar\+System\+::\+Utils\+::make\+\_\+unexpected (\begin{DoxyParamCaption}\item[{E \&\&}]{error}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+\Hypertarget{namespace_solar_system_1_1_utils_a4ae269edb40b2f73886ad9acf05ea3c5}\index{SolarSystem::Utils@{SolarSystem::Utils}!to\_string@{to\_string}}
+\index{to\_string@{to\_string}!SolarSystem::Utils@{SolarSystem::Utils}}
+\doxysubsubsection{\texorpdfstring{to\_string()}{to\_string()}}
+{\footnotesize\ttfamily \label{namespace_solar_system_1_1_utils_a4ae269edb40b2f73886ad9acf05ea3c5} 
+std\+::string Solar\+System\+::\+Utils\+::to\+\_\+string (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespace_solar_system_1_1_utils_adaea2113d068dabb4c3eda97382cc885}{Argument\+Error}}}]{error}{}\end{DoxyParamCaption})}
+
+
+
+Convert \doxylink{namespace_solar_system_1_1_utils_adaea2113d068dabb4c3eda97382cc885}{Argument\+Error} to string for error messages. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=252pt]{namespace_solar_system_1_1_utils_a4ae269edb40b2f73886ad9acf05ea3c5_icgraph}
+\end{center}
+\end{figure}

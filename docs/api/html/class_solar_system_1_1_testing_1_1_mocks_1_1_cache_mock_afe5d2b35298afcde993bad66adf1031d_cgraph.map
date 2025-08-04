@@ -1,0 +1,15 @@
+<map id="SolarSystem::Testing::Mocks::CacheMock::populate_with_corrupted_data" name="SolarSystem::Testing::Mocks::CacheMock::populate_with_corrupted_data">
+<area shape="rect" id="Node000001" title="Populate cache with corrupted test data." alt="" coords="5,165,209,221"/>
+<area shape="rect" id="Node000002" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock.html#aad3c1fff12a1f57f0331a8b38cdb1829" title="Populate cache with valid test data." alt="" coords="257,125,460,181"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="209,174,241,169,241,174,210,180"/>
+<area shape="rect" id="Node000007" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock.html#a2887e4af2d7f852559e46b5ead1c984a" title="Simulate cache corruption." alt="" coords="257,205,460,261"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="210,207,241,212,241,217,209,212"/>
+<area shape="rect" id="Node000003" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock.html#a15ca63a81c55d8c7ceb40fd2f238f382" title="Set cache data content." alt="" coords="508,5,680,61"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="410,122,507,71,517,66,519,71,509,76,412,127"/>
+<area shape="rect" id="Node000004" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock.html#ad9a574edb78b7fbca76ef8a59bce1750" title="Set whether cache exists." alt="" coords="508,85,680,141"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="460,133,492,128,493,133,461,138"/>
+<area shape="rect" id="Node000005" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock.html#abc36f08890d034bc15d1c71e3aced49f" title="Set cache metadata." alt="" coords="508,165,680,221"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="461,168,493,173,492,179,460,173"/>
+<area shape="rect" id="Node000006" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock.html#a31491fc3d9e6e71b19b90244e1068f89" title="Set whether cache is valid." alt="" coords="508,245,680,301"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="439,179,461,191,486,211,510,231,516,235,513,240,506,235,482,215,459,195,437,184"/>
+</map>

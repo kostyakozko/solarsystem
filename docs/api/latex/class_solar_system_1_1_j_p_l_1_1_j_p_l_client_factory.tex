@@ -1,0 +1,72 @@
+\doxysection{Solar\+System\+::JPL\+::JPLClient\+Factory Class Reference}
+\hypertarget{class_solar_system_1_1_j_p_l_1_1_j_p_l_client_factory}{}\label{class_solar_system_1_1_j_p_l_1_1_j_p_l_client_factory}\index{SolarSystem::JPL::JPLClientFactory@{SolarSystem::JPL::JPLClientFactory}}
+
+
+Factory for creating \doxylink{namespace_solar_system_1_1_j_p_l}{JPL} clients.  
+
+
+
+
+{\ttfamily \#include $<$jpl\+\_\+client.\+hpp$>$}
+
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{class_solar_system_1_1_j_p_l_1_1_j_p_l_client}{JPLClient}} $>$ \mbox{\hyperlink{class_solar_system_1_1_j_p_l_1_1_j_p_l_client_factory_adc331dd148702dc4177c48f8cdbad0cd}{create\+\_\+default}} ()
+\begin{DoxyCompactList}\small\item\em Create default \doxylink{namespace_solar_system_1_1_j_p_l}{JPL} client. \end{DoxyCompactList}\item 
+static std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{class_solar_system_1_1_j_p_l_1_1_j_p_l_client}{JPLClient}} $>$ \mbox{\hyperlink{class_solar_system_1_1_j_p_l_1_1_j_p_l_client_factory_afb815f8a195c5cdf889eb10f7cef06d4}{create}} (\mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_j_p_l_client_config}{JPLClient\+Config}} config)
+\begin{DoxyCompactList}\small\item\em Create \doxylink{namespace_solar_system_1_1_j_p_l}{JPL} client with custom configuration. \end{DoxyCompactList}\item 
+static std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{class_solar_system_1_1_j_p_l_1_1_j_p_l_client}{JPLClient}} $>$ \mbox{\hyperlink{class_solar_system_1_1_j_p_l_1_1_j_p_l_client_factory_ad0e3b5e36b3377b15a762fff5aec5df6}{create\+\_\+for\+\_\+testing}} ()
+\begin{DoxyCompactList}\small\item\em Create \doxylink{namespace_solar_system_1_1_j_p_l}{JPL} client for testing (with mock endpoints) \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Factory for creating \doxylink{namespace_solar_system_1_1_j_p_l}{JPL} clients. 
+
+\label{doc-func-members}
+\Hypertarget{class_solar_system_1_1_j_p_l_1_1_j_p_l_client_factory_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_solar_system_1_1_j_p_l_1_1_j_p_l_client_factory_afb815f8a195c5cdf889eb10f7cef06d4}\index{SolarSystem::JPL::JPLClientFactory@{SolarSystem::JPL::JPLClientFactory}!create@{create}}
+\index{create@{create}!SolarSystem::JPL::JPLClientFactory@{SolarSystem::JPL::JPLClientFactory}}
+\doxysubsubsection{\texorpdfstring{create()}{create()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_j_p_l_1_1_j_p_l_client_factory_afb815f8a195c5cdf889eb10f7cef06d4} 
+std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{class_solar_system_1_1_j_p_l_1_1_j_p_l_client}{JPLClient}} $>$ Solar\+System\+::\+JPL\+::\+JPLClient\+Factory\+::create (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_j_p_l_client_config}{JPLClient\+Config}}}]{config}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [nodiscard]}}
+
+
+
+Create \doxylink{namespace_solar_system_1_1_j_p_l}{JPL} client with custom configuration. 
+
+\Hypertarget{class_solar_system_1_1_j_p_l_1_1_j_p_l_client_factory_adc331dd148702dc4177c48f8cdbad0cd}\index{SolarSystem::JPL::JPLClientFactory@{SolarSystem::JPL::JPLClientFactory}!create\_default@{create\_default}}
+\index{create\_default@{create\_default}!SolarSystem::JPL::JPLClientFactory@{SolarSystem::JPL::JPLClientFactory}}
+\doxysubsubsection{\texorpdfstring{create\_default()}{create\_default()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_j_p_l_1_1_j_p_l_client_factory_adc331dd148702dc4177c48f8cdbad0cd} 
+std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{class_solar_system_1_1_j_p_l_1_1_j_p_l_client}{JPLClient}} $>$ Solar\+System\+::\+JPL\+::\+JPLClient\+Factory\+::create\+\_\+default (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [nodiscard]}}
+
+
+
+Create default \doxylink{namespace_solar_system_1_1_j_p_l}{JPL} client. 
+
+Factory methods. Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=297pt]{class_solar_system_1_1_j_p_l_1_1_j_p_l_client_factory_adc331dd148702dc4177c48f8cdbad0cd_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_j_p_l_1_1_j_p_l_client_factory_ad0e3b5e36b3377b15a762fff5aec5df6}\index{SolarSystem::JPL::JPLClientFactory@{SolarSystem::JPL::JPLClientFactory}!create\_for\_testing@{create\_for\_testing}}
+\index{create\_for\_testing@{create\_for\_testing}!SolarSystem::JPL::JPLClientFactory@{SolarSystem::JPL::JPLClientFactory}}
+\doxysubsubsection{\texorpdfstring{create\_for\_testing()}{create\_for\_testing()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_j_p_l_1_1_j_p_l_client_factory_ad0e3b5e36b3377b15a762fff5aec5df6} 
+std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{class_solar_system_1_1_j_p_l_1_1_j_p_l_client}{JPLClient}} $>$ Solar\+System\+::\+JPL\+::\+JPLClient\+Factory\+::create\+\_\+for\+\_\+testing (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [nodiscard]}}
+
+
+
+Create \doxylink{namespace_solar_system_1_1_j_p_l}{JPL} client for testing (with mock endpoints) 
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+jpl/include/solar\+\_\+jpl/\mbox{\hyperlink{jpl__client_8hpp}{jpl\+\_\+client.\+hpp}}\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+jpl/src/\mbox{\hyperlink{jpl__client_8cpp}{jpl\+\_\+client.\+cpp}}\end{DoxyCompactItemize}

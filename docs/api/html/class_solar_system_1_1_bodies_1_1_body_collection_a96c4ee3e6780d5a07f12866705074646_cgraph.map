@@ -1,0 +1,11 @@
+<map id="SolarSystem::Bodies::BodyCollection::summary" name="SolarSystem::Bodies::BodyCollection::summary">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,129,185,170"/>
+<area shape="rect" id="Node000002" href="$class_solar_system_1_1_bodies_1_1_body_collection.html#a6d596634030b94434c7b6572c9be74fb" title=" " alt="" coords="249,5,406,61"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="130,126,231,71,243,65,245,70,234,76,132,131"/>
+<area shape="rect" id="Node000003" href="$class_solar_system_1_1_bodies_1_1_body_collection.html#ac45fa7adf22fc4196f4b237ae906676f" title=" " alt="" coords="249,85,406,141"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="185,133,233,125,234,130,186,138"/>
+<area shape="rect" id="Node000004" href="$namespace_solar_system_1_1_bodies.html#a0a4fd48e68317f900e8becc17cde6cd8" title="Convert BodyType to string representation." alt="" coords="255,165,400,206"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="186,160,240,169,239,174,185,166"/>
+<area shape="rect" id="Node000005" href="$class_solar_system_1_1_bodies_1_1_body_collection.html#a515650f47d3bbe50816cdb54f359c226" title=" " alt="" coords="233,230,422,271"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="136,168,234,215,251,222,249,227,232,220,134,172"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="SolarSystem::Testing::Benchmark::name" name="SolarSystem::Testing::Benchmark::name">
+<area shape="rect" id="Node000001" title="Get benchmark name." alt="" coords="223,39,369,79"/>
+<area shape="rect" id="Node000002" href="$class_solar_system_1_1_testing_1_1_benchmark.html#abcf7e61fcc714fa207892533476c5b0b" title="Create benchmark with name and default configuration." alt="" coords="5,5,175,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="207,47,175,42,176,37,208,42"/>
+<area shape="rect" id="Node000003" href="$class_solar_system_1_1_testing_1_1_benchmark.html#adab4fddd4a67f9a42d09e23916449b7f" title="Create benchmark with name and custom configuration." alt="" coords="5,71,175,111"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="208,75,176,80,175,75,207,70"/>
+</map>

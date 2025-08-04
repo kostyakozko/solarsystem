@@ -1,0 +1,120 @@
+\doxysection{/\+Users/kostiantyn.kozko/tmp/solarsystem/lib/solar\+\_\+jpl/include/solar\+\_\+jpl/jpl\+\_\+client.hpp File Reference}
+\hypertarget{jpl__client_8hpp}{}\label{jpl__client_8hpp}\index{/Users/kostiantyn.kozko/tmp/solarsystem/lib/solar\_jpl/include/solar\_jpl/jpl\_client.hpp@{/Users/kostiantyn.kozko/tmp/solarsystem/lib/solar\_jpl/include/solar\_jpl/jpl\_client.hpp}}
+
+
+Modern C++20 JPL HORIZONS API Client.  
+
+
+{\ttfamily \#include $<$chrono$>$}\newline
+{\ttfamily \#include $<$filesystem$>$}\newline
+{\ttfamily \#include $<$future$>$}\newline
+{\ttfamily \#include $<$memory$>$}\newline
+{\ttfamily \#include $<$optional$>$}\newline
+{\ttfamily \#include $<$string$>$}\newline
+{\ttfamily \#include $<$string\+\_\+view$>$}\newline
+{\ttfamily \#include $<$unordered\+\_\+map$>$}\newline
+{\ttfamily \#include $<$variant$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include "{}solar\+\_\+core/bodies/body\+\_\+mappings.\+hpp"{}}\newline
+{\ttfamily \#include "{}solar\+\_\+core/bodies/celestial\+\_\+body.\+hpp"{}}\newline
+{\ttfamily \#include "{}solar\+\_\+core/math/vector3.\+hpp"{}}\newline
+Include dependency graph for jpl\+\_\+client.\+hpp\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{jpl__client_8hpp__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{jpl__client_8hpp__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_ephemeris_data}{Solar\+System\+::\+JPL\+::\+Ephemeris\+Data}}
+\begin{DoxyCompactList}\small\item\em Ephemeris data for a single celestial body. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_j_p_l_client_config}{Solar\+System\+::\+JPL\+::\+JPLClient\+Config}}
+\begin{DoxyCompactList}\small\item\em Configuration for \doxylink{namespace_solar_system_1_1_j_p_l}{JPL} client. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_cache_metadata}{Solar\+System\+::\+JPL\+::\+Cache\+Metadata}}
+\begin{DoxyCompactList}\small\item\em Cache metadata. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_solar_system_1_1_j_p_l_1_1_j_p_l_client}{Solar\+System\+::\+JPL\+::\+JPLClient}}
+\begin{DoxyCompactList}\small\item\em Modern \doxylink{namespace_solar_system_1_1_j_p_l}{JPL} HORIZONS API client. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_solar_system_1_1_j_p_l_1_1_j_p_l_client_factory}{Solar\+System\+::\+JPL\+::\+JPLClient\+Factory}}
+\begin{DoxyCompactList}\small\item\em Factory for creating \doxylink{namespace_solar_system_1_1_j_p_l}{JPL} clients. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespace_solar_system}{Solar\+System}}
+\item 
+namespace \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l}{Solar\+System\+::\+JPL}}
+\item 
+namespace \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_1_1_utils}{Solar\+System\+::\+JPL\+::\+Utils}}
+\begin{DoxyCompactList}\small\item\em Utility functions for \doxylink{namespace_solar_system_1_1_j_p_l}{JPL} data management. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename T$>$ }\\using \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a1ae7174894acb8c6560a62a72f42d5cd}{Solar\+System\+::\+JPL\+::\+JPLResult}} = std\+::variant$<$T, \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0d}{JPLError}}$>$
+\begin{DoxyCompactList}\small\item\em \doxylink{namespace_solar_system_1_1_j_p_l}{JPL} API result type (C++20 compatible) \end{DoxyCompactList}\item 
+using \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a9db0f8fc911088c5455067676ea1e99d}{Solar\+System\+::\+JPL\+::\+JPLVoid\+Result}} = std\+::optional$<$\mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0d}{JPLError}}$>$
+\begin{DoxyCompactList}\small\item\em \doxylink{namespace_solar_system_1_1_j_p_l}{JPL} API result type for void operations. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum class \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0d}{Solar\+System\+::\+JPL\+::\+JPLError}} \{ \newline
+\mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0da47423b8444592efbe331550c5620e821}{Solar\+System\+::\+JPL\+::\+Network\+Error}}
+, \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0dae41199faa7290c167f70f314c5e6c165}{Solar\+System\+::\+JPL\+::\+Parse\+Error}}
+, \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0dae01eb350d8cbf3af3eda4650e977649d}{Solar\+System\+::\+JPL\+::\+Invalid\+Body}}
+, \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0da12aa93ef47e4f9c9ea04cb38930efb42}{Solar\+System\+::\+JPL\+::\+Invalid\+Date}}
+, \newline
+\mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0da50ef7598e6d8e1f977ea8b4687079cbf}{Solar\+System\+::\+JPL\+::\+Rate\+Limited}}
+, \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0da7d65c64901711bc2cd2a33ff2641fbe9}{Solar\+System\+::\+JPL\+::\+Server\+Error}}
+, \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0da946f64a5553fd1f755f8a4615894cb8a}{Solar\+System\+::\+JPL\+::\+Cache\+Error}}
+, \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0da8180c46099f957f51b2bc31f7f0f5c42}{Solar\+System\+::\+JPL\+::\+Validation\+Error}}
+ \}
+\begin{DoxyCompactList}\small\item\em JPL HORIZONS API error types. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename T$>$ }\\bool \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_abb8eb67716801804e9c24e2a80dda44e}{Solar\+System\+::\+JPL\+::is\+\_\+success}} (const \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a1ae7174894acb8c6560a62a72f42d5cd}{JPLResult}}$<$ T $>$ \&result)
+\begin{DoxyCompactList}\small\item\em Helper to check if result is successful. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T$>$ }\\const T \& \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a605668a4c434918864026fc3a0216137}{Solar\+System\+::\+JPL\+::get\+\_\+value}} (const \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a1ae7174894acb8c6560a62a72f42d5cd}{JPLResult}}$<$ T $>$ \&result)
+\begin{DoxyCompactList}\small\item\em Helper to get value from successful result. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T$>$ }\\\mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0d}{JPLError}} \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_ab3c2444575b2bb169fc9aa27a6fee7c6}{Solar\+System\+::\+JPL\+::get\+\_\+error}} (const \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a1ae7174894acb8c6560a62a72f42d5cd}{JPLResult}}$<$ T $>$ \&result)
+\begin{DoxyCompactList}\small\item\em Helper to get error from failed result. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a9db0f8fc911088c5455067676ea1e99d}{JPLVoid\+Result}} \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_ac75b9c75d52b5dcc91551918f6e7244f}{Solar\+System\+::\+JPL\+::success}} ()
+\begin{DoxyCompactList}\small\item\em Helper to create successful void result. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a9db0f8fc911088c5455067676ea1e99d}{JPLVoid\+Result}} \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_aa87d1eae6faed2285995bb3f55e8bf4e}{Solar\+System\+::\+JPL\+::error}} (\mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0d}{JPLError}} err)
+\begin{DoxyCompactList}\small\item\em Helper to create error void result. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a3319a9e22f392431aaf29e413c839433}{Solar\+System\+::\+JPL\+::is\+\_\+success}} (const \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a9db0f8fc911088c5455067676ea1e99d}{JPLVoid\+Result}} \&result)
+\begin{DoxyCompactList}\small\item\em Helper to check if void result is successful. \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_1_1_utils_a5ec2537ebacb47be3243cd767fa3319b}{Solar\+System\+::\+JPL\+::\+Utils\+::to\+\_\+jpl\+\_\+date\+\_\+string}} (std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point tp)
+\begin{DoxyCompactList}\small\item\em Convert system\+\_\+clock time point to \doxylink{namespace_solar_system_1_1_j_p_l}{JPL} date string. \end{DoxyCompactList}\item 
+std\+::optional$<$ std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point $>$ \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_1_1_utils_af91b28aa85763249850dfdb7eea740ee}{Solar\+System\+::\+JPL\+::\+Utils\+::from\+\_\+jpl\+\_\+date\+\_\+string}} (std\+::string\+\_\+view date\+\_\+str)
+\begin{DoxyCompactList}\small\item\em Parse \doxylink{namespace_solar_system_1_1_j_p_l}{JPL} date string to system\+\_\+clock time point. \end{DoxyCompactList}\item 
+std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_1_1_utils_ac4776373b25f4eeda287227ffc7d6d2c}{Solar\+System\+::\+JPL\+::\+Utils\+::get\+\_\+current\+\_\+year\+\_\+epoch}} ()
+\begin{DoxyCompactList}\small\item\em Get current year as time point (January 1st) \end{DoxyCompactList}\item 
+std\+::optional$<$ int $>$ \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_1_1_utils_a64f832a0bc011bbfb99cc8e519d196c4}{Solar\+System\+::\+JPL\+::\+Utils\+::get\+\_\+jpl\+\_\+id\+\_\+for\+\_\+body}} (std\+::string\+\_\+view body\+\_\+name)
+\begin{DoxyCompactList}\small\item\em Get \doxylink{namespace_solar_system_1_1_j_p_l}{JPL} ID for body name. \end{DoxyCompactList}\item 
+std\+::vector$<$ int $>$ \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_1_1_utils_a600751088ad8e8767cb0665b841170c6}{Solar\+System\+::\+JPL\+::\+Utils\+::get\+\_\+all\+\_\+jpl\+\_\+ids}} ()
+\begin{DoxyCompactList}\small\item\em Get all known \doxylink{namespace_solar_system_1_1_j_p_l}{JPL} IDs. \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_1_1_utils_a26fe3bf37cab4ce4fff30537465e2839}{Solar\+System\+::\+JPL\+::\+Utils\+::to\+\_\+string}} (\mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0d}{JPLError}} \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_aa87d1eae6faed2285995bb3f55e8bf4e}{error}})
+\begin{DoxyCompactList}\small\item\em Convert \doxylink{namespace_solar_system_1_1_j_p_l}{JPL} error to string. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Modern C++20 JPL HORIZONS API Client. 
+
+Provides a modern, type-\/safe interface to NASA JPL HORIZONS system with\+:
+\begin{DoxyItemize}
+\item RAII-\/based resource management
+\item Async/await patterns for concurrent data fetching
+\item Type-\/safe configuration and error handling
+\item Integration with Phase 0.\+3 body management
+\item Structured caching with validation 
+\end{DoxyItemize}

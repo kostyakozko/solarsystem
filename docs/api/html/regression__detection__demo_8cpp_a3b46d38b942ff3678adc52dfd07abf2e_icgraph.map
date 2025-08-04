@@ -1,0 +1,13 @@
+<map id="simulate_benchmark" name="simulate_benchmark">
+<area shape="rect" id="Node000001" title="Simulate a benchmark with variable performance." alt="" coords="335,78,476,104"/>
+<area shape="rect" id="Node000002" href="$regression__detection__demo_8cpp.html#a3545f45ecc74ea7d87bc4646a900b5d9" title="Demonstrate baseline creation and storage." alt="" coords="121,5,269,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="347,76,262,49,264,44,348,71"/>
+<area shape="rect" id="Node000004" href="$regression__detection__demo_8cpp.html#a4f784b266172b5e58c3d262b9250a81a" title="Demonstrate regression detection." alt="" coords="115,71,275,111"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="320,94,276,94,276,88,320,88"/>
+<area shape="rect" id="Node000005" href="$regression__detection__demo_8cpp.html#a59fd53d99c1ec6222018119226f2418f" title="Demonstrate trend analysis." alt="" coords="103,136,287,161"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="342,111,246,137,244,132,340,106"/>
+<area shape="rect" id="Node000003" href="$regression__detection__demo_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title="Main demonstration function." alt="" coords="5,78,55,104"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="121,54,104,61,56,82,54,77,102,57,120,49"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="99,94,55,94,55,88,99,88"/>
+<area shape="poly" id="edge6_Node000005_Node000003" title=" " alt="" coords="125,133,102,125,54,105,56,100,104,121,127,128"/>
+</map>

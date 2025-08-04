@@ -1,0 +1,5 @@
+<map id="SolarSystem::Testing::Mocks::NetworkMock::simulate_network_congestion" name="SolarSystem::Testing::Mocks::NetworkMock::simulate_network_congestion">
+<area shape="rect" id="Node000001" title="Simulate network congestion." alt="" coords="5,5,207,61"/>
+<area shape="rect" id="Node000002" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock.html#a380f6663a15b1c8d9d48610697432139" title="Set network condition for all requests." alt="" coords="255,5,414,61"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="207,30,239,30,239,36,207,36"/>
+</map>

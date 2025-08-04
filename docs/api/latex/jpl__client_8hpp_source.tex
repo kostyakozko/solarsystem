@@ -1,0 +1,189 @@
+\doxysection{jpl\+\_\+client.\+hpp}
+\hypertarget{jpl__client_8hpp_source}{}\label{jpl__client_8hpp_source}\index{/Users/kostiantyn.kozko/tmp/solarsystem/lib/solar\_jpl/include/solar\_jpl/jpl\_client.hpp@{/Users/kostiantyn.kozko/tmp/solarsystem/lib/solar\_jpl/include/solar\_jpl/jpl\_client.hpp}}
+\mbox{\hyperlink{jpl__client_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <chrono>}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <filesystem>}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ <future>}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ <optional>}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ <string\_view>}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ <unordered\_map>}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#include\ <variant>}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{body__mappings_8hpp}{solar\_core/bodies/body\_mappings.hpp}}"{}}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{celestial__body_8hpp}{solar\_core/bodies/celestial\_body.hpp}}"{}}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{vector3_8hpp}{solar\_core/math/vector3.hpp}}"{}}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespace_solar_system_1_1_j_p_l}{SolarSystem::JPL}}\ \{}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00035\ \textcolor{keyword}{enum\ class}\ \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0d}{JPLError}}\ \{}
+\DoxyCodeLine{00036\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0da47423b8444592efbe331550c5620e821}{NetworkError}},}
+\DoxyCodeLine{00037\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0dae41199faa7290c167f70f314c5e6c165}{ParseError}},}
+\DoxyCodeLine{00038\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0dae01eb350d8cbf3af3eda4650e977649d}{InvalidBody}},}
+\DoxyCodeLine{00039\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0da12aa93ef47e4f9c9ea04cb38930efb42}{InvalidDate}},}
+\DoxyCodeLine{00040\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0da50ef7598e6d8e1f977ea8b4687079cbf}{RateLimited}},}
+\DoxyCodeLine{00041\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0da7d65c64901711bc2cd2a33ff2641fbe9}{ServerError}},}
+\DoxyCodeLine{00042\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0da946f64a5553fd1f755f8a4615894cb8a}{CacheError}},}
+\DoxyCodeLine{00043\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0da8180c46099f957f51b2bc31f7f0f5c42}{ValidationError}}}
+\DoxyCodeLine{00044\ \};}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00049\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00050\ \textcolor{keyword}{using\ }\mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a1ae7174894acb8c6560a62a72f42d5cd}{JPLResult}}\ =\ std::variant<T,\ JPLError>;}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00055\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00056\ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_abb8eb67716801804e9c24e2a80dda44e}{is\_success}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a1ae7174894acb8c6560a62a72f42d5cd}{JPLResult<T>}}\&\ result)\ \{}
+\DoxyCodeLine{00057\ \ \ \textcolor{keywordflow}{return}\ std::holds\_alternative<T>(result);}
+\DoxyCodeLine{00058\ \}}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00063\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00064\ [[nodiscard]]\ \textcolor{keyword}{const}\ T\&\ \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a605668a4c434918864026fc3a0216137}{get\_value}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a1ae7174894acb8c6560a62a72f42d5cd}{JPLResult<T>}}\&\ result)\ \{}
+\DoxyCodeLine{00065\ \ \ \textcolor{keywordflow}{return}\ std::get<T>(result);}
+\DoxyCodeLine{00066\ \}}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00071\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00072\ [[nodiscard]]\ \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0d}{JPLError}}\ \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_ab3c2444575b2bb169fc9aa27a6fee7c6}{get\_error}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a1ae7174894acb8c6560a62a72f42d5cd}{JPLResult<T>}}\&\ result)\ \{}
+\DoxyCodeLine{00073\ \ \ \textcolor{keywordflow}{return}\ std::get<JPLError>(result);}
+\DoxyCodeLine{00074\ \}}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00079\ \textcolor{keyword}{using\ }\mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a9db0f8fc911088c5455067676ea1e99d}{JPLVoidResult}}\ =\ std::optional<JPLError>;}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00084\ [[nodiscard]]\ \textcolor{keyword}{inline}\ \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a9db0f8fc911088c5455067676ea1e99d}{JPLVoidResult}}\ \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_ac75b9c75d52b5dcc91551918f6e7244f}{success}}()\ \{\ \textcolor{keywordflow}{return}\ std::nullopt;\ \}}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00089\ [[nodiscard]]\ \textcolor{keyword}{inline}\ \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a9db0f8fc911088c5455067676ea1e99d}{JPLVoidResult}}\ \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_aa87d1eae6faed2285995bb3f55e8bf4e}{error}}(\mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0d}{JPLError}}\ err)\ \{\ \textcolor{keywordflow}{return}\ err;\ \}}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00094\ [[nodiscard]]\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_abb8eb67716801804e9c24e2a80dda44e}{is\_success}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a9db0f8fc911088c5455067676ea1e99d}{JPLVoidResult}}\&\ result)\ \{\ \textcolor{keywordflow}{return}\ !result.has\_value();\ \}}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00099\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_ephemeris_data}{EphemerisData}}\ \{}
+\DoxyCodeLine{00100\ \ \ std::string\ \mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_ephemeris_data_a3d049b8d8c907ea2f930a595c9cccb40}{body\_name}};}
+\DoxyCodeLine{00101\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_ephemeris_data_aa6a53a3f9c040f90b74c1428e36cd087}{jpl\_id}};}
+\DoxyCodeLine{00102\ \ \ std::chrono::system\_clock::time\_point\ \mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_ephemeris_data_a805cbafb3c1ec5aa375d264607b3f136}{epoch}};}
+\DoxyCodeLine{00103\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_math_a58b613f1c9974f449ee706cd131b1f41}{SolarSystem::Math::Vector3d}}\ \mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_ephemeris_data_aa15d180a6b573e338b7f36cb62510ecd}{position}};\ \ \textcolor{comment}{//\ km}}
+\DoxyCodeLine{00104\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_math_a58b613f1c9974f449ee706cd131b1f41}{SolarSystem::Math::Vector3d}}\ \mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_ephemeris_data_ad244695378ae06eac6e47f14551ecca6}{velocity}};\ \ \textcolor{comment}{//\ km/s}}
+\DoxyCodeLine{00105\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_ephemeris_data_a341032b4e8a52feaf94cb6ebbea90a9d}{mass}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ kg}}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00110\ \ \ [[nodiscard]]\ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{SolarSystem::Bodies::CelestialBody}}\ \mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_ephemeris_data_a9ea3098087bde879230c9fc1019a3436}{to\_celestial\_body}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00111\ \};}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00116\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_j_p_l_client_config}{JPLClientConfig}}\ \{}
+\DoxyCodeLine{00117\ \ \ std::string\ \mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_j_p_l_client_config_a1bdc5655879b65b65447409dce8c0677}{api\_endpoint}}\ =\ \textcolor{stringliteral}{"{}https://ssd.jpl.nasa.gov/api/horizons.api"{}};}
+\DoxyCodeLine{00118\ \ \ std::chrono::seconds\ \mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_j_p_l_client_config_ad764e3f60b500ffe35f01486fdf89d78}{request\_timeout}}\ =\ std::chrono::seconds(30);}
+\DoxyCodeLine{00119\ \ \ std::chrono::milliseconds\ \mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_j_p_l_client_config_a85dc491f3696e9db8eb1ab296f0d516c}{request\_delay}}\ =\ std::chrono::milliseconds(200);}
+\DoxyCodeLine{00120\ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_j_p_l_client_config_af1fcac31b0f2f293f479712dd399f872}{max\_concurrent\_requests}}\ =\ 3;}
+\DoxyCodeLine{00121\ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_j_p_l_client_config_a68bcaad006355564e0fb8674fff4212c}{max\_retries}}\ =\ 3;}
+\DoxyCodeLine{00122\ \ \ std::chrono::milliseconds\ \mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_j_p_l_client_config_aaf7374b59c62f7abf0c30904a046ecd1}{retry\_delay}}\ =\ std::chrono::milliseconds(500);}
+\DoxyCodeLine{00123\ }
+\DoxyCodeLine{00124\ \ \ \textcolor{comment}{//\ Cache\ configuration}}
+\DoxyCodeLine{00125\ \ \ std::filesystem::path\ \mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_j_p_l_client_config_ac4ce8fbe34dfc2e4ce7fe1f7d45f2f35}{cache\_directory}}\ =\ \textcolor{stringliteral}{"{}./cache"{}};}
+\DoxyCodeLine{00126\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_j_p_l_client_config_ad0a6b6d52a8e1abcd0a2b9e87634bb43}{enable\_binary\_cache}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00127\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_j_p_l_client_config_a9f62de1e55444a2188b5aa0ca2d41e00}{enable\_json\_cache}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00128\ \ \ std::chrono::hours\ \mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_j_p_l_client_config_a1ae559b0652610b08cc8a3910742bdc7}{cache\_validity}}\ =\ std::chrono::hours(24\ *\ 30);\ \ \textcolor{comment}{//\ 30\ days}}
+\DoxyCodeLine{00129\ }
+\DoxyCodeLine{00133\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_j_p_l_client_config_a4d04b10c5883d229daf46d9ec40a7e67}{is\_valid}}(std::string*\ \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_aa87d1eae6faed2285995bb3f55e8bf4e}{error}}\ =\ \textcolor{keyword}{nullptr})\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00134\ \};}
+\DoxyCodeLine{00135\ }
+\DoxyCodeLine{00139\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_cache_metadata}{CacheMetadata}}\ \{}
+\DoxyCodeLine{00140\ \ \ std::chrono::system\_clock::time\_point\ \mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_cache_metadata_a4b220eb31076b46577cad6984c881951}{created\_at}};}
+\DoxyCodeLine{00141\ \ \ std::chrono::system\_clock::time\_point\ \mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_cache_metadata_ae4df2ddaad3227fadd985b940130ff71}{epoch}};}
+\DoxyCodeLine{00142\ \ \ std::string\ \mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_cache_metadata_ac032d8e26545a909ab25592baab433ae}{source}};}
+\DoxyCodeLine{00143\ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_cache_metadata_a5a016cf3ee3be65e7bab544078056083}{body\_count}};}
+\DoxyCodeLine{00144\ \ \ uint64\_t\ \mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_cache_metadata_a8671e8e0f7c76c162bda3bcb843b6ab7}{checksum}};}
+\DoxyCodeLine{00145\ }
+\DoxyCodeLine{00149\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_cache_metadata_a083acf30f2cc41c3522982fd5c378034}{is\_valid}}(std::chrono::hours\ max\_age)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00150\ \};}
+\DoxyCodeLine{00151\ }
+\DoxyCodeLine{00155\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_solar_system_1_1_j_p_l_1_1_j_p_l_client_a4c6b2f62b089a00e4eab96bf8c1a4c97}{JPLClient}}\ \{}
+\DoxyCodeLine{00156\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00160\ \ \ \textcolor{keyword}{explicit}\ \mbox{\hyperlink{class_solar_system_1_1_j_p_l_1_1_j_p_l_client_a4c6b2f62b089a00e4eab96bf8c1a4c97}{JPLClient}}(\mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_j_p_l_client_config}{JPLClientConfig}}\ \mbox{\hyperlink{class_solar_system_1_1_j_p_l_1_1_j_p_l_client_a75a0f9550a698dd68a2651e526d5b351}{config}}\ =\ \{\});}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00165\ \ \ \mbox{\hyperlink{class_solar_system_1_1_j_p_l_1_1_j_p_l_client_a197c08dd934cab2e61b4ee01870d7d84}{\string~JPLClient}}();}
+\DoxyCodeLine{00166\ }
+\DoxyCodeLine{00167\ \ \ \textcolor{comment}{//\ Non-\/copyable\ but\ movable}}
+\DoxyCodeLine{00168\ \ \ \mbox{\hyperlink{class_solar_system_1_1_j_p_l_1_1_j_p_l_client_a0394f5aaec461b6bfe03d84d945f1313}{JPLClient}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_solar_system_1_1_j_p_l_1_1_j_p_l_client_a4c6b2f62b089a00e4eab96bf8c1a4c97}{JPLClient}}\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00169\ \ \ \mbox{\hyperlink{class_solar_system_1_1_j_p_l_1_1_j_p_l_client_a4c6b2f62b089a00e4eab96bf8c1a4c97}{JPLClient}}\&\ \mbox{\hyperlink{class_solar_system_1_1_j_p_l_1_1_j_p_l_client_ad088be0a1090b9ce9ec1aca25d5dce53}{operator=}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_solar_system_1_1_j_p_l_1_1_j_p_l_client_a4c6b2f62b089a00e4eab96bf8c1a4c97}{JPLClient}}\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00170\ \ \ \mbox{\hyperlink{class_solar_system_1_1_j_p_l_1_1_j_p_l_client_aa76573a5b7d41dcf73f352046b6bf11d}{JPLClient}}(\mbox{\hyperlink{class_solar_system_1_1_j_p_l_1_1_j_p_l_client_a4c6b2f62b089a00e4eab96bf8c1a4c97}{JPLClient}}\&\&)\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00171\ \ \ \mbox{\hyperlink{class_solar_system_1_1_j_p_l_1_1_j_p_l_client_a4c6b2f62b089a00e4eab96bf8c1a4c97}{JPLClient}}\&\ \mbox{\hyperlink{class_solar_system_1_1_j_p_l_1_1_j_p_l_client_a848e86733db4c9ccf298ed56819b1a21}{operator=}}(\mbox{\hyperlink{class_solar_system_1_1_j_p_l_1_1_j_p_l_client_a4c6b2f62b089a00e4eab96bf8c1a4c97}{JPLClient}}\&\&)\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00172\ }
+\DoxyCodeLine{00176\ \ \ [[nodiscard]]\ std::future<JPLResult<EphemerisData>>\ \mbox{\hyperlink{class_solar_system_1_1_j_p_l_1_1_j_p_l_client_a40d288cdbbe9f517ec1ac3320c423535}{fetch\_body\_async}}(}
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ jpl\_id,\ std::chrono::system\_clock::time\_point\ epoch);}
+\DoxyCodeLine{00178\ }
+\DoxyCodeLine{00182\ \ \ [[nodiscard]]\ std::future<JPLResult<std::vector<EphemerisData>>>\ \mbox{\hyperlink{class_solar_system_1_1_j_p_l_1_1_j_p_l_client_ab0af83ad6cbbf7912c0b6f4935db3fea}{fetch\_bodies\_async}}(}
+\DoxyCodeLine{00183\ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::vector<int>\&\ jpl\_ids,\ std::chrono::system\_clock::time\_point\ epoch);}
+\DoxyCodeLine{00184\ }
+\DoxyCodeLine{00188\ \ \ [[nodiscard]]\ std::future<JPLResult<std::vector<EphemerisData>>>\ \mbox{\hyperlink{class_solar_system_1_1_j_p_l_1_1_j_p_l_client_a1d5c60ea975f5845e84b10e1fa9a683e}{fetch\_all\_bodies\_async}}(}
+\DoxyCodeLine{00189\ \ \ \ \ \ \ std::chrono::system\_clock::time\_point\ epoch);}
+\DoxyCodeLine{00190\ }
+\DoxyCodeLine{00194\ \ \ [[nodiscard]]\ \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a1ae7174894acb8c6560a62a72f42d5cd}{JPLResult<std::vector<EphemerisData>}}>\ \mbox{\hyperlink{class_solar_system_1_1_j_p_l_1_1_j_p_l_client_a5be584e972add26ef411c3251de592e3}{load\_from\_cache}}();}
+\DoxyCodeLine{00195\ }
+\DoxyCodeLine{00199\ \ \ [[nodiscard]]\ \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a9db0f8fc911088c5455067676ea1e99d}{JPLVoidResult}}\ \mbox{\hyperlink{class_solar_system_1_1_j_p_l_1_1_j_p_l_client_a064fbf32993dd7ef572f65bb7c28a92b}{save\_to\_cache}}(\textcolor{keyword}{const}\ std::vector<EphemerisData>\&\ data);}
+\DoxyCodeLine{00200\ }
+\DoxyCodeLine{00204\ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_solar_system_1_1_j_p_l_1_1_j_p_l_client_a31f2e55918e2efa76de4c25546592739}{has\_current\_year\_data}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00205\ }
+\DoxyCodeLine{00209\ \ \ [[nodiscard]]\ std::optional<CacheMetadata>\ \mbox{\hyperlink{class_solar_system_1_1_j_p_l_1_1_j_p_l_client_a6cfd14b0df3a3824155b7f540ec4efbc}{get\_cache\_metadata}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00210\ }
+\DoxyCodeLine{00214\ \ \ [[nodiscard]]\ \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a1ae7174894acb8c6560a62a72f42d5cd}{JPLResult<bool>}}\ \mbox{\hyperlink{class_solar_system_1_1_j_p_l_1_1_j_p_l_client_ae5aca8bf9076f444ccc6661acefb007f}{validate\_cache}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00215\ }
+\DoxyCodeLine{00219\ \ \ [[nodiscard]]\ \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a9db0f8fc911088c5455067676ea1e99d}{JPLVoidResult}}\ \mbox{\hyperlink{class_solar_system_1_1_j_p_l_1_1_j_p_l_client_a88c4c1687386f5b016a0a7d915c90f93}{clear\_cache}}();}
+\DoxyCodeLine{00220\ }
+\DoxyCodeLine{00221\ \ \ [[nodiscard]]\ \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a9db0f8fc911088c5455067676ea1e99d}{JPLVoidResult}}\ \mbox{\hyperlink{class_solar_system_1_1_j_p_l_1_1_j_p_l_client_a11e686e5082403828c206aeb13cf2442}{rebuild\_cache}}();}
+\DoxyCodeLine{00222\ }
+\DoxyCodeLine{00226\ \ \ [[nodiscard]]\ \textcolor{keyword}{const}\ \mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_j_p_l_client_config}{JPLClientConfig}}\&\ \mbox{\hyperlink{class_solar_system_1_1_j_p_l_1_1_j_p_l_client_a75a0f9550a698dd68a2651e526d5b351}{config}}()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ config\_;\ \}}
+\DoxyCodeLine{00227\ }
+\DoxyCodeLine{00228\ \ \ [[nodiscard]]\ \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a9db0f8fc911088c5455067676ea1e99d}{JPLVoidResult}}\ \mbox{\hyperlink{class_solar_system_1_1_j_p_l_1_1_j_p_l_client_a20c3a5c8255e5e0f8beb69e5a5e41c8a}{test\_storage}}();}
+\DoxyCodeLine{00229\ }
+\DoxyCodeLine{00230\ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00231\ \ \ \mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_j_p_l_client_config}{JPLClientConfig}}\ config\_;}
+\DoxyCodeLine{00232\ }
+\DoxyCodeLine{00233\ \ \ \textcolor{comment}{//\ Internal\ implementation\ details}}
+\DoxyCodeLine{00234\ \ \ \textcolor{keyword}{struct\ }Impl;}
+\DoxyCodeLine{00235\ \ \ std::unique\_ptr<Impl>\ impl\_;}
+\DoxyCodeLine{00236\ }
+\DoxyCodeLine{00240\ \ \ [[nodiscard]]\ \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a1ae7174894acb8c6560a62a72f42d5cd}{JPLResult<EphemerisData>}}\ fetch\_body\_internal(}
+\DoxyCodeLine{00241\ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ jpl\_id,\ std::chrono::system\_clock::time\_point\ epoch);}
+\DoxyCodeLine{00242\ }
+\DoxyCodeLine{00246\ \ \ [[nodiscard]]\ \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a1ae7174894acb8c6560a62a72f42d5cd}{JPLResult<EphemerisData>}}\ parse\_jpl\_response(\textcolor{keyword}{const}\ std::string\&\ response,}
+\DoxyCodeLine{00247\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ jpl\_id);}
+\DoxyCodeLine{00248\ }
+\DoxyCodeLine{00252\ \ \ [[nodiscard]]\ \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a1ae7174894acb8c6560a62a72f42d5cd}{JPLResult<std::string>}}\ make\_request(\textcolor{keyword}{const}\ std::string\&\ url,}
+\DoxyCodeLine{00253\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ params);}
+\DoxyCodeLine{00254\ }
+\DoxyCodeLine{00258\ \ \ [[nodiscard]]\ std::optional<CacheMetadata>\ load\_cache\_metadata()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00259\ }
+\DoxyCodeLine{00263\ \ \ [[nodiscard]]\ \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a9db0f8fc911088c5455067676ea1e99d}{JPLVoidResult}}\ save\_cache\_metadata(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_cache_metadata}{CacheMetadata}}\&\ metadata);}
+\DoxyCodeLine{00264\ \};}
+\DoxyCodeLine{00265\ }
+\DoxyCodeLine{00269\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_solar_system_1_1_j_p_l_1_1_j_p_l_client_factory}{JPLClientFactory}}\ \{}
+\DoxyCodeLine{00270\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00274\ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ std::unique\_ptr<JPLClient>\ \mbox{\hyperlink{class_solar_system_1_1_j_p_l_1_1_j_p_l_client_factory_adc331dd148702dc4177c48f8cdbad0cd}{create\_default}}();}
+\DoxyCodeLine{00275\ }
+\DoxyCodeLine{00279\ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ std::unique\_ptr<JPLClient>\ \mbox{\hyperlink{class_solar_system_1_1_j_p_l_1_1_j_p_l_client_factory_afb815f8a195c5cdf889eb10f7cef06d4}{create}}(\mbox{\hyperlink{struct_solar_system_1_1_j_p_l_1_1_j_p_l_client_config}{JPLClientConfig}}\ config);}
+\DoxyCodeLine{00280\ }
+\DoxyCodeLine{00284\ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ std::unique\_ptr<JPLClient>\ \mbox{\hyperlink{class_solar_system_1_1_j_p_l_1_1_j_p_l_client_factory_ad0e3b5e36b3377b15a762fff5aec5df6}{create\_for\_testing}}();}
+\DoxyCodeLine{00285\ \};}
+\DoxyCodeLine{00286\ }
+\DoxyCodeLine{00290\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_1_1_utils}{Utils}}\ \{}
+\DoxyCodeLine{00291\ }
+\DoxyCodeLine{00295\ [[nodiscard]]\ std::string\ \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_1_1_utils_a5ec2537ebacb47be3243cd767fa3319b}{to\_jpl\_date\_string}}(std::chrono::system\_clock::time\_point\ tp);}
+\DoxyCodeLine{00296\ }
+\DoxyCodeLine{00300\ [[nodiscard]]\ std::optional<std::chrono::system\_clock::time\_point>\ \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_1_1_utils_af91b28aa85763249850dfdb7eea740ee}{from\_jpl\_date\_string}}(}
+\DoxyCodeLine{00301\ \ \ \ \ std::string\_view\ date\_str);}
+\DoxyCodeLine{00302\ }
+\DoxyCodeLine{00306\ [[nodiscard]]\ std::chrono::system\_clock::time\_point\ \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_1_1_utils_ac4776373b25f4eeda287227ffc7d6d2c}{get\_current\_year\_epoch}}();}
+\DoxyCodeLine{00307\ }
+\DoxyCodeLine{00311\ [[nodiscard]]\ std::optional<int>\ \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_1_1_utils_a64f832a0bc011bbfb99cc8e519d196c4}{get\_jpl\_id\_for\_body}}(std::string\_view\ body\_name);}
+\DoxyCodeLine{00312\ }
+\DoxyCodeLine{00316\ [[nodiscard]]\ std::vector<int>\ \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_1_1_utils_a600751088ad8e8767cb0665b841170c6}{get\_all\_jpl\_ids}}();}
+\DoxyCodeLine{00317\ }
+\DoxyCodeLine{00321\ [[nodiscard]]\ std::string\ \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_1_1_utils_a26fe3bf37cab4ce4fff30537465e2839}{to\_string}}(\mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_a694bb863438ab0d9ff5847494f593d0d}{JPLError}}\ \mbox{\hyperlink{namespace_solar_system_1_1_j_p_l_aa87d1eae6faed2285995bb3f55e8bf4e}{error}});}
+\DoxyCodeLine{00322\ }
+\DoxyCodeLine{00323\ \}\ \ \textcolor{comment}{//\ namespace\ Utils}}
+\DoxyCodeLine{00324\ }
+\DoxyCodeLine{00325\ \}\ \ \textcolor{comment}{//\ namespace\ SolarSystem::JPL}}
+
+\end{DoxyCode}

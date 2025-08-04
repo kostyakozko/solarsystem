@@ -1,0 +1,5 @@
+<map id="SolarSystem::Testing::Mocks::NetworkMock::simulate_bandwidth_limited_transfer" name="SolarSystem::Testing::Mocks::NetworkMock::simulate_bandwidth_limited_transfer">
+<area shape="rect" id="Node000001" title="Simulate bandwidth&#45;limited transfer." alt="" coords="5,5,195,76"/>
+<area shape="rect" id="Node000002" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock.html#a8965480b42bb84b0e71e925069e49499" title="Calculate transfer time based on bandwidth." alt="" coords="243,13,407,68"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="195,38,227,38,227,43,195,43"/>
+</map>

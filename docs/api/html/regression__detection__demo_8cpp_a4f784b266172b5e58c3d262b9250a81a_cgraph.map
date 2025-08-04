@@ -1,0 +1,20 @@
+<map id="demonstrate_regression_detection" name="demonstrate_regression_detection">
+<area shape="rect" id="Node000001" title="Demonstrate regression detection." alt="" coords="5,221,166,262"/>
+<area shape="rect" id="Node000002" href="$class_solar_system_1_1_testing_1_1_regression_detector.html#a84c1c109f67284566977c3a8e5019e9c" title="Analyze benchmark result for regressions." alt="" coords="214,68,360,124"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="107,218,154,178,212,134,218,130,221,134,215,138,158,182,111,222"/>
+<area shape="rect" id="Node000006" href="$class_solar_system_1_1_testing_1_1_regression_detector.html#ac20dbe9d0ad3ba6dbba7390146728b2f" title="Generate CI&#45;compatible output." alt="" coords="214,148,360,204"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="149,218,198,202,200,207,151,223"/>
+<area shape="rect" id="Node000007" href="$class_solar_system_1_1_testing_1_1_regression_detector.html#a3c737e99861be49b840004cb581eefaf" title="Check if any regressions exceed threshold." alt="" coords="408,181,577,237"/>
+<area shape="poly" id="edge8_Node000001_Node000007" title=" " alt="" coords="166,232,392,214,393,220,166,238"/>
+<area shape="rect" id="Node000008" href="$class_solar_system_1_1_testing_1_1_regression_detector.html#a954863aaf004ad23eaab16175dd7035e" title="Generate comprehensive regression report." alt="" coords="214,279,360,350"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="144,259,200,280,198,285,142,264"/>
+<area shape="rect" id="Node000009" href="$regression__detection__demo_8cpp.html#a3b46d38b942ff3678adc52dfd07abf2e" title="Simulate a benchmark with variable performance." alt="" coords="216,374,358,399"/>
+<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="106,260,152,309,182,336,215,359,226,365,223,369,212,363,179,340,148,313,102,264"/>
+<area shape="rect" id="Node000003" href="$class_solar_system_1_1_testing_1_1_regression_detector.html#a83955e6064f95c317cbe8b8a255d2c72" title="Get baseline for a benchmark." alt="" coords="420,5,566,61"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="360,71,404,57,405,62,361,76"/>
+<area shape="rect" id="Node000004" href="$class_solar_system_1_1_testing_1_1_regression_detector.html#a352533cd8ba36727c845e1949534fc98" title="Set baseline for a benchmark." alt="" coords="420,85,566,141"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="361,99,404,103,404,108,360,105"/>
+<area shape="rect" id="Node000005" href="$class_solar_system_1_1_testing_1_1_regression_detector.html#a5749878607dd588ad869bef6a06475e3" title="Save baseline data to storage." alt="" coords="625,85,772,141"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="566,110,610,110,610,116,566,116"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="361,185,393,190,392,196,360,190"/>
+</map>

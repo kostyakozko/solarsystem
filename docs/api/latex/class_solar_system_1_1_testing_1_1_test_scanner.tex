@@ -1,0 +1,91 @@
+\doxysection{Solar\+System\+::Testing\+::Test\+Scanner Class Reference}
+\hypertarget{class_solar_system_1_1_testing_1_1_test_scanner}{}\label{class_solar_system_1_1_testing_1_1_test_scanner}\index{SolarSystem::Testing::TestScanner@{SolarSystem::Testing::TestScanner}}
+
+
+Test scanner for finding tests in source files (future enhancement)  
+
+
+
+
+{\ttfamily \#include $<$test\+\_\+discovery.\+hpp$>$}
+
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_scanner_1_1_scan_result}{Scan\+Result}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_scanner_1_1_scan_result}{Scan\+Result}} \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_scanner_a647c5315a5b076d5eb96463d45ba15b2}{scan\+\_\+directory}} (const std\+::string \&directory, bool recursive=true)
+\begin{DoxyCompactList}\small\item\em Scan directory for test files. \end{DoxyCompactList}\item 
+static \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_scanner_1_1_scan_result}{Scan\+Result}} \mbox{\hyperlink{class_solar_system_1_1_testing_1_1_test_scanner_a9360ef072462efcee6d9ece4083b352b}{scan\+\_\+file}} (const std\+::string \&file\+\_\+path)
+\begin{DoxyCompactList}\small\item\em Scan single file for tests. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Test scanner for finding tests in source files (future enhancement) 
+
+\label{doc-func-members}
+\Hypertarget{class_solar_system_1_1_testing_1_1_test_scanner_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_solar_system_1_1_testing_1_1_test_scanner_a647c5315a5b076d5eb96463d45ba15b2}\index{SolarSystem::Testing::TestScanner@{SolarSystem::Testing::TestScanner}!scan\_directory@{scan\_directory}}
+\index{scan\_directory@{scan\_directory}!SolarSystem::Testing::TestScanner@{SolarSystem::Testing::TestScanner}}
+\doxysubsubsection{\texorpdfstring{scan\_directory()}{scan\_directory()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_test_scanner_a647c5315a5b076d5eb96463d45ba15b2} 
+\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_scanner_1_1_scan_result}{Test\+Scanner\+::\+Scan\+Result}} Solar\+System\+::\+Testing\+::\+Test\+Scanner\+::scan\+\_\+directory (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{directory}{, }\item[{bool}]{recursive}{ = {\ttfamily true}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [nodiscard]}}
+
+
+
+Scan directory for test files. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em directory} & Directory to scan \\
+\hline
+{\em recursive} & Whether to scan recursively \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Scan results 
+\end{DoxyReturn}
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_test_scanner_a647c5315a5b076d5eb96463d45ba15b2_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_testing_1_1_test_scanner_a9360ef072462efcee6d9ece4083b352b}\index{SolarSystem::Testing::TestScanner@{SolarSystem::Testing::TestScanner}!scan\_file@{scan\_file}}
+\index{scan\_file@{scan\_file}!SolarSystem::Testing::TestScanner@{SolarSystem::Testing::TestScanner}}
+\doxysubsubsection{\texorpdfstring{scan\_file()}{scan\_file()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_testing_1_1_test_scanner_a9360ef072462efcee6d9ece4083b352b} 
+\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_test_scanner_1_1_scan_result}{Test\+Scanner\+::\+Scan\+Result}} Solar\+System\+::\+Testing\+::\+Test\+Scanner\+::scan\+\_\+file (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{file\+\_\+path}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [nodiscard]}}
+
+
+
+Scan single file for tests. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em file\+\_\+path} & Path to file to scan \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Scan results 
+\end{DoxyReturn}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_testing_1_1_test_scanner_a9360ef072462efcee6d9ece4083b352b_icgraph}
+\end{center}
+\end{figure}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+test/include/solar\+\_\+test/framework/\mbox{\hyperlink{test__discovery_8hpp}{test\+\_\+discovery.\+hpp}}\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+test/src/framework/\mbox{\hyperlink{test__discovery_8cpp}{test\+\_\+discovery.\+cpp}}\end{DoxyCompactItemize}

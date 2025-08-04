@@ -1,29 +1,37 @@
 \doxysection{/\+Users/kostiantyn.kozko/tmp/solarsystem/apps/solar\+\_\+system\+\_\+web/src/web\+\_\+server.cpp File Reference}
 \hypertarget{web__server_8cpp}{}\label{web__server_8cpp}\index{/Users/kostiantyn.kozko/tmp/solarsystem/apps/solar\_system\_web/src/web\_server.cpp@{/Users/kostiantyn.kozko/tmp/solarsystem/apps/solar\_system\_web/src/web\_server.cpp}}
-{\ttfamily \#include $<$errno.\+h$>$}\newline
-{\ttfamily \#include $<$fcntl.\+h$>$}\newline
-{\ttfamily \#include $<$libgen.\+h$>$}\newline
-{\ttfamily \#include $<$limits.\+h$>$}\newline
-{\ttfamily \#include $<$signal.\+h$>$}\newline
-{\ttfamily \#include $<$unistd.\+h$>$}\newline
+
+
+Modern C++20 Solar System Web Server.  
+
+
+{\ttfamily \#include $<$atomic$>$}\newline
+{\ttfamily \#include $<$cerrno$>$}\newline
 {\ttfamily \#include $<$chrono$>$}\newline
+{\ttfamily \#include $<$csignal$>$}\newline
 {\ttfamily \#include $<$cstring$>$}\newline
-{\ttfamily \#include $<$ctime$>$}\newline
+{\ttfamily \#include $<$filesystem$>$}\newline
 {\ttfamily \#include $<$fstream$>$}\newline
+{\ttfamily \#include $<$functional$>$}\newline
+{\ttfamily \#include $<$iomanip$>$}\newline
 {\ttfamily \#include $<$iostream$>$}\newline
 {\ttfamily \#include $<$map$>$}\newline
+{\ttfamily \#include $<$memory$>$}\newline
 {\ttfamily \#include $<$mutex$>$}\newline
+{\ttfamily \#include $<$optional$>$}\newline
 {\ttfamily \#include $<$sstream$>$}\newline
 {\ttfamily \#include $<$string$>$}\newline
+{\ttfamily \#include $<$string\+\_\+view$>$}\newline
 {\ttfamily \#include $<$thread$>$}\newline
 {\ttfamily \#include $<$vector$>$}\newline
 {\ttfamily \#include $<$arpa/inet.\+h$>$}\newline
+{\ttfamily \#include $<$fcntl.\+h$>$}\newline
 {\ttfamily \#include $<$netinet/in.\+h$>$}\newline
 {\ttfamily \#include $<$sys/socket.\+h$>$}\newline
-{\ttfamily \#include "{}args.\+h"{}}\newline
-{\ttfamily \#include "{}jpl\+\_\+data.\+h"{}}\newline
-{\ttfamily \#include "{}model.\+h"{}}\newline
-{\ttfamily \#include "{}simulation.\+h"{}}\newline
+{\ttfamily \#include $<$unistd.\+h$>$}\newline
+{\ttfamily \#include "{}solar\+\_\+core/bodies/body\+\_\+factory.\+hpp"{}}\newline
+{\ttfamily \#include "{}solar\+\_\+core/builders/simulation\+\_\+builder.\+hpp"{}}\newline
+{\ttfamily \#include "{}solar\+\_\+utils/logging.\+hpp"{}}\newline
 Include dependency graph for web\+\_\+server.\+cpp\+:
 \nopagebreak
 \begin{figure}[H]
@@ -35,226 +43,118 @@ Include dependency graph for web\+\_\+server.\+cpp\+:
 \doxysubsubsection*{Classes}
 \begin{DoxyCompactItemize}
 \item 
-struct \mbox{\hyperlink{struct_simulation_state}{Simulation\+State}}
-\item 
-struct \mbox{\hyperlink{struct_system_state}{System\+State}}
-\item 
 struct \mbox{\hyperlink{struct_web_server_config}{Web\+Server\+Config}}
-\item 
-struct \mbox{\hyperlink{struct_http_response}{Http\+Response}}
-\item 
+\begin{DoxyCompactList}\small\item\em Type-\/safe web server configuration. \end{DoxyCompactList}\item 
 struct \mbox{\hyperlink{struct_http_request}{Http\+Request}}
+\begin{DoxyCompactList}\small\item\em HTTP request structure. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_http_response}{Http\+Response}}
+\begin{DoxyCompactList}\small\item\em HTTP response structure. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_http_server}{Http\+Server}}
+\begin{DoxyCompactList}\small\item\em Modern HTTP server with RAII. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_solar_system_a_p_i}{Solar\+System\+API}}
+\begin{DoxyCompactList}\small\item\em Solar System API handler. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_argument_parser}{Argument\+Parser}}
+\begin{DoxyCompactList}\small\item\em Modern command-\/line parser using structured approach. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{web__server_8cpp_a777c79f3ff9f2d3f59c6fffc146bf48b}{VERBOSE\+\_\+\+LOG\+\_\+\+INFO}}(tag,  msg)
+\item 
+\#define \mbox{\hyperlink{web__server_8cpp_a5033d662c65dffba6f2f43049bd8b517}{VERBOSE\+\_\+\+LOG\+\_\+\+DEBUG}}(tag,  msg)
 \end{DoxyCompactItemize}
+\doxysubsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+using \mbox{\hyperlink{web__server_8cpp_a63fde991ffae78f145a6a79cf3706678}{Request\+Handler}} = std\+::function$<$\mbox{\hyperlink{struct_http_response}{Http\+Response}}(const \mbox{\hyperlink{struct_http_request}{Http\+Request}}\&)$>$
+\begin{DoxyCompactList}\small\item\em Request handler function type. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-std\+::string \mbox{\hyperlink{web__server_8cpp_ace2eeea0e8bbb3b04ee320a79fa2d180}{get\+\_\+default\+\_\+web\+\_\+root}} ()
-\item 
-void \mbox{\hyperlink{web__server_8cpp_aa5b130bed9b8f20a3bcb4a92fbb9ef94}{initialize\+\_\+simulation\+\_\+state}} ()
-\item 
-void \mbox{\hyperlink{web__server_8cpp_a346f165a97797e8411a435149d6789b2}{save\+\_\+system\+\_\+state}} ()
-\item 
-void \mbox{\hyperlink{web__server_8cpp_ab73530e5fd1d2bcf0307344f8e7a63c6}{restore\+\_\+system\+\_\+state}} ()
-\item 
 void \mbox{\hyperlink{web__server_8cpp_a3b527c56ed133ee6815bfbc625e757af}{signal\+\_\+handler}} (int signal)
-\item 
-\mbox{\hyperlink{struct_http_request}{Http\+Request}} \mbox{\hyperlink{web__server_8cpp_a149327b95324f74d35d9e8f55f066d5e}{parse\+\_\+http\+\_\+request}} (const std\+::string \&request\+\_\+data)
-\item 
-std\+::string \mbox{\hyperlink{web__server_8cpp_a22758eaa805586817c5e7b6a761385e7}{generate\+\_\+http\+\_\+response}} (const \mbox{\hyperlink{struct_http_response}{Http\+Response}} \&response)
-\item 
-std\+::string \mbox{\hyperlink{web__server_8cpp_a4894d19b243a5d7433f61ac292d3b6a2}{read\+\_\+file}} (const std\+::string \&filepath)
-\item 
-std\+::string \mbox{\hyperlink{web__server_8cpp_a20b170da558b0eed772c9f86d9728564}{get\+\_\+mime\+\_\+type}} (const std\+::string \&filepath)
-\item 
-std\+::string \mbox{\hyperlink{web__server_8cpp_ad463ea82527d26cb7610a491f6742afd}{generate\+\_\+solar\+\_\+system\+\_\+json}} (const std\+::string \&date\+\_\+param="{}"{}, bool is\+\_\+manual\+\_\+request=false, bool verbose=false)
-\item 
-std\+::string \mbox{\hyperlink{web__server_8cpp_a3ad4b1f1bde5cb5316734c54135dc170}{generate\+\_\+status\+\_\+json}} ()
-\item 
-\mbox{\hyperlink{struct_http_response}{Http\+Response}} \mbox{\hyperlink{web__server_8cpp_ae320d270c885fa3439530357f61689eb}{handle\+\_\+request}} (const \mbox{\hyperlink{struct_http_request}{Http\+Request}} \&request, const \mbox{\hyperlink{struct_web_server_config}{Web\+Server\+Config}} \&config)
-\item 
-void \mbox{\hyperlink{web__server_8cpp_aaa738c1fc8b6cc71982dd7f6f6ac22b6}{handle\+\_\+client}} (int client\+\_\+socket, const \mbox{\hyperlink{struct_web_server_config}{Web\+Server\+Config}} \&config)
-\item 
-void \mbox{\hyperlink{web__server_8cpp_a491d68ff3188c2fb45882a568ed1ad79}{print\+\_\+web\+\_\+usage}} (const char \texorpdfstring{$\ast$}{*}program\+\_\+name)
-\item 
-bool \mbox{\hyperlink{web__server_8cpp_a3e44761a9c18be13cf9763641d6f449e}{parse\+\_\+web\+\_\+args}} (int argc, char \texorpdfstring{$\ast$}{*}argv\mbox{[}$\,$\mbox{]}, \mbox{\hyperlink{struct_web_server_config}{Web\+Server\+Config}} \&config)
-\item 
+\begin{DoxyCompactList}\small\item\em Modern signal handler for graceful shutdown. \end{DoxyCompactList}\item 
 int \mbox{\hyperlink{web__server_8cpp_a0ddf1224851353fc92bfbff6f499fa97}{main}} (int argc, char \texorpdfstring{$\ast$}{*}argv\mbox{[}$\,$\mbox{]})
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Modern main function with structured error handling. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsubsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\hyperlink{struct_simulation_state}{Simulation\+State}} \mbox{\hyperlink{web__server_8cpp_a0288b4ea8b9a55595e5ab2b53c9ae34d}{current\+\_\+sim\+\_\+state}} = \{0, false, "{}"{}\}
-\item 
-std\+::mutex \mbox{\hyperlink{web__server_8cpp_a18a73c56549168452234ddbc99562da0}{simulation\+\_\+mutex}}
-\item 
-\mbox{\hyperlink{struct_system_state}{System\+State}} \mbox{\hyperlink{web__server_8cpp_a718948cf549dd5e00ae9e201aabf4777}{original\+\_\+state}} = \{\{\}, 0, false\}
-\item 
-volatile bool \mbox{\hyperlink{web__server_8cpp_ac85f1ad487d50b6f33a6556a790db42f}{server\+\_\+running}} = true
-\end{DoxyCompactItemize}
+std\+::atomic$<$ bool $>$ \mbox{\hyperlink{web__server_8cpp_a73b6dee2d39aef44cc20aee9f0a326f7}{g\+\_\+server\+\_\+running}} \{true\}
+\begin{DoxyCompactList}\small\item\em Global shutdown flag for signal handling. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Modern C++20 Solar System Web Server. 
+
+Enhanced web server with\+:
+\begin{DoxyItemize}
+\item Phase 0.\+3\+: Complete fluent interfaces and builder patterns
+\item Modern C++20\+: RAII, structured error handling, type safety
+\item Enhanced API\+: RESTful endpoints with JSON responses
+\item Beautiful logging\+: Structured output with colors and timestamps
+\item Configuration\+: Type-\/safe server configuration with validation 
+\end{DoxyItemize}
+
+\label{doc-define-members}
+\Hypertarget{web__server_8cpp_doc-define-members}
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{web__server_8cpp_a5033d662c65dffba6f2f43049bd8b517}\index{web\_server.cpp@{web\_server.cpp}!VERBOSE\_LOG\_DEBUG@{VERBOSE\_LOG\_DEBUG}}
+\index{VERBOSE\_LOG\_DEBUG@{VERBOSE\_LOG\_DEBUG}!web\_server.cpp@{web\_server.cpp}}
+\doxysubsubsection{\texorpdfstring{VERBOSE\_LOG\_DEBUG}{VERBOSE\_LOG\_DEBUG}}
+{\footnotesize\ttfamily \label{web__server_8cpp_a5033d662c65dffba6f2f43049bd8b517} 
+\#define VERBOSE\+\_\+\+LOG\+\_\+\+DEBUG(\begin{DoxyParamCaption}\item[{}]{tag}{, }\item[{}]{msg}{}\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ \textcolor{keywordflow}{do}\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ if\ (verbose\_logging)\ \{\ \ \ \ \ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ LOG\_DEBUG(tag,\ msg);\ \ \ \ \ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \}\ \textcolor{keywordflow}{while}\ (0)}
+
+\end{DoxyCode}
+\Hypertarget{web__server_8cpp_a777c79f3ff9f2d3f59c6fffc146bf48b}\index{web\_server.cpp@{web\_server.cpp}!VERBOSE\_LOG\_INFO@{VERBOSE\_LOG\_INFO}}
+\index{VERBOSE\_LOG\_INFO@{VERBOSE\_LOG\_INFO}!web\_server.cpp@{web\_server.cpp}}
+\doxysubsubsection{\texorpdfstring{VERBOSE\_LOG\_INFO}{VERBOSE\_LOG\_INFO}}
+{\footnotesize\ttfamily \label{web__server_8cpp_a777c79f3ff9f2d3f59c6fffc146bf48b} 
+\#define VERBOSE\+\_\+\+LOG\+\_\+\+INFO(\begin{DoxyParamCaption}\item[{}]{tag}{, }\item[{}]{msg}{}\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ \textcolor{keywordflow}{do}\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ if\ (verbose\_logging)\ \{\ \ \ \ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ LOG\_INFO(tag,\ msg);\ \ \ \ \ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \}\ \textcolor{keywordflow}{while}\ (0)}
+
+\end{DoxyCode}
+
+
+\label{doc-typedef-members}
+\Hypertarget{web__server_8cpp_doc-typedef-members}
+\doxysubsection{Typedef Documentation}
+\Hypertarget{web__server_8cpp_a63fde991ffae78f145a6a79cf3706678}\index{web\_server.cpp@{web\_server.cpp}!RequestHandler@{RequestHandler}}
+\index{RequestHandler@{RequestHandler}!web\_server.cpp@{web\_server.cpp}}
+\doxysubsubsection{\texorpdfstring{RequestHandler}{RequestHandler}}
+{\footnotesize\ttfamily \label{web__server_8cpp_a63fde991ffae78f145a6a79cf3706678} 
+using \mbox{\hyperlink{web__server_8cpp_a63fde991ffae78f145a6a79cf3706678}{Request\+Handler}} = std\+::function$<$\mbox{\hyperlink{struct_http_response}{Http\+Response}}(const \mbox{\hyperlink{struct_http_request}{Http\+Request}}\&)$>$}
+
+
+
+Request handler function type. 
+
 
 
 \label{doc-func-members}
 \Hypertarget{web__server_8cpp_doc-func-members}
 \doxysubsection{Function Documentation}
-\Hypertarget{web__server_8cpp_a22758eaa805586817c5e7b6a761385e7}\index{web\_server.cpp@{web\_server.cpp}!generate\_http\_response@{generate\_http\_response}}
-\index{generate\_http\_response@{generate\_http\_response}!web\_server.cpp@{web\_server.cpp}}
-\doxysubsubsection{\texorpdfstring{generate\_http\_response()}{generate\_http\_response()}}
-{\footnotesize\ttfamily \label{web__server_8cpp_a22758eaa805586817c5e7b6a761385e7} 
-std\+::string generate\+\_\+http\+\_\+response (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_http_response}{Http\+Response}} \&}]{response}{}\end{DoxyParamCaption})}
-
-Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{web__server_8cpp_a22758eaa805586817c5e7b6a761385e7_icgraph}
-\end{center}
-\end{figure}
-\Hypertarget{web__server_8cpp_ad463ea82527d26cb7610a491f6742afd}\index{web\_server.cpp@{web\_server.cpp}!generate\_solar\_system\_json@{generate\_solar\_system\_json}}
-\index{generate\_solar\_system\_json@{generate\_solar\_system\_json}!web\_server.cpp@{web\_server.cpp}}
-\doxysubsubsection{\texorpdfstring{generate\_solar\_system\_json()}{generate\_solar\_system\_json()}}
-{\footnotesize\ttfamily \label{web__server_8cpp_ad463ea82527d26cb7610a491f6742afd} 
-std\+::string generate\+\_\+solar\+\_\+system\+\_\+json (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{date\+\_\+param}{ = {\ttfamily "{}"{}}, }\item[{bool}]{is\+\_\+manual\+\_\+request}{ = {\ttfamily false}, }\item[{bool}]{verbose}{ = {\ttfamily false}}\end{DoxyParamCaption})}
-
-Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{web__server_8cpp_ad463ea82527d26cb7610a491f6742afd_cgraph}
-\end{center}
-\end{figure}
-Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{web__server_8cpp_ad463ea82527d26cb7610a491f6742afd_icgraph}
-\end{center}
-\end{figure}
-\Hypertarget{web__server_8cpp_a3ad4b1f1bde5cb5316734c54135dc170}\index{web\_server.cpp@{web\_server.cpp}!generate\_status\_json@{generate\_status\_json}}
-\index{generate\_status\_json@{generate\_status\_json}!web\_server.cpp@{web\_server.cpp}}
-\doxysubsubsection{\texorpdfstring{generate\_status\_json()}{generate\_status\_json()}}
-{\footnotesize\ttfamily \label{web__server_8cpp_a3ad4b1f1bde5cb5316734c54135dc170} 
-std\+::string generate\+\_\+status\+\_\+json (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
-
-Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{web__server_8cpp_a3ad4b1f1bde5cb5316734c54135dc170_cgraph}
-\end{center}
-\end{figure}
-Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{web__server_8cpp_a3ad4b1f1bde5cb5316734c54135dc170_icgraph}
-\end{center}
-\end{figure}
-\Hypertarget{web__server_8cpp_ace2eeea0e8bbb3b04ee320a79fa2d180}\index{web\_server.cpp@{web\_server.cpp}!get\_default\_web\_root@{get\_default\_web\_root}}
-\index{get\_default\_web\_root@{get\_default\_web\_root}!web\_server.cpp@{web\_server.cpp}}
-\doxysubsubsection{\texorpdfstring{get\_default\_web\_root()}{get\_default\_web\_root()}}
-{\footnotesize\ttfamily \label{web__server_8cpp_ace2eeea0e8bbb3b04ee320a79fa2d180} 
-std\+::string get\+\_\+default\+\_\+web\+\_\+root (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
-
-Solar System Web Server
-
-Lightweight HTTP server providing REST API and Web\+Socket support for browser-\/based solar system visualization and control. Built using only standard libraries -\/ no external dependencies. Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{web__server_8cpp_ace2eeea0e8bbb3b04ee320a79fa2d180_icgraph}
-\end{center}
-\end{figure}
-\Hypertarget{web__server_8cpp_a20b170da558b0eed772c9f86d9728564}\index{web\_server.cpp@{web\_server.cpp}!get\_mime\_type@{get\_mime\_type}}
-\index{get\_mime\_type@{get\_mime\_type}!web\_server.cpp@{web\_server.cpp}}
-\doxysubsubsection{\texorpdfstring{get\_mime\_type()}{get\_mime\_type()}}
-{\footnotesize\ttfamily \label{web__server_8cpp_a20b170da558b0eed772c9f86d9728564} 
-std\+::string get\+\_\+mime\+\_\+type (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{filepath}{}\end{DoxyParamCaption})}
-
-Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{web__server_8cpp_a20b170da558b0eed772c9f86d9728564_icgraph}
-\end{center}
-\end{figure}
-\Hypertarget{web__server_8cpp_aaa738c1fc8b6cc71982dd7f6f6ac22b6}\index{web\_server.cpp@{web\_server.cpp}!handle\_client@{handle\_client}}
-\index{handle\_client@{handle\_client}!web\_server.cpp@{web\_server.cpp}}
-\doxysubsubsection{\texorpdfstring{handle\_client()}{handle\_client()}}
-{\footnotesize\ttfamily \label{web__server_8cpp_aaa738c1fc8b6cc71982dd7f6f6ac22b6} 
-void handle\+\_\+client (\begin{DoxyParamCaption}\item[{int}]{client\+\_\+socket}{, }\item[{const \mbox{\hyperlink{struct_web_server_config}{Web\+Server\+Config}} \&}]{config}{}\end{DoxyParamCaption})}
-
-Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{web__server_8cpp_aaa738c1fc8b6cc71982dd7f6f6ac22b6_cgraph}
-\end{center}
-\end{figure}
-Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=226pt]{web__server_8cpp_aaa738c1fc8b6cc71982dd7f6f6ac22b6_icgraph}
-\end{center}
-\end{figure}
-\Hypertarget{web__server_8cpp_ae320d270c885fa3439530357f61689eb}\index{web\_server.cpp@{web\_server.cpp}!handle\_request@{handle\_request}}
-\index{handle\_request@{handle\_request}!web\_server.cpp@{web\_server.cpp}}
-\doxysubsubsection{\texorpdfstring{handle\_request()}{handle\_request()}}
-{\footnotesize\ttfamily \label{web__server_8cpp_ae320d270c885fa3439530357f61689eb} 
-\mbox{\hyperlink{struct_http_response}{Http\+Response}} handle\+\_\+request (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_http_request}{Http\+Request}} \&}]{request}{, }\item[{const \mbox{\hyperlink{struct_web_server_config}{Web\+Server\+Config}} \&}]{config}{}\end{DoxyParamCaption})}
-
-Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{web__server_8cpp_ae320d270c885fa3439530357f61689eb_cgraph}
-\end{center}
-\end{figure}
-Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=344pt]{web__server_8cpp_ae320d270c885fa3439530357f61689eb_icgraph}
-\end{center}
-\end{figure}
-\Hypertarget{web__server_8cpp_aa5b130bed9b8f20a3bcb4a92fbb9ef94}\index{web\_server.cpp@{web\_server.cpp}!initialize\_simulation\_state@{initialize\_simulation\_state}}
-\index{initialize\_simulation\_state@{initialize\_simulation\_state}!web\_server.cpp@{web\_server.cpp}}
-\doxysubsubsection{\texorpdfstring{initialize\_simulation\_state()}{initialize\_simulation\_state()}}
-{\footnotesize\ttfamily \label{web__server_8cpp_aa5b130bed9b8f20a3bcb4a92fbb9ef94} 
-void initialize\+\_\+simulation\+\_\+state (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
-
-Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=328pt]{web__server_8cpp_aa5b130bed9b8f20a3bcb4a92fbb9ef94_cgraph}
-\end{center}
-\end{figure}
-Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{web__server_8cpp_aa5b130bed9b8f20a3bcb4a92fbb9ef94_icgraph}
-\end{center}
-\end{figure}
 \Hypertarget{web__server_8cpp_a0ddf1224851353fc92bfbff6f499fa97}\index{web\_server.cpp@{web\_server.cpp}!main@{main}}
 \index{main@{main}!web\_server.cpp@{web\_server.cpp}}
 \doxysubsubsection{\texorpdfstring{main()}{main()}}
 {\footnotesize\ttfamily \label{web__server_8cpp_a0ddf1224851353fc92bfbff6f499fa97} 
 int main (\begin{DoxyParamCaption}\item[{int}]{argc}{, }\item[{char \texorpdfstring{$\ast$}{*}}]{argv}{\mbox{[}$\,$\mbox{]}}\end{DoxyParamCaption})}
+
+
+
+Modern main function with structured error handling. 
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -262,114 +162,6 @@ Here is the call graph for this function\+:
 \begin{center}
 \leavevmode
 \includegraphics[width=350pt]{web__server_8cpp_a0ddf1224851353fc92bfbff6f499fa97_cgraph}
-\end{center}
-\end{figure}
-\Hypertarget{web__server_8cpp_a149327b95324f74d35d9e8f55f066d5e}\index{web\_server.cpp@{web\_server.cpp}!parse\_http\_request@{parse\_http\_request}}
-\index{parse\_http\_request@{parse\_http\_request}!web\_server.cpp@{web\_server.cpp}}
-\doxysubsubsection{\texorpdfstring{parse\_http\_request()}{parse\_http\_request()}}
-{\footnotesize\ttfamily \label{web__server_8cpp_a149327b95324f74d35d9e8f55f066d5e} 
-\mbox{\hyperlink{struct_http_request}{Http\+Request}} parse\+\_\+http\+\_\+request (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{request\+\_\+data}{}\end{DoxyParamCaption})}
-
-Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{web__server_8cpp_a149327b95324f74d35d9e8f55f066d5e_icgraph}
-\end{center}
-\end{figure}
-\Hypertarget{web__server_8cpp_a3e44761a9c18be13cf9763641d6f449e}\index{web\_server.cpp@{web\_server.cpp}!parse\_web\_args@{parse\_web\_args}}
-\index{parse\_web\_args@{parse\_web\_args}!web\_server.cpp@{web\_server.cpp}}
-\doxysubsubsection{\texorpdfstring{parse\_web\_args()}{parse\_web\_args()}}
-{\footnotesize\ttfamily \label{web__server_8cpp_a3e44761a9c18be13cf9763641d6f449e} 
-bool parse\+\_\+web\+\_\+args (\begin{DoxyParamCaption}\item[{int}]{argc}{, }\item[{char \texorpdfstring{$\ast$}{*}}]{argv}{\mbox{[}$\,$\mbox{]}, }\item[{\mbox{\hyperlink{struct_web_server_config}{Web\+Server\+Config}} \&}]{config}{}\end{DoxyParamCaption})}
-
-Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=293pt]{web__server_8cpp_a3e44761a9c18be13cf9763641d6f449e_cgraph}
-\end{center}
-\end{figure}
-Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=240pt]{web__server_8cpp_a3e44761a9c18be13cf9763641d6f449e_icgraph}
-\end{center}
-\end{figure}
-\Hypertarget{web__server_8cpp_a491d68ff3188c2fb45882a568ed1ad79}\index{web\_server.cpp@{web\_server.cpp}!print\_web\_usage@{print\_web\_usage}}
-\index{print\_web\_usage@{print\_web\_usage}!web\_server.cpp@{web\_server.cpp}}
-\doxysubsubsection{\texorpdfstring{print\_web\_usage()}{print\_web\_usage()}}
-{\footnotesize\ttfamily \label{web__server_8cpp_a491d68ff3188c2fb45882a568ed1ad79} 
-void print\+\_\+web\+\_\+usage (\begin{DoxyParamCaption}\item[{const char \texorpdfstring{$\ast$}{*}}]{program\+\_\+name}{}\end{DoxyParamCaption})}
-
-Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{web__server_8cpp_a491d68ff3188c2fb45882a568ed1ad79_icgraph}
-\end{center}
-\end{figure}
-\Hypertarget{web__server_8cpp_a4894d19b243a5d7433f61ac292d3b6a2}\index{web\_server.cpp@{web\_server.cpp}!read\_file@{read\_file}}
-\index{read\_file@{read\_file}!web\_server.cpp@{web\_server.cpp}}
-\doxysubsubsection{\texorpdfstring{read\_file()}{read\_file()}}
-{\footnotesize\ttfamily \label{web__server_8cpp_a4894d19b243a5d7433f61ac292d3b6a2} 
-std\+::string read\+\_\+file (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{filepath}{}\end{DoxyParamCaption})}
-
-Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{web__server_8cpp_a4894d19b243a5d7433f61ac292d3b6a2_icgraph}
-\end{center}
-\end{figure}
-\Hypertarget{web__server_8cpp_ab73530e5fd1d2bcf0307344f8e7a63c6}\index{web\_server.cpp@{web\_server.cpp}!restore\_system\_state@{restore\_system\_state}}
-\index{restore\_system\_state@{restore\_system\_state}!web\_server.cpp@{web\_server.cpp}}
-\doxysubsubsection{\texorpdfstring{restore\_system\_state()}{restore\_system\_state()}}
-{\footnotesize\ttfamily \label{web__server_8cpp_ab73530e5fd1d2bcf0307344f8e7a63c6} 
-void restore\+\_\+system\+\_\+state (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
-
-Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=312pt]{web__server_8cpp_ab73530e5fd1d2bcf0307344f8e7a63c6_cgraph}
-\end{center}
-\end{figure}
-Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{web__server_8cpp_ab73530e5fd1d2bcf0307344f8e7a63c6_icgraph}
-\end{center}
-\end{figure}
-\Hypertarget{web__server_8cpp_a346f165a97797e8411a435149d6789b2}\index{web\_server.cpp@{web\_server.cpp}!save\_system\_state@{save\_system\_state}}
-\index{save\_system\_state@{save\_system\_state}!web\_server.cpp@{web\_server.cpp}}
-\doxysubsubsection{\texorpdfstring{save\_system\_state()}{save\_system\_state()}}
-{\footnotesize\ttfamily \label{web__server_8cpp_a346f165a97797e8411a435149d6789b2} 
-void save\+\_\+system\+\_\+state (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
-
-Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=329pt]{web__server_8cpp_a346f165a97797e8411a435149d6789b2_cgraph}
-\end{center}
-\end{figure}
-Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{web__server_8cpp_a346f165a97797e8411a435149d6789b2_icgraph}
 \end{center}
 \end{figure}
 \Hypertarget{web__server_8cpp_a3b527c56ed133ee6815bfbc625e757af}\index{web\_server.cpp@{web\_server.cpp}!signal\_handler@{signal\_handler}}
@@ -380,30 +172,20 @@ void signal\+\_\+handler (\begin{DoxyParamCaption}\item[{int}]{signal}{}\end{Dox
 
 
 
+Modern signal handler for graceful shutdown. 
+
+
+
 \label{doc-var-members}
 \Hypertarget{web__server_8cpp_doc-var-members}
 \doxysubsection{Variable Documentation}
-\Hypertarget{web__server_8cpp_a0288b4ea8b9a55595e5ab2b53c9ae34d}\index{web\_server.cpp@{web\_server.cpp}!current\_sim\_state@{current\_sim\_state}}
-\index{current\_sim\_state@{current\_sim\_state}!web\_server.cpp@{web\_server.cpp}}
-\doxysubsubsection{\texorpdfstring{current\_sim\_state}{current\_sim\_state}}
-{\footnotesize\ttfamily \label{web__server_8cpp_a0288b4ea8b9a55595e5ab2b53c9ae34d} 
-\mbox{\hyperlink{struct_simulation_state}{Simulation\+State}} current\+\_\+sim\+\_\+state = \{0, false, "{}"{}\}}
+\Hypertarget{web__server_8cpp_a73b6dee2d39aef44cc20aee9f0a326f7}\index{web\_server.cpp@{web\_server.cpp}!g\_server\_running@{g\_server\_running}}
+\index{g\_server\_running@{g\_server\_running}!web\_server.cpp@{web\_server.cpp}}
+\doxysubsubsection{\texorpdfstring{g\_server\_running}{g\_server\_running}}
+{\footnotesize\ttfamily \label{web__server_8cpp_a73b6dee2d39aef44cc20aee9f0a326f7} 
+std\+::atomic$<$bool$>$ g\+\_\+server\+\_\+running \{true\}}
 
-\Hypertarget{web__server_8cpp_a718948cf549dd5e00ae9e201aabf4777}\index{web\_server.cpp@{web\_server.cpp}!original\_state@{original\_state}}
-\index{original\_state@{original\_state}!web\_server.cpp@{web\_server.cpp}}
-\doxysubsubsection{\texorpdfstring{original\_state}{original\_state}}
-{\footnotesize\ttfamily \label{web__server_8cpp_a718948cf549dd5e00ae9e201aabf4777} 
-\mbox{\hyperlink{struct_system_state}{System\+State}} original\+\_\+state = \{\{\}, 0, false\}}
 
-\Hypertarget{web__server_8cpp_ac85f1ad487d50b6f33a6556a790db42f}\index{web\_server.cpp@{web\_server.cpp}!server\_running@{server\_running}}
-\index{server\_running@{server\_running}!web\_server.cpp@{web\_server.cpp}}
-\doxysubsubsection{\texorpdfstring{server\_running}{server\_running}}
-{\footnotesize\ttfamily \label{web__server_8cpp_ac85f1ad487d50b6f33a6556a790db42f} 
-volatile bool server\+\_\+running = true}
 
-\Hypertarget{web__server_8cpp_a18a73c56549168452234ddbc99562da0}\index{web\_server.cpp@{web\_server.cpp}!simulation\_mutex@{simulation\_mutex}}
-\index{simulation\_mutex@{simulation\_mutex}!web\_server.cpp@{web\_server.cpp}}
-\doxysubsubsection{\texorpdfstring{simulation\_mutex}{simulation\_mutex}}
-{\footnotesize\ttfamily \label{web__server_8cpp_a18a73c56549168452234ddbc99562da0} 
-std\+::mutex simulation\+\_\+mutex}
+Global shutdown flag for signal handling. 
 

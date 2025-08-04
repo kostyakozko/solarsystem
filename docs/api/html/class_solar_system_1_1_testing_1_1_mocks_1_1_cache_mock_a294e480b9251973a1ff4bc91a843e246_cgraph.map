@@ -1,0 +1,7 @@
+<map id="SolarSystem::Testing::Mocks::CacheMock::CacheMock" name="SolarSystem::Testing::Mocks::CacheMock::CacheMock">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,230,46"/>
+<area shape="rect" id="Node000002" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock.html#a522edb5d49da1e0091b488a52137d5bd" title="Construct cache mock with configuration." alt="" coords="278,5,502,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="230,23,262,23,262,28,230,28"/>
+<area shape="rect" id="Node000003" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock.html#a2e580f1ca9e7f926ad08c8e0c31520bd" title="Get current configuration." alt="" coords="550,5,739,46"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="503,23,534,23,534,28,503,28"/>
+</map>

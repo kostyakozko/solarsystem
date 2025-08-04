@@ -1,0 +1,176 @@
+\doxysection{Solar\+System\+::Utils\+::Date Class Reference}
+\hypertarget{class_solar_system_1_1_utils_1_1_date}{}\label{class_solar_system_1_1_utils_1_1_date}\index{SolarSystem::Utils::Date@{SolarSystem::Utils::Date}}
+
+
+\doxylink{class_solar_system_1_1_utils_1_1_date}{Date} representation with parsing capabilities.  
+
+
+
+
+{\ttfamily \#include $<$argument\+\_\+parser.\+hpp$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_utils_1_1_date_adbf99787192e678af95e5e789a56ad67}{Date}} ()=default
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_utils_1_1_date_a1147a50d68b0022a7150c45de1fe7f81}{Date}} (std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point tp)
+\item 
+\mbox{\hyperlink{class_solar_system_1_1_utils_1_1_date_a8e91126a3346ab7fa4c2d063314e88c3}{Date}} (std\+::time\+\_\+t t)
+\item 
+std\+::time\+\_\+t \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_date_a33f1a9b6c8b553dc64f2d88a4e0115ba}{to\+\_\+time\+\_\+t}} () const
+\begin{DoxyCompactList}\small\item\em Convert to time\+\_\+t for legacy compatibility. \end{DoxyCompactList}\item 
+std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_date_a8181b5869a77287cdc8a2160a7143dfd}{to\+\_\+time\+\_\+point}} () const
+\begin{DoxyCompactList}\small\item\em Convert to chrono time\+\_\+point. \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_date_a5cd049a67af76fe27db40cc25c801ba0}{to\+\_\+string}} () const
+\begin{DoxyCompactList}\small\item\em Convert to ISO string format. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{namespace_solar_system_1_1_utils_a6a2c73b32b32578d25a31c35a6749246}{Argument\+Result}}$<$ \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_date}{Date}} $>$ \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_date_a486f436879ac34f70521876f4194b58c}{from\+\_\+string}} (const std\+::string \&date\+\_\+str)
+\begin{DoxyCompactList}\small\item\em Parse date from ISO format (YYYY-\/\+MM-\/\+DD) \end{DoxyCompactList}\item 
+static \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_date}{Date}} \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_date_a8d498630f78368cdddb6bce152dddf78}{now}} ()
+\begin{DoxyCompactList}\small\item\em Get current date. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\doxylink{class_solar_system_1_1_utils_1_1_date}{Date} representation with parsing capabilities. 
+
+\label{doc-constructors}
+\Hypertarget{class_solar_system_1_1_utils_1_1_date_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_solar_system_1_1_utils_1_1_date_adbf99787192e678af95e5e789a56ad67}\index{SolarSystem::Utils::Date@{SolarSystem::Utils::Date}!Date@{Date}}
+\index{Date@{Date}!SolarSystem::Utils::Date@{SolarSystem::Utils::Date}}
+\doxysubsubsection{\texorpdfstring{Date()}{Date()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_utils_1_1_date_adbf99787192e678af95e5e789a56ad67} 
+Solar\+System\+::\+Utils\+::\+Date\+::\+Date (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_utils_1_1_date_adbf99787192e678af95e5e789a56ad67_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_utils_1_1_date_a1147a50d68b0022a7150c45de1fe7f81}\index{SolarSystem::Utils::Date@{SolarSystem::Utils::Date}!Date@{Date}}
+\index{Date@{Date}!SolarSystem::Utils::Date@{SolarSystem::Utils::Date}}
+\doxysubsubsection{\texorpdfstring{Date()}{Date()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_utils_1_1_date_a1147a50d68b0022a7150c45de1fe7f81} 
+Solar\+System\+::\+Utils\+::\+Date\+::\+Date (\begin{DoxyParamCaption}\item[{std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point}]{tp}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [explicit]}}
+
+\Hypertarget{class_solar_system_1_1_utils_1_1_date_a8e91126a3346ab7fa4c2d063314e88c3}\index{SolarSystem::Utils::Date@{SolarSystem::Utils::Date}!Date@{Date}}
+\index{Date@{Date}!SolarSystem::Utils::Date@{SolarSystem::Utils::Date}}
+\doxysubsubsection{\texorpdfstring{Date()}{Date()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_utils_1_1_date_a8e91126a3346ab7fa4c2d063314e88c3} 
+Solar\+System\+::\+Utils\+::\+Date\+::\+Date (\begin{DoxyParamCaption}\item[{std\+::time\+\_\+t}]{t}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [explicit]}}
+
+
+
+\label{doc-func-members}
+\Hypertarget{class_solar_system_1_1_utils_1_1_date_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_solar_system_1_1_utils_1_1_date_a486f436879ac34f70521876f4194b58c}\index{SolarSystem::Utils::Date@{SolarSystem::Utils::Date}!from\_string@{from\_string}}
+\index{from\_string@{from\_string}!SolarSystem::Utils::Date@{SolarSystem::Utils::Date}}
+\doxysubsubsection{\texorpdfstring{from\_string()}{from\_string()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_utils_1_1_date_a486f436879ac34f70521876f4194b58c} 
+\mbox{\hyperlink{namespace_solar_system_1_1_utils_a6a2c73b32b32578d25a31c35a6749246}{Argument\+Result}}$<$ \mbox{\hyperlink{class_solar_system_1_1_utils_1_1_date}{Date}} $>$ Solar\+System\+::\+Utils\+::\+Date\+::from\+\_\+string (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{date\+\_\+str}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Parse date from ISO format (YYYY-\/\+MM-\/\+DD) 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=313pt]{class_solar_system_1_1_utils_1_1_date_a486f436879ac34f70521876f4194b58c_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_solar_system_1_1_utils_1_1_date_a486f436879ac34f70521876f4194b58c_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_utils_1_1_date_a8d498630f78368cdddb6bce152dddf78}\index{SolarSystem::Utils::Date@{SolarSystem::Utils::Date}!now@{now}}
+\index{now@{now}!SolarSystem::Utils::Date@{SolarSystem::Utils::Date}}
+\doxysubsubsection{\texorpdfstring{now()}{now()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_utils_1_1_date_a8d498630f78368cdddb6bce152dddf78} 
+\mbox{\hyperlink{class_solar_system_1_1_utils_1_1_date}{Date}} Solar\+System\+::\+Utils\+::\+Date\+::now (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Get current date. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=313pt]{class_solar_system_1_1_utils_1_1_date_a8d498630f78368cdddb6bce152dddf78_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=326pt]{class_solar_system_1_1_utils_1_1_date_a8d498630f78368cdddb6bce152dddf78_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_utils_1_1_date_a5cd049a67af76fe27db40cc25c801ba0}\index{SolarSystem::Utils::Date@{SolarSystem::Utils::Date}!to\_string@{to\_string}}
+\index{to\_string@{to\_string}!SolarSystem::Utils::Date@{SolarSystem::Utils::Date}}
+\doxysubsubsection{\texorpdfstring{to\_string()}{to\_string()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_utils_1_1_date_a5cd049a67af76fe27db40cc25c801ba0} 
+std\+::string Solar\+System\+::\+Utils\+::\+Date\+::to\+\_\+string (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const}
+
+
+
+Convert to ISO string format. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=313pt]{class_solar_system_1_1_utils_1_1_date_a5cd049a67af76fe27db40cc25c801ba0_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_solar_system_1_1_utils_1_1_date_a8181b5869a77287cdc8a2160a7143dfd}\index{SolarSystem::Utils::Date@{SolarSystem::Utils::Date}!to\_time\_point@{to\_time\_point}}
+\index{to\_time\_point@{to\_time\_point}!SolarSystem::Utils::Date@{SolarSystem::Utils::Date}}
+\doxysubsubsection{\texorpdfstring{to\_time\_point()}{to\_time\_point()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_utils_1_1_date_a8181b5869a77287cdc8a2160a7143dfd} 
+std\+::chrono\+::system\+\_\+clock\+::time\+\_\+point Solar\+System\+::\+Utils\+::\+Date\+::to\+\_\+time\+\_\+point (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Convert to chrono time\+\_\+point. 
+
+\Hypertarget{class_solar_system_1_1_utils_1_1_date_a33f1a9b6c8b553dc64f2d88a4e0115ba}\index{SolarSystem::Utils::Date@{SolarSystem::Utils::Date}!to\_time\_t@{to\_time\_t}}
+\index{to\_time\_t@{to\_time\_t}!SolarSystem::Utils::Date@{SolarSystem::Utils::Date}}
+\doxysubsubsection{\texorpdfstring{to\_time\_t()}{to\_time\_t()}}
+{\footnotesize\ttfamily \label{class_solar_system_1_1_utils_1_1_date_a33f1a9b6c8b553dc64f2d88a4e0115ba} 
+std\+::time\+\_\+t Solar\+System\+::\+Utils\+::\+Date\+::to\+\_\+time\+\_\+t (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const}
+
+
+
+Convert to time\+\_\+t for legacy compatibility. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=313pt]{class_solar_system_1_1_utils_1_1_date_a33f1a9b6c8b553dc64f2d88a4e0115ba_icgraph}
+\end{center}
+\end{figure}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+utils/include/solar\+\_\+utils/\mbox{\hyperlink{argument__parser_8hpp}{argument\+\_\+parser.\+hpp}}\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+utils/src/\mbox{\hyperlink{argument__parser_8cpp}{argument\+\_\+parser.\+cpp}}\end{DoxyCompactItemize}

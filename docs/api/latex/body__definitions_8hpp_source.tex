@@ -1,0 +1,268 @@
+\doxysection{body\+\_\+definitions.\+hpp}
+\hypertarget{body__definitions_8hpp_source}{}\label{body__definitions_8hpp_source}\index{/Users/kostiantyn.kozko/tmp/solarsystem/lib/solar\_core/include/solar\_core/data/body\_definitions.hpp@{/Users/kostiantyn.kozko/tmp/solarsystem/lib/solar\_core/include/solar\_core/data/body\_definitions.hpp}}
+\mbox{\hyperlink{body__definitions_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <array>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <optional>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <string\_view>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{celestial__body_8hpp}{solar\_core/bodies/celestial\_body.hpp}}"{}}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{constants_8hpp}{solar\_core/math/constants.hpp}}"{}}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespace_solar_system_1_1_data}{SolarSystem::Data}}\ \{}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_solar_system_1_1_data_1_1_body_definition}{BodyDefinition}}\ \{}
+\DoxyCodeLine{00021\ \ \ std::string\_view\ \mbox{\hyperlink{struct_solar_system_1_1_data_1_1_body_definition_a6aed5f096bec4fcc52409dbceaee0bd6}{name}};}
+\DoxyCodeLine{00022\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{struct_solar_system_1_1_data_1_1_body_definition_a4daf28b007e90db7fffc1cd297d0d446}{mass}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ kg}}
+\DoxyCodeLine{00023\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_math_a58b613f1c9974f449ee706cd131b1f41}{Math::Vector3d}}\ \mbox{\hyperlink{struct_solar_system_1_1_data_1_1_body_definition_ab7f085d8ada8cf028b8580a22add230b}{position}};\ \ \textcolor{comment}{//\ meters\ (J2000\ ecliptic)}}
+\DoxyCodeLine{00024\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_math_a58b613f1c9974f449ee706cd131b1f41}{Math::Vector3d}}\ \mbox{\hyperlink{struct_solar_system_1_1_data_1_1_body_definition_a792982c7e63abce96d278f10e539c91b}{velocity}};\ \ \textcolor{comment}{//\ m/s\ (J2000\ ecliptic)}}
+\DoxyCodeLine{00025\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdc}{Bodies::BodyType}}\ \mbox{\hyperlink{struct_solar_system_1_1_data_1_1_body_definition_a22cf47b70cb47ce91b9bf0b224bf93b8}{type}};}
+\DoxyCodeLine{00026\ \ \ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121}{Bodies::BodyPriority}}\ \mbox{\hyperlink{struct_solar_system_1_1_data_1_1_body_definition_a47b7a16db6ec9449e7ae869f7cc838dc}{priority}};}
+\DoxyCodeLine{00027\ \ \ std::string\_view\ \mbox{\hyperlink{struct_solar_system_1_1_data_1_1_body_definition_ae3ea2f1d90d50a803de85cc452e80eb0}{jpl\_id}};}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \ \ \textcolor{comment}{//\ Convert\ to\ modern\ CelestialBody}}
+\DoxyCodeLine{00030\ \ \ [[nodiscard]]\ \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Bodies::CelestialBody}}\ \mbox{\hyperlink{struct_solar_system_1_1_data_1_1_body_definition_a4aa25dc3d254cbd8e06460a417b8dd96}{to\_celestial\_body}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00031\ \};}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00039\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{namespace_solar_system_1_1_data_a0b7d57c961068ec4199e704baa450e1f}{BODY\_COUNT}}\ =\ 27;\ \ \textcolor{comment}{//\ Need\ better\ approach,\ but\ good\ for\ now}}
+\DoxyCodeLine{00040\ \textcolor{keyword}{constexpr}\ std::array<BodyDefinition,\ BODY\_COUNT>\ \mbox{\hyperlink{namespace_solar_system_1_1_data_a14d7089c14fa21f7e4b77e11a7de84c8}{FALLBACK\_SOLAR\_SYSTEM}}\ =\ \{}
+\DoxyCodeLine{00041\ \ \ \ \ \{\textcolor{comment}{//\ Sun}}
+\DoxyCodeLine{00042\ \ \ \ \ \ \{.name\ =\ \textcolor{stringliteral}{"{}Sun"{}},}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ .mass\ =\ 1.9885E30,}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ .position\ =\ \{2.328883776117662E+08,\ 9.469803236734810E+08,\ -\/1.709434366728627E+07\},}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ .velocity\ =\ \{-\/1.063013245364047E+01,\ 8.172330033873488,\ 2.552304032541071E-\/01\},}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ .type\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca26f93e6e68e28a698377e941cb59f29a}{Bodies::BodyType::Star}},}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ .priority\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121ae3c1a1af4e04e769b2afd0e68645a308}{Bodies::BodyPriority::Essential}},}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ .jpl\_id\ =\ \textcolor{stringliteral}{"{}10"{}}\},}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \ \ \ \ \ \textcolor{comment}{//\ Inner\ Planets}}
+\DoxyCodeLine{00051\ \ \ \ \ \ \{.name\ =\ \textcolor{stringliteral}{"{}Mercury"{}},}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ .mass\ =\ 3.3020E23,}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ .position\ =\ \{3.734433664391050E+10,\ -\/5.097307167786794E+10,\ -\/7.664223240497768E+09\},}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ .velocity\ =\ \{2.990912540620261E+04,\ 3.070765623019404E+04,\ -\/2.360226338489824E+02\},}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ .type\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca9ffc5da794071c4508a5bc2fe0422e46}{Bodies::BodyType::Planet}},}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ .priority\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121ae3c1a1af4e04e769b2afd0e68645a308}{Bodies::BodyPriority::Essential}},}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ .jpl\_id\ =\ \textcolor{stringliteral}{"{}199"{}}\},}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \ \ \ \ \ \{.name\ =\ \textcolor{stringliteral}{"{}Venus"{}},}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ .mass\ =\ 4.8685E24,}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ .position\ =\ \{1.026512847456508E+11,\ -\/3.535504613638300E+10,\ -\/6.425264817168800E+09\},}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ .velocity\ =\ \{1.149840617938256E+04,\ 3.286370322494047E+04,\ -\/2.131977283742419E+02\},}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ .type\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca9ffc5da794071c4508a5bc2fe0422e46}{Bodies::BodyType::Planet}},}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ .priority\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121ae3c1a1af4e04e769b2afd0e68645a308}{Bodies::BodyPriority::Essential}},}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ .jpl\_id\ =\ \textcolor{stringliteral}{"{}299"{}}\},}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \ \ \ \ \ \{.name\ =\ \textcolor{stringliteral}{"{}Earth"{}},}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ .mass\ =\ 5.9722E24,}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ .position\ =\ \{-\/1.160377810399021E+11,\ 9.194319994670375E+10,\ -\/2.079208395353705E+07\},}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ .velocity\ =\ \{-\/1.886526891120289E+04,\ -\/2.356160384405198E+04,\ 2.068517017564275\},}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ .type\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca9ffc5da794071c4508a5bc2fe0422e46}{Bodies::BodyType::Planet}},}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ .priority\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121ae3c1a1af4e04e769b2afd0e68645a308}{Bodies::BodyPriority::Essential}},}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ .jpl\_id\ =\ \textcolor{stringliteral}{"{}399"{}}\},}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \ \ \ \ \ \textcolor{comment}{//\ Earth's\ Moon}}
+\DoxyCodeLine{00076\ \ \ \ \ \ \{.name\ =\ \textcolor{stringliteral}{"{}Moon"{}},}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ .mass\ =\ 7.3490E22,}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ .position\ =\ \{-\/1.160477699219823E+11,\ 9.153871284686904E+10,\ 6.264042621906847E+06\},}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ .velocity\ =\ \{-\/1.790099667658844E+04,\ -\/2.359686044260280E+04,\ -\/5.917605837625040E+01\},}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ .type\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdcad502a50ed945d5fca74e0105575b5b34}{Bodies::BodyType::Moon}},}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ .priority\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121a0ab984d91ab0a037bdf692bf0e73c349}{Bodies::BodyPriority::Important}},}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ .jpl\_id\ =\ \textcolor{stringliteral}{"{}301"{}}\},}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ \ \ \ \ \ \{.name\ =\ \textcolor{stringliteral}{"{}Mars"{}},}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ .mass\ =\ 6.4185E23,}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ .position\ =\ \{-\/1.997158552109526E+11,\ -\/1.284001748932029E+11,\ 2.179584290657185E+09\},}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ .velocity\ =\ \{1.405732581815473E+04,\ -\/1.826487350913149E+04,\ -\/7.278868840699015E+02\},}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ .type\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca9ffc5da794071c4508a5bc2fe0422e46}{Bodies::BodyType::Planet}},}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ .priority\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121ae3c1a1af4e04e769b2afd0e68645a308}{Bodies::BodyPriority::Essential}},}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ .jpl\_id\ =\ \textcolor{stringliteral}{"{}499"{}}\},}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \ \ \ \ \ \textcolor{comment}{//\ Gas\ Giants}}
+\DoxyCodeLine{00093\ \ \ \ \ \ \{.name\ =\ \textcolor{stringliteral}{"{}Jupiter"{}},}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ .mass\ =\ 1.8981E27,}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ .position\ =\ \{-\/6.081047685906553E+11,\ -\/5.361611236768045E+11,\ 1.582567053933117E+10\},}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ .velocity\ =\ \{8.487735250388265E+03,\ -\/9.177396693450438E+03,\ -\/1.516657044377685E+02\},}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ .type\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca9ffc5da794071c4508a5bc2fe0422e46}{Bodies::BodyType::Planet}},}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ .priority\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121ae3c1a1af4e04e769b2afd0e68645a308}{Bodies::BodyPriority::Essential}},}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ .jpl\_id\ =\ \textcolor{stringliteral}{"{}599"{}}\},}
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00101\ \ \ \ \ \ \{.name\ =\ \textcolor{stringliteral}{"{}Io/JI"{}},}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ .mass\ =\ 8.933000000000001e22,}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ .position\ =\ \{-\/6.084974965844570E+11,\ -\/5.360111750387562E+11,\ 1.582552548899150E+10\},}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ .velocity\ =\ \{2.328291016125176E+03,\ -\/2.543081464677284E+04,\ -\/8.211168351407796E+02\},}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ .type\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdcad502a50ed945d5fca74e0105575b5b34}{Bodies::BodyType::Moon}},}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ .priority\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121a0ab984d91ab0a037bdf692bf0e73c349}{Bodies::BodyPriority::Important}},}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ .jpl\_id\ =\ \textcolor{stringliteral}{"{}501"{}}\},}
+\DoxyCodeLine{00108\ }
+\DoxyCodeLine{00109\ \ \ \ \ \ \{.name\ =\ \textcolor{stringliteral}{"{}Europa/JII"{}},}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ .mass\ =\ 4.797000000000000e22,}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ .position\ =\ \{-\/6.087813968408828E+11,\ -\/5.361324438212947E+11,\ 1.581409264479351E+10\},}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ .velocity\ =\ \{7.883772836169378E+03,\ -\/2.276578831920047E+04,\ -\/7.451258380221084E+02\},}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ .type\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdcad502a50ed945d5fca74e0105575b5b34}{Bodies::BodyType::Moon}},}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ .priority\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121a0ab984d91ab0a037bdf692bf0e73c349}{Bodies::BodyPriority::Important}},}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ .jpl\_id\ =\ \textcolor{stringliteral}{"{}502"{}}\},}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00117\ \ \ \ \ \ \{.name\ =\ \textcolor{stringliteral}{"{}Ganymede/JIII"{}},}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ .mass\ =\ 1.4819e23,}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ .position\ =\ \{-\/6.082216753596034E+11,\ -\/5.350962496309689E+11,\ 1.586440200642738E+10\},}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ .velocity\ =\ \{-\/2.312762729858076E+03,\ -\/1.034694085458423E+04,\ -\/3.394028524866970E+02\},}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ .type\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdcad502a50ed945d5fca74e0105575b5b34}{Bodies::BodyType::Moon}},}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ .priority\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121a0ab984d91ab0a037bdf692bf0e73c349}{Bodies::BodyPriority::Important}},}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ .jpl\_id\ =\ \textcolor{stringliteral}{"{}503"{}}\},}
+\DoxyCodeLine{00124\ }
+\DoxyCodeLine{00125\ \ \ \ \ \ \{.name\ =\ \textcolor{stringliteral}{"{}Callisto/JIV"{}},}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ .mass\ =\ 1.0759e23,}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ .position\ =\ \{-\/6.095083629252676E+11,\ -\/5.374307967735521E+11,\ 1.576675819592145E+10\},}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ .velocity\ =\ \{1.398744019609489E+04,\ -\/1.520046486173449E+04,\ -\/2.686989877498887E+02\},}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ .type\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdcad502a50ed945d5fca74e0105575b5b34}{Bodies::BodyType::Moon}},}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ .priority\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121a0ab984d91ab0a037bdf692bf0e73c349}{Bodies::BodyPriority::Important}},}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ .jpl\_id\ =\ \textcolor{stringliteral}{"{}504"{}}\},}
+\DoxyCodeLine{00132\ }
+\DoxyCodeLine{00133\ \ \ \ \ \ \{.name\ =\ \textcolor{stringliteral}{"{}Saturn"{}},}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ .mass\ =\ 5.6832E26,}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ .position\ =\ \{3.949858217561845E+10,\ -\/1.504088201486316E+12,\ 2.457957210066664E+10\},}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ .velocity\ =\ \{9.126752354196418E+03,\ 2.225161021121407E+02,\ -\/3.672361515973047E+02\},}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ .type\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca9ffc5da794071c4508a5bc2fe0422e46}{Bodies::BodyType::Planet}},}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ .priority\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121ae3c1a1af4e04e769b2afd0e68645a308}{Bodies::BodyPriority::Essential}},}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ .jpl\_id\ =\ \textcolor{stringliteral}{"{}699"{}}\},}
+\DoxyCodeLine{00140\ }
+\DoxyCodeLine{00141\ \ \ \ \ \ \{.name\ =\ \textcolor{stringliteral}{"{}Titan"{}},}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ .mass\ =\ 1.3455E23,}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ .position\ =\ \{3.929999839392310E+10,\ -\/1.502995922959354E+12,\ 2.403633694487488E+10\},}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ .velocity\ =\ \{3.690030226225586E+03,\ -\/2.204268757260238E+02,\ 4.010626371976086E+02\},}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ .type\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdcad502a50ed945d5fca74e0105575b5b34}{Bodies::BodyType::Moon}},}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ .priority\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121a0ab984d91ab0a037bdf692bf0e73c349}{Bodies::BodyPriority::Important}},}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ .jpl\_id\ =\ \textcolor{stringliteral}{"{}606"{}}\},}
+\DoxyCodeLine{00148\ }
+\DoxyCodeLine{00149\ \ \ \ \ \ \{.name\ =\ \textcolor{stringliteral}{"{}Rhea"{}},}
+\DoxyCodeLine{00150\ \ \ \ \ \ \ .mass\ =\ 2.3090E21,}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ .position\ =\ \{3.996385564836078E+10,\ -\/1.504321861525067E+12,\ 2.465856518385583E+10\},}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ .velocity\ =\ \{1.304481971881133E+04,\ 6.756162931469384E+03,\ -\/4.118892445629723E+03\},}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ .type\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdcad502a50ed945d5fca74e0105575b5b34}{Bodies::BodyType::Moon}},}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ .priority\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121a0ab984d91ab0a037bdf692bf0e73c349}{Bodies::BodyPriority::Important}},}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ .jpl\_id\ =\ \textcolor{stringliteral}{"{}605"{}}\},}
+\DoxyCodeLine{00156\ }
+\DoxyCodeLine{00157\ \ \ \ \ \ \{.name\ =\ \textcolor{stringliteral}{"{}Iapetus"{}},}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ .mass\ =\ 1.8059E21,}
+\DoxyCodeLine{00159\ \ \ \ \ \ \ .position\ =\ \{4.289600222327930E+10,\ -\/1.504313357998975E+12,\ 2.394502357974273E+10\},}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ .velocity\ =\ \{9.178004838855442E+03,\ 3.487938513709992E+03,\ -\/1.133243907785824E+03\},}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ .type\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdcad502a50ed945d5fca74e0105575b5b34}{Bodies::BodyType::Moon}},}
+\DoxyCodeLine{00162\ \ \ \ \ \ \ .priority\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121a0ab984d91ab0a037bdf692bf0e73c349}{Bodies::BodyPriority::Important}},}
+\DoxyCodeLine{00163\ \ \ \ \ \ \ .jpl\_id\ =\ \textcolor{stringliteral}{"{}608"{}}\},}
+\DoxyCodeLine{00164\ }
+\DoxyCodeLine{00165\ \ \ \ \ \ \{.name\ =\ \textcolor{stringliteral}{"{}Uranus"{}},}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ .mass\ =\ 8.6810E25,}
+\DoxyCodeLine{00167\ \ \ \ \ \ \ .position\ =\ \{2.640122441822190E+12,\ 1.376116834688191E+12,\ -\/2.909225616355687E+10\},}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ .velocity\ =\ \{-\/3.197620376537337E+03,\ 5.721473008686046E+03,\ 6.279238980270430E+01\},}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ .type\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca9ffc5da794071c4508a5bc2fe0422e46}{Bodies::BodyType::Planet}},}
+\DoxyCodeLine{00170\ \ \ \ \ \ \ .priority\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121ae3c1a1af4e04e769b2afd0e68645a308}{Bodies::BodyPriority::Essential}},}
+\DoxyCodeLine{00171\ \ \ \ \ \ \ .jpl\_id\ =\ \textcolor{stringliteral}{"{}799"{}}\},}
+\DoxyCodeLine{00172\ }
+\DoxyCodeLine{00173\ \ \ \ \ \ \{.name\ =\ \textcolor{stringliteral}{"{}Titania"{}},}
+\DoxyCodeLine{00174\ \ \ \ \ \ \ .mass\ =\ 3.5270E21,}
+\DoxyCodeLine{00175\ \ \ \ \ \ \ .position\ =\ \{2.640344653102460E+12,\ 1.376017606903906E+12,\ -\/2.945289537567604E+10\},}
+\DoxyCodeLine{00176\ \ \ \ \ \ \ .velocity\ =\ \{-\/6.242670751319309E+03,\ 6.112273349811630E+03,\ -\/1.919409510456664E+03\},}
+\DoxyCodeLine{00177\ \ \ \ \ \ \ .type\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdcad502a50ed945d5fca74e0105575b5b34}{Bodies::BodyType::Moon}},}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ .priority\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121a0ab984d91ab0a037bdf692bf0e73c349}{Bodies::BodyPriority::Important}},}
+\DoxyCodeLine{00179\ \ \ \ \ \ \ .jpl\_id\ =\ \textcolor{stringliteral}{"{}703"{}}\},}
+\DoxyCodeLine{00180\ }
+\DoxyCodeLine{00181\ \ \ \ \ \ \{.name\ =\ \textcolor{stringliteral}{"{}Oberon"{}},}
+\DoxyCodeLine{00182\ \ \ \ \ \ \ .mass\ =\ 3.0140E21,}
+\DoxyCodeLine{00183\ \ \ \ \ \ \ .position\ =\ \{2.640442757626314E+12,\ 1.376116355970410E+12,\ -\/2.860545565141582E+10\},}
+\DoxyCodeLine{00184\ \ \ \ \ \ \ .velocity\ =\ \{-\/6.475965355525921E+02,\ 4.927750287955811E+03,\ -\/1.617677264266900E+03\},}
+\DoxyCodeLine{00185\ \ \ \ \ \ \ .type\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdcad502a50ed945d5fca74e0105575b5b34}{Bodies::BodyType::Moon}},}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ .priority\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121a0ab984d91ab0a037bdf692bf0e73c349}{Bodies::BodyPriority::Important}},}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ .jpl\_id\ =\ \textcolor{stringliteral}{"{}704"{}}\},}
+\DoxyCodeLine{00188\ }
+\DoxyCodeLine{00189\ \ \ \ \ \ \{.name\ =\ \textcolor{stringliteral}{"{}Neptune"{}},}
+\DoxyCodeLine{00190\ \ \ \ \ \ \ .mass\ =\ 1.0241E26,}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ .position\ =\ \{4.296067448041266E+12,\ -\/1.266723310574405E+12,\ -\/7.292141797366703E+10\},}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ .velocity\ =\ \{1.501752843205070E+03,\ 5.245647173615618E+03,\ -\/1.432035598510835E+02\},}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ .type\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca9ffc5da794071c4508a5bc2fe0422e46}{Bodies::BodyType::Planet}},}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ .priority\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121ae3c1a1af4e04e769b2afd0e68645a308}{Bodies::BodyPriority::Essential}},}
+\DoxyCodeLine{00195\ \ \ \ \ \ \ .jpl\_id\ =\ \textcolor{stringliteral}{"{}899"{}}\},}
+\DoxyCodeLine{00196\ }
+\DoxyCodeLine{00197\ \ \ \ \ \ \{.name\ =\ \textcolor{stringliteral}{"{}Triton"{}},}
+\DoxyCodeLine{00198\ \ \ \ \ \ \ .mass\ =\ 2.1470E22,}
+\DoxyCodeLine{00199\ \ \ \ \ \ \ .position\ =\ \{4.295926641253536E+12,\ -\/1.267010246039275E+12,\ -\/7.307535410367203E+10\},}
+\DoxyCodeLine{00200\ \ \ \ \ \ \ .velocity\ =\ \{-\/1.869947682690540E+03,\ 5.394197840398287E+03,\ 2.664058980099843E+03\},}
+\DoxyCodeLine{00201\ \ \ \ \ \ \ .type\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdcad502a50ed945d5fca74e0105575b5b34}{Bodies::BodyType::Moon}},}
+\DoxyCodeLine{00202\ \ \ \ \ \ \ .priority\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121a0ab984d91ab0a037bdf692bf0e73c349}{Bodies::BodyPriority::Important}},}
+\DoxyCodeLine{00203\ \ \ \ \ \ \ .jpl\_id\ =\ \textcolor{stringliteral}{"{}801"{}}\},}
+\DoxyCodeLine{00204\ }
+\DoxyCodeLine{00205\ \ \ \ \ \ \textcolor{comment}{//\ Pluto\ System}}
+\DoxyCodeLine{00206\ \ \ \ \ \ \{.name\ =\ \textcolor{stringliteral}{"{}Pluto"{}},}
+\DoxyCodeLine{00207\ \ \ \ \ \ \ .mass\ =\ 1.3070E22,}
+\DoxyCodeLine{00208\ \ \ \ \ \ \ .position\ =\ \{1.631032961466709E+12,\ -\/4.738021981443667E+12,\ 3.520700820841193E+10\},}
+\DoxyCodeLine{00209\ \ \ \ \ \ \ .velocity\ =\ \{5.263494750365237E+03,\ 6.474560817503934E+02,\ -\/1.572669886592717E+03\},}
+\DoxyCodeLine{00210\ \ \ \ \ \ \ .type\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca678839b1336623a3763d5e3d2697dfc7}{Bodies::BodyType::DwarfPlanet}},}
+\DoxyCodeLine{00211\ \ \ \ \ \ \ .priority\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121a0ab984d91ab0a037bdf692bf0e73c349}{Bodies::BodyPriority::Important}},}
+\DoxyCodeLine{00212\ \ \ \ \ \ \ .jpl\_id\ =\ \textcolor{stringliteral}{"{}999"{}}\},}
+\DoxyCodeLine{00213\ }
+\DoxyCodeLine{00214\ \ \ \ \ \ \{.name\ =\ \textcolor{stringliteral}{"{}Charon"{}},}
+\DoxyCodeLine{00215\ \ \ \ \ \ \ .mass\ =\ 1.5300E21,}
+\DoxyCodeLine{00216\ \ \ \ \ \ \ .position\ =\ \{1.631046050939787E+12,\ -\/4.738016060052414E+12,\ 3.519368340083623E+10\},}
+\DoxyCodeLine{00217\ \ \ \ \ \ \ .velocity\ =\ \{5.195127356962284E+03,\ 4.865648017516665E+02,\ -\/1.711358032334507E+03\},}
+\DoxyCodeLine{00218\ \ \ \ \ \ \ .type\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdcad502a50ed945d5fca74e0105575b5b34}{Bodies::BodyType::Moon}},}
+\DoxyCodeLine{00219\ \ \ \ \ \ \ .priority\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121a0ab984d91ab0a037bdf692bf0e73c349}{Bodies::BodyPriority::Important}},}
+\DoxyCodeLine{00220\ \ \ \ \ \ \ .jpl\_id\ =\ \textcolor{stringliteral}{"{}901"{}}\},}
+\DoxyCodeLine{00221\ }
+\DoxyCodeLine{00222\ \ \ \ \ \ \textcolor{comment}{//\ Dwarf\ Planets}}
+\DoxyCodeLine{00223\ \ \ \ \ \ \{.name\ =\ \textcolor{stringliteral}{"{}Quaoar"{}},}
+\DoxyCodeLine{00224\ \ \ \ \ \ \ .mass\ =\ 1.4060E21,}
+\DoxyCodeLine{00225\ \ \ \ \ \ \ .position\ =\ \{3.565307408086812E+10,\ -\/6.355839539598446E+12,\ 8.822165908103421E+11\},}
+\DoxyCodeLine{00226\ \ \ \ \ \ \ .velocity\ =\ \{4.568912422957285E+03,\ 1.995457796801816E+02,\ 7.169738510189458E+01\},}
+\DoxyCodeLine{00227\ \ \ \ \ \ \ .type\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca678839b1336623a3763d5e3d2697dfc7}{Bodies::BodyType::DwarfPlanet}},}
+\DoxyCodeLine{00228\ \ \ \ \ \ \ .priority\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121aebb061953c0454b2c8ee7b0ac615ebcd}{Bodies::BodyPriority::Optional}},}
+\DoxyCodeLine{00229\ \ \ \ \ \ \ .jpl\_id\ =\ \textcolor{stringliteral}{"{}2050000"{}}\},}
+\DoxyCodeLine{00230\ }
+\DoxyCodeLine{00231\ \ \ \ \ \ \{.name\ =\ \textcolor{stringliteral}{"{}Haumea"{}},}
+\DoxyCodeLine{00232\ \ \ \ \ \ \ .mass\ =\ 4.0060E21,}
+\DoxyCodeLine{00233\ \ \ \ \ \ \ .position\ =\ \{-\/6.081493645174928E+12,\ -\/2.745113997616651E+12,\ 3.546526011225002E+12\},}
+\DoxyCodeLine{00234\ \ \ \ \ \ \ .velocity\ =\ \{1.949707122754813E+03,\ -\/3.280386606928030E+03,\ 4.361012604044090E+01\},}
+\DoxyCodeLine{00235\ \ \ \ \ \ \ .type\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca678839b1336623a3763d5e3d2697dfc7}{Bodies::BodyType::DwarfPlanet}},}
+\DoxyCodeLine{00236\ \ \ \ \ \ \ .priority\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121aebb061953c0454b2c8ee7b0ac615ebcd}{Bodies::BodyPriority::Optional}},}
+\DoxyCodeLine{00237\ \ \ \ \ \ \ .jpl\_id\ =\ \textcolor{stringliteral}{"{}2136108"{}}\},}
+\DoxyCodeLine{00238\ }
+\DoxyCodeLine{00239\ \ \ \ \ \ \{.name\ =\ \textcolor{stringliteral}{"{}Eris"{}},}
+\DoxyCodeLine{00240\ \ \ \ \ \ \ .mass\ =\ 1.6600E22,}
+\DoxyCodeLine{00241\ \ \ \ \ \ \ .position\ =\ \{1.293238565418191E+13,\ 5.525047912929693E+12,\ -\/3.017983941392108E+12\},}
+\DoxyCodeLine{00242\ \ \ \ \ \ \ .velocity\ =\ \{-\/6.717235853970278E+02,\ 1.549067893538111E+03,\ 1.591252994469163E+03\},}
+\DoxyCodeLine{00243\ \ \ \ \ \ \ .type\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca678839b1336623a3763d5e3d2697dfc7}{Bodies::BodyType::DwarfPlanet}},}
+\DoxyCodeLine{00244\ \ \ \ \ \ \ .priority\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121aebb061953c0454b2c8ee7b0ac615ebcd}{Bodies::BodyPriority::Optional}},}
+\DoxyCodeLine{00245\ \ \ \ \ \ \ .jpl\_id\ =\ \textcolor{stringliteral}{"{}2136199"{}}\},}
+\DoxyCodeLine{00246\ }
+\DoxyCodeLine{00247\ \ \ \ \ \ \textcolor{comment}{//\ Spacecraft\ (with\ creation\ dates\ for\ historical\ accuracy)}}
+\DoxyCodeLine{00248\ \ \ \ \ \ \{.name\ =\ \textcolor{stringliteral}{"{}New\ Horizons"{}},}
+\DoxyCodeLine{00249\ \ \ \ \ \ \ .mass\ =\ 465,}
+\DoxyCodeLine{00250\ \ \ \ \ \ \ .position\ =\ \{1.648271605409920E+12,\ -\/5.848949558074337E+12,\ 2.064169308072057E+11\},}
+\DoxyCodeLine{00251\ \ \ \ \ \ \ .velocity\ =\ \{5.495070537900303E+03,\ -\/1.305799494291895E+04,\ 5.114585657450750E+02\},}
+\DoxyCodeLine{00252\ \ \ \ \ \ \ .type\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca0978cd0d2a59acbc551a384e4f639985}{Bodies::BodyType::Spacecraft}},}
+\DoxyCodeLine{00253\ \ \ \ \ \ \ .priority\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121aebb061953c0454b2c8ee7b0ac615ebcd}{Bodies::BodyPriority::Optional}},}
+\DoxyCodeLine{00254\ \ \ \ \ \ \ .jpl\_id\ =\ \textcolor{stringliteral}{"{}-\/98"{}}\},}
+\DoxyCodeLine{00255\ }
+\DoxyCodeLine{00256\ \ \ \ \ \ \{.name\ =\ \textcolor{stringliteral}{"{}SpaceX\ Roadster"{}},}
+\DoxyCodeLine{00257\ \ \ \ \ \ \ .mass\ =\ 1250,}
+\DoxyCodeLine{00258\ \ \ \ \ \ \ .position\ =\ \{-\/1.169077428133156E+11,\ 9.105691074237506E+10,\ -\/2.645012828238495E+08\},}
+\DoxyCodeLine{00259\ \ \ \ \ \ \ .velocity\ =\ \{-\/2.125352869123654E+04,\ -\/2.607176140206951E+04,\ -\/6.453526951389765E+02\},}
+\DoxyCodeLine{00260\ \ \ \ \ \ \ .type\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca0978cd0d2a59acbc551a384e4f639985}{Bodies::BodyType::Spacecraft}},}
+\DoxyCodeLine{00261\ \ \ \ \ \ \ .priority\ =\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121aebb061953c0454b2c8ee7b0ac615ebcd}{Bodies::BodyPriority::Optional}},}
+\DoxyCodeLine{00262\ \ \ \ \ \ \ .jpl\_id\ =\ \textcolor{stringliteral}{"{}-\/143205"{}}\}\}\};}
+\DoxyCodeLine{00263\ }
+\DoxyCodeLine{00267\ [[nodiscard]]\ std::optional<BodyDefinition>\ \mbox{\hyperlink{namespace_solar_system_1_1_data_a8f2357b503429860476ffda2bf5f16fe}{get\_fallback\_body}}(std::string\_view\ name);}
+\DoxyCodeLine{00268\ }
+\DoxyCodeLine{00272\ [[nodiscard]]\ std::vector<BodyDefinition>\ \mbox{\hyperlink{namespace_solar_system_1_1_data_a5ba82bc98c06cdccfdf881b2fef37f1f}{get\_essential\_bodies}}();}
+\DoxyCodeLine{00273\ }
+\DoxyCodeLine{00277\ [[nodiscard]]\ std::vector<BodyDefinition>\ \mbox{\hyperlink{namespace_solar_system_1_1_data_abe76ad724994a3f4fbccf7eff93ccdfb}{get\_all\_body\_definitions}}();}
+\DoxyCodeLine{00278\ }
+\DoxyCodeLine{00282\ [[nodiscard]]\ std::vector<BodyDefinition>\ \mbox{\hyperlink{namespace_solar_system_1_1_data_a67774606cf103263c1f4b8ca4712b934}{get\_bodies\_by\_type}}(\mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdc}{Bodies::BodyType}}\ type);}
+\DoxyCodeLine{00283\ }
+\DoxyCodeLine{00287\ [[nodiscard]]\ std::vector<BodyDefinition>\ \mbox{\hyperlink{namespace_solar_system_1_1_data_a3eb7af1e0db9b1c203fd855344511bd6}{get\_bodies\_by\_priority}}(\mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121}{Bodies::BodyPriority}}\ priority);}
+\DoxyCodeLine{00288\ }
+\DoxyCodeLine{00289\ \}\ \ \textcolor{comment}{//\ namespace\ SolarSystem::Data}}
+
+\end{DoxyCode}

@@ -1,0 +1,12 @@
+<map id="SolarSystem::Testing::TestSuiteResult::success_rate" name="SolarSystem::Testing::TestSuiteResult::success_rate">
+<area shape="rect" id="Node000001" title=" " alt="" coords="529,27,738,68"/>
+<area shape="rect" id="Node000002" href="$comprehensive__demo_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="151,5,200,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="514,43,201,22,201,17,514,37"/>
+<area shape="rect" id="Node000003" href="$struct_solar_system_1_1_testing_1_1_test_suite_result.html#a4ceff0d943e063958610929a6834b137" title=" " alt="" coords="297,55,481,96"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="514,64,482,68,482,62,514,59"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="296,53,200,27,201,22,297,48"/>
+<area shape="rect" id="Node000004" href="$namespace_solar_system_1_1_testing.html#af2d7fb6d3690aa5cd0d212035adc45e7" title="Main entry point for running tests." alt="" coords="103,55,249,96"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="281,78,249,78,249,73,281,73"/>
+<area shape="rect" id="Node000005" href="$example__tests_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="5,63,55,88"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="87,78,55,78,55,73,87,73"/>
+</map>

@@ -1,0 +1,197 @@
+\doxysection{Solar\+System\+::Testing\+::Mocks\+::Network\+Mock\+Config Struct Reference}
+\hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config}{}\label{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config}\index{SolarSystem::Testing::Mocks::NetworkMockConfig@{SolarSystem::Testing::Mocks::NetworkMockConfig}}
+
+
+Configuration for network mock behavior.  
+
+
+
+
+{\ttfamily \#include $<$network\+\_\+mock.\+hpp$>$}
+
+
+
+Collaboration diagram for Solar\+System\+::Testing\+::Mocks\+::Network\+Mock\+Config\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=233pt]{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_condition}{Network\+Condition}} \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_a3aa1f59848e0940a05207da96495afa5}{default\+\_\+condition}}
+\item 
+std\+::chrono\+::milliseconds \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_a801b447591984df05ac219efc6c039d1}{default\+\_\+response\+\_\+delay}} = std\+::chrono\+::milliseconds(100)
+\item 
+std\+::chrono\+::milliseconds \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_ab11f10258deacc9b6f86baf4efd39ff9}{max\+\_\+response\+\_\+delay}} = std\+::chrono\+::seconds(30)
+\item 
+size\+\_\+t \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_a97be6fff73b04e9f4a73ef97d3d523fc}{max\+\_\+response\+\_\+size}} = 10 \texorpdfstring{$\ast$}{*} 1024 \texorpdfstring{$\ast$}{*} 1024
+\item 
+bool \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_a03bf80a87a4fc2d6d61603db81bf799d}{enable\+\_\+automatic\+\_\+retries}} = true
+\item 
+size\+\_\+t \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_a94943fdd7a3d6d6ac63936fb23dd4bed}{max\+\_\+retry\+\_\+attempts}} = 3
+\item 
+std\+::chrono\+::milliseconds \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_a34f58c1a5fe1d16d22fe93b5c68b34c8}{retry\+\_\+delay}} = std\+::chrono\+::milliseconds(1000)
+\item 
+double \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_a132223a3043ca6b89557a74121c719e7}{retry\+\_\+backoff\+\_\+factor}} = 2.\+0
+\item 
+size\+\_\+t \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_ad32d906d5ec9b079dc7c5ac9763d0ebc}{max\+\_\+concurrent\+\_\+connections}} = 10
+\item 
+std\+::chrono\+::milliseconds \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_a1ff868289c1f9c158bfe7def6ac9ad6c}{connection\+\_\+reuse\+\_\+timeout}} = std\+::chrono\+::minutes(5)
+\item 
+bool \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_a76609bb17391ba506ae49e466673bc0d}{simulate\+\_\+connection\+\_\+pooling}} = true
+\item 
+bool \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_a33a89d53c2a7e670222abc8db771bbe2}{simulate\+\_\+ssl\+\_\+handshake}} = false
+\item 
+std\+::chrono\+::milliseconds \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_abc9eaf77991c0222c364c1f34e4ba54f}{ssl\+\_\+handshake\+\_\+delay}} = std\+::chrono\+::milliseconds(200)
+\item 
+double \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_ad41ba2f7fe1c308c3750e2c9f0bf17fd}{ssl\+\_\+error\+\_\+rate}} = 0.\+0
+\item 
+bool \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_afc4a2cac3dd646bd098455524a132ffd}{enable\+\_\+call\+\_\+history}} = true
+\item 
+size\+\_\+t \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_ab93882002cd5fd13b4470e2c80bbad60}{max\+\_\+history\+\_\+size}} = 10000
+\item 
+std\+::string \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_aa07751410ca458bb3362f9244eec9c84}{mock\+\_\+data\+\_\+directory}} = "{}tests/data/network\+\_\+responses/"{}
+\item 
+bool \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_a375d33fd95f56c42df349b013b5597b7}{use\+\_\+realistic\+\_\+responses}} = true
+\item 
+bool \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_a3af99b29026efdf1cc9e75344e4e3728}{simulate\+\_\+real\+\_\+delays}} = true
+\item 
+bool \mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_adb2a6d90825488913d429d6f3680085b}{high\+\_\+precision\+\_\+timing}} = true
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Configuration for network mock behavior. 
+
+\label{doc-variable-members}
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_a1ff868289c1f9c158bfe7def6ac9ad6c}\index{SolarSystem::Testing::Mocks::NetworkMockConfig@{SolarSystem::Testing::Mocks::NetworkMockConfig}!connection\_reuse\_timeout@{connection\_reuse\_timeout}}
+\index{connection\_reuse\_timeout@{connection\_reuse\_timeout}!SolarSystem::Testing::Mocks::NetworkMockConfig@{SolarSystem::Testing::Mocks::NetworkMockConfig}}
+\doxysubsubsection{\texorpdfstring{connection\_reuse\_timeout}{connection\_reuse\_timeout}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_a1ff868289c1f9c158bfe7def6ac9ad6c} 
+std\+::chrono\+::milliseconds Solar\+System\+::\+Testing\+::\+Mocks\+::\+Network\+Mock\+Config\+::connection\+\_\+reuse\+\_\+timeout = std\+::chrono\+::minutes(5)}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_a3aa1f59848e0940a05207da96495afa5}\index{SolarSystem::Testing::Mocks::NetworkMockConfig@{SolarSystem::Testing::Mocks::NetworkMockConfig}!default\_condition@{default\_condition}}
+\index{default\_condition@{default\_condition}!SolarSystem::Testing::Mocks::NetworkMockConfig@{SolarSystem::Testing::Mocks::NetworkMockConfig}}
+\doxysubsubsection{\texorpdfstring{default\_condition}{default\_condition}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_a3aa1f59848e0940a05207da96495afa5} 
+\mbox{\hyperlink{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_condition}{Network\+Condition}} Solar\+System\+::\+Testing\+::\+Mocks\+::\+Network\+Mock\+Config\+::default\+\_\+condition}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_a801b447591984df05ac219efc6c039d1}\index{SolarSystem::Testing::Mocks::NetworkMockConfig@{SolarSystem::Testing::Mocks::NetworkMockConfig}!default\_response\_delay@{default\_response\_delay}}
+\index{default\_response\_delay@{default\_response\_delay}!SolarSystem::Testing::Mocks::NetworkMockConfig@{SolarSystem::Testing::Mocks::NetworkMockConfig}}
+\doxysubsubsection{\texorpdfstring{default\_response\_delay}{default\_response\_delay}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_a801b447591984df05ac219efc6c039d1} 
+std\+::chrono\+::milliseconds Solar\+System\+::\+Testing\+::\+Mocks\+::\+Network\+Mock\+Config\+::default\+\_\+response\+\_\+delay = std\+::chrono\+::milliseconds(100)}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_a03bf80a87a4fc2d6d61603db81bf799d}\index{SolarSystem::Testing::Mocks::NetworkMockConfig@{SolarSystem::Testing::Mocks::NetworkMockConfig}!enable\_automatic\_retries@{enable\_automatic\_retries}}
+\index{enable\_automatic\_retries@{enable\_automatic\_retries}!SolarSystem::Testing::Mocks::NetworkMockConfig@{SolarSystem::Testing::Mocks::NetworkMockConfig}}
+\doxysubsubsection{\texorpdfstring{enable\_automatic\_retries}{enable\_automatic\_retries}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_a03bf80a87a4fc2d6d61603db81bf799d} 
+bool Solar\+System\+::\+Testing\+::\+Mocks\+::\+Network\+Mock\+Config\+::enable\+\_\+automatic\+\_\+retries = true}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_afc4a2cac3dd646bd098455524a132ffd}\index{SolarSystem::Testing::Mocks::NetworkMockConfig@{SolarSystem::Testing::Mocks::NetworkMockConfig}!enable\_call\_history@{enable\_call\_history}}
+\index{enable\_call\_history@{enable\_call\_history}!SolarSystem::Testing::Mocks::NetworkMockConfig@{SolarSystem::Testing::Mocks::NetworkMockConfig}}
+\doxysubsubsection{\texorpdfstring{enable\_call\_history}{enable\_call\_history}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_afc4a2cac3dd646bd098455524a132ffd} 
+bool Solar\+System\+::\+Testing\+::\+Mocks\+::\+Network\+Mock\+Config\+::enable\+\_\+call\+\_\+history = true}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_adb2a6d90825488913d429d6f3680085b}\index{SolarSystem::Testing::Mocks::NetworkMockConfig@{SolarSystem::Testing::Mocks::NetworkMockConfig}!high\_precision\_timing@{high\_precision\_timing}}
+\index{high\_precision\_timing@{high\_precision\_timing}!SolarSystem::Testing::Mocks::NetworkMockConfig@{SolarSystem::Testing::Mocks::NetworkMockConfig}}
+\doxysubsubsection{\texorpdfstring{high\_precision\_timing}{high\_precision\_timing}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_adb2a6d90825488913d429d6f3680085b} 
+bool Solar\+System\+::\+Testing\+::\+Mocks\+::\+Network\+Mock\+Config\+::high\+\_\+precision\+\_\+timing = true}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_ad32d906d5ec9b079dc7c5ac9763d0ebc}\index{SolarSystem::Testing::Mocks::NetworkMockConfig@{SolarSystem::Testing::Mocks::NetworkMockConfig}!max\_concurrent\_connections@{max\_concurrent\_connections}}
+\index{max\_concurrent\_connections@{max\_concurrent\_connections}!SolarSystem::Testing::Mocks::NetworkMockConfig@{SolarSystem::Testing::Mocks::NetworkMockConfig}}
+\doxysubsubsection{\texorpdfstring{max\_concurrent\_connections}{max\_concurrent\_connections}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_ad32d906d5ec9b079dc7c5ac9763d0ebc} 
+size\+\_\+t Solar\+System\+::\+Testing\+::\+Mocks\+::\+Network\+Mock\+Config\+::max\+\_\+concurrent\+\_\+connections = 10}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_ab93882002cd5fd13b4470e2c80bbad60}\index{SolarSystem::Testing::Mocks::NetworkMockConfig@{SolarSystem::Testing::Mocks::NetworkMockConfig}!max\_history\_size@{max\_history\_size}}
+\index{max\_history\_size@{max\_history\_size}!SolarSystem::Testing::Mocks::NetworkMockConfig@{SolarSystem::Testing::Mocks::NetworkMockConfig}}
+\doxysubsubsection{\texorpdfstring{max\_history\_size}{max\_history\_size}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_ab93882002cd5fd13b4470e2c80bbad60} 
+size\+\_\+t Solar\+System\+::\+Testing\+::\+Mocks\+::\+Network\+Mock\+Config\+::max\+\_\+history\+\_\+size = 10000}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_ab11f10258deacc9b6f86baf4efd39ff9}\index{SolarSystem::Testing::Mocks::NetworkMockConfig@{SolarSystem::Testing::Mocks::NetworkMockConfig}!max\_response\_delay@{max\_response\_delay}}
+\index{max\_response\_delay@{max\_response\_delay}!SolarSystem::Testing::Mocks::NetworkMockConfig@{SolarSystem::Testing::Mocks::NetworkMockConfig}}
+\doxysubsubsection{\texorpdfstring{max\_response\_delay}{max\_response\_delay}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_ab11f10258deacc9b6f86baf4efd39ff9} 
+std\+::chrono\+::milliseconds Solar\+System\+::\+Testing\+::\+Mocks\+::\+Network\+Mock\+Config\+::max\+\_\+response\+\_\+delay = std\+::chrono\+::seconds(30)}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_a97be6fff73b04e9f4a73ef97d3d523fc}\index{SolarSystem::Testing::Mocks::NetworkMockConfig@{SolarSystem::Testing::Mocks::NetworkMockConfig}!max\_response\_size@{max\_response\_size}}
+\index{max\_response\_size@{max\_response\_size}!SolarSystem::Testing::Mocks::NetworkMockConfig@{SolarSystem::Testing::Mocks::NetworkMockConfig}}
+\doxysubsubsection{\texorpdfstring{max\_response\_size}{max\_response\_size}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_a97be6fff73b04e9f4a73ef97d3d523fc} 
+size\+\_\+t Solar\+System\+::\+Testing\+::\+Mocks\+::\+Network\+Mock\+Config\+::max\+\_\+response\+\_\+size = 10 \texorpdfstring{$\ast$}{*} 1024 \texorpdfstring{$\ast$}{*} 1024}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_a94943fdd7a3d6d6ac63936fb23dd4bed}\index{SolarSystem::Testing::Mocks::NetworkMockConfig@{SolarSystem::Testing::Mocks::NetworkMockConfig}!max\_retry\_attempts@{max\_retry\_attempts}}
+\index{max\_retry\_attempts@{max\_retry\_attempts}!SolarSystem::Testing::Mocks::NetworkMockConfig@{SolarSystem::Testing::Mocks::NetworkMockConfig}}
+\doxysubsubsection{\texorpdfstring{max\_retry\_attempts}{max\_retry\_attempts}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_a94943fdd7a3d6d6ac63936fb23dd4bed} 
+size\+\_\+t Solar\+System\+::\+Testing\+::\+Mocks\+::\+Network\+Mock\+Config\+::max\+\_\+retry\+\_\+attempts = 3}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_aa07751410ca458bb3362f9244eec9c84}\index{SolarSystem::Testing::Mocks::NetworkMockConfig@{SolarSystem::Testing::Mocks::NetworkMockConfig}!mock\_data\_directory@{mock\_data\_directory}}
+\index{mock\_data\_directory@{mock\_data\_directory}!SolarSystem::Testing::Mocks::NetworkMockConfig@{SolarSystem::Testing::Mocks::NetworkMockConfig}}
+\doxysubsubsection{\texorpdfstring{mock\_data\_directory}{mock\_data\_directory}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_aa07751410ca458bb3362f9244eec9c84} 
+std\+::string Solar\+System\+::\+Testing\+::\+Mocks\+::\+Network\+Mock\+Config\+::mock\+\_\+data\+\_\+directory = "{}tests/data/network\+\_\+responses/"{}}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_a132223a3043ca6b89557a74121c719e7}\index{SolarSystem::Testing::Mocks::NetworkMockConfig@{SolarSystem::Testing::Mocks::NetworkMockConfig}!retry\_backoff\_factor@{retry\_backoff\_factor}}
+\index{retry\_backoff\_factor@{retry\_backoff\_factor}!SolarSystem::Testing::Mocks::NetworkMockConfig@{SolarSystem::Testing::Mocks::NetworkMockConfig}}
+\doxysubsubsection{\texorpdfstring{retry\_backoff\_factor}{retry\_backoff\_factor}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_a132223a3043ca6b89557a74121c719e7} 
+double Solar\+System\+::\+Testing\+::\+Mocks\+::\+Network\+Mock\+Config\+::retry\+\_\+backoff\+\_\+factor = 2.\+0}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_a34f58c1a5fe1d16d22fe93b5c68b34c8}\index{SolarSystem::Testing::Mocks::NetworkMockConfig@{SolarSystem::Testing::Mocks::NetworkMockConfig}!retry\_delay@{retry\_delay}}
+\index{retry\_delay@{retry\_delay}!SolarSystem::Testing::Mocks::NetworkMockConfig@{SolarSystem::Testing::Mocks::NetworkMockConfig}}
+\doxysubsubsection{\texorpdfstring{retry\_delay}{retry\_delay}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_a34f58c1a5fe1d16d22fe93b5c68b34c8} 
+std\+::chrono\+::milliseconds Solar\+System\+::\+Testing\+::\+Mocks\+::\+Network\+Mock\+Config\+::retry\+\_\+delay = std\+::chrono\+::milliseconds(1000)}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_a76609bb17391ba506ae49e466673bc0d}\index{SolarSystem::Testing::Mocks::NetworkMockConfig@{SolarSystem::Testing::Mocks::NetworkMockConfig}!simulate\_connection\_pooling@{simulate\_connection\_pooling}}
+\index{simulate\_connection\_pooling@{simulate\_connection\_pooling}!SolarSystem::Testing::Mocks::NetworkMockConfig@{SolarSystem::Testing::Mocks::NetworkMockConfig}}
+\doxysubsubsection{\texorpdfstring{simulate\_connection\_pooling}{simulate\_connection\_pooling}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_a76609bb17391ba506ae49e466673bc0d} 
+bool Solar\+System\+::\+Testing\+::\+Mocks\+::\+Network\+Mock\+Config\+::simulate\+\_\+connection\+\_\+pooling = true}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_a3af99b29026efdf1cc9e75344e4e3728}\index{SolarSystem::Testing::Mocks::NetworkMockConfig@{SolarSystem::Testing::Mocks::NetworkMockConfig}!simulate\_real\_delays@{simulate\_real\_delays}}
+\index{simulate\_real\_delays@{simulate\_real\_delays}!SolarSystem::Testing::Mocks::NetworkMockConfig@{SolarSystem::Testing::Mocks::NetworkMockConfig}}
+\doxysubsubsection{\texorpdfstring{simulate\_real\_delays}{simulate\_real\_delays}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_a3af99b29026efdf1cc9e75344e4e3728} 
+bool Solar\+System\+::\+Testing\+::\+Mocks\+::\+Network\+Mock\+Config\+::simulate\+\_\+real\+\_\+delays = true}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_a33a89d53c2a7e670222abc8db771bbe2}\index{SolarSystem::Testing::Mocks::NetworkMockConfig@{SolarSystem::Testing::Mocks::NetworkMockConfig}!simulate\_ssl\_handshake@{simulate\_ssl\_handshake}}
+\index{simulate\_ssl\_handshake@{simulate\_ssl\_handshake}!SolarSystem::Testing::Mocks::NetworkMockConfig@{SolarSystem::Testing::Mocks::NetworkMockConfig}}
+\doxysubsubsection{\texorpdfstring{simulate\_ssl\_handshake}{simulate\_ssl\_handshake}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_a33a89d53c2a7e670222abc8db771bbe2} 
+bool Solar\+System\+::\+Testing\+::\+Mocks\+::\+Network\+Mock\+Config\+::simulate\+\_\+ssl\+\_\+handshake = false}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_ad41ba2f7fe1c308c3750e2c9f0bf17fd}\index{SolarSystem::Testing::Mocks::NetworkMockConfig@{SolarSystem::Testing::Mocks::NetworkMockConfig}!ssl\_error\_rate@{ssl\_error\_rate}}
+\index{ssl\_error\_rate@{ssl\_error\_rate}!SolarSystem::Testing::Mocks::NetworkMockConfig@{SolarSystem::Testing::Mocks::NetworkMockConfig}}
+\doxysubsubsection{\texorpdfstring{ssl\_error\_rate}{ssl\_error\_rate}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_ad41ba2f7fe1c308c3750e2c9f0bf17fd} 
+double Solar\+System\+::\+Testing\+::\+Mocks\+::\+Network\+Mock\+Config\+::ssl\+\_\+error\+\_\+rate = 0.\+0}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_abc9eaf77991c0222c364c1f34e4ba54f}\index{SolarSystem::Testing::Mocks::NetworkMockConfig@{SolarSystem::Testing::Mocks::NetworkMockConfig}!ssl\_handshake\_delay@{ssl\_handshake\_delay}}
+\index{ssl\_handshake\_delay@{ssl\_handshake\_delay}!SolarSystem::Testing::Mocks::NetworkMockConfig@{SolarSystem::Testing::Mocks::NetworkMockConfig}}
+\doxysubsubsection{\texorpdfstring{ssl\_handshake\_delay}{ssl\_handshake\_delay}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_abc9eaf77991c0222c364c1f34e4ba54f} 
+std\+::chrono\+::milliseconds Solar\+System\+::\+Testing\+::\+Mocks\+::\+Network\+Mock\+Config\+::ssl\+\_\+handshake\+\_\+delay = std\+::chrono\+::milliseconds(200)}
+
+\Hypertarget{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_a375d33fd95f56c42df349b013b5597b7}\index{SolarSystem::Testing::Mocks::NetworkMockConfig@{SolarSystem::Testing::Mocks::NetworkMockConfig}!use\_realistic\_responses@{use\_realistic\_responses}}
+\index{use\_realistic\_responses@{use\_realistic\_responses}!SolarSystem::Testing::Mocks::NetworkMockConfig@{SolarSystem::Testing::Mocks::NetworkMockConfig}}
+\doxysubsubsection{\texorpdfstring{use\_realistic\_responses}{use\_realistic\_responses}}
+{\footnotesize\ttfamily \label{struct_solar_system_1_1_testing_1_1_mocks_1_1_network_mock_config_a375d33fd95f56c42df349b013b5597b7} 
+bool Solar\+System\+::\+Testing\+::\+Mocks\+::\+Network\+Mock\+Config\+::use\+\_\+realistic\+\_\+responses = true}
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/lib/solar\+\_\+test/include/solar\+\_\+test/mocks/\mbox{\hyperlink{network__mock_8hpp}{network\+\_\+mock.\+hpp}}\end{DoxyCompactItemize}

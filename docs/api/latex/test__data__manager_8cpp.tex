@@ -1,0 +1,67 @@
+\doxysection{/\+Users/kostiantyn.kozko/tmp/solarsystem/lib/solar\+\_\+test/src/framework/test\+\_\+data\+\_\+manager.cpp File Reference}
+\hypertarget{test__data__manager_8cpp}{}\label{test__data__manager_8cpp}\index{/Users/kostiantyn.kozko/tmp/solarsystem/lib/solar\_test/src/framework/test\_data\_manager.cpp@{/Users/kostiantyn.kozko/tmp/solarsystem/lib/solar\_test/src/framework/test\_data\_manager.cpp}}
+{\ttfamily \#include "{}solar\+\_\+test/framework/test\+\_\+data\+\_\+manager.\+hpp"{}}\newline
+{\ttfamily \#include $<$algorithm$>$}\newline
+{\ttfamily \#include $<$cstdlib$>$}\newline
+{\ttfamily \#include $<$fstream$>$}\newline
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$random$>$}\newline
+{\ttfamily \#include $<$sstream$>$}\newline
+Include dependency graph for test\+\_\+data\+\_\+manager.\+cpp\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{test__data__manager_8cpp__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespacesolar__test}{solar\+\_\+test}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+std\+::filesystem\+::path \mbox{\hyperlink{namespacesolar__test_ac46801dd401d9cf51f835d051d3a07fb}{solar\+\_\+test\+::get\+\_\+test\+\_\+data\+\_\+root}} ()
+\item 
+std\+::string \mbox{\hyperlink{namespacesolar__test_aed40a6b87acc85de2c5a1e6f56de4d2e}{solar\+\_\+test\+::load\+\_\+file\+\_\+content}} (const std\+::filesystem\+::path \&file\+\_\+path)
+\item 
+std\+::string \mbox{\hyperlink{namespacesolar__test_a4905fcd7814b7dab319304431736b7c2}{solar\+\_\+test\+::load\+\_\+file\+\_\+or\+\_\+fallback}} (const std\+::string \&file\+\_\+path, const std\+::string \&fallback)
+\item 
+std\+::string \mbox{\hyperlink{namespacesolar__test_ac074d86df6ac63c6055fb29fde3dcdcd}{solar\+\_\+test\+::create\+\_\+valid\+\_\+ephemeris\+\_\+cache}} ()
+\item 
+std\+::string \mbox{\hyperlink{namespacesolar__test_a8b80775dc7b2526911f9b635901b9176}{solar\+\_\+test\+::create\+\_\+valid\+\_\+jpl\+\_\+cache}} ()
+\item 
+std\+::string \mbox{\hyperlink{namespacesolar__test_af522c5a9ac642bd6907f38a5c937d08a}{solar\+\_\+test\+::create\+\_\+json\+\_\+cache\+\_\+data}} ()
+\item 
+std\+::string \mbox{\hyperlink{namespacesolar__test_ad0929388b80aa5d28913a09b75961026}{solar\+\_\+test\+::create\+\_\+valid\+\_\+cache\+\_\+header}} ()
+\item 
+std\+::string \mbox{\hyperlink{namespacesolar__test_aee73544b2ce818f36ad5507a760267e3}{solar\+\_\+test\+::load\+\_\+sample\+\_\+jpl\+\_\+response}} (const std\+::string \&body)
+\item 
+std\+::string \mbox{\hyperlink{namespacesolar__test_ab3f0e4f490d9275cd534abb58441de37}{solar\+\_\+test\+::create\+\_\+timeout\+\_\+response}} ()
+\item 
+std\+::string \mbox{\hyperlink{namespacesolar__test_a792389707cdab6bfda4df32314f0f161}{solar\+\_\+test\+::create\+\_\+error\+\_\+response}} (const std\+::string \&message)
+\item 
+std\+::string \mbox{\hyperlink{namespacesolar__test_aea639a0871c820f3e667058d87b733d6}{solar\+\_\+test\+::create\+\_\+server\+\_\+error\+\_\+response}} ()
+\item 
+std\+::string \mbox{\hyperlink{namespacesolar__test_a289e4a59f99722995709ec5171dd6226}{solar\+\_\+test\+::create\+\_\+ephemeris\+\_\+binary\+\_\+data}} ()
+\item 
+std\+::string \mbox{\hyperlink{namespacesolar__test_af8fee6b1f6953633d1647fd82c98e29b}{solar\+\_\+test\+::create\+\_\+ephemeris\+\_\+json\+\_\+data}} ()
+\item 
+std\+::string \mbox{\hyperlink{namespacesolar__test_a8811bd9620946d5f5899406a349da42a}{solar\+\_\+test\+::create\+\_\+historical\+\_\+ephemeris\+\_\+data}} ()
+\item 
+std\+::string \mbox{\hyperlink{namespacesolar__test_ac1d44cb4651963bd1db450f920780042}{solar\+\_\+test\+::create\+\_\+valid\+\_\+cache\+\_\+binary}} ()
+\item 
+std\+::string \mbox{\hyperlink{namespacesolar__test_a652af522129ee14e6778eef0d4ee085a}{solar\+\_\+test\+::create\+\_\+valid\+\_\+cache\+\_\+json}} ()
+\item 
+std\+::string \mbox{\hyperlink{namespacesolar__test_a044b534a4a0de19c8e3feb9036f8f09f}{solar\+\_\+test\+::create\+\_\+corrupted\+\_\+header\+\_\+cache}} ()
+\item 
+std\+::string \mbox{\hyperlink{namespacesolar__test_ad89b9eebd42886b0ec2b5b8578e4d4c0}{solar\+\_\+test\+::create\+\_\+corrupted\+\_\+body\+\_\+cache}} ()
+\item 
+std\+::string \mbox{\hyperlink{namespacesolar__test_a6cc7249430b5b4088c2c1c30c40ae1f3}{solar\+\_\+test\+::create\+\_\+realistic\+\_\+body\+\_\+data}} (const std\+::string \&body)
+\item 
+std\+::string \mbox{\hyperlink{namespacesolar__test_ad2da97b7c7ab7fdd55170a9466a5a0d4}{solar\+\_\+test\+::create\+\_\+orbital\+\_\+elements\+\_\+data}} ()
+\item 
+std\+::string \mbox{\hyperlink{namespacesolar__test_acba79000242413192bee10f9d2d45903}{solar\+\_\+test\+::create\+\_\+physical\+\_\+parameters\+\_\+data}} ()
+\end{DoxyCompactItemize}

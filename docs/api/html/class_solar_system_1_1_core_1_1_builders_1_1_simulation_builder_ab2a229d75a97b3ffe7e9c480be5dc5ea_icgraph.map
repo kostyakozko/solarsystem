@@ -1,0 +1,9 @@
+<map id="SolarSystem::Core::Builders::SimulationBuilder::build" name="SolarSystem::Core::Builders::SimulationBuilder::build">
+<area shape="rect" id="Node000001" title="Build the configured simulation engine." alt="" coords="231,71,408,126"/>
+<area shape="rect" id="Node000002" href="$class_solar_system_1_1_core_1_1_builders_1_1_simulation_builder.html#a23c4f0341625be4d5d7ad1e858469015" title="Build and immediately run the simulation." alt="" coords="5,5,183,61"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="215,71,182,62,184,56,217,66"/>
+<area shape="rect" id="Node000003" href="$class_simulation_step.html#a1179221d9a08b64d5aba7832972271ca" title="Execute the workflow step." alt="" coords="12,86,176,111"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="215,101,176,101,176,96,215,96"/>
+<area shape="rect" id="Node000004" href="$class_solar_system_a_p_i.html#ae62b5c5789c5e2880871005a9d244471" title="Handle simulation request." alt="" coords="12,136,176,176"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="217,127,177,137,176,132,215,122"/>
+</map>

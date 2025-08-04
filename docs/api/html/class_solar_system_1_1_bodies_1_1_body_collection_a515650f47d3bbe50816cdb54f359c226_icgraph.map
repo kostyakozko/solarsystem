@@ -1,0 +1,7 @@
+<map id="SolarSystem::Bodies::BodyCollection::total_mass" name="SolarSystem::Bodies::BodyCollection::total_mass">
+<area shape="rect" id="Node000001" title=" " alt="" coords="233,39,422,79"/>
+<area shape="rect" id="Node000002" href="$class_solar_system_1_1_bodies_1_1_body_collection.html#a96c4ee3e6780d5a07f12866705074646" title=" " alt="" coords="5,5,185,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="217,46,185,41,186,36,218,41"/>
+<area shape="rect" id="Node000003" href="$class_solar_system_1_1_bodies_1_1_body_collection.html#a98066436563d88f49a8ada820270dcee" title=" " alt="" coords="11,71,179,111"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="218,77,180,82,179,77,217,71"/>
+</map>

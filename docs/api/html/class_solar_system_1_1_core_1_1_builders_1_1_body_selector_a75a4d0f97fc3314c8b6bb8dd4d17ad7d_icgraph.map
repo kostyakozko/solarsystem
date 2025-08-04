@@ -1,0 +1,10 @@
+<map id="SolarSystem::Core::Builders::BodySelector::count" name="SolarSystem::Core::Builders::BodySelector::count">
+<area shape="rect" id="Node000001" title="Get count of selected bodies." alt="" coords="546,5,701,61"/>
+<area shape="rect" id="Node000002" href="$class_data_fetcher.html#ae5ca21c3de61bca83820fc3dcb6dce8f" title="Show current cache status with modern formatting." alt="" coords="323,20,498,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="530,36,499,36,499,30,530,30"/>
+<area shape="rect" id="Node000003" href="$fetch_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title="Modern main function using RAII and structured error handling." alt="" coords="5,20,55,46"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="307,36,55,36,55,30,307,30"/>
+<area shape="rect" id="Node000004" href="$class_data_fetcher.html#a756d8cf8a7756343b9f1a1c9054fbd0a" title="Update ephemeris data with progress monitoring." alt="" coords="103,46,275,71"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="308,48,276,51,275,46,307,42"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="89,45,55,40,56,34,90,40"/>
+</map>

@@ -1,0 +1,9 @@
+<map id="SolarSystem::Testing::RegressionDetector::RegressionDetector" name="SolarSystem::Testing::RegressionDetector::RegressionDetector">
+<area shape="rect" id="Node000001" title="Create regression detector with configuration." alt="" coords="5,45,152,101"/>
+<area shape="rect" id="Node000002" href="$class_solar_system_1_1_testing_1_1_regression_detector.html#a90e8c7986fdda0697bba6350041d45ae" title="Get configuration." alt="" coords="200,5,346,61"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="152,55,184,49,185,54,153,61"/>
+<area shape="rect" id="Node000003" href="$class_solar_system_1_1_testing_1_1_regression_detector.html#ad1ff9222f07525052a8acac43fb25b83" title="Load baseline data from storage." alt="" coords="200,85,346,141"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="153,86,185,92,184,98,152,91"/>
+<area shape="rect" id="Node000004" href="$struct_solar_system_1_1_testing_1_1_performance_baseline.html#a3a3e7c90fb469be99a4f5467eed6e8ca" title="Create from JSON string." alt="" coords="394,85,547,141"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="346,110,378,110,378,116,346,116"/>
+</map>

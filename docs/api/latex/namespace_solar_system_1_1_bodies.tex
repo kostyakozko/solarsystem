@@ -1,0 +1,256 @@
+\doxysection{Solar\+System\+::Bodies Namespace Reference}
+\hypertarget{namespace_solar_system_1_1_bodies}{}\label{namespace_solar_system_1_1_bodies}\index{SolarSystem::Bodies@{SolarSystem::Bodies}}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_collection}{Body\+Collection}}
+\begin{DoxyCompactList}\small\item\em Modern container for managing collections of celestial bodies. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory}{Body\+Factory}}
+\begin{DoxyCompactList}\small\item\em Factory for creating celestial bodies from various data sources. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_celestial_body}{Celestial\+Body}}
+\begin{DoxyCompactList}\small\item\em Modern celestial body class with RAII and strong typing. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum class \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdc}{Body\+Type}} \{ \newline
+\mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca26f93e6e68e28a698377e941cb59f29a}{Star}}
+, \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca9ffc5da794071c4508a5bc2fe0422e46}{Planet}}
+, \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdcad502a50ed945d5fca74e0105575b5b34}{Moon}}
+, \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca678839b1336623a3763d5e3d2697dfc7}{Dwarf\+Planet}}
+, \newline
+\mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca7bf3c00aa34e8bfd212a5ae503d54ecf}{Asteroid}}
+, \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca0978cd0d2a59acbc551a384e4f639985}{Spacecraft}}
+, \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca88183b946cc5f0e8c96b2e66e1c74a7e}{Unknown}}
+ \}
+\begin{DoxyCompactList}\small\item\em Classification of celestial body types. \end{DoxyCompactList}\item 
+enum class \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121}{Body\+Priority}} \{ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121ae3c1a1af4e04e769b2afd0e68645a308}{Essential}}
+, \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121a0ab984d91ab0a037bdf692bf0e73c349}{Important}}
+, \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121aebb061953c0454b2c8ee7b0ac615ebcd}{Optional}}
+ \}
+\begin{DoxyCompactList}\small\item\em Priority classification for smart body handling. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+std\+::optional$<$ int $>$ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a9ebc51ae94d5b88aa23a6a473fc76095}{get\+\_\+jpl\+\_\+id\+\_\+for\+\_\+body\+\_\+name}} (std\+::string\+\_\+view name) noexcept
+\begin{DoxyCompactList}\small\item\em Get \doxylink{namespace_solar_system_1_1_j_p_l}{JPL} ID for body name. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdc}{Body\+Type}} \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a643d1f576850135f355e1f960d2ebde4}{get\+\_\+body\+\_\+type\+\_\+for\+\_\+jpl\+\_\+id}} (int jpl\+\_\+id) noexcept
+\begin{DoxyCompactList}\small\item\em Get \doxylink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdc}{Body\+Type} for \doxylink{namespace_solar_system_1_1_j_p_l}{JPL} ID. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121}{Body\+Priority}} \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a515be53c365a51885a9059134f1b047b}{get\+\_\+priority\+\_\+for\+\_\+body\+\_\+type}} (\mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdc}{Body\+Type}} type) noexcept
+\begin{DoxyCompactList}\small\item\em Get \doxylink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121}{Body\+Priority} for \doxylink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdc}{Body\+Type}. \end{DoxyCompactList}\item 
+std\+::string\+\_\+view \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a0a4fd48e68317f900e8becc17cde6cd8}{to\+\_\+string}} (\mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdc}{Body\+Type}} type) noexcept
+\begin{DoxyCompactList}\small\item\em Convert \doxylink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdc}{Body\+Type} to string representation. \end{DoxyCompactList}\item 
+std\+::string\+\_\+view \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a5dde277ba1c382c6424492ae0cdea67d}{to\+\_\+string}} (\mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121}{Body\+Priority}} priority) noexcept
+\begin{DoxyCompactList}\small\item\em Convert \doxylink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121}{Body\+Priority} to string representation. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+const std\+::unordered\+\_\+map$<$ int, \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdc}{Body\+Type}} $>$ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_ab82c422d14abb4a3454760512b2d8337}{JPL\+\_\+\+ID\+\_\+\+TO\+\_\+\+TYPE}}
+\begin{DoxyCompactList}\small\item\em \doxylink{namespace_solar_system_1_1_j_p_l}{JPL} ID to \doxylink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdc}{Body\+Type} mapping Centralized mapping used throughout the system. \end{DoxyCompactList}\item 
+const std\+::unordered\+\_\+map$<$ std\+::string, int $>$ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a06c363c6776fa272ed96ead9d7967934}{BODY\+\_\+\+NAME\+\_\+\+TO\+\_\+\+JPL\+\_\+\+ID}}
+\begin{DoxyCompactList}\small\item\em Body name to \doxylink{namespace_solar_system_1_1_j_p_l}{JPL} ID mapping Centralized mapping for all supported celestial bodies. \end{DoxyCompactList}\item 
+const std\+::unordered\+\_\+map$<$ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdc}{Body\+Type}}, \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121}{Body\+Priority}} $>$ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a07f157fa67e2d21c4d1dd3ec4693d56d}{TYPE\+\_\+\+TO\+\_\+\+PRIORITY}}
+\begin{DoxyCompactList}\small\item\em \doxylink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdc}{Body\+Type} to \doxylink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121}{Body\+Priority} mapping Defines default priority levels for each body type. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\label{doc-enum-members}
+\Hypertarget{namespace_solar_system_1_1_bodies_doc-enum-members}
+\doxysubsection{Enumeration Type Documentation}
+\Hypertarget{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121}\index{SolarSystem::Bodies@{SolarSystem::Bodies}!BodyPriority@{BodyPriority}}
+\index{BodyPriority@{BodyPriority}!SolarSystem::Bodies@{SolarSystem::Bodies}}
+\doxysubsubsection{\texorpdfstring{BodyPriority}{BodyPriority}}
+{\footnotesize\ttfamily \label{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121} 
+enum class \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121}{Solar\+System\+::\+Bodies\+::\+Body\+Priority}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+
+
+Priority classification for smart body handling. 
+
+\begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Essential@{Essential}!SolarSystem::Bodies@{SolarSystem::Bodies}}\index{SolarSystem::Bodies@{SolarSystem::Bodies}!Essential@{Essential}}}\Hypertarget{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121ae3c1a1af4e04e769b2afd0e68645a308}\label{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121ae3c1a1af4e04e769b2afd0e68645a308} 
+Essential&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Important@{Important}!SolarSystem::Bodies@{SolarSystem::Bodies}}\index{SolarSystem::Bodies@{SolarSystem::Bodies}!Important@{Important}}}\Hypertarget{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121a0ab984d91ab0a037bdf692bf0e73c349}\label{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121a0ab984d91ab0a037bdf692bf0e73c349} 
+Important&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Optional@{Optional}!SolarSystem::Bodies@{SolarSystem::Bodies}}\index{SolarSystem::Bodies@{SolarSystem::Bodies}!Optional@{Optional}}}\Hypertarget{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121aebb061953c0454b2c8ee7b0ac615ebcd}\label{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121aebb061953c0454b2c8ee7b0ac615ebcd} 
+Optional&\\
+\hline
+
+\end{DoxyEnumFields}
+\Hypertarget{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdc}\index{SolarSystem::Bodies@{SolarSystem::Bodies}!BodyType@{BodyType}}
+\index{BodyType@{BodyType}!SolarSystem::Bodies@{SolarSystem::Bodies}}
+\doxysubsubsection{\texorpdfstring{BodyType}{BodyType}}
+{\footnotesize\ttfamily \label{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdc} 
+enum class \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdc}{Solar\+System\+::\+Bodies\+::\+Body\+Type}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+
+
+Classification of celestial body types. 
+
+\begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Star@{Star}!SolarSystem::Bodies@{SolarSystem::Bodies}}\index{SolarSystem::Bodies@{SolarSystem::Bodies}!Star@{Star}}}\Hypertarget{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca26f93e6e68e28a698377e941cb59f29a}\label{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca26f93e6e68e28a698377e941cb59f29a} 
+Star&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Planet@{Planet}!SolarSystem::Bodies@{SolarSystem::Bodies}}\index{SolarSystem::Bodies@{SolarSystem::Bodies}!Planet@{Planet}}}\Hypertarget{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca9ffc5da794071c4508a5bc2fe0422e46}\label{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca9ffc5da794071c4508a5bc2fe0422e46} 
+Planet&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Moon@{Moon}!SolarSystem::Bodies@{SolarSystem::Bodies}}\index{SolarSystem::Bodies@{SolarSystem::Bodies}!Moon@{Moon}}}\Hypertarget{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdcad502a50ed945d5fca74e0105575b5b34}\label{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdcad502a50ed945d5fca74e0105575b5b34} 
+Moon&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{DwarfPlanet@{DwarfPlanet}!SolarSystem::Bodies@{SolarSystem::Bodies}}\index{SolarSystem::Bodies@{SolarSystem::Bodies}!DwarfPlanet@{DwarfPlanet}}}\Hypertarget{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca678839b1336623a3763d5e3d2697dfc7}\label{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca678839b1336623a3763d5e3d2697dfc7} 
+Dwarf\+Planet&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Asteroid@{Asteroid}!SolarSystem::Bodies@{SolarSystem::Bodies}}\index{SolarSystem::Bodies@{SolarSystem::Bodies}!Asteroid@{Asteroid}}}\Hypertarget{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca7bf3c00aa34e8bfd212a5ae503d54ecf}\label{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca7bf3c00aa34e8bfd212a5ae503d54ecf} 
+Asteroid&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Spacecraft@{Spacecraft}!SolarSystem::Bodies@{SolarSystem::Bodies}}\index{SolarSystem::Bodies@{SolarSystem::Bodies}!Spacecraft@{Spacecraft}}}\Hypertarget{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca0978cd0d2a59acbc551a384e4f639985}\label{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca0978cd0d2a59acbc551a384e4f639985} 
+Spacecraft&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Unknown@{Unknown}!SolarSystem::Bodies@{SolarSystem::Bodies}}\index{SolarSystem::Bodies@{SolarSystem::Bodies}!Unknown@{Unknown}}}\Hypertarget{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca88183b946cc5f0e8c96b2e66e1c74a7e}\label{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca88183b946cc5f0e8c96b2e66e1c74a7e} 
+Unknown&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\label{doc-func-members}
+\Hypertarget{namespace_solar_system_1_1_bodies_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{namespace_solar_system_1_1_bodies_a643d1f576850135f355e1f960d2ebde4}\index{SolarSystem::Bodies@{SolarSystem::Bodies}!get\_body\_type\_for\_jpl\_id@{get\_body\_type\_for\_jpl\_id}}
+\index{get\_body\_type\_for\_jpl\_id@{get\_body\_type\_for\_jpl\_id}!SolarSystem::Bodies@{SolarSystem::Bodies}}
+\doxysubsubsection{\texorpdfstring{get\_body\_type\_for\_jpl\_id()}{get\_body\_type\_for\_jpl\_id()}}
+{\footnotesize\ttfamily \label{namespace_solar_system_1_1_bodies_a643d1f576850135f355e1f960d2ebde4} 
+\mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdc}{Body\+Type}} Solar\+System\+::\+Bodies\+::get\+\_\+body\+\_\+type\+\_\+for\+\_\+jpl\+\_\+id (\begin{DoxyParamCaption}\item[{int}]{jpl\+\_\+id}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}, {\ttfamily [noexcept]}}
+
+
+
+Get \doxylink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdc}{Body\+Type} for \doxylink{namespace_solar_system_1_1_j_p_l}{JPL} ID. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespace_solar_system_1_1_bodies_a643d1f576850135f355e1f960d2ebde4_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespace_solar_system_1_1_bodies_a9ebc51ae94d5b88aa23a6a473fc76095}\index{SolarSystem::Bodies@{SolarSystem::Bodies}!get\_jpl\_id\_for\_body\_name@{get\_jpl\_id\_for\_body\_name}}
+\index{get\_jpl\_id\_for\_body\_name@{get\_jpl\_id\_for\_body\_name}!SolarSystem::Bodies@{SolarSystem::Bodies}}
+\doxysubsubsection{\texorpdfstring{get\_jpl\_id\_for\_body\_name()}{get\_jpl\_id\_for\_body\_name()}}
+{\footnotesize\ttfamily \label{namespace_solar_system_1_1_bodies_a9ebc51ae94d5b88aa23a6a473fc76095} 
+std\+::optional$<$ int $>$ Solar\+System\+::\+Bodies\+::get\+\_\+jpl\+\_\+id\+\_\+for\+\_\+body\+\_\+name (\begin{DoxyParamCaption}\item[{std\+::string\+\_\+view}]{name}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}, {\ttfamily [noexcept]}}
+
+
+
+Get \doxylink{namespace_solar_system_1_1_j_p_l}{JPL} ID for body name. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespace_solar_system_1_1_bodies_a9ebc51ae94d5b88aa23a6a473fc76095_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespace_solar_system_1_1_bodies_a515be53c365a51885a9059134f1b047b}\index{SolarSystem::Bodies@{SolarSystem::Bodies}!get\_priority\_for\_body\_type@{get\_priority\_for\_body\_type}}
+\index{get\_priority\_for\_body\_type@{get\_priority\_for\_body\_type}!SolarSystem::Bodies@{SolarSystem::Bodies}}
+\doxysubsubsection{\texorpdfstring{get\_priority\_for\_body\_type()}{get\_priority\_for\_body\_type()}}
+{\footnotesize\ttfamily \label{namespace_solar_system_1_1_bodies_a515be53c365a51885a9059134f1b047b} 
+\mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121}{Body\+Priority}} Solar\+System\+::\+Bodies\+::get\+\_\+priority\+\_\+for\+\_\+body\+\_\+type (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdc}{Body\+Type}}}]{type}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}, {\ttfamily [noexcept]}}
+
+
+
+Get \doxylink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121}{Body\+Priority} for \doxylink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdc}{Body\+Type}. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespace_solar_system_1_1_bodies_a515be53c365a51885a9059134f1b047b_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespace_solar_system_1_1_bodies_a5dde277ba1c382c6424492ae0cdea67d}\index{SolarSystem::Bodies@{SolarSystem::Bodies}!to\_string@{to\_string}}
+\index{to\_string@{to\_string}!SolarSystem::Bodies@{SolarSystem::Bodies}}
+\doxysubsubsection{\texorpdfstring{to\_string()}{to\_string()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{namespace_solar_system_1_1_bodies_a5dde277ba1c382c6424492ae0cdea67d} 
+std\+::string\+\_\+view Solar\+System\+::\+Bodies\+::to\+\_\+string (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121}{Body\+Priority}}}]{priority}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [noexcept]}}
+
+
+
+Convert \doxylink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121}{Body\+Priority} to string representation. 
+
+\Hypertarget{namespace_solar_system_1_1_bodies_a0a4fd48e68317f900e8becc17cde6cd8}\index{SolarSystem::Bodies@{SolarSystem::Bodies}!to\_string@{to\_string}}
+\index{to\_string@{to\_string}!SolarSystem::Bodies@{SolarSystem::Bodies}}
+\doxysubsubsection{\texorpdfstring{to\_string()}{to\_string()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{namespace_solar_system_1_1_bodies_a0a4fd48e68317f900e8becc17cde6cd8} 
+std\+::string\+\_\+view Solar\+System\+::\+Bodies\+::to\+\_\+string (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdc}{Body\+Type}}}]{type}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [noexcept]}}
+
+
+
+Convert \doxylink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdc}{Body\+Type} to string representation. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespace_solar_system_1_1_bodies_a0a4fd48e68317f900e8becc17cde6cd8_icgraph}
+\end{center}
+\end{figure}
+
+
+\label{doc-var-members}
+\Hypertarget{namespace_solar_system_1_1_bodies_doc-var-members}
+\doxysubsection{Variable Documentation}
+\Hypertarget{namespace_solar_system_1_1_bodies_a06c363c6776fa272ed96ead9d7967934}\index{SolarSystem::Bodies@{SolarSystem::Bodies}!BODY\_NAME\_TO\_JPL\_ID@{BODY\_NAME\_TO\_JPL\_ID}}
+\index{BODY\_NAME\_TO\_JPL\_ID@{BODY\_NAME\_TO\_JPL\_ID}!SolarSystem::Bodies@{SolarSystem::Bodies}}
+\doxysubsubsection{\texorpdfstring{BODY\_NAME\_TO\_JPL\_ID}{BODY\_NAME\_TO\_JPL\_ID}}
+{\footnotesize\ttfamily \label{namespace_solar_system_1_1_bodies_a06c363c6776fa272ed96ead9d7967934} 
+const std\+::unordered\+\_\+map$<$std\+::string, int$>$ Solar\+System\+::\+Bodies\+::\+BODY\+\_\+\+NAME\+\_\+\+TO\+\_\+\+JPL\+\_\+\+ID\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Body name to \doxylink{namespace_solar_system_1_1_j_p_l}{JPL} ID mapping Centralized mapping for all supported celestial bodies. 
+
+\Hypertarget{namespace_solar_system_1_1_bodies_ab82c422d14abb4a3454760512b2d8337}\index{SolarSystem::Bodies@{SolarSystem::Bodies}!JPL\_ID\_TO\_TYPE@{JPL\_ID\_TO\_TYPE}}
+\index{JPL\_ID\_TO\_TYPE@{JPL\_ID\_TO\_TYPE}!SolarSystem::Bodies@{SolarSystem::Bodies}}
+\doxysubsubsection{\texorpdfstring{JPL\_ID\_TO\_TYPE}{JPL\_ID\_TO\_TYPE}}
+{\footnotesize\ttfamily \label{namespace_solar_system_1_1_bodies_ab82c422d14abb4a3454760512b2d8337} 
+const std\+::unordered\+\_\+map$<$int, \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdc}{Body\+Type}}$>$ Solar\+System\+::\+Bodies\+::\+JPL\+\_\+\+ID\+\_\+\+TO\+\_\+\+TYPE\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\doxylink{namespace_solar_system_1_1_j_p_l}{JPL} ID to \doxylink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdc}{Body\+Type} mapping Centralized mapping used throughout the system. 
+
+\Hypertarget{namespace_solar_system_1_1_bodies_a07f157fa67e2d21c4d1dd3ec4693d56d}\index{SolarSystem::Bodies@{SolarSystem::Bodies}!TYPE\_TO\_PRIORITY@{TYPE\_TO\_PRIORITY}}
+\index{TYPE\_TO\_PRIORITY@{TYPE\_TO\_PRIORITY}!SolarSystem::Bodies@{SolarSystem::Bodies}}
+\doxysubsubsection{\texorpdfstring{TYPE\_TO\_PRIORITY}{TYPE\_TO\_PRIORITY}}
+{\footnotesize\ttfamily \label{namespace_solar_system_1_1_bodies_a07f157fa67e2d21c4d1dd3ec4693d56d} 
+const std\+::unordered\+\_\+map$<$\mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdc}{Body\+Type}}, \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121}{Body\+Priority}}$>$ Solar\+System\+::\+Bodies\+::\+TYPE\+\_\+\+TO\+\_\+\+PRIORITY\hspace{0.3cm}{\ttfamily [inline]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{=\ \{}
+\DoxyCodeLine{\ \ \ \ \{\mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca26f93e6e68e28a698377e941cb59f29a}{BodyType::Star}},\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121ae3c1a1af4e04e769b2afd0e68645a308}{BodyPriority::Essential}}\},\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\ \ \ \ \{\mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca9ffc5da794071c4508a5bc2fe0422e46}{BodyType::Planet}},\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121ae3c1a1af4e04e769b2afd0e68645a308}{BodyPriority::Essential}}\},\ \ \ \ \ \ \ }
+\DoxyCodeLine{\ \ \ \ \{\mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdcad502a50ed945d5fca74e0105575b5b34}{BodyType::Moon}},\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121a0ab984d91ab0a037bdf692bf0e73c349}{BodyPriority::Important}}\},\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\ \ \ \ \{\mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca678839b1336623a3763d5e3d2697dfc7}{BodyType::DwarfPlanet}},\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121a0ab984d91ab0a037bdf692bf0e73c349}{BodyPriority::Important}}\},\ \ }
+\DoxyCodeLine{\ \ \ \ \{\mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca7bf3c00aa34e8bfd212a5ae503d54ecf}{BodyType::Asteroid}},\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121aebb061953c0454b2c8ee7b0ac615ebcd}{BodyPriority::Optional}}\},\ \ \ \ \ \ }
+\DoxyCodeLine{\ \ \ \ \{\mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca0978cd0d2a59acbc551a384e4f639985}{BodyType::Spacecraft}},\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121aebb061953c0454b2c8ee7b0ac615ebcd}{BodyPriority::Optional}}\},\ \ \ \ }
+\DoxyCodeLine{\ \ \ \ \{\mbox{\hyperlink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdca88183b946cc5f0e8c96b2e66e1c74a7e}{BodyType::Unknown}},\ \mbox{\hyperlink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121aebb061953c0454b2c8ee7b0ac615ebcd}{BodyPriority::Optional}}\}\ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+\doxylink{namespace_solar_system_1_1_bodies_a4dd5da0acaa6bc08959846c56815cbdc}{Body\+Type} to \doxylink{namespace_solar_system_1_1_bodies_a2943eb1a1ee861a12a67817b3f735121}{Body\+Priority} mapping Defines default priority levels for each body type. 
+

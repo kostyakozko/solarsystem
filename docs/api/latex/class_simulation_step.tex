@@ -1,0 +1,104 @@
+\doxysection{Simulation\+Step Class Reference}
+\hypertarget{class_simulation_step}{}\label{class_simulation_step}\index{SimulationStep@{SimulationStep}}
+
+
+Simulation workflow step.  
+
+
+
+
+Inheritance diagram for Simulation\+Step\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=162pt]{class_simulation_step__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Simulation\+Step\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=162pt]{class_simulation_step__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_step_result}{Step\+Result}} \mbox{\hyperlink{class_simulation_step_a1179221d9a08b64d5aba7832972271ca}{execute}} (const \mbox{\hyperlink{struct_launcher_config}{Launcher\+Config}} \&config, \mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory}{Solar\+System\+::\+Bodies\+::\+Body\+Factory}} \&) override
+\begin{DoxyCompactList}\small\item\em Execute the workflow step. \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{class_simulation_step_a7e1f8a0a74e3e19146682c436fc4ff97}{name}} () const override
+\begin{DoxyCompactList}\small\item\em Get step name for display. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_simulation_step_a088440ff58c3d7be484b41720ab28fb2}{should\+\_\+skip}} (const \mbox{\hyperlink{struct_launcher_config}{Launcher\+Config}} \&config) const override
+\begin{DoxyCompactList}\small\item\em Check if step should be skipped. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_workflow_step}{Workflow\+Step}}}
+\begin{DoxyCompactItemize}
+\item 
+virtual \mbox{\hyperlink{class_workflow_step_a7ec96dc07ec5dd017c6e798d16ee95d8}{\texorpdfstring{$\sim$}{\string~}\+Workflow\+Step}} ()=default
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Simulation workflow step. 
+
+\label{doc-func-members}
+\Hypertarget{class_simulation_step_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_simulation_step_a1179221d9a08b64d5aba7832972271ca}\index{SimulationStep@{SimulationStep}!execute@{execute}}
+\index{execute@{execute}!SimulationStep@{SimulationStep}}
+\doxysubsubsection{\texorpdfstring{execute()}{execute()}}
+{\footnotesize\ttfamily \label{class_simulation_step_a1179221d9a08b64d5aba7832972271ca} 
+\mbox{\hyperlink{struct_step_result}{Step\+Result}} Simulation\+Step\+::execute (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_launcher_config}{Launcher\+Config}} \&}]{config}{, }\item[{\mbox{\hyperlink{class_solar_system_1_1_bodies_1_1_body_factory}{Solar\+System\+::\+Bodies\+::\+Body\+Factory}} \&}]{factory}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Execute the workflow step. 
+
+
+
+Implements \mbox{\hyperlink{class_workflow_step_a5a38d9aa7c33061a9cd4437bfd77fd6c}{Workflow\+Step}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_simulation_step_a1179221d9a08b64d5aba7832972271ca_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_simulation_step_a7e1f8a0a74e3e19146682c436fc4ff97}\index{SimulationStep@{SimulationStep}!name@{name}}
+\index{name@{name}!SimulationStep@{SimulationStep}}
+\doxysubsubsection{\texorpdfstring{name()}{name()}}
+{\footnotesize\ttfamily \label{class_simulation_step_a7e1f8a0a74e3e19146682c436fc4ff97} 
+std\+::string Simulation\+Step\+::name (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Get step name for display. 
+
+
+
+Implements \mbox{\hyperlink{class_workflow_step_a6ce48a4c84d866787a8271cd39dbbadc}{Workflow\+Step}}.
+
+\Hypertarget{class_simulation_step_a088440ff58c3d7be484b41720ab28fb2}\index{SimulationStep@{SimulationStep}!should\_skip@{should\_skip}}
+\index{should\_skip@{should\_skip}!SimulationStep@{SimulationStep}}
+\doxysubsubsection{\texorpdfstring{should\_skip()}{should\_skip()}}
+{\footnotesize\ttfamily \label{class_simulation_step_a088440ff58c3d7be484b41720ab28fb2} 
+bool Simulation\+Step\+::should\+\_\+skip (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_launcher_config}{Launcher\+Config}} \&}]{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Check if step should be skipped. 
+
+
+
+Reimplemented from \mbox{\hyperlink{class_workflow_step_a8cb863d9573533cf5011b493dc2dd82d}{Workflow\+Step}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/kostiantyn.\+kozko/tmp/solarsystem/apps/solar\+\_\+system\+\_\+launcher/\mbox{\hyperlink{launcher_8cpp}{launcher.\+cpp}}\end{DoxyCompactItemize}
