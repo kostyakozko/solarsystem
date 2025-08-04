@@ -19,8 +19,12 @@ CMakeCache.txt
 CMakeFiles/
 cmake_install.cmake
 Makefile
-*.cmake
+# Only ignore generated cmake files, not our cmake/ directory files
+/cmake_install.cmake
+**/CMakeFiles/
+**/CMakeCache.txt
 !CMakeLists.txt
+!cmake/*.cmake
 
 # IDE and editor files
 .vscode/
