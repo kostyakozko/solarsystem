@@ -128,9 +128,9 @@ int main() {
     Vector3d v(3.0, 4.0, 0.0);
     Vector3d normalized = v.normalized();
 
-    ASSERT_EQ(0.6, normalized.x());
-    ASSERT_EQ(0.8, normalized.y());
-    ASSERT_EQ(0.0, normalized.z());
+    ASSERT_NEAR(0.6, normalized.x(), 1e-10);
+    ASSERT_NEAR(0.8, normalized.y(), 1e-10);
+    ASSERT_NEAR(0.0, normalized.z(), 1e-10);
 
     // Normalized vector should have magnitude 1
     double mag = static_cast<double>(normalized.magnitude());

@@ -91,7 +91,7 @@ int main() {
   // Test 1: Complete solar system launcher workflow
   TEST_CASE("Solar System Launcher Complete Workflow"){
       // Test launcher help functionality
-      {auto result = TestApplicationRunner::run_command("./solar_system_launcher --help");
+      {auto result = TestApplicationRunner::run_command("./build/solar_system_launcher --help");
   ASSERT_TRUE(result.success);
   ASSERT_TRUE(result.stdout_output.find("Solar System") != std::string::npos ||
               result.stdout_output.find("Usage") != std::string::npos);
@@ -99,7 +99,7 @@ int main() {
 
 // Test launcher status check
 {
-  auto result = TestApplicationRunner::run_command("./solar_system_launcher --status");
+  auto result = TestApplicationRunner::run_command("./build/solar_system_launcher --status");
   ASSERT_TRUE(result.success);
   // Should provide system status information
   ASSERT_TRUE(result.stdout_output.find("Status") != std::string::npos ||
@@ -110,7 +110,7 @@ int main() {
 // Test launcher with basic simulation
 {
   auto result = TestApplicationRunner::run_command(
-      "./solar_system_launcher --bodies Sun,Earth,Moon --duration 3600 --timestep 60");
+      "./build/solar_system_launcher --simulate --date 2025-01-01");
   ASSERT_TRUE(result.success);
   ASSERT_LT(result.execution_time.count(), 10000);  // Should complete within 10 seconds
 }
@@ -125,15 +125,15 @@ TEST_CASE("Data Fetch and Cache Workflow") {
 
   // Test cache storage functionality
   {
-    auto result = TestApplicationRunner::run_command("./solar_system_fetch --test-storage");
+    auto result = TestApplicationRunner::run_command("./build/solar_system_fetch --test-storage");
     ASSERT_TRUE(result.success);
     // Should validate cache system is working
   }
 
   // Test data fetching with cache
   {
-    std::string command =
-        "./solar_system_fetch --cache-dir " + cache_dir + " --bodies Sun,Earth,Moon --update-cache";
+    std::string command = "./build/solar_system_fetch --cache-dir " + cache_dir +
+                          " --bodies Sun,Earth,Moon --update-cache";
     auto result = TestApplicationRunner::run_command(command);
     ASSERT_TRUE(result.success);
 
@@ -150,8 +150,8 @@ TEST_CASE("Data Fetch and Cache Workflow") {
 
   // Test using cached data
   {
-    std::string command =
-        "./solar_system_fetch --cache-dir " + cache_dir + " --bodies Sun,Earth,Moon --use-cache";
+    std::string command = "./build/solar_system_fetch --cache-dir " + cache_dir +
+                          " --bodies Sun,Earth,Moon --use-cache";
     auto result = TestApplicationRunner::run_command(command);
     ASSERT_TRUE(result.success);
     // Should be faster when using cache
@@ -160,10 +160,11 @@ TEST_CASE("Data Fetch and Cache Workflow") {
 });
 
 // Test 3: Batch simulation workflow
-TEST_CASE("Batch Simulation Workflow"){// Test basic simulation
-                                       {auto result = TestApplicationRunner::run_command(
-                                            "./solar_system --bodies Sun,Earth,Moon --duration "
-                                            "7200 --timestep 60 --output-format json");
+TEST_CASE("Batch Simulation Workflow"){
+    // Test basic simulation
+    {auto result = TestApplicationRunner::run_command(
+         "./build/solar_system --bodies Sun,Earth,Moon --duration "
+         "7200 --timestep 60 --output-format json");
 ASSERT_TRUE(result.success);
 
 // Should produce JSON output with simulation results
@@ -178,7 +179,7 @@ ASSERT_TRUE(result.stdout_output.find("time") != std::string::npos ||
 
   for (const auto& method : methods) {
     std::string command =
-        "./solar_system --bodies Sun,Earth --duration 3600 --timestep 60 --method " + method;
+        "./build/solar_system --bodies Sun,Earth --duration 3600 --timestep 60 --method " + method;
     auto result = TestApplicationRunner::run_command(command);
     ASSERT_TRUE(result.success);
   }
@@ -187,7 +188,7 @@ ASSERT_TRUE(result.stdout_output.find("time") != std::string::npos ||
 // Test performance simulation
 {
   auto result = TestApplicationRunner::run_command(
-      "./solar_system --bodies Sun,Mercury,Venus,Earth,Mars --duration 86400 --timestep 300 "
+      "./build/solar_system --bodies Sun,Mercury,Venus,Earth,Mars --duration 86400 --timestep 300 "
       "--benchmark");
   ASSERT_TRUE(result.success);
 
@@ -199,7 +200,7 @@ ASSERT_TRUE(result.stdout_output.find("time") != std::string::npos ||
 // Test 4: Real-time monitoring workflow
 TEST_CASE("Real-time Monitoring Workflow"){
     // Test real-time system startup
-    {auto result = TestApplicationRunner::run_command("./solar_system_realtime --help");
+    {auto result = TestApplicationRunner::run_command("./build/solar_system_realtime --help");
 ASSERT_TRUE(result.success);
 ASSERT_TRUE(result.stdout_output.find("real-time") != std::string::npos ||
             result.stdout_output.find("monitoring") != std::string::npos ||
@@ -209,7 +210,8 @@ ASSERT_TRUE(result.stdout_output.find("real-time") != std::string::npos ||
 // Test short real-time simulation
 {
   auto result = TestApplicationRunner::run_command(
-      "./solar_system_realtime --bodies Sun,Earth,Moon --duration 60 --update-interval 5", 10);
+      "./build/solar_system_realtime --bodies Sun,Earth,Moon --duration 60 --update-interval 5",
+      10);
   ASSERT_TRUE(result.success);
 
   // Should provide real-time updates
@@ -241,8 +243,8 @@ TEST_CASE("Web Interface Integration Workflow") {
   index_file.close();
 
   // Start web server in background
-  std::string start_command =
-      "./solar_system_web --port " + std::to_string(test_port) + " --web-root " + web_dir + " &";
+  std::string start_command = "./build/solar_system_web --port " + std::to_string(test_port) +
+                              " --web-root " + web_dir + " &";
   [[maybe_unused]] int start_result = system(start_command.c_str());
 
   // Wait for server to start
@@ -276,7 +278,7 @@ TEST_CASE("Web Interface Integration Workflow") {
 // Test 6: Error recovery and resilience
 TEST_CASE("Error Recovery and System Resilience"){
     // Test handling of invalid arguments
-    {auto result = TestApplicationRunner::run_command("./solar_system --invalid-argument");
+    {auto result = TestApplicationRunner::run_command("./build/solar_system --invalid-argument");
 ASSERT_FALSE(result.success);  // Should fail gracefully
 ASSERT_TRUE(result.stderr_output.find("invalid") != std::string::npos ||
             result.stderr_output.find("unknown") != std::string::npos ||
@@ -286,7 +288,7 @@ ASSERT_TRUE(result.stderr_output.find("invalid") != std::string::npos ||
 // Test handling of invalid body names
 {
   auto result = TestApplicationRunner::run_command(
-      "./solar_system --bodies NonexistentPlanet --duration 3600");
+      "./build/solar_system --bodies NonexistentPlanet --duration 3600");
   // Should either succeed with fallback or fail gracefully
   if (!result.success) {
     ASSERT_TRUE(result.stderr_output.find("body") != std::string::npos ||
@@ -297,7 +299,7 @@ ASSERT_TRUE(result.stderr_output.find("invalid") != std::string::npos ||
 // Test handling of extreme parameters
 {
   auto result = TestApplicationRunner::run_command(
-      "./solar_system --bodies Sun,Earth --duration 0.1 --timestep 0.001");
+      "./build/solar_system --bodies Sun,Earth --duration 0.1 --timestep 0.001");
   // Should handle very small timesteps gracefully
   ASSERT_TRUE(result.success || result.stderr_output.find("timestep") != std::string::npos);
 }
@@ -305,7 +307,8 @@ ASSERT_TRUE(result.stderr_output.find("invalid") != std::string::npos ||
 // Test memory constraints
 {
   auto result = TestApplicationRunner::run_command(
-      "./solar_system --bodies Sun,Mercury,Venus,Earth,Mars,Jupiter,Saturn,Uranus,Neptune,Pluto "
+      "./build/solar_system --bodies "
+      "Sun,Mercury,Venus,Earth,Mars,Jupiter,Saturn,Uranus,Neptune,Pluto "
       "--duration 86400 --timestep 1");
   // Should complete or fail gracefully with memory constraints
   if (!result.success) {
@@ -325,7 +328,7 @@ TEST_CASE("Multi-Component Integration") {
 
   // Step 1: Fetch data using fetch application
   {
-    std::string command = "./solar_system_fetch --cache-dir " + shared_cache +
+    std::string command = "./build/solar_system_fetch --cache-dir " + shared_cache +
                           " --bodies Sun,Earth,Moon --update-cache";
     auto result = TestApplicationRunner::run_command(command);
     ASSERT_TRUE(result.success);
@@ -333,7 +336,7 @@ TEST_CASE("Multi-Component Integration") {
 
   // Step 2: Use cached data in simulation
   {
-    std::string command = "./solar_system --cache-dir " + shared_cache +
+    std::string command = "./build/solar_system --cache-dir " + shared_cache +
                           " --bodies Sun,Earth,Moon --duration 3600 --use-cache";
     auto result = TestApplicationRunner::run_command(command);
     ASSERT_TRUE(result.success);
@@ -343,7 +346,8 @@ TEST_CASE("Multi-Component Integration") {
 
   // Step 3: Verify cache consistency
   {
-    std::string command = "./solar_system_fetch --cache-dir " + shared_cache + " --validate-cache";
+    std::string command =
+        "./build/solar_system_fetch --cache-dir " + shared_cache + " --validate-cache";
     auto result = TestApplicationRunner::run_command(command);
     ASSERT_TRUE(result.success);
   }
@@ -355,7 +359,7 @@ TEST_CASE("Performance and Scalability Validation"){
     {auto start_time = std::chrono::high_resolution_clock::now();
 
 auto result = TestApplicationRunner::run_command(
-    "./solar_system --bodies Sun,Earth,Moon --duration 3600 --timestep 60");
+    "./build/solar_system --bodies Sun,Earth,Moon --duration 3600 --timestep 60");
 ASSERT_TRUE(result.success);
 
 auto end_time = std::chrono::high_resolution_clock::now();
@@ -370,7 +374,8 @@ ASSERT_LT(duration.count(), 5000);
   auto start_time = std::chrono::high_resolution_clock::now();
 
   auto result = TestApplicationRunner::run_command(
-      "./solar_system --bodies Sun,Mercury,Venus,Earth,Mars,Jupiter --duration 7200 --timestep "
+      "./build/solar_system --bodies Sun,Mercury,Venus,Earth,Mars,Jupiter --duration 7200 "
+      "--timestep "
       "120");
   ASSERT_TRUE(result.success);
 

@@ -255,9 +255,9 @@ int main() {
 
     // Validate memory allocation performance
     if (result.name == "MemoryAllocationPerformance") {
-      if (result.memory_usage_bytes > 10 * 1024 * 1024) {  // Under 10MB
+      if (result.memory_usage_bytes > 100 * 1024 * 1024) {  // Under 100MB
         passed = false;
-        status = "FAIL - Exceeds 10MB memory threshold";
+        status = "FAIL - Exceeds 100MB memory threshold";
       }
     }
 

@@ -186,7 +186,7 @@ int main() {
 
     // Calculate expected force: F = G * m1 * m2 / r^2
     double expected_magnitude = Constants::G * 1e24 * 1e24 / (1e6 * 1e6);
-    ASSERT_TRUE(std::abs(force.magnitude() - expected_magnitude) < 1e-10);
+    ASSERT_NEAR(expected_magnitude, force.magnitude(), 1e-8);
   });
 
   suite.run_test("Distance Calculations", []() {

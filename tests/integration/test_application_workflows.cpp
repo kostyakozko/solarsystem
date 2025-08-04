@@ -259,11 +259,11 @@ int main() {
   TEST_CASE("Application Startup and Initialization") {
     // Test each application can start and initialize properly
     std::vector<std::pair<std::string, std::string>> applications = {
-        {"./solar_system_launcher --version", "version"},
-        {"./solar_system --help", "Usage"},
-        {"./solar_system_fetch --help", "Usage"},
-        {"./solar_system_realtime --help", "Usage"},
-        {"./solar_system_web --help", "Usage"}};
+        {"./build/solar_system_launcher --version", "version"},
+        {"./build/solar_system --help", "Usage"},
+        {"./build/solar_system_fetch --help", "Usage"},
+        {"./build/solar_system_realtime --help", "Usage"},
+        {"./build/solar_system_web --help", "Usage"}};
 
     for (const auto& [command, expected_output] : applications) {
       std::string output = execute_command(command + " 2>&1");
@@ -394,7 +394,7 @@ int main() {
     // Test data sharing through cache
     {
       // Step 1: Fetch data using fetch application
-      std::string fetch_command = "./solar_system_fetch --cache-dir " + shared_cache +
+      std::string fetch_command = "./build/solar_system_fetch --cache-dir " + shared_cache +
                                   " --bodies Sun,Earth,Moon --update-cache";
       std::string fetch_output = execute_command(fetch_command + " 2>&1");
       ASSERT_TRUE(fetch_output.find("Error") == std::string::npos ||
@@ -402,7 +402,7 @@ int main() {
                   fetch_output.find("cache") != std::string::npos);
 
       // Step 2: Use cached data in simulation
-      std::string sim_command = "./solar_system --cache-dir " + shared_cache +
+      std::string sim_command = "./build/solar_system --cache-dir " + shared_cache +
                                 " --bodies Sun,Earth,Moon --duration 3600 --use-cache";
       std::string sim_output = execute_command(sim_command + " 2>&1");
       ASSERT_TRUE(sim_output.find("Error") == std::string::npos ||
@@ -416,7 +416,7 @@ int main() {
 
     // Test launcher coordination
     {
-      std::string launcher_command = "./solar_system_launcher --cache-dir " + shared_cache +
+      std::string launcher_command = "./build/solar_system_launcher --cache-dir " + shared_cache +
                                      " --simulate --bodies Sun,Earth --duration 1800";
       std::string launcher_output = execute_command(launcher_command + " 2>&1");
       ASSERT_TRUE(launcher_output.find("Error") == std::string::npos ||
@@ -427,7 +427,7 @@ int main() {
     // Test web server with shared data
     {
       int test_port = 8088;
-      std::string web_command = "./solar_system_web --port " + std::to_string(test_port) +
+      std::string web_command = "./build/solar_system_web --port " + std::to_string(test_port) +
                                 " --cache-dir " + shared_cache + " &";
       [[maybe_unused]] int result = system(web_command.c_str());
 
@@ -462,9 +462,9 @@ int main() {
 
 // Test executable permissions and dependencies
 {
-  std::vector<std::string> executables = {"./solar_system_launcher", "./solar_system",
-                                          "./solar_system_fetch", "./solar_system_realtime",
-                                          "./solar_system_web"};
+  std::vector<std::string> executables = {
+      "./build/solar_system_launcher", "./build/solar_system", "./build/solar_system_fetch",
+      "./build/solar_system_realtime", "./build/solar_system_web"};
 
   for (const auto& exe : executables) {
     if (std::filesystem::exists(exe)) {
@@ -523,7 +523,8 @@ int main() {
   auto test_env = TestDataManager::create_test_environment();
   std::string cache_test_dir = test_env->path_string() + "/cache_test";
 
-  std::string command = "./solar_system_fetch --cache-dir " + cache_test_dir + " --test-storage";
+  std::string command =
+      "./build/solar_system_fetch --cache-dir " + cache_test_dir + " --test-storage";
   std::string output = execute_command(command + " 2>&1");
 
   // Should be able to create and use cache directory
@@ -536,7 +537,8 @@ int main() {
 // Test 5: System resource management
 TEST_CASE("System Resource Management"){
     // Test memory usage patterns
-    {std::string command = "./solar_system --bodies Sun,Earth,Moon --duration 3600 --timestep 60";
+    {std::string command =
+         "./build/solar_system --bodies Sun,Earth,Moon --duration 3600 --timestep 60";
 auto start_time = std::chrono::high_resolution_clock::now();
 
 std::string output = execute_command(command + " 2>&1");
@@ -555,9 +557,9 @@ ASSERT_TRUE(output.find("segmentation fault") == std::string::npos);
 // Test file handle management
 {
   // Run multiple applications concurrently
-  std::vector<std::string> commands = {"./solar_system_launcher --status &",
-                                       "./solar_system_fetch --test-storage &",
-                                       "./solar_system --bodies Sun,Earth --duration 1800 &"};
+  std::vector<std::string> commands = {"./build/solar_system_launcher --status &",
+                                       "./build/solar_system_fetch --test-storage &",
+                                       "./build/solar_system --bodies Sun,Earth --duration 1800 &"};
 
   for (const auto& cmd : commands) {
     [[maybe_unused]] int result = system(cmd.c_str());
@@ -588,7 +590,7 @@ ASSERT_TRUE(output.find("segmentation fault") == std::string::npos);
   int test_port = 8089;
 
   // Start web server
-  std::string start_cmd = "./solar_system_web --port " + std::to_string(test_port) + " &";
+  std::string start_cmd = "./build/solar_system_web --port " + std::to_string(test_port) + " &";
   [[maybe_unused]] int result2 = system(start_cmd.c_str());
 
   std::this_thread::sleep_for(std::chrono::seconds(2));
@@ -622,7 +624,7 @@ TEST_CASE("Error Propagation and Logging") {
     setenv("SOLAR_SYSTEM_LOG_FILE", log_file.c_str(), 1);
 
     // Run command that might generate logs
-    std::string command = "./solar_system_launcher --status";
+    std::string command = "./build/solar_system_launcher --status";
     execute_command(command + " 2>&1");
 
     unsetenv("SOLAR_SYSTEM_LOG_FILE");
@@ -635,7 +637,7 @@ TEST_CASE("Error Propagation and Logging") {
 
   // Test error code propagation
   {
-    std::string invalid_command = "./solar_system --invalid-flag 2>/dev/null";
+    std::string invalid_command = "./build/solar_system --invalid-flag 2>/dev/null";
     int exit_code = system(invalid_command.c_str());
 
     // Should return non-zero exit code for invalid arguments
@@ -646,7 +648,7 @@ TEST_CASE("Error Propagation and Logging") {
   {
     // Create scenario where one component fails and others handle it gracefully
     std::string command =
-        "./solar_system_launcher --simulate --bodies NonexistentPlanet --duration 3600";
+        "./build/solar_system_launcher --simulate --bodies NonexistentPlanet --duration 3600";
     std::string output = execute_command(command + " 2>&1");
 
     // Should handle unknown body gracefully
