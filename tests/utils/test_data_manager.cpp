@@ -90,11 +90,18 @@ size_t TemporaryDirectory::file_count() const {
 // TemporaryCache implementation
 TemporaryCache::TemporaryCache(const std::string& cache_type) : cache_type_(cache_type) {
   temp_dir_ = std::make_unique<TemporaryDirectory>("solar_cache_");
-  cache_file_ = std::string("ephemeris_cache.") + (cache_type == "binary" ? "bin" : "json");
+  // Determine file extension based on cache type
+  std::string extension;
+  if (cache_type == "binary") {
+    extension = "bin";
+  } else {
+    extension = "json";  // Default to json for "ephemeris" and other types
+  }
+  cache_file_ = std::string("ephemeris_cache.") + extension;
 }
 
 void TemporaryCache::populate_with_valid_data() {
-  if (cache_type_ == "json") {
+  if (cache_type_ != "binary") {  // Default to JSON format for non-binary types
     std::string valid_cache_content = R"({
   "format_version": 1,
   "cache_type": "ephemeris",

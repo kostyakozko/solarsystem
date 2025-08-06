@@ -255,7 +255,9 @@ JPLResult<EphemerisData> JPLClient::parse_jpl_response(const std::string& respon
     // Trim whitespace
     data.body_name.erase(data.body_name.find_last_not_of(" \t\n\r") + 1);
   } else {
-    data.body_name = "Body_" + std::to_string(jpl_id);
+    // If we can't parse the body name, this indicates a parsing error
+    // Return an error instead of generating a fake name
+    return JPLError::ParseError;
   }
 
   // Find mass information (if available)

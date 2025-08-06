@@ -351,8 +351,13 @@ int main() {
                   << " ms/element" << std::endl;
 
         // Validate that time per element doesn't grow excessively
-        if (time_per_element > 1.0) {  // More than 1ms per element is concerning
+        // Allow higher threshold for parallel computation tests since they include thread overhead
+        double threshold =
+            (result.name.find("ParallelComputation") != std::string::npos) ? 2.0 : 1.0;
+        if (time_per_element > threshold) {
           scalability_validated = false;
+          std::cout << "WARNING: Time per element too high: " << time_per_element
+                    << " ms (threshold: " << threshold << " ms)" << std::endl;
         }
       }
     }

@@ -172,8 +172,13 @@ MemoryStats MemoryMonitor::get_stats() const {
 size_t MemoryMonitor::get_current_usage() const {
   struct rusage usage;
   getrusage(RUSAGE_SELF, &usage);
-  return static_cast<size_t>(usage.ru_maxrss) *
-         1024;  // Convert KB to bytes on Linux, already bytes on macOS
+#ifdef __APPLE__
+  // On macOS, ru_maxrss is in bytes
+  return static_cast<size_t>(usage.ru_maxrss);
+#else
+  // On Linux, ru_maxrss is in kilobytes
+  return static_cast<size_t>(usage.ru_maxrss) * 1024;
+#endif
 }
 
 size_t MemoryMonitor::get_peak_usage() const { return peak_memory; }
@@ -289,7 +294,13 @@ SystemMonitor::SystemStats SystemMonitor::get_current_stats() {
   // Get memory usage
   struct rusage usage;
   getrusage(RUSAGE_SELF, &usage);
+#ifdef __APPLE__
+  // On macOS, ru_maxrss is in bytes
+  stats.memory_usage_bytes = static_cast<size_t>(usage.ru_maxrss);
+#else
+  // On Linux, ru_maxrss is in kilobytes
   stats.memory_usage_bytes = static_cast<size_t>(usage.ru_maxrss) * 1024;
+#endif
 
   // Get available memory (simplified)
   long pages = sysconf(_SC_PHYS_PAGES);

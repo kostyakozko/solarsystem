@@ -43,7 +43,8 @@
   - Ensure documentation generation works correctly
   - _Requirements: 6.1, 6.2, 6.3, 6.4, 6.5_
 
-- [ ] 7. Address any additional library issues discovered during testing
+- [x] 7. Address any additional library issues discovered during testing
+  - Read .md files in project root to check the list of found library issues
   - Investigate and fix any mathematical calculation errors in solar_core
   - Resolve any JPL data processing issues in solar_jpl
   - Fix any utility function problems in solar_utils
@@ -52,6 +53,7 @@
   - _Requirements: 5.1, 5.2, 5.3, 5.4, 5.5_
 
 - [ ] 8. Address any additional application issues discovered during testing
+  - Read .md files in project root to check the list of found app issues
   - Fix any command-line argument parsing problems
   - Resolve any file I/O or data processing issues
   - Address any network communication problems
