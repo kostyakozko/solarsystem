@@ -4,6 +4,11 @@
 
 This specification addresses the enhancement of all Solar System Suite applications to ensure they are fully functional, robust, and production-ready. The focus is on completing application implementations, improving user experience, and ensuring reliable operation across all supported platforms.
 
+**This specification builds upon findings from the `application-functionality-audit` spec**, which provides detailed analysis of current application functionality, identified issues, and prioritized action items. All enhancement tasks should reference and address the specific issues documented in:
+- `application-functionality-audit/ACTION_ITEMS.md` - Prioritized issues requiring fixes
+- `application-functionality-audit/*-audit-report.md` - Detailed audit findings for each application
+- `application-functionality-audit/requirements.md` and `design.md` - Audit methodology and framework
+
 ## Requirements
 
 ### Requirement 1: Solar System Launcher Enhancement

@@ -44,7 +44,7 @@
 *Focus: Add missing functionality and improve user experience*
 
 #### 5. 📋 **application-enhancements** - READY TO START
-- **Status**: 📋 Ready (0/33 tasks completed)
+- **Status**: 📋 Ready (0/34 tasks completed)
 - **Priority**: 🔥 **HIGH**
 - **Dependencies**: Requires library-core-enhancements completion
 - **Estimated Duration**: 3-4 weeks
@@ -146,7 +146,7 @@
 - **Why Ready**: Foundation is stable, can enhance core functionality
 
 #### application-enhancements
-- **Tasks**: 0/33 completed
+- **Tasks**: 0/34 completed
 - **Focus**: Add missing application features and options
 - **Key Areas**: CLI options (--bodies, --duration, etc.), configuration management
 - **Why Ready**: Applications are functional, ready for feature additions
