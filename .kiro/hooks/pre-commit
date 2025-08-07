@@ -1,0 +1,35 @@
+#!/bin/bash
+
+# Solar System Suite - Pre-commit Hook
+# Automatically updates roadmap when task files are modified
+
+echo "🔍 Checking for task file changes..."
+
+# Check if any tasks.md files are being committed
+TASK_FILES_CHANGED=$(git diff --cached --name-only | grep "tasks\.md$" || true)
+
+if [ -n "$TASK_FILES_CHANGED" ]; then
+    echo "📋 Task files modified, updating roadmap..."
+    echo "Changed files:"
+    echo "$TASK_FILES_CHANGED" | sed 's/^/  - /'
+
+    # Update the roadmap
+    python3 .kiro/scripts/update-roadmap.py
+
+    # Check if roadmap was actually updated
+    if [ $? -eq 0 ]; then
+        echo "✅ Roadmap updated successfully"
+
+        # Add the updated roadmap to the commit
+        git add .kiro/specs/SPEC_ROADMAP.md
+
+        echo "📝 Added updated roadmap to commit"
+    else
+        echo "❌ Failed to update roadmap"
+        exit 1
+    fi
+else
+    echo "📋 No task files changed, skipping roadmap update"
+fi
+
+echo "✅ Pre-commit checks complete"

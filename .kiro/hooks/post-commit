@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# Solar System Suite - Post-commit Hook
+# Shows progress summary after commits that modify task files
+
+# Check if any tasks.md files were in the last commit
+TASK_FILES_IN_COMMIT=$(git diff-tree --no-commit-id --name-only -r HEAD | grep "tasks\.md$" || true)
+
+if [ -n "$TASK_FILES_IN_COMMIT" ]; then
+    echo ""
+    echo "📊 Solar System Suite Progress Update:"
+    echo "======================================"
+
+    # Run the status checker to show current progress
+    python3 .kiro/scripts/spec-status.py | grep -E "(📈 SUMMARY|Total Specs|✅ Completed|📊 Overall Progress|🎯 NEXT RECOMMENDED)"
+
+    echo ""
+    echo "📖 View full roadmap: .kiro/specs/SPEC_ROADMAP.md"
+    echo "🔄 Manual update: python3 .kiro/scripts/update-roadmap.py"
+    echo ""
+fi
