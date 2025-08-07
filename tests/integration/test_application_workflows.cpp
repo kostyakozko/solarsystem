@@ -259,11 +259,11 @@ int main() {
   TEST_CASE("Application Startup and Initialization") {
     // Test each application can start and initialize properly
     std::vector<std::pair<std::string, std::string>> applications = {
-        {"./build/solar_system_launcher --version", "version"},
-        {"./build/solar_system --help", "Usage"},
-        {"./build/solar_system_fetch --help", "Usage"},
-        {"./build/solar_system_realtime --help", "Usage"},
-        {"./build/solar_system_web --help", "Usage"}};
+        {"./solar_system_launcher --version", "version"},
+        {"./solar_system --help", "Usage"},
+        {"./solar_system_fetch --help", "Usage"},
+        {"./solar_system_realtime --help", "Usage"},
+        {"./solar_system_web --help", "Usage"}};
 
     for (const auto& [command, expected_output] : applications) {
       std::string output = execute_command(command + " 2>&1");
@@ -648,7 +648,7 @@ TEST_CASE("Error Propagation and Logging") {
   {
     // Create scenario where one component fails and others handle it gracefully
     std::string command =
-        "./build/solar_system_launcher --simulate --bodies NonexistentPlanet --duration 3600";
+        "./solar_system_launcher --simulate --bodies NonexistentPlanet --duration 3600";
     std::string output = execute_command(command + " 2>&1");
 
     // Should handle unknown body gracefully

@@ -52,7 +52,7 @@
   - Ensure all library unit tests achieve 100% pass rate
   - _Requirements: 5.1, 5.2, 5.3, 5.4, 5.5_
 
-- [ ] 8. Address any additional application issues discovered during testing
+- [-] 8. Address any additional application issues discovered during testing
   - Read .md files in project root to check the list of found app issues
   - Fix any command-line argument parsing problems
   - Resolve any file I/O or data processing issues

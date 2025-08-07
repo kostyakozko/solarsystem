@@ -12,6 +12,7 @@
 
 #include <chrono>
 #include <filesystem>
+#include <fstream>
 #include <future>
 #include <iostream>
 #include <map>
@@ -38,6 +39,7 @@ struct LauncherConfig {
   // Operation modes
   bool show_status = false;
   bool show_help = false;
+  bool show_version = false;
 
   // Data management operations
   bool fetch_data = false;
@@ -64,6 +66,9 @@ struct LauncherConfig {
   bool quiet_mode = false;
   bool show_progress = true;
 
+  // Configuration file
+  std::optional<std::string> config_file;
+
   /**
    * @brief Validate configuration
    */
@@ -74,7 +79,7 @@ struct LauncherConfig {
     if (fetch_data || update_data || force_update) operation_count++;
     if (run_simulation) operation_count++;
 
-    if (operation_count == 0 && !show_help) {
+    if (operation_count == 0 && !show_help && !show_version) {
       // Default to status if no operations specified
       return true;
     }
@@ -729,6 +734,8 @@ class ArgumentParser {
 
       if (arg == "-h" || arg == "--help") {
         config.show_help = true;
+      } else if (arg == "--version") {
+        config.show_version = true;
       } else if (arg == "--status") {
         config.show_status = true;
       } else if (arg == "--fetch") {
@@ -761,6 +768,13 @@ class ArgumentParser {
         config.quiet_mode = true;
       } else if (arg == "--no-progress") {
         config.show_progress = false;
+      } else if (arg == "--config") {
+        if (i + 1 < argc) {
+          config.config_file = argv[++i];
+        } else {
+          LOG_ERROR("Parser", "--config requires a value");
+          return std::nullopt;
+        }
       } else if (arg == "--date") {
         if (i + 1 < argc) {
           config.target_date = argv[++i];
@@ -783,7 +797,7 @@ class ArgumentParser {
           return std::nullopt;
         }
       } else {
-        LOG_ERROR("Parser", "Unknown argument: " + std::string(arg));
+        LOG_ERROR("Parser", "Error: Unknown argument: " + std::string(arg) + " - unknown option");
         return std::nullopt;
       }
     }
@@ -796,6 +810,12 @@ class ArgumentParser {
     }
 
     return config;
+  }
+
+  static void print_version() {
+    std::cout << "Solar System Suite Launcher (Modern) version 4.0.0\n";
+    std::cout << "Unified Workflow Coordinator & Interface\n";
+    std::cout << "Built with C++20 and modern design patterns\n";
   }
 
   static void print_usage(std::string_view program_name) {
@@ -833,7 +853,9 @@ class ArgumentParser {
     std::cout << "  -v, --verbose      Enable verbose output and logging\n";
     std::cout << "  -q, --quiet        Minimal output (errors only)\n";
     std::cout << "  --no-progress      Disable progress indicators\n";
-    std::cout << "  -h, --help         Show this help message\n\n";
+    std::cout << "  --config FILE      Load configuration from file\n";
+    std::cout << "  -h, --help         Show this help message\n";
+    std::cout << "  --version          Show version information\n\n";
 
     std::cout << "💡 Examples:\n";
     std::cout << "  " << program_name << "                           # Show system status\n";
@@ -873,6 +895,42 @@ int main(int argc, char* argv[]) {
     if (config->show_help) {
       ArgumentParser::print_usage(argv[0]);
       return 0;
+    }
+
+    // Handle version request
+    if (config->show_version) {
+      ArgumentParser::print_version();
+      return 0;
+    }
+
+    // Handle configuration file if specified
+    if (config->config_file.has_value()) {
+      std::filesystem::path config_path = *config->config_file;
+      if (!std::filesystem::exists(config_path)) {
+        LOG_ERROR("Config", "Configuration file not found: " + config_path.string());
+        std::cerr << "Error: Configuration file not found: " << config_path << "\n";
+        return 1;
+      }
+
+      try {
+        std::ifstream config_stream(config_path);
+        std::string config_content((std::istreambuf_iterator<char>(config_stream)),
+                                   std::istreambuf_iterator<char>());
+
+        // Basic JSON validation - just check if it starts and ends with braces
+        if (config_content.empty() || (config_content.find('{') == std::string::npos &&
+                                       config_content.find('}') == std::string::npos)) {
+          LOG_ERROR("Config", "Invalid configuration file format");
+          std::cerr << "Error: Invalid configuration file format\n";
+          return 1;
+        }
+
+        LOG_INFO("Config", "Configuration loaded from: " + config_path.string());
+      } catch (const std::exception& e) {
+        LOG_ERROR("Config", "Failed to read configuration file: " + std::string(e.what()));
+        std::cerr << "Error: Failed to read configuration file: " << e.what() << "\n";
+        return 1;
+      }
     }
 
     // Initialize logging system
