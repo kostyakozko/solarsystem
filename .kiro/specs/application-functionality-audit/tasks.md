@@ -19,7 +19,7 @@
   - Validate command-line options and help system completeness
   - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 10.1_
 
-- [x] 3. Audit solar_system simulation application functionality
+- [ ] 3. Audit solar_system simulation application functionality
   - Test N-body simulation accuracy and mathematical correctness
   - Verify different time period handling and date parsing
   - Test output format generation and file creation
@@ -30,7 +30,7 @@
   - Validate input parameter validation and error messages
   - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5, 8.1, 8.2_
 
-- [x] 4. Audit solar_system_realtime application functionality
+- [ ] 4. Audit solar_system_realtime application functionality
   - Test real-time celestial body tracking and position updates
   - Verify continuous operation stability and resource management
   - Test graceful shutdown and cleanup procedures
@@ -41,7 +41,7 @@
   - Validate real-time data accuracy and update intervals
   - _Requirements: 5.1, 5.2, 5.3, 5.4, 5.5, 8.3, 8.4_
 
-- [x] 5. Audit solar_system_web application functionality
+- [ ] 5. Audit solar_system_web application functionality
   - Test web server startup, port binding, and HTTP handling
   - Verify static file serving from web-root directory
   - Test API endpoints and JSON response generation
@@ -53,7 +53,7 @@
   - **Verify help text includes all available options**
   - _Requirements: 6.1, 6.2, 6.3, 6.4, 6.5, 6.6, 8.3_
 
-- [x] 6. Test application integration and workflows
+- [ ] 6. Test application integration and workflows
   - Test data sharing and format compatibility between applications
   - Verify launcher coordination of multi-application workflows
   - Test fetch → cache → simulation data pipeline
