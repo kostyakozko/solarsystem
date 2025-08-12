@@ -283,37 +283,70 @@ JPLResult<EphemerisData> JPLClient::parse_jpl_response(const std::string& respon
   data.jpl_id = jpl_id;
   data.epoch = std::chrono::system_clock::now();
 
-  // Enhanced error detection for different response formats
+  // Enhanced error detection with comprehensive format support and detailed reporting
   if (response.empty()) {
     return JPLError::NetworkError;
   }
 
-  // Check for JSON error responses first
+  // Validate minimum response length to detect truncated responses
+  if (response.length() < 50) {
+    return JPLError::ParseError;
+  }
+
+  // Check for malformed responses (null bytes, corrupted data)
+  if (response.find('\0') != std::string::npos) {
+    return JPLError::ParseError;
+  }
+
+  // Enhanced JSON error response detection with detailed error mapping
   if (response.find("{\"code\":") != std::string::npos) {
-    // This is a JSON error response
     if (response.find("\"code\":\"400\"") != std::string::npos) {
-      return JPLError::InvalidBody;
+      if (response.find("invalid") != std::string::npos) {
+        return JPLError::InvalidBody;
+      } else if (response.find("date") != std::string::npos) {
+        return JPLError::InvalidDate;
+      } else {
+        return JPLError::ParseError;
+      }
     } else if (response.find("\"code\":\"500\"") != std::string::npos) {
       return JPLError::ServerError;
+    } else if (response.find("\"code\":\"429\"") != std::string::npos) {
+      return JPLError::RateLimited;
     } else {
       return JPLError::ParseError;
     }
   }
 
-  // Check for common error patterns in text responses
-  if (response.find("ERROR") != std::string::npos ||
-      response.find("Cannot find") != std::string::npos ||
-      response.find("No ephemeris") != std::string::npos ||
-      response.find("invalid") != std::string::npos) {
-    return JPLError::InvalidBody;
+  // Comprehensive error pattern detection with detailed categorization
+  std::vector<std::pair<std::string, JPLError>> error_patterns = {
+    {"ERROR", JPLError::ParseError},
+    {"Cannot find", JPLError::InvalidBody},
+    {"No ephemeris", JPLError::InvalidBody},
+    {"invalid", JPLError::InvalidBody},
+    {"Bad dates", JPLError::InvalidDate},
+    {"No data available", JPLError::InvalidBody},
+    {"Target not found", JPLError::InvalidBody},
+    {"Insufficient data", JPLError::ParseError},
+    {"Connection timeout", JPLError::NetworkError},
+    {"Service unavailable", JPLError::ServerError},
+    {"Rate limit", JPLError::RateLimited}
+  };
+
+  for (const auto& [pattern, error] : error_patterns) {
+    if (response.find(pattern) != std::string::npos) {
+      return error;
+    }
   }
 
-  // Find the body name from the response with multiple patterns
+  // Enhanced body name extraction with comprehensive pattern matching for multiple JPL formats
   std::vector<std::regex> name_patterns = {
-    std::regex(R"(Target body name:\s*([^(]+))"),
+    std::regex(R"(Target body name:\s*([^(\n\r]+))"),
     std::regex(R"(Target body name:\s*([^\n\r]+))"),
     std::regex(R"(COMMAND=\s*'?(\d+)'?\s*\(([^)]+)\))"),
-    std::regex(R"(Body\s*:\s*([^\n\r]+))")
+    std::regex(R"(Body\s*:\s*([^\n\r]+))"),
+    std::regex(R"(Object\s*:\s*([^\n\r]+))"),
+    std::regex(R"(Ephemeris\s+for\s+([^\n\r]+))"),
+    std::regex(R"(Target\s*:\s*([^\n\r]+))")
   };
 
   bool found_name = false;
@@ -435,56 +468,74 @@ JPLResult<EphemerisData> JPLClient::parse_jpl_response(const std::string& respon
           }
         }
 
-        // Try to parse coordinates from tokens
+        // Enhanced coordinate parsing with comprehensive format support and validation
         if (tokens.size() >= 7) {
-          try {
-            // Position (km) - typically tokens 1, 2, 3 (after date)
-            double x = std::stod(tokens[1]);
-            double y = std::stod(tokens[2]);
-            double z = std::stod(tokens[3]);
-            data.position = SolarSystem::Math::Vector3d{x, y, z};
+          // Try multiple token position strategies for different JPL formats
+          std::vector<std::vector<int>> position_strategies = {
+            {1, 2, 3, 4, 5, 6},  // Standard format: date, x, y, z, vx, vy, vz
+            {2, 3, 4, 5, 6, 7},  // Alternative format with extra column
+            {0, 1, 2, 3, 4, 5}   // Compact format without date
+          };
 
-            // Velocity (km/s) - typically tokens 4, 5, 6
-            double vx = std::stod(tokens[4]);
-            double vy = std::stod(tokens[5]);
-            double vz = std::stod(tokens[6]);
-            data.velocity = SolarSystem::Math::Vector3d{vx, vy, vz};
-
-            found_coordinates = true;
-            break;
-          } catch (const std::exception&) {
-            // Try alternative token positions
-            if (tokens.size() >= 10) {
+          for (const auto& strategy : position_strategies) {
+            if (tokens.size() > static_cast<size_t>(strategy[5])) {
               try {
-                // Some formats have additional columns
-                double x = std::stod(tokens[2]);
-                double y = std::stod(tokens[3]);
-                double z = std::stod(tokens[4]);
-                data.position = SolarSystem::Math::Vector3d{x, y, z};
+                // Parse position coordinates
+                double x = std::stod(tokens[strategy[0]]);
+                double y = std::stod(tokens[strategy[1]]);
+                double z = std::stod(tokens[strategy[2]]);
 
-                double vx = std::stod(tokens[5]);
-                double vy = std::stod(tokens[6]);
-                double vz = std::stod(tokens[7]);
-                data.velocity = SolarSystem::Math::Vector3d{vx, vy, vz};
+                // Parse velocity coordinates
+                double vx = std::stod(tokens[strategy[3]]);
+                double vy = std::stod(tokens[strategy[4]]);
+                double vz = std::stod(tokens[strategy[5]]);
 
-                found_coordinates = true;
-                break;
+                // Validate coordinate values are reasonable
+                if (std::isfinite(x) && std::isfinite(y) && std::isfinite(z) &&
+                    std::isfinite(vx) && std::isfinite(vy) && std::isfinite(vz)) {
+
+                  double pos_mag = std::sqrt(x*x + y*y + z*z);
+                  double vel_mag = std::sqrt(vx*vx + vy*vy + vz*vz);
+
+                  // Validate magnitudes are within reasonable bounds
+                  if (pos_mag > 1e3 && pos_mag < 1e12 && vel_mag < 1e6) {
+                    data.position = SolarSystem::Math::Vector3d{x, y, z};
+                    data.velocity = SolarSystem::Math::Vector3d{vx, vy, vz};
+                    found_coordinates = true;
+                    break;
+                  }
+                }
               } catch (const std::exception&) {
                 continue;
               }
             }
+          }
+
+          if (found_coordinates) {
+            break;
           }
         }
       }
     }
   }
 
-  // Method 2: Look for coordinate patterns anywhere in the response
+  // Method 2: Enhanced coordinate pattern matching for multiple JPL response formats
   if (!found_coordinates) {
     std::vector<std::regex> coord_patterns = {
+      // Standard X=, Y=, Z= format
       std::regex(R"(X\s*=\s*([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\s*Y\s*=\s*([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\s*Z\s*=\s*([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?))"),
+      // Position: format
       std::regex(R"(Position:\s*([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\s+([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\s+([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?))"),
-      std::regex(R"(([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\s+([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\s+([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\s+([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\s+([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\s+([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?))")
+      // Vector format (6 components)
+      std::regex(R"(([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\s+([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\s+([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\s+([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\s+([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\s+([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?))"),
+      // Cartesian coordinates format
+      std::regex(R"(Cartesian\s+coordinates:\s*([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\s+([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\s+([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?))"),
+      // State vector format
+      std::regex(R"(State\s+vector:\s*([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\s+([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\s+([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?))"),
+      // Heliocentric coordinates
+      std::regex(R"(Heliocentric:\s*([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\s+([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\s+([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?))"),
+      // Barycentric coordinates
+      std::regex(R"(Barycentric:\s*([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\s+([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\s+([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?))")
     };
 
     for (const auto& pattern : coord_patterns) {
@@ -496,26 +547,42 @@ JPLResult<EphemerisData> JPLClient::parse_jpl_response(const std::string& respon
             double x = std::stod(coord_match[1].str());
             double y = std::stod(coord_match[2].str());
             double z = std::stod(coord_match[3].str());
-            data.position = SolarSystem::Math::Vector3d{x, y, z};
-
             double vx = std::stod(coord_match[4].str());
             double vy = std::stod(coord_match[5].str());
             double vz = std::stod(coord_match[6].str());
-            data.velocity = SolarSystem::Math::Vector3d{vx, vy, vz};
 
-            found_coordinates = true;
-            break;
+            // Enhanced validation for coordinate quality
+            if (std::isfinite(x) && std::isfinite(y) && std::isfinite(z) &&
+                std::isfinite(vx) && std::isfinite(vy) && std::isfinite(vz)) {
+
+              double pos_mag = std::sqrt(x*x + y*y + z*z);
+              double vel_mag = std::sqrt(vx*vx + vy*vy + vz*vz);
+
+              // Validate magnitudes are within reasonable astronomical bounds
+              if (pos_mag > 1e3 && pos_mag < 1e12 && vel_mag < 1e6) {
+                data.position = SolarSystem::Math::Vector3d{x, y, z};
+                data.velocity = SolarSystem::Math::Vector3d{vx, vy, vz};
+                found_coordinates = true;
+                break;
+              }
+            }
           } else if (coord_match.size() >= 4) {
-            // Position-only match
+            // Position-only match with validation
             double x = std::stod(coord_match[1].str());
             double y = std::stod(coord_match[2].str());
             double z = std::stod(coord_match[3].str());
-            data.position = SolarSystem::Math::Vector3d{x, y, z};
 
-            // Set default velocity
-            data.velocity = SolarSystem::Math::Vector3d{0.0, 0.0, 0.0};
-            found_coordinates = true;
-            break;
+            if (std::isfinite(x) && std::isfinite(y) && std::isfinite(z)) {
+              double pos_mag = std::sqrt(x*x + y*y + z*z);
+
+              if (pos_mag > 1e3 && pos_mag < 1e12) {
+                data.position = SolarSystem::Math::Vector3d{x, y, z};
+                // Set zero velocity for position-only data
+                data.velocity = SolarSystem::Math::Vector3d{0.0, 0.0, 0.0};
+                found_coordinates = true;
+                break;
+              }
+            }
           }
         } catch (const std::exception&) {
           continue;
@@ -577,10 +644,41 @@ JPLResult<EphemerisData> JPLClient::parse_jpl_response(const std::string& respon
     found_coordinates = true;
   }
 
-  // Validate that we have reasonable coordinate values
-  if (data.position.magnitude() > 1e12 || data.velocity.magnitude() > 1e6) {
-    // Values are unreasonably large, likely parsing error
-    return JPLError::ParseError;
+  // Comprehensive ephemeris data quality validation
+  double pos_magnitude = data.position.magnitude();
+  double vel_magnitude = data.velocity.magnitude();
+
+  // Validate position values are within reasonable astronomical bounds
+  if (pos_magnitude < 1e3 || pos_magnitude > 1e12) {
+    // Position should be between 1,000 km and 1e12 km (beyond Pluto)
+    return JPLError::ValidationError;
+  }
+
+  // Validate velocity values are reasonable
+  if (vel_magnitude > 1e6) {
+    // Velocity should not exceed 1,000,000 km/s (unrealistic)
+    return JPLError::ValidationError;
+  }
+
+  // Check for NaN or infinite values in coordinates
+  if (!std::isfinite(data.position.x()) || !std::isfinite(data.position.y()) || !std::isfinite(data.position.z()) ||
+      !std::isfinite(data.velocity.x()) || !std::isfinite(data.velocity.y()) || !std::isfinite(data.velocity.z())) {
+    return JPLError::ValidationError;
+  }
+
+  // Check for zero vectors (might indicate parsing failure)
+  if (pos_magnitude < 1e-6 && vel_magnitude < 1e-6) {
+    return JPLError::ValidationError;
+  }
+
+  // Validate body name is not empty
+  if (data.body_name.empty()) {
+    return JPLError::ValidationError;
+  }
+
+  // Validate mass is reasonable
+  if (data.mass <= 0 || !std::isfinite(data.mass)) {
+    return JPLError::ValidationError;
   }
 
   return data;
