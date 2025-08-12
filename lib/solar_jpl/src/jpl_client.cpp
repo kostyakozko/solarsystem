@@ -1272,9 +1272,9 @@ std::filesystem::path JPLClientFactory::get_executable_relative_cache_path() {
     // Get the directory containing the executable
     std::filesystem::path exe_dir = exe_path.parent_path();
 
-    // Cache should be in the same directory as the executable for a self-contained install
-    // This makes install/bin/cache/ for executables in install/bin/
-    return exe_dir / "cache";
+    // Cache should be in the parent directory of bin/ for a self-contained install
+    // This makes install/cache/ for executables in install/bin/
+    return exe_dir.parent_path() / "cache";
 
   } catch (const std::exception&) {
     // Fallback to current directory if we can't determine executable path
