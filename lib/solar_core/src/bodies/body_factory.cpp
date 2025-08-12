@@ -368,8 +368,19 @@ SolarSystem::Utils::Expected<void, std::string> BodyFactory::fetch_current_ephem
         SolarSystem::JPL::Utils::to_string(error)};
   }
 
+  // Get the fetched data
+  auto ephemeris_data = SolarSystem::JPL::get_value(result);
+
+  // Save to cache for persistence
+  auto save_result = jpl_client_->save_to_cache(ephemeris_data);
+  if (!SolarSystem::JPL::is_success(save_result)) {
+    auto error = save_result.value();
+    return SolarSystem::Utils::Expected<void, std::string>{
+        "Failed to save ephemeris data to cache: " + SolarSystem::JPL::Utils::to_string(error)};
+  }
+
   // Update internal state
-  cached_ephemeris_ = SolarSystem::JPL::get_value(result);
+  cached_ephemeris_ = ephemeris_data;
   current_epoch_ = time;
   current_source_ = "JPL_DATA";
 

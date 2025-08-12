@@ -269,7 +269,7 @@ class JPLClient {
 class JPLClientFactory {
  public:
   /**
-   * @brief Create default JPL client
+   * @brief Create default JPL client with cache relative to executable
    */
   [[nodiscard]] static std::unique_ptr<JPLClient> create_default();
 
@@ -282,6 +282,12 @@ class JPLClientFactory {
    * @brief Create JPL client for testing (with mock endpoints)
    */
   [[nodiscard]] static std::unique_ptr<JPLClient> create_for_testing();
+
+ private:
+  /**
+   * @brief Get cache directory relative to executable location
+   */
+  [[nodiscard]] static std::filesystem::path get_executable_relative_cache_path();
 };
 
 /**
