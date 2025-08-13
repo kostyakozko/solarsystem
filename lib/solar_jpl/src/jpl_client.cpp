@@ -104,8 +104,39 @@ bool JPLClientConfig::is_valid(std::string* error) const {
  */
 bool CacheMetadata::is_valid(std::chrono::hours max_age) const {
   auto now = std::chrono::system_clock::now();
+
+  // Enhanced validation with comprehensive checks
+
+  // Check if created_at is reasonable (not in the future, not too old)
+  if (created_at > now) {
+    return false;  // Future timestamp
+  }
+
+  // Check age against maximum allowed
   auto age = now - created_at;
-  return age <= max_age;
+  if (age > max_age) {
+    return false;  // Too old
+  }
+
+  // Check if epoch is reasonable
+  if (epoch > now) {
+    return false;  // Future epoch
+  }
+
+  // Validate other metadata fields
+  if (body_count == 0 || body_count > 10000) {
+    return false;  // Unreasonable body count
+  }
+
+  if (checksum == 0) {
+    return false;  // Invalid checksum
+  }
+
+  if (source.empty() || source.length() > 1000) {
+    return false;  // Invalid source
+  }
+
+  return true;
 }
 
 /**
@@ -1179,50 +1210,42 @@ JPLVoidResult JPLClient::save_to_cache(const std::vector<EphemerisData>& data) {
  */
 JPLResult<bool> JPLClient::validate_cache() const {
   try {
+    // Level 1: Comprehensive metadata validation
+    auto metadata_validation = validate_cache_metadata();
+    if (!is_success(metadata_validation)) {
+      return std::get<JPLError>(metadata_validation);
+    }
+
     auto metadata = get_cache_metadata();
     if (!metadata) {
       return false;  // No metadata means invalid cache
     }
 
-    // Check if cache files exist
-    auto binary_path = config_.cache_directory / "ephemeris_cache.bin";
-    auto json_path = config_.cache_directory / "ephemeris_data.json";
-
-    bool has_binary = config_.enable_binary_cache && std::filesystem::exists(binary_path);
-    bool has_json = config_.enable_json_cache && std::filesystem::exists(json_path);
-
-    if (!has_binary && !has_json) {
-      return false;  // No cache files
+    // Level 2: File system integrity validation
+    auto file_validation = validate_cache_files();
+    if (!is_success(file_validation)) {
+      return std::get<JPLError>(file_validation);
     }
 
-    // Check if cache is still valid (not expired)
-    if (!metadata->is_valid(config_.cache_validity)) {
-      return false;  // Cache expired
+    // Level 3: Format validation for each cache type
+    auto format_validation = validate_cache_formats();
+    if (!is_success(format_validation)) {
+      return std::get<JPLError>(format_validation);
     }
 
-    // Try to load cache to verify integrity
-    auto cache_result = const_cast<JPLClient*>(this)->load_from_cache();
-    if (!is_success(cache_result)) {
-      return false;  // Cache corrupted
+    // Level 4: Data integrity and checksum verification
+    auto integrity_validation = validate_cache_integrity(*metadata);
+    if (!is_success(integrity_validation)) {
+      return std::get<JPLError>(integrity_validation);
     }
 
-    auto cached_data = get_value(cache_result);
-    if (cached_data.size() != metadata->body_count) {
-      return false;  // Body count mismatch
+    // Level 5: Cross-validation between cache formats
+    auto cross_validation = validate_cache_consistency();
+    if (!is_success(cross_validation)) {
+      return std::get<JPLError>(cross_validation);
     }
 
-    // Calculate checksum and verify
-    uint64_t calculated_checksum = 0;
-    for (const auto& body_data : cached_data) {
-      calculated_checksum += static_cast<uint64_t>(body_data.jpl_id);
-      calculated_checksum += static_cast<uint64_t>(body_data.position.magnitude() * 1000);
-    }
-
-    if (calculated_checksum != metadata->checksum) {
-      return false;  // Checksum mismatch
-    }
-
-    return true;  // Cache is valid
+    return true;  // All validation levels passed
   } catch (const std::exception&) {
     return JPLError::ValidationError;
   }
@@ -1479,5 +1502,937 @@ std::string to_string(JPLError error) {
 }
 
 }  // namespace Utils
+
+// Enhanced Cache Validation Helper Methods
+
+/**
+ * @brief Validate cache metadata comprehensively
+ */
+JPLResult<bool> JPLClient::validate_cache_metadata() const {
+  auto metadata = get_cache_metadata();
+  if (!metadata) {
+    return false;  // No metadata means invalid cache
+  }
+
+  // Validate metadata structure integrity
+  if (metadata->body_count == 0) {
+    return JPLError::ValidationError;
+  }
+
+  if (metadata->checksum == 0) {
+    return JPLError::ValidationError;
+  }
+
+  // Validate timestamps are reasonable
+  auto now = std::chrono::system_clock::now();
+  if (metadata->created_at > now) {
+    return JPLError::ValidationError;  // Future timestamp
+  }
+
+  if (metadata->epoch > now) {
+    return JPLError::ValidationError;  // Future epoch
+  }
+
+  // Check if cache is still valid (not expired)
+  if (!metadata->is_valid(config_.cache_validity)) {
+    return false;  // Cache expired
+  }
+
+  // Validate source information
+  if (metadata->source.empty()) {
+    return JPLError::ValidationError;
+  }
+
+  return true;
+}
+
+/**
+ * @brief Validate cache file system integrity
+ */
+JPLResult<bool> JPLClient::validate_cache_files() const {
+  auto binary_path = config_.cache_directory / "ephemeris_cache.bin";
+  auto json_path = config_.cache_directory / "ephemeris_data.json";
+  auto metadata_path = config_.cache_directory / "metadata.json";
+
+  // Check if cache directory exists and is accessible
+  if (!std::filesystem::exists(config_.cache_directory)) {
+    return false;
+  }
+
+  if (!std::filesystem::is_directory(config_.cache_directory)) {
+    return JPLError::ValidationError;
+  }
+
+  // Validate metadata file
+  if (!std::filesystem::exists(metadata_path)) {
+    return false;
+  }
+
+  if (std::filesystem::file_size(metadata_path) == 0) {
+    return JPLError::ValidationError;  // Empty metadata file
+  }
+
+  // Check cache files based on configuration
+  bool has_binary = config_.enable_binary_cache && std::filesystem::exists(binary_path);
+  bool has_json = config_.enable_json_cache && std::filesystem::exists(json_path);
+
+  if (!has_binary && !has_json) {
+    return false;  // No cache files
+  }
+
+  // Validate file sizes are reasonable
+  if (has_binary) {
+    auto binary_size = std::filesystem::file_size(binary_path);
+    if (binary_size == 0 || binary_size > 100 * 1024 * 1024) {  // 0 bytes or > 100MB
+      return JPLError::ValidationError;
+    }
+  }
+
+  if (has_json) {
+    auto json_size = std::filesystem::file_size(json_path);
+    if (json_size == 0 || json_size > 500 * 1024 * 1024) {  // 0 bytes or > 500MB
+      return JPLError::ValidationError;
+    }
+  }
+
+  // Check file permissions
+  try {
+    if (has_binary) {
+      std::ifstream binary_test(binary_path, std::ios::binary);
+      if (!binary_test.is_open()) {
+        return JPLError::ValidationError;
+      }
+    }
+
+    if (has_json) {
+      std::ifstream json_test(json_path);
+      if (!json_test.is_open()) {
+        return JPLError::ValidationError;
+      }
+    }
+  } catch (const std::exception&) {
+    return JPLError::ValidationError;
+  }
+
+  return true;
+}
+
+/**
+ * @brief Validate cache file formats
+ */
+JPLResult<bool> JPLClient::validate_cache_formats() const {
+  auto binary_path = config_.cache_directory / "ephemeris_cache.bin";
+  auto json_path = config_.cache_directory / "ephemeris_data.json";
+
+  // Validate binary cache format if enabled
+  if (config_.enable_binary_cache && std::filesystem::exists(binary_path)) {
+    auto binary_validation = validate_binary_cache_format(binary_path);
+    if (!is_success(binary_validation)) {
+      return std::get<JPLError>(binary_validation);
+    }
+  }
+
+  // Validate JSON cache format if enabled
+  if (config_.enable_json_cache && std::filesystem::exists(json_path)) {
+    auto json_validation = validate_json_cache_format(json_path);
+    if (!is_success(json_validation)) {
+      return std::get<JPLError>(json_validation);
+    }
+  }
+
+  return true;
+}
+
+/**
+ * @brief Validate binary cache format
+ */
+JPLResult<bool> JPLClient::validate_binary_cache_format(const std::filesystem::path& binary_path) const {
+  try {
+    std::ifstream file(binary_path, std::ios::binary);
+    if (!file.is_open()) {
+      return JPLError::ValidationError;
+    }
+
+    // Check binary format header
+    uint32_t magic_number;
+    file.read(reinterpret_cast<char*>(&magic_number), sizeof(magic_number));
+
+    if (magic_number != 0x4A504C42) {  // "JPLB" in hex
+      return JPLError::ValidationError;  // Invalid binary format
+    }
+
+    // Check version
+    uint32_t version;
+    file.read(reinterpret_cast<char*>(&version), sizeof(version));
+
+    if (version > 1) {  // Only support version 1 for now
+      return JPLError::ValidationError;  // Unsupported version
+    }
+
+    // Check body count
+    uint32_t body_count;
+    file.read(reinterpret_cast<char*>(&body_count), sizeof(body_count));
+
+    if (body_count == 0 || body_count > 1000) {  // Reasonable bounds
+      return JPLError::ValidationError;
+    }
+
+    // Validate file size matches expected size
+    auto expected_size = sizeof(magic_number) + sizeof(version) + sizeof(body_count) +
+                        (body_count * sizeof(EphemerisData));
+    auto actual_size = std::filesystem::file_size(binary_path);
+
+    if (actual_size < expected_size) {
+      return JPLError::ValidationError;  // File too small
+    }
+
+    return true;
+  } catch (const std::exception&) {
+    return JPLError::ValidationError;
+  }
+}
+
+/**
+ * @brief Validate JSON cache format
+ */
+JPLResult<bool> JPLClient::validate_json_cache_format(const std::filesystem::path& json_path) const {
+  try {
+    std::ifstream file(json_path);
+    if (!file.is_open()) {
+      return JPLError::ValidationError;
+    }
+
+    std::string content;
+    std::string line;
+    while (std::getline(file, line)) {
+      content += line + "\n";
+    }
+
+    // Basic JSON structure validation
+    if (content.empty()) {
+      return JPLError::ValidationError;
+    }
+
+    // Check for basic JSON structure
+    if (content.front() != '{' || content.back() != '}') {
+      return JPLError::ValidationError;
+    }
+
+    // Check for required fields
+    if (content.find("\"bodies\"") == std::string::npos) {
+      return JPLError::ValidationError;
+    }
+
+    if (content.find("\"metadata\"") == std::string::npos) {
+      return JPLError::ValidationError;
+    }
+
+    // Count opening and closing braces for basic structure validation
+    int brace_count = 0;
+    for (char c : content) {
+      if (c == '{') brace_count++;
+      else if (c == '}') brace_count--;
+    }
+
+    if (brace_count != 0) {
+      return JPLError::ValidationError;  // Unbalanced braces
+    }
+
+    return true;
+  } catch (const std::exception&) {
+    return JPLError::ValidationError;
+  }
+}
+
+/**
+ * @brief Validate cache data integrity with comprehensive checksum verification
+ */
+JPLResult<bool> JPLClient::validate_cache_integrity(const CacheMetadata& metadata) const {
+  try {
+    // Load cache data to verify integrity
+    auto cache_result = const_cast<JPLClient*>(this)->load_from_cache();
+    if (!is_success(cache_result)) {
+      return false;  // Cache corrupted or unreadable
+    }
+
+    auto cached_data = get_value(cache_result);
+
+    // Validate body count matches metadata
+    if (cached_data.size() != metadata.body_count) {
+      return JPLError::ValidationError;  // Body count mismatch
+    }
+
+    // Enhanced checksum calculation with multiple validation methods
+    uint64_t calculated_checksum = calculate_enhanced_checksum(cached_data);
+
+    if (calculated_checksum != metadata.checksum) {
+      return JPLError::ValidationError;  // Checksum mismatch
+    }
+
+    // Validate individual body data integrity
+    for (const auto& body_data : cached_data) {
+      auto body_validation = validate_body_data_integrity(body_data);
+      if (!is_success(body_validation)) {
+        return std::get<JPLError>(body_validation);
+      }
+    }
+
+    return true;
+  } catch (const std::exception&) {
+    return JPLError::ValidationError;
+  }
+}
+
+/**
+ * @brief Calculate enhanced checksum for cache data
+ */
+uint64_t JPLClient::calculate_enhanced_checksum(const std::vector<EphemerisData>& data) const {
+  uint64_t checksum = 0;
+
+  for (const auto& body_data : data) {
+    // Include JPL ID
+    checksum += static_cast<uint64_t>(body_data.jpl_id);
+
+    // Include position components (scaled to avoid precision issues)
+    checksum += static_cast<uint64_t>(body_data.position.x() * 1000);
+    checksum += static_cast<uint64_t>(body_data.position.y() * 1000);
+    checksum += static_cast<uint64_t>(body_data.position.z() * 1000);
+
+    // Include velocity components
+    checksum += static_cast<uint64_t>(body_data.velocity.x() * 1000);
+    checksum += static_cast<uint64_t>(body_data.velocity.y() * 1000);
+    checksum += static_cast<uint64_t>(body_data.velocity.z() * 1000);
+
+    // Include mass (scaled)
+    checksum += static_cast<uint64_t>(body_data.mass / 1e20);
+
+    // Include body name hash
+    std::hash<std::string> hasher;
+    checksum += hasher(body_data.body_name);
+  }
+
+  return checksum;
+}
+
+/**
+ * @brief Validate individual body data integrity
+ */
+JPLResult<bool> JPLClient::validate_body_data_integrity(const EphemerisData& body_data) const {
+  // Validate JPL ID is reasonable
+  if (body_data.jpl_id <= 0 || body_data.jpl_id > 10000) {
+    return JPLError::ValidationError;
+  }
+
+  // Validate position values
+  double pos_magnitude = body_data.position.magnitude();
+  if (pos_magnitude < 1e3 || pos_magnitude > 1e12) {
+    return JPLError::ValidationError;
+  }
+
+  // Validate velocity values
+  double vel_magnitude = body_data.velocity.magnitude();
+  if (vel_magnitude > 1e6) {
+    return JPLError::ValidationError;
+  }
+
+  // Check for NaN or infinite values
+  if (!std::isfinite(body_data.position.x()) || !std::isfinite(body_data.position.y()) ||
+      !std::isfinite(body_data.position.z()) || !std::isfinite(body_data.velocity.x()) ||
+      !std::isfinite(body_data.velocity.y()) || !std::isfinite(body_data.velocity.z())) {
+    return JPLError::ValidationError;
+  }
+
+  // Validate mass
+  if (body_data.mass <= 0 || !std::isfinite(body_data.mass)) {
+    return JPLError::ValidationError;
+  }
+
+  // Validate body name
+  if (body_data.body_name.empty() || body_data.body_name.length() > 100) {
+    return JPLError::ValidationError;
+  }
+
+  return true;
+}
+
+/**
+ * @brief Validate consistency between different cache formats
+ */
+JPLResult<bool> JPLClient::validate_cache_consistency() const {
+  auto binary_path = config_.cache_directory / "ephemeris_cache.bin";
+  auto json_path = config_.cache_directory / "ephemeris_data.json";
+
+  bool has_binary = config_.enable_binary_cache && std::filesystem::exists(binary_path);
+  bool has_json = config_.enable_json_cache && std::filesystem::exists(json_path);
+
+  // If both formats exist, validate they contain the same data
+  if (has_binary && has_json) {
+    try {
+      // Load data from both formats
+      auto binary_data = load_binary_cache();
+      auto json_data = load_json_cache();
+
+      if (!is_success(binary_data) || !is_success(json_data)) {
+        return JPLError::ValidationError;
+      }
+
+      auto binary_bodies = get_value(binary_data);
+      auto json_bodies = get_value(json_data);
+
+      // Compare body counts
+      if (binary_bodies.size() != json_bodies.size()) {
+        return JPLError::ValidationError;
+      }
+
+      // Compare checksums
+      uint64_t binary_checksum = calculate_enhanced_checksum(binary_bodies);
+      uint64_t json_checksum = calculate_enhanced_checksum(json_bodies);
+
+      if (binary_checksum != json_checksum) {
+        return JPLError::ValidationError;
+      }
+
+      // Detailed comparison of first few bodies
+      size_t compare_count = std::min(binary_bodies.size(), size_t(5));
+      for (size_t i = 0; i < compare_count; ++i) {
+        if (!compare_body_data(binary_bodies[i], json_bodies[i])) {
+          return JPLError::ValidationError;
+        }
+      }
+    } catch (const std::exception&) {
+      return JPLError::ValidationError;
+    }
+  }
+
+  return true;
+}
+
+/**
+ * @brief Compare two body data entries for consistency
+ */
+bool JPLClient::compare_body_data(const EphemerisData& body1, const EphemerisData& body2) const {
+  const double tolerance = 1e-6;
+
+  // Compare JPL IDs
+  if (body1.jpl_id != body2.jpl_id) {
+    return false;
+  }
+
+  // Compare positions with tolerance
+  if (std::abs(body1.position.x() - body2.position.x()) > tolerance ||
+      std::abs(body1.position.y() - body2.position.y()) > tolerance ||
+      std::abs(body1.position.z() - body2.position.z()) > tolerance) {
+    return false;
+  }
+
+  // Compare velocities with tolerance
+  if (std::abs(body1.velocity.x() - body2.velocity.x()) > tolerance ||
+      std::abs(body1.velocity.y() - body2.velocity.y()) > tolerance ||
+      std::abs(body1.velocity.z() - body2.velocity.z()) > tolerance) {
+    return false;
+  }
+
+  // Compare mass with tolerance
+  if (std::abs(body1.mass - body2.mass) > body1.mass * tolerance) {
+    return false;
+  }
+
+  // Compare body names
+  if (body1.body_name != body2.body_name) {
+    return false;
+  }
+
+  return true;
+}
+
+/**
+ * @brief Load binary cache for validation
+ */
+JPLResult<std::vector<EphemerisData>> JPLClient::load_binary_cache() const {
+  auto binary_path = config_.cache_directory / "ephemeris_cache.bin";
+
+  if (!std::filesystem::exists(binary_path)) {
+    return JPLError::CacheError;
+  }
+
+  try {
+    std::ifstream file(binary_path, std::ios::binary);
+    if (!file.is_open()) {
+      return JPLError::CacheError;
+    }
+
+    // Read and validate header
+    uint32_t magic_number, version, body_count;
+    file.read(reinterpret_cast<char*>(&magic_number), sizeof(magic_number));
+    file.read(reinterpret_cast<char*>(&version), sizeof(version));
+    file.read(reinterpret_cast<char*>(&body_count), sizeof(body_count));
+
+    if (magic_number != 0x4A504C42 || version != 1) {
+      return JPLError::ValidationError;
+    }
+
+    std::vector<EphemerisData> bodies;
+    bodies.reserve(body_count);
+
+    // Read body data
+    for (uint32_t i = 0; i < body_count; ++i) {
+      EphemerisData body_data;
+
+      // Read JPL ID
+      file.read(reinterpret_cast<char*>(&body_data.jpl_id), sizeof(body_data.jpl_id));
+
+      // Read position
+      double pos[3];
+      file.read(reinterpret_cast<char*>(pos), sizeof(pos));
+      body_data.position = SolarSystem::Math::Vector3d{pos[0], pos[1], pos[2]};
+
+      // Read velocity
+      double vel[3];
+      file.read(reinterpret_cast<char*>(vel), sizeof(vel));
+      body_data.velocity = SolarSystem::Math::Vector3d{vel[0], vel[1], vel[2]};
+
+      // Read mass
+      file.read(reinterpret_cast<char*>(&body_data.mass), sizeof(body_data.mass));
+
+      // Read body name length and name
+      uint32_t name_length;
+      file.read(reinterpret_cast<char*>(&name_length), sizeof(name_length));
+
+      if (name_length > 0 && name_length < 1000) {  // Reasonable bounds
+        body_data.body_name.resize(name_length);
+        file.read(&body_data.body_name[0], name_length);
+      }
+
+      // Set epoch
+      body_data.epoch = std::chrono::system_clock::now();
+
+      bodies.push_back(body_data);
+    }
+
+    return bodies;
+  } catch (const std::exception&) {
+    return JPLError::CacheError;
+  }
+}
+
+/**
+ * @brief Load JSON cache for validation
+ */
+JPLResult<std::vector<EphemerisData>> JPLClient::load_json_cache() const {
+  auto json_path = config_.cache_directory / "ephemeris_data.json";
+
+  if (!std::filesystem::exists(json_path)) {
+    return JPLError::CacheError;
+  }
+
+  try {
+    std::ifstream file(json_path);
+    if (!file.is_open()) {
+      return JPLError::CacheError;
+    }
+
+    std::string content;
+    std::string line;
+    while (std::getline(file, line)) {
+      content += line + "\n";
+    }
+
+    std::vector<EphemerisData> bodies;
+
+    // Simple JSON parsing for validation (basic implementation)
+    auto bodies_start = content.find("\"bodies\":");
+    if (bodies_start == std::string::npos) {
+      return JPLError::ValidationError;
+    }
+
+    auto array_start = content.find("[", bodies_start);
+    auto array_end = content.find("]", array_start);
+
+    if (array_start == std::string::npos || array_end == std::string::npos) {
+      return JPLError::ValidationError;
+    }
+
+    std::string bodies_section = content.substr(array_start + 1, array_end - array_start - 1);
+
+    // Parse individual body objects (simplified parsing)
+    size_t pos = 0;
+    while (pos < bodies_section.length()) {
+      auto obj_start = bodies_section.find("{", pos);
+      if (obj_start == std::string::npos) break;
+
+      auto obj_end = bodies_section.find("}", obj_start);
+      if (obj_end == std::string::npos) break;
+
+      std::string body_json = bodies_section.substr(obj_start, obj_end - obj_start + 1);
+
+      EphemerisData body_data;
+
+      // Parse JPL ID
+      auto jpl_id_pos = body_json.find("\"jpl_id\":");
+      if (jpl_id_pos != std::string::npos) {
+        auto value_start = body_json.find(":", jpl_id_pos) + 1;
+        auto value_end = body_json.find(",", value_start);
+        if (value_end == std::string::npos) value_end = body_json.find("}", value_start);
+
+        std::string jpl_id_str = body_json.substr(value_start, value_end - value_start);
+        jpl_id_str.erase(std::remove_if(jpl_id_str.begin(), jpl_id_str.end(), ::isspace), jpl_id_str.end());
+        body_data.jpl_id = std::stoi(jpl_id_str);
+      }
+
+      // Parse body name
+      auto name_pos = body_json.find("\"body_name\":");
+      if (name_pos != std::string::npos) {
+        auto quote_start = body_json.find("\"", name_pos + 12);
+        auto quote_end = body_json.find("\"", quote_start + 1);
+        if (quote_start != std::string::npos && quote_end != std::string::npos) {
+          body_data.body_name = body_json.substr(quote_start + 1, quote_end - quote_start - 1);
+        }
+      }
+
+      // Parse position (simplified)
+      auto pos_x = body_json.find("\"position_x\":");
+      auto pos_y = body_json.find("\"position_y\":");
+      auto pos_z = body_json.find("\"position_z\":");
+
+      if (pos_x != std::string::npos && pos_y != std::string::npos && pos_z != std::string::npos) {
+        try {
+          double x = parse_json_double(body_json, pos_x);
+          double y = parse_json_double(body_json, pos_y);
+          double z = parse_json_double(body_json, pos_z);
+          body_data.position = SolarSystem::Math::Vector3d{x, y, z};
+        } catch (const std::exception&) {
+          // Skip this body if parsing fails
+          pos = obj_end + 1;
+          continue;
+        }
+      }
+
+      // Parse velocity (simplified)
+      auto vel_x = body_json.find("\"velocity_x\":");
+      auto vel_y = body_json.find("\"velocity_y\":");
+      auto vel_z = body_json.find("\"velocity_z\":");
+
+      if (vel_x != std::string::npos && vel_y != std::string::npos && vel_z != std::string::npos) {
+        try {
+          double vx = parse_json_double(body_json, vel_x);
+          double vy = parse_json_double(body_json, vel_y);
+          double vz = parse_json_double(body_json, vel_z);
+          body_data.velocity = SolarSystem::Math::Vector3d{vx, vy, vz};
+        } catch (const std::exception&) {
+          // Use zero velocity if parsing fails
+          body_data.velocity = SolarSystem::Math::Vector3d{0.0, 0.0, 0.0};
+        }
+      }
+
+      // Parse mass
+      auto mass_pos = body_json.find("\"mass\":");
+      if (mass_pos != std::string::npos) {
+        try {
+          body_data.mass = parse_json_double(body_json, mass_pos);
+        } catch (const std::exception&) {
+          body_data.mass = 1.0e24;  // Default mass
+        }
+      }
+
+      // Set epoch
+      body_data.epoch = std::chrono::system_clock::now();
+
+      bodies.push_back(body_data);
+      pos = obj_end + 1;
+    }
+
+    return bodies;
+  } catch (const std::exception&) {
+    return JPLError::CacheError;
+  }
+}
+
+/**
+ * @brief Parse double value from JSON string
+ */
+double JPLClient::parse_json_double(const std::string& json, size_t field_pos) const {
+  auto value_start = json.find(":", field_pos) + 1;
+  auto value_end = json.find(",", value_start);
+  if (value_end == std::string::npos) value_end = json.find("}", value_start);
+
+  std::string value_str = json.substr(value_start, value_end - value_start);
+  value_str.erase(std::remove_if(value_str.begin(), value_str.end(), ::isspace), value_str.end());
+
+  return std::stod(value_str);
+}
+
+/**
+ * @brief Detect and recover from cache corruption
+ */
+JPLResult<bool> JPLClient::detect_and_recover_cache_corruption() {
+  try {
+    // First, try to validate the cache
+    auto validation_result = validate_cache();
+
+    if (is_success(validation_result) && get_value(validation_result)) {
+      return true;  // Cache is valid, no recovery needed
+    }
+
+    // Cache is corrupted, attempt recovery
+    auto recovery_result = attempt_cache_recovery();
+    if (!is_success(recovery_result)) {
+      return std::get<JPLError>(recovery_result);
+    }
+
+    // After recovery, validate again
+    auto post_recovery_validation = validate_cache();
+    return post_recovery_validation;
+
+  } catch (const std::exception&) {
+    return JPLError::ValidationError;
+  }
+}
+
+/**
+ * @brief Attempt to recover corrupted cache
+ */
+JPLResult<bool> JPLClient::attempt_cache_recovery() {
+  try {
+    auto binary_path = config_.cache_directory / "ephemeris_cache.bin";
+    auto json_path = config_.cache_directory / "ephemeris_data.json";
+    auto metadata_path = config_.cache_directory / "metadata.json";
+
+    bool has_binary = config_.enable_binary_cache && std::filesystem::exists(binary_path);
+    bool has_json = config_.enable_json_cache && std::filesystem::exists(json_path);
+
+    // Strategy 1: If one format is corrupted but the other is valid, recover from the valid one
+    if (has_binary && has_json) {
+      auto binary_validation = validate_binary_cache_format(binary_path);
+      auto json_validation = validate_json_cache_format(json_path);
+
+      if (is_success(binary_validation) && !is_success(json_validation)) {
+        // Binary is good, JSON is corrupted - regenerate JSON from binary
+        auto binary_data = load_binary_cache();
+        if (is_success(binary_data)) {
+          auto save_result = save_json_cache(get_value(binary_data));
+          if (is_success(save_result)) {
+            return true;  // Recovery successful
+          }
+        }
+      } else if (!is_success(binary_validation) && is_success(json_validation)) {
+        // JSON is good, binary is corrupted - regenerate binary from JSON
+        auto json_data = load_json_cache();
+        if (is_success(json_data)) {
+          auto save_result = save_binary_cache(get_value(json_data));
+          if (is_success(save_result)) {
+            return true;  // Recovery successful
+          }
+        }
+      }
+    }
+
+    // Strategy 2: If metadata is corrupted but cache files are readable, regenerate metadata
+    if ((has_binary || has_json) && !std::filesystem::exists(metadata_path)) {
+      std::vector<EphemerisData> cache_data;
+
+      if (has_binary) {
+        auto binary_data = load_binary_cache();
+        if (is_success(binary_data)) {
+          cache_data = get_value(binary_data);
+        }
+      } else if (has_json) {
+        auto json_data = load_json_cache();
+        if (is_success(json_data)) {
+          cache_data = get_value(json_data);
+        }
+      }
+
+      if (!cache_data.empty()) {
+        // Regenerate metadata
+        CacheMetadata new_metadata;
+        new_metadata.created_at = std::chrono::system_clock::now();
+        new_metadata.epoch = new_metadata.created_at;
+        new_metadata.source = "Recovery";
+        new_metadata.body_count = cache_data.size();
+        new_metadata.checksum = calculate_enhanced_checksum(cache_data);
+
+        auto save_metadata_result = save_cache_metadata(new_metadata);
+        if (is_success(save_metadata_result)) {
+          return true;  // Recovery successful
+        }
+      }
+    }
+
+    // Strategy 3: If all else fails, clear corrupted cache to force fresh fetch
+    return clear_corrupted_cache();
+
+  } catch (const std::exception&) {
+    return JPLError::ValidationError;
+  }
+}
+
+/**
+ * @brief Clear corrupted cache files
+ */
+JPLResult<bool> JPLClient::clear_corrupted_cache() {
+  try {
+    auto binary_path = config_.cache_directory / "ephemeris_cache.bin";
+    auto json_path = config_.cache_directory / "ephemeris_data.json";
+    auto metadata_path = config_.cache_directory / "metadata.json";
+
+    // Remove corrupted files
+    std::error_code ec;
+
+    if (std::filesystem::exists(binary_path)) {
+      std::filesystem::remove(binary_path, ec);
+    }
+
+    if (std::filesystem::exists(json_path)) {
+      std::filesystem::remove(json_path, ec);
+    }
+
+    if (std::filesystem::exists(metadata_path)) {
+      std::filesystem::remove(metadata_path, ec);
+    }
+
+    return true;  // Cache cleared, ready for fresh data
+  } catch (const std::exception&) {
+    return JPLError::ValidationError;
+  }
+}
+
+/**
+ * @brief Save binary cache (helper for recovery)
+ */
+JPLResult<bool> JPLClient::save_binary_cache(const std::vector<EphemerisData>& data) {
+  if (!config_.enable_binary_cache) {
+    return true;  // Binary cache disabled
+  }
+
+  try {
+    auto binary_path = config_.cache_directory / "ephemeris_cache.bin";
+    std::ofstream file(binary_path, std::ios::binary);
+
+    if (!file.is_open()) {
+      return JPLError::CacheError;
+    }
+
+    // Write header
+    uint32_t magic_number = 0x4A504C42;  // "JPLB"
+    uint32_t version = 1;
+    uint32_t body_count = static_cast<uint32_t>(data.size());
+
+    file.write(reinterpret_cast<const char*>(&magic_number), sizeof(magic_number));
+    file.write(reinterpret_cast<const char*>(&version), sizeof(version));
+    file.write(reinterpret_cast<const char*>(&body_count), sizeof(body_count));
+
+    // Write body data
+    for (const auto& body_data : data) {
+      file.write(reinterpret_cast<const char*>(&body_data.jpl_id), sizeof(body_data.jpl_id));
+
+      double pos[3] = {static_cast<double>(body_data.position.x()),
+                       static_cast<double>(body_data.position.y()),
+                       static_cast<double>(body_data.position.z())};
+      file.write(reinterpret_cast<const char*>(pos), sizeof(pos));
+
+      double vel[3] = {static_cast<double>(body_data.velocity.x()),
+                       static_cast<double>(body_data.velocity.y()),
+                       static_cast<double>(body_data.velocity.z())};
+      file.write(reinterpret_cast<const char*>(vel), sizeof(vel));
+
+      file.write(reinterpret_cast<const char*>(&body_data.mass), sizeof(body_data.mass));
+
+      uint32_t name_length = static_cast<uint32_t>(body_data.body_name.length());
+      file.write(reinterpret_cast<const char*>(&name_length), sizeof(name_length));
+      file.write(body_data.body_name.c_str(), name_length);
+    }
+
+    return true;
+  } catch (const std::exception&) {
+    return JPLError::CacheError;
+  }
+}
+
+/**
+ * @brief Save JSON cache (helper for recovery)
+ */
+JPLResult<bool> JPLClient::save_json_cache(const std::vector<EphemerisData>& data) {
+  if (!config_.enable_json_cache) {
+    return true;  // JSON cache disabled
+  }
+
+  try {
+    auto json_path = config_.cache_directory / "ephemeris_data.json";
+    std::ofstream file(json_path);
+
+    if (!file.is_open()) {
+      return JPLError::CacheError;
+    }
+
+    // Write JSON structure
+    file << "{\n";
+    file << "  \"metadata\": {\n";
+    file << "    \"created_at\": \"" << std::chrono::duration_cast<std::chrono::seconds>(
+        std::chrono::system_clock::now().time_since_epoch()).count() << "\",\n";
+    file << "    \"body_count\": " << data.size() << "\n";
+    file << "  },\n";
+    file << "  \"bodies\": [\n";
+
+    for (size_t i = 0; i < data.size(); ++i) {
+      const auto& body_data = data[i];
+
+      file << "    {\n";
+      file << "      \"jpl_id\": " << body_data.jpl_id << ",\n";
+      file << "      \"body_name\": \"" << body_data.body_name << "\",\n";
+      file << "      \"position_x\": " << body_data.position.x() << ",\n";
+      file << "      \"position_y\": " << body_data.position.y() << ",\n";
+      file << "      \"position_z\": " << body_data.position.z() << ",\n";
+      file << "      \"velocity_x\": " << body_data.velocity.x() << ",\n";
+      file << "      \"velocity_y\": " << body_data.velocity.y() << ",\n";
+      file << "      \"velocity_z\": " << body_data.velocity.z() << ",\n";
+      file << "      \"mass\": " << body_data.mass << "\n";
+      file << "    }";
+
+      if (i < data.size() - 1) {
+        file << ",";
+      }
+      file << "\n";
+    }
+
+    file << "  ]\n";
+    file << "}\n";
+
+    return true;
+  } catch (const std::exception&) {
+    return JPLError::CacheError;
+  }
+}
+
+/**
+ * @brief Save cache metadata
+ */
+JPLVoidResult JPLClient::save_cache_metadata(const CacheMetadata& metadata) {
+  try {
+    auto metadata_path = config_.cache_directory / "metadata.json";
+
+    // Ensure cache directory exists
+    std::filesystem::create_directories(config_.cache_directory);
+
+    std::ofstream file(metadata_path);
+    if (!file.is_open()) {
+      return JPLError::CacheError;
+    }
+
+    // Write metadata as JSON
+    file << "{\n";
+    file << "  \"created_at\": " << std::chrono::duration_cast<std::chrono::seconds>(
+        metadata.created_at.time_since_epoch()).count() << ",\n";
+    file << "  \"epoch\": " << std::chrono::duration_cast<std::chrono::seconds>(
+        metadata.epoch.time_since_epoch()).count() << ",\n";
+    file << "  \"source\": \"" << metadata.source << "\",\n";
+    file << "  \"body_count\": " << metadata.body_count << ",\n";
+    file << "  \"checksum\": " << metadata.checksum << "\n";
+    file << "}\n";
+
+    return {};
+  } catch (const std::exception&) {
+    return JPLError::CacheError;
+  }
+}
 
 }  // namespace SolarSystem::JPL

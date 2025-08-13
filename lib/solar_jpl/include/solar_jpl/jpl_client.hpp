@@ -261,6 +261,44 @@ class JPLClient {
    * @brief Save cache metadata
    */
   [[nodiscard]] JPLVoidResult save_cache_metadata(const CacheMetadata& metadata);
+
+  /**
+   * @brief Enhanced cache validation methods
+   */
+  [[nodiscard]] JPLResult<bool> validate_cache_metadata() const;
+  [[nodiscard]] JPLResult<bool> validate_cache_files() const;
+  [[nodiscard]] JPLResult<bool> validate_cache_formats() const;
+  [[nodiscard]] JPLResult<bool> validate_binary_cache_format(const std::filesystem::path& binary_path) const;
+  [[nodiscard]] JPLResult<bool> validate_json_cache_format(const std::filesystem::path& json_path) const;
+  [[nodiscard]] JPLResult<bool> validate_cache_integrity(const CacheMetadata& metadata) const;
+  [[nodiscard]] JPLResult<bool> validate_cache_consistency() const;
+
+  /**
+   * @brief Cache data validation helpers
+   */
+  [[nodiscard]] uint64_t calculate_enhanced_checksum(const std::vector<EphemerisData>& data) const;
+  [[nodiscard]] JPLResult<bool> validate_body_data_integrity(const EphemerisData& body_data) const;
+  [[nodiscard]] bool compare_body_data(const EphemerisData& body1, const EphemerisData& body2) const;
+
+  /**
+   * @brief Cache loading methods for validation
+   */
+  [[nodiscard]] JPLResult<std::vector<EphemerisData>> load_binary_cache() const;
+  [[nodiscard]] JPLResult<std::vector<EphemerisData>> load_json_cache() const;
+
+  /**
+   * @brief JSON parsing helper
+   */
+  [[nodiscard]] double parse_json_double(const std::string& json, size_t field_pos) const;
+
+  /**
+   * @brief Cache corruption detection and recovery
+   */
+  [[nodiscard]] JPLResult<bool> detect_and_recover_cache_corruption();
+  [[nodiscard]] JPLResult<bool> attempt_cache_recovery();
+  [[nodiscard]] JPLResult<bool> clear_corrupted_cache();
+  [[nodiscard]] JPLResult<bool> save_binary_cache(const std::vector<EphemerisData>& data);
+  [[nodiscard]] JPLResult<bool> save_json_cache(const std::vector<EphemerisData>& data);
 };
 
 /**
