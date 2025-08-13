@@ -428,13 +428,67 @@ class BodySelector {
 };
 
 /**
- * @brief Configuration builder for simulation parameters
+ * @brief Configuration template for predefined simulation scenarios
+ */
+struct ConfigurationTemplate {
+  std::string name;
+  std::string description;
+  Simulation::SimulationConfig config;
+  std::vector<std::string> recommended_bodies;
+  std::unordered_map<std::string, std::string> metadata;
+
+  ConfigurationTemplate() = default;
+
+  ConfigurationTemplate(const std::string& template_name, const std::string& desc,
+                       const Simulation::SimulationConfig& cfg)
+    : name(template_name), description(desc), config(cfg) {}
+};
+
+/**
+ * @brief Configuration conflict information
+ */
+struct ConfigurationConflict {
+  std::string parameter1;
+  std::string parameter2;
+  std::string description;
+  std::vector<std::string> resolution_options;
+  std::string recommended_resolution;
+
+  ConfigurationConflict() = default;
+
+  ConfigurationConflict(const std::string& p1, const std::string& p2, const std::string& desc)
+    : parameter1(p1), parameter2(p2), description(desc) {}
+};
+
+/**
+ * @brief Configuration migration information
+ */
+struct ConfigurationMigration {
+  int from_version;
+  int to_version;
+  std::string description;
+  std::function<Simulation::SimulationConfig(const Simulation::SimulationConfig&)> migrate_function;
+
+  ConfigurationMigration() = default;
+
+  ConfigurationMigration(int from, int to, const std::string& desc,
+                        std::function<Simulation::SimulationConfig(const Simulation::SimulationConfig&)> func)
+    : from_version(from), to_version(to), description(desc), migrate_function(func) {}
+};
+
+/**
+ * @brief Enhanced configuration builder for simulation parameters
  *
  * Provides a fluent interface for building simulation configurations
- * that can be used with SimulationBuilder.
+ * with comprehensive validation, conflict detection, templates, and migration support.
  */
 class ConfigurationBuilder {
  public:
+  /**
+   * @brief Configuration version for migration support
+   */
+  static constexpr int CURRENT_CONFIG_VERSION = 2;
+
   /**
    * @brief Start with default configuration
    */
@@ -444,6 +498,11 @@ class ConfigurationBuilder {
    * @brief Start with existing configuration
    */
   explicit ConfigurationBuilder(const Simulation::SimulationConfig& base);
+
+  /**
+   * @brief Start with configuration template
+   */
+  explicit ConfigurationBuilder(const std::string& template_name);
 
   // === PHYSICS PARAMETERS ===
 
@@ -472,27 +531,136 @@ class ConfigurationBuilder {
    */
   ConfigurationBuilder& convergence_threshold(double threshold);
 
-  // === PRESETS ===
+  /**
+   * @brief Set adaptive timestep parameters
+   */
+  ConfigurationBuilder& adaptive_timestep(bool enable, double min_step = 1.0, double max_step = 3600.0);
 
   /**
-   * @brief High accuracy preset
+   * @brief Set collision detection parameters
+   */
+  ConfigurationBuilder& collision_detection(bool enable, double threshold = 1e6);
+
+  // === ENHANCED PRESETS ===
+
+  /**
+   * @brief High accuracy preset for research simulations
    */
   ConfigurationBuilder& high_accuracy();
 
   /**
-   * @brief High performance preset
+   * @brief High performance preset for large-scale simulations
    */
   ConfigurationBuilder& high_performance();
 
   /**
-   * @brief Balanced preset
+   * @brief Balanced preset for general use
    */
   ConfigurationBuilder& balanced();
 
   /**
-   * @brief Real-time preset
+   * @brief Real-time preset for interactive applications
    */
   ConfigurationBuilder& real_time();
+
+  /**
+   * @brief Educational preset for teaching scenarios
+   */
+  ConfigurationBuilder& educational();
+
+  /**
+   * @brief Research preset for scientific studies
+   */
+  ConfigurationBuilder& research();
+
+  /**
+   * @brief Visualization preset for rendering applications
+   */
+  ConfigurationBuilder& visualization();
+
+  // === TEMPLATE MANAGEMENT ===
+
+  /**
+   * @brief Load configuration from template
+   */
+  ConfigurationBuilder& from_template(const std::string& template_name);
+
+  /**
+   * @brief Save current configuration as template
+   */
+  bool save_as_template(const std::string& template_name, const std::string& description);
+
+  /**
+   * @brief Get available template names
+   */
+  static std::vector<std::string> get_available_templates();
+
+  /**
+   * @brief Get template details
+   */
+  static std::optional<ConfigurationTemplate> get_template(const std::string& name);
+
+  // === VALIDATION AND CONFLICT DETECTION ===
+
+  /**
+   * @brief Comprehensive configuration validation
+   */
+  [[nodiscard]] ValidationResult validate_comprehensive() const;
+
+  /**
+   * @brief Detect configuration conflicts
+   */
+  [[nodiscard]] std::vector<ConfigurationConflict> detect_conflicts() const;
+
+  /**
+   * @brief Resolve configuration conflicts automatically
+   */
+  ConfigurationBuilder& resolve_conflicts_automatically();
+
+  /**
+   * @brief Apply specific conflict resolution
+   */
+  ConfigurationBuilder& resolve_conflict(const std::string& parameter1, const std::string& parameter2,
+                                        const std::string& resolution);
+
+  // === MIGRATION SUPPORT ===
+
+  /**
+   * @brief Migrate configuration from older version
+   */
+  ConfigurationBuilder& migrate_from_version(int version);
+
+  /**
+   * @brief Check if configuration needs migration
+   */
+  bool needs_migration() const;
+
+  /**
+   * @brief Get configuration version
+   */
+  int get_version() const;
+
+  // === SERIALIZATION ===
+
+  /**
+   * @brief Export configuration to JSON string
+   */
+  std::string to_json() const;
+
+  /**
+   * @brief Import configuration from JSON string
+   */
+  ConfigurationBuilder& from_json(const std::string& json_str);
+
+  /**
+   * @brief Save configuration to file
+   */
+  bool save_to_file(const std::string& filename) const;
+
+  /**
+   * @brief Load configuration from file
+   */
+  ConfigurationBuilder& load_from_file(const std::string& filename);
 
   // === BUILDING ===
 
@@ -502,12 +670,39 @@ class ConfigurationBuilder {
   Simulation::SimulationConfig build() const;
 
   /**
-   * @brief Validate configuration
+   * @brief Validate configuration (legacy method)
    */
   bool validate(std::string* error_message = nullptr) const;
 
+  /**
+   * @brief Get configuration summary
+   */
+  std::string get_summary() const;
+
+  /**
+   * @brief Compare with another configuration
+   */
+  std::vector<std::string> compare_with(const ConfigurationBuilder& other) const;
+
  private:
   Simulation::SimulationConfig config_;
+  int config_version_ = CURRENT_CONFIG_VERSION;
+  std::unordered_map<std::string, std::string> metadata_;
+
+  // Static template registry
+  static std::unordered_map<std::string, ConfigurationTemplate> templates_;
+  static std::vector<ConfigurationMigration> migrations_;
+  static bool templates_initialized_;
+
+  // Helper methods
+  void initialize_templates();
+  void initialize_migrations();
+  ValidationResult validate_physics_parameters() const;
+  ValidationResult validate_adaptive_timestep() const;
+  ValidationResult validate_collision_detection() const;
+  std::vector<ConfigurationConflict> check_timestep_conflicts() const;
+  std::vector<ConfigurationConflict> check_adaptive_conflicts() const;
+  std::vector<ConfigurationConflict> check_performance_conflicts() const;
 };
 
 }  // namespace SolarSystem::Core::Builders

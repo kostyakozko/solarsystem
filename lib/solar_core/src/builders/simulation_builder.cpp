@@ -4,6 +4,8 @@
 #include <sstream>
 #include <algorithm>
 #include <cmath>
+#include <fstream>
+#include <regex>
 
 #include "solar_core/bodies/body_factory.hpp"
 #include "solar_core/data/body_definitions.hpp"
@@ -458,14 +460,39 @@ void BodySelector::add_name_filter(const std::vector<std::string>& names, bool i
   });
 }
 
-// === ConfigurationBuilder Implementation ===
+// === Enhanced ConfigurationBuilder Implementation ===
+
+// Static member initialization
+std::unordered_map<std::string, ConfigurationTemplate> ConfigurationBuilder::templates_;
+std::vector<ConfigurationMigration> ConfigurationBuilder::migrations_;
+bool ConfigurationBuilder::templates_initialized_ = false;
 
 ConfigurationBuilder::ConfigurationBuilder() {
   // Use default SimulationConfig values
+  if (!templates_initialized_) {
+    initialize_templates();
+    initialize_migrations();
+    templates_initialized_ = true;
+  }
 }
 
 ConfigurationBuilder::ConfigurationBuilder(const Simulation::SimulationConfig& base)
-    : config_(base) {}
+    : config_(base) {
+  if (!templates_initialized_) {
+    initialize_templates();
+    initialize_migrations();
+    templates_initialized_ = true;
+  }
+}
+
+ConfigurationBuilder::ConfigurationBuilder(const std::string& template_name) {
+  if (!templates_initialized_) {
+    initialize_templates();
+    initialize_migrations();
+    templates_initialized_ = true;
+  }
+  from_template(template_name);
+}
 
 ConfigurationBuilder& ConfigurationBuilder::timestep(double seconds) {
   config_.time_step = seconds;
@@ -492,45 +519,577 @@ ConfigurationBuilder& ConfigurationBuilder::convergence_threshold(double thresho
   return *this;
 }
 
+ConfigurationBuilder& ConfigurationBuilder::adaptive_timestep(bool enable, double min_step, double max_step) {
+  config_.use_adaptive_timestep = enable;
+  config_.min_timestep = min_step;
+  config_.max_timestep = max_step;
+  return *this;
+}
+
+ConfigurationBuilder& ConfigurationBuilder::collision_detection(bool enable, double threshold) {
+  config_.enable_collision_detection = enable;
+  config_.collision_threshold = threshold;
+  return *this;
+}
+
 ConfigurationBuilder& ConfigurationBuilder::high_accuracy() {
   config_.time_step = 60.0;  // 1 minute
   config_.tolerance = 1e-15;
+  config_.use_adaptive_timestep = true;
+  config_.min_timestep = 1.0;
+  config_.max_timestep = 300.0;  // 5 minutes max
+  metadata_["preset"] = "high_accuracy";
+  metadata_["description"] = "High accuracy preset for research simulations";
   return *this;
 }
 
 ConfigurationBuilder& ConfigurationBuilder::high_performance() {
   config_.time_step = 7200.0;  // 2 hours
   config_.tolerance = 1e-10;
+  config_.use_adaptive_timestep = false;
+  config_.enable_collision_detection = false;
+  metadata_["preset"] = "high_performance";
+  metadata_["description"] = "High performance preset for large-scale simulations";
   return *this;
 }
 
 ConfigurationBuilder& ConfigurationBuilder::balanced() {
   config_.time_step = 3600.0;  // 1 hour
   config_.tolerance = 1e-12;
+  config_.use_adaptive_timestep = true;
+  config_.min_timestep = 60.0;
+  config_.max_timestep = 7200.0;
+  metadata_["preset"] = "balanced";
+  metadata_["description"] = "Balanced preset for general use";
   return *this;
 }
 
 ConfigurationBuilder& ConfigurationBuilder::real_time() {
   config_.time_step = 1.0;  // 1 second
   config_.tolerance = 1e-8;
+  config_.use_adaptive_timestep = false;
+  config_.enable_collision_detection = true;
+  metadata_["preset"] = "real_time";
+  metadata_["description"] = "Real-time preset for interactive applications";
   return *this;
 }
 
-Simulation::SimulationConfig ConfigurationBuilder::build() const { return config_; }
+ConfigurationBuilder& ConfigurationBuilder::educational() {
+  config_.time_step = 3600.0;  // 1 hour
+  config_.tolerance = 1e-10;
+  config_.use_adaptive_timestep = false;
+  config_.enable_collision_detection = false;
+  metadata_["preset"] = "educational";
+  metadata_["description"] = "Educational preset for teaching scenarios";
+  return *this;
+}
+
+ConfigurationBuilder& ConfigurationBuilder::research() {
+  config_.time_step = 300.0;  // 5 minutes
+  config_.tolerance = 1e-14;
+  config_.use_adaptive_timestep = true;
+  config_.min_timestep = 1.0;
+  config_.max_timestep = 1800.0;  // 30 minutes max
+  metadata_["preset"] = "research";
+  metadata_["description"] = "Research preset for scientific studies";
+  return *this;
+}
+
+ConfigurationBuilder& ConfigurationBuilder::visualization() {
+  config_.time_step = 60.0;  // 1 minute
+  config_.tolerance = 1e-10;
+  config_.use_adaptive_timestep = false;
+  config_.enable_collision_detection = true;
+  config_.collision_threshold = 1e5;  // Closer collision detection for visualization
+  metadata_["preset"] = "visualization";
+  metadata_["description"] = "Visualization preset for rendering applications";
+  return *this;
+}
+
+ConfigurationBuilder& ConfigurationBuilder::from_template(const std::string& template_name) {
+  auto it = templates_.find(template_name);
+  if (it != templates_.end()) {
+    config_ = it->second.config;
+    metadata_ = it->second.metadata;
+  }
+  return *this;
+}
+
+bool ConfigurationBuilder::save_as_template(const std::string& template_name, const std::string& description) {
+  ConfigurationTemplate new_template(template_name, description, config_);
+  new_template.metadata = metadata_;
+  templates_[template_name] = new_template;
+  return true;  // In a real implementation, this would save to persistent storage
+}
+
+std::vector<std::string> ConfigurationBuilder::get_available_templates() {
+  if (!templates_initialized_) {
+    // Force initialization of static members
+    ConfigurationBuilder temp;
+  }
+
+  std::vector<std::string> names;
+  for (const auto& pair : templates_) {
+    names.push_back(pair.first);
+  }
+  return names;
+}
+
+std::optional<ConfigurationTemplate> ConfigurationBuilder::get_template(const std::string& name) {
+  if (!templates_initialized_) {
+    // Force initialization of static members
+    ConfigurationBuilder temp;
+  }
+
+  auto it = templates_.find(name);
+  if (it != templates_.end()) {
+    return it->second;
+  }
+  return std::nullopt;
+}
+
+ValidationResult ConfigurationBuilder::validate_comprehensive() const {
+  ValidationResult result;
+
+  // Validate physics parameters
+  auto physics_result = validate_physics_parameters();
+  for (const auto& error : physics_result.errors) result.add_error(error);
+  for (const auto& warning : physics_result.warnings) result.add_error(warning);
+
+  // Validate adaptive timestep settings
+  if (config_.use_adaptive_timestep) {
+    auto adaptive_result = validate_adaptive_timestep();
+    for (const auto& error : adaptive_result.errors) result.add_error(error);
+    for (const auto& warning : adaptive_result.warnings) result.add_error(warning);
+  }
+
+  // Validate collision detection settings
+  if (config_.enable_collision_detection) {
+    auto collision_result = validate_collision_detection();
+    for (const auto& error : collision_result.errors) result.add_error(error);
+    for (const auto& warning : collision_result.warnings) result.add_error(warning);
+  }
+
+  // Generate summary
+  if (result.is_valid) {
+    result.summary = "Configuration is valid and ready for use";
+  } else {
+    result.summary = "Configuration has " + std::to_string(result.errors.size()) +
+                    " error(s) and " + std::to_string(result.warnings.size()) + " warning(s)";
+  }
+
+  return result;
+}
+
+std::vector<ConfigurationConflict> ConfigurationBuilder::detect_conflicts() const {
+  std::vector<ConfigurationConflict> conflicts;
+
+  // Check timestep conflicts
+  auto timestep_conflicts = check_timestep_conflicts();
+  conflicts.insert(conflicts.end(), timestep_conflicts.begin(), timestep_conflicts.end());
+
+  // Check adaptive timestep conflicts
+  if (config_.use_adaptive_timestep) {
+    auto adaptive_conflicts = check_adaptive_conflicts();
+    conflicts.insert(conflicts.end(), adaptive_conflicts.begin(), adaptive_conflicts.end());
+  }
+
+  // Check performance conflicts
+  auto performance_conflicts = check_performance_conflicts();
+  conflicts.insert(conflicts.end(), performance_conflicts.begin(), performance_conflicts.end());
+
+  return conflicts;
+}
+
+ConfigurationBuilder& ConfigurationBuilder::resolve_conflicts_automatically() {
+  auto conflicts = detect_conflicts();
+
+  for (const auto& conflict : conflicts) {
+    if (!conflict.recommended_resolution.empty()) {
+      // Apply recommended resolution
+      if (conflict.parameter1 == "timestep" && conflict.parameter2 == "adaptive_timestep") {
+        if (conflict.recommended_resolution == "disable_adaptive") {
+          config_.use_adaptive_timestep = false;
+        } else if (conflict.recommended_resolution == "adjust_timestep") {
+          config_.time_step = std::max(config_.min_timestep, std::min(config_.max_timestep, config_.time_step));
+        }
+      }
+      // Add more conflict resolution logic as needed
+    }
+  }
+
+  return *this;
+}
+
+ConfigurationBuilder& ConfigurationBuilder::resolve_conflict(const std::string& parameter1,
+                                                            const std::string& parameter2,
+                                                            const std::string& resolution) {
+  // Apply specific conflict resolution
+  if (parameter1 == "timestep" && parameter2 == "adaptive_timestep") {
+    if (resolution == "disable_adaptive") {
+      config_.use_adaptive_timestep = false;
+    } else if (resolution == "adjust_timestep") {
+      config_.time_step = std::max(config_.min_timestep, std::min(config_.max_timestep, config_.time_step));
+    }
+  }
+  // Add more specific resolution logic as needed
+
+  return *this;
+}
+
+ConfigurationBuilder& ConfigurationBuilder::migrate_from_version(int version) {
+  for (const auto& migration : migrations_) {
+    if (migration.from_version == version && migration.to_version > version) {
+      config_ = migration.migrate_function(config_);
+      config_version_ = migration.to_version;
+      break;
+    }
+  }
+  return *this;
+}
+
+bool ConfigurationBuilder::needs_migration() const {
+  return config_version_ < CURRENT_CONFIG_VERSION;
+}
+
+int ConfigurationBuilder::get_version() const {
+  return config_version_;
+}
+
+std::string ConfigurationBuilder::to_json() const {
+  // Simple JSON serialization (in a real implementation, use a JSON library)
+  std::ostringstream json;
+  json << "{\n";
+  json << "  \"version\": " << config_version_ << ",\n";
+  json << "  \"time_step\": " << config_.time_step << ",\n";
+  json << "  \"gravitational_constant\": " << config_.gravitational_constant << ",\n";
+  json << "  \"tolerance\": " << config_.tolerance << ",\n";
+  json << "  \"use_adaptive_timestep\": " << (config_.use_adaptive_timestep ? "true" : "false") << ",\n";
+  json << "  \"min_timestep\": " << config_.min_timestep << ",\n";
+  json << "  \"max_timestep\": " << config_.max_timestep << ",\n";
+  json << "  \"enable_collision_detection\": " << (config_.enable_collision_detection ? "true" : "false") << ",\n";
+  json << "  \"collision_threshold\": " << config_.collision_threshold << "\n";
+  json << "}";
+  return json.str();
+}
+
+ConfigurationBuilder& ConfigurationBuilder::from_json(const std::string& json_str) {
+  // Simple JSON parsing (in a real implementation, use a JSON library)
+  // This is a basic implementation for demonstration
+
+  // Extract version
+  std::regex version_regex(R"("version":\s*(\d+))");
+  std::smatch match;
+  if (std::regex_search(json_str, match, version_regex)) {
+    config_version_ = std::stoi(match[1]);
+  }
+
+  // Extract time_step
+  std::regex timestep_regex(R"("time_step":\s*([\d.e+-]+))");
+  if (std::regex_search(json_str, match, timestep_regex)) {
+    config_.time_step = std::stod(match[1]);
+  }
+
+  // Extract tolerance
+  std::regex tolerance_regex(R"("tolerance":\s*([\d.e+-]+))");
+  if (std::regex_search(json_str, match, tolerance_regex)) {
+    config_.tolerance = std::stod(match[1]);
+  }
+
+  // Extract adaptive timestep
+  std::regex adaptive_regex(R"("use_adaptive_timestep":\s*(true|false))");
+  if (std::regex_search(json_str, match, adaptive_regex)) {
+    config_.use_adaptive_timestep = (match[1] == "true");
+  }
+
+  return *this;
+}
+
+bool ConfigurationBuilder::save_to_file(const std::string& filename) const {
+  std::ofstream file(filename);
+  if (!file.is_open()) {
+    return false;
+  }
+
+  file << to_json();
+  return true;
+}
+
+ConfigurationBuilder& ConfigurationBuilder::load_from_file(const std::string& filename) {
+  std::ifstream file(filename);
+  if (!file.is_open()) {
+    return *this;
+  }
+
+  std::string json_content((std::istreambuf_iterator<char>(file)),
+                          std::istreambuf_iterator<char>());
+  from_json(json_content);
+
+  return *this;
+}
+
+Simulation::SimulationConfig ConfigurationBuilder::build() const {
+  return config_;
+}
 
 bool ConfigurationBuilder::validate(std::string* error_message) const {
-  // Simple validation for now
+  auto result = validate_comprehensive();
+  if (error_message && !result.is_valid && !result.errors.empty()) {
+    *error_message = result.errors[0].message;
+  }
+  return result.is_valid;
+}
+
+std::string ConfigurationBuilder::get_summary() const {
+  std::ostringstream summary;
+  summary << "Configuration Summary:\n";
+  summary << "  Version: " << config_version_ << "\n";
+  summary << "  Timestep: " << config_.time_step << " seconds\n";
+  summary << "  Tolerance: " << config_.tolerance << "\n";
+  summary << "  Gravitational constant: " << config_.gravitational_constant << " m³/kg/s²\n";
+  summary << "  Adaptive timestep: " << (config_.use_adaptive_timestep ? "enabled" : "disabled") << "\n";
+
+  if (config_.use_adaptive_timestep) {
+    summary << "    Min timestep: " << config_.min_timestep << " seconds\n";
+    summary << "    Max timestep: " << config_.max_timestep << " seconds\n";
+  }
+
+  summary << "  Collision detection: " << (config_.enable_collision_detection ? "enabled" : "disabled") << "\n";
+
+  if (config_.enable_collision_detection) {
+    summary << "    Collision threshold: " << config_.collision_threshold << " meters\n";
+  }
+
+  auto preset_it = metadata_.find("preset");
+  if (preset_it != metadata_.end()) {
+    summary << "  Preset: " << preset_it->second << "\n";
+  }
+
+  return summary.str();
+}
+
+std::vector<std::string> ConfigurationBuilder::compare_with(const ConfigurationBuilder& other) const {
+  std::vector<std::string> differences;
+
+  if (config_.time_step != other.config_.time_step) {
+    differences.push_back("Timestep: " + std::to_string(config_.time_step) +
+                         " vs " + std::to_string(other.config_.time_step));
+  }
+
+  if (config_.tolerance != other.config_.tolerance) {
+    differences.push_back("Tolerance: " + std::to_string(config_.tolerance) +
+                         " vs " + std::to_string(other.config_.tolerance));
+  }
+
+  if (config_.use_adaptive_timestep != other.config_.use_adaptive_timestep) {
+    differences.push_back("Adaptive timestep: " +
+                         std::string(config_.use_adaptive_timestep ? "enabled" : "disabled") +
+                         " vs " + std::string(other.config_.use_adaptive_timestep ? "enabled" : "disabled"));
+  }
+
+  if (config_.enable_collision_detection != other.config_.enable_collision_detection) {
+    differences.push_back("Collision detection: " +
+                         std::string(config_.enable_collision_detection ? "enabled" : "disabled") +
+                         " vs " + std::string(other.config_.enable_collision_detection ? "enabled" : "disabled"));
+  }
+
+  return differences;
+}
+
+// === Private Helper Methods ===
+
+void ConfigurationBuilder::initialize_templates() {
+  // Initialize built-in templates
+
+  // High Accuracy Research Template
+  Simulation::SimulationConfig research_config;
+  research_config.time_step = 300.0;  // 5 minutes
+  research_config.tolerance = 1e-14;
+  research_config.use_adaptive_timestep = true;
+  research_config.min_timestep = 1.0;
+  research_config.max_timestep = 1800.0;
+
+  ConfigurationTemplate research_template("research", "High accuracy configuration for scientific research", research_config);
+  research_template.recommended_bodies = {"Sun", "Earth", "Moon", "Mars", "Jupiter"};
+  research_template.metadata["category"] = "scientific";
+  research_template.metadata["accuracy"] = "high";
+  templates_["research"] = research_template;
+
+  // Educational Template
+  Simulation::SimulationConfig edu_config;
+  edu_config.time_step = 3600.0;  // 1 hour
+  edu_config.tolerance = 1e-10;
+  edu_config.use_adaptive_timestep = false;
+
+  ConfigurationTemplate edu_template("educational", "Simple configuration for educational purposes", edu_config);
+  edu_template.recommended_bodies = {"Sun", "Earth", "Moon"};
+  edu_template.metadata["category"] = "educational";
+  edu_template.metadata["complexity"] = "low";
+  templates_["educational"] = edu_template;
+
+  // Visualization Template
+  Simulation::SimulationConfig viz_config;
+  viz_config.time_step = 60.0;  // 1 minute
+  viz_config.tolerance = 1e-10;
+  viz_config.enable_collision_detection = true;
+  viz_config.collision_threshold = 1e5;
+
+  ConfigurationTemplate viz_template("visualization", "Optimized for real-time visualization", viz_config);
+  viz_template.recommended_bodies = {"Sun", "Mercury", "Venus", "Earth", "Mars"};
+  viz_template.metadata["category"] = "visualization";
+  viz_template.metadata["real_time"] = "true";
+  templates_["visualization"] = viz_template;
+}
+
+void ConfigurationBuilder::initialize_migrations() {
+  // Migration from version 1 to 2
+  migrations_.emplace_back(1, 2, "Add adaptive timestep and collision detection support",
+    [](const Simulation::SimulationConfig& old_config) {
+      Simulation::SimulationConfig new_config = old_config;
+      // Set default values for new fields
+      new_config.use_adaptive_timestep = false;
+      new_config.min_timestep = 1.0;
+      new_config.max_timestep = 3600.0;
+      new_config.enable_collision_detection = false;
+      new_config.collision_threshold = 1e6;
+      return new_config;
+    });
+}
+
+ValidationResult ConfigurationBuilder::validate_physics_parameters() const {
+  ValidationResult result;
+
+  // Validate timestep
   if (config_.time_step <= 0) {
-    if (error_message) *error_message = "Timestep must be positive";
-    return false;
+    result.add_error(ValidationErrorCode::INVALID_TIMESTEP,
+                    ValidationSeverity::FATAL,
+                    "Timestep must be positive",
+                    "Current value: " + std::to_string(config_.time_step));
   }
 
+  // Validate tolerance
   if (config_.tolerance <= 0) {
-    if (error_message) *error_message = "Tolerance must be positive";
-    return false;
+    result.add_error(ValidationErrorCode::INVALID_CONVERGENCE_THRESHOLD,
+                    ValidationSeverity::FATAL,
+                    "Tolerance must be positive",
+                    "Current value: " + std::to_string(config_.tolerance));
   }
 
-  return true;
+  // Validate gravitational constant
+  if (config_.gravitational_constant <= 0) {
+    result.add_error(ValidationErrorCode::INVALID_GRAVITATIONAL_CONSTANT,
+                    ValidationSeverity::ERROR,
+                    "Gravitational constant must be positive",
+                    "Current value: " + std::to_string(config_.gravitational_constant));
+  }
+
+  // Check if gravitational constant is reasonable
+  constexpr double STANDARD_G = 6.67430e-11;
+  if (std::abs(config_.gravitational_constant - STANDARD_G) / STANDARD_G > 0.1) {
+    result.add_error(ValidationErrorCode::INVALID_GRAVITATIONAL_CONSTANT,
+                    ValidationSeverity::WARNING,
+                    "Gravitational constant differs significantly from standard value",
+                    "Current: " + std::to_string(config_.gravitational_constant) +
+                    ", standard: " + std::to_string(STANDARD_G));
+  }
+
+  return result;
+}
+
+ValidationResult ConfigurationBuilder::validate_adaptive_timestep() const {
+  ValidationResult result;
+
+  if (config_.min_timestep <= 0) {
+    result.add_error(ValidationErrorCode::TIMESTEP_TOO_SMALL,
+                    ValidationSeverity::ERROR,
+                    "Minimum timestep must be positive",
+                    "Current value: " + std::to_string(config_.min_timestep));
+  }
+
+  if (config_.max_timestep <= config_.min_timestep) {
+    result.add_error(ValidationErrorCode::CONFLICTING_PARAMETERS,
+                    ValidationSeverity::ERROR,
+                    "Maximum timestep must be greater than minimum timestep",
+                    "Min: " + std::to_string(config_.min_timestep) +
+                    ", Max: " + std::to_string(config_.max_timestep));
+  }
+
+  if (config_.time_step < config_.min_timestep || config_.time_step > config_.max_timestep) {
+    result.add_error(ValidationErrorCode::CONFLICTING_PARAMETERS,
+                    ValidationSeverity::WARNING,
+                    "Initial timestep is outside adaptive timestep range",
+                    "Timestep: " + std::to_string(config_.time_step) +
+                    ", Range: [" + std::to_string(config_.min_timestep) +
+                    ", " + std::to_string(config_.max_timestep) + "]");
+  }
+
+  return result;
+}
+
+ValidationResult ConfigurationBuilder::validate_collision_detection() const {
+  ValidationResult result;
+
+  if (config_.collision_threshold <= 0) {
+    result.add_error(ValidationErrorCode::CONFLICTING_PARAMETERS,
+                    ValidationSeverity::ERROR,
+                    "Collision threshold must be positive",
+                    "Current value: " + std::to_string(config_.collision_threshold));
+  }
+
+  // Warn if collision threshold is very large (might miss collisions)
+  if (config_.collision_threshold > 1e8) {  // 100,000 km
+    result.add_error(ValidationErrorCode::CONFLICTING_PARAMETERS,
+                    ValidationSeverity::WARNING,
+                    "Collision threshold is very large, may miss close approaches",
+                    "Current value: " + std::to_string(config_.collision_threshold) + " meters");
+  }
+
+  return result;
+}
+
+std::vector<ConfigurationConflict> ConfigurationBuilder::check_timestep_conflicts() const {
+  std::vector<ConfigurationConflict> conflicts;
+
+  // Check if timestep is too large for collision detection
+  if (config_.enable_collision_detection && config_.time_step > 3600.0) {
+    ConfigurationConflict conflict("timestep", "collision_detection",
+                                  "Large timestep may miss collision events");
+    conflict.resolution_options = {"Reduce timestep to <= 3600 seconds", "Disable collision detection"};
+    conflict.recommended_resolution = "reduce_timestep";
+    conflicts.push_back(conflict);
+  }
+
+  return conflicts;
+}
+
+std::vector<ConfigurationConflict> ConfigurationBuilder::check_adaptive_conflicts() const {
+  std::vector<ConfigurationConflict> conflicts;
+
+  // Check if adaptive timestep range is too narrow
+  if (config_.max_timestep / config_.min_timestep < 2.0) {
+    ConfigurationConflict conflict("min_timestep", "max_timestep",
+                                  "Adaptive timestep range is too narrow to be effective");
+    conflict.resolution_options = {"Increase max_timestep", "Decrease min_timestep", "Disable adaptive timestep"};
+    conflict.recommended_resolution = "increase_range";
+    conflicts.push_back(conflict);
+  }
+
+  return conflicts;
+}
+
+std::vector<ConfigurationConflict> ConfigurationBuilder::check_performance_conflicts() const {
+  std::vector<ConfigurationConflict> conflicts;
+
+  // Check if high accuracy settings might impact performance
+  if (config_.tolerance < 1e-13 && config_.time_step < 60.0) {
+    ConfigurationConflict conflict("tolerance", "timestep",
+                                  "Very high accuracy settings may significantly impact performance");
+    conflict.resolution_options = {"Increase tolerance to 1e-12", "Increase timestep to >= 60 seconds", "Keep current settings"};
+    conflict.recommended_resolution = "balance_accuracy_performance";
+    conflicts.push_back(conflict);
+  }
+
+  return conflicts;
 }
 
 // === Enhanced Validation Implementation ===
