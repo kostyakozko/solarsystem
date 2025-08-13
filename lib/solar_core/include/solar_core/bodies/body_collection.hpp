@@ -1,8 +1,11 @@
 #pragma once
 
 #include <algorithm>
+#include <chrono>
 #include <functional>
+#include <optional>
 #include <ranges>
+#include <regex>
 #include <string>
 #include <string_view>
 #include <unordered_map>
@@ -95,9 +98,61 @@ class BodyCollection {
   [[nodiscard]] double total_mass() const;
   [[nodiscard]] Math::Vector3d center_of_mass() const;
 
-  // Validation
+  // Enhanced validation and consistency checking
   [[nodiscard]] bool validate() const;
   [[nodiscard]] std::vector<std::string> get_validation_errors() const;
+  [[nodiscard]] bool validate_comprehensive() const;
+  [[nodiscard]] std::vector<std::string> get_comprehensive_validation_errors() const;
+
+  // Consistency management
+  struct ConsistencyReport {
+    bool is_consistent;
+    std::vector<std::string> issues;
+    std::vector<std::string> warnings;
+    size_t bodies_checked;
+    std::chrono::system_clock::time_point check_time;
+  };
+
+  [[nodiscard]] ConsistencyReport check_consistency() const;
+  void maintain_consistency();
+
+  // Enhanced operations with error handling
+  struct OperationResult {
+    bool success;
+    std::string error_message;
+    std::optional<std::string> warning;
+    size_t affected_bodies;
+  };
+
+  [[nodiscard]] OperationResult add_body_validated(const CelestialBody& body);
+  [[nodiscard]] OperationResult add_body_validated(CelestialBody::Properties props);
+  [[nodiscard]] OperationResult remove_body_safe(std::string_view name);
+  [[nodiscard]] OperationResult update_body(std::string_view name, const CelestialBody& updated_body);
+
+  // Enhanced search and filtering with error handling
+  [[nodiscard]] std::vector<std::reference_wrapper<const CelestialBody>>
+  search_by_name_pattern(const std::string& pattern) const;
+
+  [[nodiscard]] std::vector<std::reference_wrapper<const CelestialBody>>
+  filter_by_mass_range(long double min_mass, long double max_mass) const;
+
+  [[nodiscard]] std::vector<std::reference_wrapper<const CelestialBody>>
+  filter_by_distance_from_point(const Math::Vector3d& point, long double max_distance) const;
+
+  // Bulk operations with progress reporting
+  struct BulkOperationResult {
+    size_t total_operations;
+    size_t successful_operations;
+    size_t failed_operations;
+    std::vector<std::string> errors;
+    std::vector<std::string> warnings;
+    std::chrono::milliseconds execution_time;
+  };
+
+  [[nodiscard]] BulkOperationResult bulk_add_bodies(const std::vector<CelestialBody>& bodies);
+  [[nodiscard]] BulkOperationResult bulk_remove_bodies(const std::vector<std::string>& names);
+  [[nodiscard]] BulkOperationResult bulk_update_positions(
+    const std::function<Math::Vector3d(const CelestialBody&)>& position_updater);
 
   // Serialization
   [[nodiscard]] std::string to_json() const;
