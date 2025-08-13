@@ -2,6 +2,8 @@
 
 #include <iomanip>
 #include <sstream>
+#include <algorithm>
+#include <cmath>
 
 #include "solar_core/bodies/body_factory.hpp"
 #include "solar_core/data/body_definitions.hpp"
@@ -102,44 +104,116 @@ SimulationBuilder& SimulationBuilder::reset_to_defaults() {
 }
 
 bool SimulationBuilder::validate(std::string* error_message) const {
-  // Validate timestep
-  if (timestep_ <= 0) {
-    if (error_message) *error_message = "Timestep must be positive";
-    return false;
+  auto result = validate_comprehensive();
+  if (error_message && !result.is_valid && !result.errors.empty()) {
+    *error_message = result.errors[0].message;
   }
+  return result.is_valid;
+}
 
-  // Validate max iterations
-  if (max_iterations_ == 0) {
-    if (error_message) *error_message = "Max iterations must be positive";
-    return false;
-  }
+ValidationResult SimulationBuilder::validate_comprehensive() const {
+  ValidationResult result;
 
-  // Validate convergence threshold
-  if (convergence_threshold_ <= 0) {
-    if (error_message) *error_message = "Convergence threshold must be positive";
-    return false;
-  }
+  // Update validation timestamp
+  last_validation_time_ = std::chrono::system_clock::now();
 
-  // Validate bodies
-  if (!bodies_.has_value()) {
-    if (error_message) *error_message = "No celestial bodies specified";
-    return false;
-  }
+  // Validate individual parameters
+  auto timestep_result = validate_timestep();
+  auto iterations_result = validate_max_iterations();
+  auto threshold_result = validate_convergence_threshold();
+  auto bodies_result = validate_bodies();
+  auto date_result = validate_target_date();
 
-  if (bodies_->size() == 0) {
-    if (error_message) *error_message = "Body collection is empty";
-    return false;
-  }
+  // Merge individual validation results
+  for (const auto& error : timestep_result.errors) result.add_error(error);
+  for (const auto& warning : timestep_result.warnings) result.add_error(warning);
+
+  for (const auto& error : iterations_result.errors) result.add_error(error);
+  for (const auto& warning : iterations_result.warnings) result.add_error(warning);
+
+  for (const auto& error : threshold_result.errors) result.add_error(error);
+  for (const auto& warning : threshold_result.warnings) result.add_error(warning);
+
+  for (const auto& error : bodies_result.errors) result.add_error(error);
+  for (const auto& warning : bodies_result.warnings) result.add_error(warning);
+
+  for (const auto& error : date_result.errors) result.add_error(error);
+  for (const auto& warning : date_result.warnings) result.add_error(warning);
+
+  // Cross-parameter validation
+  auto cross_param_result = validate_cross_parameters();
+  for (const auto& error : cross_param_result.errors) result.add_error(error);
+  for (const auto& warning : cross_param_result.warnings) result.add_error(warning);
+
+  // Computational load validation
+  auto load_result = validate_computational_load();
+  for (const auto& error : load_result.errors) result.add_error(error);
+  for (const auto& warning : load_result.warnings) result.add_error(warning);
 
   // Custom validation if provided
-  if (validator_.has_value()) {
+  if (validator_.has_value() && bodies_.has_value()) {
     if (!validator_.value()(*bodies_)) {
-      if (error_message) *error_message = "Custom validation failed";
-      return false;
+      result.add_error(ValidationErrorCode::CUSTOM_VALIDATION_FAILED,
+                      ValidationSeverity::ERROR,
+                      "Custom validation callback failed",
+                      "User-provided validation function returned false");
     }
   }
 
-  return true;
+  // Generate summary
+  if (result.is_valid) {
+    result.summary = "Configuration is valid and ready for simulation";
+  } else {
+    result.summary = "Configuration has " + std::to_string(result.errors.size()) +
+                    " error(s) and " + std::to_string(result.warnings.size()) + " warning(s)";
+  }
+
+  return result;
+}
+
+ValidationResult SimulationBuilder::validate_with_level(ValidationSeverity min_severity) const {
+  auto full_result = validate_comprehensive();
+  ValidationResult filtered_result;
+
+  // Filter results based on minimum severity
+  for (const auto& error : full_result.errors) {
+    if (error.severity >= min_severity) {
+      filtered_result.add_error(error);
+    }
+  }
+
+  for (const auto& warning : full_result.warnings) {
+    if (warning.severity >= min_severity) {
+      filtered_result.add_error(warning);
+    }
+  }
+
+  filtered_result.parameter_status = full_result.parameter_status;
+  return filtered_result;
+}
+
+ValidationResult SimulationBuilder::detect_conflicts() const {
+  return validate_parameter_combinations();
+}
+
+ValidationResult SimulationBuilder::validate_physical_constraints() const {
+  ValidationResult result;
+
+  // Validate against physical constraints
+  auto timestep_result = validate_timestep();
+  auto iterations_result = validate_max_iterations();
+  auto threshold_result = validate_convergence_threshold();
+
+  // Merge results
+  for (const auto& error : timestep_result.errors) result.add_error(error);
+  for (const auto& error : iterations_result.errors) result.add_error(error);
+  for (const auto& error : threshold_result.errors) result.add_error(error);
+
+  return result;
+}
+
+ValidationResult SimulationBuilder::validate_cross_parameters() const {
+  return validate_parameter_combinations();
 }
 
 std::unique_ptr<Simulation::SimulationEngine> SimulationBuilder::build(std::string* error_message) {
@@ -457,6 +531,383 @@ bool ConfigurationBuilder::validate(std::string* error_message) const {
   }
 
   return true;
+}
+
+// === Enhanced Validation Implementation ===
+
+ValidationResult SimulationBuilder::validate_timestep() const {
+  ValidationResult result;
+
+  // Basic validation
+  if (timestep_ <= 0) {
+    result.add_error(ValidationErrorCode::INVALID_TIMESTEP,
+                    ValidationSeverity::FATAL,
+                    "Timestep must be positive",
+                    "Current value: " + std::to_string(timestep_));
+    return result;
+  }
+
+  // Physical constrais validation
+  if (timestep_ < PhysicalConstraints::MIN_TIMESTEP) {
+    result.add_error(ValidationErrorCode::TIMESTEP_TOO_SMALL,
+                    ValidationSeverity::ERROR,
+                    "Timestep is too small for stable simulation",
+                    "Current: " + std::to_string(timestep_) + "s, minimum: " +
+                    std::to_string(PhysicalConstraints::MIN_TIMESTEP) + "s");
+
+    ValidationError& error = result.errors.back();
+    error.suggestions.push_back("Use timestep >= " + std::to_string(PhysicalConstraints::RECOMMENDED_MIN_TIMESTEP) + " seconds");
+    error.suggestions.push_back("Consider using adaptive timestep for very small values");
+    error.recovery_action = "Set timestep to " + std::to_string(PhysicalConstraints::RECOMMENDED_MIN_TIMESTEP) + " seconds";
+  }
+
+  if (timestep_ > PhysicalConstraints::MAX_TIMESTEP) {
+    result.add_error(ValidationErrorCode::TIMESTEP_TOO_LARGE,
+                    ValidationSeverity::ERROR,
+                    "Timestep is too large for accurate simulation",
+                    "Current: " + std::to_string(timestep_) + "s, maximum: " +
+                    std::to_string(PhysicalConstraints::MAX_TIMESTEP) + "s");
+
+    ValidationError& error = result.errors.back();
+    error.suggestions.push_back("Use timestep <= " + std::to_string(PhysicalConstraints::RECOMMENDED_MAX_TIMESTEP) + " seconds");
+    error.suggestions.push_back("Break simulation into smaller time segments");
+    error.recovery_action = "Set timestep to " + std::to_string(PhysicalConstraints::RECOMMENDED_MAX_TIMESTEP) + " seconds";
+  }
+
+  // Performance warnings
+  if (timestep_ < PhysicalConstraints::RECOMMENDED_MIN_TIMESTEP) {
+    result.add_error(ValidationErrorCode::TIMESTEP_TOO_SMALL,
+                    ValidationSeverity::WARNING,
+                    "Small timestep may impact performance",
+                    "Current: " + std::to_string(timestep_) + "s, recommended minimum: " +
+                    std::to_string(PhysicalConstraints::RECOMMENDED_MIN_TIMESTEP) + "s");
+  }
+
+  if (timestep_ > PhysicalConstraints::RECOMMENDED_MAX_TIMESTEP) {
+    result.add_error(ValidationErrorCode::TIMESTEP_TOO_LARGE,
+                    ValidationSeverity::WARNING,
+                    "Large timestep may reduce accuracy",
+                    "Current: " + std::to_string(timestep_) + "s, recommended maximum: " +
+                    std::to_string(PhysicalConstraints::RECOMMENDED_MAX_TIMESTEP) + "s");
+  }
+
+  result.parameter_status["timestep"] = "valid";
+  return result;
+}
+
+ValidationResult SimulationBuilder::validate_max_iterations() const {
+  ValidationResult result;
+
+  if (max_iterations_ < PhysicalConstraints::MIN_ITERATIONS) {
+    result.add_error(ValidationErrorCode::INVALID_MAX_ITERATIONS,
+                    ValidationSeverity::ERROR,
+                    "Maximum iterations must be at least " + std::to_string(PhysicalConstraints::MIN_ITERATIONS),
+                    "Current value: " + std::to_string(max_iterations_));
+
+    ValidationError& error = result.errors.back();
+    error.suggestions.push_back("Set max_iterations to at least " + std::to_string(PhysicalConstraints::MIN_ITERATIONS));
+    error.recovery_action = "Set max_iterations to " + std::to_string(PhysicalConstraints::MIN_ITERATIONS);
+  }
+
+  if (max_iterations_ > PhysicalConstraints::MAX_ITERATIONS) {
+    result.add_error(ValidationErrorCode::INVALID_MAX_ITERATIONS,
+                    ValidationSeverity::ERROR,
+                    "Maximum iterations exceeds reasonable limit",
+                    "Current: " + std::to_string(max_iterations_) + ", maximum: " +
+                    std::to_string(PhysicalConstraints::MAX_ITERATIONS));
+
+    ValidationError& error = result.errors.back();
+    error.suggestions.push_back("Reduce max_iterations to <= " + std::to_string(PhysicalConstraints::RECOMMENDED_MAX_ITERATIONS));
+    error.suggestions.push_back("Consider breaking simulation into multiple runs");
+    error.recovery_action = "Set max_iterations to " + std::to_string(PhysicalConstraints::RECOMMENDED_MAX_ITERATIONS);
+  }
+
+  // Performance warning
+  if (max_iterations_ > PhysicalConstraints::RECOMMENDED_MAX_ITERATIONS) {
+    result.add_error(ValidationErrorCode::EXCESSIVE_COMPUTATIONAL_LOAD,
+                    ValidationSeverity::WARNING,
+                    "High iteration count may impact performance",
+                    "Current: " + std::to_string(max_iterations_) + ", recommended maximum: " +
+                    std::to_string(PhysicalConstraints::RECOMMENDED_MAX_ITERATIONS));
+  }
+
+  result.parameter_status["max_iterations"] = "valid";
+  return result;
+}
+
+ValidationResult SimulationBuilder::validate_convergence_threshold() const {
+  ValidationResult result;
+
+  if (convergence_threshold_ <= 0) {
+    result.add_error(ValidationErrorCode::INVALID_CONVERGENCE_THRESHOLD,
+                    ValidationSeverity::FATAL,
+                    "Convergence threshold must be positive",
+                    "Current value: " + std::to_string(convergence_threshold_));
+    return result;
+  }
+
+  if (convergence_threshold_ < PhysicalConstraints::MIN_CONVERGENCE_THRESHOLD) {
+    result.add_error(ValidationErrorCode::INVALID_CONVERGENCE_THRESHOLD,
+                    ValidationSeverity::WARNING,
+                    "Convergence threshold may be too strict",
+                    "Current: " + std::to_string(convergence_threshold_) + ", minimum: " +
+                    std::to_string(PhysicalConstraints::MIN_CONVERGENCE_THRESHOLD));
+
+    ValidationError& error = result.warnings.back();
+    error.suggestions.push_back("Consider using threshold >= " + std::to_string(PhysicalConstraints::RECOMMENDED_CONVERGENCE_THRESHOLD));
+    error.suggestions.push_back("Very strict thresholds may prevent convergence");
+  }
+
+  if (convergence_threshold_ > PhysicalConstraints::MAX_CONVERGENCE_THRESHOLD) {
+    result.add_error(ValidationErrorCode::INVALID_CONVERGENCE_THRESHOLD,
+                    ValidationSeverity::WARNING,
+                    "Convergence threshold may be too loose",
+                    "Current: " + std::to_string(convergence_threshold_) + ", maximum: " +
+                    std::to_string(PhysicalConstraints::MAX_CONVERGENCE_THRESHOLD));
+
+    ValidationError& error = result.warnings.back();
+    error.suggestions.push_back("Consider using threshold <= " + std::to_string(PhysicalConstraints::RECOMMENDED_CONVERGENCE_THRESHOLD));
+    error.suggestions.push_back("Loose thresholds may reduce simulation accuracy");
+  }
+
+  result.parameter_status["convergence_threshold"] = "valid";
+  return result;
+}
+
+ValidationResult SimulationBuilder::validate_bodies() const {
+  ValidationResult result;
+
+  if (!bodies_.has_value()) {
+    result.add_error(ValidationErrorCode::NO_BODIES_SPECIFIED,
+                    ValidationSeverity::ERROR,
+                    "No celestial bodies specified for simulation",
+                    "Bodies collection is not set");
+
+    ValidationError& error = result.errors.back();
+    error.suggestions.push_back("Use with_bodies() to specify celestial bodies");
+    error.suggestions.push_back("Use BodySelector to create a body collection");
+    error.recovery_action = "Add bodies using with_bodies(BodySelector().essential().build())";
+    return result;
+  }
+
+  if (bodies_->size() == 0) {
+    result.add_error(ValidationErrorCode::EMPTY_BODY_COLLECTION,
+                    ValidationSeverity::ERROR,
+                    "Body collection is empty",
+                    "No bodies in the collection");
+
+    ValidationError& error = result.errors.back();
+    error.suggestions.push_back("Ensure body collection contains at least " +
+                               std::to_string(PhysicalConstraints::MIN_BODIES_FOR_SIMULATION) + " bodies");
+    error.recovery_action = "Add bodies to the collection";
+    return result;
+  }
+
+  if (bodies_->size() < PhysicalConstraints::MIN_BODIES_FOR_SIMULATION) {
+    result.add_error(ValidationErrorCode::INSUFFICIENT_BODIES_FOR_SIMULATION,
+                    ValidationSeverity::ERROR,
+                    "Insufficient bodies for meaningful simulation",
+                    "Current: " + std::to_string(bodies_->size()) + " bodies, minimum: " +
+                    std::to_string(PhysicalConstraints::MIN_BODIES_FOR_SIMULATION));
+
+    ValidationError& error = result.errors.back();
+    error.suggestions.push_back("Add more bodies to reach minimum of " +
+                               std::to_string(PhysicalConstraints::MIN_BODIES_FOR_SIMULATION));
+    error.suggestions.push_back("Use BodySelector to add essential bodies");
+  }
+
+  if (bodies_->size() > PhysicalConstraints::MAX_BODIES_FOR_PERFORMANCE) {
+    result.add_error(ValidationErrorCode::EXCESSIVE_COMPUTATIONAL_LOAD,
+                    ValidationSeverity::WARNING,
+                    "Large number of bodies may impact performance",
+                    "Current: " + std::to_string(bodies_->size()) + " bodies, recommended maximum: " +
+                    std::to_string(PhysicalConstraints::RECOMMENDED_MAX_BODIES));
+
+    ValidationError& error = result.warnings.back();
+    error.suggestions.push_back("Consider reducing body count for better performance");
+    error.suggestions.push_back("Use body filtering to focus on essential objects");
+  }
+
+  result.parameter_status["bodies"] = "valid";
+  return result;
+}
+
+ValidationResult SimulationBuilder::validate_target_date() const {
+  ValidationResult result;
+
+  if (target_date_.has_value()) {
+    auto time_t_value = std::chrono::system_clock::to_time_t(*target_date_);
+    auto tm_value = *std::gmtime(&time_t_value);
+
+    if (tm_value.tm_year + 1900 < PhysicalConstraints::MIN_YEAR) {
+      result.add_error(ValidationErrorCode::DATE_OUT_OF_RANGE,
+                      ValidationSeverity::ERROR,
+                      "Target date is too far in the past",
+                      "Year: " + std::to_string(tm_value.tm_year + 1900) +
+                      ", minimum: " + std::to_string(PhysicalConstraints::MIN_YEAR));
+
+      ValidationError& error = result.errors.back();
+      error.suggestions.push_back("Use date >= " + std::to_string(PhysicalConstraints::MIN_YEAR));
+      error.suggestions.push_back("Historical data may be less accurate for very old dates");
+    }
+
+    if (tm_value.tm_year + 1900 > PhysicalConstraints::MAX_YEAR) {
+      result.add_error(ValidationErrorCode::DATE_OUT_OF_RANGE,
+                      ValidationSeverity::ERROR,
+                      "Target date is too far in the future",
+                      "Year: " + std::to_string(tm_value.tm_year + 1900) +
+                      ", maximum: " + std::to_string(PhysicalConstraints::MAX_YEAR));
+
+      ValidationError& error = result.errors.back();
+      error.suggestions.push_back("Use date <= " + std::to_string(PhysicalConstraints::MAX_YEAR));
+      error.suggestions.push_back("Future predictions become less accurate over time");
+    }
+  }
+
+  result.parameter_status["target_date"] = target_date_.has_value() ? "valid" : "not_set";
+  return result;
+}
+
+ValidationResult SimulationBuilder::validate_computational_load() const {
+  ValidationResult result;
+
+  double complexity = estimate_computational_complexity();
+
+  // Define complexity thresholds
+  constexpr double HIGH_COMPLEXITY_THRESHOLD = 1e9;
+  constexpr double EXTREME_COMPLEXITY_THRESHOLD = 1e12;
+
+  if (complexity > EXTREME_COMPLEXITY_THRESHOLD) {
+    result.add_error(ValidationErrorCode::EXCESSIVE_COMPUTATIONAL_LOAD,
+                    ValidationSeverity::ERROR,
+                    "Computational load is extremely high",
+                    "Estimated complexity: " + std::to_string(complexity));
+
+    ValidationError& error = result.errors.back();
+    error.suggestions = suggest_performance_improvements();
+    error.recovery_action = "Reduce timestep resolution or body count";
+  } else if (complexity > HIGH_COMPLEXITY_THRESHOLD) {
+    result.add_error(ValidationErrorCode::EXCESSIVE_COMPUTATIONAL_LOAD,
+                    ValidationSeverity::WARNING,
+                    "Computational load is high",
+                    "Estimated complexity: " + std::to_string(complexity));
+
+    ValidationError& error = result.warnings.back();
+    error.suggestions = suggest_performance_improvements();
+  }
+
+  return result;
+}
+
+ValidationResult SimulationBuilder::validate_parameter_combinations() const {
+  ValidationResult result;
+
+  // Check timestep vs body count interaction
+  if (bodies_.has_value() && !is_timestep_appropriate_for_bodies()) {
+    result.add_error(ValidationErrorCode::CONFLICTING_PARAMETERS,
+                    ValidationSeverity::WARNING,
+                    "Timestep may not be appropriate for body configuration",
+                    "Bodies: " + std::to_string(bodies_->size()) +
+                    ", timestep: " + std::to_string(timestep_) + "s");
+
+    ValidationError& error = result.warnings.back();
+    error.suggestions = suggest_timestep_improvements();
+  }
+
+  // Check iterations vs timestep interaction
+  double total_simulation_time = max_iterations_ * timestep_;
+  constexpr double MAX_REASONABLE_SIMULATION_TIME = 365.25 * 24 * 3600 * 100; // 100 years
+
+  if (total_simulation_time > MAX_REASONABLE_SIMULATION_TIME) {
+    result.add_error(ValidationErrorCode::CONFLICTING_PARAMETERS,
+                    ValidationSeverity::WARNING,
+                    "Total simulation time is very long",
+                    "Total time: " + std::to_string(total_simulation_time / (365.25 * 24 * 3600)) + " years");
+
+    ValidationError& error = result.warnings.back();
+    error.suggestions.push_back("Reduce max_iterations or increase timestep");
+    error.suggestions.push_back("Consider breaking into multiple simulation runs");
+  }
+
+  return result;
+}
+
+// === Utility Methods ===
+
+bool SimulationBuilder::is_timestep_appropriate_for_bodies() const {
+  if (!bodies_.has_value()) return true;
+
+  size_t body_count = bodies_->size();
+
+  // For many bodies, smaller timesteps are generally better
+  if (body_count > 50 && timestep_ > 1800.0) { // 30 minutes
+    return false;
+  }
+
+  // For few bodies, very small timesteps may be overkill
+  if (body_count < 10 && timestep_ < 60.0) { // 1 minute
+    return false;
+  }
+
+  return true;
+}
+
+double SimulationBuilder::estimate_computational_complexity() const {
+  double complexity = 1.0;
+
+  if (bodies_.has_value()) {
+    size_t n = bodies_->size();
+    complexity *= n * n; // N-body problem is O(N²)
+  }
+
+  complexity *= max_iterations_;
+  complexity /= timestep_; // Smaller timesteps = more computation
+
+  return complexity;
+}
+
+std::vector<std::string> SimulationBuilder::suggest_timestep_improvements() const {
+  std::vector<std::string> suggestions;
+
+  if (bodies_.has_value()) {
+    size_t body_count = bodies_->size();
+
+    if (body_count > 50) {
+      suggestions.push_back("For " + std::to_string(body_count) + " bodies, consider timestep 300-1800 seconds");
+    } else if (body_count > 20) {
+      suggestions.push_back("For " + std::to_string(body_count) + " bodies, consider timestep 600-3600 seconds");
+    } else {
+      suggestions.push_back("For " + std::to_string(body_count) + " bodies, consider timestep 1800-7200 seconds");
+    }
+  }
+
+  suggestions.push_back("Use adaptive timestep for optimal performance");
+  suggestions.push_back("Test different timesteps to find the best balance");
+
+  return suggestions;
+}
+
+std::vector<std::string> SimulationBuilder::suggest_performance_improvements() const {
+  std::vector<std::string> suggestions;
+
+  suggestions.push_back("Increase timestep to reduce computational load");
+  suggestions.push_back("Reduce number of bodies in simulation");
+  suggestions.push_back("Decrease max_iterations");
+  suggestions.push_back("Use body filtering to focus on essential objects");
+  suggestions.push_back("Consider parallel processing for large simulations");
+
+  return suggestions;
+}
+
+std::string SimulationBuilder::get_validation_context() const {
+  std::ostringstream oss;
+  oss << "SimulationBuilder validation context:\n";
+  oss << "  Timestep: " << timestep_ << "s\n";
+  oss << "  Max iterations: " << max_iterations_ << "\n";
+  oss << "  Bodies: " << (bodies_.has_value() ? std::to_string(bodies_->size()) : "none") << "\n";
+  oss << "  Convergence threshold: " << convergence_threshold_ << "\n";
+  oss << "  Target date: " << (target_date_.has_value() ? "set" : "not set");
+  return oss.str();
 }
 
 }  // namespace SolarSystem::Core::Builders
