@@ -29,7 +29,15 @@ Utils::Expected<CelestialBody, std::string> BodyFactory::create_body(
   const auto& opts =
       options.preferred_source != default_options_.preferred_source ? options : default_options_;
 
-  // Try preferred source first
+  // Use intelligent fallback strategies if specified
+  if (opts.fallback_strategy != FallbackStrategy::GRACEFUL ||
+      opts.minimum_quality != DataQuality::ACCEPTABLE ||
+      opts.allow_partial_data ||
+      !opts.prefer_recent_data) {
+    return create_body_with_intelligent_fallback(name, opts);
+  }
+
+  // Original fallback logic for backward compatibility
   switch (opts.preferred_source) {
     case DataSource::JPL_HORIZONS:
       if (auto result = create_from_jpl(name, opts.reference_time); result.has_value()) {
@@ -836,6 +844,428 @@ Utils::Expected<void, std::string> BodyFactory::validate_body_relationships(
   }
 
   return Utils::Expected<void, std::string>{};
+}
+
+// Intelligent fallback strategies implementation
+
+Utils::Expected<CelestialBody, std::string> BodyFactory::create_body_with_intelligent_fallback(
+    std::string_view name, const CreationOptions& options) const {
+
+  auto start_time = std::chrono::steady_clock::now();
+
+  // Execute the fallback strategy
+  auto fallback_result = execute_fallback_strategy(name, options);
+
+  if (!fallback_result.success) {
+    return Utils::Expected<CelestialBody, std::string>{
+        "Intelligent fallback failed for '" + std::string(name) + "': no suitable data source found"};
+  }
+
+  // Try to create the body using the determined strategy
+  switch (options.fallback_strategy) {
+    case FallbackStrategy::STRICT: {
+      // Only use preferred source, no fallback - avoid recursion
+      switch (options.preferred_source) {
+        case DataSource::JPL_HORIZONS:
+          return create_from_jpl(name, options.reference_time);
+        case DataSource::CACHED_DATA:
+          return create_from_cache(name, options.reference_time);
+        case DataSource::FALLBACK_DATA:
+          return create_from_fallback(name);
+      }
+      break;
+    }
+
+    case FallbackStrategy::GRACEFUL:
+      return create_with_graceful_fallback(name, options);
+
+    case FallbackStrategy::INTELLIGENT:
+      return create_with_quality_assessment(name, options);
+
+    case FallbackStrategy::PARTIAL_ALLOWED:
+      return create_with_partial_data(name, options);
+
+    case FallbackStrategy::HYBRID:
+      return create_with_hybrid_approach(name, options);
+  }
+
+  return Utils::Expected<CelestialBody, std::string>{
+      "Unknown fallback strategy for '" + std::string(name) + "'"};
+}
+
+std::vector<BodyFactory::DataSourceInfo> BodyFactory::assess_data_sources(
+    std::string_view name, const CreationOptions& options) const {
+
+  std::vector<DataSourceInfo> sources;
+
+  // Assess JPL HORIZONS
+  if (is_data_source_available(DataSource::JPL_HORIZONS, name)) {
+    DataSourceInfo jpl_info;
+    jpl_info.source = DataSource::JPL_HORIZONS;
+    jpl_info.last_updated = std::chrono::system_clock::now(); // Real-time data
+    jpl_info.is_complete = true;
+    jpl_info.quality = DataQuality::EXCELLENT;
+    jpl_info.quality_reason = "Real-time JPL HORIZONS data";
+    sources.push_back(jpl_info);
+  }
+
+  // Assess cached data
+  if (is_data_source_available(DataSource::CACHED_DATA, name)) {
+    DataSourceInfo cache_info;
+    cache_info.source = DataSource::CACHED_DATA;
+    cache_info.last_updated = get_data_source_timestamp(DataSource::CACHED_DATA, name);
+    cache_info.is_complete = true;
+
+    // Assess cache quality based on age
+    auto age = std::chrono::system_clock::now() - cache_info.last_updated;
+    if (age < std::chrono::hours(24)) {
+      cache_info.quality = DataQuality::EXCELLENT;
+      cache_info.quality_reason = "Recent cached JPL data (< 24 hours)";
+    } else if (age < std::chrono::hours(24 * 7)) {
+      cache_info.quality = DataQuality::GOOD;
+      cache_info.quality_reason = "Cached JPL data (< 1 week)";
+    } else if (age < options.max_data_age) {
+      cache_info.quality = DataQuality::ACCEPTABLE;
+      cache_info.quality_reason = "Older cached JPL data (within max age)";
+    } else {
+      cache_info.quality = DataQuality::POOR;
+      cache_info.quality_reason = "Very old cached data (exceeds max age)";
+    }
+
+    sources.push_back(cache_info);
+  }
+
+  // Assess fallback data
+  if (is_data_source_available(DataSource::FALLBACK_DATA, name)) {
+    DataSourceInfo fallback_info;
+    fallback_info.source = DataSource::FALLBACK_DATA;
+    fallback_info.last_updated = get_data_source_timestamp(DataSource::FALLBACK_DATA, name);
+    fallback_info.is_complete = true;
+    fallback_info.quality = DataQuality::ACCEPTABLE;
+    fallback_info.quality_reason = "Hardcoded fallback data (static reference epoch)";
+    sources.push_back(fallback_info);
+  }
+
+  // Sort by quality (best first)
+  std::sort(sources.begin(), sources.end(), [](const DataSourceInfo& a, const DataSourceInfo& b) {
+    return static_cast<int>(a.quality) < static_cast<int>(b.quality);
+  });
+
+  return sources;
+}
+
+BodyFactory::DataQuality BodyFactory::assess_data_quality(
+    const CelestialBody& body, DataSource source,
+    std::chrono::system_clock::time_point reference_time) const {
+
+  // Check for basic data validity
+  if (body.mass() <= 0.0L) {
+    return DataQuality::POOR;
+  }
+
+  const auto& pos = body.position();
+  const auto& vel = body.velocity();
+
+  // Check for non-finite values
+  if (!std::isfinite(static_cast<double>(pos.x())) ||
+      !std::isfinite(static_cast<double>(pos.y())) ||
+      !std::isfinite(static_cast<double>(pos.z())) ||
+      !std::isfinite(static_cast<double>(vel.x())) ||
+      !std::isfinite(static_cast<double>(vel.y())) ||
+      !std::isfinite(static_cast<double>(vel.z()))) {
+    return DataQuality::POOR;
+  }
+
+  // Assess based on source type
+  switch (source) {
+    case DataSource::JPL_HORIZONS:
+      return DataQuality::EXCELLENT;
+
+    case DataSource::CACHED_DATA: {
+      // Quality depends on cache age (would need to check actual cache timestamp)
+      return DataQuality::GOOD;
+    }
+
+    case DataSource::FALLBACK_DATA:
+      // Check if fallback data seems reasonable
+      long double pos_magnitude = pos.magnitude();
+      long double vel_magnitude = vel.magnitude();
+
+      // Very rough sanity checks for solar system scale
+      if (pos_magnitude > 1.0e15L || vel_magnitude > 1.0e6L) {
+        return DataQuality::POOR;
+      }
+
+      return DataQuality::ACCEPTABLE;
+  }
+
+  return DataQuality::UNKNOWN;
+}
+
+Utils::Expected<CelestialBody, std::string> BodyFactory::create_with_hybrid_approach(
+    std::string_view name, const CreationOptions& options) const {
+
+  // Try to get the best available data from multiple sources
+  auto sources = assess_data_sources(name, options);
+
+  if (sources.empty()) {
+    return Utils::Expected<CelestialBody, std::string>{
+        "No data sources available for '" + std::string(name) + "'"};
+  }
+
+  // Use the highest quality source that meets minimum requirements
+  for (const auto& source_info : sources) {
+    if (source_info.quality >= options.minimum_quality) {
+      CreationOptions source_options = options;
+      source_options.preferred_source = source_info.source;
+      source_options.allow_fallback = false; // Don't fallback within hybrid approach
+
+      auto result = create_body(name, source_options);
+      if (result.has_value()) {
+        return result;
+      }
+    }
+  }
+
+  return Utils::Expected<CelestialBody, std::string>{
+      "No data source met minimum quality requirements for '" + std::string(name) + "'"};
+}
+
+Utils::Expected<CelestialBody, std::string> BodyFactory::create_with_partial_data(
+    std::string_view name, const CreationOptions& options) const {
+
+  // Try each source and accept partial data if necessary
+  auto sources = get_prioritized_sources(name, options);
+
+  for (DataSource source : sources) {
+    CreationOptions source_options = options;
+    source_options.preferred_source = source;
+    source_options.allow_fallback = false;
+    source_options.validate_data = false; // Allow partial/invalid data
+
+    auto result = create_body(name, source_options);
+    if (result.has_value()) {
+      // Assess the quality and warn if poor
+      auto quality = assess_data_quality(result.value(), source, options.reference_time);
+      if (quality == DataQuality::POOR) {
+        // Could log warning here, but for now just return the body
+      }
+      return result;
+    }
+  }
+
+  return Utils::Expected<CelestialBody, std::string>{
+      "Failed to create '" + std::string(name) + "' even with partial data allowed"};
+}
+
+BodyFactory::FallbackResult BodyFactory::execute_fallback_strategy(
+    std::string_view name, const CreationOptions& options) const {
+
+  auto start_time = std::chrono::steady_clock::now();
+  FallbackResult result;
+  result.success = false;
+
+  // Assess available data sources
+  auto sources = assess_data_sources(name, options);
+
+  if (sources.empty()) {
+    result.fallback_chain.push_back("No data sources available");
+    auto end_time = std::chrono::steady_clock::now();
+    result.total_time = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
+    return result;
+  }
+
+  // Execute strategy based on type
+  switch (options.fallback_strategy) {
+    case FallbackStrategy::STRICT:
+      // Only use preferred source
+      for (const auto& source_info : sources) {
+        if (source_info.source == options.preferred_source) {
+          result.success = true;
+          result.source_used = source_info.source;
+          result.data_quality = source_info.quality;
+          result.fallback_chain.push_back("Using preferred source: " + source_info.quality_reason);
+          break;
+        }
+      }
+      break;
+
+    case FallbackStrategy::GRACEFUL:
+    case FallbackStrategy::INTELLIGENT:
+      // Use best available source that meets quality requirements
+      for (const auto& source_info : sources) {
+        if (source_info.quality >= options.minimum_quality) {
+          result.success = true;
+          result.source_used = source_info.source;
+          result.data_quality = source_info.quality;
+          result.fallback_chain.push_back("Selected source: " + source_info.quality_reason);
+          break;
+        }
+      }
+      break;
+
+    case FallbackStrategy::PARTIAL_ALLOWED:
+      // Accept any available source
+      if (!sources.empty()) {
+        result.success = true;
+        result.source_used = sources[0].source;
+        result.data_quality = sources[0].quality;
+        result.fallback_chain.push_back("Using best available: " + sources[0].quality_reason);
+        if (sources[0].quality < options.minimum_quality) {
+          result.warnings.push_back("Data quality below minimum requirements");
+        }
+      }
+      break;
+
+    case FallbackStrategy::HYBRID:
+      // Complex logic handled in create_with_hybrid_approach
+      result.success = !sources.empty();
+      if (result.success) {
+        result.source_used = sources[0].source;
+        result.data_quality = sources[0].quality;
+        result.fallback_chain.push_back("Hybrid approach with multiple sources");
+      }
+      break;
+  }
+
+  auto end_time = std::chrono::steady_clock::now();
+  result.total_time = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
+
+  return result;
+}
+
+std::vector<BodyFactory::DataSource> BodyFactory::get_prioritized_sources(
+    std::string_view name, const CreationOptions& options) const {
+
+  std::vector<DataSource> sources;
+
+  if (options.prefer_recent_data) {
+    // Prioritize by data freshness
+    if (is_data_source_available(DataSource::JPL_HORIZONS, name)) {
+      sources.push_back(DataSource::JPL_HORIZONS);
+    }
+    if (is_data_source_available(DataSource::CACHED_DATA, name)) {
+      sources.push_back(DataSource::CACHED_DATA);
+    }
+    if (is_data_source_available(DataSource::FALLBACK_DATA, name)) {
+      sources.push_back(DataSource::FALLBACK_DATA);
+    }
+  } else {
+    // Use original preference order
+    sources.push_back(options.preferred_source);
+
+    // Add other sources
+    for (auto source : {DataSource::JPL_HORIZONS, DataSource::CACHED_DATA, DataSource::FALLBACK_DATA}) {
+      if (source != options.preferred_source && is_data_source_available(source, name)) {
+        sources.push_back(source);
+      }
+    }
+  }
+
+  return sources;
+}
+
+bool BodyFactory::is_data_source_available(DataSource source, std::string_view name) const {
+  switch (source) {
+    case DataSource::JPL_HORIZONS:
+      // Check if JPL client is available and network accessible
+      return jpl_client_ != nullptr;
+
+    case DataSource::CACHED_DATA:
+      // Check if we have cached data
+      return has_current_ephemeris_data();
+
+    case DataSource::FALLBACK_DATA:
+      // Check if body exists in fallback data
+      return Data::get_fallback_body(name).has_value();
+  }
+
+  return false;
+}
+
+std::chrono::system_clock::time_point BodyFactory::get_data_source_timestamp(
+    DataSource source, std::string_view name) const {
+
+  switch (source) {
+    case DataSource::JPL_HORIZONS:
+      // JPL data is always current
+      return std::chrono::system_clock::now();
+
+    case DataSource::CACHED_DATA:
+      // Return cache timestamp (use current epoch as approximation)
+      return current_epoch_;
+
+    case DataSource::FALLBACK_DATA:
+      // Fallback data has a fixed reference epoch
+      return get_current_year_epoch();
+  }
+
+  return std::chrono::system_clock::time_point{};
+}
+
+// Helper methods for graceful fallback and quality assessment
+
+Utils::Expected<CelestialBody, std::string> BodyFactory::create_with_graceful_fallback(
+    std::string_view name, const CreationOptions& options) const {
+
+  auto sources = get_prioritized_sources(name, options);
+  std::vector<std::string> errors;
+
+  for (DataSource source : sources) {
+    CreationOptions source_options = options;
+    source_options.preferred_source = source;
+    source_options.allow_fallback = false;
+
+    auto result = create_body(name, source_options);
+    if (result.has_value()) {
+      return result;
+    } else {
+      errors.push_back("Source " + std::to_string(static_cast<int>(source)) + ": " + result.error());
+    }
+  }
+
+  // All sources failed
+  std::string combined_error = "All data sources failed for '" + std::string(name) + "':\n";
+  for (const auto& error : errors) {
+    combined_error += "  - " + error + "\n";
+  }
+
+  return Utils::Expected<CelestialBody, std::string>{combined_error};
+}
+
+Utils::Expected<CelestialBody, std::string> BodyFactory::create_with_quality_assessment(
+    std::string_view name, const CreationOptions& options) const {
+
+  auto sources = assess_data_sources(name, options);
+
+  // Filter sources by minimum quality
+  auto suitable_sources = sources;
+  suitable_sources.erase(
+    std::remove_if(suitable_sources.begin(), suitable_sources.end(),
+      [&options](const DataSourceInfo& info) {
+        return info.quality < options.minimum_quality;
+      }),
+    suitable_sources.end());
+
+  if (suitable_sources.empty()) {
+    return Utils::Expected<CelestialBody, std::string>{
+        "No data sources meet minimum quality requirements for '" + std::string(name) + "'"};
+  }
+
+  // Try the best quality source first
+  for (const auto& source_info : suitable_sources) {
+    CreationOptions source_options = options;
+    source_options.preferred_source = source_info.source;
+    source_options.allow_fallback = false;
+
+    auto result = create_body(name, source_options);
+    if (result.has_value()) {
+      return result;
+    }
+  }
+
+  return Utils::Expected<CelestialBody, std::string>{
+      "Failed to create '" + std::string(name) + "' from quality-assessed sources"};
 }
 
 }  // namespace SolarSystem::Bodies

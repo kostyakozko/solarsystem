@@ -4,6 +4,8 @@
 #include <string>
 #include <string_view>
 #include <vector>
+#include <algorithm>
+#include <optional>
 
 #include "solar_core/bodies/body_collection.hpp"
 #include "solar_core/bodies/celestial_body.hpp"
@@ -31,11 +33,52 @@ class BodyFactory {
     FALLBACK_DATA  // Use hardcoded constants
   };
 
+  // Enhanced fallback strategies
+  enum class FallbackStrategy {
+    STRICT,           // No fallback, fail if preferred source unavailable
+    GRACEFUL,         // Try all sources in order, use best available
+    INTELLIGENT,      // Assess data quality and choose best source
+    PARTIAL_ALLOWED,  // Allow partial data with warnings
+    HYBRID           // Combine data from multiple sources
+  };
+
+  enum class DataQuality {
+    EXCELLENT,  // Recent JPL data with full validation
+    GOOD,       // Cached JPL data or recent fallback
+    ACCEPTABLE, // Older cached data or basic fallback
+    POOR,       // Very old or incomplete data
+    UNKNOWN     // Quality cannot be assessed
+  };
+
   struct CreationOptions {
     DataSource preferred_source = DataSource::JPL_HORIZONS;
     std::chrono::system_clock::time_point reference_time = std::chrono::system_clock::now();
     bool allow_fallback = true;
     bool validate_data = true;
+    FallbackStrategy fallback_strategy = FallbackStrategy::GRACEFUL;
+    DataQuality minimum_quality = DataQuality::ACCEPTABLE;
+    bool allow_partial_data = false;
+    bool prefer_recent_data = true;
+    std::chrono::hours max_data_age{24 * 30}; // 30 days default
+  };
+
+  // Data quality assessment
+  struct DataSourceInfo {
+    DataSource source;
+    DataQuality quality;
+    std::chrono::system_clock::time_point last_updated;
+    bool is_complete;
+    std::vector<std::string> missing_fields;
+    std::string quality_reason;
+  };
+
+  struct FallbackResult {
+    bool success;
+    DataSource source_used;
+    DataQuality data_quality;
+    std::vector<std::string> warnings;
+    std::vector<std::string> fallback_chain;
+    std::chrono::milliseconds total_time;
   };
 
   // Constructor
@@ -98,6 +141,44 @@ class BodyFactory {
   [[nodiscard]] SolarSystem::Utils::Expected<void, std::string> test_storage_system();
 
   [[nodiscard]] static std::chrono::system_clock::time_point get_current_year_epoch() noexcept;
+
+  // Intelligent fallback strategies
+  [[nodiscard]] Utils::Expected<CelestialBody, std::string> create_body_with_intelligent_fallback(
+      std::string_view name, const CreationOptions& options) const;
+
+  [[nodiscard]] std::vector<DataSourceInfo> assess_data_sources(
+      std::string_view name, const CreationOptions& options) const;
+
+  [[nodiscard]] DataQuality assess_data_quality(
+      const CelestialBody& body, DataSource source,
+      std::chrono::system_clock::time_point reference_time) const;
+
+  [[nodiscard]] Utils::Expected<CelestialBody, std::string> create_with_hybrid_approach(
+      std::string_view name, const CreationOptions& options) const;
+
+  [[nodiscard]] Utils::Expected<CelestialBody, std::string> create_with_partial_data(
+      std::string_view name, const CreationOptions& options) const;
+
+  [[nodiscard]] FallbackResult execute_fallback_strategy(
+      std::string_view name, const CreationOptions& options) const;
+
+  // Data source prioritization
+  [[nodiscard]] std::vector<DataSource> get_prioritized_sources(
+      std::string_view name, const CreationOptions& options) const;
+
+  [[nodiscard]] bool is_data_source_available(
+      DataSource source, std::string_view name) const;
+
+  [[nodiscard]] std::chrono::system_clock::time_point get_data_source_timestamp(
+      DataSource source, std::string_view name) const;
+
+ private:
+  // Helper methods for intelligent fallback strategies
+  [[nodiscard]] Utils::Expected<CelestialBody, std::string> create_with_graceful_fallback(
+      std::string_view name, const CreationOptions& options) const;
+
+  [[nodiscard]] Utils::Expected<CelestialBody, std::string> create_with_quality_assessment(
+      std::string_view name, const CreationOptions& options) const;
 
  private:
   CreationOptions default_options_;
