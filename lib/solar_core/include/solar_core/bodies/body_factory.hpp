@@ -123,6 +123,18 @@ class BodyFactory {
   [[nodiscard]] std::optional<int> get_jpl_id(std::string_view name) const;
 
   void initialize_internal_data();
+
+  // Comprehensive validation methods
+  [[nodiscard]] Utils::Expected<void, std::string> validate_physical_properties(
+      const CelestialBody::Properties& props) const;
+  [[nodiscard]] Utils::Expected<void, std::string> validate_mass_bounds(
+      long double mass, BodyType type, std::string_view name) const;
+  [[nodiscard]] Utils::Expected<void, std::string> validate_orbital_parameters(
+      const Math::Vector3d& position, const Math::Vector3d& velocity, BodyType type, std::string_view name) const;
+  [[nodiscard]] Utils::Expected<void, std::string> validate_cross_properties(
+      const CelestialBody::Properties& props) const;
+  [[nodiscard]] Utils::Expected<void, std::string> validate_body_relationships(
+      const CelestialBody::Properties& props, const std::vector<CelestialBody>& existing_bodies) const;
 };
 
 }  // namespace SolarSystem::Bodies

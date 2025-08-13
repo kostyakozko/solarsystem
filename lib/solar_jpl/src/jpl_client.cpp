@@ -250,13 +250,30 @@ JPLResult<EphemerisData> JPLClient::fetch_body_internal(
   params << "&VEC_TABLE='2'&REF_PLANE='ECLIPTIC'&REF_SYSTEM='J2000'";
   params << "&VEC_CORR='NONE'&VEC_DELTA_T='NO'&CSV_FORMAT='YES'";
 
-  // Make HTTP request
+  // Make HTTP request with network resilience
   auto response = make_request(config_.api_endpoint, params.str());
   if (!is_success(response)) {
+    // Network request failed, try cache fallback if enabled
+    if (config_.prefer_cache_on_network_failure) {
+      // First, detect and recover from any cache corruption
+      auto corruption_check = detect_and_recover_cache_corruption();
+      if (is_success(corruption_check) && get_value(corruption_check)) {
+        auto cache_result = load_from_cache();
+        if (is_success(cache_result)) {
+          auto cached_data = get_value(cache_result);
+          // Find the requested body in cached data
+          for (const auto& body_data : cached_data) {
+            if (body_data.jpl_id == jpl_id) {
+              return body_data;  // Return cached ephemeris data directly
+            }
+          }
+        }
+      }
+    }
     return get_error(response);
   }
 
-  // Parse response
+  // Parse response from network
   return parse_jpl_response(get_value(response), jpl_id);
 }
 
@@ -2417,14 +2434,7 @@ JPLResult<std::string> JPLClient::make_resilient_request(const std::string& url,
     }
   }
 
-  // If all network attempts fail and cache fallback is enabled, try to use cached data
-  if (config_.prefer_cache_on_network_failure) {
-    auto cache_result = load_from_cache();
-    if (is_success(cache_result)) {
-      // Return a special indicator that we're using cached data
-      return std::string("CACHED_DATA_FALLBACK");
-    }
-  }
+  // Cache fallback is handled at the application layer in fetch_body_internal
 
   // All fallback strategies failed
   return std::get<JPLError>(primary_result);
