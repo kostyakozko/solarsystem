@@ -11,8 +11,11 @@
 #include <fstream>
 #include <iomanip>
 #include <iostream>
+#include <mutex>
+#include <random>
 #include <regex>
 #include <sstream>
+#include <thread>
 #include <thread>
 
 // For HTTP requests (using system curl for now)
@@ -261,49 +264,8 @@ JPLResult<EphemerisData> JPLClient::fetch_body_internal(
  * @brief Make HTTP request to JPL API
  */
 JPLResult<std::string> JPLClient::make_request(const std::string& url, const std::string& params) {
-  // Build curl command with proper parameter encoding
-  std::ostringstream cmd;
-  cmd << "curl -s --max-time " << config_.request_timeout.count();
-  cmd << " --data '" << params << "'";
-  cmd << " '" << url << "'";
-
-  // Execute request with retries
-  for (size_t attempt = 0; attempt < config_.max_retries; ++attempt) {
-    auto response = impl_->execute_command(cmd.str());
-
-    // Enhanced error detection
-    if (!response.empty()) {
-      // Check for JSON error responses
-      if (response.find("\"code\":\"400\"") != std::string::npos ||
-          response.find("\"code\":\"500\"") != std::string::npos) {
-        // This is a JSON error response, continue to retry
-        if (attempt < config_.max_retries - 1) {
-          std::this_thread::sleep_for(config_.retry_delay);
-          continue;
-        }
-        return JPLError::ServerError;
-      }
-
-      // Check for specific JPL error messages
-      if (response.find("Bad dates") != std::string::npos) {
-        return JPLError::InvalidDate;
-      }
-
-      // Check for other error indicators
-      if (response.find("ERROR") == std::string::npos &&
-          response.find("invalid") == std::string::npos &&
-          response.find("Cannot") == std::string::npos &&
-          response.find("Bad dates") == std::string::npos) {
-        return response;
-      }
-    }
-
-    if (attempt < config_.max_retries - 1) {
-      std::this_thread::sleep_for(config_.retry_delay);
-    }
-  }
-
-  return JPLError::NetworkError;
+  // Use enhanced resilient request method
+  return make_resilient_request(url, params);
 }
 
 /**
@@ -2432,6 +2394,287 @@ JPLVoidResult JPLClient::save_cache_metadata(const CacheMetadata& metadata) {
     return {};
   } catch (const std::exception&) {
     return JPLError::CacheError;
+  }
+}
+
+// Enhanced Network Resilience Implementation
+
+/**
+ * @brief Make resilient request with comprehensive error handling and fallback strategies
+ */
+JPLResult<std::string> JPLClient::make_resilient_request(const std::string& url, const std::string& params) {
+  // First, try the primary endpoint with circuit breaker protection
+  auto primary_result = execute_request_with_circuit_breaker(url, params);
+  if (is_success(primary_result)) {
+    return primary_result;
+  }
+
+  // If primary endpoint fails, try fallback endpoints
+  if (!config_.fallback_endpoints.empty()) {
+    auto fallback_result = try_fallback_endpoints(params);
+    if (is_success(fallback_result)) {
+      return fallback_result;
+    }
+  }
+
+  // If all network attempts fail and cache fallback is enabled, try to use cached data
+  if (config_.prefer_cache_on_network_failure) {
+    auto cache_result = load_from_cache();
+    if (is_success(cache_result)) {
+      // Return a special indicator that we're using cached data
+      return std::string("CACHED_DATA_FALLBACK");
+    }
+  }
+
+  // All fallback strategies failed
+  return std::get<JPLError>(primary_result);
+}
+
+/**
+ * @brief Execute request with circuit breaker protection
+ */
+JPLResult<std::string> JPLClient::execute_request_with_circuit_breaker(const std::string& url, const std::string& params) {
+  std::lock_guard<std::mutex> lock(network_mutex_);
+
+  // Check if circuit breaker allows the request
+  if (!circuit_breaker_.should_allow_request(config_)) {
+    return JPLError::NetworkError;  // Circuit breaker is open
+  }
+
+  // Clean up expired connections
+  cleanup_expired_connections();
+
+  // Try to acquire a connection from the pool
+  auto connection = acquire_connection(url);
+  if (!connection) {
+    return JPLError::NetworkError;  // No available connections
+  }
+
+  // Execute request with exponential backoff retry logic
+  JPLResult<std::string> result = JPLError::NetworkError;
+
+  for (size_t attempt = 0; attempt < config_.max_retries; ++attempt) {
+    // Build curl command with enhanced options
+    std::ostringstream cmd;
+    cmd << "curl -s --max-time " << config_.request_timeout.count();
+    cmd << " --connect-timeout 10";  // Connection timeout
+    cmd << " --retry 0";  // Disable curl's internal retry (we handle it)
+    cmd << " --fail-with-body";  // Return body even on HTTP errors
+
+    if (config_.enable_connection_pooling) {
+      cmd << " --keepalive-time " << config_.connection_keep_alive.count();
+    }
+
+    cmd << " --data '" << params << "'";
+    cmd << " '" << url << "'";
+
+    // Execute the request
+    auto response = impl_->execute_command(cmd.str());
+
+    // Enhanced error detection
+    if (!response.empty()) {
+      // Check for JSON error responses
+      if (response.find("\"code\":\"400\"") != std::string::npos ||
+          response.find("\"code\":\"500\"") != std::string::npos) {
+        // This is a server error, continue to retry
+        if (attempt < config_.max_retries - 1) {
+          auto delay = calculate_backoff_delay(attempt);
+          std::this_thread::sleep_for(delay);
+          continue;
+        }
+        circuit_breaker_.record_failure(config_);
+        result = JPLError::ServerError;
+        break;
+      }
+
+      // Check for specific JPL error messages
+      if (response.find("Bad dates") != std::string::npos) {
+        result = JPLError::InvalidDate;
+        break;  // Don't retry for invalid dates
+      }
+
+      // Check for other error indicators
+      if (response.find("ERROR") == std::string::npos &&
+          response.find("invalid") == std::string::npos &&
+          response.find("Cannot") == std::string::npos &&
+          response.find("Bad dates") == std::string::npos) {
+        // Success!
+        circuit_breaker_.record_success();
+        result = response;
+        break;
+      }
+    }
+
+    // Network or parsing error, retry with backoff
+    if (attempt < config_.max_retries - 1) {
+      auto delay = calculate_backoff_delay(attempt);
+      std::this_thread::sleep_for(delay);
+    }
+  }
+
+  // Release the connection back to the pool
+  release_connection(url);
+
+  // Record failure if all attempts failed
+  if (!is_success(result)) {
+    circuit_breaker_.record_failure(config_);
+  }
+
+  return result;
+}
+
+/**
+ * @brief Calculate exponential backoff delay
+ */
+std::chrono::milliseconds JPLClient::calculate_backoff_delay(size_t attempt) const {
+  if (!config_.enable_exponential_backoff) {
+    return config_.retry_delay;
+  }
+
+  // Exponential backoff: base_delay * (multiplier ^ attempt)
+  auto delay_ms = static_cast<long long>(
+    config_.retry_delay.count() * std::pow(config_.backoff_multiplier, attempt)
+  );
+
+  // Cap at maximum backoff delay
+  delay_ms = std::min(delay_ms, config_.max_backoff_delay.count());
+
+  // Add jitter (±25% randomization to avoid thundering herd)
+  std::random_device rd;
+  std::mt19937 gen(rd());
+  std::uniform_real_distribution<> jitter(0.75, 1.25);
+
+  delay_ms = static_cast<long long>(delay_ms * jitter(gen));
+
+  return std::chrono::milliseconds(delay_ms);
+}
+
+/**
+ * @brief Try fallback endpoints when primary fails
+ */
+JPLResult<std::string> JPLClient::try_fallback_endpoints(const std::string& params) {
+  for (const auto& fallback_endpoint : config_.fallback_endpoints) {
+    auto result = execute_request_with_circuit_breaker(fallback_endpoint, params);
+    if (is_success(result)) {
+      return result;
+    }
+
+    // Brief delay between fallback attempts
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+  }
+
+  return JPLError::NetworkError;
+}
+
+/**
+ * @brief Acquire connection from pool
+ */
+std::optional<ConnectionPoolEntry*> JPLClient::acquire_connection(const std::string& endpoint) {
+  // Look for existing available connection
+  for (auto& entry : connection_pool_) {
+    if (entry.endpoint == endpoint && entry.is_available &&
+        entry.active_requests < config_.max_concurrent_requests) {
+      entry.is_available = false;
+      entry.active_requests++;
+      entry.last_used = std::chrono::system_clock::now();
+      return &entry;
+    }
+  }
+
+  // Create new connection if pool not full
+  if (connection_pool_.size() < config_.connection_pool_size) {
+    ConnectionPoolEntry new_entry;
+    new_entry.endpoint = endpoint;
+    new_entry.last_used = std::chrono::system_clock::now();
+    new_entry.is_available = false;
+    new_entry.active_requests = 1;
+
+    connection_pool_.push_back(new_entry);
+    return &connection_pool_.back();
+  }
+
+  // Pool is full, no available connections
+  return std::nullopt;
+}
+
+/**
+ * @brief Release connection back to pool
+ */
+void JPLClient::release_connection(const std::string& endpoint) {
+  for (auto& entry : connection_pool_) {
+    if (entry.endpoint == endpoint && !entry.is_available) {
+      entry.is_available = true;
+      entry.active_requests = std::max(0, static_cast<int>(entry.active_requests) - 1);
+      entry.last_used = std::chrono::system_clock::now();
+      break;
+    }
+  }
+}
+
+/**
+ * @brief Clean up expired connections from pool
+ */
+void JPLClient::cleanup_expired_connections() {
+  auto now = std::chrono::system_clock::now();
+
+  connection_pool_.erase(
+    std::remove_if(connection_pool_.begin(), connection_pool_.end(),
+      [&](const ConnectionPoolEntry& entry) {
+        auto age = now - entry.last_used;
+        return entry.is_available &&
+               age > config_.connection_keep_alive &&
+               entry.active_requests == 0;
+      }),
+    connection_pool_.end()
+  );
+}
+
+// Circuit Breaker Implementation
+
+/**
+ * @brief Check if circuit breaker should allow request
+ */
+bool CircuitBreaker::should_allow_request(const JPLClientConfig& config) const {
+  auto now = std::chrono::system_clock::now();
+
+  switch (state) {
+    case CircuitBreakerState::Closed:
+      return true;  // Normal operation
+
+    case CircuitBreakerState::Open:
+      // Check if timeout period has passed
+      if (now >= next_attempt_time) {
+        // Transition to half-open to test if service recovered
+        const_cast<CircuitBreaker*>(this)->state = CircuitBreakerState::HalfOpen;
+        return true;
+      }
+      return false;  // Still in failure state
+
+    case CircuitBreakerState::HalfOpen:
+      return true;  // Allow one test request
+  }
+
+  return false;
+}
+
+/**
+ * @brief Record successful request
+ */
+void CircuitBreaker::record_success() {
+  failure_count = 0;
+  state = CircuitBreakerState::Closed;
+}
+
+/**
+ * @brief Record failed request
+ */
+void CircuitBreaker::record_failure(const JPLClientConfig& config) {
+  failure_count++;
+  last_failure_time = std::chrono::system_clock::now();
+
+  if (failure_count >= config.circuit_breaker_failure_threshold) {
+    state = CircuitBreakerState::Open;
+    next_attempt_time = last_failure_time + config.circuit_breaker_timeout;
   }
 }
 

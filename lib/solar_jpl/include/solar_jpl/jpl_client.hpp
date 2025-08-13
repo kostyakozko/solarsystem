@@ -16,6 +16,7 @@
 #include <filesystem>
 #include <future>
 #include <memory>
+#include <mutex>
 #include <optional>
 #include <string>
 #include <string_view>
@@ -121,6 +122,22 @@ struct JPLClientConfig {
   size_t max_retries = 3;
   std::chrono::milliseconds retry_delay = std::chrono::milliseconds(500);
 
+  // Enhanced network resilience configuration
+  bool enable_exponential_backoff = true;
+  double backoff_multiplier = 2.0;
+  std::chrono::milliseconds max_backoff_delay = std::chrono::milliseconds(30000);  // 30 seconds
+  bool enable_circuit_breaker = true;
+  size_t circuit_breaker_failure_threshold = 5;
+  std::chrono::minutes circuit_breaker_timeout = std::chrono::minutes(5);
+  bool enable_connection_pooling = true;
+  size_t connection_pool_size = 5;
+  std::chrono::seconds connection_keep_alive = std::chrono::seconds(300);  // 5 minutes
+
+  // Fallback configuration
+  std::vector<std::string> fallback_endpoints;
+  bool enable_offline_mode = true;
+  bool prefer_cache_on_network_failure = true;
+
   // Cache configuration
   std::filesystem::path cache_directory = "./cache";
   bool enable_binary_cache = true;
@@ -131,6 +148,39 @@ struct JPLClientConfig {
    * @brief Validate configuration
    */
   [[nodiscard]] bool is_valid(std::string* error = nullptr) const;
+};
+
+/**
+ * @brief Circuit breaker states for network resilience
+ */
+enum class CircuitBreakerState {
+  Closed,    // Normal operation
+  Open,      // Failing, requests blocked
+  HalfOpen   // Testing if service recovered
+};
+
+/**
+ * @brief Circuit breaker for network failure management
+ */
+struct CircuitBreaker {
+  CircuitBreakerState state = CircuitBreakerState::Closed;
+  size_t failure_count = 0;
+  std::chrono::system_clock::time_point last_failure_time;
+  std::chrono::system_clock::time_point next_attempt_time;
+
+  bool should_allow_request(const JPLClientConfig& config) const;
+  void record_success();
+  void record_failure(const JPLClientConfig& config);
+};
+
+/**
+ * @brief Connection pool entry for reusing connections
+ */
+struct ConnectionPoolEntry {
+  std::string endpoint;
+  std::chrono::system_clock::time_point last_used;
+  bool is_available = true;
+  size_t active_requests = 0;
 };
 
 /**
@@ -164,11 +214,11 @@ class JPLClient {
    */
   ~JPLClient();
 
-  // Non-copyable but movable
+  // Non-copyable and non-movable (due to mutex)
   JPLClient(const JPLClient&) = delete;
   JPLClient& operator=(const JPLClient&) = delete;
-  JPLClient(JPLClient&&) = default;
-  JPLClient& operator=(JPLClient&&) = default;
+  JPLClient(JPLClient&&) = delete;
+  JPLClient& operator=(JPLClient&&) = delete;
 
   /**
    * @brief Fetch ephemeris data for a single body
@@ -299,6 +349,28 @@ class JPLClient {
   [[nodiscard]] JPLResult<bool> clear_corrupted_cache();
   [[nodiscard]] JPLResult<bool> save_binary_cache(const std::vector<EphemerisData>& data);
   [[nodiscard]] JPLResult<bool> save_json_cache(const std::vector<EphemerisData>& data);
+
+  /**
+   * @brief Enhanced network resilience methods
+   */
+  [[nodiscard]] JPLResult<std::string> make_resilient_request(const std::string& url, const std::string& params);
+  [[nodiscard]] std::chrono::milliseconds calculate_backoff_delay(size_t attempt) const;
+  [[nodiscard]] JPLResult<std::string> try_fallback_endpoints(const std::string& params);
+  [[nodiscard]] JPLResult<std::string> execute_request_with_circuit_breaker(const std::string& url, const std::string& params);
+
+  /**
+   * @brief Connection pool management
+   */
+  [[nodiscard]] std::optional<ConnectionPoolEntry*> acquire_connection(const std::string& endpoint);
+  void release_connection(const std::string& endpoint);
+  void cleanup_expired_connections();
+
+  /**
+   * @brief Circuit breaker management
+   */
+  mutable CircuitBreaker circuit_breaker_;
+  mutable std::vector<ConnectionPoolEntry> connection_pool_;
+  mutable std::mutex network_mutex_;
 };
 
 /**
