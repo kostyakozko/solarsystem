@@ -26,6 +26,8 @@ enum class ValidationErrorCode {
   EMPTY_BODY_COLLECTION,
   INVALID_DATE_FORMAT,
   DATE_OUT_OF_RANGE,
+  INVALID_TIMEZONE,
+  AMBIGUOUS_DATE_FORMAT,
   TIMESTEP_TOO_LARGE,
   TIMESTEP_TOO_SMALL,
   CONFLICTING_PARAMETERS,
@@ -92,6 +94,72 @@ struct ValidationResult {
   [[nodiscard]] size_t total_issues() const { return errors.size() + warnings.size(); }
   [[nodiscard]] bool has_warnings() const { return !warnings.empty(); }
   [[nodiscard]] bool has_errors() const { return !errors.empty(); }
+};
+
+/**
+ * @brief Supported date formats for parsing
+ */
+enum class DateFormat {
+  ISO_8601,           // 2025-12-31T23:59:59Z
+  ISO_8601_DATE,      // 2025-12-31
+  US_FORMAT,          // 12/31/2025
+  EUROPEAN_FORMAT,    // 31/12/2025
+  LONG_FORMAT,        // December 31, 2025
+  UNIX_TIMESTAMP,     // 1735689599
+  JULIAN_DAY,         // 2460676.5
+  AUTO_DETECT         // Automatically detect format
+};
+
+/**
+ * @brief Timezone information for date parsing
+ */
+struct TimezoneInfo {
+  std::string name;
+  std::string abbreviation;
+  int offset_hours;
+  int offset_minutes;
+  bool is_dst;
+
+  TimezoneInfo() : offset_hours(0), offset_minutes(0), is_dst(false) {}
+
+  TimezoneInfo(const std::string& tz_name, const std::string& abbr,
+               int hours, int minutes = 0, bool dst = false)
+    : name(tz_name), abbreviation(abbr), offset_hours(hours),
+      offset_minutes(minutes), is_dst(dst) {}
+
+  [[nodiscard]] int total_offset_minutes() const {
+    return offset_hours * 60 + offset_minutes;
+  }
+};
+
+/**
+ * @brief Date parsing result with detailed information
+ */
+struct DateParseResult {
+  bool success;
+  std::chrono::system_clock::time_point time_point;
+  DateFormat detected_format;
+  TimezoneInfo timezone;
+  std::string error_message;
+  std::vector<std::string> suggestions;
+
+  DateParseResult() : success(false), detected_format(DateFormat::AUTO_DETECT) {}
+
+  DateParseResult(std::chrono::system_clock::time_point tp, DateFormat format)
+    : success(true), time_point(tp), detected_format(format) {}
+};
+
+/**
+ * @brief Date range constraints for validation
+ */
+struct DateConstraints {
+  std::optional<std::chrono::system_clock::time_point> min_date;
+  std::optional<std::chrono::system_clock::time_point> max_date;
+  std::vector<DateFormat> allowed_formats;
+  std::vector<std::string> allowed_timezones;
+  bool require_timezone;
+
+  DateConstraints() : require_timezone(false) {}
 };
 
 /**
@@ -196,7 +264,7 @@ class SimulationBuilder {
   SimulationBuilder& with_max_iterations(size_t max_iterations);
 
   /**
-   * @brief Set the target date for simulation
+   * @brief Set the target date for simulation (legacy method)
    */
   SimulationBuilder& with_target_date(const std::string& iso_date);
 
@@ -209,6 +277,36 @@ class SimulationBuilder {
    * @brief Set the target date using chrono time_point
    */
   SimulationBuilder& with_target_date(std::chrono::system_clock::time_point target);
+
+  /**
+   * @brief Set target date with enhanced parsing and format detection
+   */
+  SimulationBuilder& with_target_date_enhanced(const std::string& date_str,
+                                              DateFormat format = DateFormat::AUTO_DETECT);
+
+  /**
+   * @brief Set target date with timezone support
+   */
+  SimulationBuilder& with_target_date_timezone(const std::string& date_str,
+                                              const std::string& timezone = "UTC",
+                                              DateFormat format = DateFormat::AUTO_DETECT);
+
+  /**
+   * @brief Set target date with comprehensive validation
+   */
+  SimulationBuilder& with_target_date_validated(const std::string& date_str,
+                                               const DateConstraints& constraints);
+
+  /**
+   * @brief Set date range for simulation
+   */
+  SimulationBuilder& with_date_range(const std::string& start_date, const std::string& end_date,
+                                    DateFormat format = DateFormat::AUTO_DETECT);
+
+  /**
+   * @brief Set date constraints for validation
+   */
+  SimulationBuilder& with_date_constraints(const DateConstraints& constraints);
 
   /**
    * @brief Enable or disable progress reporting
@@ -309,6 +407,19 @@ class SimulationBuilder {
    */
   std::chrono::seconds get_estimated_duration() const;
 
+  // === PUBLIC DATE PARSING UTILITIES ===
+
+  /**
+   * @brief Parse date with comprehensive format detection (public utility)
+   */
+  [[nodiscard]] DateParseResult parse_date_comprehensive(const std::string& date_str,
+                                                        DateFormat format = DateFormat::AUTO_DETECT) const;
+
+  /**
+   * @brief Get list of supported timezones
+   */
+  [[nodiscard]] std::vector<std::string> get_supported_timezones() const;
+
  private:
   // Configuration state
   std::optional<Bodies::BodyCollection> bodies_;
@@ -321,6 +432,12 @@ class SimulationBuilder {
   bool verbose_output_ = false;
   std::optional<ValidationCallback> validator_;
 
+  // Enhanced date handling state
+  std::optional<std::chrono::system_clock::time_point> start_date_;
+  std::optional<std::chrono::system_clock::time_point> end_date_;
+  DateConstraints date_constraints_;
+  TimezoneInfo default_timezone_;
+
   // Enhanced validation state
   mutable std::unordered_map<std::string, std::string> validation_cache_;
   mutable std::chrono::system_clock::time_point last_validation_time_;
@@ -328,6 +445,30 @@ class SimulationBuilder {
   // Helper methods
   std::string format_time_point(std::chrono::system_clock::time_point tp) const;
   std::chrono::system_clock::time_point parse_iso_date(const std::string& iso_date) const;
+
+  // Enhanced date parsing helper methods (private)
+  [[nodiscard]] DateParseResult parse_date_with_timezone(const std::string& date_str,
+                                                        const std::string& timezone,
+                                                        DateFormat format = DateFormat::AUTO_DETECT) const;
+  [[nodiscard]] DateFormat detect_date_format(const std::string& date_str) const;
+  [[nodiscard]] TimezoneInfo parse_timezone(const std::string& timezone_str) const;
+  [[nodiscard]] std::chrono::system_clock::time_point apply_timezone_offset(
+      std::chrono::system_clock::time_point tp, const TimezoneInfo& tz) const;
+  [[nodiscard]] ValidationResult validate_date_constraints(
+      std::chrono::system_clock::time_point tp, const DateConstraints& constraints) const;
+
+  // Date format parsing methods
+  [[nodiscard]] std::optional<std::chrono::system_clock::time_point> parse_iso8601(const std::string& date_str) const;
+  [[nodiscard]] std::optional<std::chrono::system_clock::time_point> parse_us_format(const std::string& date_str) const;
+  [[nodiscard]] std::optional<std::chrono::system_clock::time_point> parse_european_format(const std::string& date_str) const;
+  [[nodiscard]] std::optional<std::chrono::system_clock::time_point> parse_long_format(const std::string& date_str) const;
+  [[nodiscard]] std::optional<std::chrono::system_clock::time_point> parse_unix_timestamp(const std::string& date_str) const;
+  [[nodiscard]] std::optional<std::chrono::system_clock::time_point> parse_julian_day(const std::string& date_str) const;
+
+  // Timezone helper methods
+  [[nodiscard]] TimezoneInfo get_timezone_info(const std::string& timezone_name) const;
+  [[nodiscard]] std::string format_date_with_timezone(std::chrono::system_clock::time_point tp,
+                                                     const TimezoneInfo& tz) const;
 
   // Enhanced validation helper methods
   [[nodiscard]] ValidationResult validate_timestep() const;
@@ -683,6 +824,8 @@ class ConfigurationBuilder {
    * @brief Compare with another configuration
    */
   std::vector<std::string> compare_with(const ConfigurationBuilder& other) const;
+
+
 
  private:
   Simulation::SimulationConfig config_;

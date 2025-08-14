@@ -6,6 +6,9 @@
 #include <cmath>
 #include <fstream>
 #include <regex>
+#include <locale>
+#include <ctime>
+#include <chrono>
 
 #include "solar_core/bodies/body_factory.hpp"
 #include "solar_core/data/body_definitions.hpp"
@@ -49,9 +52,73 @@ SimulationBuilder& SimulationBuilder::with_target_date(std::time_t target_time) 
   return *this;
 }
 
-SimulationBuilder& SimulationBuilder::with_target_date(
-    std::chrono::system_clock::time_point target) {
-  target_date_ = target;
+
+
+SimulationBuilder& SimulationBuilder::with_target_date_enhanced(const std::string& date_str,
+                                                               DateFormat format) {
+  auto result = this->parse_date_comprehensive(date_str, format);
+  if (result.success) {
+    target_date_ = result.time_point;
+  } else {
+    LOG_ERROR("SimulationBuilder", "Enhanced date parsing failed: " + result.error_message);
+  }
+  return *this;
+}
+
+SimulationBuilder& SimulationBuilder::with_target_date_timezone(const std::string& date_str,
+                                                               const std::string& timezone,
+                                                               DateFormat format) {
+  auto result = this->parse_date_with_timezone(date_str, timezone, format);
+  if (result.success) {
+    target_date_ = result.time_point;
+    default_timezone_ = result.timezone;
+  } else {
+    LOG_ERROR("SimulationBuilder", "Timezone date parsing failed: " + result.error_message);
+  }
+  return *this;
+}
+
+SimulationBuilder& SimulationBuilder::with_target_date_validated(const std::string& date_str,
+                                                                const DateConstraints& constraints) {
+  auto result = this->parse_date_comprehensive(date_str, DateFormat::AUTO_DETECT);
+  if (result.success) {
+    auto validation_result = this->validate_date_constraints(result.time_point, constraints);
+    if (validation_result.is_valid) {
+      target_date_ = result.time_point;
+      date_constraints_ = constraints;
+    } else {
+      LOG_ERROR("SimulationBuilder", "Date validation failed: " +
+                (validation_result.errors.empty() ? "Unknown error" : validation_result.errors[0].message));
+    }
+  } else {
+    LOG_ERROR("SimulationBuilder", "Date parsing failed: " + result.error_message);
+  }
+  return *this;
+}
+
+SimulationBuilder& SimulationBuilder::with_date_range(const std::string& start_date,
+                                                     const std::string& end_date,
+                                                     DateFormat format) {
+  auto start_result = this->parse_date_comprehensive(start_date, format);
+  auto end_result = this->parse_date_comprehensive(end_date, format);
+
+  if (start_result.success && end_result.success) {
+    start_date_ = start_result.time_point;
+    end_date_ = end_result.time_point;
+
+    // Set target date to start date by default
+    target_date_ = start_result.time_point;
+  } else {
+    std::string error = "Date range parsing failed: ";
+    if (!start_result.success) error += "start date - " + start_result.error_message;
+    if (!end_result.success) error += " end date - " + end_result.error_message;
+    LOG_ERROR("SimulationBuilder", error);
+  }
+  return *this;
+}
+
+SimulationBuilder& SimulationBuilder::with_date_constraints(const DateConstraints& constraints) {
+  date_constraints_ = constraints;
   return *this;
 }
 
@@ -1468,5 +1535,329 @@ std::string SimulationBuilder::get_validation_context() const {
   oss << "  Target date: " << (target_date_.has_value() ? "set" : "not set");
   return oss.str();
 }
+
+// === Enhanced Date Parsing Implementation ===
+
+DateParseResult SimulationBuilder::parse_date_comprehensive(const std::string& date_str,
+                                                           DateFormat format) const {
+  DateParseResult result;
+
+  if (date_str.empty()) {
+    result.error_message = "Empty date string";
+    result.suggestions.push_back("Provide a valid date string");
+    return result;
+  }
+
+  // Auto-detect format if requested
+  if (format == DateFormat::AUTO_DETECT) {
+    format = detect_date_format(date_str);
+    if (format == DateFormat::AUTO_DETECT) {
+      result.error_message = "Could not detect date format";
+      result.suggestions.push_back("Specify date format explicitly");
+      result.suggestions.push_back("Use ISO 8601 format: YYYY-MM-DD");
+      return result;
+    }
+  }
+
+  std::optional<std::chrono::system_clock::time_point> parsed_time;
+
+  // Parse based on detected/specified format
+  switch (format) {
+    case DateFormat::ISO_8601:
+    case DateFormat::ISO_8601_DATE:
+      parsed_time = parse_iso8601(date_str);
+      break;
+    case DateFormat::US_FORMAT:
+      parsed_time = parse_us_format(date_str);
+      break;
+    case DateFormat::EUROPEAN_FORMAT:
+      parsed_time = parse_european_format(date_str);
+      break;
+    case DateFormat::LONG_FORMAT:
+      parsed_time = parse_long_format(date_str);
+      break;
+    case DateFormat::UNIX_TIMESTAMP:
+      parsed_time = parse_unix_timestamp(date_str);
+      break;
+    case DateFormat::JULIAN_DAY:
+      parsed_time = parse_julian_day(date_str);
+      break;
+    default:
+      result.error_message = "Unsupported date format";
+      return result;
+  }
+
+  if (parsed_time.has_value()) {
+    result.success = true;
+    result.time_point = *parsed_time;
+    result.detected_format = format;
+    result.timezone = TimezoneInfo("UTC", "UTC", 0, 0, false);
+  } else {
+    result.error_message = "Failed to parse date with detected format";
+    result.suggestions.push_back("Check date format and try again");
+    result.suggestions.push_back("Use ISO 8601 format for best compatibility");
+  }
+
+  return result;
+}
+
+DateParseResult SimulationBuilder::parse_date_with_timezone(const std::string& date_str,
+                                                           const std::string& timezone,
+                                                           DateFormat format) const {
+  auto result = parse_date_comprehensive(date_str, format);
+
+  if (result.success) {
+    auto tz_info = parse_timezone(timezone);
+    if (!tz_info.name.empty()) {
+      result.time_point = apply_timezone_offset(result.time_point, tz_info);
+      result.timezone = tz_info;
+    } else {
+      result.success = false;
+      result.error_message = "Invalid timezone: " + timezone;
+      result.suggestions.push_back("Use standard timezone names like UTC, EST, PST");
+      result.suggestions.push_back("Use timezone offsets like +05:00, -08:00");
+    }
+  }
+
+  return result;
+}
+
+DateFormat SimulationBuilder::detect_date_format(const std::string& date_str) const {
+  // ISO 8601 patterns
+  std::regex iso8601_full(R"(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})?)");
+  std::regex iso8601_date(R"(\d{4}-\d{2}-\d{2})");
+
+  // US format: MM/DD/YYYY or MM-DD-YYYY
+  std::regex us_format(R"(\d{1,2}[/-]\d{1,2}[/-]\d{4})");
+
+  // European format: DD/MM/YYYY or DD-MM-YYYY
+  std::regex european_format(R"(\d{1,2}[/.]\d{1,2}[/.]\d{4})");
+
+  // Long format: Month DD, YYYY
+  std::regex long_format(R"([A-Za-z]+ \d{1,2}, \d{4})");
+
+  // Unix timestamp: digits only
+  std::regex unix_timestamp(R"(\d{10,})");
+
+  // Julian day: decimal number
+  std::regex julian_day(R"(\d+\.\d+)");
+
+  if (std::regex_match(date_str, iso8601_full)) {
+    return DateFormat::ISO_8601;
+  } else if (std::regex_match(date_str, iso8601_date)) {
+    return DateFormat::ISO_8601_DATE;
+  } else if (std::regex_match(date_str, long_format)) {
+    return DateFormat::LONG_FORMAT;
+  } else if (std::regex_match(date_str, unix_timestamp)) {
+    return DateFormat::UNIX_TIMESTAMP;
+  } else if (std::regex_match(date_str, julian_day)) {
+    return DateFormat::JULIAN_DAY;
+  } else if (std::regex_match(date_str, us_format)) {
+    // Ambiguous - could be US or European format
+    // Default to US format, but this could be improved with heuristics
+    return DateFormat::US_FORMAT;
+  }
+
+  return DateFormat::AUTO_DETECT; // Could not detect
+}
+
+TimezoneInfo SimulationBuilder::parse_timezone(const std::string& timezone_str) const {
+  // Common timezone mappings
+  static const std::unordered_map<std::string, TimezoneInfo> timezone_map = {
+    {"UTC", TimezoneInfo("Coordinated Universal Time", "UTC", 0, 0, false)},
+    {"GMT", TimezoneInfo("Greenwich Mean Time", "GMT", 0, 0, false)},
+    {"EST", TimezoneInfo("Eastern Standard Time", "EST", -5, 0, false)},
+    {"EDT", TimezoneInfo("Eastern Daylight Time", "EDT", -4, 0, true)},
+    {"CST", TimezoneInfo("Central Standard Time", "CST", -6, 0, false)},
+    {"CDT", TimezoneInfo("Central Daylight Time", "CDT", -5, 0, true)},
+    {"MST", TimezoneInfo("Mountain Standard Time", "MST", -7, 0, false)},
+    {"MDT", TimezoneInfo("Mountain Daylight Time", "MDT", -6, 0, true)},
+    {"PST", TimezoneInfo("Pacific Standard Time", "PST", -8, 0, false)},
+    {"PDT", TimezoneInfo("Pacific Daylight Time", "PDT", -7, 0, true)},
+  };
+
+  auto it = timezone_map.find(timezone_str);
+  if (it != timezone_map.end()) {
+    return it->second;
+  }
+
+  // Try to parse offset format: +05:00, -08:00
+  std::regex offset_regex(R"([+-](\d{2}):(\d{2}))");
+  std::smatch match;
+  if (std::regex_match(timezone_str, match, offset_regex)) {
+    int hours = std::stoi(match[1]);
+    int minutes = std::stoi(match[2]);
+    if (timezone_str[0] == '-') {
+      hours = -hours;
+      minutes = -minutes;
+    }
+    return TimezoneInfo("Custom Offset", timezone_str, hours, minutes, false);
+  }
+
+  return TimezoneInfo(); // Empty/invalid timezone
+}
+
+std::chrono::system_clock::time_point SimulationBuilder::apply_timezone_offset(
+    std::chrono::system_clock::time_point tp, const TimezoneInfo& tz) const {
+  auto offset_minutes = std::chrono::minutes(tz.total_offset_minutes());
+  return tp - offset_minutes; // Convert to UTC
+}
+
+ValidationResult SimulationBuilder::validate_date_constraints(
+    std::chrono::system_clock::time_point tp, const DateConstraints& constraints) const {
+  ValidationResult result;
+
+  // Check date range constraints
+  if (constraints.min_date.has_value() && tp < *constraints.min_date) {
+    result.add_error(ValidationErrorCode::DATE_OUT_OF_RANGE,
+                    ValidationSeverity::ERROR,
+                    "Date is before minimum allowed date",
+                    "Date: " + format_time_point(tp) +
+                    ", minimum: " + format_time_point(*constraints.min_date));
+  }
+
+  if (constraints.max_date.has_value() && tp > *constraints.max_date) {
+    result.add_error(ValidationErrorCode::DATE_OUT_OF_RANGE,
+                    ValidationSeverity::ERROR,
+                    "Date is after maximum allowed date",
+                    "Date: " + format_time_point(tp) +
+                    ", maximum: " + format_time_point(*constraints.max_date));
+  }
+
+  return result;
+}
+
+// === Date Format Parsing Methods ===
+
+std::optional<std::chrono::system_clock::time_point> SimulationBuilder::parse_iso8601(const std::string& date_str) const {
+  std::tm tm = {};
+  std::istringstream ss(date_str);
+
+  // Try full ISO 8601 format first
+  if (date_str.find('T') != std::string::npos) {
+    ss >> std::get_time(&tm, "%Y-%m-%dT%H:%M:%S");
+  } else {
+    // Date only format
+    ss >> std::get_time(&tm, "%Y-%m-%d");
+  }
+
+  if (ss.fail()) {
+    return std::nullopt;
+  }
+
+  return std::chrono::system_clock::from_time_t(std::mktime(&tm));
+}
+
+std::optional<std::chrono::system_clock::time_point> SimulationBuilder::parse_us_format(const std::string& date_str) const {
+  std::tm tm = {};
+  std::istringstream ss(date_str);
+
+  // Try MM/DD/YYYY format
+  ss >> std::get_time(&tm, "%m/%d/%Y");
+  if (ss.fail()) {
+    ss.clear();
+    ss.str(date_str);
+    ss >> std::get_time(&tm, "%m-%d-%Y");
+  }
+
+  if (ss.fail()) {
+    return std::nullopt;
+  }
+
+  return std::chrono::system_clock::from_time_t(std::mktime(&tm));
+}
+
+std::optional<std::chrono::system_clock::time_point> SimulationBuilder::parse_european_format(const std::string& date_str) const {
+  std::tm tm = {};
+  std::istringstream ss(date_str);
+
+  // Try DD/MM/YYYY format
+  ss >> std::get_time(&tm, "%d/%m/%Y");
+  if (ss.fail()) {
+    ss.clear();
+    ss.str(date_str);
+    ss >> std::get_time(&tm, "%d.%m.%Y");
+  }
+
+  if (ss.fail()) {
+    return std::nullopt;
+  }
+
+  return std::chrono::system_clock::from_time_t(std::mktime(&tm));
+}
+
+std::optional<std::chrono::system_clock::time_point> SimulationBuilder::parse_long_format(const std::string& date_str) const {
+  std::tm tm = {};
+  std::istringstream ss(date_str);
+
+  // Try "Month DD, YYYY" format
+  ss >> std::get_time(&tm, "%B %d, %Y");
+  if (ss.fail()) {
+    ss.clear();
+    ss.str(date_str);
+    ss >> std::get_time(&tm, "%b %d, %Y");
+  }
+
+  if (ss.fail()) {
+    return std::nullopt;
+  }
+
+  return std::chrono::system_clock::from_time_t(std::mktime(&tm));
+}
+
+std::optional<std::chrono::system_clock::time_point> SimulationBuilder::parse_unix_timestamp(const std::string& date_str) const {
+  try {
+    std::time_t timestamp = std::stoll(date_str);
+    return std::chrono::system_clock::from_time_t(timestamp);
+  } catch (const std::exception&) {
+    return std::nullopt;
+  }
+}
+
+std::optional<std::chrono::system_clock::time_point> SimulationBuilder::parse_julian_day(const std::string& date_str) const {
+  try {
+    double jd = std::stod(date_str);
+
+    // Convert Julian Day to Unix timestamp
+    // Julian Day 2440587.5 = January 1, 1970 00:00:00 UTC
+    constexpr double UNIX_EPOCH_JD = 2440587.5;
+    constexpr double SECONDS_PER_DAY = 86400.0;
+
+    double days_since_epoch = jd - UNIX_EPOCH_JD;
+    std::time_t timestamp = static_cast<std::time_t>(days_since_epoch * SECONDS_PER_DAY);
+
+    return std::chrono::system_clock::from_time_t(timestamp);
+  } catch (const std::exception&) {
+    return std::nullopt;
+  }
+}
+
+// === Timezone Helper Methods ===
+
+std::vector<std::string> SimulationBuilder::get_supported_timezones() const {
+  return {
+    "UTC", "GMT", "EST", "EDT", "CST", "CDT",
+    "MST", "MDT", "PST", "PDT"
+  };
+}
+
+TimezoneInfo SimulationBuilder::get_timezone_info(const std::string& timezone_name) const {
+  return parse_timezone(timezone_name);
+}
+
+std::string SimulationBuilder::format_date_with_timezone(std::chrono::system_clock::time_point tp,
+                                                        const TimezoneInfo& tz) const {
+  // Apply timezone offset for display
+  auto local_time = tp + std::chrono::minutes(tz.total_offset_minutes());
+  auto time_t_value = std::chrono::system_clock::to_time_t(local_time);
+
+  std::ostringstream oss;
+  oss << std::put_time(std::gmtime(&time_t_value), "%Y-%m-%d %H:%M:%S");
+  oss << " " << tz.abbreviation;
+
+  return oss.str();
+}
+
+
 
 }  // namespace SolarSystem::Core::Builders
