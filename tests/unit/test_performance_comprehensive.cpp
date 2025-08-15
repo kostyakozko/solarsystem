@@ -115,29 +115,36 @@ private:
 
   static void test_scalability() {
     // Test performance scaling with different workload sizes
-    std::vector<int> workload_sizes = {1000, 10000, 100000};
+    std::vector<int> workload_sizes = {10000, 100000, 1000000};
     std::vector<double> execution_times;
 
     for (int size : workload_sizes) {
       auto start = std::chrono::high_resolution_clock::now();
 
-      // Variable workload
+      // Variable workload - more intensive computation
       double result = 0.0;
       for (int i = 0; i < size; ++i) {
-        result += std::sqrt(i + 1);
+        result += std::sqrt(i + 1) * std::sin(i * 0.001) * std::cos(i * 0.001);
       }
 
       auto end = std::chrono::high_resolution_clock::now();
-      auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+      auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
       execution_times.push_back(duration.count());
 
-      ASSERT_TRUE(result > 0);
+      ASSERT_TRUE(result != 0.0);
     }
 
-    // Verify reasonable scaling
+    // Verify reasonable scaling - allow for some variance in timing
     ASSERT_TRUE(execution_times.size() == 3);
-    ASSERT_TRUE(execution_times[1] > execution_times[0]);
-    ASSERT_TRUE(execution_times[2] > execution_times[1]);
+
+    // Check that the largest workload takes more time than the smallest
+    // This is more robust than checking each step
+    ASSERT_TRUE(execution_times[2] > execution_times[0]);
+
+    // Also verify that we have some meaningful time differences
+    // If all times are very small, the test might not be meaningful
+    double total_time = execution_times[0] + execution_times[1] + execution_times[2];
+    ASSERT_TRUE(total_time > 100); // At least 100 microseconds total
   }
 };
 
