@@ -25,7 +25,7 @@ std::uniform_int_distribution<int> TestDataGenerator::int_dist_(0, 255);
 
 // Validation patterns
 const std::regex TestDataValidator::jpl_response_pattern_(
-  R"(^\s*\*{5,}\s*Ephemeris\s*\*{5,}.*)"
+  R"(\*+.*EPHEMERIS.*\*+)"
 );
 const std::regex TestDataValidator::ephemeris_header_pattern_(
   R"(^JDTDB\s+X\s+Y\s+Z\s+VX\s+VY\s+VZ.*)"
@@ -116,9 +116,11 @@ void IsolatedTestEnvironment::restore_original_environment() {
 void IsolatedTestEnvironment::cleanup_all_resources() {
   if (is_clean_) return;
 
+  // Restore working directory first, before cleaning up temp directories
+  restore_working_directory();
   cleanup_processes();
   cleanup_network_resources();
-  restore_original_environment();
+  restore_environment_variables();
   cleanup_temp_files();
   cleanup_temp_directories();
 
