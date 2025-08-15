@@ -188,6 +188,12 @@ target_link_libraries(test_performance_comprehensive test_utils solar_core solar
 add_test(NAME UnitTest_PerformanceComprehensive COMMAND test_performance_comprehensive)
 set_tests_properties(UnitTest_PerformanceComprehensive PROPERTIES LABELS "unit;performance;monitoring;comprehensive;task11" TIMEOUT 120)
 
+# NEW: Enhanced Test Data Management (Task 12)
+add_executable(test_enhanced_data_management test_enhanced_data_management.cpp)
+target_link_libraries(test_enhanced_data_management test_utils solar_test solar_core solar_jpl solar_utils Threads::Threads)
+add_test(NAME UnitTest_EnhancedDataManagement COMMAND test_enhanced_data_management)
+set_tests_properties(UnitTest_EnhancedDataManagement PROPERTIES LABELS "unit;enhanced;data;management;comprehensive;task12" TIMEOUT 120)
+
 message(STATUS "Unit tests configured:")
 message(STATUS "  - Solar Core Library Tests")
 message(STATUS "  - Solar JPL Library Tests")
@@ -243,6 +249,7 @@ install(TARGETS
     test_simulation_builder_enhanced
     test_date_time_comprehensive
     test_performance_comprehensive
+    test_enhanced_data_management
     RUNTIME DESTINATION bin/tests
     COMPONENT tests
 )

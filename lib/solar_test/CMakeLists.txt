@@ -9,6 +9,7 @@ add_library(solar_test STATIC
     src/framework/test_result.cpp
     src/framework/test_discovery.cpp
     src/framework/test_data_manager.cpp
+    src/framework/enhanced_test_data_manager.cpp
     src/reporters/test_reporter.cpp
     src/reporters/console_reporter.cpp
     src/reporters/xml_reporter.cpp
