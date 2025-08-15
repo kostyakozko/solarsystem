@@ -36,7 +36,7 @@ run_performance_test() {
     local test_name="$1"
     local test_executable="$2"
 
-    echo}🧪 Running: $test_name${NC}"
+    echo -e "${BLUE}🧪 Running: $test_name${NC}"
 
     # Set up environment
     export PERFORMANCE_BASELINE_FILE="$BASELINE_FILE"
