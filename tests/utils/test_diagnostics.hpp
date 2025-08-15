@@ -229,6 +229,114 @@ class FailureAnalyzer {
 };
 
 /**
+ * @brief Platform-specific memory monitoring utilities
+ */
+class PlatformMemoryMonitor {
+ public:
+  /**
+   * @brief Memory usage information
+   */
+  struct MemoryInfo {
+    size_t resident_set_size;      // RSS - Physical memory currently used
+    size_t virtual_memory_size;    // Virtual memory size
+    size_t peak_resident_set_size; // Peak RSS during process lifetime
+    size_t heap_size;              // Heap memory allocated
+    size_t stack_size;             // Stack memory used
+    size_t shared_memory;          // Shared memory segments
+    size_t private_memory;         // Private memory (not shared)
+    double memory_usage_percent;   // Percentage of system memory used
+    std::chrono::system_clock::time_point measurement_time;
+
+    MemoryInfo() : resident_set_size(0), virtual_memory_size(0), peak_resident_set_size(0),
+                   heap_size(0), stack_size(0), shared_memory(0), private_memory(0),
+                   memory_usage_percent(0.0), measurement_time(std::chrono::system_clock::now()) {}
+  };
+
+  /**
+   * @brief System memory information
+   */
+  struct SystemMemoryInfo {
+    size_t total_physical_memory;
+    size_t available_physical_memory;
+    size_t used_physical_memory;
+    size_t total_virtual_memory;
+    size_t available_virtual_memory;
+    size_t used_virtual_memory;
+    double memory_pressure;        // 0.0 to 1.0, higher means more pressure
+    size_t page_size;
+    size_t cache_memory;
+    size_t buffer_memory;
+    std::chrono::system_clock::time_point measurement_time;
+
+    SystemMemoryInfo() : total_physical_memory(0), available_physical_memory(0),
+                        used_physical_memory(0), total_virtual_memory(0),
+                        available_virtual_memory(0), used_virtual_memory(0),
+                        memory_pressure(0.0), page_size(0), cache_memory(0),
+                        buffer_memory(0), measurement_time(std::chrono::system_clock::now()) {}
+  };
+
+  /**
+   * @brief Memory leak detection information
+   */
+  struct MemoryLeakInfo {
+    std::string test_name;
+    MemoryInfo baseline_memory;
+    MemoryInfo final_memory;
+    size_t leaked_bytes;
+    double leak_rate_per_second;
+    std::vector<std::string> potential_leak_sources;
+    bool leak_detected;
+    std::chrono::system_clock::time_point detection_time;
+
+    MemoryLeakInfo() : leaked_bytes(0), leak_rate_per_second(0.0), leak_detected(false),
+                      detection_time(std::chrono::system_clock::now()) {}
+  };
+
+  // Platform-specific memory measurement
+  static MemoryInfo get_current_memory_usage();
+  static SystemMemoryInfo get_system_memory_info();
+  static std::string format_memory_info(const MemoryInfo& info);
+  static std::string format_system_memory_info(const SystemMemoryInfo& info);
+
+  // Memory leak detection
+  static void start_leak_detection(const std::string& test_name);
+  static MemoryLeakInfo stop_leak_detection(const std::string& test_name);
+  static std::vector<MemoryLeakInfo> get_all_leak_reports();
+
+  // Memory profiling
+  static void start_memory_profiling(const std::string& test_name);
+  static std::vector<MemoryInfo> stop_memory_profiling(const std::string& test_name);
+  static std::string generate_memory_profile_report(const std::string& test_name);
+
+  // Memory baseline management
+  static void set_memory_baseline(const std::string& test_name);
+  static bool detect_memory_regression(const std::string& test_name, double threshold = 0.1);
+  static std::string get_memory_regression_report(const std::string& test_name);
+
+  // Platform detection
+  static std::string get_platform_name();
+  static bool is_memory_monitoring_available();
+  static std::vector<std::string> get_available_memory_metrics();
+
+ private:
+  PlatformMemoryMonitor() = delete;
+
+  // Platform-specific implementations
+  static MemoryInfo get_memory_usage_macos();
+  static MemoryInfo get_memory_usage_linux();
+  static MemoryInfo get_memory_usage_windows();
+  static SystemMemoryInfo get_system_memory_macos();
+  static SystemMemoryInfo get_system_memory_linux();
+  static SystemMemoryInfo get_system_memory_windows();
+
+  // Memory tracking state
+  static std::map<std::string, MemoryInfo> baseline_memory_;
+  static std::map<std::string, std::vector<MemoryInfo>> memory_profiles_;
+  static std::map<std::string, MemoryLeakInfo> leak_detection_state_;
+  static std::mutex memory_monitor_mutex_;
+};
+
+/**
  * @brief Performance monitoring for tests
  */
 class TestPerformanceMonitor {
@@ -241,13 +349,18 @@ class TestPerformanceMonitor {
     std::chrono::system_clock::time_point start_time;
     std::chrono::system_clock::time_point end_time;
     std::chrono::milliseconds duration;
-    size_t peak_memory_usage;
-    size_t average_memory_usage;
+    PlatformMemoryMonitor::MemoryInfo start_memory;
+    PlatformMemoryMonitor::MemoryInfo end_memory;
+    PlatformMemoryMonitor::MemoryInfo peak_memory;
+    size_t peak_memory_usage;        // Legacy field for compatibility
+    size_t average_memory_usage;     // Legacy field for compatibility
     double cpu_usage_percent;
     size_t disk_io_bytes;
     size_t network_io_bytes;
     int context_switches;
     std::map<std::string, double> custom_metrics;
+    bool memory_leak_detected;
+    size_t leaked_bytes;
   };
 
   // Monitoring control

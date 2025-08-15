@@ -8,6 +8,13 @@
 #include <algorithm>
 #include <iostream>
 #include <sstream>
+#include <iomanip>
+
+#ifdef __APPLE__
+#include <sys/resource.h>
+#elif __linux__
+#include <unistd.h>
+#endif
 
 #include "test_port_manager.hpp"
 
@@ -285,7 +292,10 @@ std::string SystemStateCapture::get_os_info() { return "macOS/Linux"; }
 
 std::string SystemStateCapture::get_cpu_info() { return "CPU info not available"; }
 
-std::string SystemStateCapture::get_memory_info() { return "Memory info not available"; }
+std::string SystemStateCapture::get_memory_info() {
+  auto system_info = PlatformMemoryMonitor::get_system_memory_info();
+  return PlatformMemoryMonitor::format_system_memory_info(system_info);
+}
 
 std::string SystemStateCapture::get_disk_info() { return "Disk info not available"; }
 
@@ -379,8 +389,15 @@ void TestPerformanceMonitor::start_monitoring(const std::string& test_name) {
   PerformanceMetrics metrics;
   metrics.test_name = test_name;
   metrics.start_time = std::chrono::system_clock::now();
+  metrics.start_memory = PlatformMemoryMonitor::get_current_memory_usage();
+  metrics.peak_memory = metrics.start_memory;
+  metrics.memory_leak_detected = false;
+  metrics.leaked_bytes = 0;
 
   active_monitors_[test_name] = metrics;
+
+  // Start memory leak detection
+  PlatformMemoryMonitor::start_leak_detection(test_name);
 }
 
 TestPerformanceMonitor::PerformanceMetrics TestPerformanceMonitor::stop_monitoring(
@@ -394,8 +411,23 @@ TestPerformanceMonitor::PerformanceMetrics TestPerformanceMonitor::stop_monitori
 
   PerformanceMetrics metrics = it->second;
   metrics.end_time = std::chrono::system_clock::now();
+  metrics.end_memory = PlatformMemoryMonitor::get_current_memory_usage();
   metrics.duration =
       std::chrono::duration_cast<std::chrono::milliseconds>(metrics.end_time - metrics.start_time);
+
+  // Update peak memory if current is higher
+  if (metrics.end_memory.resident_set_size > metrics.peak_memory.resident_set_size) {
+    metrics.peak_memory = metrics.end_memory;
+  }
+
+  // Set legacy fields for compatibility
+  metrics.peak_memory_usage = metrics.peak_memory.resident_set_size;
+  metrics.average_memory_usage = (metrics.start_memory.resident_set_size + metrics.end_memory.resident_set_size) / 2;
+
+  // Stop memory leak detection
+  auto leak_info = PlatformMemoryMonitor::stop_leak_detection(test_name);
+  metrics.memory_leak_detected = leak_info.leak_detected;
+  metrics.leaked_bytes = leak_info.leaked_bytes;
 
   completed_metrics_.push_back(metrics);
   active_monitors_.erase(it);
@@ -445,6 +477,443 @@ bool TestPerformanceMonitor::detect_performance_regression(const std::string& /*
                                                            const PerformanceMetrics& /* baseline */,
                                                            double /* threshold */) {
   return false;  // Simplified implementation
+}
+
+// === Platform-Specific Memory Monitoring Implementation ===
+
+// Static member initialization
+std::map<std::string, PlatformMemoryMonitor::MemoryInfo> PlatformMemoryMonitor::baseline_memory_;
+std::map<std::string, std::vector<PlatformMemoryMonitor::MemoryInfo>> PlatformMemoryMonitor::memory_profiles_;
+std::map<std::string, PlatformMemoryMonitor::MemoryLeakInfo> PlatformMemoryMonitor::leak_detection_state_;
+std::mutex PlatformMemoryMonitor::memory_monitor_mutex_;
+
+PlatformMemoryMonitor::MemoryInfo PlatformMemoryMonitor::get_current_memory_usage() {
+  std::string platform = get_platform_name();
+
+  if (platform == "macOS") {
+    return get_memory_usage_macos();
+  } else if (platform == "Linux") {
+    return get_memory_usage_linux();
+  } else if (platform == "Windows") {
+    return get_memory_usage_windows();
+  } else {
+    // Fallback implementation
+    MemoryInfo info;
+    info.measurement_time = std::chrono::system_clock::now();
+    return info;
+  }
+}
+
+PlatformMemoryMonitor::SystemMemoryInfo PlatformMemoryMonitor::get_system_memory_info() {
+  std::string platform = get_platform_name();
+
+  if (platform == "macOS") {
+    return get_system_memory_macos();
+  } else if (platform == "Linux") {
+    return get_system_memory_linux();
+  } else if (platform == "Windows") {
+    return get_system_memory_windows();
+  } else {
+    // Fallback implementation
+    SystemMemoryInfo info;
+    info.measurement_time = std::chrono::system_clock::now();
+    return info;
+  }
+}
+
+std::string PlatformMemoryMonitor::format_memory_info(const MemoryInfo& info) {
+  std::ostringstream oss;
+  oss << "Memory Usage Report:\n";
+  oss << "  RSS: " << (info.resident_set_size / 1024 / 1024) << " MB\n";
+  oss << "  Virtual: " << (info.virtual_memory_size / 1024 / 1024) << " MB\n";
+  oss << "  Peak RSS: " << (info.peak_resident_set_size / 1024 / 1024) << " MB\n";
+  oss << "  Heap: " << (info.heap_size / 1024 / 1024) << " MB\n";
+  oss << "  Usage: " << std::fixed << std::setprecision(2) << info.memory_usage_percent << "%\n";
+  return oss.str();
+}
+
+std::string PlatformMemoryMonitor::format_system_memory_info(const SystemMemoryInfo& info) {
+  std::ostringstream oss;
+  oss << "System Memory Report:\n";
+  oss << "  Total Physical: " << (info.total_physical_memory / 1024 / 1024) << " MB\n";
+  oss << "  Available Physical: " << (info.available_physical_memory / 1024 / 1024) << " MB\n";
+  oss << "  Used Physical: " << (info.used_physical_memory / 1024 / 1024) << " MB\n";
+  oss << "  Memory Pressure: " << std::fixed << std::setprecision(2) << (info.memory_pressure * 100) << "%\n";
+  oss << "  Page Size: " << info.page_size << " bytes\n";
+  return oss.str();
+}
+
+void PlatformMemoryMonitor::start_leak_detection(const std::string& test_name) {
+  std::lock_guard<std::mutex> lock(memory_monitor_mutex_);
+
+  MemoryLeakInfo leak_info;
+  leak_info.test_name = test_name;
+  leak_info.baseline_memory = get_current_memory_usage();
+  leak_info.detection_time = std::chrono::system_clock::now();
+
+  leak_detection_state_[test_name] = leak_info;
+}
+
+PlatformMemoryMonitor::MemoryLeakInfo PlatformMemoryMonitor::stop_leak_detection(const std::string& test_name) {
+  std::lock_guard<std::mutex> lock(memory_monitor_mutex_);
+
+  auto it = leak_detection_state_.find(test_name);
+  if (it == leak_detection_state_.end()) {
+    MemoryLeakInfo empty_info;
+    empty_info.test_name = test_name;
+    return empty_info;
+  }
+
+  MemoryLeakInfo& leak_info = it->second;
+  leak_info.final_memory = get_current_memory_usage();
+
+  // Calculate leaked bytes
+  if (leak_info.final_memory.resident_set_size > leak_info.baseline_memory.resident_set_size) {
+    leak_info.leaked_bytes = leak_info.final_memory.resident_set_size - leak_info.baseline_memory.resident_set_size;
+    leak_info.leak_detected = leak_info.leaked_bytes > (1024 * 1024); // 1MB threshold
+
+    // Calculate leak rate
+    auto duration = std::chrono::duration_cast<std::chrono::seconds>(
+        leak_info.final_memory.measurement_time - leak_info.baseline_memory.measurement_time);
+    if (duration.count() > 0) {
+      leak_info.leak_rate_per_second = static_cast<double>(leak_info.leaked_bytes) / duration.count();
+    }
+  }
+
+  MemoryLeakInfo result = leak_info;
+  leak_detection_state_.erase(it);
+  return result;
+}
+
+std::vector<PlatformMemoryMonitor::MemoryLeakInfo> PlatformMemoryMonitor::get_all_leak_reports() {
+  std::lock_guard<std::mutex> lock(memory_monitor_mutex_);
+
+  std::vector<MemoryLeakInfo> reports;
+  for (const auto& pair : leak_detection_state_) {
+    reports.push_back(pair.second);
+  }
+  return reports;
+}
+
+void PlatformMemoryMonitor::start_memory_profiling(const std::string& test_name) {
+  std::lock_guard<std::mutex> lock(memory_monitor_mutex_);
+
+  memory_profiles_[test_name] = std::vector<MemoryInfo>();
+  memory_profiles_[test_name].push_back(get_current_memory_usage());
+}
+
+std::vector<PlatformMemoryMonitor::MemoryInfo> PlatformMemoryMonitor::stop_memory_profiling(const std::string& test_name) {
+  std::lock_guard<std::mutex> lock(memory_monitor_mutex_);
+
+  auto it = memory_profiles_.find(test_name);
+  if (it == memory_profiles_.end()) {
+    return {};
+  }
+
+  // Add final measurement
+  it->second.push_back(get_current_memory_usage());
+
+  std::vector<MemoryInfo> result = it->second;
+  memory_profiles_.erase(it);
+  return result;
+}
+
+std::string PlatformMemoryMonitor::generate_memory_profile_report(const std::string& test_name) {
+  auto profile = stop_memory_profiling(test_name);
+
+  std::ostringstream report;
+  report << "Memory Profile Report for " << test_name << ":\n";
+  report << "Total measurements: " << profile.size() << "\n";
+
+  if (!profile.empty()) {
+    size_t min_rss = profile[0].resident_set_size;
+    size_t max_rss = profile[0].resident_set_size;
+    size_t total_rss = 0;
+
+    for (const auto& info : profile) {
+      min_rss = std::min(min_rss, info.resident_set_size);
+      max_rss = std::max(max_rss, info.resident_set_size);
+      total_rss += info.resident_set_size;
+    }
+
+    report << "RSS - Min: " << (min_rss / 1024 / 1024) << " MB, ";
+    report << "Max: " << (max_rss / 1024 / 1024) << " MB, ";
+    report << "Avg: " << (total_rss / profile.size() / 1024 / 1024) << " MB\n";
+  }
+
+  return report.str();
+}
+
+void PlatformMemoryMonitor::set_memory_baseline(const std::string& test_name) {
+  std::lock_guard<std::mutex> lock(memory_monitor_mutex_);
+  baseline_memory_[test_name] = get_current_memory_usage();
+}
+
+bool PlatformMemoryMonitor::detect_memory_regression(const std::string& test_name, double threshold) {
+  std::lock_guard<std::mutex> lock(memory_monitor_mutex_);
+
+  auto it = baseline_memory_.find(test_name);
+  if (it == baseline_memory_.end()) {
+    return false;
+  }
+
+  auto current_memory = get_current_memory_usage();
+  double increase_ratio = static_cast<double>(current_memory.resident_set_size) / it->second.resident_set_size;
+
+  return increase_ratio > (1.0 + threshold);
+}
+
+std::string PlatformMemoryMonitor::get_memory_regression_report(const std::string& test_name) {
+  std::lock_guard<std::mutex> lock(memory_monitor_mutex_);
+
+  auto it = baseline_memory_.find(test_name);
+  if (it == baseline_memory_.end()) {
+    return "No baseline memory data available for " + test_name;
+  }
+
+  auto current_memory = get_current_memory_usage();
+
+  std::ostringstream report;
+  report << "Memory Regression Report for " << test_name << ":\n";
+  report << "Baseline RSS: " << (it->second.resident_set_size / 1024 / 1024) << " MB\n";
+  report << "Current RSS: " << (current_memory.resident_set_size / 1024 / 1024) << " MB\n";
+
+  if (current_memory.resident_set_size > it->second.resident_set_size) {
+    size_t increase = current_memory.resident_set_size - it->second.resident_set_size;
+    double increase_percent = (static_cast<double>(increase) / it->second.resident_set_size) * 100.0;
+    report << "Memory increase: " << (increase / 1024 / 1024) << " MB ("
+           << std::fixed << std::setprecision(2) << increase_percent << "%)\n";
+  }
+
+  return report.str();
+}
+
+std::string PlatformMemoryMonitor::get_platform_name() {
+#ifdef __APPLE__
+  return "macOS";
+#elif __linux__
+  return "Linux";
+#elif _WIN32
+  return "Windows";
+#else
+  return "Unknown";
+#endif
+}
+
+bool PlatformMemoryMonitor::is_memory_monitoring_available() {
+  std::string platform = get_platform_name();
+  return (platform == "macOS" || platform == "Linux" || platform == "Windows");
+}
+
+std::vector<std::string> PlatformMemoryMonitor::get_available_memory_metrics() {
+  std::vector<std::string> metrics;
+
+  if (is_memory_monitoring_available()) {
+    metrics.push_back("resident_set_size");
+    metrics.push_back("virtual_memory_size");
+    metrics.push_back("peak_resident_set_size");
+    metrics.push_back("heap_size");
+    metrics.push_back("memory_usage_percent");
+  } else {
+    metrics.push_back("memory_monitoring_unavailable");
+  }
+
+  return metrics;
+}
+
+// Platform-specific implementations
+
+#ifdef __APPLE__
+#include <mach/mach.h>
+#include <mach/task.h>
+#include <mach/mach_init.h>
+#include <mach/host_info.h>
+#include <sys/sysctl.h>
+
+PlatformMemoryMonitor::MemoryInfo PlatformMemoryMonitor::get_memory_usage_macos() {
+  MemoryInfo info;
+  info.measurement_time = std::chrono::system_clock::now();
+
+  task_t task = mach_task_self();
+  struct mach_task_basic_info basic_info;
+  mach_msg_type_number_t info_count = MACH_TASK_BASIC_INFO_COUNT;
+
+  if (task_info(task, MACH_TASK_BASIC_INFO, reinterpret_cast<task_info_t>(&basic_info), &info_count) == KERN_SUCCESS) {
+    info.resident_set_size = basic_info.resident_size;
+    info.virtual_memory_size = basic_info.virtual_size;
+  }
+
+  // Get peak memory usage
+  struct rusage usage;
+  if (getrusage(RUSAGE_SELF, &usage) == 0) {
+    info.peak_resident_set_size = static_cast<size_t>(usage.ru_maxrss);
+  }
+
+  // Calculate memory usage percentage
+  auto system_info = get_system_memory_macos();
+  if (system_info.total_physical_memory > 0) {
+    info.memory_usage_percent = (static_cast<double>(info.resident_set_size) / system_info.total_physical_memory) * 100.0;
+  }
+
+  return info;
+}
+
+PlatformMemoryMonitor::SystemMemoryInfo PlatformMemoryMonitor::get_system_memory_macos() {
+  SystemMemoryInfo info;
+  info.measurement_time = std::chrono::system_clock::now();
+
+  // Get total physical memory
+  int64_t total_memory;
+  size_t size = sizeof(total_memory);
+  if (sysctlbyname("hw.memsize", &total_memory, &size, NULL, 0) == 0) {
+    info.total_physical_memory = static_cast<size_t>(total_memory);
+  }
+
+  // Get page size
+  vm_size_t page_size;
+  if (host_page_size(mach_host_self(), &page_size) == KERN_SUCCESS) {
+    info.page_size = page_size;
+  }
+
+  // Get VM statistics
+  vm_statistics64_data_t vm_stat;
+  mach_msg_type_number_t count = HOST_VM_INFO64_COUNT;
+  if (host_statistics64(mach_host_self(), HOST_VM_INFO64, reinterpret_cast<host_info64_t>(&vm_stat), &count) == KERN_SUCCESS) {
+    info.available_physical_memory = (vm_stat.free_count + vm_stat.inactive_count) * info.page_size;
+    info.used_physical_memory = info.total_physical_memory - info.available_physical_memory;
+
+    // Calculate memory pressure
+    if (info.total_physical_memory > 0) {
+      info.memory_pressure = static_cast<double>(info.used_physical_memory) / info.total_physical_memory;
+    }
+  }
+
+  return info;
+}
+
+#else
+// Fallback implementations for non-macOS platforms
+
+PlatformMemoryMonitor::MemoryInfo PlatformMemoryMonitor::get_memory_usage_macos() {
+  MemoryInfo info;
+  info.measurement_time = std::chrono::system_clock::now();
+  return info;
+}
+
+PlatformMemoryMonitor::SystemMemoryInfo PlatformMemoryMonitor::get_system_memory_macos() {
+  SystemMemoryInfo info;
+  info.measurement_time = std::chrono::system_clock::now();
+  return info;
+}
+
+#endif
+
+#ifdef __linux__
+#include <sys/resource.h>
+#include <fstream>
+#include <sstream>
+
+PlatformMemoryMonitor::MemoryInfo PlatformMemoryMonitor::get_memory_usage_linux() {
+  MemoryInfo info;
+  info.measurement_time = std::chrono::system_clock::now();
+
+  // Read from /proc/self/status
+  std::ifstream status_file("/proc/self/status");
+  std::string line;
+
+  while (std::getline(status_file, line)) {
+    if (line.find("VmRSS:") == 0) {
+      std::istringstream iss(line);
+      std::string key, value, unit;
+      iss >> key >> value >> unit;
+      info.resident_set_size = std::stoull(value) * 1024; // Convert KB to bytes
+    } else if (line.find("VmSize:") == 0) {
+      std::istringstream iss(line);
+      std::string key, value, unit;
+      iss >> key >> value >> unit;
+      info.virtual_memory_size = std::stoull(value) * 1024; // Convert KB to bytes
+    } else if (line.find("VmPeak:") == 0) {
+      std::istringstream iss(line);
+      std::string key, value, unit;
+      iss >> key >> value >> unit;
+      info.peak_resident_set_size = std::stoull(value) * 1024; // Convert KB to bytes
+    }
+  }
+
+  // Calculate memory usage percentage
+  auto system_info = get_system_memory_linux();
+  if (system_info.total_physical_memory > 0) {
+    info.memory_usage_percent = (static_cast<double>(info.resident_set_size) / system_info.total_physical_memory) * 100.0;
+  }
+
+  return info;
+}
+
+PlatformMemoryMonitor::SystemMemoryInfo PlatformMemoryMonitor::get_system_memory_linux() {
+  SystemMemoryInfo info;
+  info.measurement_time = std::chrono::system_clock::now();
+
+  // Read from /proc/meminfo
+  std::ifstream meminfo_file("/proc/meminfo");
+  std::string line;
+
+  while (std::getline(meminfo_file, line)) {
+    if (line.find("MemTotal:") == 0) {
+      std::istringstream iss(line);
+      std::string key, value, unit;
+      iss >> key >> value >> unit;
+      info.total_physical_memory = std::stoull(value) * 1024; // Convert KB to bytes
+    } else if (line.find("MemAvailable:") == 0) {
+      std::istringstream iss(line);
+      std::string key, value, unit;
+      iss >> key >> value >> unit;
+      info.available_physical_memory = std::stoull(value) * 1024; // Convert KB to bytes
+    }
+  }
+
+  info.used_physical_memory = info.total_physical_memory - info.available_physical_memory;
+
+  // Calculate memory pressure
+  if (info.total_physical_memory > 0) {
+    info.memory_pressure = static_cast<double>(info.used_physical_memory) / info.total_physical_memory;
+  }
+
+  // Get page size
+  info.page_size = getpagesize();
+
+  return info;
+}
+
+#else
+// Fallback implementations for non-Linux platforms
+
+PlatformMemoryMonitor::MemoryInfo PlatformMemoryMonitor::get_memory_usage_linux() {
+  MemoryInfo info;
+  info.measurement_time = std::chrono::system_clock::now();
+  return info;
+}
+
+PlatformMemoryMonitor::SystemMemoryInfo PlatformMemoryMonitor::get_system_memory_linux() {
+  SystemMemoryInfo info;
+  info.measurement_time = std::chrono::system_clock::now();
+  return info;
+}
+
+#endif
+
+// Windows implementation placeholder
+PlatformMemoryMonitor::MemoryInfo PlatformMemoryMonitor::get_memory_usage_windows() {
+  MemoryInfo info;
+  info.measurement_time = std::chrono::system_clock::now();
+  // TODO: Implement Windows-specific memory monitoring using Windows API
+  return info;
+}
+
+PlatformMemoryMonitor::SystemMemoryInfo PlatformMemoryMonitor::get_system_memory_windows() {
+  SystemMemoryInfo info;
+  info.measurement_time = std::chrono::system_clock::now();
+  // TODO: Implement Windows-specific system memory monitoring
+  return info;
 }
 
 }  // namespace TestUtils
