@@ -171,6 +171,23 @@ target_link_libraries(test_concurrent_execution test_utils solar_core solar_util
 add_test(NAME UnitTest_ConcurrentExecution COMMAND test_concurrent_execution)
 set_tests_properties(UnitTest_ConcurrentExecution PROPERTIES LABELS "unit;testing;concurrent;execution" TIMEOUT ${TEST_TIMEOUT})
 
+# NEW: Enhanced Test Framework with Memory and Performance Monitoring (Task 10)
+add_executable(test_simulation_builder_enhanced test_simulation_builder_enhanced.cpp)
+target_link_libraries(test_simulation_builder_enhanced test_utils solar_core solar_jpl solar_utils Threads::Threads)
+add_test(NAME UnitTest_SimulationBuilderEnhanced COMMAND test_simulation_builder_enhanced)
+set_tests_properties(UnitTest_SimulationBuilderEnhanced PROPERTIES LABELS "unit;enhanced;testing;memory;performance;task10" TIMEOUT 60)
+
+add_executable(test_date_time_comprehensive test_date_time_comprehensive.cpp)
+target_link_libraries(test_date_time_comprehensive test_utils solar_core solar_jpl solar_utils Threads::Threads)
+add_test(NAME UnitTest_DateTimeComprehensive COMMAND test_date_time_comprehensive)
+set_tests_properties(UnitTest_DateTimeComprehensive PROPERTIES LABELS "unit;enhanced;datetime;comprehensive;task10" TIMEOUT 60)
+
+# NEW: Comprehensive Performance Monitoring (Task 11)
+add_executable(test_performance_comprehensive test_performance_comprehensive.cpp)
+target_link_libraries(test_performance_comprehensive test_utils solar_core solar_jpl solar_utils Threads::Threads)
+add_test(NAME UnitTest_PerformanceComprehensive COMMAND test_performance_comprehensive)
+set_tests_properties(UnitTest_PerformanceComprehensive PROPERTIES LABELS "unit;performance;monitoring;comprehensive;task11" TIMEOUT 120)
+
 message(STATUS "Unit tests configured:")
 message(STATUS "  - Solar Core Library Tests")
 message(STATUS "  - Solar JPL Library Tests")
@@ -223,6 +240,9 @@ install(TARGETS
     test_application_components
     test_port_management
     test_concurrent_execution
+    test_simulation_builder_enhanced
+    test_date_time_comprehensive
+    test_performance_comprehensive
     RUNTIME DESTINATION bin/tests
     COMPONENT tests
 )
