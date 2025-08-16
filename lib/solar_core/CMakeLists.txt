@@ -12,6 +12,8 @@ add_library(solar_core STATIC
 
     # Modern API design patterns (Phase 0.3)
     src/builders/simulation_builder.cpp
+
+
 )
 
 # Public headers for other libraries and applications

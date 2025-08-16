@@ -194,6 +194,12 @@ target_link_libraries(test_enhanced_data_management test_utils solar_test solar_
 add_test(NAME UnitTest_EnhancedDataManagement COMMAND test_enhanced_data_management)
 set_tests_properties(UnitTest_EnhancedDataManagement PROPERTIES LABELS "unit;enhanced;data;management;comprehensive;task12" TIMEOUT 120)
 
+# Input validation tests (Task 13)
+add_executable(test_input_validation_comprehensive test_input_validation_comprehensive.cpp)
+target_link_libraries(test_input_validation_comprehensive test_utils solar_core solar_jpl solar_utils Threads::Threads)
+add_test(NAME UnitTest_InputValidationComprehensive COMMAND test_input_validation_comprehensive)
+set_tests_properties(UnitTest_InputValidationComprehensive PROPERTIES LABELS "unit;input;validation;comprehensive;task13" TIMEOUT 120)
+
 message(STATUS "Unit tests configured:")
 message(STATUS "  - Solar Core Library Tests")
 message(STATUS "  - Solar JPL Library Tests")
@@ -253,3 +259,4 @@ install(TARGETS
     RUNTIME DESTINATION bin/tests
     COMPONENT tests
 )
+

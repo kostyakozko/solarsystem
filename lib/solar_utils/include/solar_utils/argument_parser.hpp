@@ -24,11 +24,12 @@
 #include <vector>
 
 #include "solar_core/utils/expected.hpp"
+#include "solar_utils/validation/input_validator.hpp"
 
 namespace SolarSystem::Utils {
 
 /**
- * @brief Error types for argument parsing
+ * @brief Error types for argument parsing (enhanced with validation details)
  */
 enum class ArgumentError {
   UnknownOption,
@@ -37,7 +38,10 @@ enum class ArgumentError {
   InvalidDateFormat,
   DateOutOfRange,
   ConflictingOptions,
-  MissingRequiredOption
+  MissingRequiredOption,
+  ValidationFailed,
+  SanitizationFailed,
+  FormatNotSupported
 };
 
 /**
@@ -60,7 +64,7 @@ concept Parseable = requires(const std::string& str) {
 };
 
 /**
- * @brief Date representation with parsing capabilities
+ * @brief Enhanced date representation with comprehensive parsing capabilities
  */
 class Date {
  public:
@@ -69,9 +73,22 @@ class Date {
   explicit Date(std::time_t t) : time_point_(std::chrono::system_clock::from_time_t(t)) {}
 
   /**
-   * @brief Parse date from ISO format (YYYY-MM-DD)
+   * @brief Parse date with automatic format detection and validation
    */
   static ArgumentResult<Date> from_string(const std::string& date_str);
+
+  /**
+   * @brief Parse date with specific format validation
+   */
+  static ArgumentResult<Date> from_string_format(const std::string& date_str,
+                                                const std::string& expected_format);
+
+  /**
+   * @brief Parse date with range validation
+   */
+  static ArgumentResult<Date> from_string_with_range(const std::string& date_str,
+                                                    const std::chrono::system_clock::time_point& min_date,
+                                                    const std::chrono::system_clock::time_point& max_date);
 
   /**
    * @brief Get current date
@@ -92,6 +109,11 @@ class Date {
    * @brief Convert to ISO string format
    */
   std::string to_string() const;
+
+  /**
+   * @brief Get supported date formats
+   */
+  static std::vector<std::string> get_supported_formats();
 
  private:
   std::chrono::system_clock::time_point time_point_{std::chrono::system_clock::now()};
@@ -168,10 +190,44 @@ class Option {
   }
 
   /**
-   * @brief Set validation function
+   * @brief Set validation function (legacy)
    */
   Option& validate(std::function<bool(const std::string&)> validator) {
     validator_ = std::move(validator);
+    return *this;
+  }
+
+  /**
+   * @brief Set validation type for comprehensive validation
+   */
+  Option& validate_as(const std::string& validation_type) {
+    validation_type_ = validation_type;
+    return *this;
+  }
+
+  /**
+   * @brief Set allowed values for choice validation
+   */
+  Option& allow_values(const std::vector<std::string>& values) {
+    allowed_values_ = values;
+    return *this;
+  }
+
+  /**
+   * @brief Set numeric range for validation
+   */
+  Option& set_range(int min_val, int max_val) {
+    min_int_ = min_val;
+    max_int_ = max_val;
+    return *this;
+  }
+
+  /**
+   * @brief Set numeric range for validation (double)
+   */
+  Option& set_range(double min_val, double max_val) {
+    min_double_ = min_val;
+    max_double_ = max_val;
     return *this;
   }
 
@@ -196,9 +252,14 @@ class Option {
   bool matches(std::string_view arg) const;
 
   /**
-   * @brief Validate the value for this option
+   * @brief Validate the value for this option (legacy)
    */
   bool is_valid(const std::string& value) const;
+
+  /**
+   * @brief Comprehensive validation with detailed error reporting
+   */
+  Validation::ValidationResult validate_comprehensive_value(const std::string& value) const;
 
   /**
    * @brief Execute the action for this option
@@ -211,6 +272,12 @@ class Option {
   std::string description_;
   bool requires_value_{false};
   std::function<bool(const std::string&)> validator_;
+  std::string validation_type_;
+  std::vector<std::string> allowed_values_;
+  int min_int_ = INT_MIN;
+  int max_int_ = INT_MAX;
+  double min_double_ = -DBL_MAX;
+  double max_double_ = DBL_MAX;
   std::function<void(const std::optional<std::string>&)> action_;
 };
 

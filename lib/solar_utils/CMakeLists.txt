@@ -4,6 +4,7 @@
 add_library(solar_utils STATIC
     src/argument_parser.cpp
     src/logging.cpp
+    src/validation/input_validator.cpp
     # src/config.cpp  # Temporarily disabled due to Expected usage issues
 )
 
