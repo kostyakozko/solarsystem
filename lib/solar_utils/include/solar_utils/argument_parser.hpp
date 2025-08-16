@@ -45,6 +45,39 @@ enum class ArgumentError {
 };
 
 /**
+ * @brief Detailed error information with intelligent suggestions
+ */
+struct DetailedArgumentError {
+  ArgumentError error_code = ArgumentError::UnknownOption;
+  std::string error_message;
+  std::string context;
+  std::vector<std::string> suggestions;
+  std::vector<std::string> similar_options;
+  std::optional<std::string> help_text;
+  std::optional<std::string> usage_example;
+
+  DetailedArgumentError() = default;
+
+  DetailedArgumentError(ArgumentError code, const std::string& message)
+    : error_code(code), error_message(message) {}
+
+  DetailedArgumentError(ArgumentError code, const std::string& message, const std::string& ctx)
+    : error_code(code), error_message(message), context(ctx) {}
+};
+
+/**
+ * @brief Conflict detection result
+ */
+struct ConflictReport {
+  bool has_conflicts = false;
+  std::vector<std::pair<std::string, std::string>> conflicting_pairs;
+  std::vector<std::string> resolution_suggestions;
+
+  ConflictReport() = default;
+  ConflictReport(bool conflicts) : has_conflicts(conflicts) {}
+};
+
+/**
  * @brief Convert ArgumentError to string for error messages
  */
 std::string to_string(ArgumentError error);
@@ -54,6 +87,12 @@ std::string to_string(ArgumentError error);
  */
 template <typename T>
 using ArgumentResult = Expected<T, ArgumentError>;
+
+/**
+ * @brief Enhanced result type with detailed error information
+ */
+template <typename T>
+using DetailedArgumentResult = Expected<T, DetailedArgumentError>;
 
 /**
  * @brief Concept for types that can be parsed from string
@@ -282,7 +321,7 @@ class Option {
 };
 
 /**
- * @brief Modern C++20 argument parser
+ * @brief Modern C++20 argument parser with intelligent error reporting
  */
 class ArgumentParser {
  public:
@@ -304,6 +343,16 @@ class ArgumentParser {
   ArgumentResult<void> parse(int argc, const char* const argv[]);
 
   /**
+   * @brief Parse with detailed error reporting
+   */
+  DetailedArgumentResult<void> parse_with_details(std::span<const char* const> args);
+
+  /**
+   * @brief Parse with detailed error reporting (traditional interface)
+   */
+  DetailedArgumentResult<void> parse_with_details(int argc, const char* const argv[]);
+
+  /**
    * @brief Generate help text
    */
   std::string help() const;
@@ -313,10 +362,36 @@ class ArgumentParser {
    */
   void print_help() const;
 
+  /**
+   * @brief Generate contextual help for specific option
+   */
+  std::string contextual_help(const std::string& option_name) const;
+
+  /**
+   * @brief Detect argument conflicts
+   */
+  ConflictReport detect_conflicts(const std::vector<std::string>& provided_args) const;
+
+  /**
+   * @brief Find similar options for spell-checking
+   */
+  std::vector<std::string> find_similar_options(const std::string& invalid_option) const;
+
+  /**
+   * @brief Generate usage examples
+   */
+  std::vector<std::string> generate_usage_examples() const;
+
+  /**
+   * @brief Get intelligent suggestions for invalid arguments
+   */
+  std::vector<std::string> get_intelligent_suggestions(const std::string& invalid_arg) const;
+
  private:
   std::string program_name_;
   std::vector<Option> options_;
   std::map<std::string, size_t> option_map_;  // Maps option names to indices
+  std::map<std::string, std::vector<std::string>> conflicting_options_;  // Conflict rules
 
   /**
    * @brief Find option by name
@@ -327,6 +402,21 @@ class ArgumentParser {
    * @brief Parse a single argument
    */
   ArgumentResult<size_t> parse_argument(std::span<const char* const> args, size_t index);
+
+  /**
+   * @brief Parse a single argument with detailed error reporting
+   */
+  DetailedArgumentResult<size_t> parse_argument_detailed(std::span<const char* const> args, size_t index);
+
+  /**
+   * @brief Calculate string similarity for spell-checking
+   */
+  int calculate_edit_distance(const std::string& s1, const std::string& s2) const;
+
+  /**
+   * @brief Add conflict rule between options
+   */
+  void add_conflict_rule(const std::string& option1, const std::string& option2);
 };
 
 /**

@@ -11,6 +11,9 @@
 #include <iomanip>
 #include <iostream>
 #include <sstream>
+#include <cctype>
+#include <memory>
+#include <regex>
 
 using namespace SolarSystem::Utils;
 
@@ -51,13 +54,48 @@ ArgumentResult<Date> Date::from_string(const std::string& date_str) {
     return ArgumentResult<Date>{ArgumentError::InvalidDateFormat};
   }
 
-  // For now, just return current time since we simplified the API
+  // Parse ISO format date (YYYY-MM-DD)
+  std::regex iso_pattern(R"(^(\d{4})-(\d{2})-(\d{2})$)");
+  std::smatch matches;
+
+  if (std::regex_match(date_str, matches, iso_pattern)) {
+    try {
+      int year = std::stoi(matches[1]);
+      int month = std::stoi(matches[2]);
+      int day = std::stoi(matches[3]);
+
+      // Create a time_t for the specified date using UTC
+      std::tm tm = {};
+      tm.tm_year = year - 1900;  // years since 1900
+      tm.tm_mon = month - 1;     // months since January (0-11)
+      tm.tm_mday = day;          // day of the month (1-31)
+      tm.tm_hour = 12;           // Use noon to avoid timezone issues
+      tm.tm_min = 0;
+      tm.tm_sec = 0;
+      tm.tm_isdst = 0;           // No daylight saving time
+
+      // Use timegm if available, otherwise mktime with UTC adjustment
+      #ifdef __APPLE__
+      std::time_t time = timegm(&tm);
+      #else
+      std::time_t time = mktime(&tm);
+      #endif
+      if (time != -1) {
+        return ArgumentResult<Date>{Date{time}};
+      }
+    } catch (const std::exception&) {
+      // Fall through to error
+    }
+  }
+
+  // For other formats, return current time (placeholder)
   return ArgumentResult<Date>{Date{}};
 }
 
 ArgumentResult<Date> Date::from_string_format(const std::string& date_str,
                                               const std::string& expected_format) {
-  // Use the simple validation
+  // Use the simple validation (expected_format is for future enhancement)
+  (void)expected_format;  // Suppress unused parameter warning
   auto result = Validation::DateTimeValidator::validate_date(date_str);
 
   if (!result.is_valid) {
@@ -179,6 +217,188 @@ std::string ArgumentParser::help() const {
 
 void ArgumentParser::print_help() const { std::cout << help(); }
 
+std::string ArgumentParser::contextual_help(const std::string& option_name) const {
+  auto option_index = find_option(option_name);
+  if (!option_index) {
+    return "Option not found: " + option_name;
+  }
+
+  const auto& option = options_[*option_index];
+  std::ostringstream oss;
+
+  oss << "Option: " << option.long_name();
+  if (!option.short_name().empty()) {
+    oss << " (" << option.short_name() << ")";
+  }
+  oss << "\n";
+
+  if (!option.description().empty()) {
+    oss << "Description: " << option.description() << "\n";
+  }
+
+  if (option.requires_value()) {
+    oss << "Requires: A value\n";
+    oss << "Usage: " << program_name_ << " " << option.long_name() << " <value>\n";
+  } else {
+    oss << "Type: Flag (no value required)\n";
+    oss << "Usage: " << program_name_ << " " << option.long_name() << "\n";
+  }
+
+  return oss.str();
+}
+
+ConflictReport ArgumentParser::detect_conflicts(const std::vector<std::string>& provided_args) const {
+  ConflictReport report;
+
+  // Check for mutually exclusive options
+  std::vector<std::string> found_options;
+
+  for (const auto& arg : provided_args) {
+    if (arg.starts_with("-")) {
+      auto option_index = find_option(arg);
+      if (option_index) {
+        found_options.push_back(arg);
+      }
+    }
+  }
+
+  // Define some common conflicts
+  std::vector<std::pair<std::string, std::string>> known_conflicts = {
+    {"--help", "--version"},
+    {"--quiet", "--verbose"},
+    {"--update", "--no-update"},
+    {"--force", "--no-force"}
+  };
+
+  for (const auto& [opt1, opt2] : known_conflicts) {
+    bool has_opt1 = std::find(found_options.begin(), found_options.end(), opt1) != found_options.end();
+    bool has_opt2 = std::find(found_options.begin(), found_options.end(), opt2) != found_options.end();
+
+    if (has_opt1 && has_opt2) {
+      report.has_conflicts = true;
+      report.conflicting_pairs.emplace_back(opt1, opt2);
+      report.resolution_suggestions.push_back("Remove either " + opt1 + " or " + opt2);
+    }
+  }
+
+  return report;
+}
+
+std::vector<std::string> ArgumentParser::find_similar_options(const std::string& invalid_option) const {
+  std::vector<std::pair<std::string, int>> candidates;
+
+  for (const auto& option : options_) {
+    // Check both short and long names
+    if (!option.short_name().empty()) {
+      int distance = calculate_edit_distance(invalid_option, std::string(option.short_name()));
+      if (distance <= 2) {  // Allow up to 2 character differences
+        candidates.emplace_back(option.short_name(), distance);
+      }
+    }
+
+    if (!option.long_name().empty()) {
+      int distance = calculate_edit_distance(invalid_option, std::string(option.long_name()));
+      if (distance <= 3) {  // Allow up to 3 character differences for longer names
+        candidates.emplace_back(option.long_name(), distance);
+      }
+    }
+  }
+
+  // Sort by edit distance (closest first)
+  std::sort(candidates.begin(), candidates.end(),
+           [](const auto& a, const auto& b) { return a.second < b.second; });
+
+  std::vector<std::string> similar_options;
+  for (const auto& [option, distance] : candidates) {
+    similar_options.push_back(option);
+    if (similar_options.size() >= 3) break;  // Limit to top 3 suggestions
+  }
+
+  return similar_options;
+}
+
+std::vector<std::string> ArgumentParser::generate_usage_examples() const {
+  std::vector<std::string> examples;
+
+  // Generate basic usage
+  examples.push_back(program_name_ + " --help");
+
+  // Find some common options and create examples
+  for (const auto& option : options_) {
+    if (option.requires_value()) {
+      if (option.long_name().find("date") != std::string::npos) {
+        examples.push_back(program_name_ + " " + std::string(option.long_name()) + " 2025-01-01");
+      } else if (option.long_name().find("port") != std::string::npos) {
+        examples.push_back(program_name_ + " " + std::string(option.long_name()) + " 8080");
+      } else if (option.long_name().find("file") != std::string::npos) {
+        examples.push_back(program_name_ + " " + std::string(option.long_name()) + " /path/to/file");
+      }
+    } else {
+      if (option.long_name().find("verbose") != std::string::npos) {
+        examples.push_back(program_name_ + " " + std::string(option.long_name()));
+      }
+    }
+
+    if (examples.size() >= 5) break;  // Limit examples
+  }
+
+  return examples;
+}
+
+std::vector<std::string> ArgumentParser::get_intelligent_suggestions(const std::string& invalid_arg) const {
+  std::vector<std::string> suggestions;
+
+  // Check for common typos
+  if (invalid_arg == "-h" || invalid_arg == "help") {
+    suggestions.push_back("--help");
+  } else if (invalid_arg == "-v" || invalid_arg == "verbose") {
+    suggestions.push_back("--verbose");
+  } else if (invalid_arg.find("date") != std::string::npos) {
+    suggestions.push_back("--date");
+  } else if (invalid_arg.find("update") != std::string::npos) {
+    suggestions.push_back("--update");
+  }
+
+  // Add similar options
+  auto similar = find_similar_options(invalid_arg);
+  suggestions.insert(suggestions.end(), similar.begin(), similar.end());
+
+  // Remove duplicates
+  std::sort(suggestions.begin(), suggestions.end());
+  suggestions.erase(std::unique(suggestions.begin(), suggestions.end()), suggestions.end());
+
+  return suggestions;
+}
+
+int ArgumentParser::calculate_edit_distance(const std::string& s1, const std::string& s2) const {
+  const size_t len1 = s1.size();
+  const size_t len2 = s2.size();
+
+  std::vector<std::vector<int>> dp(len1 + 1, std::vector<int>(len2 + 1));
+
+  // Initialize base cases
+  for (size_t i = 0; i <= len1; ++i) dp[i][0] = static_cast<int>(i);
+  for (size_t j = 0; j <= len2; ++j) dp[0][j] = static_cast<int>(j);
+
+  // Fill the DP table
+  for (size_t i = 1; i <= len1; ++i) {
+    for (size_t j = 1; j <= len2; ++j) {
+      if (std::tolower(s1[i-1]) == std::tolower(s2[j-1])) {
+        dp[i][j] = dp[i-1][j-1];
+      } else {
+        dp[i][j] = 1 + std::min({dp[i-1][j], dp[i][j-1], dp[i-1][j-1]});
+      }
+    }
+  }
+
+  return dp[len1][len2];
+}
+
+void ArgumentParser::add_conflict_rule(const std::string& option1, const std::string& option2) {
+  conflicting_options_[option1].push_back(option2);
+  conflicting_options_[option2].push_back(option1);
+}
+
 std::optional<size_t> ArgumentParser::find_option(std::string_view name) const {
   auto it = option_map_.find(std::string(name));
   return it != option_map_.end() ? std::make_optional(it->second) : std::nullopt;
@@ -236,6 +456,92 @@ ArgumentResult<size_t> ArgumentParser::parse_argument(std::span<const char* cons
   }
 }
 
+DetailedArgumentResult<void> ArgumentParser::parse_with_details(std::span<const char* const> args) {
+  for (size_t i = 1; i < args.size(); /* increment handled in loop */) {
+    auto result = parse_argument_detailed(args, i);
+    if (!result) {
+      return DetailedArgumentResult<void>{result.error()};
+    }
+    i = result.value();
+  }
+  return DetailedArgumentResult<void>{};  // Success
+}
+
+DetailedArgumentResult<void> ArgumentParser::parse_with_details(int argc, const char* const argv[]) {
+  return parse_with_details(std::span<const char* const>(argv, static_cast<size_t>(argc)));
+}
+
+DetailedArgumentResult<size_t> ArgumentParser::parse_argument_detailed(std::span<const char* const> args, size_t index) {
+  std::string_view arg = args[index];
+  std::string arg_str(arg);
+
+  auto option_index = find_option(arg);
+  if (!option_index) {
+    DetailedArgumentError error(ArgumentError::UnknownOption,
+                               "Unknown option: " + arg_str,
+                               "Option '" + arg_str + "' is not recognized");
+
+    // Add intelligent suggestions
+    error.similar_options = find_similar_options(arg_str);
+    error.suggestions = get_intelligent_suggestions(arg_str);
+
+    // Add contextual help
+    if (!error.similar_options.empty()) {
+      error.help_text = "Did you mean one of: " + error.similar_options[0] + "?";
+      error.usage_example = contextual_help(error.similar_options[0]);
+    } else {
+      error.help_text = "Use --help to see all available options";
+      auto examples = generate_usage_examples();
+      if (!examples.empty()) {
+        error.usage_example = examples[0];
+      }
+    }
+
+    return DetailedArgumentResult<size_t>{error};
+  }
+
+  const auto& option = options_[*option_index];
+
+  if (option.requires_value()) {
+    if (index + 1 >= args.size()) {
+      DetailedArgumentError error(ArgumentError::MissingValue,
+                                 "Missing value for option: " + arg_str,
+                                 "Option '" + arg_str + "' requires a value but none was provided");
+
+      error.help_text = contextual_help(arg_str);
+      error.usage_example = program_name_ + " " + arg_str + " <value>";
+
+      return DetailedArgumentResult<size_t>{error};
+    }
+
+    std::string value = args[index + 1];
+
+    // Use comprehensive validation if available
+    auto validation_result = option.validate_comprehensive_value(value);
+    if (!validation_result.is_valid) {
+      DetailedArgumentError error(ArgumentError::ValidationFailed,
+                                 "Invalid value for option " + arg_str + ": " + validation_result.error_message,
+                                 "The value '" + value + "' is not valid for option '" + arg_str + "'");
+
+      error.suggestions = validation_result.suggestions;
+      error.help_text = contextual_help(arg_str);
+
+      if (!validation_result.expected_formats.empty()) {
+        error.usage_example = "Expected formats: " + validation_result.expected_formats[0];
+      }
+
+      return DetailedArgumentResult<size_t>{error};
+    }
+
+    // Use the validated (and potentially sanitized) value
+    option.execute(validation_result.normalized_value.empty() ? value : validation_result.normalized_value);
+    return DetailedArgumentResult<size_t>{index + 2};  // Skip both option and value
+  } else {
+    option.execute();
+    return DetailedArgumentResult<size_t>{index + 1};  // Skip just the option
+  }
+}
+
 // SimulationArgumentParser implementation
 SimulationArgumentParser::SimulationArgumentParser(std::string_view program_name)
     : parser_(program_name) {
@@ -282,9 +588,60 @@ ArgumentResult<SimulationConfig> SimulationArgumentParser::parse(int argc,
                                                                  const char* const argv[]) {
   config_ = SimulationConfig{};  // Reset config
 
-  auto result = parser_.parse(argc, argv);
-  if (!result) {
-    return ArgumentResult<SimulationConfig>{result.error()};
+  // Try detailed parsing first for better error messages
+  auto detailed_result = parser_.parse_with_details(argc, argv);
+  if (!detailed_result) {
+    const auto& error = detailed_result.error();
+
+    // Print intelligent error information
+    std::cerr << "Error: " << error.error_message << std::endl;
+
+    if (!error.context.empty()) {
+      std::cerr << "Context: " << error.context << std::endl;
+    }
+
+    if (!error.suggestions.empty()) {
+      std::cerr << "Suggestions:" << std::endl;
+      for (const auto& suggestion : error.suggestions) {
+        std::cerr << "  - " << suggestion << std::endl;
+      }
+    }
+
+    if (!error.similar_options.empty()) {
+      std::cerr << "Similar options:" << std::endl;
+      for (const auto& option : error.similar_options) {
+        std::cerr << "  - " << option << std::endl;
+      }
+    }
+
+    if (error.help_text.has_value()) {
+      std::cerr << "Help: " << *error.help_text << std::endl;
+    }
+
+    if (error.usage_example.has_value()) {
+      std::cerr << "Example: " << *error.usage_example << std::endl;
+    }
+
+    // Convert detailed error to simple error for return
+    return ArgumentResult<SimulationConfig>{error.error_code};
+  }
+
+  // Check for conflicts
+  std::vector<std::string> args_vec;
+  for (int i = 1; i < argc; ++i) {
+    args_vec.emplace_back(argv[i]);
+  }
+
+  auto conflict_report = parser_.detect_conflicts(args_vec);
+  if (conflict_report.has_conflicts) {
+    std::cerr << "Argument conflicts detected:" << std::endl;
+    for (const auto& [opt1, opt2] : conflict_report.conflicting_pairs) {
+      std::cerr << "  - " << opt1 << " conflicts with " << opt2 << std::endl;
+    }
+    for (const auto& suggestion : conflict_report.resolution_suggestions) {
+      std::cerr << "  Suggestion: " << suggestion << std::endl;
+    }
+    return ArgumentResult<SimulationConfig>{ArgumentError::ConflictingOptions};
   }
 
   return ArgumentResult<SimulationConfig>{config_};
@@ -389,9 +746,59 @@ ExtendedArgumentParser::ExtendedArgumentParser(std::string_view program_name)
 ArgumentResult<ExtendedConfig> ExtendedArgumentParser::parse(int argc, const char* const argv[]) {
   config_ = ExtendedConfig{};  // Reset config
 
-  auto result = parser_.parse(argc, argv);
-  if (!result) {
-    return ArgumentResult<ExtendedConfig>{result.error()};
+  // Try detailed parsing first for better error messages
+  auto detailed_result = parser_.parse_with_details(argc, argv);
+  if (!detailed_result) {
+    const auto& error = detailed_result.error();
+
+    // Print intelligent error information
+    std::cerr << "Error: " << error.error_message << std::endl;
+
+    if (!error.context.empty()) {
+      std::cerr << "Context: " << error.context << std::endl;
+    }
+
+    if (!error.suggestions.empty()) {
+      std::cerr << "Suggestions:" << std::endl;
+      for (const auto& suggestion : error.suggestions) {
+        std::cerr << "  - " << suggestion << std::endl;
+      }
+    }
+
+    if (!error.similar_options.empty()) {
+      std::cerr << "Similar options:" << std::endl;
+      for (const auto& option : error.similar_options) {
+        std::cerr << "  - " << option << std::endl;
+      }
+    }
+
+    if (error.help_text.has_value()) {
+      std::cerr << "Help: " << *error.help_text << std::endl;
+    }
+
+    if (error.usage_example.has_value()) {
+      std::cerr << "Example: " << *error.usage_example << std::endl;
+    }
+
+    return ArgumentResult<ExtendedConfig>{error.error_code};
+  }
+
+  // Check for conflicts
+  std::vector<std::string> args_vec;
+  for (int i = 1; i < argc; ++i) {
+    args_vec.emplace_back(argv[i]);
+  }
+
+  auto conflict_report = parser_.detect_conflicts(args_vec);
+  if (conflict_report.has_conflicts) {
+    std::cerr << "Argument conflicts detected:" << std::endl;
+    for (const auto& [opt1, opt2] : conflict_report.conflicting_pairs) {
+      std::cerr << "  - " << opt1 << " conflicts with " << opt2 << std::endl;
+    }
+    for (const auto& suggestion : conflict_report.resolution_suggestions) {
+      std::cerr << "  Suggestion: " << suggestion << std::endl;
+    }
+    return ArgumentResult<ExtendedConfig>{ArgumentError::ConflictingOptions};
   }
 
   return ArgumentResult<ExtendedConfig>{config_};
@@ -533,15 +940,74 @@ RealtimeArgumentParser::RealtimeArgumentParser(std::string_view program_name)
 ArgumentResult<RealtimeConfig> RealtimeArgumentParser::parse(int argc, const char* const argv[]) {
   config_ = RealtimeConfig{};  // Reset config
 
-  auto result = parser_.parse(argc, argv);
-  if (!result) {
-    return ArgumentResult<RealtimeConfig>{result.error()};
+  // Try detailed parsing first for better error messages
+  auto detailed_result = parser_.parse_with_details(argc, argv);
+  if (!detailed_result) {
+    const auto& error = detailed_result.error();
+
+    // Print intelligent error information
+    std::cerr << "Error: " << error.error_message << std::endl;
+
+    if (!error.context.empty()) {
+      std::cerr << "Context: " << error.context << std::endl;
+    }
+
+    if (!error.suggestions.empty()) {
+      std::cerr << "Suggestions:" << std::endl;
+      for (const auto& suggestion : error.suggestions) {
+        std::cerr << "  - " << suggestion << std::endl;
+      }
+    }
+
+    if (!error.similar_options.empty()) {
+      std::cerr << "Similar options:" << std::endl;
+      for (const auto& option : error.similar_options) {
+        std::cerr << "  - " << option << std::endl;
+      }
+    }
+
+    if (error.help_text.has_value()) {
+      std::cerr << "Help: " << *error.help_text << std::endl;
+    }
+
+    if (error.usage_example.has_value()) {
+      std::cerr << "Example: " << *error.usage_example << std::endl;
+    }
+
+    return ArgumentResult<RealtimeConfig>{error.error_code};
+  }
+
+  // Check for conflicts
+  std::vector<std::string> args_vec;
+  for (int i = 1; i < argc; ++i) {
+    args_vec.emplace_back(argv[i]);
+  }
+
+  auto conflict_report = parser_.detect_conflicts(args_vec);
+  if (conflict_report.has_conflicts) {
+    std::cerr << "Argument conflicts detected:" << std::endl;
+    for (const auto& [opt1, opt2] : conflict_report.conflicting_pairs) {
+      std::cerr << "  - " << opt1 << " conflicts with " << opt2 << std::endl;
+    }
+    for (const auto& suggestion : conflict_report.resolution_suggestions) {
+      std::cerr << "  Suggestion: " << suggestion << std::endl;
+    }
+    return ArgumentResult<RealtimeConfig>{ArgumentError::ConflictingOptions};
   }
 
   // Validate configuration
-  std::string error;
-  if (!config_.is_valid(&error)) {
-    std::cerr << "Configuration error: " << error << std::endl;
+  std::string validation_error;
+  if (!config_.is_valid(&validation_error)) {
+    std::cerr << "Configuration error: " << validation_error << std::endl;
+
+    // Provide intelligent suggestions for configuration errors
+    if (validation_error.find("interval") != std::string::npos) {
+      std::cerr << "Suggestion: Use positive values for intervals (e.g., --update-interval 1)" << std::endl;
+    }
+    if (validation_error.find("duration") != std::string::npos) {
+      std::cerr << "Suggestion: Use positive values for duration (e.g., --duration 60)" << std::endl;
+    }
+
     return ArgumentResult<RealtimeConfig>{ArgumentError::InvalidValue};
   }
 
