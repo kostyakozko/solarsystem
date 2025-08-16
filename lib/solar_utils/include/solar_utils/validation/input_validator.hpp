@@ -32,9 +32,13 @@ struct ValidationResult {
   std::string normalized_value;
 
   ValidationResult() = default;
+
+  // Constructor for successful validation
   ValidationResult(bool valid, const std::string& value = "")
     : is_valid(valid), normalized_value(value) {}
-  ValidationResult(const std::string& error, const std::vector<std::string>& formats = {})
+
+  // Constructor for failed validation with error message
+  explicit ValidationResult(const std::string& error, const std::vector<std::string>& formats = {})
     : is_valid(false), error_message(error), expected_formats(formats) {}
 };
 
