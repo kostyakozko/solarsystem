@@ -16,6 +16,8 @@ add_library(solar_test STATIC
     src/reporters/json_reporter.cpp
     src/reporters/tap_reporter.cpp
     src/reporters/coverage_reporter.cpp
+    src/reporters/enhanced_test_reporter.cpp
+    src/utils/robust_file_handler.cpp
     src/mocks/jpl_mock.cpp
     src/mocks/cache_mock.cpp
     src/mocks/time_mock.cpp
