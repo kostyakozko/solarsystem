@@ -309,6 +309,18 @@ private:
 
   static std::vector<ParsedTestResult> parse_xml_results(const std::string& xml);
   static std::vector<ParsedTestResult> parse_json_results(const std::string& json);
+
+  // Format conversion helpers
+  static std::string convert_to_xml(const std::vector<ParsedTestResult>& results);
+  static std::string convert_to_json(const std::vector<ParsedTestResult>& results);
+  static std::string convert_to_html(const std::vector<ParsedTestResult>& results);
+  static std::string convert_to_csv(const std::vector<ParsedTestResult>& results);
+
+  // Escaping utilities
+  static std::string xml_escape(const std::string& text);
+  static std::string json_escape(const std::string& text);
+  static std::string html_escape(const std::string& text);
+  static std::string csv_escape(const std::string& text);
 };
 
 /**

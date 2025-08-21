@@ -51,8 +51,11 @@ std::string EnhancedXmlFormatter::format_test_suite(const TestSuiteResult& resul
   };
 
   xml << "<testsuites>\n";
-  xml << format_xml_element("testsuite", suite_attrs, "", false);
-  xml << "\n";
+  xml << "  <testsuite";
+  for (const auto& [key, value] : suite_attrs) {
+    xml << " " << key << "=\"" << xml_escape(value) << "\"";
+  }
+  xml << ">\n";
 
   // Add individual test cases
   for (const auto& test : result.test_results) {
@@ -130,10 +133,10 @@ std::string EnhancedXmlFormatter::format_test_result(const TestResult& result) {
     }
   }
 
-  std::string indent = optimization_.pretty_print ? "  " : "";
+  std::string indent = optimization_.pretty_print ? "    " : "";
 
   if (has_failure) {
-    return indent + format_xml_element("testcase", attrs, "\n" + content + "  ", false) + "\n";
+    return indent + format_xml_element("testcase", attrs, "\n" + content + "    ", false) + "\n";
   } else {
     return indent + format_xml_element("testcase", attrs, "", true) + "\n";
   }
@@ -318,7 +321,7 @@ std::string EnhancedXmlFormatter::format_duration(std::chrono::milliseconds dura
 void EnhancedXmlFormatter::validate_xml_structure(const std::string& xml) {
   // Basic XML structure validation
   std::stack<std::string> tag_stack;
-  std::regex tag_regex(R"(<(/?)([a-zA-Z][a-zA-Z0-9_-]*)[^>]*(/?)>)");
+  std::regex tag_regex("<(/?)([a-zA-Z][a-zA-Z0-9_-]*)[^>]*(/?)>");
   std::sregex_iterator iter(xml.begin(), xml.end(), tag_regex);
   std::sregex_iterator end;
 
@@ -669,6 +672,95 @@ OutputFormat OutputFormatterFactory::string_to_format(const std::string& format_
   if (lower_format == "markdown") return OutputFormat::Markdown;
 
   throw std::runtime_error("Unknown format: " + format_str);
+}
+
+std::unique_ptr<StreamingOutputManager> OutputFormatterFactory::create_streaming_manager(
+    OutputFormat format,
+    const StreamingConfig& streaming_config,
+    const FormatOptimization& optimization) {
+
+  auto formatter = create_formatter(format, optimization);
+  return std::make_unique<StreamingOutputManager>(std::move(formatter), streaming_config);
+}
+
+OutputFormat OutputFormatterFactory::detect_format(const std::string& content) {
+  // Trim whitespace for detection
+  std::string trimmed = content;
+  trimmed.erase(0, trimmed.find_first_not_of(" \t\n\r"));
+  trimmed.erase(trimmed.find_last_not_of(" \t\n\r") + 1);
+
+  if (trimmed.empty()) {
+    return OutputFormat::Plain;
+  }
+
+  // XML detection
+  if (trimmed.find("<?xml") == 0 || trimmed.find("<testsuites") != std::string::npos ||
+      trimmed.find("<testsuite") != std::string::npos) {
+    return OutputFormat::XML;
+  }
+
+  // JSON detection
+  if ((trimmed[0] == '{' && trimmed.back() == '}') ||
+      (trimmed[0] == '[' && trimmed.back() == ']')) {
+    return OutputFormat::JSON;
+  }
+
+  // TAP detection
+  if (trimmed.find("TAP version") == 0 || trimmed.find("1..") != std::string::npos) {
+    return OutputFormat::TAP;
+  }
+
+  // HTML detection
+  if (trimmed.find("<!DOCTYPE html") == 0 || trimmed.find("<html") != std::string::npos) {
+    return OutputFormat::HTML;
+  }
+
+  // CSV detection (simple heuristic)
+  if (std::count(trimmed.begin(), trimmed.end(), ',') > 2 &&
+      std::count(trimmed.begin(), trimmed.end(), '\n') > 0) {
+    return OutputFormat::CSV;
+  }
+
+  // Markdown detection
+  if (trimmed.find("# ") == 0 || trimmed.find("## ") == 0 ||
+      trimmed.find("| ") != std::string::npos) {
+    return OutputFormat::Markdown;
+  }
+
+  return OutputFormat::Plain;
+}
+
+OutputFormat OutputFormatterFactory::detect_format_from_extension(const std::string& filename) {
+  // Find the last dot
+  size_t dot_pos = filename.find_last_of('.');
+  if (dot_pos == std::string::npos) {
+    return OutputFormat::Plain;
+  }
+
+  std::string extension = filename.substr(dot_pos + 1);
+  std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
+
+  if (extension == "xml") return OutputFormat::XML;
+  if (extension == "json") return OutputFormat::JSON;
+  if (extension == "tap") return OutputFormat::TAP;
+  if (extension == "html" || extension == "htm") return OutputFormat::HTML;
+  if (extension == "csv") return OutputFormat::CSV;
+  if (extension == "md" || extension == "markdown") return OutputFormat::Markdown;
+
+  return OutputFormat::Plain;
+}
+
+std::vector<OutputFormat> OutputFormatterFactory::get_supported_formats() {
+  return {
+    OutputFormat::XML,
+    OutputFormat::JSON,
+    OutputFormat::TAP,
+    OutputFormat::JUnit,
+    OutputFormat::HTML,
+    OutputFormat::CSV,
+    OutputFormat::Plain,
+    OutputFormat::Markdown
+  };
 }
 
 } // namespace SolarSystem::Testing::Formatters

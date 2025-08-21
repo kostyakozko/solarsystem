@@ -21,6 +21,7 @@ add_library(solar_test STATIC
     src/formatters/output_formatter.cpp
     src/formatters/streaming_output_manager.cpp
     src/formatters/output_validator.cpp
+    src/formatters/format_converter.cpp
     src/mocks/jpl_mock.cpp
     src/mocks/cache_mock.cpp
     src/mocks/time_mock.cpp
