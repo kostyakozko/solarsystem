@@ -6,6 +6,9 @@ add_library(solar_utils STATIC
     src/logging.cpp
     src/validation/input_validator.cpp
     src/resource_manager.cpp
+    src/file_resource_manager.cpp
+    src/network_resource_manager.cpp
+    src/error_handling.cpp
     # src/config.cpp  # Temporarily disabled due to Expected usage issues
 )
 

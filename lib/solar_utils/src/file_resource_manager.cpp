@@ -150,7 +150,8 @@ std::string ManagedFileHandle::read_all() {
     return "";
   }
 
-  std::istream* stream = input_stream_ ? input_stream_.get() : bidirectional_stream_.get();
+  std::istream* stream = input_stream_ ? static_cast<std::istream*>(input_stream_.get()) :
+                                        static_cast<std::istream*>(bidirectional_stream_.get());
   std::ostringstream content;
   content << stream->rdbuf();
 
@@ -166,7 +167,8 @@ std::string ManagedFileHandle::read_line() {
     return "";
   }
 
-  std::istream* stream = input_stream_ ? input_stream_.get() : bidirectional_stream_.get();
+  std::istream* stream = input_stream_ ? static_cast<std::istream*>(input_stream_.get()) :
+                                        static_cast<std::istream*>(bidirectional_stream_.get());
   std::string line;
   std::getline(*stream, line);
 
@@ -181,7 +183,8 @@ std::vector<char> ManagedFileHandle::read_binary(size_t bytes) {
     return {};
   }
 
-  std::istream* stream = input_stream_ ? input_stream_.get() : bidirectional_stream_.get();
+  std::istream* stream = input_stream_ ? static_cast<std::istream*>(input_stream_.get()) :
+                                        static_cast<std::istream*>(bidirectional_stream_.get());
   std::vector<char> buffer(bytes);
   stream->read(buffer.data(), bytes);
 
@@ -199,7 +202,8 @@ size_t ManagedFileHandle::read(char* buffer, size_t size) {
     return 0;
   }
 
-  std::istream* stream = input_stream_ ? input_stream_.get() : bidirectional_stream_.get();
+  std::istream* stream = input_stream_ ? static_cast<std::istream*>(input_stream_.get()) :
+                                        static_cast<std::istream*>(bidirectional_stream_.get());
   stream->read(buffer, size);
 
   size_t actual_bytes = stream->gcount();
@@ -214,7 +218,8 @@ bool ManagedFileHandle::write(const std::string& data) {
     return false;
   }
 
-  std::ostream* stream = output_stream_ ? output_stream_.get() : bidirectional_stream_.get();
+  std::ostream* stream = output_stream_ ? static_cast<std::ostream*>(output_stream_.get()) :
+                                         static_cast<std::ostream*>(bidirectional_stream_.get());
   *stream << data;
 
   if (stream->good()) {
@@ -235,7 +240,8 @@ bool ManagedFileHandle::write_binary(const std::vector<char>& data) {
     return false;
   }
 
-  std::ostream* stream = output_stream_ ? output_stream_.get() : bidirectional_stream_.get();
+  std::ostream* stream = output_stream_ ? static_cast<std::ostream*>(output_stream_.get()) :
+                                         static_cast<std::ostream*>(bidirectional_stream_.get());
   stream->write(data.data(), data.size());
 
   if (stream->good()) {
@@ -252,7 +258,8 @@ bool ManagedFileHandle::write(const char* data, size_t size) {
     return false;
   }
 
-  std::ostream* stream = output_stream_ ? output_stream_.get() : bidirectional_stream_.get();
+  std::ostream* stream = output_stream_ ? static_cast<std::ostream*>(output_stream_.get()) :
+                                         static_cast<std::ostream*>(bidirectional_stream_.get());
   stream->write(data, size);
 
   if (stream->good()) {

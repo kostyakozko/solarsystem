@@ -18,6 +18,7 @@
 #include <mutex>
 #include <string>
 #include <thread>
+#include <type_traits>
 #include <unordered_map>
 #include <vector>
 
@@ -200,6 +201,7 @@ private:
   void register_with_resource_manager();
   void unregister_from_resource_manager();
   void update_statistics(size_t bytes_sent, size_t bytes_received);
+  std::string generate_connection_id() const;
 };
 
 /**
@@ -319,7 +321,11 @@ private:
 template<typename T>
 class NetworkResult {
 public:
+  template<typename U = T, typename = std::enable_if_t<!std::is_same_v<U, std::string>>>
   NetworkResult(T value) : value_(std::move(value)), success_(true) {}
+
+  NetworkResult(const char* error, int error_code = 0)
+      : error_(error), error_code_(error_code), success_(false) {}
   NetworkResult(std::string error, int error_code = 0)
       : error_(std::move(error)), error_code_(error_code), success_(false) {}
 

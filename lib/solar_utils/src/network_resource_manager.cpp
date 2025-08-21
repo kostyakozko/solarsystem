@@ -4,6 +4,7 @@
  */
 
 #include "solar_utils/network_resource_manager.hpp"
+#include "solar_utils/file_resource_manager.hpp"
 
 #include <algorithm>
 #include <cstdio>
@@ -955,7 +956,7 @@ NetworkResult<std::string> make_http_request(const std::string& url,
       return NetworkResult<std::string>("Empty response from server", -2);
     }
 
-    return NetworkResult<std::string>(response);
+    return NetworkResult<std::string>(std::move(response));
 
   } catch (const std::exception& e) {
     return NetworkResult<std::string>("HTTP request failed: " + std::string(e.what()), -1);
@@ -988,7 +989,8 @@ NetworkResult<std::string> download_file(const std::string& url, const std::stri
       return NetworkResult<std::string>("Failed to write downloaded content to " + output_path, -3);
     }
 
-    return NetworkResult<std::string>("Download completed successfully: " + std::to_string(body.size()) + " bytes");
+    std::string success_msg = "Download completed successfully: " + std::to_string(body.size()) + " bytes";
+    return NetworkResult<std::string>(std::move(success_msg));
 
   } catch (const std::exception& e) {
     return NetworkResult<std::string>("Download failed: " + std::string(e.what()), -1);

@@ -17,6 +17,7 @@
 #include <memory>
 #include <mutex>
 #include <string>
+#include <type_traits>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
@@ -197,6 +198,9 @@ public:
   void force_close_all_files();
   void cleanup_expired_handles(std::chrono::seconds max_age = std::chrono::hours(1));
 
+  // Allow ManagedFileHandle to access private methods
+  friend class ManagedFileHandle;
+
 private:
   FileResourceManager() = default;
   ~FileResourceManager();
@@ -232,7 +236,10 @@ private:
 template<typename T>
 class FileResult {
 public:
+  template<typename U = T, typename = std::enable_if_t<!std::is_same_v<U, std::string>>>
   FileResult(T value) : value_(std::move(value)), success_(true) {}
+
+  FileResult(const char* error) : error_(error), success_(false) {}
   FileResult(std::string error) : error_(std::move(error)), success_(false) {}
 
   bool is_success() const { return success_; }
