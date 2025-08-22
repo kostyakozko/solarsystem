@@ -9,6 +9,7 @@ add_library(solar_utils STATIC
     src/file_resource_manager.cpp
     src/network_resource_manager.cpp
     src/error_handling.cpp
+    src/error_recovery.cpp
     # src/config.cpp  # Temporarily disabled due to Expected usage issues
 )
 
