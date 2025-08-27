@@ -26,6 +26,7 @@ add_library(test_utils STATIC
     utils/benchmark_utils.cpp
     utils/test_port_manager.cpp
     utils/test_diagnostics.cpp
+    utils/performance_regression_system_simple.cpp
 )
 
 target_include_directories(test_utils PUBLIC

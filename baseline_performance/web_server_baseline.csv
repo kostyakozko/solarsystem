@@ -1,4 +1,0 @@
-Name,AvgDuration(ms),MinDuration(ms),MaxDuration(ms),StdDev(ms),Iterations,OpsPerSec,MemoryUsage(bytes)
-HTTPRequestProcessingBenchmark,0,0,0,0,1000,0,1090519040
-JSONResponseGenerationBenchmark,0,0,0,0,1000,0,1124073472
-WebGLDataSerializationBenchmark,0,0,0,0,1000,0,1124073472

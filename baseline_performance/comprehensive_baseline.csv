@@ -1,7 +1,0 @@
-Name,AvgDuration(ms),MinDuration(ms),MaxDuration(ms),StdDev(ms),Iterations,OpsPerSec,MemoryUsage(bytes)
-SimulationStepMicrosecondBenchmark,8e-08,0,0.004,1.78884e-05,50000,1.25e+10,1140850688
-Vector3DMathBenchmark,4e-08,0,0.002,7.74586e-06,100000,2.5e+10,2231369728
-GravitationalForceBenchmark,1e-06,0,0.009,8.26982e-05,25000,1e+09,3623878656
-MemoryAllocationPatternBenchmark,0.002187,0.002,0.033,0.00157545,1000,457247,167772160
-ComplexMathematicalOperationsBenchmark,0,0,0,0,10000,0,3976200192
-LargeDatasetProcessingBenchmark,0.42607,0.401,0.622,0.0393256,100,2347.03,4211081216

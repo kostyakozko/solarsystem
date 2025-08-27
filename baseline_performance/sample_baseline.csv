@@ -1,5 +1,0 @@
-Name,AvgDuration(ms),MinDuration(ms),MaxDuration(ms),StdDev(ms),Iterations,OpsPerSec,MemoryUsage(bytes)
-CacheLoadingBenchmark,0.125,0.098,0.234,0.045,1000,8000.0,1048576
-SimulationStepBenchmark,0.001,0.0008,0.0015,0.0002,10000,1000000.0,2097152
-JPLResponseParsingBenchmark,0.050,0.045,0.078,0.012,1000,20000.0,524288
-MemoryAllocationBenchmark,0.002,0.001,0.005,0.001,1000,500000.0,4194304

@@ -200,6 +200,12 @@ target_link_libraries(test_input_validation_comprehensive test_utils solar_core 
 add_test(NAME UnitTest_InputValidationComprehensive COMMAND test_input_validation_comprehensive)
 set_tests_properties(UnitTest_InputValidationComprehensive PROPERTIES LABELS "unit;input;validation;comprehensive;task13" TIMEOUT 120)
 
+# Performance Regression Testing System (Task 22)
+add_executable(test_performance_regression_system_simple test_performance_regression_system_simple.cpp)
+target_link_libraries(test_performance_regression_system_simple test_utils solar_core solar_jpl solar_utils Threads::Threads)
+add_test(NAME UnitTest_PerformanceRegressionSystemSimple COMMAND test_performance_regression_system_simple)
+set_tests_properties(UnitTest_PerformanceRegressionSystemSimple PROPERTIES LABELS "unit;performance;regression;testing;task22" TIMEOUT 120)
+
 message(STATUS "Unit tests configured:")
 message(STATUS "  - Solar Core Library Tests")
 message(STATUS "  - Solar JPL Library Tests")

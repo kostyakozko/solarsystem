@@ -1,3 +1,0 @@
-Name,AvgDuration(ms),MinDuration(ms),MaxDuration(ms),StdDev(ms),Iterations,OpsPerSec,MemoryUsage(bytes)
-BaselinePerformanceTest,0.007467,0.006,0.043,0.00162139,1000,133923,1090519040
-MemoryUsageStabilityTest,0.001989,0.001,0.003,0.000113486,1000,502765,1157627904

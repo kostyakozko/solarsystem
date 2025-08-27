@@ -46,3 +46,7 @@ Makefile
 debug_*.cpp
 test_*_verification.cpp
 temp_*.cpp
+
+# Performance baseline CSV files (generated artifacts)
+baseline_performance/*.csv
+build/tests/benchmarks/benchmark_results/*.csv
