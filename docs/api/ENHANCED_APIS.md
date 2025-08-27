@@ -625,3 +625,990 @@ struct SimulationConfig {
     double min_timestep = 1.0;                    // Minimum timestep (1 second)
     double tolerance = 1e-12;                     // Error tolerance for adaptive stepping
     bool enable_collision_detec
+## Simulation Engine API
+
+### Overview
+
+The enhanced `SimulationEngine` provides a modern, configurable physics simulation system with adaptive time stepping, collision detection, and comprehensive monitoring capabilities.
+
+### Key Features
+
+- **Adaptive Time Stepping**: Automatic time step adjustment for accuracy and stability
+- **Collision Detection**: Optional collision detection with configurable thresholds
+- **Energy Conservation**: Monitoring of total, kinetic, and potential energy
+- **Progress Callbacks**: Real-time simulation monitoring and progress reporting
+- **Modern Configuration**: Structured configuration with sensible defaults
+
+### Configuration
+
+```cpp
+namespace SolarSystem::Simulation {
+
+struct SimulationConfig {
+    double time_step = 30.0;                      // Time step in seconds
+    double gravitational_constant = 6.67430e-11;  // G in m³/kg/s²
+    bool use_adaptive_timestep = false;           // Adaptive time stepping
+    double max_timestep = 3600.0;                 // Maximum timestep (1 hour)
+    double min_timestep = 1.0;                    // Minimum timestep (1 second)
+    double tolerance = 1e-12;                     // Error tolerance for adaptive stepping
+    bool enable_collision_detection = false;      // Collision detection
+    double collision_threshold = 1e6;             // Collision distance threshold (m)
+};
+}
+```
+
+### Simulation State Monitoring
+
+```cpp
+struct SimulationState {
+    double current_time = 0.0;                             // Current simulation time (seconds)
+    std::chrono::system_clock::time_point reference_time;  // Reference epoch
+    size_t iteration_count = 0;                            // Number of iterations performed
+    long double total_energy = 0.0;                        // Total system energy
+    long double kinetic_energy = 0.0;                      // Total kinetic energy
+    long double potential_energy = 0.0;                    // Total potential energy
+    Math::Vector3d center_of_mass{};                       // System center of mass
+    Math::Vector3d total_momentum{};                       // Total system momentum
+    double largest_timestep = 0.0;                         // Largest timestep used
+    double smallest_timestep = 0.0;                        // Smallest timestep used
+};
+```
+
+### Callback Functions
+
+```cpp
+// Progress monitoring callback
+using ProgressCallback = std::function<void(const SimulationState&)>;
+
+// Collision detection callback
+using CollisionCallback = std::function<void(const Bodies::CelestialBody&, const Bodies::CelestialBody&)>;
+```
+
+### Basic Usage
+
+```cpp
+#include "solar_core/simulation/simulation_engine.hpp"
+#include "solar_core/bodies/body_factory.hpp"
+
+using namespace SolarSystem;
+
+// Create simulation configuration
+Simulation::SimulationConfig config{
+    .time_step = 60.0,                    // 1 minute steps
+    .use_adaptive_timestep = true,        // Enable adaptive stepping
+    .enable_collision_detection = true,   // Enable collision detection
+    .collision_threshold = 1e7            // 10,000 km threshold
+};
+
+// Create simulation engine
+Simulation::SimulationEngine engine(config);
+
+// Create bodies using factory
+Bodies::BodyFactory factory;
+auto earth = factory.create_body("Earth");
+auto moon = factory.create_body("Moon");
+
+if (earth && moon) {
+    Bodies::BodyCollection bodies;
+    bodies.add_body(std::move(*earth));
+    bodies.add_body(std::move(*moon));
+
+    // Initialize simulation
+    engine.initialize(std::move(bodies));
+
+    // Run simulation for 1 day
+    double simulation_duration = 24 * 3600; // 24 hours in seconds
+    engine.run_for_duration(simulation_duration);
+}
+```
+
+### Advanced Usage with Callbacks
+
+```cpp
+// Progress monitoring callback
+auto progress_callback = [](const Simulation::SimulationState& state) {
+    std::cout << "Time: " << state.current_time << "s, "
+              << "Energy: " << state.total_energy << "J, "
+              << "Iterations: " << state.iteration_count << std::endl;
+};
+
+// Collision detection callback
+auto collision_callback = [](const Bodies::CelestialBody& body1, const Bodies::CelestialBody& body2) {
+    std::cout << "Collision detected between " << body1.name()
+              << " and " << body2.name() << std::endl;
+};
+
+// Configure engine with callbacks
+engine.set_progress_callback(progress_callback);
+engine.set_collision_callback(collision_callback);
+
+// Run simulation with real-time monitoring
+engine.run_with_monitoring(simulation_duration, std::chrono::seconds(1));
+```
+
+### Adaptive Time Stepping
+
+```cpp
+// Configure adaptive time stepping
+Simulation::SimulationConfig adaptive_config{
+    .time_step = 30.0,              // Initial time step
+    .use_adaptive_timestep = true,  // Enable adaptive stepping
+    .max_timestep = 3600.0,         // Maximum 1 hour
+    .min_timestep = 0.1,            // Minimum 0.1 seconds
+    .tolerance = 1e-10              // High precision tolerance
+};
+
+Simulation::SimulationEngine adaptive_engine(adaptive_config);
+
+// The engine will automatically adjust time steps based on:
+// - System dynamics (close encounters require smaller steps)
+// - Energy conservation requirements
+// - Numerical stability considerations
+```
+
+### Energy Conservation Monitoring
+
+```cpp
+// Monitor energy conservation during simulation
+engine.set_progress_callback([](const Simulation::SimulationState& state) {
+    // Calculate energy conservation
+    static long double initial_energy = 0.0;
+    if (state.iteration_count == 1) {
+        initial_energy = state.total_energy;
+    }
+
+    long double energy_drift = std::abs(state.total_energy - initial_energy) / initial_energy;
+
+    if (energy_drift > 1e-6) {  // 0.0001% tolerance
+        std::cout << "Warning: Energy drift detected: " << energy_drift * 100 << "%" << std::endl;
+    }
+});
+```
+
+### Performance Optimization
+
+```cpp
+// High-performance configuration for large simulations
+Simulation::SimulationConfig performance_config{
+    .time_step = 300.0,                   // Larger time steps for speed
+    .use_adaptive_timestep = false,       // Disable for consistent performance
+    .enable_collision_detection = false,  // Disable if not needed
+    .gravitational_constant = 6.67430e-11 // Standard value
+};
+
+// For very large systems, consider:
+// - Hierarchical time stepping
+// - Symplectic integrators
+// - Parallel processing (future enhancement)
+```
+## Usage Examples
+
+### Complete Solar System Simulation
+
+```cpp
+#include "solar_core/bodies/body_factory.hpp"
+#include "solar_core/bodies/body_collection.hpp"
+#include "solar_core/simulation/simulation_engine.hpp"
+#include <iostream>
+#include <chrono>
+
+int main() {
+    using namespace SolarSystem;
+
+    try {
+        // Configure factory for intelligent fallback
+        Bodies::BodyFactory::FactoryConfig factory_config{
+            .preferred_source = Bodies::BodyFactory::DataSource::JPL_HORIZONS,
+            .fallback_strategy = Bodies::BodyFactory::FallbackStrategy::INTELLIGENT,
+            .enable_validation = true
+        };
+
+        Bodies::BodyFactory factory(factory_config);
+
+        // Create essential solar system bodies
+        auto collection_result = factory.create_essential_bodies();
+        if (!collection_result) {
+            std::cerr << "Failed to create solar system: " << collection_result.error() << std::endl;
+            return 1;
+        }
+
+        Bodies::BodyCollection bodies = std::move(*collection_result);
+        std::cout << "Created " << bodies.size() << " celestial bodies" << std::endl;
+
+        // Configure simulation for accuracy
+        Simulation::SimulationConfig sim_config{
+            .time_step = 3600.0,              // 1 hour steps
+            .use_adaptive_timestep = true,    // Adaptive for accuracy
+            .max_timestep = 86400.0,          // Max 1 day
+            .min_timestep = 60.0,             // Min 1 minute
+            .tolerance = 1e-12,               // High precision
+            .enable_collision_detection = false
+        };
+
+        Simulation::SimulationEngine engine(sim_config);
+
+        // Set up progress monitoring
+        engine.set_progress_callback([](const Simulation::SimulationState& state) {
+            if (state.iteration_count % 24 == 0) {  // Every 24 hours
+                std::cout << "Day " << (state.current_time / 86400.0)
+                          << ": Energy = " << state.total_energy << " J" << std::endl;
+            }
+        });
+
+        // Initialize and run simulation
+        engine.initialize(std::move(bodies));
+
+        // Simulate one year
+        double one_year = 365.25 * 24 * 3600;  // seconds
+        engine.run_for_duration(one_year);
+
+        std::cout << "Simulation completed successfully!" << std::endl;
+
+    } catch (const std::exception& e) {
+        std::cerr << "Simulation error: " << e.what() << std::endl;
+        return 1;
+    }
+
+    return 0;
+}
+```
+
+### Custom Body Creation and Validation
+
+```cpp
+#include "solar_core/bodies/celestial_body.hpp"
+#include "solar_core/bodies/body_collection.hpp"
+
+// Create a custom asteroid
+Bodies::CelestialBody::Properties asteroid_props{
+    .name = "CustomAsteroid",
+    .mass = 1e15,  // 1 petagram
+    .position = {4e11, 0, 0},  // 4 AU from Sun
+    .velocity = {0, 15000, 0}, // Orbital velocity
+    .type = Bodies::BodyType::Asteroid,
+    .priority = Bodies::BodyPriority::Optional,
+    .jpl_id = std::nullopt,
+    .creation_date = std::chrono::system_clock::now()
+};
+
+Bodies::CelestialBody asteroid(asteroid_props);
+
+// Add to collection with validation
+Bodies::BodyCollection collection;
+collection.add_body(std::move(asteroid));
+
+// Validate collection consistency
+auto consistency_report = collection.check_consistency();
+if (!consistency_report.is_valid) {
+    for (const auto& issue : consistency_report.issues) {
+        std::cout << "Validation issue: " << issue.description << std::endl;
+    }
+}
+```
+
+### Advanced Filtering and Analysis
+
+```cpp
+#include "solar_core/bodies/body_collection.hpp"
+#include <ranges>
+
+// Assume we have a populated collection
+Bodies::BodyCollection solar_system = create_solar_system();
+
+// Find all planets more massive than Earth
+auto massive_planets = solar_system.filter([](const Bodies::CelestialBody& body) {
+    return body.type() == Bodies::BodyType::Planet && body.mass() > 5.972e24;
+});
+
+std::cout << "Planets more massive than Earth:" << std::endl;
+for (const auto& planet : massive_planets) {
+    std::cout << "  " << planet.name() << ": " << planet.mass() << " kg" << std::endl;
+}
+
+// Using C++20 ranges for complex filtering
+auto inner_system_moons = solar_system
+    | std::views::filter([](const auto& body) {
+        return body.type() == Bodies::BodyType::Moon;
+      })
+    | std::views::filter([](const auto& body) {
+        return body.position().magnitude() < 5e11; // Within 5 AU
+      });
+
+// Calculate system statistics
+auto stats = solar_system.get_statistics();
+std::cout << "System center of mass: " << stats.center_of_mass.to_string() << std::endl;
+std::cout << "Total system mass: " << stats.total_mass << " kg" << std::endl;
+```
+
+### Error Handling Best Practices
+
+```cpp
+#include "solar_core/bodies/body_factory.hpp"
+#include "solar_core/utils/expected.hpp"
+
+Bodies::BodyFactory factory;
+
+// Proper error handling with Expected<T, Error>
+auto earth_result = factory.create_body("Earth");
+if (!earth_result) {
+    // Handle specific error types
+    const auto& error = earth_result.error();
+    switch (error.type) {
+        case Bodies::FactoryError::BODY_NOT_FOUND:
+            std::cerr << "Earth not found in any data source" << std::endl;
+            // Try alternative approach
+            break;
+
+        case Bodies::FactoryError::VALIDATION_FAILED:
+            std::cerr << "Earth data validation failed: " << error.message << std::endl;
+            // Log validation details
+            break;
+
+        case Bodies::FactoryError::DATA_SOURCE_UNAVAILABLE:
+            std::cerr << "All data sources unavailable, using fallback" << std::endl;
+            // Switch to offline mode
+            break;
+
+        default:
+            std::cerr << "Unknown error creating Earth: " << error.message << std::endl;
+    }
+    return;
+}
+
+// Use the successfully created body
+Bodies::CelestialBody earth = std::move(*earth_result);
+std::cout << "Successfully created Earth with mass: " << earth.mass() << " kg" << std::endl;
+```
+
+### Performance Monitoring Integration
+
+```cpp
+#include "solar_core/simulation/simulation_engine.hpp"
+#include "tests/utils/performance_regression_system.h"
+
+// Initialize performance monitoring
+initialize_performance_regression_testing("performance_baselines.txt");
+
+// Register simulation performance test
+register_performance_test("SimulationEngine", "solar_system_simulation", []() {
+    // Create and run simulation
+    Bodies::BodyFactory factory;
+    auto bodies = factory.create_essential_bodies();
+
+    Simulation::SimulationEngine engine;
+    engine.initialize(std::move(*bodies));
+
+    auto start = std::chrono::high_resolution_clock::now();
+    engine.run_for_duration(86400.0);  // 1 day
+    auto end = std::chrono::high_resolution_clock::now();
+
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+    return create_performance_metrics(duration.count(), get_memory_usage());
+});
+
+// Run performance regression tests
+auto alerts = run_performance_regression_tests();
+if (!alerts.empty()) {
+    std::cout << "Performance regressions detected:" << std::endl;
+    for (const auto& alert : alerts) {
+        std::cout << "  " << alert.component << ": " << alert.message << std::endl;
+    }
+}
+```
+## Migration Guide
+
+### Migrating from Placeholder Implementations
+
+This section provides step-by-step guidance for migrating from the original placeholder implementations to the enhanced APIs.
+
+#### 1. Celestial Body Migration
+
+**Before (Placeholder Implementation):**
+```cpp
+// Old placeholder approach
+struct CelestialBody {
+    std::string name;
+    double mass;
+    double x, y, z;
+    double vx, vy, vz;
+};
+
+CelestialBody earth;
+earth.name = "Earth";
+earth.mass = 5.972e24;
+earth.x = 1.496e11;
+// ... manual initialization
+```
+
+**After (Enhanced Implementation):**
+```cpp
+// New enhanced approach
+#include "solar_core/bodies/celestial_body.hpp"
+
+using namespace SolarSystem::Bodies;
+
+CelestialBody::Properties earth_props{
+    .name = "Earth",
+    .mass = 5.972e24,
+    .position = {1.496e11, 0, 0},
+    .velocity = {0, 29780, 0},
+    .type = BodyType::Planet,
+    .priority = BodyPriority::Essential
+};
+
+CelestialBody earth(earth_props);
+```
+
+**Migration Steps:**
+1. Replace manual struct initialization with `Properties` structure
+2. Use `Math::Vector3d` for position and velocity instead of separate x,y,z components
+3. Add type and priority classification
+4. Utilize RAII and move semantics for better performance
+
+#### 2. Body Factory Migration
+
+**Before (Manual Creation):**
+```cpp
+// Old manual approach
+std::vector<CelestialBody> create_solar_system() {
+    std::vector<CelestialBody> bodies;
+
+    // Manual hardcoded data
+    CelestialBody sun;
+    sun.name = "Sun";
+    sun.mass = 1.989e30;
+    // ... lots of manual setup
+
+    bodies.push_back(sun);
+    return bodies;
+}
+```
+
+**After (Factory Pattern):**
+```cpp
+// New factory approach
+#include "solar_core/bodies/body_factory.hpp"
+
+Bodies::BodyFactory factory;
+auto collection_result = factory.create_essential_bodies();
+
+if (collection_result) {
+    Bodies::BodyCollection bodies = std::move(*collection_result);
+    // Ready to use with validation and fallback handling
+} else {
+    // Handle error appropriately
+    std::cerr << "Failed to create bodies: " << collection_result.error() << std::endl;
+}
+```
+
+**Migration Benefits:**
+- Automatic data source management (JPL, cached, fallback)
+- Built-in validation and error handling
+- Intelligent fallback strategies
+- Reduced boilerplate code
+
+#### 3. Simulation Engine Migration
+
+**Before (Basic Integration):**
+```cpp
+// Old basic simulation loop
+void simulate(std::vector<CelestialBody>& bodies, double dt, int steps) {
+    for (int i = 0; i < steps; ++i) {
+        // Manual force calculation
+        for (auto& body1 : bodies) {
+            for (const auto& body2 : bodies) {
+                if (&body1 != &body2) {
+                    // Manual gravitational force calculation
+                    // Manual position updates
+                }
+            }
+        }
+    }
+}
+```
+
+**After (Enhanced Engine):**
+```cpp
+// New enhanced simulation
+#include "solar_core/simulation/simulation_engine.hpp"
+
+Simulation::SimulationConfig config{
+    .time_step = 3600.0,
+    .use_adaptive_timestep = true,
+    .enable_collision_detection = true
+};
+
+Simulation::SimulationEngine engine(config);
+engine.initialize(std::move(bodies));
+
+// Progress monitoring
+engine.set_progress_callback([](const Simulation::SimulationState& state) {
+    std::cout << "Progress: " << state.current_time << "s" << std::endl;
+});
+
+engine.run_for_duration(365.25 * 24 * 3600);  // One year
+```
+
+**Migration Advantages:**
+- Adaptive time stepping for accuracy and stability
+- Built-in energy conservation monitoring
+- Collision detection capabilities
+- Progress callbacks and monitoring
+- Configurable physics parameters
+
+#### 4. Collection Management Migration
+
+**Before (Basic Containers):**
+```cpp
+// Old approach with basic containers
+std::vector<CelestialBody> bodies;
+bodies.push_back(earth);
+bodies.push_back(mars);
+
+// Manual searching
+auto it = std::find_if(bodies.begin(), bodies.end(),
+    [](const CelestialBody& b) { return b.name == "Earth"; });
+```
+
+**After (Enhanced Collection):**
+```cpp
+// New collection approach
+Bodies::BodyCollection collection;
+collection.add_body(std::move(earth));
+collection.add_body(std::move(mars));
+
+// Efficient lookup
+auto earth_opt = collection.find_body("Earth");
+if (earth_opt) {
+    const CelestialBody& earth = *earth_opt;
+    // Use earth...
+}
+
+// Advanced filtering
+auto planets = collection.filter_by_type(BodyType::Planet);
+auto massive_bodies = collection.filter([](const CelestialBody& body) {
+    return body.mass() > 1e24;
+});
+```
+
+### Breaking Changes and Compatibility
+
+#### API Changes
+1. **Namespace Changes**: All enhanced APIs are in `SolarSystem::Bodies` and `SolarSystem::Simulation` namespaces
+2. **Type Safety**: Strong typing replaces loose primitive types
+3. **Error Handling**: `Expected<T, Error>` replaces exception-based error handling
+4. **Memory Management**: RAII and move semantics replace manual memory management
+
+#### Compatibility Layer
+For gradual migration, a compatibility layer is available:
+
+```cpp
+#include "solar_core/compatibility/legacy_adapter.hpp"
+
+// Adapter for old code
+LegacyAdapter adapter;
+auto legacy_bodies = adapter.convert_to_legacy(enhanced_collection);
+// Use with old simulation code...
+
+// Convert back when ready
+auto enhanced_bodies = adapter.convert_from_legacy(legacy_bodies);
+```
+
+### Migration Checklist
+
+- [ ] **Update includes**: Replace old headers with new enhanced API headers
+- [ ] **Namespace adoption**: Add `using namespace SolarSystem::Bodies;` where appropriate
+- [ ] **Error handling**: Replace try-catch with `Expected<T, Error>` pattern
+- [ ] **Type safety**: Use enums instead of magic numbers/strings
+- [ ] **Memory management**: Utilize move semantics and RAII
+- [ ] **Configuration**: Replace hardcoded values with configuration structures
+- [ ] **Testing**: Update unit tests to use new APIs
+- [ ] **Performance**: Verify performance improvements with regression testing
+
+### Common Migration Patterns
+
+#### Pattern 1: Simple Body Creation
+```cpp
+// Old
+CelestialBody body;
+body.name = "Test";
+body.mass = 1e20;
+
+// New
+CelestialBody body(CelestialBody::Properties{
+    .name = "Test",
+    .mass = 1e20,
+    .position = {0, 0, 0},
+    .velocity = {0, 0, 0},
+    .type = BodyType::Asteroid,
+    .priority = BodyPriority::Optional
+});
+```
+
+#### Pattern 2: Error Handling
+```cpp
+// Old
+try {
+    auto body = create_body("Earth");
+    // use body...
+} catch (const std::exception& e) {
+    std::cerr << "Error: " << e.what() << std::endl;
+}
+
+// New
+auto body_result = factory.create_body("Earth");
+if (body_result) {
+    auto body = std::move(*body_result);
+    // use body...
+} else {
+    std::cerr << "Error: " << body_result.error().message << std::endl;
+}
+```
+
+#### Pattern 3: Collection Operations
+```cpp
+// Old
+std::vector<CelestialBody> bodies;
+for (const auto& body : bodies) {
+    if (body.name == "Earth") {
+        // found Earth...
+        break;
+    }
+}
+
+// New
+Bodies::BodyCollection collection;
+auto earth = collection.find_body("Earth");
+if (earth) {
+    // use *earth...
+}
+```
+## Troubleshooting
+
+### Common Issues and Solutions
+
+#### 1. Body Factory Issues
+
+**Problem**: `FactoryError::BODY_NOT_FOUND`
+```
+Error: Body 'Pluto' not found in any data source
+```
+
+**Solutions:**
+- Check if the body name is spelled correctly (case-sensitive)
+- Verify the body is available in your configured data sources
+- For spacecraft, ensure the target date is after the launch date
+- Use `factory.list_available_bodies()` to see all available bodies
+
+```cpp
+// Debug available bodies
+Bodies::BodyFactory factory;
+auto available = factory.list_available_bodies();
+for (const auto& name : available) {
+    std::cout << "Available: " << name << std::endl;
+}
+```
+
+**Problem**: `FactoryError::VALIDATION_FAILED`
+```
+Error: Body data validation failed: Mass outside realistic bounds
+```
+
+**Solutions:**
+- Check if custom validation rules are too strict
+- Verify data source integrity
+- Use more permissive validation tolerance
+- Enable partial data if appropriate
+
+```cpp
+// Relaxed validation configuration
+Bodies::BodyFactory::FactoryConfig config{
+    .validation_tolerance = 0.2,  // 20% tolerance
+    .allow_partial_data = true
+};
+Bodies::BodyFactory factory(config);
+```
+
+#### 2. Simulation Engine Issues
+
+**Problem**: Simulation becomes unstable or produces unrealistic results
+
+**Symptoms:**
+- Bodies flying off to infinity
+- Negative energies
+- Extreme velocities
+
+**Solutions:**
+- Reduce time step size
+- Enable adaptive time stepping
+- Check initial conditions for validity
+- Monitor energy conservation
+
+```cpp
+// Stable configuration for problematic systems
+Simulation::SimulationConfig stable_config{
+    .time_step = 60.0,              // Small time steps
+    .use_adaptive_timestep = true,  // Let engine adjust
+    .max_timestep = 3600.0,         // Conservative maximum
+    .min_timestep = 1.0,            // Fine-grained minimum
+    .tolerance = 1e-15              // High precision
+};
+```
+
+**Problem**: Poor performance with large numbers of bodies
+
+**Solutions:**
+- Disable collision detection if not needed
+- Use larger time steps for distant bodies
+- Consider hierarchical simulation approaches
+- Monitor memory usage
+
+```cpp
+// Performance-optimized configuration
+Simulation::SimulationConfig perf_config{
+    .time_step = 3600.0,                  // Larger steps
+    .use_adaptive_timestep = false,       // Consistent performance
+    .enable_collision_detection = false   // Disable if not needed
+};
+```
+
+#### 3. Memory and Performance Issues
+
+**Problem**: High memory usage or memory leaks
+
+**Diagnostic Steps:**
+1. Use memory profiling tools (valgrind, AddressSanitizer)
+2. Check for proper RAII usage
+3. Monitor collection sizes
+4. Verify move semantics are being used
+
+```cpp
+// Memory usage monitoring
+#include "tests/utils/test_diagnostics.hpp"
+
+TestDiagnostics::set_memory_baseline("simulation_test");
+// ... run simulation ...
+bool has_leak = TestDiagnostics::detect_memory_regression("simulation_test");
+if (has_leak) {
+    auto report = TestDiagnostics::get_memory_regression_report("simulation_test");
+    std::cout << "Memory issue: " << report << std::endl;
+}
+```
+
+**Problem**: Performance regression detected
+
+**Solutions:**
+- Check recent code changes
+- Run performance profiling
+- Compare with baseline metrics
+- Review algorithm complexity
+
+```cpp
+// Performance regression analysis
+#include "tests/utils/performance_regression_system.h"
+
+auto alerts = run_performance_regression_tests();
+for (const auto& alert : alerts) {
+    std::cout << "Regression in " << alert.component
+              << ": " << alert.message << std::endl;
+
+    // Get optimization recommendations
+    auto recommendations = get_optimization_recommendations(alert.component);
+    for (const auto& rec : recommendations) {
+        std::cout << "  Recommendation: " << rec.description << std::endl;
+    }
+}
+```
+
+#### 4. Data Source Issues
+
+**Problem**: JPL HORIZONS API unavailable
+
+**Symptoms:**
+- Network timeouts
+- API rate limiting
+- Service unavailable errors
+
+**Solutions:**
+- Configure intelligent fallback strategy
+- Use cached data when available
+- Implement retry logic with exponential backoff
+
+```cpp
+// Robust data source configuration
+Bodies::BodyFactory::FactoryConfig robust_config{
+    .preferred_source = Bodies::BodyFactory::DataSource::CACHED_DATA,
+    .fallback_strategy = Bodies::BodyFactory::FallbackStrategy::GRACEFUL,
+    .enable_validation = true,
+    .allow_partial_data = true
+};
+```
+
+**Problem**: Cached data is outdated
+
+**Solutions:**
+- Force refresh of cached data
+- Check cache expiration settings
+- Verify cache file integrity
+
+```cpp
+// Force cache refresh
+Bodies::BodyFactory factory;
+factory.clear_cache();
+factory.refresh_cache_from_jpl();
+```
+
+#### 5. Compilation Issues
+
+**Problem**: Missing headers or undefined symbols
+
+**Common Causes:**
+- Incorrect include paths
+- Missing library dependencies
+- C++20 feature not supported
+
+**Solutions:**
+```bash
+# Verify C++20 support
+g++ --version  # Should be 10+ for full C++20 support
+clang++ --version  # Should be 10+ for full C++20 support
+
+# Check CMake configuration
+cmake -DCMAKE_CXX_STANDARD=20 ..
+
+# Verify library linking
+cmake --build . --verbose
+```
+
+**Problem**: Template instantiation errors
+
+**Common with C++20 concepts and ranges:**
+```cpp
+// Ensure proper concept constraints
+template<typename T>
+requires std::is_same_v<T, Bodies::CelestialBody>
+void process_body(const T& body) {
+    // Implementation...
+}
+```
+
+### Debugging Tools and Techniques
+
+#### 1. Enable Debug Logging
+
+```cpp
+// Enable comprehensive logging
+#define SOLAR_SYSTEM_DEBUG_LOGGING
+#include "solar_core/utils/debug_logger.hpp"
+
+DebugLogger::set_level(LogLevel::DEBUG);
+DebugLogger::enable_component("BodyFactory");
+DebugLogger::enable_component("SimulationEngine");
+```
+
+#### 2. Validation and Consistency Checking
+
+```cpp
+// Comprehensive validation
+Bodies::BodyCollection collection = /* ... */;
+
+// Check collection consistency
+auto consistency = collection.check_consistency();
+if (!consistency.is_valid) {
+    for (const auto& issue : consistency.issues) {
+        std::cout << "Issue: " << issue.description << std::endl;
+        std::cout << "Severity: " << issue.severity << std::endl;
+        std::cout << "Suggestion: " << issue.suggestion << std::endl;
+    }
+}
+
+// Validate individual bodies
+for (const auto& body : collection) {
+    auto validation = Bodies::validate_body_properties(body);
+    if (!validation.is_valid) {
+        std::cout << "Body " << body.name() << " validation failed:" << std::endl;
+        for (const auto& error : validation.errors) {
+            std::cout << "  " << error << std::endl;
+        }
+    }
+}
+```
+
+#### 3. Performance Profiling
+
+```cpp
+// Built-in performance profiling
+#include "tests/utils/performance_profiler.hpp"
+
+PerformanceProfiler profiler;
+profiler.start_profiling("simulation_run");
+
+// ... run simulation ...
+
+auto profile = profiler.stop_profiling("simulation_run");
+std::cout << "Execution time: " << profile.execution_time_ms << "ms" << std::endl;
+std::cout << "Memory usage: " << profile.peak_memory_mb << "MB" << std::endl;
+std::cout << "CPU usage: " << profile.cpu_usage_percent << "%" << std::endl;
+```
+
+### Getting Help
+
+#### 1. Documentation Resources
+- **API Reference**: `docs/api/ENHANCED_APIS.md` (this document)
+- **Architecture Guide**: `docs/architecture/`
+- **Examples**: `docs/examples/`
+- **Developer Guide**: `docs/developer/`
+
+#### 2. Diagnostic Commands
+```bash
+# Run comprehensive test suite
+ctest --output-on-failure
+
+# Run performance regression tests
+python3 tests/scripts/run_performance_regression_tests.py
+
+# Generate performance baseline
+python3 tests/scripts/generate_baseline.py
+
+# Verify system integrity
+python3 tests/scripts/verify_benchmark_system.py
+```
+
+#### 3. Common Debug Patterns
+
+```cpp
+// Pattern 1: Safe body access
+auto body_opt = collection.find_body("Earth");
+if (!body_opt) {
+    std::cerr << "Earth not found in collection" << std::endl;
+    // List available bodies for debugging
+    for (const auto& body : collection) {
+        std::cerr << "Available: " << body.name() << std::endl;
+    }
+    return;
+}
+
+// Pattern 2: Error context preservation
+auto result = factory.create_body("Mars");
+if (!result) {
+    const auto& error = result.error();
+    std::cerr << "Failed to create Mars:" << std::endl;
+    std::cerr << "  Type: " << static_cast<int>(error.type) << std::endl;
+    std::cerr << "  Message: " << error.message << std::endl;
+    std::cerr << "  Context: " << error.context << std::endl;
+}
+
+// Pattern 3: Simulation state monitoring
+engine.set_progress_callback([](const Simulation::SimulationState& state) {
+    // Monitor for anomalies
+    if (std::isnan(state.total_energy) || std::isinf(state.total_energy)) {
+        std::cerr << "Energy calculation error at iteration "
+                  << state.iteration_count << std::endl;
+    }
+
+    if (state.center_of_mass.magnitude() > 1e12) {
+        std::cerr << "Center of mass drift detected: "
+                  << state.center_of_mass.magnitude() << std::endl;
+    }
+});
+```

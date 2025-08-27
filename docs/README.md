@@ -14,6 +14,12 @@ Welcome to the comprehensive documentation for the Solar System Suite - a high-p
 - **[👨‍💻 Developer Guide](developer/DEVELOPER_GUIDE.md)**: Development setup, coding standards, and contribution guidelines
 - **[📋 API Documentation](api/html/index.html)**: Complete API reference with call graphs (Doxygen-generated)
 
+### **Enhanced API Documentation** ⭐ NEW
+- **[🚀 Enhanced APIs Guide](api/ENHANCED_APIS.md)**: Comprehensive guide to modern C++20 enhanced APIs
+- **[📝 Enhanced API Examples](examples/ENHANCED_API_EXAMPLES.md)**: Practical usage examples for enhanced components
+- **[🔄 Migration Guide](MIGRATION_GUIDE.md)**: Step-by-step migration from placeholder to enhanced APIs
+- **[🛠️ Troubleshooting Guide](TROUBLESHOOTING_GUIDE.md)**: Common issues and solutions for enhanced APIs
+
 ## 🚀 Quick Navigation
 
 ### **Getting Started**
@@ -42,8 +48,10 @@ Welcome to the comprehensive documentation for the Solar System Suite - a high-p
 - Reference: [Installation Guide](INSTALLATION.md)
 
 ### **Developers**
-- Start with: [Developer Guide](developer/DEVELOPER_GUIDE.md)
-- Understand: [Architecture Guide](architecture/ARCHITECTURE.md)
+- Start with: [Enhanced APIs Guide](api/ENHANCED_APIS.md) ⭐ **NEW**
+- Examples: [Enhanced API Examples](examples/ENHANCED_API_EXAMPLES.md) ⭐ **NEW**
+- Migration: [Migration Guide](MIGRATION_GUIDE.md) ⭐ **NEW**
+- Architecture: [Architecture Guide](architecture/ARCHITECTURE.md)
 - Reference: [API Documentation](api/html/index.html)
 
 ### **System Administrators**
@@ -102,5 +110,5 @@ Found an error or want to improve the documentation?
 
 ---
 
-**Solar System Suite Documentation** - Your complete guide to professional N-body simulation  
+**Solar System Suite Documentation** - Your complete guide to professional N-body simulation
 **Status**: Production Ready 🚀 | **Coverage**: Complete 📚 | **Format**: Multi-format 📄
