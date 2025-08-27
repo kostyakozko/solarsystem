@@ -17,6 +17,19 @@ add_executable(test_end_to_end
     test_end_to_end.cpp
 )
 
+# Enhanced components integration tests (Task 21)
+add_executable(test_enhanced_components_integration
+    test_enhanced_components_integration.cpp
+)
+
+add_executable(test_performance_regression_integration
+    test_performance_regression_integration.cpp
+)
+
+add_executable(test_cross_component_validation
+    test_cross_component_validation.cpp
+)
+
 # Link libraries
 target_link_libraries(test_application_workflows
     test_utils
@@ -50,6 +63,31 @@ target_link_libraries(test_end_to_end
     Threads::Threads
 )
 
+# Link libraries for enhanced integration tests
+target_link_libraries(test_enhanced_components_integration
+    test_utils
+    solar_core
+    solar_jpl
+    solar_utils
+    Threads::Threads
+)
+
+target_link_libraries(test_performance_regression_integration
+    test_utils
+    solar_core
+    solar_jpl
+    solar_utils
+    Threads::Threads
+)
+
+target_link_libraries(test_cross_component_validation
+    test_utils
+    solar_core
+    solar_jpl
+    solar_utils
+    Threads::Threads
+)
+
 # Add integration tests to CTest
 add_test(NAME IntegrationTest_ApplicationWorkflows
          COMMAND tests/integration/test_application_workflows
@@ -57,6 +95,11 @@ add_test(NAME IntegrationTest_ApplicationWorkflows
 add_test(NAME IntegrationTest_DataPipeline COMMAND test_data_pipeline)
 add_test(NAME IntegrationTest_WebInterface COMMAND test_web_interface)
 add_test(NAME IntegrationTest_EndToEnd COMMAND test_end_to_end)
+
+# Add enhanced integration tests to CTest
+add_test(NAME IntegrationTest_EnhancedComponents COMMAND test_enhanced_components_integration)
+add_test(NAME IntegrationTest_PerformanceRegression COMMAND test_performance_regression_integration)
+add_test(NAME IntegrationTest_CrossComponentValidation COMMAND test_cross_component_validation)
 
 # Set working directory for all integration tests
 set_tests_properties(IntegrationTest_DataPipeline PROPERTIES WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
@@ -84,6 +127,22 @@ set_tests_properties(IntegrationTest_EndToEnd PROPERTIES
     TIMEOUT 300
 )
 
+# Set properties for enhanced integration tests
+set_tests_properties(IntegrationTest_EnhancedComponents PROPERTIES
+    LABELS "integration;enhanced;task21"
+    TIMEOUT 300
+)
+
+set_tests_properties(IntegrationTest_PerformanceRegression PROPERTIES
+    LABELS "integration;performance;task21"
+    TIMEOUT 300
+)
+
+set_tests_properties(IntegrationTest_CrossComponentValidation PROPERTIES
+    LABELS "integration;validation;task21"
+    TIMEOUT 300
+)
+
 # Test data directory
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/test_data)
 
@@ -99,4 +158,7 @@ message(STATUS "  - Application Workflow Tests")
 message(STATUS "  - Data Pipeline Tests")
 message(STATUS "  - Web Interface Tests")
 message(STATUS "  - End-to-End Tests")
+message(STATUS "  - Enhanced Components Integration Tests (Task 21)")
+message(STATUS "  - Performance Regression Integration Tests (Task 21)")
+message(STATUS "  - Cross-Component Validation Tests (Task 21)")
 message(STATUS "  - Test data directory: ${CMAKE_CURRENT_BINARY_DIR}/test_data")
