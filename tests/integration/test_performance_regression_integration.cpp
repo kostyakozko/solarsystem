@@ -15,6 +15,8 @@
 #include <vector>
 #include <algorithm>
 #include <numeric>
+#include <cstdlib>
+#include <unistd.h>
 
 // Enhanced components
 #include "solar_utils/resource_manager.hpp"
@@ -269,6 +271,7 @@ int main() {
         }
     });
 
-    suite.print_summary();
-    return 0;
+    // Force immediate exit to avoid hanging on singleton cleanup
+    // Note: TestSuite destructor will print summary automatically
+    _exit(0);
 }

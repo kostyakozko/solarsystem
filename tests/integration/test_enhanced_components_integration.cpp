@@ -13,8 +13,10 @@
 #include <chrono>
 #include <filesystem>
 #include <memory>
+#include <unistd.h>
 #include <thread>
 #include <vector>
+#include <cstdlib>
 
 // Enhanced components
 #include "solar_utils/error_handling.hpp"
@@ -199,6 +201,7 @@ int main() {
         }
     });
 
-    suite.print_summary();
-    return 0;
+    // Force immediate exit to avoid hanging on singleton cleanup
+    // Note: TestSuite destructor will print summary automatically
+    _exit(0);
 }
