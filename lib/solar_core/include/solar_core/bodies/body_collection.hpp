@@ -127,14 +127,15 @@ class BodyCollection {
   [[nodiscard]] OperationResult add_body_validated(const CelestialBody& body);
   [[nodiscard]] OperationResult add_body_validated(CelestialBody::Properties props);
   [[nodiscard]] OperationResult remove_body_safe(std::string_view name);
-  [[nodiscard]] OperationResult update_body(std::string_view name, const CelestialBody& updated_body);
+  [[nodiscard]] OperationResult update_body(std::string_view name,
+                                            const CelestialBody& updated_body);
 
   // Enhanced search and filtering with error handling
-  [[nodiscard]] std::vector<std::reference_wrapper<const CelestialBody>>
-  search_by_name_pattern(const std::string& pattern) const;
+  [[nodiscard]] std::vector<std::reference_wrapper<const CelestialBody>> search_by_name_pattern(
+      const std::string& pattern) const;
 
-  [[nodiscard]] std::vector<std::reference_wrapper<const CelestialBody>>
-  filter_by_mass_range(long double min_mass, long double max_mass) const;
+  [[nodiscard]] std::vector<std::reference_wrapper<const CelestialBody>> filter_by_mass_range(
+      long double min_mass, long double max_mass) const;
 
   [[nodiscard]] std::vector<std::reference_wrapper<const CelestialBody>>
   filter_by_distance_from_point(const Math::Vector3d& point, long double max_distance) const;
@@ -152,7 +153,7 @@ class BodyCollection {
   [[nodiscard]] BulkOperationResult bulk_add_bodies(const std::vector<CelestialBody>& bodies);
   [[nodiscard]] BulkOperationResult bulk_remove_bodies(const std::vector<std::string>& names);
   [[nodiscard]] BulkOperationResult bulk_update_positions(
-    const std::function<Math::Vector3d(const CelestialBody&)>& position_updater);
+      const std::function<Math::Vector3d(const CelestialBody&)>& position_updater);
 
   // Serialization
   [[nodiscard]] std::string to_json() const;

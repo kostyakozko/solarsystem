@@ -304,13 +304,15 @@ std::vector<std::string> BodyCollection::get_comprehensive_validation_errors() c
     long double vel_magnitude = vel.magnitude();
 
     if (pos_magnitude > 1.0e18L) {  // Beyond reasonable solar system scale
-      errors.push_back("Body '" + std::string(body.name()) + "' has unreasonably large position magnitude: " +
-                      std::to_string(static_cast<double>(pos_magnitude)) + " m");
+      errors.push_back("Body '" + std::string(body.name()) +
+                       "' has unreasonably large position magnitude: " +
+                       std::to_string(static_cast<double>(pos_magnitude)) + " m");
     }
 
     if (vel_magnitude > 1.0e6L) {  // Beyond reasonable velocity scale
-      errors.push_back("Body '" + std::string(body.name()) + "' has unreasonably large velocity magnitude: " +
-                      std::to_string(static_cast<double>(vel_magnitude)) + " m/s");
+      errors.push_back("Body '" + std::string(body.name()) +
+                       "' has unreasonably large velocity magnitude: " +
+                       std::to_string(static_cast<double>(vel_magnitude)) + " m/s");
     }
   }
 
@@ -325,16 +327,17 @@ std::vector<std::string> BodyCollection::get_comprehensive_validation_errors() c
   // Check index consistency
   if (name_index_.size() != bodies_.size()) {
     errors.push_back("Name index size (" + std::to_string(name_index_.size()) +
-                    ") does not match body count (" + std::to_string(bodies_.size()) + ")");
+                     ") does not match body count (" + std::to_string(bodies_.size()) + ")");
   }
 
   // Verify index integrity
   for (const auto& [name, index] : name_index_) {
     if (index >= bodies_.size()) {
-      errors.push_back("Name index for '" + name + "' points to invalid body index: " + std::to_string(index));
+      errors.push_back("Name index for '" + name +
+                       "' points to invalid body index: " + std::to_string(index));
     } else if (bodies_[index].name() != name) {
       errors.push_back("Name index inconsistency: '" + name + "' maps to body '" +
-                      std::string(bodies_[index].name()) + "'");
+                       std::string(bodies_[index].name()) + "'");
     }
   }
 
@@ -379,11 +382,13 @@ void BodyCollection::maintain_consistency() {
 
     if (!std::isfinite(static_cast<double>(pos.x())) ||
         !std::isfinite(static_cast<double>(pos.y())) ||
-        !std::isfinite(static_cast<double>(pos.z()))) return true;
+        !std::isfinite(static_cast<double>(pos.z())))
+      return true;
 
     if (!std::isfinite(static_cast<double>(vel.x())) ||
         !std::isfinite(static_cast<double>(vel.y())) ||
-        !std::isfinite(static_cast<double>(vel.z()))) return true;
+        !std::isfinite(static_cast<double>(vel.z())))
+      return true;
 
     return false;
   });
@@ -440,12 +445,12 @@ BodyCollection::OperationResult BodyCollection::add_body_validated(const Celesti
 
   if (pos_magnitude > 1.0e18L) {
     result.warning = "Body '" + std::string(body.name()) + "' has very large position magnitude: " +
-                    std::to_string(static_cast<double>(pos_magnitude)) + " m";
+                     std::to_string(static_cast<double>(pos_magnitude)) + " m";
   }
 
   if (vel_magnitude > 1.0e6L) {
     result.warning = "Body '" + std::string(body.name()) + "' has very large velocity magnitude: " +
-                    std::to_string(static_cast<double>(vel_magnitude)) + " m/s";
+                     std::to_string(static_cast<double>(vel_magnitude)) + " m/s";
   }
 
   // Add the body
@@ -462,7 +467,8 @@ BodyCollection::OperationResult BodyCollection::add_body_validated(const Celesti
   return result;
 }
 
-BodyCollection::OperationResult BodyCollection::add_body_validated(CelestialBody::Properties props) {
+BodyCollection::OperationResult BodyCollection::add_body_validated(
+    CelestialBody::Properties props) {
   return add_body_validated(CelestialBody{std::move(props)});
 }
 
@@ -497,7 +503,8 @@ BodyCollection::OperationResult BodyCollection::remove_body_safe(std::string_vie
   return result;
 }
 
-BodyCollection::OperationResult BodyCollection::update_body(std::string_view name, const CelestialBody& updated_body) {
+BodyCollection::OperationResult BodyCollection::update_body(std::string_view name,
+                                                            const CelestialBody& updated_body) {
   OperationResult result;
   result.affected_bodies = 0;
 
@@ -545,7 +552,7 @@ BodyCollection::OperationResult BodyCollection::update_body(std::string_view nam
   if (updated_body.name() != name && contains(updated_body.name())) {
     result.success = false;
     result.error_message = "Cannot update body name to '" + std::string(updated_body.name()) +
-                          "' - name already exists";
+                           "' - name already exists";
     return result;
   }
 
@@ -570,8 +577,8 @@ BodyCollection::OperationResult BodyCollection::update_body(std::string_view nam
 
 // Enhanced search and filtering
 
-std::vector<std::reference_wrapper<const CelestialBody>>
-BodyCollection::search_by_name_pattern(const std::string& pattern) const {
+std::vector<std::reference_wrapper<const CelestialBody>> BodyCollection::search_by_name_pattern(
+    const std::string& pattern) const {
   std::vector<std::reference_wrapper<const CelestialBody>> result;
 
   try {
@@ -600,8 +607,8 @@ BodyCollection::search_by_name_pattern(const std::string& pattern) const {
   return result;
 }
 
-std::vector<std::reference_wrapper<const CelestialBody>>
-BodyCollection::filter_by_mass_range(long double min_mass, long double max_mass) const {
+std::vector<std::reference_wrapper<const CelestialBody>> BodyCollection::filter_by_mass_range(
+    long double min_mass, long double max_mass) const {
   std::vector<std::reference_wrapper<const CelestialBody>> result;
 
   if (min_mass > max_mass) {
@@ -619,7 +626,8 @@ BodyCollection::filter_by_mass_range(long double min_mass, long double max_mass)
 }
 
 std::vector<std::reference_wrapper<const CelestialBody>>
-BodyCollection::filter_by_distance_from_point(const Math::Vector3d& point, long double max_distance) const {
+BodyCollection::filter_by_distance_from_point(const Math::Vector3d& point,
+                                              long double max_distance) const {
   std::vector<std::reference_wrapper<const CelestialBody>> result;
 
   if (max_distance < 0.0L) {
@@ -638,7 +646,8 @@ BodyCollection::filter_by_distance_from_point(const Math::Vector3d& point, long 
 
 // Bulk operations with progress reporting
 
-BodyCollection::BulkOperationResult BodyCollection::bulk_add_bodies(const std::vector<CelestialBody>& bodies) {
+BodyCollection::BulkOperationResult BodyCollection::bulk_add_bodies(
+    const std::vector<CelestialBody>& bodies) {
   BulkOperationResult result;
   auto start_time = std::chrono::steady_clock::now();
 
@@ -655,17 +664,20 @@ BodyCollection::BulkOperationResult BodyCollection::bulk_add_bodies(const std::v
       }
     } else {
       result.failed_operations++;
-      result.errors.push_back("Failed to add '" + std::string(body.name()) + "': " + add_result.error_message);
+      result.errors.push_back("Failed to add '" + std::string(body.name()) +
+                              "': " + add_result.error_message);
     }
   }
 
   auto end_time = std::chrono::steady_clock::now();
-  result.execution_time = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
+  result.execution_time =
+      std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
 
   return result;
 }
 
-BodyCollection::BulkOperationResult BodyCollection::bulk_remove_bodies(const std::vector<std::string>& names) {
+BodyCollection::BulkOperationResult BodyCollection::bulk_remove_bodies(
+    const std::vector<std::string>& names) {
   BulkOperationResult result;
   auto start_time = std::chrono::steady_clock::now();
 
@@ -684,7 +696,8 @@ BodyCollection::BulkOperationResult BodyCollection::bulk_remove_bodies(const std
   }
 
   auto end_time = std::chrono::steady_clock::now();
-  result.execution_time = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
+  result.execution_time =
+      std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
 
   return result;
 }
@@ -707,7 +720,8 @@ BodyCollection::BulkOperationResult BodyCollection::bulk_update_positions(
           !std::isfinite(static_cast<double>(new_position.y())) ||
           !std::isfinite(static_cast<double>(new_position.z()))) {
         result.failed_operations++;
-        result.errors.push_back("Position updater returned non-finite values for '" + std::string(body.name()) + "'");
+        result.errors.push_back("Position updater returned non-finite values for '" +
+                                std::string(body.name()) + "'");
         continue;
       }
 
@@ -715,12 +729,14 @@ BodyCollection::BulkOperationResult BodyCollection::bulk_update_positions(
       result.successful_operations++;
     } catch (const std::exception& e) {
       result.failed_operations++;
-      result.errors.push_back("Failed to update position for '" + std::string(body.name()) + "': " + e.what());
+      result.errors.push_back("Failed to update position for '" + std::string(body.name()) +
+                              "': " + e.what());
     }
   }
 
   auto end_time = std::chrono::steady_clock::now();
-  result.execution_time = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
+  result.execution_time =
+      std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
 
   return result;
 }

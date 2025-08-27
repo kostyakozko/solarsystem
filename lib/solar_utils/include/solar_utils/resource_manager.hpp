@@ -51,11 +51,14 @@ struct ResourceInfo {
   std::function<void()> cleanup_function;
 
   ResourceInfo() = default;
-  ResourceInfo(std::string id, ResourceType type, size_t size = 0,
-               std::string location = "", std::string description = "")
-      : id(std::move(id)), type(type), size_bytes(size),
+  ResourceInfo(std::string id, ResourceType type, size_t size = 0, std::string location = "",
+               std::string description = "")
+      : id(std::move(id)),
+        type(type),
+        size_bytes(size),
         allocated_at(std::chrono::system_clock::now()),
-        location(std::move(location)), description(std::move(description)) {}
+        location(std::move(location)),
+        description(std::move(description)) {}
 };
 
 /**
@@ -115,9 +118,9 @@ struct ResourceManagerConfig {
 /**
  * @brief RAII-based resource guard
  */
-template<typename T>
+template <typename T>
 class ResourceGuard {
-public:
+ public:
   ResourceGuard() = default;
 
   explicit ResourceGuard(T* resource, std::function<void(T*)> deleter = nullptr)
@@ -129,7 +132,8 @@ public:
 
   // Move constructor
   ResourceGuard(ResourceGuard&& other) noexcept
-      : resource_(other.resource_), deleter_(std::move(other.deleter_)),
+      : resource_(other.resource_),
+        deleter_(std::move(other.deleter_)),
         resource_id_(std::move(other.resource_id_)) {
     other.resource_ = nullptr;
   }
@@ -150,9 +154,7 @@ public:
   ResourceGuard(const ResourceGuard&) = delete;
   ResourceGuard& operator=(const ResourceGuard&) = delete;
 
-  ~ResourceGuard() {
-    cleanup();
-  }
+  ~ResourceGuard() { cleanup(); }
 
   T* get() const { return resource_; }
   T* operator->() const { return resource_; }
@@ -176,7 +178,7 @@ public:
     }
   }
 
-private:
+ private:
   T* resource_ = nullptr;
   std::function<void(T*)> deleter_;
   std::string resource_id_;
@@ -190,7 +192,7 @@ private:
  * @brief Comprehensive resource management system
  */
 class ResourceManager {
-public:
+ public:
   static ResourceManager& instance();
 
   // Configuration
@@ -234,7 +236,7 @@ public:
   void set_cleanup_callback(std::function<void(const ResourceInfo&)> callback);
   void set_leak_detection_callback(std::function<void(const LeakDetectionResult&)> callback);
 
-private:
+ private:
   ResourceManager() = default;
   ~ResourceManager();
 
@@ -266,7 +268,7 @@ private:
  * @brief RAII wrapper for memory allocations
  */
 class ManagedMemory {
-public:
+ public:
   explicit ManagedMemory(size_t size, const std::string& description = "");
   ~ManagedMemory();
 
@@ -280,10 +282,12 @@ public:
   size_t size() const { return size_; }
   bool is_valid() const { return memory_ != nullptr; }
 
-  template<typename T>
-  T* as() const { return static_cast<T*>(memory_); }
+  template <typename T>
+  T* as() const {
+    return static_cast<T*>(memory_);
+  }
 
-private:
+ private:
   void* memory_ = nullptr;
   size_t size_ = 0;
   std::string resource_id_;
@@ -293,9 +297,9 @@ private:
  * @brief RAII wrapper for temporary files
  */
 class ManagedTempFile {
-public:
+ public:
   explicit ManagedTempFile(const std::string& prefix = "solar_temp",
-                          const std::string& suffix = ".tmp");
+                           const std::string& suffix = ".tmp");
   ~ManagedTempFile();
 
   // Disable copy, enable move
@@ -308,7 +312,7 @@ public:
   bool exists() const;
   bool remove();
 
-private:
+ private:
   std::string file_path_;
   std::string resource_id_;
   bool auto_remove_ = true;
@@ -318,7 +322,7 @@ private:
  * @brief Resource usage monitor for scoped monitoring
  */
 class ResourceUsageMonitor {
-public:
+ public:
   explicit ResourceUsageMonitor(const std::string& scope_name);
   ~ResourceUsageMonitor();
 
@@ -326,7 +330,7 @@ public:
   ResourceStats get_scope_usage() const;
   void log_checkpoint(const std::string& checkpoint_name);
 
-private:
+ private:
   std::string scope_name_;
   ResourceStats initial_stats_;
   std::chrono::system_clock::time_point start_time_;
@@ -336,21 +340,19 @@ private:
 /**
  * @brief Utility macros for resource tracking
  */
-#define SOLAR_REGISTER_RESOURCE(type, ptr, size, desc) \
-  SolarSystem::Utils::ResourceManager::instance().register_resource( \
-    SolarSystem::Utils::ResourceInfo(#ptr, type, size, __FILE__ ":" + std::to_string(__LINE__), desc))
+#define SOLAR_REGISTER_RESOURCE(type, ptr, size, desc)                                            \
+  SolarSystem::Utils::ResourceManager::instance().register_resource(                              \
+      SolarSystem::Utils::ResourceInfo(#ptr, type, size, __FILE__ ":" + std::to_string(__LINE__), \
+                                       desc))
 
 #define SOLAR_UNREGISTER_RESOURCE(id) \
   SolarSystem::Utils::ResourceManager::instance().unregister_resource(id)
 
-#define SOLAR_MONITOR_SCOPE(name) \
-  SolarSystem::Utils::ResourceUsageMonitor _scope_monitor(name)
+#define SOLAR_MONITOR_SCOPE(name) SolarSystem::Utils::ResourceUsageMonitor _scope_monitor(name)
 
-#define SOLAR_MANAGED_MEMORY(size, desc) \
-  SolarSystem::Utils::ManagedMemory(size, desc)
+#define SOLAR_MANAGED_MEMORY(size, desc) SolarSystem::Utils::ManagedMemory(size, desc)
 
-#define SOLAR_MANAGED_TEMP_FILE(prefix, suffix) \
-  SolarSystem::Utils::ManagedTempFile(prefix, suffix)
+#define SOLAR_MANAGED_TEMP_FILE(prefix, suffix) SolarSystem::Utils::ManagedTempFile(prefix, suffix)
 
 /**
  * @brief Resource type to string conversion
@@ -362,4 +364,4 @@ std::string resource_type_to_string(ResourceType type);
  */
 ResourceType string_to_resource_type(const std::string& type_str);
 
-} // namespace SolarSystem::Utils
+}  // namespace SolarSystem::Utils

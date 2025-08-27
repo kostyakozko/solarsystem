@@ -104,7 +104,7 @@ bool ResourceManager::unregister_resource(const std::string& resource_id) {
   }
 
   // Remove from active res
-active_resources_.erase(it);
+  active_resources_.erase(it);
 
   return true;
 }
@@ -261,8 +261,7 @@ LeakDetectionResult ResourceManager::detect_leaks_by_type(ResourceType type) con
 
   if (result.has_leaks) {
     std::ostringstream summary;
-    summary << "Detected " << result.leak_count << " "
-            << resource_type_to_string(type) << " leaks "
+    summary << "Detected " << result.leak_count << " " << resource_type_to_string(type) << " leaks "
             << "totaling " << result.leaked_bytes << " bytes";
     result.summary = summary.str();
   }
@@ -320,7 +319,8 @@ void ResourceManager::cleanup_expired_resources() {
   }
 
   auto end_time = std::chrono::steady_clock::now();
-  auto cleanup_duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
+  auto cleanup_duration =
+      std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
   stats_.total_cleanup_time += cleanup_duration;
   stats_.last_cleanup = std::chrono::system_clock::now();
 
@@ -519,7 +519,8 @@ void ResourceManager::generate_usage_report(std::ostream& output) const {
   std::lock_guard<std::mutex> lock(resources_mutex_);
 
   output << "=== Resource Usage Report ===\n";
-  output << "Generated at: " << std::chrono::system_clock::now().time_since_epoch().count() << "\n\n";
+  output << "Generated at: " << std::chrono::system_clock::now().time_since_epoch().count()
+         << "\n\n";
 
   output << "Overall Statistics:\n";
   output << "  Total allocations: " << stats_.total_allocations << "\n";
@@ -543,11 +544,11 @@ void ResourceManager::generate_usage_report(std::ostream& output) const {
 
   output << "\nActive Resources:\n";
   for (const auto& [id, info] : active_resources_) {
-    auto age = std::chrono::duration_cast<std::chrono::seconds>(
-      std::chrono::system_clock::now() - info.allocated_at);
+    auto age = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now() -
+                                                                info.allocated_at);
 
-    output << "  " << id << " (" << resource_type_to_string(info.type) << "): "
-           << info.size_bytes << " bytes, age " << age.count() << "s";
+    output << "  " << id << " (" << resource_type_to_string(info.type) << "): " << info.size_bytes
+           << " bytes, age " << age.count() << "s";
     if (!info.description.empty()) {
       output << " - " << info.description;
     }
@@ -568,7 +569,8 @@ void ResourceManager::generate_usage_report(std::ostream& output) const {
   }
 }
 
-void ResourceManager::log_resource_operation(const std::string& operation, const ResourceInfo& info) {
+void ResourceManager::log_resource_operation(const std::string& operation,
+                                             const ResourceInfo& info) {
   if (!config_.log_file_path.empty()) {
     std::ostringstream log_entry;
     log_entry << "[" << std::chrono::system_clock::now().time_since_epoch().count() << "] "
@@ -589,7 +591,8 @@ void ResourceManager::set_cleanup_callback(std::function<void(const ResourceInfo
   cleanup_callback_ = callback;
 }
 
-void ResourceManager::set_leak_detection_callback(std::function<void(const LeakDetectionResult&)> callback) {
+void ResourceManager::set_leak_detection_callback(
+    std::function<void(const LeakDetectionResult&)> callback) {
   leak_detection_callback_ = callback;
 }
 
@@ -775,7 +778,8 @@ ManagedTempFile::~ManagedTempFile() {
 }
 
 ManagedTempFile::ManagedTempFile(ManagedTempFile&& other) noexcept
-    : file_path_(std::move(other.file_path_)), resource_id_(std::move(other.resource_id_)),
+    : file_path_(std::move(other.file_path_)),
+      resource_id_(std::move(other.resource_id_)),
       auto_remove_(other.auto_remove_) {
   other.auto_remove_ = false;
 }
@@ -801,9 +805,7 @@ ManagedTempFile& ManagedTempFile::operator=(ManagedTempFile&& other) noexcept {
   return *this;
 }
 
-bool ManagedTempFile::exists() const {
-  return std::filesystem::exists(file_path_);
-}
+bool ManagedTempFile::exists() const { return std::filesystem::exists(file_path_); }
 
 bool ManagedTempFile::remove() {
   try {
@@ -827,19 +829,23 @@ ResourceUsageMonitor::~ResourceUsageMonitor() {
   // Log scope statistics
   std::ostringstream log_message;
   log_message << "Scope '" << scope_name_ << "' completed in " << duration.count() << "ms. ";
-  log_message << "Allocations: " << (final_stats.total_allocations - initial_stats_.total_allocations);
-  log_message << ", Bytes: " << (final_stats.total_bytes_allocated - initial_stats_.total_bytes_allocated);
+  log_message << "Allocations: "
+              << (final_stats.total_allocations - initial_stats_.total_allocations);
+  log_message << ", Bytes: "
+              << (final_stats.total_bytes_allocated - initial_stats_.total_bytes_allocated);
 
-  ResourceManager::instance().log_resource_operation("SCOPE_END",
-    ResourceInfo(scope_name_, ResourceType::Custom, 0, "", log_message.str()));
+  ResourceManager::instance().log_resource_operation(
+      "SCOPE_END", ResourceInfo(scope_name_, ResourceType::Custom, 0, "", log_message.str()));
 }
 
 ResourceStats ResourceUsageMonitor::get_scope_usage() const {
   auto current_stats = ResourceManager::instance().get_statistics();
 
   ResourceStats scope_stats;
-  scope_stats.total_allocations = current_stats.total_allocations - initial_stats_.total_allocations;
-  scope_stats.total_bytes_allocated = current_stats.total_bytes_allocated - initial_stats_.total_bytes_allocated;
+  scope_stats.total_allocations =
+      current_stats.total_allocations - initial_stats_.total_allocations;
+  scope_stats.total_bytes_allocated =
+      current_stats.total_bytes_allocated - initial_stats_.total_bytes_allocated;
   scope_stats.current_allocations = current_stats.current_allocations;
   scope_stats.current_bytes_allocated = current_stats.current_bytes_allocated;
 
@@ -854,14 +860,22 @@ void ResourceUsageMonitor::log_checkpoint(const std::string& checkpoint_name) {
 // Utility functions
 std::string resource_type_to_string(ResourceType type) {
   switch (type) {
-    case ResourceType::Memory: return "Memory";
-    case ResourceType::FileHandle: return "FileHandle";
-    case ResourceType::NetworkConnection: return "NetworkConnection";
-    case ResourceType::TemporaryFile: return "TemporaryFile";
-    case ResourceType::ThreadHandle: return "ThreadHandle";
-    case ResourceType::MutexLock: return "MutexLock";
-    case ResourceType::Custom: return "Custom";
-    default: return "Unknown";
+    case ResourceType::Memory:
+      return "Memory";
+    case ResourceType::FileHandle:
+      return "FileHandle";
+    case ResourceType::NetworkConnection:
+      return "NetworkConnection";
+    case ResourceType::TemporaryFile:
+      return "TemporaryFile";
+    case ResourceType::ThreadHandle:
+      return "ThreadHandle";
+    case ResourceType::MutexLock:
+      return "MutexLock";
+    case ResourceType::Custom:
+      return "Custom";
+    default:
+      return "Unknown";
   }
 }
 
@@ -876,4 +890,4 @@ ResourceType string_to_resource_type(const std::string& type_str) {
   return ResourceType::Custom;
 }
 
-} // namespace SolarSystem::Utils
+}  // namespace SolarSystem::Utils

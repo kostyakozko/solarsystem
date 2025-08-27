@@ -3,10 +3,10 @@
  * @brief Implementation of output format validator
  */
 
-#include "solar_test/formatters/output_formatter.hpp"
-
 #include <regex>
 #include <stack>
+
+#include "solar_test/formatters/output_formatter.hpp"
 
 namespace SolarSystem::Testing::Formatters {
 
@@ -60,8 +60,8 @@ FormatValidationResult OutputValidator::validate_xml(const std::string& xml) {
         }
         if (tag_stack.top() != tag_name) {
           result.is_valid = false;
-          result.error_message = "Mismatched closing tag: expected " +
-                                tag_stack.top() + ", got " + tag_name;
+          result.error_message =
+              "Mismatched closing tag: expected " + tag_stack.top() + ", got " + tag_name;
           result.error_line = line_number;
           return result;
         }
@@ -131,7 +131,7 @@ FormatValidationResult OutputValidator::validate_json(const std::string& json) {
         // Validate string content
         if (c < 0x20 && c != '\t' && c != '\n' && c != '\r') {
           result.warnings.push_back("Control character in string at line " +
-                                   std::to_string(line_number));
+                                    std::to_string(line_number));
         }
         continue;
       }
@@ -200,8 +200,7 @@ FormatValidationResult OutputValidator::validate_junit_xml(const std::string& xm
   // Additional JUnit-specific validation
 
   // Check for required elements
-  if (xml.find("<testsuites") == std::string::npos &&
-      xml.find("<testsuite") == std::string::npos) {
+  if (xml.find("<testsuites") == std::string::npos && xml.find("<testsuite") == std::string::npos) {
     result.is_valid = false;
     result.error_message = "Missing required testsuite or testsuites element";
     return result;
@@ -239,7 +238,7 @@ FormatValidationResult OutputValidator::validate_junit_xml(const std::string& xm
 }
 
 FormatValidationResult OutputValidator::validate_test_content(const std::string& content,
-                                                             OutputFormat format) {
+                                                              OutputFormat format) {
   switch (format) {
     case OutputFormat::XML:
     case OutputFormat::JUnit:
@@ -247,11 +246,12 @@ FormatValidationResult OutputValidator::validate_test_content(const std::string&
     case OutputFormat::JSON:
       return validate_json(content);
     default:
-      return FormatValidationResult(true); // No validation for other formats yet
+      return FormatValidationResult(true);  // No validation for other formats yet
   }
 }
 
-std::vector<std::string> OutputValidator::suggest_fixes(const FormatValidationResult& validation_result) {
+std::vector<std::string> OutputValidator::suggest_fixes(
+    const FormatValidationResult& validation_result) {
   std::vector<std::string> suggestions;
 
   if (!validation_result.is_valid) {
@@ -340,15 +340,15 @@ bool OutputValidator::is_valid_json_string(const std::string& str) {
     }
 
     if (c == '"') {
-      return false; // Unescaped quote
+      return false;  // Unescaped quote
     }
 
     if (c < 0x20 && c != '\t' && c != '\n' && c != '\r') {
-      return false; // Control character
+      return false;  // Control character
     }
   }
 
-  return !escaped; // Should not end with escape character
+  return !escaped;  // Should not end with escape character
 }
 
-} // namespace SolarSystem::Testing::Formatters
+}  // namespace SolarSystem::Testing::Formatters

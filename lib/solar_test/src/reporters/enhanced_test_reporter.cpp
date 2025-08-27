@@ -14,8 +14,7 @@
 namespace SolarSystem::Testing {
 
 // EnhancedTestReporter implementation
-EnhancedTestReporter::EnhancedTestReporter(const EnhancedConfiguration& config)
-    : config_(config) {
+EnhancedTestReporter::EnhancedTestReporter(const EnhancedConfiguration& config) : config_(config) {
   file_handler_ = std::make_unique<Utils::RobustFileHandler>(config_.file_config);
 
   if (config_.use_streaming_output) {
@@ -106,9 +105,7 @@ bool EnhancedTestReporter::ensure_output_ready() {
   return output_ready_ && output_stream_ && output_stream_->is_open();
 }
 
-Utils::RobustFileStream* EnhancedTestReporter::get_output_stream() {
-  return output_stream_.get();
-}
+Utils::RobustFileStream* EnhancedTestReporter::get_output_stream() { return output_stream_.get(); }
 
 bool EnhancedTestReporter::is_output_available() const {
   return output_ready_ && output_stream_ && output_stream_->is_open();
@@ -260,7 +257,7 @@ void EnhancedTestReporter::cleanup_output() {
 }
 
 void EnhancedTestReporter::update_statistics(bool success, size_t bytes_written,
-                                           std::chrono::milliseconds write_time) {
+                                             std::chrono::milliseconds write_time) {
   stats_.write_operations++;
   if (success) {
     stats_.bytes_written += bytes_written;
@@ -286,10 +283,9 @@ void EnhancedTestReporter::update_configuration(const EnhancedConfiguration& con
 }
 
 void EnhancedTestReporter::log_operation(const std::string& operation, bool success,
-                                       const std::string& details) {
+                                         const std::string& details) {
   if (config_.log_file_operations) {
-    std::cerr << "[EnhancedTestReporter] " << operation << ": "
-              << (success ? "SUCCESS" : "FAILED");
+    std::cerr << "[EnhancedTestReporter] " << operation << ": " << (success ? "SUCCESS" : "FAILED");
     if (!details.empty()) {
       std::cerr << " - " << details;
     }
@@ -304,9 +300,7 @@ EnhancedTestReporter::StreamBuffer::StreamBuffer(size_t buffer_size) : max_size_
 
 EnhancedTestReporter::StreamBuffer::~StreamBuffer() = default;
 
-void EnhancedTestReporter::StreamBuffer::write(const std::string& content) {
-  buffer_ += content;
-}
+void EnhancedTestReporter::StreamBuffer::write(const std::string& content) { buffer_ += content; }
 
 void EnhancedTestReporter::StreamBuffer::flush(Utils::RobustFileStream* stream) {
   if (!buffer_.empty() && stream) {
@@ -316,9 +310,7 @@ void EnhancedTestReporter::StreamBuffer::flush(Utils::RobustFileStream* stream) 
   }
 }
 
-bool EnhancedTestReporter::StreamBuffer::needs_flush() const {
-  return buffer_.size() >= max_size_;
-}
+bool EnhancedTestReporter::StreamBuffer::needs_flush() const { return buffer_.size() >= max_size_; }
 
 // EnhancedXmlReporter implementation
 EnhancedXmlReporter::EnhancedXmlReporter(const XmlConfiguration& config)
@@ -385,21 +377,18 @@ void EnhancedXmlReporter::write_xml_header() {
   write_line("<testsuites>");
 }
 
-void EnhancedXmlReporter::write_xml_footer() {
-  write_line("</testsuites>");
-}
+void EnhancedXmlReporter::write_xml_footer() { write_line("</testsuites>"); }
 
 void EnhancedXmlReporter::write_testsuite_element(const TestSuiteResult& result) {
   auto suite_end_time = std::chrono::steady_clock::now();
-  auto suite_duration = std::chrono::duration_cast<std::chrono::milliseconds>(
-    suite_end_time - suite_start_time_);
+  auto suite_duration =
+      std::chrono::duration_cast<std::chrono::milliseconds>(suite_end_time - suite_start_time_);
 
-  write_formatted("  <testsuite name=\"%s\" tests=\"%zu\" failures=\"%zu\" errors=\"0\" skipped=\"%zu\" time=\"%.3f\">\n",
-                 xml_escape(result.suite_name).c_str(),
-                 result.test_results.size(),
-                 result.failed_count,
-                 result.skipped_count,
-                 static_cast<double>(suite_duration.count()) / 1000.0);
+  write_formatted(
+      "  <testsuite name=\"%s\" tests=\"%zu\" failures=\"%zu\" errors=\"0\" skipped=\"%zu\" "
+      "time=\"%.3f\">\n",
+      xml_escape(result.suite_name).c_str(), result.test_results.size(), result.failed_count,
+      result.skipped_count, static_cast<double>(suite_duration.count()) / 1000.0);
 
   for (const auto& test_result : result.test_results) {
     write_testcase_element(test_result);
@@ -410,17 +399,16 @@ void EnhancedXmlReporter::write_testsuite_element(const TestSuiteResult& result)
 
 void EnhancedXmlReporter::write_testcase_element(const TestResult& result) {
   write_formatted("    <testcase name=\"%s\" classname=\"%s\" time=\"%.3f\"",
-                 xml_escape(result.test_name).c_str(),
-                 xml_escape(current_suite_name_).c_str(),
-                 static_cast<double>(result.execution_time.count()) / 1000.0);
+                  xml_escape(result.test_name).c_str(), xml_escape(current_suite_name_).c_str(),
+                  static_cast<double>(result.execution_time.count()) / 1000.0);
 
-  if (result.status == TestResult::Status::Failed ||
-      result.status == TestResult::Status::Error ||
+  if (result.status == TestResult::Status::Failed || result.status == TestResult::Status::Error ||
       result.status == TestResult::Status::Timeout) {
     write_line(">");
-    write_formatted("      <failure type=\"%s\" message=\"%s\"/>\n",
-                   result.status == TestResult::Status::Timeout ? "TestTimeout" : "AssertionFailure",
-                   xml_escape(result.error_message).c_str());
+    write_formatted(
+        "      <failure type=\"%s\" message=\"%s\"/>\n",
+        result.status == TestResult::Status::Timeout ? "TestTimeout" : "AssertionFailure",
+        xml_escape(result.error_message).c_str());
     write_line("    </testcase>");
   } else if (result.status == TestResult::Status::Skipped) {
     write_line(">");
@@ -437,12 +425,24 @@ std::string EnhancedXmlReporter::xml_escape(const std::string& text) const {
 
   for (char c : text) {
     switch (c) {
-      case '<': escaped += "&lt;"; break;
-      case '>': escaped += "&gt;"; break;
-      case '&': escaped += "&amp;"; break;
-      case '"': escaped += "&quot;"; break;
-      case '\'': escaped += "&apos;"; break;
-      default: escaped += c; break;
+      case '<':
+        escaped += "&lt;";
+        break;
+      case '>':
+        escaped += "&gt;";
+        break;
+      case '&':
+        escaped += "&amp;";
+        break;
+      case '"':
+        escaped += "&quot;";
+        break;
+      case '\'':
+        escaped += "&apos;";
+        break;
+      default:
+        escaped += c;
+        break;
     }
   }
 
@@ -451,9 +451,7 @@ std::string EnhancedXmlReporter::xml_escape(const std::string& text) const {
 
 // EnhancedTestReporterFactory implementation
 std::unique_ptr<EnhancedTestReporter> EnhancedTestReporterFactory::create_xml_reporter(
-    const std::string& output_file,
-    const EnhancedTestReporter::EnhancedConfiguration& config) {
-
+    const std::string& output_file, const EnhancedTestReporter::EnhancedConfiguration& config) {
   EnhancedXmlReporter::XmlConfiguration xml_config;
   xml_config.base_config = config;
   xml_config.base_config.output_file = output_file;
@@ -474,12 +472,8 @@ EnhancedTestReporterFactory::create_high_reliability_config() {
   config.file_config.create_directories = true;
 
   // Multiple fallback directories
-  config.file_config.fallback_directories = {
-    "./test_output",
-    "./backup_test_output",
-    "/tmp/solar_system_tests",
-    "."
-  };
+  config.file_config.fallback_directories = {"./test_output", "./backup_test_output",
+                                             "/tmp/solar_system_tests", "."};
 
   // Robust output configuration
   config.use_streaming_output = true;
@@ -491,4 +485,4 @@ EnhancedTestReporterFactory::create_high_reliability_config() {
   return config;
 }
 
-} // namespace SolarSystem::Testing
+}  // namespace SolarSystem::Testing

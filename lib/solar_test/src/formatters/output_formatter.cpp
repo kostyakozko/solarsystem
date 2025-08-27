@@ -42,13 +42,12 @@ std::string EnhancedXmlFormatter::format_test_suite(const TestSuiteResult& resul
 
   // Create testsuite element
   std::unordered_map<std::string, std::string> suite_attrs = {
-    {"name", result.suite_name},
-    {"tests", std::to_string(total_tests)},
-    {"failures", std::to_string(failures)},
-    {"errors", std::to_string(errors)},
-    {"skipped", std::to_string(skipped)},
-    {"time", format_duration(total_duration)}
-  };
+      {"name", result.suite_name},
+      {"tests", std::to_string(total_tests)},
+      {"failures", std::to_string(failures)},
+      {"errors", std::to_string(errors)},
+      {"skipped", std::to_string(skipped)},
+      {"time", format_duration(total_duration)}};
 
   xml << "<testsuites>\n";
   xml << "  <testsuite";
@@ -80,10 +79,9 @@ std::string EnhancedXmlFormatter::format_test_suite(const TestSuiteResult& resul
 
 std::string EnhancedXmlFormatter::format_test_result(const TestResult& result) {
   std::unordered_map<std::string, std::string> attrs = {
-    {"name", result.test_name},
-    {"classname", "TestSuite"},  // Could be enhanced to include actual class name
-    {"time", format_duration(result.execution_time)}
-  };
+      {"name", result.test_name},
+      {"classname", "TestSuite"},  // Could be enhanced to include actual class name
+      {"time", format_duration(result.execution_time)}};
 
   std::string content;
   bool has_failure = false;
@@ -95,9 +93,9 @@ std::string EnhancedXmlFormatter::format_test_result(const TestResult& result) {
     case TestResult::Status::Timeout: {
       has_failure = true;
       std::unordered_map<std::string, std::string> failure_attrs = {
-        {"type", result.status == TestResult::Status::Timeout ? "TestTimeout" : "AssertionFailure"},
-        {"message", xml_escape(result.error_message)}
-      };
+          {"type",
+           result.status == TestResult::Status::Timeout ? "TestTimeout" : "AssertionFailure"},
+          {"message", xml_escape(result.error_message)}};
 
       std::string failure_content;
       if (!result.assertion_failures.empty()) {
@@ -151,9 +149,7 @@ std::string EnhancedXmlFormatter::format_header() {
   return header;
 }
 
-std::string EnhancedXmlFormatter::format_footer() {
-  return "</testsuites>\n";
-}
+std::string EnhancedXmlFormatter::format_footer() { return "</testsuites>\n"; }
 
 void EnhancedXmlFormatter::start_streaming(std::ostream& output) {
   streaming_active_ = true;
@@ -212,7 +208,7 @@ FormatValidationResult EnhancedXmlFormatter::validate_output(const std::string& 
 }
 
 std::string EnhancedXmlFormatter::recover_from_error(const std::string& invalid_output,
-                                                    const std::string& error_context) {
+                                                     const std::string& error_context) {
   std::string recovered = invalid_output;
 
   // Basic recovery strategies
@@ -234,9 +230,9 @@ std::string EnhancedXmlFormatter::recover_from_error(const std::string& invalid_
   }
 
   // 3. Add XML declaration if missing
-  if (optimization_.include_xml_declaration &&
-      recovered.find("<?xml") == std::string::npos) {
-    recovered = "<?xml version=\"1.0\" encoding=\"" + optimization_.xml_encoding + "\"?>\n" + recovered;
+  if (optimization_.include_xml_declaration && recovered.find("<?xml") == std::string::npos) {
+    recovered =
+        "<?xml version=\"1.0\" encoding=\"" + optimization_.xml_encoding + "\"?>\n" + recovered;
   }
 
   return recovered;
@@ -267,12 +263,24 @@ std::string EnhancedXmlFormatter::xml_escape(const std::string& text) {
 
   for (char c : text) {
     switch (c) {
-      case '<': escaped += "&lt;"; break;
-      case '>': escaped += "&gt;"; break;
-      case '&': escaped += "&amp;"; break;
-      case '"': escaped += "&quot;"; break;
-      case '\'': escaped += "&apos;"; break;
-      default: escaped += c; break;
+      case '<':
+        escaped += "&lt;";
+        break;
+      case '>':
+        escaped += "&gt;";
+        break;
+      case '&':
+        escaped += "&amp;";
+        break;
+      case '"':
+        escaped += "&quot;";
+        break;
+      case '\'':
+        escaped += "&apos;";
+        break;
+      default:
+        escaped += c;
+        break;
     }
   }
 
@@ -285,11 +293,8 @@ std::string EnhancedXmlFormatter::xml_escape(const std::string& text) {
 }
 
 std::string EnhancedXmlFormatter::format_xml_element(
-    const std::string& name,
-    const std::unordered_map<std::string, std::string>& attributes,
-    const std::string& content,
-    bool self_closing) {
-
+    const std::string& name, const std::unordered_map<std::string, std::string>& attributes,
+    const std::string& content, bool self_closing) {
   std::ostringstream element;
   element << "<" << name;
 
@@ -459,13 +464,9 @@ std::string EnhancedJsonFormatter::format_test_result(const TestResult& result) 
   return json.str();
 }
 
-std::string EnhancedJsonFormatter::format_header() {
-  return "{\n  \"test_results\": [\n";
-}
+std::string EnhancedJsonFormatter::format_header() { return "{\n  \"test_results\": [\n"; }
 
-std::string EnhancedJsonFormatter::format_footer() {
-  return "\n  ]\n}";
-}
+std::string EnhancedJsonFormatter::format_footer() { return "\n  ]\n}"; }
 
 void EnhancedJsonFormatter::start_streaming(std::ostream& output) {
   streaming_active_ = true;
@@ -515,7 +516,7 @@ FormatValidationResult EnhancedJsonFormatter::validate_output(const std::string&
 }
 
 std::string EnhancedJsonFormatter::recover_from_error(const std::string& invalid_output,
-                                                     const std::string& error_context) {
+                                                      const std::string& error_context) {
   (void)error_context;  // Suppress unused parameter warning
   std::string recovered = invalid_output;
 
@@ -551,13 +552,27 @@ std::string EnhancedJsonFormatter::json_escape(const std::string& text) {
 
   for (char c : text) {
     switch (c) {
-      case '"': escaped << "\\\""; break;
-      case '\\': escaped << "\\\\"; break;
-      case '\b': escaped << "\\b"; break;
-      case '\f': escaped << "\\f"; break;
-      case '\n': escaped << "\\n"; break;
-      case '\r': escaped << "\\r"; break;
-      case '\t': escaped << "\\t"; break;
+      case '"':
+        escaped << "\\\"";
+        break;
+      case '\\':
+        escaped << "\\\\";
+        break;
+      case '\b':
+        escaped << "\\b";
+        break;
+      case '\f':
+        escaped << "\\f";
+        break;
+      case '\n':
+        escaped << "\\n";
+        break;
+      case '\r':
+        escaped << "\\r";
+        break;
+      case '\t':
+        escaped << "\\t";
+        break;
       default:
         if (c < 0x20) {
           escaped << "\\u" << std::hex << std::setw(4) << std::setfill('0') << static_cast<int>(c);
@@ -632,7 +647,6 @@ void EnhancedJsonFormatter::validate_json_syntax(const std::string& json) {
 // OutputFormatterFactory implementation
 std::unique_ptr<OutputFormatter> OutputFormatterFactory::create_formatter(
     OutputFormat format, const FormatOptimization& optimization) {
-
   switch (format) {
     case OutputFormat::XML:
     case OutputFormat::JUnit:
@@ -646,15 +660,24 @@ std::unique_ptr<OutputFormatter> OutputFormatterFactory::create_formatter(
 
 std::string OutputFormatterFactory::format_to_string(OutputFormat format) {
   switch (format) {
-    case OutputFormat::XML: return "xml";
-    case OutputFormat::JSON: return "json";
-    case OutputFormat::TAP: return "tap";
-    case OutputFormat::JUnit: return "junit";
-    case OutputFormat::HTML: return "html";
-    case OutputFormat::CSV: return "csv";
-    case OutputFormat::Plain: return "plain";
-    case OutputFormat::Markdown: return "markdown";
-    default: return "unknown";
+    case OutputFormat::XML:
+      return "xml";
+    case OutputFormat::JSON:
+      return "json";
+    case OutputFormat::TAP:
+      return "tap";
+    case OutputFormat::JUnit:
+      return "junit";
+    case OutputFormat::HTML:
+      return "html";
+    case OutputFormat::CSV:
+      return "csv";
+    case OutputFormat::Plain:
+      return "plain";
+    case OutputFormat::Markdown:
+      return "markdown";
+    default:
+      return "unknown";
   }
 }
 
@@ -675,10 +698,8 @@ OutputFormat OutputFormatterFactory::string_to_format(const std::string& format_
 }
 
 std::unique_ptr<StreamingOutputManager> OutputFormatterFactory::create_streaming_manager(
-    OutputFormat format,
-    const StreamingConfig& streaming_config,
+    OutputFormat format, const StreamingConfig& streaming_config,
     const FormatOptimization& optimization) {
-
   auto formatter = create_formatter(format, optimization);
   return std::make_unique<StreamingOutputManager>(std::move(formatter), streaming_config);
 }
@@ -751,16 +772,8 @@ OutputFormat OutputFormatterFactory::detect_format_from_extension(const std::str
 }
 
 std::vector<OutputFormat> OutputFormatterFactory::get_supported_formats() {
-  return {
-    OutputFormat::XML,
-    OutputFormat::JSON,
-    OutputFormat::TAP,
-    OutputFormat::JUnit,
-    OutputFormat::HTML,
-    OutputFormat::CSV,
-    OutputFormat::Plain,
-    OutputFormat::Markdown
-  };
+  return {OutputFormat::XML,  OutputFormat::JSON, OutputFormat::TAP,   OutputFormat::JUnit,
+          OutputFormat::HTML, OutputFormat::CSV,  OutputFormat::Plain, OutputFormat::Markdown};
 }
 
-} // namespace SolarSystem::Testing::Formatters
+}  // namespace SolarSystem::Testing::Formatters

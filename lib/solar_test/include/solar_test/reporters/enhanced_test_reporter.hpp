@@ -15,8 +15,8 @@
 #include <string>
 #include <vector>
 
-#include "test_reporter.hpp"
 #include "../utils/robust_file_handler.hpp"
+#include "test_reporter.hpp"
 
 namespace SolarSystem::Testing {
 
@@ -24,7 +24,7 @@ namespace SolarSystem::Testing {
  * @brief Enhanced test reporter with robust file handling capabilities
  */
 class EnhancedTestReporter : public TestReporter {
-public:
+ public:
   /**
    * @brief Configuration for enhanced reporting
    */
@@ -41,11 +41,11 @@ public:
     // Error handling configuration
     bool continue_on_write_errors = true;
     bool log_file_operations = false;
-    std::vector<std::string> notification_emails; // For critical failures
+    std::vector<std::string> notification_emails;  // For critical failures
 
     // Performance configuration
-    bool use_memory_mapping = false; // For large outputs
-    size_t memory_threshold = 10 * 1024 * 1024; // 10MB
+    bool use_memory_mapping = false;             // For large outputs
+    size_t memory_threshold = 10 * 1024 * 1024;  // 10MB
   };
 
   explicit EnhancedTestReporter(const EnhancedConfiguration& config);
@@ -84,7 +84,7 @@ public:
   const OutputStats& output_statistics() const { return stats_; }
   void reset_statistics() { stats_ = OutputStats{}; }
 
-protected:
+ protected:
   // Template method for derived classes
   virtual void on_output_stream_ready() {}
   virtual void on_output_stream_error(const std::string& error) { (void)error; }
@@ -102,7 +102,7 @@ protected:
 
   // Streaming utilities
   class StreamBuffer {
-  public:
+   public:
     explicit StreamBuffer(size_t buffer_size);
     ~StreamBuffer();
 
@@ -112,12 +112,12 @@ protected:
     size_t size() const { return buffer_.size(); }
     void clear() { buffer_.clear(); }
 
-  private:
+   private:
     std::string buffer_;
     size_t max_size_;
   };
 
-private:
+ private:
   EnhancedConfiguration config_;
   std::unique_ptr<Utils::RobustFileHandler> file_handler_;
   std::unique_ptr<Utils::RobustFileStream> output_stream_;
@@ -129,17 +129,15 @@ private:
   // Internal methods
   bool initialize_output();
   void cleanup_output();
-  void update_statistics(bool success, size_t bytes_written,
-                        std::chrono::milliseconds write_time);
-  void log_operation(const std::string& operation, bool success,
-                    const std::string& details = "");
+  void update_statistics(bool success, size_t bytes_written, std::chrono::milliseconds write_time);
+  void log_operation(const std::string& operation, bool success, const std::string& details = "");
 };
 
 /**
  * @brief Enhanced XML reporter with robust file handling
  */
 class EnhancedXmlReporter : public EnhancedTestReporter {
-public:
+ public:
   struct XmlConfiguration {
     EnhancedConfiguration base_config;
     bool pretty_print = true;
@@ -160,11 +158,11 @@ public:
   void on_progress(const std::string& message, double percentage) override;
   void on_error(const std::string& error_message) override;
 
-protected:
+ protected:
   void on_output_stream_ready() override;
   void on_fallback_location_used(const std::string& new_location) override;
 
-private:
+ private:
   XmlConfiguration xml_config_;
   std::string current_suite_name_;
   std::vector<TestResult> current_suite_results_;
@@ -184,7 +182,7 @@ private:
  * @brief Enhanced JSON reporter with robust file handling
  */
 class EnhancedJsonReporter : public EnhancedTestReporter {
-public:
+ public:
   struct JsonConfiguration {
     EnhancedConfiguration base_config;
     bool pretty_print = true;
@@ -204,10 +202,10 @@ public:
   void on_progress(const std::string& message, double percentage) override;
   void on_error(const std::string& error_message) override;
 
-protected:
+ protected:
   void on_output_stream_ready() override;
 
-private:
+ private:
   JsonConfiguration json_config_;
   std::string current_suite_name_;
   std::vector<TestResult> current_suite_results_;
@@ -222,25 +220,25 @@ private:
   void write_test_suite(const TestSuiteResult& result);
   std::string json_escape(const std::string& text) const;
   std::string format_json_value(const std::string& key, const std::string& value,
-                               bool is_last = false) const;
+                                bool is_last = false) const;
 };
 
 /**
  * @brief Factory for creating enhanced test reporters
  */
 class EnhancedTestReporterFactory {
-public:
+ public:
   static std::unique_ptr<EnhancedTestReporter> create_xml_reporter(
-    const std::string& output_file,
-    const EnhancedTestReporter::EnhancedConfiguration& config = {});
+      const std::string& output_file,
+      const EnhancedTestReporter::EnhancedConfiguration& config = {});
 
   static std::unique_ptr<EnhancedTestReporter> create_json_reporter(
-    const std::string& output_file,
-    const EnhancedTestReporter::EnhancedConfiguration& config = {});
+      const std::string& output_file,
+      const EnhancedTestReporter::EnhancedConfiguration& config = {});
 
   static std::unique_ptr<EnhancedTestReporter> create_robust_reporter(
-    const std::string& format, const std::string& output_file,
-    const EnhancedTestReporter::EnhancedConfiguration& config = {});
+      const std::string& format, const std::string& output_file,
+      const EnhancedTestReporter::EnhancedConfiguration& config = {});
 
   // Configuration helpers
   static EnhancedTestReporter::EnhancedConfiguration create_high_reliability_config();
@@ -248,4 +246,4 @@ public:
   static EnhancedTestReporter::EnhancedConfiguration create_minimal_config();
 };
 
-} // namespace SolarSystem::Testing
+}  // namespace SolarSystem::Testing

@@ -6,14 +6,14 @@
 #include "solar_utils/argument_parser.hpp"
 
 #include <algorithm>
+#include <cctype>
 #include <cstring>
 #include <ctime>
 #include <iomanip>
 #include <iostream>
-#include <sstream>
-#include <cctype>
 #include <memory>
 #include <regex>
+#include <sstream>
 
 using namespace SolarSystem::Utils;
 
@@ -72,14 +72,14 @@ ArgumentResult<Date> Date::from_string(const std::string& date_str) {
       tm.tm_hour = 12;           // Use noon to avoid timezone issues
       tm.tm_min = 0;
       tm.tm_sec = 0;
-      tm.tm_isdst = 0;           // No daylight saving time
+      tm.tm_isdst = 0;  // No daylight saving time
 
-      // Use timegm if available, otherwise mktime with UTC adjustment
-      #ifdef __APPLE__
+// Use timegm if available, otherwise mktime with UTC adjustment
+#ifdef __APPLE__
       std::time_t time = timegm(&tm);
-      #else
+#else
       std::time_t time = mktime(&tm);
-      #endif
+#endif
       if (time != -1) {
         return ArgumentResult<Date>{Date{time}};
       }
@@ -105,10 +105,11 @@ ArgumentResult<Date> Date::from_string_format(const std::string& date_str,
   return ArgumentResult<Date>{Date{}};
 }
 
-ArgumentResult<Date> Date::from_string_with_range(const std::string& date_str,
-                                                  const std::chrono::system_clock::time_point& min_date,
-                                                  const std::chrono::system_clock::time_point& max_date) {
-  auto result = Validation::DateTimeValidator::validate_date_with_range(date_str, min_date, max_date);
+ArgumentResult<Date> Date::from_string_with_range(
+    const std::string& date_str, const std::chrono::system_clock::time_point& min_date,
+    const std::chrono::system_clock::time_point& max_date) {
+  auto result =
+      Validation::DateTimeValidator::validate_date_with_range(date_str, min_date, max_date);
 
   if (!result.is_valid) {
     return ArgumentResult<Date>{ArgumentError::DateOutOfRange};
@@ -247,7 +248,8 @@ std::string ArgumentParser::contextual_help(const std::string& option_name) cons
   return oss.str();
 }
 
-ConflictReport ArgumentParser::detect_conflicts(const std::vector<std::string>& provided_args) const {
+ConflictReport ArgumentParser::detect_conflicts(
+    const std::vector<std::string>& provided_args) const {
   ConflictReport report;
 
   // Check for mutually exclusive options
@@ -263,16 +265,16 @@ ConflictReport ArgumentParser::detect_conflicts(const std::vector<std::string>& 
   }
 
   // Define some common conflicts
-  std::vector<std::pair<std::string, std::string>> known_conflicts = {
-    {"--help", "--version"},
-    {"--quiet", "--verbose"},
-    {"--update", "--no-update"},
-    {"--force", "--no-force"}
-  };
+  std::vector<std::pair<std::string, std::string>> known_conflicts = {{"--help", "--version"},
+                                                                      {"--quiet", "--verbose"},
+                                                                      {"--update", "--no-update"},
+                                                                      {"--force", "--no-force"}};
 
   for (const auto& [opt1, opt2] : known_conflicts) {
-    bool has_opt1 = std::find(found_options.begin(), found_options.end(), opt1) != found_options.end();
-    bool has_opt2 = std::find(found_options.begin(), found_options.end(), opt2) != found_options.end();
+    bool has_opt1 =
+        std::find(found_options.begin(), found_options.end(), opt1) != found_options.end();
+    bool has_opt2 =
+        std::find(found_options.begin(), found_options.end(), opt2) != found_options.end();
 
     if (has_opt1 && has_opt2) {
       report.has_conflicts = true;
@@ -284,7 +286,8 @@ ConflictReport ArgumentParser::detect_conflicts(const std::vector<std::string>& 
   return report;
 }
 
-std::vector<std::string> ArgumentParser::find_similar_options(const std::string& invalid_option) const {
+std::vector<std::string> ArgumentParser::find_similar_options(
+    const std::string& invalid_option) const {
   std::vector<std::pair<std::string, int>> candidates;
 
   for (const auto& option : options_) {
@@ -306,7 +309,7 @@ std::vector<std::string> ArgumentParser::find_similar_options(const std::string&
 
   // Sort by edit distance (closest first)
   std::sort(candidates.begin(), candidates.end(),
-           [](const auto& a, const auto& b) { return a.second < b.second; });
+            [](const auto& a, const auto& b) { return a.second < b.second; });
 
   std::vector<std::string> similar_options;
   for (const auto& [option, distance] : candidates) {
@@ -331,7 +334,8 @@ std::vector<std::string> ArgumentParser::generate_usage_examples() const {
       } else if (option.long_name().find("port") != std::string::npos) {
         examples.push_back(program_name_ + " " + std::string(option.long_name()) + " 8080");
       } else if (option.long_name().find("file") != std::string::npos) {
-        examples.push_back(program_name_ + " " + std::string(option.long_name()) + " /path/to/file");
+        examples.push_back(program_name_ + " " + std::string(option.long_name()) +
+                           " /path/to/file");
       }
     } else {
       if (option.long_name().find("verbose") != std::string::npos) {
@@ -345,7 +349,8 @@ std::vector<std::string> ArgumentParser::generate_usage_examples() const {
   return examples;
 }
 
-std::vector<std::string> ArgumentParser::get_intelligent_suggestions(const std::string& invalid_arg) const {
+std::vector<std::string> ArgumentParser::get_intelligent_suggestions(
+    const std::string& invalid_arg) const {
   std::vector<std::string> suggestions;
 
   // Check for common typos
@@ -383,10 +388,10 @@ int ArgumentParser::calculate_edit_distance(const std::string& s1, const std::st
   // Fill the DP table
   for (size_t i = 1; i <= len1; ++i) {
     for (size_t j = 1; j <= len2; ++j) {
-      if (std::tolower(s1[i-1]) == std::tolower(s2[j-1])) {
-        dp[i][j] = dp[i-1][j-1];
+      if (std::tolower(s1[i - 1]) == std::tolower(s2[j - 1])) {
+        dp[i][j] = dp[i - 1][j - 1];
       } else {
-        dp[i][j] = 1 + std::min({dp[i-1][j], dp[i][j-1], dp[i-1][j-1]});
+        dp[i][j] = 1 + std::min({dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]});
       }
     }
   }
@@ -426,8 +431,8 @@ ArgumentResult<size_t> ArgumentParser::parse_argument(std::span<const char* cons
     auto validation_result = option.validate_comprehensive_value(value);
     if (!validation_result.is_valid) {
       // Print detailed error message
-      std::cerr << "Validation Error for option " << arg << ": "
-                << validation_result.error_message << std::endl;
+      std::cerr << "Validation Error for option " << arg << ": " << validation_result.error_message
+                << std::endl;
 
       // Provide suggestions if available
       if (!validation_result.suggestions.empty()) {
@@ -448,7 +453,8 @@ ArgumentResult<size_t> ArgumentParser::parse_argument(std::span<const char* cons
     }
 
     // Use the validated (and potentially sanitized) value
-    option.execute(validation_result.normalized_value.empty() ? value : validation_result.normalized_value);
+    option.execute(validation_result.normalized_value.empty() ? value
+                                                              : validation_result.normalized_value);
     return ArgumentResult<size_t>{index + 2};  // Skip both option and value
   } else {
     option.execute();
@@ -467,19 +473,20 @@ DetailedArgumentResult<void> ArgumentParser::parse_with_details(std::span<const 
   return DetailedArgumentResult<void>{};  // Success
 }
 
-DetailedArgumentResult<void> ArgumentParser::parse_with_details(int argc, const char* const argv[]) {
+DetailedArgumentResult<void> ArgumentParser::parse_with_details(int argc,
+                                                                const char* const argv[]) {
   return parse_with_details(std::span<const char* const>(argv, static_cast<size_t>(argc)));
 }
 
-DetailedArgumentResult<size_t> ArgumentParser::parse_argument_detailed(std::span<const char* const> args, size_t index) {
+DetailedArgumentResult<size_t> ArgumentParser::parse_argument_detailed(
+    std::span<const char* const> args, size_t index) {
   std::string_view arg = args[index];
   std::string arg_str(arg);
 
   auto option_index = find_option(arg);
   if (!option_index) {
-    DetailedArgumentError error(ArgumentError::UnknownOption,
-                               "Unknown option: " + arg_str,
-                               "Option '" + arg_str + "' is not recognized");
+    DetailedArgumentError error(ArgumentError::UnknownOption, "Unknown option: " + arg_str,
+                                "Option '" + arg_str + "' is not recognized");
 
     // Add intelligent suggestions
     error.similar_options = find_similar_options(arg_str);
@@ -504,9 +511,9 @@ DetailedArgumentResult<size_t> ArgumentParser::parse_argument_detailed(std::span
 
   if (option.requires_value()) {
     if (index + 1 >= args.size()) {
-      DetailedArgumentError error(ArgumentError::MissingValue,
-                                 "Missing value for option: " + arg_str,
-                                 "Option '" + arg_str + "' requires a value but none was provided");
+      DetailedArgumentError error(
+          ArgumentError::MissingValue, "Missing value for option: " + arg_str,
+          "Option '" + arg_str + "' requires a value but none was provided");
 
       error.help_text = contextual_help(arg_str);
       error.usage_example = program_name_ + " " + arg_str + " <value>";
@@ -519,9 +526,10 @@ DetailedArgumentResult<size_t> ArgumentParser::parse_argument_detailed(std::span
     // Use comprehensive validation if available
     auto validation_result = option.validate_comprehensive_value(value);
     if (!validation_result.is_valid) {
-      DetailedArgumentError error(ArgumentError::ValidationFailed,
-                                 "Invalid value for option " + arg_str + ": " + validation_result.error_message,
-                                 "The value '" + value + "' is not valid for option '" + arg_str + "'");
+      DetailedArgumentError error(
+          ArgumentError::ValidationFailed,
+          "Invalid value for option " + arg_str + ": " + validation_result.error_message,
+          "The value '" + value + "' is not valid for option '" + arg_str + "'");
 
       error.suggestions = validation_result.suggestions;
       error.help_text = contextual_help(arg_str);
@@ -534,7 +542,8 @@ DetailedArgumentResult<size_t> ArgumentParser::parse_argument_detailed(std::span
     }
 
     // Use the validated (and potentially sanitized) value
-    option.execute(validation_result.normalized_value.empty() ? value : validation_result.normalized_value);
+    option.execute(validation_result.normalized_value.empty() ? value
+                                                              : validation_result.normalized_value);
     return DetailedArgumentResult<size_t>{index + 2};  // Skip both option and value
   } else {
     option.execute();
@@ -1002,10 +1011,12 @@ ArgumentResult<RealtimeConfig> RealtimeArgumentParser::parse(int argc, const cha
 
     // Provide intelligent suggestions for configuration errors
     if (validation_error.find("interval") != std::string::npos) {
-      std::cerr << "Suggestion: Use positive values for intervals (e.g., --update-interval 1)" << std::endl;
+      std::cerr << "Suggestion: Use positive values for intervals (e.g., --update-interval 1)"
+                << std::endl;
     }
     if (validation_error.find("duration") != std::string::npos) {
-      std::cerr << "Suggestion: Use positive values for duration (e.g., --duration 60)" << std::endl;
+      std::cerr << "Suggestion: Use positive values for duration (e.g., --duration 60)"
+                << std::endl;
     }
 
     return ArgumentResult<RealtimeConfig>{ArgumentError::InvalidValue};
@@ -1078,7 +1089,8 @@ bool SolarSystem::Utils::Option::is_valid(const std::string& value) const {
   return !validator_ || validator_(value);
 }
 
-SolarSystem::Utils::Validation::ValidationResult SolarSystem::Utils::Option::validate_comprehensive_value(const std::string& value) const {
+SolarSystem::Utils::Validation::ValidationResult
+SolarSystem::Utils::Option::validate_comprehensive_value(const std::string& value) const {
   if (!validation_type_.empty()) {
     if (validation_type_ == "choice" && !allowed_values_.empty()) {
       return Validation::StringValidator::validate_choice(value, allowed_values_);

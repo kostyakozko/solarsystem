@@ -1,11 +1,11 @@
 #pragma once
 
+#include <algorithm>
 #include <chrono>
+#include <optional>
 #include <string>
 #include <string_view>
 #include <vector>
-#include <algorithm>
-#include <optional>
 
 #include "solar_core/bodies/body_collection.hpp"
 #include "solar_core/bodies/celestial_body.hpp"
@@ -39,15 +39,15 @@ class BodyFactory {
     GRACEFUL,         // Try all sources in order, use best available
     INTELLIGENT,      // Assess data quality and choose best source
     PARTIAL_ALLOWED,  // Allow partial data with warnings
-    HYBRID           // Combine data from multiple sources
+    HYBRID            // Combine data from multiple sources
   };
 
   enum class DataQuality {
-    EXCELLENT,  // Recent JPL data with full validation
-    GOOD,       // Cached JPL data or recent fallback
-    ACCEPTABLE, // Older cached data or basic fallback
-    POOR,       // Very old or incomplete data
-    UNKNOWN     // Quality cannot be assessed
+    EXCELLENT,   // Recent JPL data with full validation
+    GOOD,        // Cached JPL data or recent fallback
+    ACCEPTABLE,  // Older cached data or basic fallback
+    POOR,        // Very old or incomplete data
+    UNKNOWN      // Quality cannot be assessed
   };
 
   struct CreationOptions {
@@ -59,7 +59,7 @@ class BodyFactory {
     DataQuality minimum_quality = DataQuality::ACCEPTABLE;
     bool allow_partial_data = false;
     bool prefer_recent_data = true;
-    std::chrono::hours max_data_age{24 * 30}; // 30 days default
+    std::chrono::hours max_data_age{24 * 30};  // 30 days default
   };
 
   // Data quality assessment
@@ -159,15 +159,14 @@ class BodyFactory {
   [[nodiscard]] Utils::Expected<CelestialBody, std::string> create_with_partial_data(
       std::string_view name, const CreationOptions& options) const;
 
-  [[nodiscard]] FallbackResult execute_fallback_strategy(
-      std::string_view name, const CreationOptions& options) const;
+  [[nodiscard]] FallbackResult execute_fallback_strategy(std::string_view name,
+                                                         const CreationOptions& options) const;
 
   // Data source prioritization
   [[nodiscard]] std::vector<DataSource> get_prioritized_sources(
       std::string_view name, const CreationOptions& options) const;
 
-  [[nodiscard]] bool is_data_source_available(
-      DataSource source, std::string_view name) const;
+  [[nodiscard]] bool is_data_source_available(DataSource source, std::string_view name) const;
 
   [[nodiscard]] std::chrono::system_clock::time_point get_data_source_timestamp(
       DataSource source, std::string_view name) const;
@@ -211,11 +210,13 @@ class BodyFactory {
   [[nodiscard]] Utils::Expected<void, std::string> validate_mass_bounds(
       long double mass, BodyType type, std::string_view name) const;
   [[nodiscard]] Utils::Expected<void, std::string> validate_orbital_parameters(
-      const Math::Vector3d& position, const Math::Vector3d& velocity, BodyType type, std::string_view name) const;
+      const Math::Vector3d& position, const Math::Vector3d& velocity, BodyType type,
+      std::string_view name) const;
   [[nodiscard]] Utils::Expected<void, std::string> validate_cross_properties(
       const CelestialBody::Properties& props) const;
   [[nodiscard]] Utils::Expected<void, std::string> validate_body_relationships(
-      const CelestialBody::Properties& props, const std::vector<CelestialBody>& existing_bodies) const;
+      const CelestialBody::Properties& props,
+      const std::vector<CelestialBody>& existing_bodies) const;
 };
 
 }  // namespace SolarSystem::Bodies

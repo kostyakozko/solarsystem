@@ -1,10 +1,10 @@
 #include "solar_utils/logging.hpp"
 
-#include <iomanip>
-#include <thread>
-#include <filesystem>
 #include <algorithm>
+#include <filesystem>
+#include <iomanip>
 #include <regex>
+#include <thread>
 
 namespace SolarSystem::Utils {
 
@@ -12,12 +12,11 @@ namespace SolarSystem::Utils {
 std::string LogEntry::to_string() const {
   std::ostringstream oss;
   auto time_t = std::chrono::system_clock::to_time_t(timestamp);
-  auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(
-    timestamp.time_since_epoch()) % 1000;
+  auto ms =
+      std::chrono::duration_cast<std::chrono::milliseconds>(timestamp.time_since_epoch()) % 1000;
 
-  oss << std::put_time(std::localtime(&time_t), "%Y-%m-%d %H:%M:%S")
-      << '.' << std::setfill('0') << std::setw(3) << ms.count()
-      << " [" << static_cast<int>(level) << "]"
+  oss << std::put_time(std::localtime(&time_t), "%Y-%m-%d %H:%M:%S") << '.' << std::setfill('0')
+      << std::setw(3) << ms.count() << " [" << static_cast<int>(level) << "]"
       << " [" << component << "]"
       << " " << message;
 
@@ -38,12 +37,12 @@ std::string LogEntry::to_string() const {
 std::string LogEntry::to_json() const {
   std::ostringstream oss;
   auto time_t = std::chrono::system_clock::to_time_t(timestamp);
-  auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(
-    timestamp.time_since_epoch()) % 1000;
+  auto ms =
+      std::chrono::duration_cast<std::chrono::milliseconds>(timestamp.time_since_epoch()) % 1000;
 
   oss << "{"
-      << "\"timestamp\":\"" << std::put_time(std::gmtime(&time_t), "%Y-%m-%dT%H:%M:%S")
-      << '.' << std::setfill('0') << std::setw(3) << ms.count() << "Z\","
+      << "\"timestamp\":\"" << std::put_time(std::gmtime(&time_t), "%Y-%m-%dT%H:%M:%S") << '.'
+      << std::setfill('0') << std::setw(3) << ms.count() << "Z\","
       << "\"level\":" << static_cast<int>(level) << ","
       << "\"component\":\"" << component << "\","
       << "\"message\":\"" << message << "\","
@@ -70,7 +69,8 @@ std::string LogEntry::to_xml() const {
   auto time_t = std::chrono::system_clock::to_time_t(timestamp);
 
   oss << "<log>"
-      << "<timestamp>" << std::put_time(std::gmtime(&time_t), "%Y-%m-%dT%H:%M:%SZ") << "</timestamp>"
+      << "<timestamp>" << std::put_time(std::gmtime(&time_t), "%Y-%m-%dT%H:%M:%SZ")
+      << "</timestamp>"
       << "<level>" << static_cast<int>(level) << "</level>"
       << "<component>" << component << "</component>"
       << "<message>" << message << "</message>"
@@ -93,20 +93,15 @@ std::string LogEntry::to_csv() const {
   std::ostringstream oss;
   auto time_t = std::chrono::system_clock::to_time_t(timestamp);
 
-  oss << std::put_time(std::gmtime(&time_t), "%Y-%m-%d %H:%M:%S") << ","
-      << static_cast<int>(level) << ","
-      << component << ","
-      << "\"" << message << "\","
-      << thread_id << ","
-      << sequence_number;
+  oss << std::put_time(std::gmtime(&time_t), "%Y-%m-%d %H:%M:%S") << "," << static_cast<int>(level)
+      << "," << component << ","
+      << "\"" << message << "\"," << thread_id << "," << sequence_number;
 
   return oss.str();
 }
 
 // ConsoleAppender implementation
-ConsoleAppender::ConsoleAppender(bool use_colors) : use_colors_(use_colors) {
-  name_ = "console";
-}
+ConsoleAppender::ConsoleAppender(bool use_colors) : use_colors_(use_colors) { name_ = "console"; }
 
 void ConsoleAppender::append(const LogEntry& entry) {
   if (!should_log(entry.level)) {
@@ -137,24 +132,32 @@ void ConsoleAppender::close() {
 
 std::string ConsoleAppender::get_color_code(LogLevel level) const {
   switch (level) {
-    case LogLevel::TRACE: return "\033[37m";  // White
-    case LogLevel::DEBUG: return "\033[36m";  // Cyan
-    case LogLevel::INFO:  return "\033[32m";  // Green
-    case LogLevel::WARN:  return "\033[33m";  // Yellow
-    case LogLevel::ERROR: return "\033[31m";  // Red
-    case LogLevel::FATAL: return "\033[35m";  // Magenta
-    default: return "";
+    case LogLevel::TRACE:
+      return "\033[37m";  // White
+    case LogLevel::DEBUG:
+      return "\033[36m";  // Cyan
+    case LogLevel::INFO:
+      return "\033[32m";  // Green
+    case LogLevel::WARN:
+      return "\033[33m";  // Yellow
+    case LogLevel::ERROR:
+      return "\033[31m";  // Red
+    case LogLevel::FATAL:
+      return "\033[35m";  // Magenta
+    default:
+      return "";
   }
 }
 
-std::string ConsoleAppender::get_reset_code() const {
-  return "\033[0m";
-}
+std::string ConsoleAppender::get_reset_code() const { return "\033[0m"; }
 
 // FileAppender implementation
 FileAppender::FileAppender(const std::string& filename, size_t max_size, int max_files)
-  : filename_(filename), base_filename_(filename), max_size_(max_size),
-    max_files_(max_files), current_size_(0) {
+    : filename_(filename),
+      base_filename_(filename),
+      max_size_(max_size),
+      max_files_(max_files),
+      current_size_(0) {
   name_ = "file_" + std::filesystem::path(filename).filename().string();
 
   // Create directory if it doesn't exist
@@ -170,9 +173,7 @@ FileAppender::FileAppender(const std::string& filename, size_t max_size, int max
   }
 }
 
-FileAppender::~FileAppender() {
-  close();
-}
+FileAppender::~FileAppender() { close(); }
 
 void FileAppender::append(const LogEntry& entry) {
   if (!should_log(entry.level)) {
@@ -268,9 +269,9 @@ void FileAppender::cleanup_old_files() {
 
   // Sort by modification time (newest first)
   std::sort(log_files.begin(), log_files.end(),
-    [](const std::filesystem::path& a, const std::filesystem::path& b) {
-      return std::filesystem::last_write_time(a) > std::filesystem::last_write_time(b);
-    });
+            [](const std::filesystem::path& a, const std::filesystem::path& b) {
+              return std::filesystem::last_write_time(a) > std::filesystem::last_write_time(b);
+            });
 
   // Remove excess files
   for (size_t i = max_files_; i < log_files.size(); ++i) {
@@ -280,7 +281,7 @@ void FileAppender::cleanup_old_files() {
 
 // MemoryAppender implementation
 MemoryAppender::MemoryAppender(size_t max_entries)
-  : max_entries_(max_entries), current_index_(0), is_full_(false) {
+    : max_entries_(max_entries), current_index_(0), is_full_(false) {
   name_ = "memory";
   entries_.reserve(max_entries_);
 }
@@ -352,28 +353,25 @@ AsyncLogger::AsyncLogger() : running_(true), min_level_(LogLevel::INFO) {
   worker_thread_ = std::thread(&AsyncLogger::worker_loop, this);
 }
 
-AsyncLogger::~AsyncLogger() {
-  shutdown();
-}
+AsyncLogger::~AsyncLogger() { shutdown(); }
 
 void AsyncLogger::add_appender(std::unique_ptr<LogAppender> appender) {
   appenders_.push_back(std::move(appender));
 }
 
 void AsyncLogger::remove_appender(const std::string& name) {
-  appenders_.erase(
-    std::remove_if(appenders_.begin(), appenders_.end(),
-      [&name](const std::unique_ptr<LogAppender>& appender) {
-        return appender->get_name() == name;
-      }),
-    appenders_.end());
+  appenders_.erase(std::remove_if(appenders_.begin(), appenders_.end(),
+                                  [&name](const std::unique_ptr<LogAppender>& appender) {
+                                    return appender->get_name() == name;
+                                  }),
+                   appenders_.end());
 }
 
 LogAppender* AsyncLogger::get_appender(const std::string& name) {
   auto it = std::find_if(appenders_.begin(), appenders_.end(),
-    [&name](const std::unique_ptr<LogAppender>& appender) {
-      return appender->get_name() == name;
-    });
+                         [&name](const std::unique_ptr<LogAppender>& appender) {
+                           return appender->get_name() == name;
+                         });
 
   return (it != appenders_.end()) ? it->get() : nullptr;
 }
@@ -438,7 +436,8 @@ std::string AsyncLogger::get_performance_report() const {
   oss << "Peak queue size: " << m.peak_queue_size << "\n";
 
   if (m.messages_logged > 0) {
-    double avg_processing_time = static_cast<double>(m.total_processing_time_us) / m.messages_logged;
+    double avg_processing_time =
+        static_cast<double>(m.total_processing_time_us) / m.messages_logged;
     oss << "Average processing time: " << avg_processing_time << " microseconds\n";
   }
 
@@ -475,7 +474,8 @@ void AsyncLogger::process_entry(const LogEntry& entry) {
   }
 
   auto end_time = std::chrono::high_resolution_clock::now();
-  auto processing_time = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
+  auto processing_time =
+      std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
 
   metrics_.messages_logged++;
   metrics_.total_processing_time_us += processing_time.count();
@@ -518,8 +518,8 @@ void Logger::initialize_comprehensive() {
 
   // Add memory appender for log analysis
   auto memory_appender = std::make_unique<MemoryAppender>(1000);
-  memory_appender_ = memory_appender.get(); // Keep raw pointer for access
-  async_logger_->add_appender(std::move(memory_appender)); // Transfer ownership
+  memory_appender_ = memory_appender.get();                 // Keep raw pointer for access
+  async_logger_->add_appender(std::move(memory_appender));  // Transfer ownership
 
   // Add default appenders based on configuration
   if (config_.output == Output::CONSOLE || config_.output == Output::BOTH) {
@@ -597,8 +597,8 @@ void Logger::log(Level level, std::string_view component, std::string_view messa
 }
 
 void Logger::log_enhanced(LogLevel level, std::string_view component, std::string_view message,
-                         const std::string& file, int line, const std::string& function,
-                         const std::unordered_map<std::string, std::string>& metadata) {
+                          const std::string& file, int line, const std::string& function,
+                          const std::unordered_map<std::string, std::string>& metadata) {
   if (!comprehensive_mode_) {
     initialize_comprehensive();
   }
@@ -686,12 +686,13 @@ void Logger::add_console_appender(const std::string& name, LogLevel min_level) {
 }
 
 void Logger::add_file_appender(const std::string& name, const std::string& filename,
-                              LogLevel min_level) {
+                               LogLevel min_level) {
   if (!comprehensive_mode_) {
     initialize_comprehensive();
   }
 
-  auto appender = std::make_unique<FileAppender>(filename, config_.max_file_size, config_.max_files);
+  auto appender =
+      std::make_unique<FileAppender>(filename, config_.max_file_size, config_.max_files);
   appender->set_name(name);
   appender->set_min_level(min_level);
   async_logger_->add_appender(std::move(appender));
@@ -858,24 +859,37 @@ std::string Logger::get_timestamp() const {
 
 LogLevel Logger::convert_level(Level level) const {
   switch (level) {
-    case Level::DEBUG: return LogLevel::DEBUG;
-    case Level::INFO:  return LogLevel::INFO;
-    case Level::WARN:  return LogLevel::WARN;
-    case Level::ERROR: return LogLevel::ERROR;
-    case Level::FATAL: return LogLevel::FATAL;
-    default: return LogLevel::INFO;
+    case Level::DEBUG:
+      return LogLevel::DEBUG;
+    case Level::INFO:
+      return LogLevel::INFO;
+    case Level::WARN:
+      return LogLevel::WARN;
+    case Level::ERROR:
+      return LogLevel::ERROR;
+    case Level::FATAL:
+      return LogLevel::FATAL;
+    default:
+      return LogLevel::INFO;
   }
 }
 
 Logger::Level Logger::convert_level_back(LogLevel level) const {
   switch (level) {
-    case LogLevel::TRACE: return Level::DEBUG; // Map TRACE to DEBUG for backward compatibility
-    case LogLevel::DEBUG: return Level::DEBUG;
-    case LogLevel::INFO:  return Level::INFO;
-    case LogLevel::WARN:  return Level::WARN;
-    case LogLevel::ERROR: return Level::ERROR;
-    case LogLevel::FATAL: return Level::FATAL;
-    default: return Level::INFO;
+    case LogLevel::TRACE:
+      return Level::DEBUG;  // Map TRACE to DEBUG for backward compatibility
+    case LogLevel::DEBUG:
+      return Level::DEBUG;
+    case LogLevel::INFO:
+      return Level::INFO;
+    case LogLevel::WARN:
+      return Level::WARN;
+    case LogLevel::ERROR:
+      return Level::ERROR;
+    case LogLevel::FATAL:
+      return Level::FATAL;
+    default:
+      return Level::INFO;
   }
 }
 

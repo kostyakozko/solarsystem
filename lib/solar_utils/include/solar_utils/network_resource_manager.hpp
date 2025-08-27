@@ -9,8 +9,6 @@
 
 #pragma once
 
-#include "resource_manager.hpp"
-
 #include <atomic>
 #include <chrono>
 #include <functional>
@@ -22,30 +20,19 @@
 #include <unordered_map>
 #include <vector>
 
+#include "resource_manager.hpp"
+
 namespace SolarSystem::Utils {
 
 /**
  * @brief Network connection states
  */
-enum class ConnectionState {
-  Idle,
-  Active,
-  Connecting,
-  Disconnecting,
-  Failed,
-  Closed
-};
+enum class ConnectionState { Idle, Active, Connecting, Disconnecting, Failed, Closed };
 
 /**
  * @brief Network connection types
  */
-enum class ConnectionType {
-  HTTP,
-  HTTPS,
-  TCP,
-  UDP,
-  Custom
-};
+enum class ConnectionType { HTTP, HTTPS, TCP, UDP, Custom };
 
 /**
  * @brief Network connection information
@@ -114,16 +101,16 @@ struct CircuitBreakerConfig {
  * @brief Circuit breaker states
  */
 enum class CircuitBreakerState {
-  Closed,    // Normal operation
-  Open,      // Failing, requests blocked
-  HalfOpen   // Testing if service recovered
+  Closed,   // Normal operation
+  Open,     // Failing, requests blocked
+  HalfOpen  // Testing if service recovered
 };
 
 /**
  * @brief Circuit breaker for network failure management
  */
 class NetworkCircuitBreaker {
-public:
+ public:
   explicit NetworkCircuitBreaker(const CircuitBreakerConfig& config = CircuitBreakerConfig{});
 
   bool can_execute() const;
@@ -135,7 +122,7 @@ public:
   size_t get_failure_count() const { return failure_count_; }
   double get_failure_rate() const;
 
-private:
+ private:
   mutable std::mutex mutex_;
   CircuitBreakerConfig config_;
   CircuitBreakerState state_ = CircuitBreakerState::Closed;
@@ -155,10 +142,10 @@ private:
  * @brief RAII network connection wrapper
  */
 class ManagedNetworkConnection {
-public:
+ public:
   ManagedNetworkConnection() = default;
   explicit ManagedNetworkConnection(const std::string& endpoint,
-                                   ConnectionType type = ConnectionType::HTTP);
+                                    ConnectionType type = ConnectionType::HTTP);
   ~ManagedNetworkConnection();
 
   // Disable copy, enable move
@@ -175,7 +162,7 @@ public:
 
   // Data operations
   std::string send_request(const std::string& request,
-                          std::chrono::seconds timeout = std::chrono::seconds(30));
+                           std::chrono::seconds timeout = std::chrono::seconds(30));
   bool send_data(const std::vector<char>& data);
   std::vector<char> receive_data(size_t max_bytes = 8192);
 
@@ -190,7 +177,7 @@ public:
   size_t bytes_received() const { return info_.bytes_received; }
   size_t request_count() const { return info_.request_count; }
 
-private:
+ private:
   std::string endpoint_;
   ConnectionType type_ = ConnectionType::HTTP;
   ConnectionState state_ = ConnectionState::Closed;
@@ -208,13 +195,13 @@ private:
  * @brief Network connection pool manager
  */
 class NetworkConnectionPool {
-public:
+ public:
   explicit NetworkConnectionPool(const ConnectionPoolConfig& config = ConnectionPoolConfig{});
   ~NetworkConnectionPool();
 
   // Connection management
-  std::shared_ptr<ManagedNetworkConnection> acquire_connection(const std::string& endpoint,
-                                                              ConnectionType type = ConnectionType::HTTP);
+  std::shared_ptr<ManagedNetworkConnection> acquire_connection(
+      const std::string& endpoint, ConnectionType type = ConnectionType::HTTP);
   void release_connection(std::shared_ptr<ManagedNetworkConnection> connection);
   void close_all_connections();
 
@@ -231,11 +218,13 @@ public:
   // Statistics
   NetworkOperationStats get_statistics() const;
 
-private:
+ private:
   mutable std::mutex pool_mutex_;
   ConnectionPoolConfig config_;
-  std::unordered_map<std::string, std::vector<std::shared_ptr<ManagedNetworkConnection>>> idle_connections_;
-  std::unordered_map<std::string, std::vector<std::shared_ptr<ManagedNetworkConnection>>> active_connections_;
+  std::unordered_map<std::string, std::vector<std::shared_ptr<ManagedNetworkConnection>>>
+      idle_connections_;
+  std::unordered_map<std::string, std::vector<std::shared_ptr<ManagedNetworkConnection>>>
+      active_connections_;
   NetworkOperationStats stats_;
 
   std::string get_pool_key(const std::string& endpoint, ConnectionType type) const;
@@ -247,25 +236,25 @@ private:
  * @brief Network resource manager
  */
 class NetworkResourceManager {
-public:
+ public:
   static NetworkResourceManager& instance();
 
   // Connection management
-  std::shared_ptr<ManagedNetworkConnection> create_connection(const std::string& endpoint,
-                                                             ConnectionType type = ConnectionType::HTTP);
+  std::shared_ptr<ManagedNetworkConnection> create_connection(
+      const std::string& endpoint, ConnectionType type = ConnectionType::HTTP);
 
-  std::shared_ptr<ManagedNetworkConnection> get_pooled_connection(const std::string& endpoint,
-                                                                 ConnectionType type = ConnectionType::HTTP);
+  std::shared_ptr<ManagedNetworkConnection> get_pooled_connection(
+      const std::string& endpoint, ConnectionType type = ConnectionType::HTTP);
 
   // Circuit breaker management
-  void register_circuit_breaker(const std::string& endpoint, const CircuitBreakerConfig& config = CircuitBreakerConfig{});
+  void register_circuit_breaker(const std::string& endpoint,
+                                const CircuitBreakerConfig& config = CircuitBreakerConfig{});
   NetworkCircuitBreaker* get_circuit_breaker(const std::string& endpoint);
   void remove_circuit_breaker(const std::string& endpoint);
 
   // Request management with resilience
-  std::string make_resilient_request(const std::string& endpoint,
-                                   const std::string& request,
-                                   size_t max_retries = 3);
+  std::string make_resilient_request(const std::string& endpoint, const std::string& request,
+                                     size_t max_retries = 3);
 
   // Resource monitoring
   NetworkOperationStats get_statistics() const;
@@ -275,7 +264,9 @@ public:
   // Configuration
   void configure_connection_pool(const ConnectionPoolConfig& config);
   void set_global_timeout(std::chrono::seconds timeout) { global_timeout_ = timeout; }
-  void set_max_concurrent_connections(size_t max_connections) { max_concurrent_connections_ = max_connections; }
+  void set_max_concurrent_connections(size_t max_connections) {
+    max_concurrent_connections_ = max_connections;
+  }
 
   // Cleanup operations
   void cleanup_expired_connections();
@@ -287,7 +278,7 @@ public:
   void stop_health_monitoring();
   bool is_endpoint_healthy(const std::string& endpoint) const;
 
-private:
+ private:
   NetworkResourceManager() = default;
   ~NetworkResourceManager();
 
@@ -318,10 +309,10 @@ private:
 /**
  * @brief Network operation result with error information
  */
-template<typename T>
+template <typename T>
 class NetworkResult {
-public:
-  template<typename U = T, typename = std::enable_if_t<!std::is_same_v<U, std::string>>>
+ public:
+  template <typename U = T, typename = std::enable_if_t<!std::is_same_v<U, std::string>>>
   NetworkResult(T value) : value_(std::move(value)), success_(true) {}
 
   NetworkResult(const char* error, int error_code = 0)
@@ -336,7 +327,7 @@ public:
 
   explicit operator bool() const { return success_; }
 
-private:
+ private:
   T value_{};
   std::string error_;
   int error_code_ = 0;
@@ -347,23 +338,23 @@ private:
  * @brief Utility functions for network operations
  */
 namespace NetworkUtils {
-  // HTTP utilities
-  NetworkResult<std::string> make_http_request(const std::string& url,
-                                              const std::string& method = "GET",
-                                              const std::string& data = "",
-                                              const std::unordered_map<std::string, std::string>& headers = {});
+// HTTP utilities
+NetworkResult<std::string> make_http_request(
+    const std::string& url, const std::string& method = "GET", const std::string& data = "",
+    const std::unordered_map<std::string, std::string>& headers = {});
 
-  NetworkResult<std::string> download_file(const std::string& url, const std::string& output_path);
+NetworkResult<std::string> download_file(const std::string& url, const std::string& output_path);
 
-  // Connection utilities
-  bool is_endpoint_reachable(const std::string& endpoint, std::chrono::seconds timeout = std::chrono::seconds(5));
-  std::string resolve_hostname(const std::string& hostname);
+// Connection utilities
+bool is_endpoint_reachable(const std::string& endpoint,
+                           std::chrono::seconds timeout = std::chrono::seconds(5));
+std::string resolve_hostname(const std::string& hostname);
 
-  // URL utilities
-  std::string encode_url(const std::string& url);
-  std::string decode_url(const std::string& encoded_url);
-  std::unordered_map<std::string, std::string> parse_query_string(const std::string& query);
-}
+// URL utilities
+std::string encode_url(const std::string& url);
+std::string decode_url(const std::string& encoded_url);
+std::unordered_map<std::string, std::string> parse_query_string(const std::string& query);
+}  // namespace NetworkUtils
 
 /**
  * @brief Utility macros for network resource management
@@ -374,7 +365,8 @@ namespace NetworkUtils {
 #define SOLAR_POOLED_CONNECTION(endpoint, type) \
   SolarSystem::Utils::NetworkResourceManager::instance().get_pooled_connection(endpoint, type)
 
-#define SOLAR_RESILIENT_REQUEST(endpoint, request, retries) \
-  SolarSystem::Utils::NetworkResourceManager::instance().make_resilient_request(endpoint, request, retries)
+#define SOLAR_RESILIENT_REQUEST(endpoint, request, retries)                                        \
+  SolarSystem::Utils::NetworkResourceManager::instance().make_resilient_request(endpoint, request, \
+                                                                                retries)
 
-} // namespace SolarSystem::Utils
+}  // namespace SolarSystem::Utils

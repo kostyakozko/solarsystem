@@ -10,8 +10,6 @@
 
 #pragma once
 
-#include "resource_manager.hpp"
-
 #include <filesystem>
 #include <fstream>
 #include <memory>
@@ -22,26 +20,22 @@
 #include <unordered_set>
 #include <vector>
 
+#include "resource_manager.hpp"
+
 namespace SolarSystem::Utils {
 
 /**
  * @brief File access modes
  */
-enum class FileAccessMode {
-  Read,
-  Write,
-  Append,
-  ReadWrite,
-  Binary
-};
+enum class FileAccessMode { Read, Write, Append, ReadWrite, Binary };
 
 /**
  * @brief File lock types
  */
 enum class FileLockType {
   None,
-  Shared,     // Multiple readers
-  Exclusive   // Single writer
+  Shared,    // Multiple readers
+  Exclusive  // Single writer
 };
 
 /**
@@ -77,11 +71,11 @@ struct FileOperationStats {
  * @brief RAII file handle wrapper with resource management
  */
 class ManagedFileHandle {
-public:
+ public:
   ManagedFileHandle() = default;
   explicit ManagedFileHandle(const std::string& file_path,
-                           FileAccessMode mode = FileAccessMode::Read,
-                           FileLockType lock_type = FileLockType::None);
+                             FileAccessMode mode = FileAccessMode::Read,
+                             FileLockType lock_type = FileLockType::None);
   ~ManagedFileHandle();
 
   // Disable copy, enable move
@@ -92,7 +86,8 @@ public:
 
   // File operations
   bool is_open() const;
-  bool open(const std::string& file_path, FileAccessMode mode, FileLockType lock_type = FileLockType::None);
+  bool open(const std::string& file_path, FileAccessMode mode,
+            FileLockType lock_type = FileLockType::None);
   void close();
 
   // Read operations
@@ -123,7 +118,7 @@ public:
   std::ofstream* output_stream() { return output_stream_.get(); }
   std::fstream* bidirectional_stream() { return bidirectional_stream_.get(); }
 
-private:
+ private:
   std::string file_path_;
   FileAccessMode access_mode_ = FileAccessMode::Read;
   FileLockType lock_type_ = FileLockType::None;
@@ -147,22 +142,23 @@ private:
  * @brief File resource manager for handling file operations and conflicts
  */
 class FileResourceManager {
-public:
+ public:
   static FileResourceManager& instance();
 
   // File handle management
   std::unique_ptr<ManagedFileHandle> open_file(const std::string& file_path,
-                                              FileAccessMode mode = FileAccessMode::Read,
-                                              FileLockType lock_type = FileLockType::None);
+                                               FileAccessMode mode = FileAccessMode::Read,
+                                               FileLockType lock_type = FileLockType::None);
 
   bool is_file_locked(const std::string& file_path) const;
   bool can_acquire_lock(const std::string& file_path, FileLockType requested_lock) const;
-  std::vector<std::string> get_conflicting_files(const std::string& file_path, FileLockType requested_lock) const;
+  std::vector<std::string> get_conflicting_files(const std::string& file_path,
+                                                 FileLockType requested_lock) const;
 
   // Temporary file management
   std::unique_ptr<ManagedFileHandle> create_temp_file(const std::string& prefix = "solar_temp",
-                                                     const std::string& suffix = ".tmp",
-                                                     bool auto_delete = true);
+                                                      const std::string& suffix = ".tmp",
+                                                      bool auto_delete = true);
 
   std::string create_temp_directory(const std::string& prefix = "solar_temp_dir");
   void cleanup_temp_files();
@@ -170,7 +166,7 @@ public:
 
   // File operation utilities
   bool copy_file_managed(const std::string& source, const std::string& destination,
-                        bool overwrite = false);
+                         bool overwrite = false);
   bool move_file_managed(const std::string& source, const std::string& destination);
   bool delete_file_managed(const std::string& file_path);
 
@@ -182,7 +178,8 @@ public:
   // Backup operations
   bool create_backup(const std::string& file_path, const std::string& backup_suffix = ".bak");
   bool restore_from_backup(const std::string& file_path, const std::string& backup_suffix = ".bak");
-  void cleanup_backups(const std::string& directory, std::chrono::hours max_age = std::chrono::hours(24));
+  void cleanup_backups(const std::string& directory,
+                       std::chrono::hours max_age = std::chrono::hours(24));
 
   // Statistics and monitoring
   FileOperationStats get_statistics() const;
@@ -192,7 +189,9 @@ public:
   // Configuration
   void set_max_open_files(size_t max_files) { max_open_files_ = max_files; }
   void set_temp_directory(const std::string& temp_dir) { temp_directory_ = temp_dir; }
-  void set_auto_cleanup_interval(std::chrono::seconds interval) { auto_cleanup_interval_ = interval; }
+  void set_auto_cleanup_interval(std::chrono::seconds interval) {
+    auto_cleanup_interval_ = interval;
+  }
 
   // Cleanup operations
   void force_close_all_files();
@@ -201,7 +200,7 @@ public:
   // Allow ManagedFileHandle to access private methods
   friend class ManagedFileHandle;
 
-private:
+ private:
   FileResourceManager() = default;
   ~FileResourceManager();
 
@@ -218,7 +217,7 @@ private:
   FileOperationStats stats_;
   size_t max_open_files_ = 1000;
   std::string temp_directory_;
-  std::chrono::seconds auto_cleanup_interval_{300}; // 5 minutes
+  std::chrono::seconds auto_cleanup_interval_{300};  // 5 minutes
 
   // Internal methods
   bool check_file_limits() const;
@@ -233,10 +232,10 @@ private:
 /**
  * @brief File operation result with error information
  */
-template<typename T>
+template <typename T>
 class FileResult {
-public:
-  template<typename U = T, typename = std::enable_if_t<!std::is_same_v<U, std::string>>>
+ public:
+  template <typename U = T, typename = std::enable_if_t<!std::is_same_v<U, std::string>>>
   FileResult(T value) : value_(std::move(value)), success_(true) {}
 
   FileResult(const char* error) : error_(error), success_(false) {}
@@ -248,7 +247,7 @@ public:
 
   explicit operator bool() const { return success_; }
 
-private:
+ private:
   T value_{};
   std::string error_;
   bool success_ = false;
@@ -258,27 +257,27 @@ private:
  * @brief Utility functions for file operations
  */
 namespace FileUtils {
-  // Safe file operations
-  FileResult<std::string> safe_read_file(const std::string& file_path);
-  FileResult<bool> safe_write_file(const std::string& file_path, const std::string& content);
-  FileResult<bool> safe_append_file(const std::string& file_path, const std::string& content);
+// Safe file operations
+FileResult<std::string> safe_read_file(const std::string& file_path);
+FileResult<bool> safe_write_file(const std::string& file_path, const std::string& content);
+FileResult<bool> safe_append_file(const std::string& file_path, const std::string& content);
 
-  // File system utilities
-  bool ensure_directory_exists(const std::string& directory_path);
-  std::vector<std::string> list_files_in_directory(const std::string& directory_path,
-                                                  const std::string& pattern = "*");
-  size_t get_directory_size(const std::string& directory_path);
+// File system utilities
+bool ensure_directory_exists(const std::string& directory_path);
+std::vector<std::string> list_files_in_directory(const std::string& directory_path,
+                                                 const std::string& pattern = "*");
+size_t get_directory_size(const std::string& directory_path);
 
-  // File validation
-  bool is_file_readable(const std::string& file_path);
-  bool is_file_writable(const std::string& file_path);
-  bool is_file_locked_by_system(const std::string& file_path);
+// File validation
+bool is_file_readable(const std::string& file_path);
+bool is_file_writable(const std::string& file_path);
+bool is_file_locked_by_system(const std::string& file_path);
 
-  // Path utilities
-  std::string get_file_extension(const std::string& file_path);
-  std::string get_filename_without_extension(const std::string& file_path);
-  std::string get_unique_filename(const std::string& base_path);
-}
+// Path utilities
+std::string get_file_extension(const std::string& file_path);
+std::string get_filename_without_extension(const std::string& file_path);
+std::string get_unique_filename(const std::string& base_path);
+}  // namespace FileUtils
 
 /**
  * @brief Utility macros for file resource management
@@ -292,7 +291,6 @@ namespace FileUtils {
 #define SOLAR_ATOMIC_WRITE(path, content) \
   SolarSystem::Utils::FileResourceManager::instance().atomic_write(path, content)
 
-#define SOLAR_SAFE_READ(path) \
-  SolarSystem::Utils::FileUtils::safe_read_file(path)
+#define SOLAR_SAFE_READ(path) SolarSystem::Utils::FileUtils::safe_read_file(path)
 
-} // namespace SolarSystem::Utils
+}  // namespace SolarSystem::Utils

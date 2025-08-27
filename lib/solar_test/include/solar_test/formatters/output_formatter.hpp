@@ -25,16 +25,7 @@ namespace SolarSystem::Testing::Formatters {
 /**
  * @brief Output format types supported by the system
  */
-enum class OutputFormat {
-  XML,
-  JSON,
-  TAP,
-  JUnit,
-  HTML,
-  CSV,
-  Plain,
-  Markdown
-};
+enum class OutputFormat { XML, JSON, TAP, JUnit, HTML, CSV, Plain, Markdown };
 
 /**
  * @brief Format validation result
@@ -57,7 +48,7 @@ struct FormatValidationResult {
  * @brief Streaming configuration for large result sets
  */
 struct StreamingConfig {
-  size_t buffer_size = 64 * 1024;  // 64KB default
+  size_t buffer_size = 64 * 1024;      // 64KB default
   size_t flush_threshold = 32 * 1024;  // Flush when buffer is half full
   bool auto_flush = true;
   bool compress_output = false;
@@ -101,7 +92,7 @@ struct FormatOptimization {
  * @brief Base interface for output formatters
  */
 class OutputFormatter {
-public:
+ public:
   virtual ~OutputFormatter() = default;
 
   // Core formatting methods
@@ -118,7 +109,7 @@ public:
   // Validation and error recovery
   virtual FormatValidationResult validate_output(const std::string& output) = 0;
   virtual std::string recover_from_error(const std::string& invalid_output,
-                                        const std::string& error_context) = 0;
+                                         const std::string& error_context) = 0;
 
   // Configuration
   virtual void set_optimization(const FormatOptimization& optimization) = 0;
@@ -129,7 +120,7 @@ public:
   virtual std::string get_file_extension() const = 0;
   virtual std::string get_mime_type() const = 0;
 
-protected:
+ protected:
   FormatOptimization optimization_;
   StreamingConfig streaming_config_;
 };
@@ -138,7 +129,7 @@ protected:
  * @brief Enhanced XML formatter with validation and streaming
  */
 class EnhancedXmlFormatter : public OutputFormatter {
-public:
+ public:
   explicit EnhancedXmlFormatter(const FormatOptimization& optimization = FormatOptimization{});
 
   // OutputFormatter interface
@@ -153,7 +144,7 @@ public:
 
   FormatValidationResult validate_output(const std::string& output) override;
   std::string recover_from_error(const std::string& invalid_output,
-                                const std::string& error_context) override;
+                                 const std::string& error_context) override;
 
   void set_optimization(const FormatOptimization& optimization) override;
   void set_streaming_config(const StreamingConfig& config) override;
@@ -162,7 +153,7 @@ public:
   std::string get_file_extension() const override { return ".xml"; }
   std::string get_mime_type() const override { return "application/xml"; }
 
-private:
+ private:
   std::unordered_map<std::string, std::string> escaped_string_cache_;
   bool streaming_active_ = false;
   size_t test_count_ = 0;
@@ -170,9 +161,8 @@ private:
   // XML utility methods
   std::string xml_escape(const std::string& text);
   std::string format_xml_element(const std::string& name,
-                                const std::unordered_map<std::string, std::string>& attributes,
-                                const std::string& content = "",
-                                bool self_closing = false);
+                                 const std::unordered_map<std::string, std::string>& attributes,
+                                 const std::string& content = "", bool self_closing = false);
   std::string format_duration(std::chrono::milliseconds duration);
   void validate_xml_structure(const std::string& xml);
 };
@@ -181,7 +171,7 @@ private:
  * @brief Enhanced JSON formatter with streaming and compression
  */
 class EnhancedJsonFormatter : public OutputFormatter {
-public:
+ public:
   explicit EnhancedJsonFormatter(const FormatOptimization& optimization = FormatOptimization{});
 
   // OutputFormatter interface
@@ -196,7 +186,7 @@ public:
 
   FormatValidationResult validate_output(const std::string& output) override;
   std::string recover_from_error(const std::string& invalid_output,
-                                const std::string& error_context) override;
+                                 const std::string& error_context) override;
 
   void set_optimization(const FormatOptimization& optimization) override;
   void set_streaming_config(const StreamingConfig& config) override;
@@ -205,16 +195,15 @@ public:
   std::string get_file_extension() const override { return ".json"; }
   std::string get_mime_type() const override { return "application/json"; }
 
-private:
+ private:
   bool streaming_active_ = false;
   bool first_result_ = true;
 
   // JSON utility methods
   std::string json_escape(const std::string& text);
   std::string format_json_object(const std::unordered_map<std::string, std::string>& fields,
-                                int indent_level = 0);
-  std::string format_json_array(const std::vector<std::string>& items,
-                               int indent_level = 0);
+                                 int indent_level = 0);
+  std::string format_json_array(const std::vector<std::string>& items, int indent_level = 0);
   void validate_json_syntax(const std::string& json);
 };
 
@@ -222,9 +211,9 @@ private:
  * @brief Streaming output manager for large result sets
  */
 class StreamingOutputManager {
-public:
+ public:
   explicit StreamingOutputManager(std::unique_ptr<OutputFormatter> formatter,
-                                 const StreamingConfig& config = StreamingConfig{});
+                                  const StreamingConfig& config = StreamingConfig{});
 
   // Streaming operations
   void start_output(std::ostream& output);
@@ -250,7 +239,7 @@ public:
   const StreamingStats& get_statistics() const { return stats_; }
   void reset_statistics() { stats_ = StreamingStats{}; }
 
-private:
+ private:
   std::unique_ptr<OutputFormatter> formatter_;
   StreamingConfig config_;
   std::ostringstream buffer_;
@@ -268,11 +257,10 @@ private:
  * @brief Format converter for migrating between output formats
  */
 class FormatConverter {
-public:
+ public:
   // Conversion methods
-  static std::string convert(const std::string& input,
-                           OutputFormat from_format,
-                           OutputFormat to_format);
+  static std::string convert(const std::string& input, OutputFormat from_format,
+                             OutputFormat to_format);
 
   static std::string xml_to_json(const std::string& xml);
   static std::string json_to_xml(const std::string& json);
@@ -281,9 +269,9 @@ public:
 
   // Validation during conversion
   static FormatValidationResult validate_conversion(const std::string& input,
-                                                   const std::string& output,
-                                                   OutputFormat from_format,
-                                                   OutputFormat to_format);
+                                                    const std::string& output,
+                                                    OutputFormat from_format,
+                                                    OutputFormat to_format);
 
   // Batch conversion
   struct ConversionJob {
@@ -294,10 +282,9 @@ public:
     FormatOptimization optimization;
   };
 
-  static std::vector<FormatValidationResult> convert_batch(
-    const std::vector<ConversionJob>& jobs);
+  static std::vector<FormatValidationResult> convert_batch(const std::vector<ConversionJob>& jobs);
 
-private:
+ private:
   // Internal parsing helpers
   struct ParsedTestResult {
     std::string name;
@@ -327,15 +314,13 @@ private:
  * @brief Factory for creating output formatters
  */
 class OutputFormatterFactory {
-public:
+ public:
   static std::unique_ptr<OutputFormatter> create_formatter(
-    OutputFormat format,
-    const FormatOptimization& optimization = FormatOptimization{});
+      OutputFormat format, const FormatOptimization& optimization = FormatOptimization{});
 
   static std::unique_ptr<StreamingOutputManager> create_streaming_manager(
-    OutputFormat format,
-    const StreamingConfig& streaming_config = StreamingConfig{},
-    const FormatOptimization& optimization = FormatOptimization{});
+      OutputFormat format, const StreamingConfig& streaming_config = StreamingConfig{},
+      const FormatOptimization& optimization = FormatOptimization{});
 
   // Format detection
   static OutputFormat detect_format(const std::string& content);
@@ -351,7 +336,7 @@ public:
  * @brief Output format validator with comprehensive error checking
  */
 class OutputValidator {
-public:
+ public:
   // Validation methods
   static FormatValidationResult validate_xml(const std::string& xml);
   static FormatValidationResult validate_json(const std::string& json);
@@ -359,7 +344,7 @@ public:
 
   // Content validation
   static FormatValidationResult validate_test_content(const std::string& content,
-                                                     OutputFormat format);
+                                                      OutputFormat format);
 
   // Schema validation
   static FormatValidationResult validate_against_schema(const std::string& content,
@@ -369,7 +354,7 @@ public:
   // Recovery suggestions
   static std::vector<std::string> suggest_fixes(const FormatValidationResult& validation_result);
 
-private:
+ private:
   // Internal validation helpers
   static bool is_valid_xml_name(const std::string& name);
   static bool is_valid_json_string(const std::string& str);
@@ -377,4 +362,4 @@ private:
   static std::vector<std::string> find_json_errors(const std::string& json);
 };
 
-} // namespace SolarSystem::Testing::Formatters
+}  // namespace SolarSystem::Testing::Formatters

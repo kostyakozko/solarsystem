@@ -154,9 +154,9 @@ struct JPLClientConfig {
  * @brief Circuit breaker states for network resilience
  */
 enum class CircuitBreakerState {
-  Closed,    // Normal operation
-  Open,      // Failing, requests blocked
-  HalfOpen   // Testing if service recovered
+  Closed,   // Normal operation
+  Open,     // Failing, requests blocked
+  HalfOpen  // Testing if service recovered
 };
 
 /**
@@ -318,8 +318,10 @@ class JPLClient {
   [[nodiscard]] JPLResult<bool> validate_cache_metadata() const;
   [[nodiscard]] JPLResult<bool> validate_cache_files() const;
   [[nodiscard]] JPLResult<bool> validate_cache_formats() const;
-  [[nodiscard]] JPLResult<bool> validate_binary_cache_format(const std::filesystem::path& binary_path) const;
-  [[nodiscard]] JPLResult<bool> validate_json_cache_format(const std::filesystem::path& json_path) const;
+  [[nodiscard]] JPLResult<bool> validate_binary_cache_format(
+      const std::filesystem::path& binary_path) const;
+  [[nodiscard]] JPLResult<bool> validate_json_cache_format(
+      const std::filesystem::path& json_path) const;
   [[nodiscard]] JPLResult<bool> validate_cache_integrity(const CacheMetadata& metadata) const;
   [[nodiscard]] JPLResult<bool> validate_cache_consistency() const;
 
@@ -328,7 +330,8 @@ class JPLClient {
    */
   [[nodiscard]] uint64_t calculate_enhanced_checksum(const std::vector<EphemerisData>& data) const;
   [[nodiscard]] JPLResult<bool> validate_body_data_integrity(const EphemerisData& body_data) const;
-  [[nodiscard]] bool compare_body_data(const EphemerisData& body1, const EphemerisData& body2) const;
+  [[nodiscard]] bool compare_body_data(const EphemerisData& body1,
+                                       const EphemerisData& body2) const;
 
   /**
    * @brief Cache loading methods for validation
@@ -353,10 +356,12 @@ class JPLClient {
   /**
    * @brief Enhanced network resilience methods
    */
-  [[nodiscard]] JPLResult<std::string> make_resilient_request(const std::string& url, const std::string& params);
+  [[nodiscard]] JPLResult<std::string> make_resilient_request(const std::string& url,
+                                                              const std::string& params);
   [[nodiscard]] std::chrono::milliseconds calculate_backoff_delay(size_t attempt) const;
   [[nodiscard]] JPLResult<std::string> try_fallback_endpoints(const std::string& params);
-  [[nodiscard]] JPLResult<std::string> execute_request_with_circuit_breaker(const std::string& url, const std::string& params);
+  [[nodiscard]] JPLResult<std::string> execute_request_with_circuit_breaker(
+      const std::string& url, const std::string& params);
 
   /**
    * @brief Connection pool management

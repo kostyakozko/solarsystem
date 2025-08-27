@@ -1,4 +1,9 @@
 #include "solar_test/framework/enhanced_test_data_manager.hpp"
+
+#include <signal.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
 #include <algorithm>
 #include <chrono>
 #include <cstdlib>
@@ -7,9 +12,6 @@
 #include <random>
 #include <sstream>
 #include <thread>
-#include <unistd.h>
-#include <sys/stat.h>
-#include <signal.h>
 
 namespace solar_test {
 
@@ -17,19 +19,18 @@ namespace solar_test {
 std::vector<std::unique_ptr<IsolatedTestEnvironment>> EnhancedTestDataManager::active_environments_;
 bool EnhancedTestDataManager::performance_monitoring_enabled_ = false;
 std::unordered_map<std::string, double> EnhancedTestDataManager::performance_metrics_;
-DataVersion EnhancedTestDataManager::current_version_{1, 2, 0, "Enhanced test data management", std::chrono::system_clock::now()};
+DataVersion EnhancedTestDataManager::current_version_{1, 2, 0, "Enhanced test data management",
+                                                      std::chrono::system_clock::now()};
 
-std::mt19937 TestDataGenerator::random_generator_(std::chrono::steady_clock::now().time_since_epoch().count());
+std::mt19937 TestDataGenerator::random_generator_(
+    std::chrono::steady_clock::now().time_since_epoch().count());
 std::uniform_real_distribution<double> TestDataGenerator::real_dist_(0.0, 1.0);
 std::uniform_int_distribution<int> TestDataGenerator::int_dist_(0, 255);
 
 // Validation patterns
-const std::regex TestDataValidator::jpl_response_pattern_(
-  R"(\*+.*EPHEMERIS.*\*+)"
-);
+const std::regex TestDataValidator::jpl_response_pattern_(R"(\*+.*EPHEMERIS.*\*+)");
 const std::regex TestDataValidator::ephemeris_header_pattern_(
-  R"(^JDTDB\s+X\s+Y\s+Z\s+VX\s+VY\s+VZ.*)"
-);
+    R"(^JDTDB\s+X\s+Y\s+Z\s+VX\s+VY\s+VZ.*)");
 
 // EnhancedTestDataSet implementation
 bool EnhancedTestDataSet::is_current_version() const {
@@ -56,9 +57,7 @@ IsolatedTestEnvironment::IsolatedTestEnvironment(const std::string& test_name)
   setup_clean_environment();
 }
 
-IsolatedTestEnvironment::~IsolatedTestEnvironment() {
-  cleanup_all_resources();
-}
+IsolatedTestEnvironment::~IsolatedTestEnvironment() { cleanup_all_resources(); }
 
 IsolatedTestEnvironment::IsolatedTestEnvironment(IsolatedTestEnvironment&& other) noexcept
     : test_name_(std::move(other.test_name_)),
@@ -70,10 +69,11 @@ IsolatedTestEnvironment::IsolatedTestEnvironment(IsolatedTestEnvironment&& other
       temp_directories_(std::move(other.temp_directories_)),
       spawned_processes_(std::move(other.spawned_processes_)),
       allocated_ports_(std::move(other.allocated_ports_)) {
-  other.is_clean_ = true; // Prevent cleanup in moved-from object
+  other.is_clean_ = true;  // Prevent cleanup in moved-from object
 }
 
-IsolatedTestEnvironment& IsolatedTestEnvironment::operator=(IsolatedTestEnvironment&& other) noexcept {
+IsolatedTestEnvironment& IsolatedTestEnvironment::operator=(
+    IsolatedTestEnvironment&& other) noexcept {
   if (this != &other) {
     cleanup_all_resources();
 
@@ -96,8 +96,9 @@ void IsolatedTestEnvironment::setup_clean_environment() {
   if (is_clean_) return;
 
   // Create isolated temporary directory
-  auto temp_dir = std::filesystem::temp_directory_path() / ("solar_test_" + test_name_ + "_" +
-    std::to_string(std::chrono::steady_clock::now().time_since_epoch().count()));
+  auto temp_dir = std::filesystem::temp_directory_path() /
+                  ("solar_test_" + test_name_ + "_" +
+                   std::to_string(std::chrono::steady_clock::now().time_since_epoch().count()));
 
   std::filesystem::create_directories(temp_dir);
   register_temp_directory(temp_dir.string());
@@ -135,13 +136,9 @@ void IsolatedTestEnvironment::register_temp_directory(const std::string& path) {
   temp_directories_.push_back(path);
 }
 
-void IsolatedTestEnvironment::register_process(int pid) {
-  spawned_processes_.push_back(pid);
-}
+void IsolatedTestEnvironment::register_process(int pid) { spawned_processes_.push_back(pid); }
 
-void IsolatedTestEnvironment::register_network_port(int port) {
-  allocated_ports_.push_back(port);
-}
+void IsolatedTestEnvironment::register_network_port(int port) { allocated_ports_.push_back(port); }
 
 void IsolatedTestEnvironment::set_env_var(const std::string& name, const std::string& value) {
   // Store original value if not already stored
@@ -215,7 +212,8 @@ void IsolatedTestEnvironment::cleanup_temp_directories() {
         std::filesystem::remove_all(dir);
       }
     } catch (const std::exception& e) {
-      std::cerr << "Warning: Failed to cleanup temp directory " << dir << ": " << e.what() << std::endl;
+      std::cerr << "Warning: Failed to cleanup temp directory " << dir << ": " << e.what()
+                << std::endl;
     }
   }
   temp_directories_.clear();
@@ -275,7 +273,7 @@ std::string TestDataGenerator::generate_valid_jpl_response(const std::string& bo
 
   // Generate realistic ephemeris data
   for (int i = 0; i < 10; ++i) {
-    double jd = 2451545.0 + i; // J2000.0 + i days
+    double jd = 2451545.0 + i;  // J2000.0 + i days
     double x = generate_realistic_orbital_element() * 1e8;
     double y = generate_realistic_orbital_element() * 1e8;
     double z = generate_realistic_orbital_element() * 1e8;
@@ -311,7 +309,8 @@ std::string TestDataGenerator::generate_timeout_jpl_response() {
 std::string TestDataGenerator::generate_malformed_jpl_response() {
   return "INVALID RESPONSE: Missing headers and malformed data\n"
          "This is not a valid JPL response format\n"
-         "Random data: " + generate_random_string(100);
+         "Random data: " +
+         generate_random_string(100);
 }
 
 std::string TestDataGenerator::generate_ephemeris_json(const std::string& time_range) {
@@ -321,7 +320,8 @@ std::string TestDataGenerator::generate_ephemeris_json(const std::string& time_r
   json << "  \"format\": \"ephemeris_json\",\n";
   json << "  \"version\": \"1.0\",\n";
   json << "  \"time_range\": \"" << time_range << "\",\n";
-  json << "  \"created_at\": " << std::chrono::system_clock::now().time_since_epoch().count() << ",\n";
+  json << "  \"created_at\": " << std::chrono::system_clock::now().time_since_epoch().count()
+       << ",\n";
   json << "  \"bodies\": [\n";
 
   std::vector<std::string> body_names = {"Sun", "Mercury", "Venus", "Earth", "Mars"};
@@ -344,7 +344,7 @@ std::string TestDataGenerator::generate_ephemeris_binary(const std::string& /*ti
   std::ostringstream binary_data;
 
   // Binary header
-  binary_data << "EPHBIN10"; // Magic number + version
+  binary_data << "EPHBIN10";  // Magic number + version
   uint32_t body_count = 5;
   binary_data.write(reinterpret_cast<const char*>(&body_count), sizeof(body_count));
 
@@ -354,7 +354,7 @@ std::string TestDataGenerator::generate_ephemeris_binary(const std::string& /*ti
     binary_data.write(reinterpret_cast<const char*>(&i), sizeof(i));
 
     // Position and velocity data (simplified)
-    for (int j = 0; j < 6; ++j) { // x, y, z, vx, vy, vz
+    for (int j = 0; j < 6; ++j) {  // x, y, z, vx, vy, vz
       double value = generate_realistic_orbital_element();
       binary_data.write(reinterpret_cast<const char*>(&value), sizeof(value));
     }
@@ -389,7 +389,8 @@ std::string TestDataGenerator::generate_partial_cache_file() {
   return full_cache.substr(0, full_cache.length() / 2);
 }
 
-std::string TestDataGenerator::mutate_data(const std::string& original_data, MutationStrategy strategy) {
+std::string TestDataGenerator::mutate_data(const std::string& original_data,
+                                           MutationStrategy strategy) {
   std::string mutated = original_data;
 
   switch (strategy) {
@@ -433,8 +434,7 @@ std::string TestDataGenerator::mutate_data(const std::string& original_data, Mut
 }
 
 std::vector<std::string> TestDataGenerator::generate_mutation_variants(
-    const std::string& original_data,
-    const std::vector<MutationStrategy>& strategies) {
+    const std::string& original_data, const std::vector<MutationStrategy>& strategies) {
   std::vector<std::string> variants;
 
   for (const auto& strategy : strategies) {
@@ -452,9 +452,8 @@ EnhancedTestDataSet TestDataGenerator::generate_realistic_solar_system_data() {
   dataset.created_at = std::chrono::system_clock::now();
 
   // Generate data for major solar system bodies
-  std::vector<std::string> bodies = {
-    "Sun", "Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune"
-  };
+  std::vector<std::string> bodies = {"Sun",     "Mercury", "Venus",  "Earth",  "Mars",
+                                     "Jupiter", "Saturn",  "Uranus", "Neptune"};
 
   for (const auto& body : bodies) {
     std::string jpl_response = generate_valid_jpl_response(body);
@@ -498,7 +497,7 @@ EnhancedTestDataSet TestDataGenerator::generate_stress_test_data_set(size_t data
   // Generate large amount of test data
   for (size_t i = 0; i < data_size; ++i) {
     std::string filename = "data_" + std::to_string(i) + ".txt";
-    std::string content = generate_random_string(1000); // 1KB per file
+    std::string content = generate_random_string(1000);  // 1KB per file
     dataset.files[filename] = content;
     dataset.update_checksum(filename, content);
   }
@@ -523,7 +522,7 @@ std::string TestDataGenerator::generate_random_string(size_t length) {
 }
 
 double TestDataGenerator::generate_realistic_orbital_element() {
-  return (real_dist_(random_generator_) - 0.5) * 2.0; // Range: -1.0 to 1.0
+  return (real_dist_(random_generator_) - 0.5) * 2.0;  // Range: -1.0 to 1.0
 }
 
 std::string TestDataGenerator::generate_body_data_json(const std::string& body_name) {
@@ -548,27 +547,33 @@ std::string TestDataGenerator::generate_body_data_json(const std::string& body_n
   }
 
   json << "],\n";
-  json << "      \"timestamp\": " << std::chrono::system_clock::now().time_since_epoch().count() << "\n";
+  json << "      \"timestamp\": " << std::chrono::system_clock::now().time_since_epoch().count()
+       << "\n";
   json << "    }";
 
   return json.str();
 }
 
 // TestDataValidator implementation
-ValidationResult TestDataValidator::validate_jpl_response_comprehensive(const std::string& response) {
+ValidationResult TestDataValidator::validate_jpl_response_comprehensive(
+    const std::string& response) {
   ValidationResult result;
   result.validation_type = "JPL Response Comprehensive";
   result.validated_at = std::chrono::system_clock::now();
 
   // Format validation
   auto format_result = validate_jpl_response_format(response);
-  result.errors.insert(result.errors.end(), format_result.errors.begin(), format_result.errors.end());
-  result.warnings.insert(result.warnings.end(), format_result.warnings.begin(), format_result.warnings.end());
+  result.errors.insert(result.errors.end(), format_result.errors.begin(),
+                       format_result.errors.end());
+  result.warnings.insert(result.warnings.end(), format_result.warnings.begin(),
+                         format_result.warnings.end());
 
   // Content validation
   auto content_result = validate_jpl_response_content(response);
-  result.errors.insert(result.errors.end(), content_result.errors.begin(), content_result.errors.end());
-  result.warnings.insert(result.warnings.end(), content_result.warnings.begin(), content_result.warnings.end());
+  result.errors.insert(result.errors.end(), content_result.errors.begin(),
+                       content_result.errors.end());
+  result.warnings.insert(result.warnings.end(), content_result.warnings.begin(),
+                         content_result.warnings.end());
 
   result.is_valid = result.errors.empty();
   return result;
@@ -588,7 +593,9 @@ ValidationResult TestDataValidator::validate_jpl_response_format(const std::stri
     result.add_error("Response does not match expected JPL format pattern");
   }
 
-  if (response.find("*******************************************************************************") == std::string::npos) {
+  if (response.find(
+          "*******************************************************************************") ==
+      std::string::npos) {
     result.add_error("Missing JPL response header markers");
   }
 
@@ -644,32 +651,37 @@ ValidationResult TestDataValidator::validate_jpl_response_content(const std::str
   return result;
 }
 
-ValidationResult TestDataValidator::validate_ephemeris_data_comprehensive(const std::string& /*data*/) {
+ValidationResult TestDataValidator::validate_ephemeris_data_comprehensive(
+    const std::string& /*data*/) {
   ValidationResult result;
   result.validation_type = "Ephemeris Data Comprehensive";
   result.validated_at = std::chrono::system_clock::now();
-  result.is_valid = true; // Placeholder implementation
+  result.is_valid = true;  // Placeholder implementation
   return result;
 }
 
-ValidationResult TestDataValidator::validate_cache_file_comprehensive(const std::string& /*cache_path*/) {
+ValidationResult TestDataValidator::validate_cache_file_comprehensive(
+    const std::string& /*cache_path*/) {
   ValidationResult result;
   result.validation_type = "Cache File Comprehensive";
   result.validated_at = std::chrono::system_clock::now();
-  result.is_valid = true; // Placeholder implementation
+  result.is_valid = true;  // Placeholder implementation
   return result;
 }
 
-std::optional<std::string> TestDataValidator::attempt_data_recovery(const std::string& /*corrupted_data*/, const std::string& /*data_type*/) {
-  return std::nullopt; // Placeholder implementation
+std::optional<std::string> TestDataValidator::attempt_data_recovery(
+    const std::string& /*corrupted_data*/, const std::string& /*data_type*/) {
+  return std::nullopt;  // Placeholder implementation
 }
 
-std::vector<std::string> TestDataValidator::suggest_recovery_actions(const ValidationResult& /*validation_result*/) {
-  return {}; // Placeholder implementation
+std::vector<std::string> TestDataValidator::suggest_recovery_actions(
+    const ValidationResult& /*validation_result*/) {
+  return {};  // Placeholder implementation
 }
 
 // EnhancedTestDataManager implementation
-EnhancedTestDataSet EnhancedTestDataManager::load_validated_jpl_responses(const std::string& scenario) {
+EnhancedTestDataSet EnhancedTestDataManager::load_validated_jpl_responses(
+    const std::string& scenario) {
   auto start_time = std::chrono::high_resolution_clock::now();
 
   EnhancedTestDataSet dataset;
@@ -688,18 +700,14 @@ EnhancedTestDataSet EnhancedTestDataManager::load_validated_jpl_responses(const 
     auto validation_result = TestDataValidator::validate_jpl_response_comprehensive(content);
 
     if (!validation_result.is_valid) {
-      dataset.validation_result.errors.insert(
-        dataset.validation_result.errors.end(),
-        validation_result.errors.begin(),
-        validation_result.errors.end()
-      );
+      dataset.validation_result.errors.insert(dataset.validation_result.errors.end(),
+                                              validation_result.errors.begin(),
+                                              validation_result.errors.end());
     }
 
-    dataset.validation_result.warnings.insert(
-      dataset.validation_result.warnings.end(),
-      validation_result.warnings.begin(),
-      validation_result.warnings.end()
-    );
+    dataset.validation_result.warnings.insert(dataset.validation_result.warnings.end(),
+                                              validation_result.warnings.begin(),
+                                              validation_result.warnings.end());
 
     // Update checksum
     dataset.update_checksum(filename, content);
@@ -720,7 +728,8 @@ EnhancedTestDataSet EnhancedTestDataManager::load_validated_jpl_responses(const 
   return dataset;
 }
 
-EnhancedTestDataSet EnhancedTestDataManager::generate_test_data_set(const std::string& type, const std::vector<MutationStrategy>& /*mutations*/) {
+EnhancedTestDataSet EnhancedTestDataManager::generate_test_data_set(
+    const std::string& type, const std::vector<MutationStrategy>& /*mutations*/) {
   if (type == "realistic") {
     return TestDataGenerator::generate_realistic_solar_system_data();
   } else if (type == "historical") {
@@ -730,33 +739,32 @@ EnhancedTestDataSet EnhancedTestDataManager::generate_test_data_set(const std::s
   }
 }
 
-std::vector<EnhancedTestDataSet> EnhancedTestDataManager::generate_mutation_test_suite(const std::string& /*base_type*/) {
+std::vector<EnhancedTestDataSet> EnhancedTestDataManager::generate_mutation_test_suite(
+    const std::string& /*base_type*/) {
   std::vector<EnhancedTestDataSet> suite;
   suite.push_back(TestDataGenerator::generate_realistic_solar_system_data());
   return suite;
 }
 
-std::unique_ptr<IsolatedTestEnvironment> EnhancedTestDataManager::create_isolated_environment(const std::string& test_name) {
+std::unique_ptr<IsolatedTestEnvironment> EnhancedTestDataManager::create_isolated_environment(
+    const std::string& test_name) {
   return std::make_unique<IsolatedTestEnvironment>(test_name);
 }
 
-void EnhancedTestDataManager::cleanup_all_test_environments() {
-  active_environments_.clear();
-}
+void EnhancedTestDataManager::cleanup_all_test_environments() { active_environments_.clear(); }
 
-DataVersion EnhancedTestDataManager::get_current_data_version() {
-  return current_version_;
-}
+DataVersion EnhancedTestDataManager::get_current_data_version() { return current_version_; }
 
-bool EnhancedTestDataManager::migrate_data_set(EnhancedTestDataSet& /*dataset*/, const DataVersion& /*target_version*/) {
-  return true; // Placeholder implementation
+bool EnhancedTestDataManager::migrate_data_set(EnhancedTestDataSet& /*dataset*/,
+                                               const DataVersion& /*target_version*/) {
+  return true;  // Placeholder implementation
 }
 
 ValidationResult EnhancedTestDataManager::validate_test_environment() {
   ValidationResult result;
   result.validation_type = "Test Environment";
   result.validated_at = std::chrono::system_clock::now();
-  result.is_valid = true; // Placeholder implementation
+  result.is_valid = true;  // Placeholder implementation
   return result;
 }
 
@@ -764,7 +772,7 @@ ValidationResult EnhancedTestDataManager::validate_all_test_data() {
   ValidationResult result;
   result.validation_type = "All Test Data";
   result.validated_at = std::chrono::system_clock::now();
-  result.is_valid = true; // Placeholder implementation
+  result.is_valid = true;  // Placeholder implementation
   return result;
 }
 
@@ -776,11 +784,12 @@ std::vector<ValidationResult> EnhancedTestDataManager::run_comprehensive_validat
 }
 
 bool EnhancedTestDataManager::attempt_automatic_recovery(const std::string& /*data_path*/) {
-  return false; // Placeholder implementation
+  return false;  // Placeholder implementation
 }
 
-std::vector<std::string> EnhancedTestDataManager::generate_recovery_report(const std::vector<ValidationResult>& /*validation_results*/) {
-  return {}; // Placeholder implementation
+std::vector<std::string> EnhancedTestDataManager::generate_recovery_report(
+    const std::vector<ValidationResult>& /*validation_results*/) {
+  return {};  // Placeholder implementation
 }
 
 void EnhancedTestDataManager::enable_performance_monitoring(bool enable) {
@@ -791,11 +800,10 @@ std::unordered_map<std::string, double> EnhancedTestDataManager::get_performance
   return performance_metrics_;
 }
 
-void EnhancedTestDataManager::reset_performance_metrics() {
-  performance_metrics_.clear();
-}
+void EnhancedTestDataManager::reset_performance_metrics() { performance_metrics_.clear(); }
 
-void EnhancedTestDataManager::update_performance_metric(const std::string& metric_name, double value) {
+void EnhancedTestDataManager::update_performance_metric(const std::string& metric_name,
+                                                        double value) {
   performance_metrics_[metric_name] = value;
 }
 
@@ -815,9 +823,7 @@ AutoCleanupGuard::~AutoCleanupGuard() {
   }
 }
 
-void AutoCleanupGuard::release() {
-  released_ = true;
-}
+void AutoCleanupGuard::release() { released_ = true; }
 
 std::string IntegrityChecker::calculate_checksum(const std::string& data) {
   // Simple hash implementation using std::hash
@@ -849,17 +855,17 @@ bool IntegrityChecker::verify_dataset_integrity(const EnhancedTestDataSet& datas
   for (const auto& [filename, expected_checksum] : dataset.checksums) {
     auto it = dataset.files.find(filename);
     if (it == dataset.files.end()) {
-      return false; // File missing
+      return false;  // File missing
     }
 
     if (!verify_checksum(it->second, expected_checksum)) {
-      return false; // Checksum mismatch
+      return false;  // Checksum mismatch
     }
   }
 
   return true;
 }
 
-} // namespace test_data_utils
+}  // namespace test_data_utils
 
-} // namespace solar_test
+}  // namespace solar_test

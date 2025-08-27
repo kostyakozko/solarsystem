@@ -3,10 +3,10 @@
  * @brief Implementation of streaming output manager for large result sets
  */
 
-#include "solar_test/formatters/output_formatter.hpp"
-
 #include <algorithm>
 #include <iostream>
+
+#include "solar_test/formatters/output_formatter.hpp"
 
 namespace SolarSystem::Testing::Formatters {
 
@@ -39,7 +39,8 @@ void StreamingOutputManager::add_test_result(const TestResult& result) {
   stats_.total_results_processed++;
 
   // Update memory usage estimate
-  size_t estimated_size = result.test_name.size() + result.error_message.size() + 200; // Base overhead
+  size_t estimated_size =
+      result.test_name.size() + result.error_message.size() + 200;  // Base overhead
   stats_.bytes_written += estimated_size;
 
   // Flush if needed
@@ -72,8 +73,8 @@ void StreamingOutputManager::finish_output() {
 
     // Calculate final statistics
     auto end_time = std::chrono::steady_clock::now();
-    stats_.total_time = std::chrono::duration_cast<std::chrono::milliseconds>(
-      end_time - start_time_);
+    stats_.total_time =
+        std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time_);
 
     output_stream_ = nullptr;
   }
@@ -106,7 +107,7 @@ void StreamingOutputManager::optimize_memory_usage() {
 size_t StreamingOutputManager::get_memory_usage() const {
   // Estimate current memory usage
   size_t usage = buffer_.str().size();
-  usage += stats_.total_results_processed * 100; // Rough estimate per result
+  usage += stats_.total_results_processed * 100;  // Rough estimate per result
   return usage;
 }
 
@@ -120,9 +121,8 @@ void StreamingOutputManager::check_memory_limits() {
     // If still over limit, warn but continue
     current_usage = get_memory_usage();
     if (current_usage > config_.max_memory_usage) {
-      std::cerr << "Warning: Memory usage (" << current_usage
-                << " bytes) exceeds limit (" << config_.max_memory_usage
-                << " bytes)" << std::endl;
+      std::cerr << "Warning: Memory usage (" << current_usage << " bytes) exceeds limit ("
+                << config_.max_memory_usage << " bytes)" << std::endl;
     }
   }
 }
@@ -132,14 +132,14 @@ std::string StreamingOutputManager::compress_data(const std::string& data) {
   // In a real implementation, this would use zlib, lz4, or zstd
 
   if (data.size() < config_.compression_threshold) {
-    return data; // Don't compress small data
+    return data;  // Don't compress small data
   }
 
   // Simple run-length encoding as a placeholder
   std::string compressed;
   compressed.reserve(data.size());
 
-  for (size_t i = 0; i < data.size(); ) {
+  for (size_t i = 0; i < data.size();) {
     char current = data[i];
     size_t count = 1;
 
@@ -160,11 +160,11 @@ std::string StreamingOutputManager::compress_data(const std::string& data) {
 
   // Update compression ratio
   if (!data.empty()) {
-    stats_.compression_ratio = static_cast<size_t>(
-      (static_cast<double>(compressed.size()) / data.size()) * 100);
+    stats_.compression_ratio =
+        static_cast<size_t>((static_cast<double>(compressed.size()) / data.size()) * 100);
   }
 
   return compressed;
 }
 
-} // namespace SolarSystem::Testing::Formatters
+}  // namespace SolarSystem::Testing::Formatters

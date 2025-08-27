@@ -16,7 +16,6 @@
 #include <regex>
 #include <sstream>
 #include <thread>
-#include <thread>
 
 // For HTTP requests (using system curl for now)
 #include <cstdio>
@@ -239,7 +238,7 @@ JPLResult<EphemerisData> JPLClient::fetch_body_internal(
   auto date_str = Utils::to_jpl_date_string(epoch);
 
   // Build JPL HORIZONS API request with proper date range
-  auto end_epoch = epoch + std::chrono::hours(24); // Add one day
+  auto end_epoch = epoch + std::chrono::hours(24);  // Add one day
   auto end_date_str = Utils::to_jpl_date_string(end_epoch);
 
   std::ostringstream params;
@@ -329,18 +328,17 @@ JPLResult<EphemerisData> JPLClient::parse_jpl_response(const std::string& respon
 
   // Comprehensive error pattern detection with detailed categorization
   std::vector<std::pair<std::string, JPLError>> error_patterns = {
-    {"ERROR", JPLError::ParseError},
-    {"Cannot find", JPLError::InvalidBody},
-    {"No ephemeris", JPLError::InvalidBody},
-    {"invalid", JPLError::InvalidBody},
-    {"Bad dates", JPLError::InvalidDate},
-    {"No data available", JPLError::InvalidBody},
-    {"Target not found", JPLError::InvalidBody},
-    {"Insufficient data", JPLError::ParseError},
-    {"Connection timeout", JPLError::NetworkError},
-    {"Service unavailable", JPLError::ServerError},
-    {"Rate limit", JPLError::RateLimited}
-  };
+      {"ERROR", JPLError::ParseError},
+      {"Cannot find", JPLError::InvalidBody},
+      {"No ephemeris", JPLError::InvalidBody},
+      {"invalid", JPLError::InvalidBody},
+      {"Bad dates", JPLError::InvalidDate},
+      {"No data available", JPLError::InvalidBody},
+      {"Target not found", JPLError::InvalidBody},
+      {"Insufficient data", JPLError::ParseError},
+      {"Connection timeout", JPLError::NetworkError},
+      {"Service unavailable", JPLError::ServerError},
+      {"Rate limit", JPLError::RateLimited}};
 
   for (const auto& [pattern, error] : error_patterns) {
     if (response.find(pattern) != std::string::npos) {
@@ -349,15 +347,13 @@ JPLResult<EphemerisData> JPLClient::parse_jpl_response(const std::string& respon
   }
 
   // Enhanced body name extraction with comprehensive pattern matching for multiple JPL formats
-  std::vector<std::regex> name_patterns = {
-    std::regex(R"(Target body name:\s*([^(\n\r]+))"),
-    std::regex(R"(Target body name:\s*([^\n\r]+))"),
-    std::regex(R"(COMMAND=\s*'?(\d+)'?\s*\(([^)]+)\))"),
-    std::regex(R"(Body\s*:\s*([^\n\r]+))"),
-    std::regex(R"(Object\s*:\s*([^\n\r]+))"),
-    std::regex(R"(Ephemeris\s+for\s+([^\n\r]+))"),
-    std::regex(R"(Target\s*:\s*([^\n\r]+))")
-  };
+  std::vector<std::regex> name_patterns = {std::regex(R"(Target body name:\s*([^(\n\r]+))"),
+                                           std::regex(R"(Target body name:\s*([^\n\r]+))"),
+                                           std::regex(R"(COMMAND=\s*'?(\d+)'?\s*\(([^)]+)\))"),
+                                           std::regex(R"(Body\s*:\s*([^\n\r]+))"),
+                                           std::regex(R"(Object\s*:\s*([^\n\r]+))"),
+                                           std::regex(R"(Ephemeris\s+for\s+([^\n\r]+))"),
+                                           std::regex(R"(Target\s*:\s*([^\n\r]+))")};
 
   bool found_name = false;
   for (const auto& pattern : name_patterns) {
@@ -451,10 +447,8 @@ JPLResult<EphemerisData> JPLClient::parse_jpl_response(const std::string& respon
 
       while (std::getline(stream, line)) {
         // Skip empty lines, comments, and headers
-        if (line.empty() || line[0] == '#' ||
-            line.find("JDTDB") != std::string::npos ||
-            line.find("Date") != std::string::npos ||
-            line.find("X") != std::string::npos) {
+        if (line.empty() || line[0] == '#' || line.find("JDTDB") != std::string::npos ||
+            line.find("Date") != std::string::npos || line.find("X") != std::string::npos) {
           continue;
         }
 
@@ -482,9 +476,9 @@ JPLResult<EphemerisData> JPLClient::parse_jpl_response(const std::string& respon
         if (tokens.size() >= 7) {
           // Try multiple token position strategies for different JPL formats
           std::vector<std::vector<int>> position_strategies = {
-            {1, 2, 3, 4, 5, 6},  // Standard format: date, x, y, z, vx, vy, vz
-            {2, 3, 4, 5, 6, 7},  // Alternative format with extra column
-            {0, 1, 2, 3, 4, 5}   // Compact format without date
+              {1, 2, 3, 4, 5, 6},  // Standard format: date, x, y, z, vx, vy, vz
+              {2, 3, 4, 5, 6, 7},  // Alternative format with extra column
+              {0, 1, 2, 3, 4, 5}   // Compact format without date
           };
 
           for (const auto& strategy : position_strategies) {
@@ -501,11 +495,10 @@ JPLResult<EphemerisData> JPLClient::parse_jpl_response(const std::string& respon
                 double vz = std::stod(tokens[strategy[5]]);
 
                 // Validate coordinate values are reasonable
-                if (std::isfinite(x) && std::isfinite(y) && std::isfinite(z) &&
-                    std::isfinite(vx) && std::isfinite(vy) && std::isfinite(vz)) {
-
-                  double pos_mag = std::sqrt(x*x + y*y + z*z);
-                  double vel_mag = std::sqrt(vx*vx + vy*vy + vz*vz);
+                if (std::isfinite(x) && std::isfinite(y) && std::isfinite(z) && std::isfinite(vx) &&
+                    std::isfinite(vy) && std::isfinite(vz)) {
+                  double pos_mag = std::sqrt(x * x + y * y + z * z);
+                  double vel_mag = std::sqrt(vx * vx + vy * vy + vz * vz);
 
                   // Validate magnitudes are within reasonable bounds
                   if (pos_mag > 1e3 && pos_mag < 1e12 && vel_mag < 1e6) {
@@ -532,21 +525,27 @@ JPLResult<EphemerisData> JPLClient::parse_jpl_response(const std::string& respon
   // Method 2: Enhanced coordinate pattern matching for multiple JPL response formats
   if (!found_coordinates) {
     std::vector<std::regex> coord_patterns = {
-      // Standard X=, Y=, Z= format
-      std::regex(R"(X\s*=\s*([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\s*Y\s*=\s*([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\s*Z\s*=\s*([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?))"),
-      // Position: format
-      std::regex(R"(Position:\s*([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\s+([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\s+([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?))"),
-      // Vector format (6 components)
-      std::regex(R"(([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\s+([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\s+([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\s+([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\s+([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\s+([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?))"),
-      // Cartesian coordinates format
-      std::regex(R"(Cartesian\s+coordinates:\s*([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\s+([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\s+([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?))"),
-      // State vector format
-      std::regex(R"(State\s+vector:\s*([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\s+([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\s+([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?))"),
-      // Heliocentric coordinates
-      std::regex(R"(Heliocentric:\s*([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\s+([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\s+([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?))"),
-      // Barycentric coordinates
-      std::regex(R"(Barycentric:\s*([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\s+([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\s+([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?))")
-    };
+        // Standard X=, Y=, Z= format
+        std::regex(
+            R"(X\s*=\s*([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\s*Y\s*=\s*([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\s*Z\s*=\s*([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?))"),
+        // Position: format
+        std::regex(
+            R"(Position:\s*([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\s+([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\s+([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?))"),
+        // Vector format (6 components)
+        std::regex(
+            R"(([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\s+([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\s+([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\s+([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\s+([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\s+([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?))"),
+        // Cartesian coordinates format
+        std::regex(
+            R"(Cartesian\s+coordinates:\s*([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\s+([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\s+([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?))"),
+        // State vector format
+        std::regex(
+            R"(State\s+vector:\s*([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\s+([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\s+([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?))"),
+        // Heliocentric coordinates
+        std::regex(
+            R"(Heliocentric:\s*([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\s+([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\s+([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?))"),
+        // Barycentric coordinates
+        std::regex(
+            R"(Barycentric:\s*([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\s+([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\s+([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?))")};
 
     for (const auto& pattern : coord_patterns) {
       std::smatch coord_match;
@@ -562,11 +561,10 @@ JPLResult<EphemerisData> JPLClient::parse_jpl_response(const std::string& respon
             double vz = std::stod(coord_match[6].str());
 
             // Enhanced validation for coordinate quality
-            if (std::isfinite(x) && std::isfinite(y) && std::isfinite(z) &&
-                std::isfinite(vx) && std::isfinite(vy) && std::isfinite(vz)) {
-
-              double pos_mag = std::sqrt(x*x + y*y + z*z);
-              double vel_mag = std::sqrt(vx*vx + vy*vy + vz*vz);
+            if (std::isfinite(x) && std::isfinite(y) && std::isfinite(z) && std::isfinite(vx) &&
+                std::isfinite(vy) && std::isfinite(vz)) {
+              double pos_mag = std::sqrt(x * x + y * y + z * z);
+              double vel_mag = std::sqrt(vx * vx + vy * vy + vz * vz);
 
               // Validate magnitudes are within reasonable astronomical bounds
               if (pos_mag > 1e3 && pos_mag < 1e12 && vel_mag < 1e6) {
@@ -583,7 +581,7 @@ JPLResult<EphemerisData> JPLClient::parse_jpl_response(const std::string& respon
             double z = std::stod(coord_match[3].str());
 
             if (std::isfinite(x) && std::isfinite(y) && std::isfinite(z)) {
-              double pos_mag = std::sqrt(x*x + y*y + z*z);
+              double pos_mag = std::sqrt(x * x + y * y + z * z);
 
               if (pos_mag > 1e3 && pos_mag < 1e12) {
                 data.position = SolarSystem::Math::Vector3d{x, y, z};
@@ -607,28 +605,28 @@ JPLResult<EphemerisData> JPLClient::parse_jpl_response(const std::string& respon
     auto body_type = Bodies::get_body_type_for_jpl_id(jpl_id);
 
     // Use simplified orbital mechanics for fallback data
-    double orbital_radius = 1.0; // AU
-    double orbital_velocity = 30.0; // km/s
+    double orbital_radius = 1.0;     // AU
+    double orbital_velocity = 30.0;  // km/s
 
     switch (body_type) {
       case Bodies::BodyType::Planet:
-        if (jpl_id == 399) { // Earth
-          orbital_radius = 149597870.7; // km (1 AU)
-          orbital_velocity = 29.78; // km/s
-        } else if (jpl_id == 499) { // Mars
-          orbital_radius = 227939200.0; // km
-          orbital_velocity = 24.07; // km/s
-        } else if (jpl_id == 599) { // Jupiter
-          orbital_radius = 778299000.0; // km
-          orbital_velocity = 13.07; // km/s
+        if (jpl_id == 399) {             // Earth
+          orbital_radius = 149597870.7;  // km (1 AU)
+          orbital_velocity = 29.78;      // km/s
+        } else if (jpl_id == 499) {      // Mars
+          orbital_radius = 227939200.0;  // km
+          orbital_velocity = 24.07;      // km/s
+        } else if (jpl_id == 599) {      // Jupiter
+          orbital_radius = 778299000.0;  // km
+          orbital_velocity = 13.07;      // km/s
         }
         break;
       case Bodies::BodyType::Moon:
-        orbital_radius = 384400.0; // km (Earth-Moon distance)
-        orbital_velocity = 1.022; // km/s
+        orbital_radius = 384400.0;  // km (Earth-Moon distance)
+        orbital_velocity = 1.022;   // km/s
         break;
       default:
-        orbital_radius = 149597870.7; // Default to Earth-like orbit
+        orbital_radius = 149597870.7;  // Default to Earth-like orbit
         orbital_velocity = 29.78;
         break;
     }
@@ -637,19 +635,13 @@ JPLResult<EphemerisData> JPLClient::parse_jpl_response(const std::string& respon
     auto now = std::chrono::system_clock::now();
     auto time_since_epoch = now.time_since_epoch();
     auto seconds = std::chrono::duration_cast<std::chrono::seconds>(time_since_epoch).count();
-    double angle = (seconds % 31536000) * 2.0 * M_PI / 31536000.0; // Annual orbit
+    double angle = (seconds % 31536000) * 2.0 * M_PI / 31536000.0;  // Annual orbit
 
-    data.position = SolarSystem::Math::Vector3d{
-      orbital_radius * std::cos(angle),
-      orbital_radius * std::sin(angle),
-      0.0
-    };
+    data.position = SolarSystem::Math::Vector3d{orbital_radius * std::cos(angle),
+                                                orbital_radius * std::sin(angle), 0.0};
 
-    data.velocity = SolarSystem::Math::Vector3d{
-      -orbital_velocity * std::sin(angle),
-      orbital_velocity * std::cos(angle),
-      0.0
-    };
+    data.velocity = SolarSystem::Math::Vector3d{-orbital_velocity * std::sin(angle),
+                                                orbital_velocity * std::cos(angle), 0.0};
 
     found_coordinates = true;
   }
@@ -671,8 +663,9 @@ JPLResult<EphemerisData> JPLClient::parse_jpl_response(const std::string& respon
   }
 
   // Check for NaN or infinite values in coordinates
-  if (!std::isfinite(data.position.x()) || !std::isfinite(data.position.y()) || !std::isfinite(data.position.z()) ||
-      !std::isfinite(data.velocity.x()) || !std::isfinite(data.velocity.y()) || !std::isfinite(data.velocity.z())) {
+  if (!std::isfinite(data.position.x()) || !std::isfinite(data.position.y()) ||
+      !std::isfinite(data.position.z()) || !std::isfinite(data.velocity.x()) ||
+      !std::isfinite(data.velocity.y()) || !std::isfinite(data.velocity.z())) {
     return JPLError::ValidationError;
   }
 
@@ -1370,7 +1363,7 @@ std::filesystem::path JPLClientFactory::get_executable_relative_cache_path() {
   try {
     std::filesystem::path exe_path;
 
-    #ifdef __APPLE__
+#ifdef __APPLE__
     // macOS approach
     char path[1024];
     uint32_t size = sizeof(path);
@@ -1379,13 +1372,13 @@ std::filesystem::path JPLClientFactory::get_executable_relative_cache_path() {
     } else {
       throw std::runtime_error("Failed to get executable path on macOS");
     }
-    #elif defined(__linux__)
+#elif defined(__linux__)
     // Linux approach
     exe_path = std::filesystem::canonical("/proc/self/exe");
-    #else
+#else
     // Other platforms - fallback
     throw std::runtime_error("Unsupported platform for executable path detection");
-    #endif
+#endif
 
     // Get the directory containing the executable
     std::filesystem::path exe_dir = exe_path.parent_path();
@@ -1643,7 +1636,8 @@ JPLResult<bool> JPLClient::validate_cache_formats() const {
 /**
  * @brief Validate binary cache format
  */
-JPLResult<bool> JPLClient::validate_binary_cache_format(const std::filesystem::path& binary_path) const {
+JPLResult<bool> JPLClient::validate_binary_cache_format(
+    const std::filesystem::path& binary_path) const {
   try {
     std::ifstream file(binary_path, std::ios::binary);
     if (!file.is_open()) {
@@ -1654,7 +1648,7 @@ JPLResult<bool> JPLClient::validate_binary_cache_format(const std::filesystem::p
     uint32_t magic_number;
     file.read(reinterpret_cast<char*>(&magic_number), sizeof(magic_number));
 
-    if (magic_number != 0x4A504C42) {  // "JPLB" in hex
+    if (magic_number != 0x4A504C42) {    // "JPLB" in hex
       return JPLError::ValidationError;  // Invalid binary format
     }
 
@@ -1662,7 +1656,7 @@ JPLResult<bool> JPLClient::validate_binary_cache_format(const std::filesystem::p
     uint32_t version;
     file.read(reinterpret_cast<char*>(&version), sizeof(version));
 
-    if (version > 1) {  // Only support version 1 for now
+    if (version > 1) {                   // Only support version 1 for now
       return JPLError::ValidationError;  // Unsupported version
     }
 
@@ -1675,9 +1669,10 @@ JPLResult<bool> JPLClient::validate_binary_cache_format(const std::filesystem::p
     }
 
     // Calculate minimum expected size (header + minimal body data)
-    // Each body has: jpl_id(4) + name_length(8) + min_name(1) + epoch(8) + pos(24) + vel(24) + mass(8) = 77 bytes minimum
+    // Each body has: jpl_id(4) + name_length(8) + min_name(1) + epoch(8) + pos(24) + vel(24) +
+    // mass(8) = 77 bytes minimum
     auto min_expected_size = sizeof(magic_number) + sizeof(version) + sizeof(body_count) +
-                            (body_count * 77);  // Minimum size per body
+                             (body_count * 77);  // Minimum size per body
     auto actual_size = std::filesystem::file_size(binary_path);
 
     if (actual_size < min_expected_size) {
@@ -1693,7 +1688,8 @@ JPLResult<bool> JPLClient::validate_binary_cache_format(const std::filesystem::p
 /**
  * @brief Validate JSON cache format
  */
-JPLResult<bool> JPLClient::validate_json_cache_format(const std::filesystem::path& json_path) const {
+JPLResult<bool> JPLClient::validate_json_cache_format(
+    const std::filesystem::path& json_path) const {
   try {
     std::ifstream file(json_path);
     if (!file.is_open()) {
@@ -1736,8 +1732,10 @@ JPLResult<bool> JPLClient::validate_json_cache_format(const std::filesystem::pat
     // Count opening and closing braces for basic structure validation
     int brace_count = 0;
     for (char c : content) {
-      if (c == '{') brace_count++;
-      else if (c == '}') brace_count--;
+      if (c == '{')
+        brace_count++;
+      else if (c == '}')
+        brace_count--;
     }
 
     if (brace_count != 0) {
@@ -2060,7 +2058,8 @@ JPLResult<std::vector<EphemerisData>> JPLClient::load_json_cache() const {
         if (value_end == std::string::npos) value_end = body_json.find("}", value_start);
 
         std::string jpl_id_str = body_json.substr(value_start, value_end - value_start);
-        jpl_id_str.erase(std::remove_if(jpl_id_str.begin(), jpl_id_str.end(), ::isspace), jpl_id_str.end());
+        jpl_id_str.erase(std::remove_if(jpl_id_str.begin(), jpl_id_str.end(), ::isspace),
+                         jpl_id_str.end());
         body_data.jpl_id = std::stoi(jpl_id_str);
       }
 
@@ -2352,8 +2351,11 @@ JPLResult<bool> JPLClient::save_json_cache(const std::vector<EphemerisData>& dat
     // Write JSON structure
     file << "{\n";
     file << "  \"metadata\": {\n";
-    file << "    \"created_at\": \"" << std::chrono::duration_cast<std::chrono::seconds>(
-        std::chrono::system_clock::now().time_since_epoch()).count() << "\",\n";
+    file << "    \"created_at\": \""
+         << std::chrono::duration_cast<std::chrono::seconds>(
+                std::chrono::system_clock::now().time_since_epoch())
+                .count()
+         << "\",\n";
     file << "    \"body_count\": " << data.size() << "\n";
     file << "  },\n";
     file << "  \"bodies\": [\n";
@@ -2405,10 +2407,14 @@ JPLVoidResult JPLClient::save_cache_metadata(const CacheMetadata& metadata) {
 
     // Write metadata as JSON
     file << "{\n";
-    file << "  \"created_at\": " << std::chrono::duration_cast<std::chrono::seconds>(
-        metadata.created_at.time_since_epoch()).count() << ",\n";
-    file << "  \"epoch\": " << std::chrono::duration_cast<std::chrono::seconds>(
-        metadata.epoch.time_since_epoch()).count() << ",\n";
+    file << "  \"created_at\": "
+         << std::chrono::duration_cast<std::chrono::seconds>(metadata.created_at.time_since_epoch())
+                .count()
+         << ",\n";
+    file << "  \"epoch\": "
+         << std::chrono::duration_cast<std::chrono::seconds>(metadata.epoch.time_since_epoch())
+                .count()
+         << ",\n";
     file << "  \"source\": \"" << metadata.source << "\",\n";
     file << "  \"body_count\": " << metadata.body_count << ",\n";
     file << "  \"checksum\": " << metadata.checksum << "\n";
@@ -2425,7 +2431,8 @@ JPLVoidResult JPLClient::save_cache_metadata(const CacheMetadata& metadata) {
 /**
  * @brief Make resilient request with comprehensive error handling and fallback strategies
  */
-JPLResult<std::string> JPLClient::make_resilient_request(const std::string& url, const std::string& params) {
+JPLResult<std::string> JPLClient::make_resilient_request(const std::string& url,
+                                                         const std::string& params) {
   // First, try the primary endpoint with circuit breaker protection
   auto primary_result = execute_request_with_circuit_breaker(url, params);
   if (is_success(primary_result)) {
@@ -2449,7 +2456,8 @@ JPLResult<std::string> JPLClient::make_resilient_request(const std::string& url,
 /**
  * @brief Execute request with circuit breaker protection
  */
-JPLResult<std::string> JPLClient::execute_request_with_circuit_breaker(const std::string& url, const std::string& params) {
+JPLResult<std::string> JPLClient::execute_request_with_circuit_breaker(const std::string& url,
+                                                                       const std::string& params) {
   std::lock_guard<std::mutex> lock(network_mutex_);
 
   // Check if circuit breaker allows the request
@@ -2474,8 +2482,8 @@ JPLResult<std::string> JPLClient::execute_request_with_circuit_breaker(const std
     std::ostringstream cmd;
     cmd << "curl -s --max-time " << config_.request_timeout.count();
     cmd << " --connect-timeout 10";  // Connection timeout
-    cmd << " --retry 0";  // Disable curl's internal retry (we handle it)
-    cmd << " --fail-with-body";  // Return body even on HTTP errors
+    cmd << " --retry 0";             // Disable curl's internal retry (we handle it)
+    cmd << " --fail-with-body";      // Return body even on HTTP errors
 
     if (config_.enable_connection_pooling) {
       cmd << " --keepalive-time " << config_.connection_keep_alive.count();
@@ -2548,9 +2556,8 @@ std::chrono::milliseconds JPLClient::calculate_backoff_delay(size_t attempt) con
   }
 
   // Exponential backoff: base_delay * (multiplier ^ attempt)
-  auto delay_ms = static_cast<long long>(
-    config_.retry_delay.count() * std::pow(config_.backoff_multiplier, attempt)
-  );
+  auto delay_ms = static_cast<long long>(config_.retry_delay.count() *
+                                         std::pow(config_.backoff_multiplier, attempt));
 
   // Cap at maximum backoff delay
   delay_ms = std::min(delay_ms, config_.max_backoff_delay.count());
@@ -2633,16 +2640,14 @@ void JPLClient::release_connection(const std::string& endpoint) {
 void JPLClient::cleanup_expired_connections() {
   auto now = std::chrono::system_clock::now();
 
-  connection_pool_.erase(
-    std::remove_if(connection_pool_.begin(), connection_pool_.end(),
-      [&](const ConnectionPoolEntry& entry) {
-        auto age = now - entry.last_used;
-        return entry.is_available &&
-               age > config_.connection_keep_alive &&
-               entry.active_requests == 0;
-      }),
-    connection_pool_.end()
-  );
+  connection_pool_.erase(std::remove_if(connection_pool_.begin(), connection_pool_.end(),
+                                        [&](const ConnectionPoolEntry& entry) {
+                                          auto age = now - entry.last_used;
+                                          return entry.is_available &&
+                                                 age > config_.connection_keep_alive &&
+                                                 entry.active_requests == 0;
+                                        }),
+                         connection_pool_.end());
 }
 
 // Circuit Breaker Implementation

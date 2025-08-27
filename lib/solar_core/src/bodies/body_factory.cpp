@@ -31,8 +31,7 @@ Utils::Expected<CelestialBody, std::string> BodyFactory::create_body(
 
   // Use intelligent fallback strategies if specified
   if (opts.fallback_strategy != FallbackStrategy::GRACEFUL ||
-      opts.minimum_quality != DataQuality::ACCEPTABLE ||
-      opts.allow_partial_data ||
+      opts.minimum_quality != DataQuality::ACCEPTABLE || opts.allow_partial_data ||
       !opts.prefer_recent_data) {
     return create_body_with_intelligent_fallback(name, opts);
   }
@@ -85,20 +84,19 @@ Utils::Expected<BodyCollection, std::string> BodyFactory::create_collection(
 
       // Apply relationship validation if enabled
       if (options.validate_data) {
-        CelestialBody::Properties props{
-          .name = std::string(body.name()),
-          .mass = body.mass(),
-          .position = body.position(),
-          .velocity = body.velocity(),
-          .type = body.type(),
-          .priority = body.priority(),
-          .jpl_id = body.jpl_id(),
-          .creation_date = body.creation_date()
-        };
+        CelestialBody::Properties props{.name = std::string(body.name()),
+                                        .mass = body.mass(),
+                                        .position = body.position(),
+                                        .velocity = body.velocity(),
+                                        .type = body.type(),
+                                        .priority = body.priority(),
+                                        .jpl_id = body.jpl_id(),
+                                        .creation_date = body.creation_date()};
 
         auto relationship_validation = validate_body_relationships(props, created_bodies);
         if (!relationship_validation.has_value()) {
-          errors.push_back("Relationship validation failed for " + name + ": " + relationship_validation.error());
+          errors.push_back("Relationship validation failed for " + name + ": " +
+                           relationship_validation.error());
           if (!options.allow_fallback) {
             continue;  // Skip this body if validation fails and fallback not allowed
           }
@@ -175,21 +173,20 @@ Utils::Expected<CelestialBody, std::string> BodyFactory::create_from_legacy_data
 
         // Apply validation if enabled
         if (default_options_.validate_data) {
-          CelestialBody::Properties props{
-            .name = std::string(celestial_body.name()),
-            .mass = celestial_body.mass(),
-            .position = celestial_body.position(),
-            .velocity = celestial_body.velocity(),
-            .type = celestial_body.type(),
-            .priority = celestial_body.priority(),
-            .jpl_id = celestial_body.jpl_id(),
-            .creation_date = celestial_body.creation_date()
-          };
+          CelestialBody::Properties props{.name = std::string(celestial_body.name()),
+                                          .mass = celestial_body.mass(),
+                                          .position = celestial_body.position(),
+                                          .velocity = celestial_body.velocity(),
+                                          .type = celestial_body.type(),
+                                          .priority = celestial_body.priority(),
+                                          .jpl_id = celestial_body.jpl_id(),
+                                          .creation_date = celestial_body.creation_date()};
 
           auto validation_result = validate_physical_properties(props);
           if (!validation_result.has_value()) {
             return Utils::Expected<CelestialBody, std::string>{
-              "Validation failed for " + std::string(name) + " from cached data: " + validation_result.error()};
+                "Validation failed for " + std::string(name) +
+                " from cached data: " + validation_result.error()};
           }
         }
 
@@ -284,21 +281,20 @@ Utils::Expected<CelestialBody, std::string> BodyFactory::create_from_jpl(
   // Apply validation if enabled
   if (default_options_.validate_data) {
     // Extract properties for validation
-    CelestialBody::Properties props{
-      .name = std::string(celestial_body.name()),
-      .mass = celestial_body.mass(),
-      .position = celestial_body.position(),
-      .velocity = celestial_body.velocity(),
-      .type = celestial_body.type(),
-      .priority = celestial_body.priority(),
-      .jpl_id = celestial_body.jpl_id(),
-      .creation_date = celestial_body.creation_date()
-    };
+    CelestialBody::Properties props{.name = std::string(celestial_body.name()),
+                                    .mass = celestial_body.mass(),
+                                    .position = celestial_body.position(),
+                                    .velocity = celestial_body.velocity(),
+                                    .type = celestial_body.type(),
+                                    .priority = celestial_body.priority(),
+                                    .jpl_id = celestial_body.jpl_id(),
+                                    .creation_date = celestial_body.creation_date()};
 
     auto validation_result = validate_physical_properties(props);
     if (!validation_result.has_value()) {
       return Utils::Expected<CelestialBody, std::string>{
-        "Validation failed for " + std::string(name) + " from JPL data: " + validation_result.error()};
+          "Validation failed for " + std::string(name) +
+          " from JPL data: " + validation_result.error()};
     }
   }
 
@@ -353,21 +349,20 @@ Utils::Expected<CelestialBody, std::string> BodyFactory::create_from_fallback(
 
     // Apply validation if enabled
     if (default_options_.validate_data) {
-      CelestialBody::Properties props{
-        .name = std::string(celestial_body.name()),
-        .mass = celestial_body.mass(),
-        .position = celestial_body.position(),
-        .velocity = celestial_body.velocity(),
-        .type = celestial_body.type(),
-        .priority = celestial_body.priority(),
-        .jpl_id = celestial_body.jpl_id(),
-        .creation_date = celestial_body.creation_date()
-      };
+      CelestialBody::Properties props{.name = std::string(celestial_body.name()),
+                                      .mass = celestial_body.mass(),
+                                      .position = celestial_body.position(),
+                                      .velocity = celestial_body.velocity(),
+                                      .type = celestial_body.type(),
+                                      .priority = celestial_body.priority(),
+                                      .jpl_id = celestial_body.jpl_id(),
+                                      .creation_date = celestial_body.creation_date()};
 
       auto validation_result = validate_physical_properties(props);
       if (!validation_result.has_value()) {
         return Utils::Expected<CelestialBody, std::string>{
-          "Validation failed for " + std::string(name) + " from fallback data: " + validation_result.error()};
+            "Validation failed for " + std::string(name) +
+            " from fallback data: " + validation_result.error()};
       }
     }
 
@@ -533,7 +528,6 @@ std::chrono::system_clock::time_point BodyFactory::get_current_year_epoch() noex
  */
 Utils::Expected<void, std::string> BodyFactory::validate_physical_properties(
     const CelestialBody::Properties& props) const {
-
   // Validate mass bounds
   auto mass_validation = validate_mass_bounds(props.mass, props.type, props.name);
   if (!mass_validation.has_value()) {
@@ -541,7 +535,8 @@ Utils::Expected<void, std::string> BodyFactory::validate_physical_properties(
   }
 
   // Validate orbital parameters
-  auto orbital_validation = validate_orbital_parameters(props.position, props.velocity, props.type, props.name);
+  auto orbital_validation =
+      validate_orbital_parameters(props.position, props.velocity, props.type, props.name);
   if (!orbital_validation.has_value()) {
     return orbital_validation;
   }
@@ -558,19 +553,20 @@ Utils::Expected<void, std::string> BodyFactory::validate_physical_properties(
 /**
  * @brief Validate mass against realistic bounds for body type
  */
-Utils::Expected<void, std::string> BodyFactory::validate_mass_bounds(
-    long double mass, BodyType type, std::string_view name) const {
-
+Utils::Expected<void, std::string> BodyFactory::validate_mass_bounds(long double mass,
+                                                                     BodyType type,
+                                                                     std::string_view name) const {
   // Check for non-positive mass
   if (mass <= 0.0L) {
-    return Utils::Expected<void, std::string>{
-        "Invalid mass for " + std::string(name) + ": mass must be positive, got " + std::to_string(static_cast<double>(mass)) + " kg"};
+    return Utils::Expected<void, std::string>{"Invalid mass for " + std::string(name) +
+                                              ": mass must be positive, got " +
+                                              std::to_string(static_cast<double>(mass)) + " kg"};
   }
 
   // Check for NaN or infinite mass
   if (!std::isfinite(static_cast<double>(mass))) {
-    return Utils::Expected<void, std::string>{
-        "Invalid mass for " + std::string(name) + ": mass must be finite, got non-finite value"};
+    return Utils::Expected<void, std::string>{"Invalid mass for " + std::string(name) +
+                                              ": mass must be finite, got non-finite value"};
   }
 
   // Define realistic mass bounds for different body types (in kg)
@@ -592,7 +588,8 @@ Utils::Expected<void, std::string> BodyFactory::validate_mass_bounds(
       bounds = {1.0e20L, 1.5e23L, "dwarf planet mass (Ceres to Pluto range)"};
       break;
     case BodyType::Moon:
-      bounds = {1.0e19L, 1.5e23L, "moon mass (small asteroids to Ganymede)"};  // Increased upper bound for Ganymede
+      bounds = {1.0e19L, 1.5e23L,
+                "moon mass (small asteroids to Ganymede)"};  // Increased upper bound for Ganymede
       break;
     case BodyType::Asteroid:
       bounds = {1.0e12L, 1.0e22L, "asteroid mass (small rocks to Vesta)"};
@@ -607,11 +604,11 @@ Utils::Expected<void, std::string> BodyFactory::validate_mass_bounds(
 
   if (mass < bounds.min_mass || mass > bounds.max_mass) {
     return Utils::Expected<void, std::string>{
-        "Mass validation failed for " + std::string(name) + " (type: " +
-        std::to_string(static_cast<int>(type)) + "): " +
-        "mass " + std::to_string(static_cast<double>(mass)) + " kg is outside realistic " + bounds.description +
-        " range [" + std::to_string(static_cast<double>(bounds.min_mass)) + ", " +
-        std::to_string(static_cast<double>(bounds.max_mass)) + "] kg"};
+        "Mass validation failed for " + std::string(name) +
+        " (type: " + std::to_string(static_cast<int>(type)) + "): " + "mass " +
+        std::to_string(static_cast<double>(mass)) + " kg is outside realistic " +
+        bounds.description + " range [" + std::to_string(static_cast<double>(bounds.min_mass)) +
+        ", " + std::to_string(static_cast<double>(bounds.max_mass)) + "] kg"};
   }
 
   return Utils::Expected<void, std::string>{};
@@ -621,16 +618,18 @@ Utils::Expected<void, std::string> BodyFactory::validate_mass_bounds(
  * @brief Validate orbital parameters against realistic bounds
  */
 Utils::Expected<void, std::string> BodyFactory::validate_orbital_parameters(
-    const Math::Vector3d& position, const Math::Vector3d& velocity, BodyType type, std::string_view name) const {
-
+    const Math::Vector3d& position, const Math::Vector3d& velocity, BodyType type,
+    std::string_view name) const {
   // Calculate orbital characteristics
   long double pos_magnitude = position.magnitude();
   long double vel_magnitude = velocity.magnitude();
 
   // Check for NaN or infinite values
-  if (!std::isfinite(static_cast<double>(pos_magnitude)) || !std::isfinite(static_cast<double>(vel_magnitude))) {
-    return Utils::Expected<void, std::string>{
-        "Invalid orbital parameters for " + std::string(name) + ": position or velocity contains non-finite values"};
+  if (!std::isfinite(static_cast<double>(pos_magnitude)) ||
+      !std::isfinite(static_cast<double>(vel_magnitude))) {
+    return Utils::Expected<void, std::string>{"Invalid orbital parameters for " +
+                                              std::string(name) +
+                                              ": position or velocity contains non-finite values"};
   }
 
   // Define realistic orbital bounds based on body type
@@ -653,7 +652,9 @@ Utils::Expected<void, std::string> BodyFactory::validate_orbital_parameters(
       bounds = {1.0e11L, 1.0e14L, 5.0e4L, "dwarf planet orbit (1 to 1000 AU)"};
       break;
     case BodyType::Moon:
-      bounds = {1.0e8L, 1.0e13L, 5.0e4L, "moon orbit (100 km to solar system scale)"};  // Allow higher velocities for moons in solar system reference frame
+      bounds = {1.0e8L, 1.0e13L, 5.0e4L,
+                "moon orbit (100 km to solar system scale)"};  // Allow higher velocities for moons
+                                                               // in solar system reference frame
       break;
     case BodyType::Asteroid:
       bounds = {1.0e10L, 1.0e13L, 1.0e5L, "asteroid orbit (similar to planets)"};
@@ -669,27 +670,29 @@ Utils::Expected<void, std::string> BodyFactory::validate_orbital_parameters(
   // Validate position bounds
   if (pos_magnitude < bounds.min_distance || pos_magnitude > bounds.max_distance) {
     return Utils::Expected<void, std::string>{
-        "Orbital distance validation failed for " + std::string(name) + " (type: " +
-        std::to_string(static_cast<int>(type)) + "): " +
-        "distance " + std::to_string(static_cast<double>(pos_magnitude)) + " m is outside realistic " + bounds.description +
-        " range [" + std::to_string(static_cast<double>(bounds.min_distance)) + ", " +
-        std::to_string(static_cast<double>(bounds.max_distance)) + "] m"};
+        "Orbital distance validation failed for " + std::string(name) +
+        " (type: " + std::to_string(static_cast<int>(type)) + "): " + "distance " +
+        std::to_string(static_cast<double>(pos_magnitude)) + " m is outside realistic " +
+        bounds.description + " range [" + std::to_string(static_cast<double>(bounds.min_distance)) +
+        ", " + std::to_string(static_cast<double>(bounds.max_distance)) + "] m"};
   }
 
   // Validate velocity bounds
   if (vel_magnitude > bounds.max_velocity) {
     return Utils::Expected<void, std::string>{
-        "Orbital velocity validation failed for " + std::string(name) + " (type: " +
-        std::to_string(static_cast<int>(type)) + "): " +
-        "velocity " + std::to_string(static_cast<double>(vel_magnitude)) + " m/s exceeds realistic maximum " +
-        std::to_string(static_cast<double>(bounds.max_velocity)) + " m/s for " + bounds.description};
+        "Orbital velocity validation failed for " + std::string(name) +
+        " (type: " + std::to_string(static_cast<int>(type)) + "): " + "velocity " +
+        std::to_string(static_cast<double>(vel_magnitude)) + " m/s exceeds realistic maximum " +
+        std::to_string(static_cast<double>(bounds.max_velocity)) + " m/s for " +
+        bounds.description};
   }
 
   // Check for zero position (bodies at origin are suspicious)
   if (pos_magnitude < 1.0e6L && type != BodyType::Star) {  // 1000 km minimum for non-stars
     return Utils::Expected<void, std::string>{
-        "Suspicious orbital position for " + std::string(name) + ": body is very close to origin (" +
-        std::to_string(static_cast<double>(pos_magnitude)) + " m), which may indicate invalid data"};
+        "Suspicious orbital position for " + std::string(name) +
+        ": body is very close to origin (" + std::to_string(static_cast<double>(pos_magnitude)) +
+        " m), which may indicate invalid data"};
   }
 
   return Utils::Expected<void, std::string>{};
@@ -700,7 +703,6 @@ Utils::Expected<void, std::string> BodyFactory::validate_orbital_parameters(
  */
 Utils::Expected<void, std::string> BodyFactory::validate_cross_properties(
     const CelestialBody::Properties& props) const {
-
   long double pos_magnitude = props.position.magnitude();
   long double vel_magnitude = props.velocity.magnitude();
 
@@ -710,7 +712,7 @@ Utils::Expected<void, std::string> BodyFactory::validate_cross_properties(
 
   // Use approximate solar mass for central body (this is a rough validation)
   const long double solar_mass = 1.989e30L;  // kg
-  const long double G = 6.67430e-11L;  // m³/kg/s²
+  const long double G = 6.67430e-11L;        // m³/kg/s²
 
   long double kinetic_energy_per_mass = vel_magnitude * vel_magnitude / 2.0L;
   long double potential_energy_per_mass = G * solar_mass / pos_magnitude;
@@ -722,7 +724,8 @@ Utils::Expected<void, std::string> BodyFactory::validate_cross_properties(
   long double energy_tolerance = (props.type == BodyType::Moon) ? 2.0e8L : 1.0e8L;
   if (specific_energy > energy_tolerance && props.type != BodyType::Spacecraft) {
     return Utils::Expected<void, std::string>{
-        "Cross-validation failed for " + props.name + ": orbital energy suggests unbound trajectory (" +
+        "Cross-validation failed for " + props.name +
+        ": orbital energy suggests unbound trajectory (" +
         std::to_string(static_cast<double>(specific_energy)) + " J/kg), which is unusual for " +
         std::to_string(static_cast<int>(props.type)) + " type bodies"};
   }
@@ -733,14 +736,18 @@ Utils::Expected<void, std::string> BodyFactory::validate_cross_properties(
     // Very rough density check - most rocky/icy bodies have density 1000-8000 kg/m³
     // Assume spherical body: mass = density * (4/3) * π * r³
     // Estimate radius from orbital distance (very rough approximation)
-    long double estimated_radius = std::pow(static_cast<double>(props.mass) / (5000.0 * 4.0/3.0 * M_PI), 1.0/3.0);
+    long double estimated_radius =
+        std::pow(static_cast<double>(props.mass) / (5000.0 * 4.0 / 3.0 * M_PI), 1.0 / 3.0);
 
     // This is a very loose check - just catch obviously wrong values
-    if (estimated_radius > pos_magnitude / 10.0L) {  // Body can't be larger than 1/10 its orbital distance
+    if (estimated_radius >
+        pos_magnitude / 10.0L) {  // Body can't be larger than 1/10 its orbital distance
       return Utils::Expected<void, std::string>{
-          "Cross-validation warning for " + props.name + ": mass-to-orbital-distance ratio suggests " +
-          "unrealistic body size (estimated radius " + std::to_string(static_cast<double>(estimated_radius)) +
-          " m vs orbital distance " + std::to_string(static_cast<double>(pos_magnitude)) + " m)"};
+          "Cross-validation warning for " + props.name +
+          ": mass-to-orbital-distance ratio suggests " +
+          "unrealistic body size (estimated radius " +
+          std::to_string(static_cast<double>(estimated_radius)) + " m vs orbital distance " +
+          std::to_string(static_cast<double>(pos_magnitude)) + " m)"};
     }
   }
 
@@ -751,13 +758,14 @@ Utils::Expected<void, std::string> BodyFactory::validate_cross_properties(
  * @brief Validate body relationships and dependencies
  */
 Utils::Expected<void, std::string> BodyFactory::validate_body_relationships(
-    const CelestialBody::Properties& props, const std::vector<CelestialBody>& existing_bodies) const {
-
+    const CelestialBody::Properties& props,
+    const std::vector<CelestialBody>& existing_bodies) const {
   // Check for duplicate names
   for (const auto& existing_body : existing_bodies) {
     if (existing_body.name() == props.name) {
       return Utils::Expected<void, std::string>{
-          "Body relationship validation failed: duplicate body name '" + props.name + "' already exists in collection"};
+          "Body relationship validation failed: duplicate body name '" + props.name +
+          "' already exists in collection"};
     }
   }
 
@@ -775,7 +783,8 @@ Utils::Expected<void, std::string> BodyFactory::validate_body_relationships(
         // Hill sphere approximation: a_hill ≈ a * (m_planet / 3*m_star)^(1/3)
         // For rough validation, assume moon should be within reasonable distance from planet
         // Allow larger distances for moons positioned in solar system reference frame
-        if (distance < 1.0e12L) {  // Within 1 million km to 1 million km (very lenient for solar system scale)
+        if (distance <
+            1.0e12L) {  // Within 1 million km to 1 million km (very lenient for solar system scale)
           found_nearby_planet = true;
           break;
         }
@@ -796,8 +805,9 @@ Utils::Expected<void, std::string> BodyFactory::validate_body_relationships(
 
       if (!found_nearby_planet) {
         return Utils::Expected<void, std::string>{
-            "Body relationship validation failed for moon '" + props.name + "': no nearby planet found " +
-            "(closest planet at " + std::to_string(static_cast<double>(min_planet_distance)) + " m, " +
+            "Body relationship validation failed for moon '" + props.name +
+            "': no nearby planet found " + "(closest planet at " +
+            std::to_string(static_cast<double>(min_planet_distance)) + " m, " +
             "expected < 1e12 m for typical moon orbits)"};
       }
     }
@@ -811,8 +821,8 @@ Utils::Expected<void, std::string> BodyFactory::validate_body_relationships(
     // Spacecraft shouldn't be created in the future
     if (creation_time > now) {
       return Utils::Expected<void, std::string>{
-          "Body relationship validation failed for spacecraft '" + props.name + "': " +
-          "creation date is in the future"};
+          "Body relationship validation failed for spacecraft '" + props.name +
+          "': " + "creation date is in the future"};
     }
 
     // Spacecraft shouldn't be too old (before space age ~1957)
@@ -824,8 +834,8 @@ Utils::Expected<void, std::string> BodyFactory::validate_body_relationships(
 
     if (creation_time < space_age_start) {
       return Utils::Expected<void, std::string>{
-          "Body relationship validation failed for spacecraft '" + props.name + "': " +
-          "creation date predates the space age (before 1957)"};
+          "Body relationship validation failed for spacecraft '" + props.name +
+          "': " + "creation date predates the space age (before 1957)"};
     }
   }
 
@@ -835,10 +845,10 @@ Utils::Expected<void, std::string> BodyFactory::validate_body_relationships(
     for (const auto& existing_body : existing_bodies) {
       if (existing_body.mass() > props.mass && existing_body.type() != BodyType::Star) {
         return Utils::Expected<void, std::string>{
-            "Body relationship validation warning for star '" + props.name + "': " +
-            "non-stellar body '" + std::string(existing_body.name()) + "' has greater mass (" +
-            std::to_string(static_cast<double>(existing_body.mass())) + " kg vs " +
-            std::to_string(static_cast<double>(props.mass)) + " kg)"};
+            "Body relationship validation warning for star '" + props.name +
+            "': " + "non-stellar body '" + std::string(existing_body.name()) +
+            "' has greater mass (" + std::to_string(static_cast<double>(existing_body.mass())) +
+            " kg vs " + std::to_string(static_cast<double>(props.mass)) + " kg)"};
       }
     }
   }
@@ -850,15 +860,15 @@ Utils::Expected<void, std::string> BodyFactory::validate_body_relationships(
 
 Utils::Expected<CelestialBody, std::string> BodyFactory::create_body_with_intelligent_fallback(
     std::string_view name, const CreationOptions& options) const {
-
   auto start_time = std::chrono::steady_clock::now();
 
   // Execute the fallback strategy
   auto fallback_result = execute_fallback_strategy(name, options);
 
   if (!fallback_result.success) {
-    return Utils::Expected<CelestialBody, std::string>{
-        "Intelligent fallback failed for '" + std::string(name) + "': no suitable data source found"};
+    return Utils::Expected<CelestialBody, std::string>{"Intelligent fallback failed for '" +
+                                                       std::string(name) +
+                                                       "': no suitable data source found"};
   }
 
   // Try to create the body using the determined strategy
@@ -889,20 +899,19 @@ Utils::Expected<CelestialBody, std::string> BodyFactory::create_body_with_intell
       return create_with_hybrid_approach(name, options);
   }
 
-  return Utils::Expected<CelestialBody, std::string>{
-      "Unknown fallback strategy for '" + std::string(name) + "'"};
+  return Utils::Expected<CelestialBody, std::string>{"Unknown fallback strategy for '" +
+                                                     std::string(name) + "'"};
 }
 
 std::vector<BodyFactory::DataSourceInfo> BodyFactory::assess_data_sources(
     std::string_view name, const CreationOptions& options) const {
-
   std::vector<DataSourceInfo> sources;
 
   // Assess JPL HORIZONS
   if (is_data_source_available(DataSource::JPL_HORIZONS, name)) {
     DataSourceInfo jpl_info;
     jpl_info.source = DataSource::JPL_HORIZONS;
-    jpl_info.last_updated = std::chrono::system_clock::now(); // Real-time data
+    jpl_info.last_updated = std::chrono::system_clock::now();  // Real-time data
     jpl_info.is_complete = true;
     jpl_info.quality = DataQuality::EXCELLENT;
     jpl_info.quality_reason = "Real-time JPL HORIZONS data";
@@ -957,7 +966,6 @@ std::vector<BodyFactory::DataSourceInfo> BodyFactory::assess_data_sources(
 BodyFactory::DataQuality BodyFactory::assess_data_quality(
     const CelestialBody& body, DataSource source,
     std::chrono::system_clock::time_point reference_time) const {
-
   // Check for basic data validity
   if (body.mass() <= 0.0L) {
     return DataQuality::POOR;
@@ -1004,13 +1012,12 @@ BodyFactory::DataQuality BodyFactory::assess_data_quality(
 
 Utils::Expected<CelestialBody, std::string> BodyFactory::create_with_hybrid_approach(
     std::string_view name, const CreationOptions& options) const {
-
   // Try to get the best available data from multiple sources
   auto sources = assess_data_sources(name, options);
 
   if (sources.empty()) {
-    return Utils::Expected<CelestialBody, std::string>{
-        "No data sources available for '" + std::string(name) + "'"};
+    return Utils::Expected<CelestialBody, std::string>{"No data sources available for '" +
+                                                       std::string(name) + "'"};
   }
 
   // Use the highest quality source that meets minimum requirements
@@ -1018,7 +1025,7 @@ Utils::Expected<CelestialBody, std::string> BodyFactory::create_with_hybrid_appr
     if (source_info.quality >= options.minimum_quality) {
       CreationOptions source_options = options;
       source_options.preferred_source = source_info.source;
-      source_options.allow_fallback = false; // Don't fallback within hybrid approach
+      source_options.allow_fallback = false;  // Don't fallback within hybrid approach
 
       auto result = create_body(name, source_options);
       if (result.has_value()) {
@@ -1033,7 +1040,6 @@ Utils::Expected<CelestialBody, std::string> BodyFactory::create_with_hybrid_appr
 
 Utils::Expected<CelestialBody, std::string> BodyFactory::create_with_partial_data(
     std::string_view name, const CreationOptions& options) const {
-
   // Try each source and accept partial data if necessary
   auto sources = get_prioritized_sources(name, options);
 
@@ -1041,7 +1047,7 @@ Utils::Expected<CelestialBody, std::string> BodyFactory::create_with_partial_dat
     CreationOptions source_options = options;
     source_options.preferred_source = source;
     source_options.allow_fallback = false;
-    source_options.validate_data = false; // Allow partial/invalid data
+    source_options.validate_data = false;  // Allow partial/invalid data
 
     auto result = create_body(name, source_options);
     if (result.has_value()) {
@@ -1054,13 +1060,12 @@ Utils::Expected<CelestialBody, std::string> BodyFactory::create_with_partial_dat
     }
   }
 
-  return Utils::Expected<CelestialBody, std::string>{
-      "Failed to create '" + std::string(name) + "' even with partial data allowed"};
+  return Utils::Expected<CelestialBody, std::string>{"Failed to create '" + std::string(name) +
+                                                     "' even with partial data allowed"};
 }
 
 BodyFactory::FallbackResult BodyFactory::execute_fallback_strategy(
     std::string_view name, const CreationOptions& options) const {
-
   auto start_time = std::chrono::steady_clock::now();
   FallbackResult result;
   result.success = false;
@@ -1071,7 +1076,8 @@ BodyFactory::FallbackResult BodyFactory::execute_fallback_strategy(
   if (sources.empty()) {
     result.fallback_chain.push_back("No data sources available");
     auto end_time = std::chrono::steady_clock::now();
-    result.total_time = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
+    result.total_time =
+        std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
     return result;
   }
 
@@ -1136,7 +1142,6 @@ BodyFactory::FallbackResult BodyFactory::execute_fallback_strategy(
 
 std::vector<BodyFactory::DataSource> BodyFactory::get_prioritized_sources(
     std::string_view name, const CreationOptions& options) const {
-
   std::vector<DataSource> sources;
 
   if (options.prefer_recent_data) {
@@ -1155,7 +1160,8 @@ std::vector<BodyFactory::DataSource> BodyFactory::get_prioritized_sources(
     sources.push_back(options.preferred_source);
 
     // Add other sources
-    for (auto source : {DataSource::JPL_HORIZONS, DataSource::CACHED_DATA, DataSource::FALLBACK_DATA}) {
+    for (auto source :
+         {DataSource::JPL_HORIZONS, DataSource::CACHED_DATA, DataSource::FALLBACK_DATA}) {
       if (source != options.preferred_source && is_data_source_available(source, name)) {
         sources.push_back(source);
       }
@@ -1185,7 +1191,6 @@ bool BodyFactory::is_data_source_available(DataSource source, std::string_view n
 
 std::chrono::system_clock::time_point BodyFactory::get_data_source_timestamp(
     DataSource source, std::string_view name) const {
-
   switch (source) {
     case DataSource::JPL_HORIZONS:
       // JPL data is always current
@@ -1207,7 +1212,6 @@ std::chrono::system_clock::time_point BodyFactory::get_data_source_timestamp(
 
 Utils::Expected<CelestialBody, std::string> BodyFactory::create_with_graceful_fallback(
     std::string_view name, const CreationOptions& options) const {
-
   auto sources = get_prioritized_sources(name, options);
   std::vector<std::string> errors;
 
@@ -1220,7 +1224,8 @@ Utils::Expected<CelestialBody, std::string> BodyFactory::create_with_graceful_fa
     if (result.has_value()) {
       return result;
     } else {
-      errors.push_back("Source " + std::to_string(static_cast<int>(source)) + ": " + result.error());
+      errors.push_back("Source " + std::to_string(static_cast<int>(source)) + ": " +
+                       result.error());
     }
   }
 
@@ -1235,17 +1240,15 @@ Utils::Expected<CelestialBody, std::string> BodyFactory::create_with_graceful_fa
 
 Utils::Expected<CelestialBody, std::string> BodyFactory::create_with_quality_assessment(
     std::string_view name, const CreationOptions& options) const {
-
   auto sources = assess_data_sources(name, options);
 
   // Filter sources by minimum quality
   auto suitable_sources = sources;
-  suitable_sources.erase(
-    std::remove_if(suitable_sources.begin(), suitable_sources.end(),
-      [&options](const DataSourceInfo& info) {
-        return info.quality < options.minimum_quality;
-      }),
-    suitable_sources.end());
+  suitable_sources.erase(std::remove_if(suitable_sources.begin(), suitable_sources.end(),
+                                        [&options](const DataSourceInfo& info) {
+                                          return info.quality < options.minimum_quality;
+                                        }),
+                         suitable_sources.end());
 
   if (suitable_sources.empty()) {
     return Utils::Expected<CelestialBody, std::string>{
@@ -1264,8 +1267,8 @@ Utils::Expected<CelestialBody, std::string> BodyFactory::create_with_quality_ass
     }
   }
 
-  return Utils::Expected<CelestialBody, std::string>{
-      "Failed to create '" + std::string(name) + "' from quality-assessed sources"};
+  return Utils::Expected<CelestialBody, std::string>{"Failed to create '" + std::string(name) +
+                                                     "' from quality-assessed sources"};
 }
 
 }  // namespace SolarSystem::Bodies

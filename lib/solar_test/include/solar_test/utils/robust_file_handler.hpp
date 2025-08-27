@@ -31,11 +31,7 @@ struct FileOperationConfig {
   double retry_backoff_multiplier = 2.0;
 
   // Fallback configuration
-  std::vector<std::string> fallback_directories = {
-    "./test_output",
-    "/tmp/solar_system_tests",
-    "."
-  };
+  std::vector<std::string> fallback_directories = {"./test_output", "/tmp/solar_system_tests", "."};
 
   // File operation configuration
   bool create_directories = true;
@@ -44,8 +40,8 @@ struct FileOperationConfig {
 
   // Permissions (Unix-style)
   std::filesystem::perms file_permissions = std::filesystem::perms::owner_read |
-                                           std::filesystem::perms::owner_write |
-                                           std::filesystem::perms::group_read;
+                                            std::filesystem::perms::owner_write |
+                                            std::filesystem::perms::group_read;
 };
 
 /**
@@ -60,8 +56,7 @@ struct FileOperationResult {
   std::chrono::milliseconds total_time{0};
 
   FileOperationResult() = default;
-  FileOperationResult(bool success, const std::string& path)
-    : success(success), final_path(path) {}
+  FileOperationResult(bool success, const std::string& path) : success(success), final_path(path) {}
 
   explicit operator bool() const { return success; }
 };
@@ -70,12 +65,8 @@ struct FileOperationResult {
  * @brief RAII wrapper for robust file streams
  */
 class RobustFileStream {
-public:
-  enum class Mode {
-    Read,
-    Write,
-    Append
-  };
+ public:
+  enum class Mode { Read, Write, Append };
 
   RobustFileStream(const std::string& filename, Mode mode,
                    const FileOperationConfig& config = FileOperationConfig{});
@@ -103,7 +94,7 @@ public:
   void close();
 
   // Stream operators
-  template<typename T>
+  template <typename T>
   RobustFileStream& operator<<(const T& value) {
     if (mode_ == Mode::Write || mode_ == Mode::Append) {
       (*output_stream_) << value;
@@ -111,7 +102,7 @@ public:
     return *this;
   }
 
-  template<typename T>
+  template <typename T>
   RobustFileStream& operator>>(T& value) {
     if (mode_ == Mode::Read) {
       input_stream_ >> value;
@@ -119,7 +110,7 @@ public:
     return *this;
   }
 
-private:
+ private:
   Mode mode_;
   FileOperationConfig config_;
   FileOperationResult result_;
@@ -129,7 +120,7 @@ private:
 
   bool attempt_open(const std::string& path);
   std::string generate_fallback_path(const std::string& original_filename,
-                                   const std::string& fallback_dir) const;
+                                     const std::string& fallback_dir) const;
   bool ensure_directory_exists(const std::filesystem::path& dir_path);
   void setup_atomic_write(const std::string& final_path);
   void finalize_atomic_write();
@@ -140,7 +131,7 @@ private:
  * @brief Robust file operations utility class
  */
 class RobustFileHandler {
-public:
+ public:
   explicit RobustFileHandler(const FileOperationConfig& config = FileOperationConfig{});
 
   // File writing operations
@@ -179,11 +170,11 @@ public:
   static std::string get_safe_filename(const std::string& filename);
   static std::string get_unique_filename(const std::string& base_filename);
 
-private:
+ private:
   FileOperationConfig config_;
 
   // Internal retry mechanism
-  template<typename Operation>
+  template <typename Operation>
   FileOperationResult retry_operation(const std::string& description, Operation&& op);
 
   // Path resolution
@@ -192,17 +183,17 @@ private:
 
   // Error handling
   std::string get_system_error_message() const;
-  void log_operation_attempt(const std::string& operation, const std::string& path,
-                           int attempt, const std::string& error = "") const;
+  void log_operation_attempt(const std::string& operation, const std::string& path, int attempt,
+                             const std::string& error = "") const;
 };
 
 /**
  * @brief RAII temporary file manager
  */
 class TemporaryFile {
-public:
+ public:
   explicit TemporaryFile(const std::string& prefix = "solar_test_",
-                        const std::string& suffix = ".tmp");
+                         const std::string& suffix = ".tmp");
   ~TemporaryFile();
 
   // Non-copyable, movable
@@ -220,7 +211,7 @@ public:
   // Manual cleanup
   void cleanup();
 
-private:
+ private:
   std::string file_path_;
   bool cleanup_on_destroy_ = true;
 };
@@ -238,14 +229,14 @@ struct FileOperationStats {
   std::chrono::milliseconds average_time{0};
 
   double success_rate() const {
-    return total_operations > 0 ?
-           static_cast<double>(successful_operations) / total_operations : 0.0;
+    return total_operations > 0 ? static_cast<double>(successful_operations) / total_operations
+                                : 0.0;
   }
 
   void update_average_time() {
-    average_time = total_operations > 0 ?
-                   std::chrono::milliseconds(total_time.count() / total_operations) :
-                   std::chrono::milliseconds{0};
+    average_time = total_operations > 0
+                       ? std::chrono::milliseconds(total_time.count() / total_operations)
+                       : std::chrono::milliseconds{0};
   }
 };
 
@@ -253,7 +244,7 @@ struct FileOperationStats {
  * @brief Global file operation monitor
  */
 class FileOperationMonitor {
-public:
+ public:
   static FileOperationMonitor& instance();
 
   void record_operation(const FileOperationResult& result);
@@ -264,11 +255,11 @@ public:
   using OperationCallback = std::function<void(const FileOperationResult&)>;
   void set_operation_callback(OperationCallback callback) { callback_ = std::move(callback); }
 
-private:
+ private:
   FileOperationStats stats_;
   OperationCallback callback_;
 
   FileOperationMonitor() = default;
 };
 
-} // namespace SolarSystem::Testing::Utils
+}  // namespace SolarSystem::Testing::Utils

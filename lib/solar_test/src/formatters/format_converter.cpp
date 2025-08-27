@@ -3,20 +3,19 @@
  * @brief Implementation of format converter for migrating between output formats
  */
 
-#include "solar_test/formatters/output_formatter.hpp"
-
 #include <algorithm>
 #include <fstream>
 #include <iomanip>
 #include <regex>
 #include <sstream>
 
+#include "solar_test/formatters/output_formatter.hpp"
+
 namespace SolarSystem::Testing::Formatters {
 
 // FormatConverter implementation
-std::string FormatConverter::convert(const std::string& input,
-                                   OutputFormat from_format,
-                                   OutputFormat to_format) {
+std::string FormatConverter::convert(const std::string& input, OutputFormat from_format,
+                                     OutputFormat to_format) {
   if (from_format == to_format) {
     return input;
   }
@@ -69,9 +68,9 @@ std::string FormatConverter::json_to_csv(const std::string& json) {
 }
 
 FormatValidationResult FormatConverter::validate_conversion(const std::string& input,
-                                                           const std::string& output,
-                                                           OutputFormat from_format,
-                                                           OutputFormat to_format) {
+                                                            const std::string& output,
+                                                            OutputFormat from_format,
+                                                            OutputFormat to_format) {
   FormatValidationResult result(true);
 
   try {
@@ -92,10 +91,10 @@ FormatValidationResult FormatConverter::validate_conversion(const std::string& i
     }
 
     // Validate content preservation (basic check)
-    auto input_results = (from_format == OutputFormat::XML) ?
-                        parse_xml_results(input) : parse_json_results(input);
-    auto output_results = (to_format == OutputFormat::XML) ?
-                         parse_xml_results(output) : parse_json_results(output);
+    auto input_results =
+        (from_format == OutputFormat::XML) ? parse_xml_results(input) : parse_json_results(input);
+    auto output_results =
+        (to_format == OutputFormat::XML) ? parse_xml_results(output) : parse_json_results(output);
 
     if (input_results.size() != output_results.size()) {
       result.warnings.push_back("Number of test results changed during conversion");
@@ -104,12 +103,12 @@ FormatValidationResult FormatConverter::validate_conversion(const std::string& i
     // Check for data loss in key fields
     for (size_t i = 0; i < std::min(input_results.size(), output_results.size()); ++i) {
       if (input_results[i].name != output_results[i].name) {
-        result.warnings.push_back("Test name changed during conversion: " +
-                                 input_results[i].name + " -> " + output_results[i].name);
+        result.warnings.push_back("Test name changed during conversion: " + input_results[i].name +
+                                  " -> " + output_results[i].name);
       }
       if (input_results[i].status != output_results[i].status) {
         result.warnings.push_back("Test status changed during conversion for: " +
-                                 input_results[i].name);
+                                  input_results[i].name);
       }
     }
 
@@ -123,7 +122,6 @@ FormatValidationResult FormatConverter::validate_conversion(const std::string& i
 
 std::vector<FormatValidationResult> FormatConverter::convert_batch(
     const std::vector<ConversionJob>& jobs) {
-
   std::vector<FormatValidationResult> results;
   results.reserve(jobs.size());
 
@@ -141,7 +139,7 @@ std::vector<FormatValidationResult> FormatConverter::convert_batch(
       }
 
       std::string input_content((std::istreambuf_iterator<char>(input_file)),
-                               std::istreambuf_iterator<char>());
+                                std::istreambuf_iterator<char>());
       input_file.close();
 
       // Perform conversion
@@ -160,8 +158,7 @@ std::vector<FormatValidationResult> FormatConverter::convert_batch(
       output_file.close();
 
       // Validate conversion
-      result = validate_conversion(input_content, output_content,
-                                  job.from_format, job.to_format);
+      result = validate_conversion(input_content, output_content, job.from_format, job.to_format);
 
     } catch (const std::exception& e) {
       result.is_valid = false;
@@ -174,11 +171,13 @@ std::vector<FormatValidationResult> FormatConverter::convert_batch(
   return results;
 }
 
-std::vector<FormatConverter::ParsedTestResult> FormatConverter::parse_xml_results(const std::string& xml) {
+std::vector<FormatConverter::ParsedTestResult> FormatConverter::parse_xml_results(
+    const std::string& xml) {
   std::vector<ParsedTestResult> results;
 
   // Parse testcase elements
-  std::regex testcase_regex("<testcase[^>]*name=\"([^\"]*)\"[^>]*time=\"([^\"]*)\"[^>]*>(.*?)</testcase>");
+  std::regex testcase_regex(
+      "<testcase[^>]*name=\"([^\"]*)\"[^>]*time=\"([^\"]*)\"[^>]*>(.*?)</testcase>");
   std::sregex_iterator iter(xml.begin(), xml.end(), testcase_regex);
   std::sregex_iterator end;
 
@@ -229,7 +228,8 @@ std::vector<FormatConverter::ParsedTestResult> FormatConverter::parse_xml_result
   return results;
 }
 
-std::vector<FormatConverter::ParsedTestResult> FormatConverter::parse_json_results(const std::string& json) {
+std::vector<FormatConverter::ParsedTestResult> FormatConverter::parse_json_results(
+    const std::string& json) {
   std::vector<ParsedTestResult> results;
 
   // Simple JSON parsing for test results
@@ -248,7 +248,9 @@ std::vector<FormatConverter::ParsedTestResult> FormatConverter::parse_json_resul
   }
 
   // Parse individual test objects
-  std::regex test_regex("\\{\\s*\"name\":\\s*\"([^\"]*)\"[^}]*\"status\":\\s*\"([^\"]*)\"[^}]*\"duration_ms\":\\s*(\\d+)[^}]*(?:\"error_message\":\\s*\"([^\"]*)\")?[^}]*\\}");
+  std::regex test_regex(
+      "\\{\\s*\"name\":\\s*\"([^\"]*)\"[^}]*\"status\":\\s*\"([^\"]*)\"[^}]*\"duration_ms\":\\s*("
+      "\\d+)[^}]*(?:\"error_message\":\\s*\"([^\"]*)\")?[^}]*\\}");
   std::sregex_iterator iter(json.begin(), json.end(), test_regex);
   std::sregex_iterator end;
 
@@ -366,7 +368,8 @@ std::string FormatConverter::convert_to_html(const std::vector<ParsedTestResult>
   html << "<body>\n";
   html << "  <h1>Test Results</h1>\n";
   html << "  <table>\n";
-  html << "    <tr><th>Test Name</th><th>Status</th><th>Duration (ms)</th><th>Error Message</th></tr>\n";
+  html << "    <tr><th>Test Name</th><th>Status</th><th>Duration (ms)</th><th>Error "
+          "Message</th></tr>\n";
 
   for (const auto& result : results) {
     html << "    <tr>\n";
@@ -407,12 +410,24 @@ std::string FormatConverter::xml_escape(const std::string& text) {
 
   for (char c : text) {
     switch (c) {
-      case '<': escaped += "&lt;"; break;
-      case '>': escaped += "&gt;"; break;
-      case '&': escaped += "&amp;"; break;
-      case '"': escaped += "&quot;"; break;
-      case '\'': escaped += "&apos;"; break;
-      default: escaped += c; break;
+      case '<':
+        escaped += "&lt;";
+        break;
+      case '>':
+        escaped += "&gt;";
+        break;
+      case '&':
+        escaped += "&amp;";
+        break;
+      case '"':
+        escaped += "&quot;";
+        break;
+      case '\'':
+        escaped += "&apos;";
+        break;
+      default:
+        escaped += c;
+        break;
     }
   }
 
@@ -425,13 +440,27 @@ std::string FormatConverter::json_escape(const std::string& text) {
 
   for (char c : text) {
     switch (c) {
-      case '"': escaped << "\\\""; break;
-      case '\\': escaped << "\\\\"; break;
-      case '\b': escaped << "\\b"; break;
-      case '\f': escaped << "\\f"; break;
-      case '\n': escaped << "\\n"; break;
-      case '\r': escaped << "\\r"; break;
-      case '\t': escaped << "\\t"; break;
+      case '"':
+        escaped << "\\\"";
+        break;
+      case '\\':
+        escaped << "\\\\";
+        break;
+      case '\b':
+        escaped << "\\b";
+        break;
+      case '\f':
+        escaped << "\\f";
+        break;
+      case '\n':
+        escaped << "\\n";
+        break;
+      case '\r':
+        escaped << "\\r";
+        break;
+      case '\t':
+        escaped << "\\t";
+        break;
       default:
         if (c < 0x20) {
           escaped << "\\u" << std::hex << std::setw(4) << std::setfill('0') << static_cast<int>(c);
@@ -452,11 +481,21 @@ std::string FormatConverter::html_escape(const std::string& text) {
 
   for (char c : text) {
     switch (c) {
-      case '<': escaped += "&lt;"; break;
-      case '>': escaped += "&gt;"; break;
-      case '&': escaped += "&amp;"; break;
-      case '"': escaped += "&quot;"; break;
-      default: escaped += c; break;
+      case '<':
+        escaped += "&lt;";
+        break;
+      case '>':
+        escaped += "&gt;";
+        break;
+      case '&':
+        escaped += "&amp;";
+        break;
+      case '"':
+        escaped += "&quot;";
+        break;
+      default:
+        escaped += c;
+        break;
     }
   }
 
@@ -464,8 +503,7 @@ std::string FormatConverter::html_escape(const std::string& text) {
 }
 
 std::string FormatConverter::csv_escape(const std::string& text) {
-  if (text.find(',') == std::string::npos &&
-      text.find('"') == std::string::npos &&
+  if (text.find(',') == std::string::npos && text.find('"') == std::string::npos &&
       text.find('\n') == std::string::npos) {
     return text;
   }
@@ -483,4 +521,4 @@ std::string FormatConverter::csv_escape(const std::string& text) {
   return escaped;
 }
 
-} // namespace SolarSystem::Testing::Formatters
+}  // namespace SolarSystem::Testing::Formatters

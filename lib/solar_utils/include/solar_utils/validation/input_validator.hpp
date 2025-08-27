@@ -10,14 +10,14 @@
 
 #pragma once
 
+#include <cfloat>
 #include <chrono>
+#include <climits>
 #include <optional>
 #include <regex>
 #include <string>
-#include <vector>
 #include <unordered_map>
-#include <climits>
-#include <cfloat>
+#include <vector>
 
 namespace SolarSystem::Utils::Validation {
 
@@ -35,18 +35,18 @@ struct ValidationResult {
 
   // Constructor for successful validation
   ValidationResult(bool valid, const std::string& value = "")
-    : is_valid(valid), normalized_value(value) {}
+      : is_valid(valid), normalized_value(value) {}
 
   // Constructor for failed validation with error message
   explicit ValidationResult(const std::string& error, const std::vector<std::string>& formats = {})
-    : is_valid(false), error_message(error), expected_formats(formats) {}
+      : is_valid(false), error_message(error), expected_formats(formats) {}
 };
 
 /**
  * @brief Date/time validator with multiple format support (Requirement 5.2)
  */
 class DateTimeValidator {
-public:
+ public:
   /**
    * @brief Parse date with automatic format detection
    */
@@ -55,16 +55,16 @@ public:
   /**
    * @brief Parse date with range validation (Requirement 5.4)
    */
-  static ValidationResult validate_date_with_range(const std::string& date_str,
-                                                  const std::chrono::system_clock::time_point& min_date,
-                                                  const std::chrono::system_clock::time_point& max_date);
+  static ValidationResult validate_date_with_range(
+      const std::string& date_str, const std::chrono::system_clock::time_point& min_date,
+      const std::chrono::system_clock::time_point& max_date);
 
   /**
    * @brief Get supported date formats
    */
   static std::vector<std::string> get_supported_formats();
 
-private:
+ private:
   static const std::vector<std::regex> date_patterns_;
   static const std::vector<std::string> format_descriptions_;
 };
@@ -73,16 +73,18 @@ private:
  * @brief Numeric validator with range checking (Requirements 5.1, 5.4)
  */
 class NumericValidator {
-public:
+ public:
   /**
    * @brief Validate integer with range checking
    */
-  static ValidationResult validate_int(const std::string& str, int min_val = INT_MIN, int max_val = INT_MAX);
+  static ValidationResult validate_int(const std::string& str, int min_val = INT_MIN,
+                                       int max_val = INT_MAX);
 
   /**
    * @brief Validate double with range checking
    */
-  static ValidationResult validate_double(const std::string& str, double min_val = -DBL_MAX, double max_val = DBL_MAX);
+  static ValidationResult validate_double(const std::string& str, double min_val = -DBL_MAX,
+                                          double max_val = DBL_MAX);
 
   /**
    * @brief Validate port number (common use case)
@@ -99,11 +101,12 @@ public:
  * @brief String validator with pattern matching (Requirement 5.1)
  */
 class StringValidator {
-public:
+ public:
   /**
    * @brief Validate string against allowed values
    */
-  static ValidationResult validate_choice(const std::string& str, const std::vector<std::string>& allowed_values);
+  static ValidationResult validate_choice(const std::string& str,
+                                          const std::vector<std::string>& allowed_values);
 
   /**
    * @brief Validate email format
@@ -125,19 +128,18 @@ public:
  * @brief Input validator that combines all validation types
  */
 class InputValidator {
-public:
+ public:
   /**
    * @brief Validate argument based on expected type
    */
-  static ValidationResult validate_argument(const std::string& arg_name,
-                                           const std::string& value,
-                                           const std::string& expected_type);
+  static ValidationResult validate_argument(const std::string& arg_name, const std::string& value,
+                                            const std::string& expected_type);
 
   /**
    * @brief Get validation suggestions for invalid input
    */
   static std::vector<std::string> get_suggestions(const std::string& invalid_input,
-                                                 const std::vector<std::string>& valid_options);
+                                                  const std::vector<std::string>& valid_options);
 };
 
-} // namespace SolarSystem::Utils::Validation
+}  // namespace SolarSystem::Utils::Validation

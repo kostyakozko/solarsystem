@@ -14,13 +14,12 @@
 namespace SolarSystem::Utils {
 
 // ManagedFileHandle implementation
-ManagedFileHandle::ManagedFileHandle(const std::string& file_path, FileAccessMode mode, FileLockType lock_type) {
+ManagedFileHandle::ManagedFileHandle(const std::string& file_path, FileAccessMode mode,
+                                     FileLockType lock_type) {
   open(file_path, mode, lock_type);
 }
 
-ManagedFileHandle::~ManagedFileHandle() {
-  close();
-}
+ManagedFileHandle::~ManagedFileHandle() { close(); }
 
 ManagedFileHandle::ManagedFileHandle(ManagedFileHandle&& other) noexcept
     : file_path_(std::move(other.file_path_)),
@@ -60,7 +59,8 @@ ManagedFileHandle& ManagedFileHandle::operator=(ManagedFileHandle&& other) noexc
   return *this;
 }
 
-bool ManagedFileHandle::open(const std::string& file_path, FileAccessMode mode, FileLockType lock_type) {
+bool ManagedFileHandle::open(const std::string& file_path, FileAccessMode mode,
+                             FileLockType lock_type) {
   close();  // Close any existing handle
 
   file_path_ = file_path;
@@ -83,7 +83,7 @@ bool ManagedFileHandle::open(const std::string& file_path, FileAccessMode mode, 
           open_mode |= std::ios_base::binary;
         }
         input_stream_ = std::make_unique<std::ifstream>(file_path, open_mode);
-  break;
+        break;
 
       case FileAccessMode::Write:
         open_mode = std::ios_base::out | std::ios_base::trunc;
@@ -150,8 +150,8 @@ std::string ManagedFileHandle::read_all() {
     return "";
   }
 
-  std::istream* stream = input_stream_ ? static_cast<std::istream*>(input_stream_.get()) :
-                                        static_cast<std::istream*>(bidirectional_stream_.get());
+  std::istream* stream = input_stream_ ? static_cast<std::istream*>(input_stream_.get())
+                                       : static_cast<std::istream*>(bidirectional_stream_.get());
   std::ostringstream content;
   content << stream->rdbuf();
 
@@ -167,8 +167,8 @@ std::string ManagedFileHandle::read_line() {
     return "";
   }
 
-  std::istream* stream = input_stream_ ? static_cast<std::istream*>(input_stream_.get()) :
-                                        static_cast<std::istream*>(bidirectional_stream_.get());
+  std::istream* stream = input_stream_ ? static_cast<std::istream*>(input_stream_.get())
+                                       : static_cast<std::istream*>(bidirectional_stream_.get());
   std::string line;
   std::getline(*stream, line);
 
@@ -183,8 +183,8 @@ std::vector<char> ManagedFileHandle::read_binary(size_t bytes) {
     return {};
   }
 
-  std::istream* stream = input_stream_ ? static_cast<std::istream*>(input_stream_.get()) :
-                                        static_cast<std::istream*>(bidirectional_stream_.get());
+  std::istream* stream = input_stream_ ? static_cast<std::istream*>(input_stream_.get())
+                                       : static_cast<std::istream*>(bidirectional_stream_.get());
   std::vector<char> buffer(bytes);
   stream->read(buffer.data(), bytes);
 
@@ -202,8 +202,8 @@ size_t ManagedFileHandle::read(char* buffer, size_t size) {
     return 0;
   }
 
-  std::istream* stream = input_stream_ ? static_cast<std::istream*>(input_stream_.get()) :
-                                        static_cast<std::istream*>(bidirectional_stream_.get());
+  std::istream* stream = input_stream_ ? static_cast<std::istream*>(input_stream_.get())
+                                       : static_cast<std::istream*>(bidirectional_stream_.get());
   stream->read(buffer, size);
 
   size_t actual_bytes = stream->gcount();
@@ -218,8 +218,8 @@ bool ManagedFileHandle::write(const std::string& data) {
     return false;
   }
 
-  std::ostream* stream = output_stream_ ? static_cast<std::ostream*>(output_stream_.get()) :
-                                         static_cast<std::ostream*>(bidirectional_stream_.get());
+  std::ostream* stream = output_stream_ ? static_cast<std::ostream*>(output_stream_.get())
+                                        : static_cast<std::ostream*>(bidirectional_stream_.get());
   *stream << data;
 
   if (stream->good()) {
@@ -231,17 +231,15 @@ bool ManagedFileHandle::write(const std::string& data) {
   return false;
 }
 
-bool ManagedFileHandle::write_line(const std::string& line) {
-  return write(line + "\n");
-}
+bool ManagedFileHandle::write_line(const std::string& line) { return write(line + "\n"); }
 
 bool ManagedFileHandle::write_binary(const std::vector<char>& data) {
   if (!output_stream_ && !bidirectional_stream_) {
     return false;
   }
 
-  std::ostream* stream = output_stream_ ? static_cast<std::ostream*>(output_stream_.get()) :
-                                         static_cast<std::ostream*>(bidirectional_stream_.get());
+  std::ostream* stream = output_stream_ ? static_cast<std::ostream*>(output_stream_.get())
+                                        : static_cast<std::ostream*>(bidirectional_stream_.get());
   stream->write(data.data(), data.size());
 
   if (stream->good()) {
@@ -258,8 +256,8 @@ bool ManagedFileHandle::write(const char* data, size_t size) {
     return false;
   }
 
-  std::ostream* stream = output_stream_ ? static_cast<std::ostream*>(output_stream_.get()) :
-                                         static_cast<std::ostream*>(bidirectional_stream_.get());
+  std::ostream* stream = output_stream_ ? static_cast<std::ostream*>(output_stream_.get())
+                                        : static_cast<std::ostream*>(bidirectional_stream_.get());
   stream->write(data, size);
 
   if (stream->good()) {
@@ -283,16 +281,12 @@ size_t ManagedFileHandle::size() const {
   }
 }
 
-bool ManagedFileHandle::exists() const {
-  return std::filesystem::exists(file_path_);
-}
+bool ManagedFileHandle::exists() const { return std::filesystem::exists(file_path_); }
 
 void ManagedFileHandle::register_with_resource_manager() {
   ResourceInfo info("", ResourceType::FileHandle, size(), "", "File: " + file_path_);
   info.resource_ptr = this;
-  info.cleanup_function = [this]() {
-    close();
-  };
+  info.cleanup_function = [this]() { close(); };
 
   resource_id_ = ResourceManager::instance().register_resource(info);
 
@@ -334,8 +328,8 @@ FileResourceManager::~FileResourceManager() {
 }
 
 std::unique_ptr<ManagedFileHandle> FileResourceManager::open_file(const std::string& file_path,
-                                                                 FileAccessMode mode,
-                                                                 FileLockType lock_type) {
+                                                                  FileAccessMode mode,
+                                                                  FileLockType lock_type) {
   std::lock_guard<std::mutex> lock(files_mutex_);
 
   if (!check_file_limits()) {
@@ -360,7 +354,8 @@ bool FileResourceManager::is_file_locked(const std::string& file_path) const {
   return file_locks_.find(file_path) != file_locks_.end();
 }
 
-bool FileResourceManager::can_acquire_lock(const std::string& file_path, FileLockType requested_lock) const {
+bool FileResourceManager::can_acquire_lock(const std::string& file_path,
+                                           FileLockType requested_lock) const {
   std::lock_guard<std::mutex> lock(files_mutex_);
 
   auto it = file_locks_.find(file_path);
@@ -379,8 +374,8 @@ bool FileResourceManager::can_acquire_lock(const std::string& file_path, FileLoc
   return existing_lock == FileLockType::Shared && requested_lock == FileLockType::Shared;
 }
 
-std::vector<std::string> FileResourceManager::get_conflicting_files(const std::string& file_path,
-                                                                   FileLockType requested_lock) const {
+std::vector<std::string> FileResourceManager::get_conflicting_files(
+    const std::string& file_path, FileLockType requested_lock) const {
   std::vector<std::string> conflicts;
 
   if (!can_acquire_lock(file_path, requested_lock)) {
@@ -391,8 +386,8 @@ std::vector<std::string> FileResourceManager::get_conflicting_files(const std::s
 }
 
 std::unique_ptr<ManagedFileHandle> FileResourceManager::create_temp_file(const std::string& prefix,
-                                                                        const std::string& suffix,
-                                                                        bool auto_delete) {
+                                                                         const std::string& suffix,
+                                                                         bool auto_delete) {
   std::string temp_path = generate_temp_path(prefix, suffix);
 
   auto handle = open_file(temp_path, FileAccessMode::ReadWrite);
@@ -449,7 +444,8 @@ void FileResourceManager::cleanup_temp_directories() {
   }
 }
 
-bool FileResourceManager::copy_file_managed(const std::string& source, const std::string& destination, bool overwrite) {
+bool FileResourceManager::copy_file_managed(const std::string& source,
+                                            const std::string& destination, bool overwrite) {
   try {
     std::filesystem::copy_options options = std::filesystem::copy_options::none;
     if (overwrite) {
@@ -462,7 +458,8 @@ bool FileResourceManager::copy_file_managed(const std::string& source, const std
   }
 }
 
-bool FileResourceManager::move_file_managed(const std::string& source, const std::string& destination) {
+bool FileResourceManager::move_file_managed(const std::string& source,
+                                            const std::string& destination) {
   try {
     std::filesystem::rename(source, destination);
     return true;
@@ -499,7 +496,8 @@ bool FileResourceManager::atomic_write(const std::string& file_path, const std::
   }
 }
 
-bool FileResourceManager::atomic_write_binary(const std::string& file_path, const std::vector<char>& data) {
+bool FileResourceManager::atomic_write_binary(const std::string& file_path,
+                                              const std::vector<char>& data) {
   std::string temp_path = file_path + ".tmp";
 
   try {
@@ -528,7 +526,8 @@ std::string FileResourceManager::atomic_read(const std::string& file_path) {
   return handle->read_all();
 }
 
-bool FileResourceManager::create_backup(const std::string& file_path, const std::string& backup_suffix) {
+bool FileResourceManager::create_backup(const std::string& file_path,
+                                        const std::string& backup_suffix) {
   if (!std::filesystem::exists(file_path)) {
     return false;
   }
@@ -537,7 +536,8 @@ bool FileResourceManager::create_backup(const std::string& file_path, const std:
   return copy_file_managed(file_path, backup_path, true);
 }
 
-bool FileResourceManager::restore_from_backup(const std::string& file_path, const std::string& backup_suffix) {
+bool FileResourceManager::restore_from_backup(const std::string& file_path,
+                                              const std::string& backup_suffix) {
   std::string backup_path = file_path + backup_suffix;
   if (!std::filesystem::exists(backup_path)) {
     return false;
@@ -546,7 +546,8 @@ bool FileResourceManager::restore_from_backup(const std::string& file_path, cons
   return copy_file_managed(backup_path, file_path, true);
 }
 
-void FileResourceManager::cleanup_backups(const std::string& directory, std::chrono::hours max_age) {
+void FileResourceManager::cleanup_backups(const std::string& directory,
+                                          std::chrono::hours max_age) {
   try {
     auto cutoff_time = std::filesystem::file_time_type::clock::now() - max_age;
 
@@ -599,8 +600,8 @@ void FileResourceManager::generate_file_usage_report(std::ostream& output) const
 
   output << "Open Files:\n";
   for (const auto& [path, info] : open_files_) {
-    auto age = std::chrono::duration_cast<std::chrono::seconds>(
-      std::chrono::system_clock::now() - info.opened_at);
+    auto age = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now() -
+                                                                info.opened_at);
 
     output << "  " << path << " (" << static_cast<int>(info.access_mode) << "): "
            << "age " << age.count() << "s, "
@@ -661,10 +662,10 @@ void FileResourceManager::update_statistics(const FileHandleInfo& info, bool is_
   }
 }
 
-std::string FileResourceManager::generate_temp_path(const std::string& prefix, const std::string& suffix) const {
-  std::filesystem::path temp_dir = temp_directory_.empty() ?
-                                  std::filesystem::temp_directory_path() :
-                                  std::filesystem::path(temp_directory_);
+std::string FileResourceManager::generate_temp_path(const std::string& prefix,
+                                                    const std::string& suffix) const {
+  std::filesystem::path temp_dir = temp_directory_.empty() ? std::filesystem::temp_directory_path()
+                                                           : std::filesystem::path(temp_directory_);
 
   // Generate unique filename
   static std::random_device rd;
@@ -681,7 +682,8 @@ std::string FileResourceManager::generate_temp_path(const std::string& prefix, c
   return (temp_dir / filename.str()).string();
 }
 
-void FileResourceManager::register_file_handle(const std::string& file_path, const FileHandleInfo& info) {
+void FileResourceManager::register_file_handle(const std::string& file_path,
+                                               const FileHandleInfo& info) {
   std::lock_guard<std::mutex> lock(files_mutex_);
   open_files_[file_path] = info;
   update_statistics(info, true);
@@ -722,7 +724,8 @@ namespace FileUtils {
 
 FileResult<std::string> safe_read_file(const std::string& file_path) {
   try {
-    auto handle = FileResourceManager::instance().open_file(file_path, FileAccessMode::Read, FileLockType::Shared);
+    auto handle = FileResourceManager::instance().open_file(file_path, FileAccessMode::Read,
+                                                            FileLockType::Shared);
     if (!handle) {
       return FileResult<std::string>("Failed to open file: " + file_path);
     }
@@ -768,7 +771,8 @@ bool ensure_directory_exists(const std::string& directory_path) {
   }
 }
 
-std::vector<std::string> list_files_in_directory(const std::string& directory_path, const std::string& pattern) {
+std::vector<std::string> list_files_in_directory(const std::string& directory_path,
+                                                 const std::string& pattern) {
   std::vector<std::string> files;
 
   try {
@@ -873,6 +877,6 @@ std::string get_unique_filename(const std::string& base_path) {
   return unique_path;
 }
 
-} // namespace FileUtils
+}  // namespace FileUtils
 
-} // namespace SolarSystem::Utils
+}  // namespace SolarSystem::Utils

@@ -11,8 +11,6 @@
 
 #pragma once
 
-#include "error_handling.hpp"
-
 #include <atomic>
 #include <condition_variable>
 #include <functional>
@@ -22,6 +20,8 @@
 #include <queue>
 #include <thread>
 #include <unordered_set>
+
+#include "error_handling.hpp"
 
 namespace SolarSystem::Utils {
 
@@ -52,13 +52,13 @@ enum class RecoveryStatus {
  * @brief User interaction types for recovery workflows
  */
 enum class UserInteractionType {
-  Confirmation,     // Yes/No confirmation
-  Selection,        // Select from options
-  Input,           // Text input
-  FileSelection,   // File selection
-  Retry,           // Retry operation
-  Skip,            // Skip this step
-  Abort            // Abort recovery
+  Confirmation,   // Yes/No confirmation
+  Selection,      // Select from options
+  Input,          // Text input
+  FileSelection,  // File selection
+  Retry,          // Retry operation
+  Skip,           // Skip this step
+  Abort           // Abort recovery
 };
 
 /**
@@ -113,7 +113,7 @@ struct RecoveryWorkflow {
   std::string description;
   std::vector<RecoveryStep> steps;
   RecoveryMode mode = RecoveryMode::Automatic;
-  std::chrono::seconds total_timeout{300}; // 5 minutes
+  std::chrono::seconds total_timeout{300};  // 5 minutes
   std::function<void(const std::string&)> progress_callback;
   std::function<void(const DetailedError&)> error_callback;
 };
@@ -185,7 +185,7 @@ struct LearningDataPoint {
  * @brief Advanced error recovery manager
  */
 class AdvancedErrorRecoveryManager {
-public:
+ public:
   static AdvancedErrorRecoveryManager& instance();
 
   // Workflow management
@@ -196,14 +196,14 @@ public:
 
   // Recovery execution
   std::future<bool> execute_recovery_async(const DetailedError& error,
-                                          const std::string& workflow_id = "",
-                                          RecoveryMode mode = RecoveryMode::Automatic);
-  bool execute_recovery_sync(const DetailedError& error,
-                            const std::string& workflow_id = "",
-                            RecoveryMode mode = RecoveryMode::Automatic);
+                                           const std::string& workflow_id = "",
+                                           RecoveryMode mode = RecoveryMode::Automatic);
+  bool execute_recovery_sync(const DetailedError& error, const std::string& workflow_id = "",
+                             RecoveryMode mode = RecoveryMode::Automatic);
 
   // User interaction handling
-  void set_user_interaction_handler(std::function<UserInteractionResponse(const UserInteractionRequest&)> handler);
+  void set_user_interaction_handler(
+      std::function<UserInteractionResponse(const UserInteractionRequest&)> handler);
   UserInteractionResponse request_user_interaction(const UserInteractionRequest& request);
 
   // Recovery monitoring
@@ -218,11 +218,11 @@ public:
 
   // Recovery statistics and learning
   void record_recovery_outcome(const DetailedError& error, const RecoveryAction& action,
-                              bool successful, std::chrono::milliseconds duration);
+                               bool successful, std::chrono::milliseconds duration);
   std::vector<LearningDataPoint> get_learning_data() const;
   void update_recovery_strategies_from_learning();
 
-private:
+ private:
   AdvancedErrorRecoveryManager() = default;
   ~AdvancedErrorRecoveryManager();
 
@@ -258,7 +258,7 @@ private:
  * @brief Error prevention system
  */
 class ErrorPreventionSystem {
-public:
+ public:
   static ErrorPreventionSystem& instance();
 
   // Prevention rule management
@@ -278,7 +278,7 @@ public:
   void set_prevention_enabled(bool enabled = true);
   void set_check_interval(std::chrono::seconds interval);
 
-private:
+ private:
   ErrorPreventionSystem() = default;
   ~ErrorPreventionSystem();
 
@@ -294,7 +294,8 @@ private:
   std::chrono::seconds check_interval_{10};
 
   // Internal methods
-  bool evaluate_prevention_rule(const PreventionRule& rule, const std::vector<DetailedError>& errors);
+  bool evaluate_prevention_rule(const PreventionRule& rule,
+                                const std::vector<DetailedError>& errors);
   void record_prevention_attempt(const std::string& rule_id, bool successful);
 };
 
@@ -302,7 +303,7 @@ private:
  * @brief Early detection system
  */
 class EarlyDetectionSystem {
-public:
+ public:
   static EarlyDetectionSystem& instance();
 
   // Monitor management
@@ -324,7 +325,7 @@ public:
   void set_monitoring_interval(std::chrono::seconds interval);
   void set_health_thresholds(double warning_threshold, double critical_threshold);
 
-private:
+ private:
   EarlyDetectionSystem() = default;
   ~EarlyDetectionSystem();
 
@@ -346,21 +347,21 @@ private:
   void monitoring_loop();
   void check_monitor(EarlyDetectionMonitor& monitor);
   void process_monitor_results(const std::string& monitor_id, double health_score,
-                              const std::vector<DetailedError>& issues);
+                               const std::vector<DetailedError>& issues);
 };
 
 /**
  * @brief Machine learning-based error pattern analyzer
  */
 class MLErrorPatternAnalyzer {
-public:
+ public:
   static MLErrorPatternAnalyzer& instance();
 
   // Learning and prediction
   void train_model(const std::vector<LearningDataPoint>& training_data);
   std::vector<std::pair<ErrorCode, double>> predict_likely_errors(
-    const std::vector<DetailedError>& recent_errors,
-    const std::unordered_map<std::string, std::string>& context) const;
+      const std::vector<DetailedError>& recent_errors,
+      const std::unordered_map<std::string, std::string>& context) const;
 
   // Pattern analysis
   std::vector<ErrorPattern> discover_new_patterns(const std::vector<DetailedError>& errors);
@@ -376,7 +377,7 @@ public:
   size_t get_training_data_size() const;
   std::chrono::system_clock::time_point get_last_training_time() const;
 
-private:
+ private:
   MLErrorPatternAnalyzer() = default;
   ~MLErrorPatternAnalyzer() = default;
 
@@ -393,9 +394,11 @@ private:
   size_t total_predictions_ = 0;
 
   // Internal methods
-  std::vector<double> extract_features(const std::vector<DetailedError>& errors,
-                                      const std::unordered_map<std::string, std::string>& context) const;
-  double calculate_error_probability(const std::vector<double>& features, ErrorCode error_code) const;
+  std::vector<double> extract_features(
+      const std::vector<DetailedError>& errors,
+      const std::unordered_map<std::string, std::string>& context) const;
+  double calculate_error_probability(const std::vector<double>& features,
+                                     ErrorCode error_code) const;
   void update_weights(const std::vector<LearningDataPoint>& data);
 };
 
@@ -403,7 +406,7 @@ private:
  * @brief Comprehensive error recovery orchestrator
  */
 class ErrorRecoveryOrchestrator {
-public:
+ public:
   static ErrorRecoveryOrchestrator& instance();
 
   // System initialization
@@ -423,7 +426,7 @@ public:
   std::string generate_system_report() const;
   void export_recovery_data(const std::string& file_path) const;
 
-private:
+ private:
   ErrorRecoveryOrchestrator() = default;
   ~ErrorRecoveryOrchestrator() = default;
 
@@ -447,37 +450,38 @@ private:
  * @brief Utility functions for error recovery
  */
 namespace ErrorRecoveryUtils {
-  // Workflow builders
-  RecoveryWorkflow create_network_recovery_workflow();
-  RecoveryWorkflow create_filesystem_recovery_workflow();
-  RecoveryWorkflow create_memory_recovery_workflow();
-  RecoveryWorkflow create_configuration_recovery_workflow();
+// Workflow builders
+RecoveryWorkflow create_network_recovery_workflow();
+RecoveryWorkflow create_filesystem_recovery_workflow();
+RecoveryWorkflow create_memory_recovery_workflow();
+RecoveryWorkflow create_configuration_recovery_workflow();
 
-  // Prevention rule builders
-  PreventionRule create_memory_leak_prevention_rule();
-  PreventionRule create_network_timeout_prevention_rule();
-  PreventionRule create_disk_space_prevention_rule();
+// Prevention rule builders
+PreventionRule create_memory_leak_prevention_rule();
+PreventionRule create_network_timeout_prevention_rule();
+PreventionRule create_disk_space_prevention_rule();
 
-  // Monitor builders
-  EarlyDetectionMonitor create_memory_usage_monitor();
-  EarlyDetectionMonitor create_network_health_monitor();
-  EarlyDetectionMonitor create_filesystem_health_monitor();
-  EarlyDetectionMonitor create_performance_monitor();
+// Monitor builders
+EarlyDetectionMonitor create_memory_usage_monitor();
+EarlyDetectionMonitor create_network_health_monitor();
+EarlyDetectionMonitor create_filesystem_health_monitor();
+EarlyDetectionMonitor create_performance_monitor();
 
-  // User interaction helpers
-  UserInteractionRequest create_confirmation_request(const std::string& message);
-  UserInteractionRequest create_selection_request(const std::string& message,
-                                                  const std::vector<std::string>& options);
-  UserInteractionRequest create_input_request(const std::string& message,
-                                             const std::string& default_value = "");
+// User interaction helpers
+UserInteractionRequest create_confirmation_request(const std::string& message);
+UserInteractionRequest create_selection_request(const std::string& message,
+                                                const std::vector<std::string>& options);
+UserInteractionRequest create_input_request(const std::string& message,
+                                            const std::string& default_value = "");
 
-  // Recovery action builders
-  std::function<bool()> create_retry_action(std::function<bool()> original_action, size_t max_retries = 3);
-  std::function<bool()> create_fallback_action(std::function<bool()> primary_action,
-                                               std::function<bool()> fallback_action);
-  std::function<bool()> create_timeout_action(std::function<bool()> action,
-                                              std::chrono::seconds timeout);
-}
+// Recovery action builders
+std::function<bool()> create_retry_action(std::function<bool()> original_action,
+                                          size_t max_retries = 3);
+std::function<bool()> create_fallback_action(std::function<bool()> primary_action,
+                                             std::function<bool()> fallback_action);
+std::function<bool()> create_timeout_action(std::function<bool()> action,
+                                            std::chrono::seconds timeout);
+}  // namespace ErrorRecoveryUtils
 
 /**
  * @brief Macros for convenient error recovery
@@ -494,8 +498,8 @@ namespace ErrorRecoveryUtils {
 #define SOLAR_ATTEMPT_AUTO_RECOVERY(error) \
   SolarSystem::Utils::ErrorRecoveryOrchestrator::instance().handle_error(error)
 
-#define SOLAR_AUTO_RECOVERY(error) \
-  SolarSystem::Utils::AdvancedErrorRecoveryManager::instance().execute_recovery_sync(error, "", SolarSystem::Utils::RecoveryMode::Automatic)
+#define SOLAR_AUTO_RECOVERY(error)                                                    \
+  SolarSystem::Utils::AdvancedErrorRecoveryManager::instance().execute_recovery_sync( \
+      error, "", SolarSystem::Utils::RecoveryMode::Automatic)
 
-} // namespace SolarSystem::Utils
-
+}  // namespace SolarSystem::Utils

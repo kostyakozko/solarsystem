@@ -59,10 +59,10 @@ struct DetailedArgumentError {
   DetailedArgumentError() = default;
 
   DetailedArgumentError(ArgumentError code, const std::string& message)
-    : error_code(code), error_message(message) {}
+      : error_code(code), error_message(message) {}
 
   DetailedArgumentError(ArgumentError code, const std::string& message, const std::string& ctx)
-    : error_code(code), error_message(message), context(ctx) {}
+      : error_code(code), error_message(message), context(ctx) {}
 };
 
 /**
@@ -120,14 +120,14 @@ class Date {
    * @brief Parse date with specific format validation
    */
   static ArgumentResult<Date> from_string_format(const std::string& date_str,
-                                                const std::string& expected_format);
+                                                 const std::string& expected_format);
 
   /**
    * @brief Parse date with range validation
    */
-  static ArgumentResult<Date> from_string_with_range(const std::string& date_str,
-                                                    const std::chrono::system_clock::time_point& min_date,
-                                                    const std::chrono::system_clock::time_point& max_date);
+  static ArgumentResult<Date> from_string_with_range(
+      const std::string& date_str, const std::chrono::system_clock::time_point& min_date,
+      const std::chrono::system_clock::time_point& max_date);
 
   /**
    * @brief Get current date
@@ -406,7 +406,8 @@ class ArgumentParser {
   /**
    * @brief Parse a single argument with detailed error reporting
    */
-  DetailedArgumentResult<size_t> parse_argument_detailed(std::span<const char* const> args, size_t index);
+  DetailedArgumentResult<size_t> parse_argument_detailed(std::span<const char* const> args,
+                                                         size_t index);
 
   /**
    * @brief Calculate string similarity for spell-checking

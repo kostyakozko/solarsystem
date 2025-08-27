@@ -1,14 +1,14 @@
 #include "solar_core/builders/simulation_builder.hpp"
 
-#include <iomanip>
-#include <sstream>
 #include <algorithm>
-#include <cmath>
-#include <fstream>
-#include <regex>
-#include <locale>
-#include <ctime>
 #include <chrono>
+#include <cmath>
+#include <ctime>
+#include <fstream>
+#include <iomanip>
+#include <locale>
+#include <regex>
+#include <sstream>
 
 #include "solar_core/bodies/body_factory.hpp"
 #include "solar_core/data/body_definitions.hpp"
@@ -52,10 +52,8 @@ SimulationBuilder& SimulationBuilder::with_target_date(std::time_t target_time) 
   return *this;
 }
 
-
-
 SimulationBuilder& SimulationBuilder::with_target_date_enhanced(const std::string& date_str,
-                                                               DateFormat format) {
+                                                                DateFormat format) {
   auto result = this->parse_date_comprehensive(date_str, format);
   if (result.success) {
     target_date_ = result.time_point;
@@ -66,8 +64,8 @@ SimulationBuilder& SimulationBuilder::with_target_date_enhanced(const std::strin
 }
 
 SimulationBuilder& SimulationBuilder::with_target_date_timezone(const std::string& date_str,
-                                                               const std::string& timezone,
-                                                               DateFormat format) {
+                                                                const std::string& timezone,
+                                                                DateFormat format) {
   auto result = this->parse_date_with_timezone(date_str, timezone, format);
   if (result.success) {
     target_date_ = result.time_point;
@@ -78,8 +76,8 @@ SimulationBuilder& SimulationBuilder::with_target_date_timezone(const std::strin
   return *this;
 }
 
-SimulationBuilder& SimulationBuilder::with_target_date_validated(const std::string& date_str,
-                                                                const DateConstraints& constraints) {
+SimulationBuilder& SimulationBuilder::with_target_date_validated(
+    const std::string& date_str, const DateConstraints& constraints) {
   auto result = this->parse_date_comprehensive(date_str, DateFormat::AUTO_DETECT);
   if (result.success) {
     auto validation_result = this->validate_date_constraints(result.time_point, constraints);
@@ -87,8 +85,10 @@ SimulationBuilder& SimulationBuilder::with_target_date_validated(const std::stri
       target_date_ = result.time_point;
       date_constraints_ = constraints;
     } else {
-      LOG_ERROR("SimulationBuilder", "Date validation failed: " +
-                (validation_result.errors.empty() ? "Unknown error" : validation_result.errors[0].message));
+      LOG_ERROR("SimulationBuilder",
+                "Date validation failed: " + (validation_result.errors.empty()
+                                                  ? "Unknown error"
+                                                  : validation_result.errors[0].message));
     }
   } else {
     LOG_ERROR("SimulationBuilder", "Date parsing failed: " + result.error_message);
@@ -97,8 +97,8 @@ SimulationBuilder& SimulationBuilder::with_target_date_validated(const std::stri
 }
 
 SimulationBuilder& SimulationBuilder::with_date_range(const std::string& start_date,
-                                                     const std::string& end_date,
-                                                     DateFormat format) {
+                                                      const std::string& end_date,
+                                                      DateFormat format) {
   auto start_result = this->parse_date_comprehensive(start_date, format);
   auto end_result = this->parse_date_comprehensive(end_date, format);
 
@@ -222,10 +222,9 @@ ValidationResult SimulationBuilder::validate_comprehensive() const {
   // Custom validation if provided
   if (validator_.has_value() && bodies_.has_value()) {
     if (!validator_.value()(*bodies_)) {
-      result.add_error(ValidationErrorCode::CUSTOM_VALIDATION_FAILED,
-                      ValidationSeverity::ERROR,
-                      "Custom validation callback failed",
-                      "User-provided validation function returned false");
+      result.add_error(ValidationErrorCode::CUSTOM_VALIDATION_FAILED, ValidationSeverity::ERROR,
+                       "Custom validation callback failed",
+                       "User-provided validation function returned false");
     }
   }
 
@@ -234,7 +233,7 @@ ValidationResult SimulationBuilder::validate_comprehensive() const {
     result.summary = "Configuration is valid and ready for simulation";
   } else {
     result.summary = "Configuration has " + std::to_string(result.errors.size()) +
-                    " error(s) and " + std::to_string(result.warnings.size()) + " warning(s)";
+                     " error(s) and " + std::to_string(result.warnings.size()) + " warning(s)";
   }
 
   return result;
@@ -586,7 +585,8 @@ ConfigurationBuilder& ConfigurationBuilder::convergence_threshold(double thresho
   return *this;
 }
 
-ConfigurationBuilder& ConfigurationBuilder::adaptive_timestep(bool enable, double min_step, double max_step) {
+ConfigurationBuilder& ConfigurationBuilder::adaptive_timestep(bool enable, double min_step,
+                                                              double max_step) {
   config_.use_adaptive_timestep = enable;
   config_.min_timestep = min_step;
   config_.max_timestep = max_step;
@@ -682,7 +682,8 @@ ConfigurationBuilder& ConfigurationBuilder::from_template(const std::string& tem
   return *this;
 }
 
-bool ConfigurationBuilder::save_as_template(const std::string& template_name, const std::string& description) {
+bool ConfigurationBuilder::save_as_template(const std::string& template_name,
+                                            const std::string& description) {
   ConfigurationTemplate new_template(template_name, description, config_);
   new_template.metadata = metadata_;
   templates_[template_name] = new_template;
@@ -742,7 +743,7 @@ ValidationResult ConfigurationBuilder::validate_comprehensive() const {
     result.summary = "Configuration is valid and ready for use";
   } else {
     result.summary = "Configuration has " + std::to_string(result.errors.size()) +
-                    " error(s) and " + std::to_string(result.warnings.size()) + " warning(s)";
+                     " error(s) and " + std::to_string(result.warnings.size()) + " warning(s)";
   }
 
   return result;
@@ -778,7 +779,8 @@ ConfigurationBuilder& ConfigurationBuilder::resolve_conflicts_automatically() {
         if (conflict.recommended_resolution == "disable_adaptive") {
           config_.use_adaptive_timestep = false;
         } else if (conflict.recommended_resolution == "adjust_timestep") {
-          config_.time_step = std::max(config_.min_timestep, std::min(config_.max_timestep, config_.time_step));
+          config_.time_step =
+              std::max(config_.min_timestep, std::min(config_.max_timestep, config_.time_step));
         }
       }
       // Add more conflict resolution logic as needed
@@ -789,14 +791,15 @@ ConfigurationBuilder& ConfigurationBuilder::resolve_conflicts_automatically() {
 }
 
 ConfigurationBuilder& ConfigurationBuilder::resolve_conflict(const std::string& parameter1,
-                                                            const std::string& parameter2,
-                                                            const std::string& resolution) {
+                                                             const std::string& parameter2,
+                                                             const std::string& resolution) {
   // Apply specific conflict resolution
   if (parameter1 == "timestep" && parameter2 == "adaptive_timestep") {
     if (resolution == "disable_adaptive") {
       config_.use_adaptive_timestep = false;
     } else if (resolution == "adjust_timestep") {
-      config_.time_step = std::max(config_.min_timestep, std::min(config_.max_timestep, config_.time_step));
+      config_.time_step =
+          std::max(config_.min_timestep, std::min(config_.max_timestep, config_.time_step));
     }
   }
   // Add more specific resolution logic as needed
@@ -819,9 +822,7 @@ bool ConfigurationBuilder::needs_migration() const {
   return config_version_ < CURRENT_CONFIG_VERSION;
 }
 
-int ConfigurationBuilder::get_version() const {
-  return config_version_;
-}
+int ConfigurationBuilder::get_version() const { return config_version_; }
 
 std::string ConfigurationBuilder::to_json() const {
   // Simple JSON serialization (in a real implementation, use a JSON library)
@@ -831,10 +832,12 @@ std::string ConfigurationBuilder::to_json() const {
   json << "  \"time_step\": " << config_.time_step << ",\n";
   json << "  \"gravitational_constant\": " << config_.gravitational_constant << ",\n";
   json << "  \"tolerance\": " << config_.tolerance << ",\n";
-  json << "  \"use_adaptive_timestep\": " << (config_.use_adaptive_timestep ? "true" : "false") << ",\n";
+  json << "  \"use_adaptive_timestep\": " << (config_.use_adaptive_timestep ? "true" : "false")
+       << ",\n";
   json << "  \"min_timestep\": " << config_.min_timestep << ",\n";
   json << "  \"max_timestep\": " << config_.max_timestep << ",\n";
-  json << "  \"enable_collision_detection\": " << (config_.enable_collision_detection ? "true" : "false") << ",\n";
+  json << "  \"enable_collision_detection\": "
+       << (config_.enable_collision_detection ? "true" : "false") << ",\n";
   json << "  \"collision_threshold\": " << config_.collision_threshold << "\n";
   json << "}";
   return json.str();
@@ -889,15 +892,13 @@ ConfigurationBuilder& ConfigurationBuilder::load_from_file(const std::string& fi
   }
 
   std::string json_content((std::istreambuf_iterator<char>(file)),
-                          std::istreambuf_iterator<char>());
+                           std::istreambuf_iterator<char>());
   from_json(json_content);
 
   return *this;
 }
 
-Simulation::SimulationConfig ConfigurationBuilder::build() const {
-  return config_;
-}
+Simulation::SimulationConfig ConfigurationBuilder::build() const { return config_; }
 
 bool ConfigurationBuilder::validate(std::string* error_message) const {
   auto result = validate_comprehensive();
@@ -914,14 +915,16 @@ std::string ConfigurationBuilder::get_summary() const {
   summary << "  Timestep: " << config_.time_step << " seconds\n";
   summary << "  Tolerance: " << config_.tolerance << "\n";
   summary << "  Gravitational constant: " << config_.gravitational_constant << " m³/kg/s²\n";
-  summary << "  Adaptive timestep: " << (config_.use_adaptive_timestep ? "enabled" : "disabled") << "\n";
+  summary << "  Adaptive timestep: " << (config_.use_adaptive_timestep ? "enabled" : "disabled")
+          << "\n";
 
   if (config_.use_adaptive_timestep) {
     summary << "    Min timestep: " << config_.min_timestep << " seconds\n";
     summary << "    Max timestep: " << config_.max_timestep << " seconds\n";
   }
 
-  summary << "  Collision detection: " << (config_.enable_collision_detection ? "enabled" : "disabled") << "\n";
+  summary << "  Collision detection: "
+          << (config_.enable_collision_detection ? "enabled" : "disabled") << "\n";
 
   if (config_.enable_collision_detection) {
     summary << "    Collision threshold: " << config_.collision_threshold << " meters\n";
@@ -935,29 +938,32 @@ std::string ConfigurationBuilder::get_summary() const {
   return summary.str();
 }
 
-std::vector<std::string> ConfigurationBuilder::compare_with(const ConfigurationBuilder& other) const {
+std::vector<std::string> ConfigurationBuilder::compare_with(
+    const ConfigurationBuilder& other) const {
   std::vector<std::string> differences;
 
   if (config_.time_step != other.config_.time_step) {
-    differences.push_back("Timestep: " + std::to_string(config_.time_step) +
-                         " vs " + std::to_string(other.config_.time_step));
+    differences.push_back("Timestep: " + std::to_string(config_.time_step) + " vs " +
+                          std::to_string(other.config_.time_step));
   }
 
   if (config_.tolerance != other.config_.tolerance) {
-    differences.push_back("Tolerance: " + std::to_string(config_.tolerance) +
-                         " vs " + std::to_string(other.config_.tolerance));
+    differences.push_back("Tolerance: " + std::to_string(config_.tolerance) + " vs " +
+                          std::to_string(other.config_.tolerance));
   }
 
   if (config_.use_adaptive_timestep != other.config_.use_adaptive_timestep) {
-    differences.push_back("Adaptive timestep: " +
-                         std::string(config_.use_adaptive_timestep ? "enabled" : "disabled") +
-                         " vs " + std::string(other.config_.use_adaptive_timestep ? "enabled" : "disabled"));
+    differences.push_back(
+        "Adaptive timestep: " +
+        std::string(config_.use_adaptive_timestep ? "enabled" : "disabled") + " vs " +
+        std::string(other.config_.use_adaptive_timestep ? "enabled" : "disabled"));
   }
 
   if (config_.enable_collision_detection != other.config_.enable_collision_detection) {
-    differences.push_back("Collision detection: " +
-                         std::string(config_.enable_collision_detection ? "enabled" : "disabled") +
-                         " vs " + std::string(other.config_.enable_collision_detection ? "enabled" : "disabled"));
+    differences.push_back(
+        "Collision detection: " +
+        std::string(config_.enable_collision_detection ? "enabled" : "disabled") + " vs " +
+        std::string(other.config_.enable_collision_detection ? "enabled" : "disabled"));
   }
 
   return differences;
@@ -976,7 +982,8 @@ void ConfigurationBuilder::initialize_templates() {
   research_config.min_timestep = 1.0;
   research_config.max_timestep = 1800.0;
 
-  ConfigurationTemplate research_template("research", "High accuracy configuration for scientific research", research_config);
+  ConfigurationTemplate research_template(
+      "research", "High accuracy configuration for scientific research", research_config);
   research_template.recommended_bodies = {"Sun", "Earth", "Moon", "Mars", "Jupiter"};
   research_template.metadata["category"] = "scientific";
   research_template.metadata["accuracy"] = "high";
@@ -988,7 +995,8 @@ void ConfigurationBuilder::initialize_templates() {
   edu_config.tolerance = 1e-10;
   edu_config.use_adaptive_timestep = false;
 
-  ConfigurationTemplate edu_template("educational", "Simple configuration for educational purposes", edu_config);
+  ConfigurationTemplate edu_template("educational", "Simple configuration for educational purposes",
+                                     edu_config);
   edu_template.recommended_bodies = {"Sun", "Earth", "Moon"};
   edu_template.metadata["category"] = "educational";
   edu_template.metadata["complexity"] = "low";
@@ -1001,7 +1009,8 @@ void ConfigurationBuilder::initialize_templates() {
   viz_config.enable_collision_detection = true;
   viz_config.collision_threshold = 1e5;
 
-  ConfigurationTemplate viz_template("visualization", "Optimized for real-time visualization", viz_config);
+  ConfigurationTemplate viz_template("visualization", "Optimized for real-time visualization",
+                                     viz_config);
   viz_template.recommended_bodies = {"Sun", "Mercury", "Venus", "Earth", "Mars"};
   viz_template.metadata["category"] = "visualization";
   viz_template.metadata["real_time"] = "true";
@@ -1011,16 +1020,16 @@ void ConfigurationBuilder::initialize_templates() {
 void ConfigurationBuilder::initialize_migrations() {
   // Migration from version 1 to 2
   migrations_.emplace_back(1, 2, "Add adaptive timestep and collision detection support",
-    [](const Simulation::SimulationConfig& old_config) {
-      Simulation::SimulationConfig new_config = old_config;
-      // Set default values for new fields
-      new_config.use_adaptive_timestep = false;
-      new_config.min_timestep = 1.0;
-      new_config.max_timestep = 3600.0;
-      new_config.enable_collision_detection = false;
-      new_config.collision_threshold = 1e6;
-      return new_config;
-    });
+                           [](const Simulation::SimulationConfig& old_config) {
+                             Simulation::SimulationConfig new_config = old_config;
+                             // Set default values for new fields
+                             new_config.use_adaptive_timestep = false;
+                             new_config.min_timestep = 1.0;
+                             new_config.max_timestep = 3600.0;
+                             new_config.enable_collision_detection = false;
+                             new_config.collision_threshold = 1e6;
+                             return new_config;
+                           });
 }
 
 ValidationResult ConfigurationBuilder::validate_physics_parameters() const {
@@ -1028,36 +1037,33 @@ ValidationResult ConfigurationBuilder::validate_physics_parameters() const {
 
   // Validate timestep
   if (config_.time_step <= 0) {
-    result.add_error(ValidationErrorCode::INVALID_TIMESTEP,
-                    ValidationSeverity::FATAL,
-                    "Timestep must be positive",
-                    "Current value: " + std::to_string(config_.time_step));
+    result.add_error(ValidationErrorCode::INVALID_TIMESTEP, ValidationSeverity::FATAL,
+                     "Timestep must be positive",
+                     "Current value: " + std::to_string(config_.time_step));
   }
 
   // Validate tolerance
   if (config_.tolerance <= 0) {
-    result.add_error(ValidationErrorCode::INVALID_CONVERGENCE_THRESHOLD,
-                    ValidationSeverity::FATAL,
-                    "Tolerance must be positive",
-                    "Current value: " + std::to_string(config_.tolerance));
+    result.add_error(ValidationErrorCode::INVALID_CONVERGENCE_THRESHOLD, ValidationSeverity::FATAL,
+                     "Tolerance must be positive",
+                     "Current value: " + std::to_string(config_.tolerance));
   }
 
   // Validate gravitational constant
   if (config_.gravitational_constant <= 0) {
-    result.add_error(ValidationErrorCode::INVALID_GRAVITATIONAL_CONSTANT,
-                    ValidationSeverity::ERROR,
-                    "Gravitational constant must be positive",
-                    "Current value: " + std::to_string(config_.gravitational_constant));
+    result.add_error(ValidationErrorCode::INVALID_GRAVITATIONAL_CONSTANT, ValidationSeverity::ERROR,
+                     "Gravitational constant must be positive",
+                     "Current value: " + std::to_string(config_.gravitational_constant));
   }
 
   // Check if gravitational constant is reasonable
   constexpr double STANDARD_G = 6.67430e-11;
   if (std::abs(config_.gravitational_constant - STANDARD_G) / STANDARD_G > 0.1) {
     result.add_error(ValidationErrorCode::INVALID_GRAVITATIONAL_CONSTANT,
-                    ValidationSeverity::WARNING,
-                    "Gravitational constant differs significantly from standard value",
-                    "Current: " + std::to_string(config_.gravitational_constant) +
-                    ", standard: " + std::to_string(STANDARD_G));
+                     ValidationSeverity::WARNING,
+                     "Gravitational constant differs significantly from standard value",
+                     "Current: " + std::to_string(config_.gravitational_constant) +
+                         ", standard: " + std::to_string(STANDARD_G));
   }
 
   return result;
@@ -1067,27 +1073,24 @@ ValidationResult ConfigurationBuilder::validate_adaptive_timestep() const {
   ValidationResult result;
 
   if (config_.min_timestep <= 0) {
-    result.add_error(ValidationErrorCode::TIMESTEP_TOO_SMALL,
-                    ValidationSeverity::ERROR,
-                    "Minimum timestep must be positive",
-                    "Current value: " + std::to_string(config_.min_timestep));
+    result.add_error(ValidationErrorCode::TIMESTEP_TOO_SMALL, ValidationSeverity::ERROR,
+                     "Minimum timestep must be positive",
+                     "Current value: " + std::to_string(config_.min_timestep));
   }
 
   if (config_.max_timestep <= config_.min_timestep) {
-    result.add_error(ValidationErrorCode::CONFLICTING_PARAMETERS,
-                    ValidationSeverity::ERROR,
-                    "Maximum timestep must be greater than minimum timestep",
-                    "Min: " + std::to_string(config_.min_timestep) +
-                    ", Max: " + std::to_string(config_.max_timestep));
+    result.add_error(ValidationErrorCode::CONFLICTING_PARAMETERS, ValidationSeverity::ERROR,
+                     "Maximum timestep must be greater than minimum timestep",
+                     "Min: " + std::to_string(config_.min_timestep) +
+                         ", Max: " + std::to_string(config_.max_timestep));
   }
 
   if (config_.time_step < config_.min_timestep || config_.time_step > config_.max_timestep) {
-    result.add_error(ValidationErrorCode::CONFLICTING_PARAMETERS,
-                    ValidationSeverity::WARNING,
-                    "Initial timestep is outside adaptive timestep range",
-                    "Timestep: " + std::to_string(config_.time_step) +
-                    ", Range: [" + std::to_string(config_.min_timestep) +
-                    ", " + std::to_string(config_.max_timestep) + "]");
+    result.add_error(ValidationErrorCode::CONFLICTING_PARAMETERS, ValidationSeverity::WARNING,
+                     "Initial timestep is outside adaptive timestep range",
+                     "Timestep: " + std::to_string(config_.time_step) + ", Range: [" +
+                         std::to_string(config_.min_timestep) + ", " +
+                         std::to_string(config_.max_timestep) + "]");
   }
 
   return result;
@@ -1097,18 +1100,16 @@ ValidationResult ConfigurationBuilder::validate_collision_detection() const {
   ValidationResult result;
 
   if (config_.collision_threshold <= 0) {
-    result.add_error(ValidationErrorCode::CONFLICTING_PARAMETERS,
-                    ValidationSeverity::ERROR,
-                    "Collision threshold must be positive",
-                    "Current value: " + std::to_string(config_.collision_threshold));
+    result.add_error(ValidationErrorCode::CONFLICTING_PARAMETERS, ValidationSeverity::ERROR,
+                     "Collision threshold must be positive",
+                     "Current value: " + std::to_string(config_.collision_threshold));
   }
 
   // Warn if collision threshold is very large (might miss collisions)
   if (config_.collision_threshold > 1e8) {  // 100,000 km
-    result.add_error(ValidationErrorCode::CONFLICTING_PARAMETERS,
-                    ValidationSeverity::WARNING,
-                    "Collision threshold is very large, may miss close approaches",
-                    "Current value: " + std::to_string(config_.collision_threshold) + " meters");
+    result.add_error(ValidationErrorCode::CONFLICTING_PARAMETERS, ValidationSeverity::WARNING,
+                     "Collision threshold is very large, may miss close approaches",
+                     "Current value: " + std::to_string(config_.collision_threshold) + " meters");
   }
 
   return result;
@@ -1120,8 +1121,9 @@ std::vector<ConfigurationConflict> ConfigurationBuilder::check_timestep_conflict
   // Check if timestep is too large for collision detection
   if (config_.enable_collision_detection && config_.time_step > 3600.0) {
     ConfigurationConflict conflict("timestep", "collision_detection",
-                                  "Large timestep may miss collision events");
-    conflict.resolution_options = {"Reduce timestep to <= 3600 seconds", "Disable collision detection"};
+                                   "Large timestep may miss collision events");
+    conflict.resolution_options = {"Reduce timestep to <= 3600 seconds",
+                                   "Disable collision detection"};
     conflict.recommended_resolution = "reduce_timestep";
     conflicts.push_back(conflict);
   }
@@ -1135,8 +1137,9 @@ std::vector<ConfigurationConflict> ConfigurationBuilder::check_adaptive_conflict
   // Check if adaptive timestep range is too narrow
   if (config_.max_timestep / config_.min_timestep < 2.0) {
     ConfigurationConflict conflict("min_timestep", "max_timestep",
-                                  "Adaptive timestep range is too narrow to be effective");
-    conflict.resolution_options = {"Increase max_timestep", "Decrease min_timestep", "Disable adaptive timestep"};
+                                   "Adaptive timestep range is too narrow to be effective");
+    conflict.resolution_options = {"Increase max_timestep", "Decrease min_timestep",
+                                   "Disable adaptive timestep"};
     conflict.recommended_resolution = "increase_range";
     conflicts.push_back(conflict);
   }
@@ -1149,9 +1152,11 @@ std::vector<ConfigurationConflict> ConfigurationBuilder::check_performance_confl
 
   // Check if high accuracy settings might impact performance
   if (config_.tolerance < 1e-13 && config_.time_step < 60.0) {
-    ConfigurationConflict conflict("tolerance", "timestep",
-                                  "Very high accuracy settings may significantly impact performance");
-    conflict.resolution_options = {"Increase tolerance to 1e-12", "Increase timestep to >= 60 seconds", "Keep current settings"};
+    ConfigurationConflict conflict(
+        "tolerance", "timestep",
+        "Very high accuracy settings may significantly impact performance");
+    conflict.resolution_options = {"Increase tolerance to 1e-12",
+                                   "Increase timestep to >= 60 seconds", "Keep current settings"};
     conflict.recommended_resolution = "balance_accuracy_performance";
     conflicts.push_back(conflict);
   }
@@ -1166,55 +1171,57 @@ ValidationResult SimulationBuilder::validate_timestep() const {
 
   // Basic validation
   if (timestep_ <= 0) {
-    result.add_error(ValidationErrorCode::INVALID_TIMESTEP,
-                    ValidationSeverity::FATAL,
-                    "Timestep must be positive",
-                    "Current value: " + std::to_string(timestep_));
+    result.add_error(ValidationErrorCode::INVALID_TIMESTEP, ValidationSeverity::FATAL,
+                     "Timestep must be positive", "Current value: " + std::to_string(timestep_));
     return result;
   }
 
   // Physical constrais validation
   if (timestep_ < PhysicalConstraints::MIN_TIMESTEP) {
-    result.add_error(ValidationErrorCode::TIMESTEP_TOO_SMALL,
-                    ValidationSeverity::ERROR,
-                    "Timestep is too small for stable simulation",
-                    "Current: " + std::to_string(timestep_) + "s, minimum: " +
-                    std::to_string(PhysicalConstraints::MIN_TIMESTEP) + "s");
+    result.add_error(ValidationErrorCode::TIMESTEP_TOO_SMALL, ValidationSeverity::ERROR,
+                     "Timestep is too small for stable simulation",
+                     "Current: " + std::to_string(timestep_) +
+                         "s, minimum: " + std::to_string(PhysicalConstraints::MIN_TIMESTEP) + "s");
 
     ValidationError& error = result.errors.back();
-    error.suggestions.push_back("Use timestep >= " + std::to_string(PhysicalConstraints::RECOMMENDED_MIN_TIMESTEP) + " seconds");
+    error.suggestions.push_back(
+        "Use timestep >= " + std::to_string(PhysicalConstraints::RECOMMENDED_MIN_TIMESTEP) +
+        " seconds");
     error.suggestions.push_back("Consider using adaptive timestep for very small values");
-    error.recovery_action = "Set timestep to " + std::to_string(PhysicalConstraints::RECOMMENDED_MIN_TIMESTEP) + " seconds";
+    error.recovery_action = "Set timestep to " +
+                            std::to_string(PhysicalConstraints::RECOMMENDED_MIN_TIMESTEP) +
+                            " seconds";
   }
 
   if (timestep_ > PhysicalConstraints::MAX_TIMESTEP) {
-    result.add_error(ValidationErrorCode::TIMESTEP_TOO_LARGE,
-                    ValidationSeverity::ERROR,
-                    "Timestep is too large for accurate simulation",
-                    "Current: " + std::to_string(timestep_) + "s, maximum: " +
-                    std::to_string(PhysicalConstraints::MAX_TIMESTEP) + "s");
+    result.add_error(ValidationErrorCode::TIMESTEP_TOO_LARGE, ValidationSeverity::ERROR,
+                     "Timestep is too large for accurate simulation",
+                     "Current: " + std::to_string(timestep_) +
+                         "s, maximum: " + std::to_string(PhysicalConstraints::MAX_TIMESTEP) + "s");
 
     ValidationError& error = result.errors.back();
-    error.suggestions.push_back("Use timestep <= " + std::to_string(PhysicalConstraints::RECOMMENDED_MAX_TIMESTEP) + " seconds");
+    error.suggestions.push_back(
+        "Use timestep <= " + std::to_string(PhysicalConstraints::RECOMMENDED_MAX_TIMESTEP) +
+        " seconds");
     error.suggestions.push_back("Break simulation into smaller time segments");
-    error.recovery_action = "Set timestep to " + std::to_string(PhysicalConstraints::RECOMMENDED_MAX_TIMESTEP) + " seconds";
+    error.recovery_action = "Set timestep to " +
+                            std::to_string(PhysicalConstraints::RECOMMENDED_MAX_TIMESTEP) +
+                            " seconds";
   }
 
   // Performance warnings
   if (timestep_ < PhysicalConstraints::RECOMMENDED_MIN_TIMESTEP) {
-    result.add_error(ValidationErrorCode::TIMESTEP_TOO_SMALL,
-                    ValidationSeverity::WARNING,
-                    "Small timestep may impact performance",
-                    "Current: " + std::to_string(timestep_) + "s, recommended minimum: " +
-                    std::to_string(PhysicalConstraints::RECOMMENDED_MIN_TIMESTEP) + "s");
+    result.add_error(ValidationErrorCode::TIMESTEP_TOO_SMALL, ValidationSeverity::WARNING,
+                     "Small timestep may impact performance",
+                     "Current: " + std::to_string(timestep_) + "s, recommended minimum: " +
+                         std::to_string(PhysicalConstraints::RECOMMENDED_MIN_TIMESTEP) + "s");
   }
 
   if (timestep_ > PhysicalConstraints::RECOMMENDED_MAX_TIMESTEP) {
-    result.add_error(ValidationErrorCode::TIMESTEP_TOO_LARGE,
-                    ValidationSeverity::WARNING,
-                    "Large timestep may reduce accuracy",
-                    "Current: " + std::to_string(timestep_) + "s, recommended maximum: " +
-                    std::to_string(PhysicalConstraints::RECOMMENDED_MAX_TIMESTEP) + "s");
+    result.add_error(ValidationErrorCode::TIMESTEP_TOO_LARGE, ValidationSeverity::WARNING,
+                     "Large timestep may reduce accuracy",
+                     "Current: " + std::to_string(timestep_) + "s, recommended maximum: " +
+                         std::to_string(PhysicalConstraints::RECOMMENDED_MAX_TIMESTEP) + "s");
   }
 
   result.parameter_status["timestep"] = "valid";
@@ -1225,36 +1232,38 @@ ValidationResult SimulationBuilder::validate_max_iterations() const {
   ValidationResult result;
 
   if (max_iterations_ < PhysicalConstraints::MIN_ITERATIONS) {
-    result.add_error(ValidationErrorCode::INVALID_MAX_ITERATIONS,
-                    ValidationSeverity::ERROR,
-                    "Maximum iterations must be at least " + std::to_string(PhysicalConstraints::MIN_ITERATIONS),
-                    "Current value: " + std::to_string(max_iterations_));
+    result.add_error(ValidationErrorCode::INVALID_MAX_ITERATIONS, ValidationSeverity::ERROR,
+                     "Maximum iterations must be at least " +
+                         std::to_string(PhysicalConstraints::MIN_ITERATIONS),
+                     "Current value: " + std::to_string(max_iterations_));
 
     ValidationError& error = result.errors.back();
-    error.suggestions.push_back("Set max_iterations to at least " + std::to_string(PhysicalConstraints::MIN_ITERATIONS));
-    error.recovery_action = "Set max_iterations to " + std::to_string(PhysicalConstraints::MIN_ITERATIONS);
+    error.suggestions.push_back("Set max_iterations to at least " +
+                                std::to_string(PhysicalConstraints::MIN_ITERATIONS));
+    error.recovery_action =
+        "Set max_iterations to " + std::to_string(PhysicalConstraints::MIN_ITERATIONS);
   }
 
   if (max_iterations_ > PhysicalConstraints::MAX_ITERATIONS) {
-    result.add_error(ValidationErrorCode::INVALID_MAX_ITERATIONS,
-                    ValidationSeverity::ERROR,
-                    "Maximum iterations exceeds reasonable limit",
-                    "Current: " + std::to_string(max_iterations_) + ", maximum: " +
-                    std::to_string(PhysicalConstraints::MAX_ITERATIONS));
+    result.add_error(ValidationErrorCode::INVALID_MAX_ITERATIONS, ValidationSeverity::ERROR,
+                     "Maximum iterations exceeds reasonable limit",
+                     "Current: " + std::to_string(max_iterations_) +
+                         ", maximum: " + std::to_string(PhysicalConstraints::MAX_ITERATIONS));
 
     ValidationError& error = result.errors.back();
-    error.suggestions.push_back("Reduce max_iterations to <= " + std::to_string(PhysicalConstraints::RECOMMENDED_MAX_ITERATIONS));
+    error.suggestions.push_back("Reduce max_iterations to <= " +
+                                std::to_string(PhysicalConstraints::RECOMMENDED_MAX_ITERATIONS));
     error.suggestions.push_back("Consider breaking simulation into multiple runs");
-    error.recovery_action = "Set max_iterations to " + std::to_string(PhysicalConstraints::RECOMMENDED_MAX_ITERATIONS);
+    error.recovery_action =
+        "Set max_iterations to " + std::to_string(PhysicalConstraints::RECOMMENDED_MAX_ITERATIONS);
   }
 
   // Performance warning
   if (max_iterations_ > PhysicalConstraints::RECOMMENDED_MAX_ITERATIONS) {
-    result.add_error(ValidationErrorCode::EXCESSIVE_COMPUTATIONAL_LOAD,
-                    ValidationSeverity::WARNING,
-                    "High iteration count may impact performance",
-                    "Current: " + std::to_string(max_iterations_) + ", recommended maximum: " +
-                    std::to_string(PhysicalConstraints::RECOMMENDED_MAX_ITERATIONS));
+    result.add_error(ValidationErrorCode::EXCESSIVE_COMPUTATIONAL_LOAD, ValidationSeverity::WARNING,
+                     "High iteration count may impact performance",
+                     "Current: " + std::to_string(max_iterations_) + ", recommended maximum: " +
+                         std::to_string(PhysicalConstraints::RECOMMENDED_MAX_ITERATIONS));
   }
 
   result.parameter_status["max_iterations"] = "valid";
@@ -1265,34 +1274,35 @@ ValidationResult SimulationBuilder::validate_convergence_threshold() const {
   ValidationResult result;
 
   if (convergence_threshold_ <= 0) {
-    result.add_error(ValidationErrorCode::INVALID_CONVERGENCE_THRESHOLD,
-                    ValidationSeverity::FATAL,
-                    "Convergence threshold must be positive",
-                    "Current value: " + std::to_string(convergence_threshold_));
+    result.add_error(ValidationErrorCode::INVALID_CONVERGENCE_THRESHOLD, ValidationSeverity::FATAL,
+                     "Convergence threshold must be positive",
+                     "Current value: " + std::to_string(convergence_threshold_));
     return result;
   }
 
   if (convergence_threshold_ < PhysicalConstraints::MIN_CONVERGENCE_THRESHOLD) {
     result.add_error(ValidationErrorCode::INVALID_CONVERGENCE_THRESHOLD,
-                    ValidationSeverity::WARNING,
-                    "Convergence threshold may be too strict",
-                    "Current: " + std::to_string(convergence_threshold_) + ", minimum: " +
-                    std::to_string(PhysicalConstraints::MIN_CONVERGENCE_THRESHOLD));
+                     ValidationSeverity::WARNING, "Convergence threshold may be too strict",
+                     "Current: " + std::to_string(convergence_threshold_) + ", minimum: " +
+                         std::to_string(PhysicalConstraints::MIN_CONVERGENCE_THRESHOLD));
 
     ValidationError& error = result.warnings.back();
-    error.suggestions.push_back("Consider using threshold >= " + std::to_string(PhysicalConstraints::RECOMMENDED_CONVERGENCE_THRESHOLD));
+    error.suggestions.push_back(
+        "Consider using threshold >= " +
+        std::to_string(PhysicalConstraints::RECOMMENDED_CONVERGENCE_THRESHOLD));
     error.suggestions.push_back("Very strict thresholds may prevent convergence");
   }
 
   if (convergence_threshold_ > PhysicalConstraints::MAX_CONVERGENCE_THRESHOLD) {
     result.add_error(ValidationErrorCode::INVALID_CONVERGENCE_THRESHOLD,
-                    ValidationSeverity::WARNING,
-                    "Convergence threshold may be too loose",
-                    "Current: " + std::to_string(convergence_threshold_) + ", maximum: " +
-                    std::to_string(PhysicalConstraints::MAX_CONVERGENCE_THRESHOLD));
+                     ValidationSeverity::WARNING, "Convergence threshold may be too loose",
+                     "Current: " + std::to_string(convergence_threshold_) + ", maximum: " +
+                         std::to_string(PhysicalConstraints::MAX_CONVERGENCE_THRESHOLD));
 
     ValidationError& error = result.warnings.back();
-    error.suggestions.push_back("Consider using threshold <= " + std::to_string(PhysicalConstraints::RECOMMENDED_CONVERGENCE_THRESHOLD));
+    error.suggestions.push_back(
+        "Consider using threshold <= " +
+        std::to_string(PhysicalConstraints::RECOMMENDED_CONVERGENCE_THRESHOLD));
     error.suggestions.push_back("Loose thresholds may reduce simulation accuracy");
   }
 
@@ -1304,10 +1314,9 @@ ValidationResult SimulationBuilder::validate_bodies() const {
   ValidationResult result;
 
   if (!bodies_.has_value()) {
-    result.add_error(ValidationErrorCode::NO_BODIES_SPECIFIED,
-                    ValidationSeverity::ERROR,
-                    "No celestial bodies specified for simulation",
-                    "Bodies collection is not set");
+    result.add_error(ValidationErrorCode::NO_BODIES_SPECIFIED, ValidationSeverity::ERROR,
+                     "No celestial bodies specified for simulation",
+                     "Bodies collection is not set");
 
     ValidationError& error = result.errors.back();
     error.suggestions.push_back("Use with_bodies() to specify celestial bodies");
@@ -1317,37 +1326,35 @@ ValidationResult SimulationBuilder::validate_bodies() const {
   }
 
   if (bodies_->size() == 0) {
-    result.add_error(ValidationErrorCode::EMPTY_BODY_COLLECTION,
-                    ValidationSeverity::ERROR,
-                    "Body collection is empty",
-                    "No bodies in the collection");
+    result.add_error(ValidationErrorCode::EMPTY_BODY_COLLECTION, ValidationSeverity::ERROR,
+                     "Body collection is empty", "No bodies in the collection");
 
     ValidationError& error = result.errors.back();
     error.suggestions.push_back("Ensure body collection contains at least " +
-                               std::to_string(PhysicalConstraints::MIN_BODIES_FOR_SIMULATION) + " bodies");
+                                std::to_string(PhysicalConstraints::MIN_BODIES_FOR_SIMULATION) +
+                                " bodies");
     error.recovery_action = "Add bodies to the collection";
     return result;
   }
 
   if (bodies_->size() < PhysicalConstraints::MIN_BODIES_FOR_SIMULATION) {
     result.add_error(ValidationErrorCode::INSUFFICIENT_BODIES_FOR_SIMULATION,
-                    ValidationSeverity::ERROR,
-                    "Insufficient bodies for meaningful simulation",
-                    "Current: " + std::to_string(bodies_->size()) + " bodies, minimum: " +
-                    std::to_string(PhysicalConstraints::MIN_BODIES_FOR_SIMULATION));
+                     ValidationSeverity::ERROR, "Insufficient bodies for meaningful simulation",
+                     "Current: " + std::to_string(bodies_->size()) + " bodies, minimum: " +
+                         std::to_string(PhysicalConstraints::MIN_BODIES_FOR_SIMULATION));
 
     ValidationError& error = result.errors.back();
     error.suggestions.push_back("Add more bodies to reach minimum of " +
-                               std::to_string(PhysicalConstraints::MIN_BODIES_FOR_SIMULATION));
+                                std::to_string(PhysicalConstraints::MIN_BODIES_FOR_SIMULATION));
     error.suggestions.push_back("Use BodySelector to add essential bodies");
   }
 
   if (bodies_->size() > PhysicalConstraints::MAX_BODIES_FOR_PERFORMANCE) {
-    result.add_error(ValidationErrorCode::EXCESSIVE_COMPUTATIONAL_LOAD,
-                    ValidationSeverity::WARNING,
-                    "Large number of bodies may impact performance",
-                    "Current: " + std::to_string(bodies_->size()) + " bodies, recommended maximum: " +
-                    std::to_string(PhysicalConstraints::RECOMMENDED_MAX_BODIES));
+    result.add_error(ValidationErrorCode::EXCESSIVE_COMPUTATIONAL_LOAD, ValidationSeverity::WARNING,
+                     "Large number of bodies may impact performance",
+                     "Current: " + std::to_string(bodies_->size()) +
+                         " bodies, recommended maximum: " +
+                         std::to_string(PhysicalConstraints::RECOMMENDED_MAX_BODIES));
 
     ValidationError& error = result.warnings.back();
     error.suggestions.push_back("Consider reducing body count for better performance");
@@ -1366,11 +1373,10 @@ ValidationResult SimulationBuilder::validate_target_date() const {
     auto tm_value = *std::gmtime(&time_t_value);
 
     if (tm_value.tm_year + 1900 < PhysicalConstraints::MIN_YEAR) {
-      result.add_error(ValidationErrorCode::DATE_OUT_OF_RANGE,
-                      ValidationSeverity::ERROR,
-                      "Target date is too far in the past",
-                      "Year: " + std::to_string(tm_value.tm_year + 1900) +
-                      ", minimum: " + std::to_string(PhysicalConstraints::MIN_YEAR));
+      result.add_error(ValidationErrorCode::DATE_OUT_OF_RANGE, ValidationSeverity::ERROR,
+                       "Target date is too far in the past",
+                       "Year: " + std::to_string(tm_value.tm_year + 1900) +
+                           ", minimum: " + std::to_string(PhysicalConstraints::MIN_YEAR));
 
       ValidationError& error = result.errors.back();
       error.suggestions.push_back("Use date >= " + std::to_string(PhysicalConstraints::MIN_YEAR));
@@ -1378,11 +1384,10 @@ ValidationResult SimulationBuilder::validate_target_date() const {
     }
 
     if (tm_value.tm_year + 1900 > PhysicalConstraints::MAX_YEAR) {
-      result.add_error(ValidationErrorCode::DATE_OUT_OF_RANGE,
-                      ValidationSeverity::ERROR,
-                      "Target date is too far in the future",
-                      "Year: " + std::to_string(tm_value.tm_year + 1900) +
-                      ", maximum: " + std::to_string(PhysicalConstraints::MAX_YEAR));
+      result.add_error(ValidationErrorCode::DATE_OUT_OF_RANGE, ValidationSeverity::ERROR,
+                       "Target date is too far in the future",
+                       "Year: " + std::to_string(tm_value.tm_year + 1900) +
+                           ", maximum: " + std::to_string(PhysicalConstraints::MAX_YEAR));
 
       ValidationError& error = result.errors.back();
       error.suggestions.push_back("Use date <= " + std::to_string(PhysicalConstraints::MAX_YEAR));
@@ -1404,19 +1409,17 @@ ValidationResult SimulationBuilder::validate_computational_load() const {
   constexpr double EXTREME_COMPLEXITY_THRESHOLD = 1e12;
 
   if (complexity > EXTREME_COMPLEXITY_THRESHOLD) {
-    result.add_error(ValidationErrorCode::EXCESSIVE_COMPUTATIONAL_LOAD,
-                    ValidationSeverity::ERROR,
-                    "Computational load is extremely high",
-                    "Estimated complexity: " + std::to_string(complexity));
+    result.add_error(ValidationErrorCode::EXCESSIVE_COMPUTATIONAL_LOAD, ValidationSeverity::ERROR,
+                     "Computational load is extremely high",
+                     "Estimated complexity: " + std::to_string(complexity));
 
     ValidationError& error = result.errors.back();
     error.suggestions = suggest_performance_improvements();
     error.recovery_action = "Reduce timestep resolution or body count";
   } else if (complexity > HIGH_COMPLEXITY_THRESHOLD) {
-    result.add_error(ValidationErrorCode::EXCESSIVE_COMPUTATIONAL_LOAD,
-                    ValidationSeverity::WARNING,
-                    "Computational load is high",
-                    "Estimated complexity: " + std::to_string(complexity));
+    result.add_error(ValidationErrorCode::EXCESSIVE_COMPUTATIONAL_LOAD, ValidationSeverity::WARNING,
+                     "Computational load is high",
+                     "Estimated complexity: " + std::to_string(complexity));
 
     ValidationError& error = result.warnings.back();
     error.suggestions = suggest_performance_improvements();
@@ -1430,11 +1433,10 @@ ValidationResult SimulationBuilder::validate_parameter_combinations() const {
 
   // Check timestep vs body count interaction
   if (bodies_.has_value() && !is_timestep_appropriate_for_bodies()) {
-    result.add_error(ValidationErrorCode::CONFLICTING_PARAMETERS,
-                    ValidationSeverity::WARNING,
-                    "Timestep may not be appropriate for body configuration",
-                    "Bodies: " + std::to_string(bodies_->size()) +
-                    ", timestep: " + std::to_string(timestep_) + "s");
+    result.add_error(ValidationErrorCode::CONFLICTING_PARAMETERS, ValidationSeverity::WARNING,
+                     "Timestep may not be appropriate for body configuration",
+                     "Bodies: " + std::to_string(bodies_->size()) +
+                         ", timestep: " + std::to_string(timestep_) + "s");
 
     ValidationError& error = result.warnings.back();
     error.suggestions = suggest_timestep_improvements();
@@ -1442,13 +1444,13 @@ ValidationResult SimulationBuilder::validate_parameter_combinations() const {
 
   // Check iterations vs timestep interaction
   double total_simulation_time = max_iterations_ * timestep_;
-  constexpr double MAX_REASONABLE_SIMULATION_TIME = 365.25 * 24 * 3600 * 100; // 100 years
+  constexpr double MAX_REASONABLE_SIMULATION_TIME = 365.25 * 24 * 3600 * 100;  // 100 years
 
   if (total_simulation_time > MAX_REASONABLE_SIMULATION_TIME) {
-    result.add_error(ValidationErrorCode::CONFLICTING_PARAMETERS,
-                    ValidationSeverity::WARNING,
-                    "Total simulation time is very long",
-                    "Total time: " + std::to_string(total_simulation_time / (365.25 * 24 * 3600)) + " years");
+    result.add_error(
+        ValidationErrorCode::CONFLICTING_PARAMETERS, ValidationSeverity::WARNING,
+        "Total simulation time is very long",
+        "Total time: " + std::to_string(total_simulation_time / (365.25 * 24 * 3600)) + " years");
 
     ValidationError& error = result.warnings.back();
     error.suggestions.push_back("Reduce max_iterations or increase timestep");
@@ -1466,12 +1468,12 @@ bool SimulationBuilder::is_timestep_appropriate_for_bodies() const {
   size_t body_count = bodies_->size();
 
   // For many bodies, smaller timesteps are generally better
-  if (body_count > 50 && timestep_ > 1800.0) { // 30 minutes
+  if (body_count > 50 && timestep_ > 1800.0) {  // 30 minutes
     return false;
   }
 
   // For few bodies, very small timesteps may be overkill
-  if (body_count < 10 && timestep_ < 60.0) { // 1 minute
+  if (body_count < 10 && timestep_ < 60.0) {  // 1 minute
     return false;
   }
 
@@ -1483,11 +1485,11 @@ double SimulationBuilder::estimate_computational_complexity() const {
 
   if (bodies_.has_value()) {
     size_t n = bodies_->size();
-    complexity *= n * n; // N-body problem is O(N²)
+    complexity *= n * n;  // N-body problem is O(N²)
   }
 
   complexity *= max_iterations_;
-  complexity /= timestep_; // Smaller timesteps = more computation
+  complexity /= timestep_;  // Smaller timesteps = more computation
 
   return complexity;
 }
@@ -1499,11 +1501,14 @@ std::vector<std::string> SimulationBuilder::suggest_timestep_improvements() cons
     size_t body_count = bodies_->size();
 
     if (body_count > 50) {
-      suggestions.push_back("For " + std::to_string(body_count) + " bodies, consider timestep 300-1800 seconds");
+      suggestions.push_back("For " + std::to_string(body_count) +
+                            " bodies, consider timestep 300-1800 seconds");
     } else if (body_count > 20) {
-      suggestions.push_back("For " + std::to_string(body_count) + " bodies, consider timestep 600-3600 seconds");
+      suggestions.push_back("For " + std::to_string(body_count) +
+                            " bodies, consider timestep 600-3600 seconds");
     } else {
-      suggestions.push_back("For " + std::to_string(body_count) + " bodies, consider timestep 1800-7200 seconds");
+      suggestions.push_back("For " + std::to_string(body_count) +
+                            " bodies, consider timestep 1800-7200 seconds");
     }
   }
 
@@ -1539,7 +1544,7 @@ std::string SimulationBuilder::get_validation_context() const {
 // === Enhanced Date Parsing Implementation ===
 
 DateParseResult SimulationBuilder::parse_date_comprehensive(const std::string& date_str,
-                                                           DateFormat format) const {
+                                                            DateFormat format) const {
   DateParseResult result;
 
   if (date_str.empty()) {
@@ -1602,8 +1607,8 @@ DateParseResult SimulationBuilder::parse_date_comprehensive(const std::string& d
 }
 
 DateParseResult SimulationBuilder::parse_date_with_timezone(const std::string& date_str,
-                                                           const std::string& timezone,
-                                                           DateFormat format) const {
+                                                            const std::string& timezone,
+                                                            DateFormat format) const {
   auto result = parse_date_comprehensive(date_str, format);
 
   if (result.success) {
@@ -1658,22 +1663,22 @@ DateFormat SimulationBuilder::detect_date_format(const std::string& date_str) co
     return DateFormat::US_FORMAT;
   }
 
-  return DateFormat::AUTO_DETECT; // Could not detect
+  return DateFormat::AUTO_DETECT;  // Could not detect
 }
 
 TimezoneInfo SimulationBuilder::parse_timezone(const std::string& timezone_str) const {
   // Common timezone mappings
   static const std::unordered_map<std::string, TimezoneInfo> timezone_map = {
-    {"UTC", TimezoneInfo("Coordinated Universal Time", "UTC", 0, 0, false)},
-    {"GMT", TimezoneInfo("Greenwich Mean Time", "GMT", 0, 0, false)},
-    {"EST", TimezoneInfo("Eastern Standard Time", "EST", -5, 0, false)},
-    {"EDT", TimezoneInfo("Eastern Daylight Time", "EDT", -4, 0, true)},
-    {"CST", TimezoneInfo("Central Standard Time", "CST", -6, 0, false)},
-    {"CDT", TimezoneInfo("Central Daylight Time", "CDT", -5, 0, true)},
-    {"MST", TimezoneInfo("Mountain Standard Time", "MST", -7, 0, false)},
-    {"MDT", TimezoneInfo("Mountain Daylight Time", "MDT", -6, 0, true)},
-    {"PST", TimezoneInfo("Pacific Standard Time", "PST", -8, 0, false)},
-    {"PDT", TimezoneInfo("Pacific Daylight Time", "PDT", -7, 0, true)},
+      {"UTC", TimezoneInfo("Coordinated Universal Time", "UTC", 0, 0, false)},
+      {"GMT", TimezoneInfo("Greenwich Mean Time", "GMT", 0, 0, false)},
+      {"EST", TimezoneInfo("Eastern Standard Time", "EST", -5, 0, false)},
+      {"EDT", TimezoneInfo("Eastern Daylight Time", "EDT", -4, 0, true)},
+      {"CST", TimezoneInfo("Central Standard Time", "CST", -6, 0, false)},
+      {"CDT", TimezoneInfo("Central Daylight Time", "CDT", -5, 0, true)},
+      {"MST", TimezoneInfo("Mountain Standard Time", "MST", -7, 0, false)},
+      {"MDT", TimezoneInfo("Mountain Daylight Time", "MDT", -6, 0, true)},
+      {"PST", TimezoneInfo("Pacific Standard Time", "PST", -8, 0, false)},
+      {"PDT", TimezoneInfo("Pacific Daylight Time", "PDT", -7, 0, true)},
   };
 
   auto it = timezone_map.find(timezone_str);
@@ -1694,13 +1699,13 @@ TimezoneInfo SimulationBuilder::parse_timezone(const std::string& timezone_str) 
     return TimezoneInfo("Custom Offset", timezone_str, hours, minutes, false);
   }
 
-  return TimezoneInfo(); // Empty/invalid timezone
+  return TimezoneInfo();  // Empty/invalid timezone
 }
 
 std::chrono::system_clock::time_point SimulationBuilder::apply_timezone_offset(
     std::chrono::system_clock::time_point tp, const TimezoneInfo& tz) const {
   auto offset_minutes = std::chrono::minutes(tz.total_offset_minutes());
-  return tp - offset_minutes; // Convert to UTC
+  return tp - offset_minutes;  // Convert to UTC
 }
 
 ValidationResult SimulationBuilder::validate_date_constraints(
@@ -1709,19 +1714,17 @@ ValidationResult SimulationBuilder::validate_date_constraints(
 
   // Check date range constraints
   if (constraints.min_date.has_value() && tp < *constraints.min_date) {
-    result.add_error(ValidationErrorCode::DATE_OUT_OF_RANGE,
-                    ValidationSeverity::ERROR,
-                    "Date is before minimum allowed date",
-                    "Date: " + format_time_point(tp) +
-                    ", minimum: " + format_time_point(*constraints.min_date));
+    result.add_error(ValidationErrorCode::DATE_OUT_OF_RANGE, ValidationSeverity::ERROR,
+                     "Date is before minimum allowed date",
+                     "Date: " + format_time_point(tp) +
+                         ", minimum: " + format_time_point(*constraints.min_date));
   }
 
   if (constraints.max_date.has_value() && tp > *constraints.max_date) {
-    result.add_error(ValidationErrorCode::DATE_OUT_OF_RANGE,
-                    ValidationSeverity::ERROR,
-                    "Date is after maximum allowed date",
-                    "Date: " + format_time_point(tp) +
-                    ", maximum: " + format_time_point(*constraints.max_date));
+    result.add_error(ValidationErrorCode::DATE_OUT_OF_RANGE, ValidationSeverity::ERROR,
+                     "Date is after maximum allowed date",
+                     "Date: " + format_time_point(tp) +
+                         ", maximum: " + format_time_point(*constraints.max_date));
   }
 
   return result;
@@ -1729,7 +1732,8 @@ ValidationResult SimulationBuilder::validate_date_constraints(
 
 // === Date Format Parsing Methods ===
 
-std::optional<std::chrono::system_clock::time_point> SimulationBuilder::parse_iso8601(const std::string& date_str) const {
+std::optional<std::chrono::system_clock::time_point> SimulationBuilder::parse_iso8601(
+    const std::string& date_str) const {
   std::tm tm = {};
   std::istringstream ss(date_str);
 
@@ -1748,7 +1752,8 @@ std::optional<std::chrono::system_clock::time_point> SimulationBuilder::parse_is
   return std::chrono::system_clock::from_time_t(std::mktime(&tm));
 }
 
-std::optional<std::chrono::system_clock::time_point> SimulationBuilder::parse_us_format(const std::string& date_str) const {
+std::optional<std::chrono::system_clock::time_point> SimulationBuilder::parse_us_format(
+    const std::string& date_str) const {
   std::tm tm = {};
   std::istringstream ss(date_str);
 
@@ -1767,7 +1772,8 @@ std::optional<std::chrono::system_clock::time_point> SimulationBuilder::parse_us
   return std::chrono::system_clock::from_time_t(std::mktime(&tm));
 }
 
-std::optional<std::chrono::system_clock::time_point> SimulationBuilder::parse_european_format(const std::string& date_str) const {
+std::optional<std::chrono::system_clock::time_point> SimulationBuilder::parse_european_format(
+    const std::string& date_str) const {
   std::tm tm = {};
   std::istringstream ss(date_str);
 
@@ -1786,7 +1792,8 @@ std::optional<std::chrono::system_clock::time_point> SimulationBuilder::parse_eu
   return std::chrono::system_clock::from_time_t(std::mktime(&tm));
 }
 
-std::optional<std::chrono::system_clock::time_point> SimulationBuilder::parse_long_format(const std::string& date_str) const {
+std::optional<std::chrono::system_clock::time_point> SimulationBuilder::parse_long_format(
+    const std::string& date_str) const {
   std::tm tm = {};
   std::istringstream ss(date_str);
 
@@ -1805,7 +1812,8 @@ std::optional<std::chrono::system_clock::time_point> SimulationBuilder::parse_lo
   return std::chrono::system_clock::from_time_t(std::mktime(&tm));
 }
 
-std::optional<std::chrono::system_clock::time_point> SimulationBuilder::parse_unix_timestamp(const std::string& date_str) const {
+std::optional<std::chrono::system_clock::time_point> SimulationBuilder::parse_unix_timestamp(
+    const std::string& date_str) const {
   try {
     std::time_t timestamp = std::stoll(date_str);
     return std::chrono::system_clock::from_time_t(timestamp);
@@ -1814,7 +1822,8 @@ std::optional<std::chrono::system_clock::time_point> SimulationBuilder::parse_un
   }
 }
 
-std::optional<std::chrono::system_clock::time_point> SimulationBuilder::parse_julian_day(const std::string& date_str) const {
+std::optional<std::chrono::system_clock::time_point> SimulationBuilder::parse_julian_day(
+    const std::string& date_str) const {
   try {
     double jd = std::stod(date_str);
 
@@ -1835,10 +1844,7 @@ std::optional<std::chrono::system_clock::time_point> SimulationBuilder::parse_ju
 // === Timezone Helper Methods ===
 
 std::vector<std::string> SimulationBuilder::get_supported_timezones() const {
-  return {
-    "UTC", "GMT", "EST", "EDT", "CST", "CDT",
-    "MST", "MDT", "PST", "PDT"
-  };
+  return {"UTC", "GMT", "EST", "EDT", "CST", "CDT", "MST", "MDT", "PST", "PDT"};
 }
 
 TimezoneInfo SimulationBuilder::get_timezone_info(const std::string& timezone_name) const {
@@ -1846,7 +1852,7 @@ TimezoneInfo SimulationBuilder::get_timezone_info(const std::string& timezone_na
 }
 
 std::string SimulationBuilder::format_date_with_timezone(std::chrono::system_clock::time_point tp,
-                                                        const TimezoneInfo& tz) const {
+                                                         const TimezoneInfo& tz) const {
   // Apply timezone offset for display
   auto local_time = tp + std::chrono::minutes(tz.total_offset_minutes());
   auto time_t_value = std::chrono::system_clock::to_time_t(local_time);
@@ -1857,7 +1863,5 @@ std::string SimulationBuilder::format_date_with_timezone(std::chrono::system_clo
 
   return oss.str();
 }
-
-
 
 }  // namespace SolarSystem::Core::Builders

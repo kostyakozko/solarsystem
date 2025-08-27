@@ -35,8 +35,8 @@ ErrorCategory DetailedError::get_category_for_code(ErrorCode code) {
 std::string DetailedError::to_string() const {
   std::ostringstream oss;
   oss << "[" << ErrorUtils::error_severity_to_string(severity) << "] "
-      << ErrorUtils::error_category_to_string(category) << " Error "
-      << static_cast<int>(code) << ": " << message;
+      << ErrorUtils::error_category_to_string(category) << " Error " << static_cast<int>(code)
+      << ": " << message;
 
   if (!context.empty()) {
     oss << " (Context: " << context << ")";
@@ -104,35 +104,29 @@ void ValidationResult::add_error(const DetailedError& error) {
   is_valid = false;
 }
 
-void ValidationResult::add_error(ErrorCode code, const std::string& message,
-                                ErrorSeverity severity, const std::string& context) {
+void ValidationResult::add_error(ErrorCode code, const std::string& message, ErrorSeverity severity,
+                                 const std::string& context) {
   DetailedError error(code, message, severity, context);
   add_error(error);
 }
 
-void ValidationResult::add_warning(const DetailedError& warning) {
-  warnings.push_back(warning);
-}
+void ValidationResult::add_warning(const DetailedError& warning) { warnings.push_back(warning); }
 
 void ValidationResult::add_warning(ErrorCode code, const std::string& message,
-                                  const std::string& context) {
+                                   const std::string& context) {
   DetailedError warning(code, message, ErrorSeverity::Warning, context);
   add_warning(warning);
 }
 
 bool ValidationResult::has_errors_of_severity(ErrorSeverity severity) const {
   return std::any_of(errors.begin(), errors.end(),
-                     [severity](const DetailedError& error) {
-                       return error.severity == severity;
-                     });
+                     [severity](const DetailedError& error) { return error.severity == severity; });
 }
 
 std::vector<DetailedError> ValidationResult::get_errors_by_category(ErrorCategory category) const {
   std::vector<DetailedError> filtered_errors;
   std::copy_if(errors.begin(), errors.end(), std::back_inserter(filtered_errors),
-               [category](const DetailedError& error) {
-                 return error.category == category;
-               });
+               [category](const DetailedError& error) { return error.category == category; });
   return filtered_errors;
 }
 
@@ -219,8 +213,8 @@ void ErrorStatistics::record_recovery_attempt(bool successful, std::chrono::mill
 double ErrorStatistics::get_error_rate() const {
   if (total_errors == 0) return 0.0;
 
-  auto duration = std::chrono::duration_cast<std::chrono::minutes>(
-    last_error_time - first_error_time);
+  auto duration =
+      std::chrono::duration_cast<std::chrono::minutes>(last_error_time - first_error_time);
 
   if (duration.count() == 0) return 0.0;
 
@@ -239,8 +233,8 @@ std::string ErrorStatistics::generate_report() const {
 
   oss << "=== Error Statistics Report ===\n";
   oss << "Total errors: " << total_errors << "\n";
-  oss << "Error rate: " << std::fixed << std::setprecision(2)
-      << get_error_rate() << " errors/minute\n";
+  oss << "Error rate: " << std::fixed << std::setprecision(2) << get_error_rate()
+      << " errors/minute\n";
 
   oss << "\nErrors by severity:\n";
   const char* severity_names[] = {"Info", "Warning", "Error", "Critical", "Fatal"};
@@ -252,8 +246,7 @@ std::string ErrorStatistics::generate_report() const {
 
   oss << "\nErrors by category:\n";
   for (const auto& [category, count] : errors_by_category) {
-    oss << "  " << ErrorUtils::error_category_to_string(category)
-        << ": " << count << "\n";
+    oss << "  " << ErrorUtils::error_category_to_string(category) << ": " << count << "\n";
   }
 
   oss << "\nRecovery statistics:\n";
@@ -292,8 +285,8 @@ void ErrorPattern::update_occurrence() {
   }
 
   // Update confidence score bon frequency and recency
-  auto age = std::chrono::duration_cast<std::chrono::hours>(
-    std::chrono::system_clock::now() - first_seen);
+  auto age =
+      std::chrono::duration_cast<std::chrono::hours>(std::chrono::system_clock::now() - first_seen);
 
   if (age.count() > 0) {
     confidence_score = static_cast<double>(occurrence_count) / age.count();
@@ -314,7 +307,8 @@ RecoveryAction ErrorRecoveryManager::determine_recovery_strategy(const DetailedE
   return get_default_recovery_strategy(error);
 }
 
-bool ErrorRecoveryManager::attempt_recovery(const DetailedError& error, const RecoveryAction& action) {
+bool ErrorRecoveryManager::attempt_recovery(const DetailedError& error,
+                                            const RecoveryAction& action) {
   auto start_time = std::chrono::steady_clock::now();
   bool success = false;
 
@@ -352,17 +346,15 @@ bool ErrorRecoveryManager::attempt_recovery(const DetailedError& error, const Re
 }
 
 void ErrorRecoveryManager::register_recovery_strategy(
-    ErrorCode error_code,
-    std::function<RecoveryAction(const DetailedError&)> strategy_provider) {
+    ErrorCode error_code, std::function<RecoveryAction(const DetailedError&)> strategy_provider) {
   custom_strategies_[error_code] = strategy_provider;
 }
 
 void ErrorRecoveryManager::register_recovery_action(
-    ErrorCode error_code,
-    RecoveryStrategy strategy,
+    ErrorCode error_code, RecoveryStrategy strategy,
     std::function<bool(const DetailedError&)> action) {
   std::string key = std::to_string(static_cast<int>(error_code)) + "_" +
-                   std::to_string(static_cast<int>(strategy));
+                    std::to_string(static_cast<int>(strategy));
   custom_actions_[key] = action;
 }
 
@@ -376,10 +368,12 @@ void ErrorRecoveryManager::clear_statistics() {
   statistics_ = ErrorStatistics{};
 }
 
-RecoveryAction ErrorRecoveryManager::get_default_recovery_strategy(const DetailedError& error) const {
+RecoveryAction ErrorRecoveryManager::get_default_recovery_strategy(
+    const DetailedError& error) const {
   RecoveryStrategy strategy = error.get_recovery_strategy();
 
-  RecoveryAction action(strategy, "Default recovery for " + ErrorUtils::error_code_to_string(error.code));
+  RecoveryAction action(strategy,
+                        "Default recovery for " + ErrorUtils::error_code_to_string(error.code));
 
   switch (strategy) {
     case RecoveryStrategy::Retry:
@@ -422,11 +416,19 @@ void ErrorLogger::set_network_endpoint(const std::string& endpoint) {
 void ErrorLogger::log_error(const DetailedError& error) {
   LogLevel level;
   switch (error.severity) {
-    case ErrorSeverity::Info: level = LogLevel::Info; break;
-    case ErrorSeverity::Warning: level = LogLevel::Warning; break;
-    case ErrorSeverity::Error: level = LogLevel::Error; break;
+    case ErrorSeverity::Info:
+      level = LogLevel::Info;
+      break;
+    case ErrorSeverity::Warning:
+      level = LogLevel::Warning;
+      break;
+    case ErrorSeverity::Error:
+      level = LogLevel::Error;
+      break;
     case ErrorSeverity::Critical:
-    case ErrorSeverity::Fatal: level = LogLevel::Critical; break;
+    case ErrorSeverity::Fatal:
+      level = LogLevel::Critical;
+      break;
   }
 
   if (level < min_level_) {
@@ -461,7 +463,7 @@ void ErrorLogger::log_error(const DetailedError& error) {
 
 void ErrorLogger::log_validation_result(const ValidationResult& result) {
   if (result.is_valid && result.warnings.empty()) {
-    return; // Nothing to log
+    return;  // Nothing to log
   }
 
   std::string message = format_log_message(result);
@@ -494,11 +496,12 @@ void ErrorLogger::log_validation_result(const ValidationResult& result) {
   }
 }
 
-void ErrorLogger::log_recovery_attempt(const DetailedError& error, const RecoveryAction& action, bool success) {
+void ErrorLogger::log_recovery_attempt(const DetailedError& error, const RecoveryAction& action,
+                                       bool success) {
   std::ostringstream oss;
-  oss << "Recovery attempt for error " << static_cast<int>(error.code)
-      << " using strategy " << ErrorUtils::recovery_strategy_to_string(action.strategy)
-      << ": " << (success ? "SUCCESS" : "FAILED");
+  oss << "Recovery attempt for error " << static_cast<int>(error.code) << " using strategy "
+      << ErrorUtils::recovery_strategy_to_string(action.strategy) << ": "
+      << (success ? "SUCCESS" : "FAILED");
 
   LogLevel level = success ? LogLevel::Info : LogLevel::Warning;
 
@@ -560,8 +563,8 @@ void ErrorLogger::log_to_file(const std::string& message) {
     auto now = std::chrono::system_clock::now();
     auto time_t = std::chrono::system_clock::to_time_t(now);
 
-    file << "[" << std::put_time(std::localtime(&time_t), "%Y-%m-%d %H:%M:%S") << "] "
-         << message << std::endl;
+    file << "[" << std::put_time(std::localtime(&time_t), "%Y-%m-%d %H:%M:%S") << "] " << message
+         << std::endl;
   }
 }
 
@@ -585,8 +588,7 @@ void ErrorLogger::log_to_memory(const std::string& message) {
 std::string ErrorLogger::format_log_message(const DetailedError& error) const {
   std::ostringstream oss;
   oss << "ERROR " << static_cast<int>(error.code) << " ["
-      << ErrorUtils::error_category_to_string(error.category) << "]: "
-      << error.message;
+      << ErrorUtils::error_category_to_string(error.category) << "]: " << error.message;
 
   if (!error.context.empty()) {
     oss << " | Context: " << error.context;
@@ -605,9 +607,8 @@ std::string ErrorLogger::format_log_message(const ValidationResult& result) cons
   if (result.summary.has_value()) {
     oss << "VALIDATION: " << result.summary.value();
   } else {
-    oss << "VALIDATION: " << (result.is_valid ? "PASSED" : "FAILED")
-        << " (" << result.errors.size() << " errors, "
-        << result.warnings.size() << " warnings)";
+    oss << "VALIDATION: " << (result.is_valid ? "PASSED" : "FAILED") << " (" << result.errors.size()
+        << " errors, " << result.warnings.size() << " warnings)";
   }
 
   return oss.str();
@@ -615,17 +616,24 @@ std::string ErrorLogger::format_log_message(const ValidationResult& result) cons
 
 std::string ErrorLogger::log_level_to_string(LogLevel level) const {
   switch (level) {
-    case LogLevel::Debug: return "DEBUG";
-    case LogLevel::Info: return "INFO";
-    case LogLevel::Warning: return "WARN";
-    case LogLevel::Error: return "ERROR";
-    case LogLevel::Critical: return "CRITICAL";
-    default: return "UNKNOWN";
+    case LogLevel::Debug:
+      return "DEBUG";
+    case LogLevel::Info:
+      return "INFO";
+    case LogLevel::Warning:
+      return "WARN";
+    case LogLevel::Error:
+      return "ERROR";
+    case LogLevel::Critical:
+      return "CRITICAL";
+    default:
+      return "UNKNOWN";
   }
 }
 
 // ErrorPatternAnalyzer implementation
-std::vector<ErrorPattern> ErrorPatternAnalyzer::analyze_patterns(const std::vector<DetailedError>& errors) {
+std::vector<ErrorPattern> ErrorPatternAnalyzer::analyze_patterns(
+    const std::vector<DetailedError>& errors) {
   std::lock_guard<std::mutex> lock(patterns_mutex_);
 
   // Add errors to history
@@ -636,7 +644,7 @@ std::vector<ErrorPattern> ErrorPatternAnalyzer::analyze_patterns(const std::vect
   // Maintain history size limit
   if (error_history_.size() > max_history_size_) {
     error_history_.erase(error_history_.begin(),
-                        error_history_.begin() + (error_history_.size() - max_history_size_));
+                         error_history_.begin() + (error_history_.size() - max_history_size_));
   }
 
   // Extract new patterns
@@ -677,7 +685,8 @@ std::vector<std::pair<ErrorCode, double>> ErrorPatternAnalyzer::predict_next_err
   return result;
 }
 
-std::vector<ErrorPattern> ErrorPatternAnalyzer::get_frequent_patterns(size_t min_occurrences) const {
+std::vector<ErrorPattern> ErrorPatternAnalyzer::get_frequent_patterns(
+    size_t min_occurrences) const {
   std::lock_guard<std::mutex> lock(patterns_mutex_);
 
   std::vector<ErrorPattern> frequent_patterns;
@@ -743,7 +752,8 @@ std::vector<ErrorPattern> ErrorPatternAnalyzer::extract_patterns(
   std::vector<ErrorPattern> patterns;
 
   // Extract patterns of length 2-5
-  for (size_t pattern_length = 2; pattern_length <= 5 && pattern_length <= errors.size(); ++pattern_length) {
+  for (size_t pattern_length = 2; pattern_length <= 5 && pattern_length <= errors.size();
+       ++pattern_length) {
     for (size_t start = 0; start <= errors.size() - pattern_length; ++start) {
       ErrorPattern pattern;
       pattern.pattern_id = "auto_" + std::to_string(patterns.size());
@@ -845,8 +855,7 @@ bool ErrorHandlingSystem::attempt_error_recovery(const DetailedError& error) {
 }
 
 void ErrorHandlingSystem::register_recovery_strategy(
-    ErrorCode code,
-    std::function<RecoveryAction(const DetailedError&)> strategy) {
+    ErrorCode code, std::function<RecoveryAction(const DetailedError&)> strategy) {
   if (recovery_manager_) {
     recovery_manager_->register_recovery_strategy(code, strategy);
   }
@@ -894,7 +903,7 @@ void ErrorHandlingSystem::set_log_file(const std::string& file_path) {
 }
 
 bool ErrorHandlingSystem::is_system_healthy() const {
-  return get_system_health_score() > 0.7; // 70% threshold
+  return get_system_health_score() > 0.7;  // 70% threshold
 }
 
 double ErrorHandlingSystem::get_system_health_score() const {
@@ -906,8 +915,8 @@ std::string ErrorHandlingSystem::generate_health_report() const {
   std::ostringstream oss;
 
   oss << "=== System Health Report ===\n";
-  oss << "Health Score: " << std::fixed << std::setprecision(1)
-      << (get_system_health_score() * 100) << "%\n";
+  oss << "Health Score: " << std::fixed << std::setprecision(1) << (get_system_health_score() * 100)
+      << "%\n";
   oss << "System Status: " << (is_system_healthy() ? "HEALTHY" : "DEGRADED") << "\n";
 
   std::lock_guard<std::mutex> lock(system_mutex_);
@@ -926,12 +935,11 @@ void ErrorHandlingSystem::cleanup_old_errors(std::chrono::hours max_age) {
 
   auto cutoff_time = std::chrono::system_clock::now() - max_age;
 
-  recent_errors_.erase(
-    std::remove_if(recent_errors_.begin(), recent_errors_.end(),
-                   [cutoff_time](const DetailedError& error) {
-                     return error.timestamp < cutoff_time;
-                   }),
-    recent_errors_.end());
+  recent_errors_.erase(std::remove_if(recent_errors_.begin(), recent_errors_.end(),
+                                      [cutoff_time](const DetailedError& error) {
+                                        return error.timestamp < cutoff_time;
+                                      }),
+                       recent_errors_.end());
 }
 
 void ErrorHandlingSystem::export_error_data(const std::string& file_path) const {
@@ -946,10 +954,8 @@ void ErrorHandlingSystem::export_error_data(const std::string& file_path) const 
   file << "# Generated: " << std::chrono::system_clock::now().time_since_epoch().count() << "\n\n";
 
   for (const auto& error : recent_errors_) {
-    file << "ERROR," << static_cast<int>(error.code) << ","
-         << static_cast<int>(error.severity) << ","
-         << error.timestamp.time_since_epoch().count() << ","
-         << error.message << "\n";
+    file << "ERROR," << static_cast<int>(error.code) << "," << static_cast<int>(error.severity)
+         << "," << error.timestamp.time_since_epoch().count() << "," << error.message << "\n";
   }
 }
 
@@ -992,18 +998,28 @@ void ErrorHandlingSystem::update_health_metrics() {
 
 double ErrorHandlingSystem::calculate_health_score() const {
   if (recent_errors_.empty()) {
-    return 1.0; // Perfect health if no recent errors
+    return 1.0;  // Perfect health if no recent errors
   }
 
   // Calculate health based on error severity and frequency
   double severity_penalty = 0.0;
   for (const auto& error : recent_errors_) {
     switch (error.severity) {
-      case ErrorSeverity::Info: severity_penalty += 0.01; break;
-      case ErrorSeverity::Warning: severity_penalty += 0.05; break;
-      case ErrorSeverity::Error: severity_penalty += 0.1; break;
-      case ErrorSeverity::Critical: severity_penalty += 0.3; break;
-      case ErrorSeverity::Fatal: severity_penalty += 1.0; break;
+      case ErrorSeverity::Info:
+        severity_penalty += 0.01;
+        break;
+      case ErrorSeverity::Warning:
+        severity_penalty += 0.05;
+        break;
+      case ErrorSeverity::Error:
+        severity_penalty += 0.1;
+        break;
+      case ErrorSeverity::Critical:
+        severity_penalty += 0.3;
+        break;
+      case ErrorSeverity::Fatal:
+        severity_penalty += 1.0;
+        break;
     }
   }
 
@@ -1018,88 +1034,155 @@ namespace ErrorUtils {
 
 std::string error_code_to_string(ErrorCode code) {
   switch (code) {
-    case ErrorCode::InvalidInput: return "InvalidInput";
-    case ErrorCode::InvalidFormat: return "InvalidFormat";
-    case ErrorCode::InvalidRange: return "InvalidRange";
-    case ErrorCode::MissingRequired: return "MissingRequired";
-    case ErrorCode::ConflictingParameters: return "ConflictingParameters";
-    case ErrorCode::ConnectionFailed: return "ConnectionFailed";
-    case ErrorCode::ConnectionTimeout: return "ConnectionTimeout";
-    case ErrorCode::NetworkUnavailable: return "NetworkUnavailable";
-    case ErrorCode::InvalidResponse: return "InvalidResponse";
-    case ErrorCode::AuthenticationFailed: return "AuthenticationFailed";
-    case ErrorCode::FileNotFound: return "FileNotFound";
-    case ErrorCode::FileAccessDenied: return "FileAccessDenied";
-    case ErrorCode::FileCorrupted: return "FileCorrupted";
-    case ErrorCode::DiskFull: return "DiskFull";
-    case ErrorCode::DirectoryNotFound: return "DirectoryNotFound";
-    case ErrorCode::OutOfMemory: return "OutOfMemory";
-    case ErrorCode::MemoryLeak: return "MemoryLeak";
-    case ErrorCode::InvalidPointer: return "InvalidPointer";
-    case ErrorCode::BufferOverflow: return "BufferOverflow";
-    case ErrorCode::ConfigNotFound: return "ConfigNotFound";
-    case ErrorCode::ConfigInvalid: return "ConfigInvalid";
-    case ErrorCode::ConfigMissing: return "ConfigMissing";
-    case ErrorCode::ConfigConflict: return "ConfigConflict";
-    case ErrorCode::OperationFailed: return "OperationFailed";
-    case ErrorCode::StateInvalid: return "StateInvalid";
-    case ErrorCode::ResourceUnavailable: return "ResourceUnavailable";
-    case ErrorCode::TimeoutExpired: return "TimeoutExpired";
-    case ErrorCode::ResourceExhausted: return "ResourceExhausted";
-    case ErrorCode::ResourceLocked: return "ResourceLocked";
-    case ErrorCode::ResourceCorrupted: return "ResourceCorrupted";
-    case ErrorCode::ResourceConflict: return "ResourceConflict";
-    case ErrorCode::AccessDenied: return "AccessDenied";
-    case ErrorCode::InvalidCredentials: return "InvalidCredentials";
-    case ErrorCode::SecurityViolation: return "SecurityViolation";
-    case ErrorCode::PerformanceDegraded: return "PerformanceDegraded";
-    case ErrorCode::ResourceContention: return "ResourceContention";
-    case ErrorCode::Unknown: return "Unknown";
-    default: return "UnknownErrorCode";
+    case ErrorCode::InvalidInput:
+      return "InvalidInput";
+    case ErrorCode::InvalidFormat:
+      return "InvalidFormat";
+    case ErrorCode::InvalidRange:
+      return "InvalidRange";
+    case ErrorCode::MissingRequired:
+      return "MissingRequired";
+    case ErrorCode::ConflictingParameters:
+      return "ConflictingParameters";
+    case ErrorCode::ConnectionFailed:
+      return "ConnectionFailed";
+    case ErrorCode::ConnectionTimeout:
+      return "ConnectionTimeout";
+    case ErrorCode::NetworkUnavailable:
+      return "NetworkUnavailable";
+    case ErrorCode::InvalidResponse:
+      return "InvalidResponse";
+    case ErrorCode::AuthenticationFailed:
+      return "AuthenticationFailed";
+    case ErrorCode::FileNotFound:
+      return "FileNotFound";
+    case ErrorCode::FileAccessDenied:
+      return "FileAccessDenied";
+    case ErrorCode::FileCorrupted:
+      return "FileCorrupted";
+    case ErrorCode::DiskFull:
+      return "DiskFull";
+    case ErrorCode::DirectoryNotFound:
+      return "DirectoryNotFound";
+    case ErrorCode::OutOfMemory:
+      return "OutOfMemory";
+    case ErrorCode::MemoryLeak:
+      return "MemoryLeak";
+    case ErrorCode::InvalidPointer:
+      return "InvalidPointer";
+    case ErrorCode::BufferOverflow:
+      return "BufferOverflow";
+    case ErrorCode::ConfigNotFound:
+      return "ConfigNotFound";
+    case ErrorCode::ConfigInvalid:
+      return "ConfigInvalid";
+    case ErrorCode::ConfigMissing:
+      return "ConfigMissing";
+    case ErrorCode::ConfigConflict:
+      return "ConfigConflict";
+    case ErrorCode::OperationFailed:
+      return "OperationFailed";
+    case ErrorCode::StateInvalid:
+      return "StateInvalid";
+    case ErrorCode::ResourceUnavailable:
+      return "ResourceUnavailable";
+    case ErrorCode::TimeoutExpired:
+      return "TimeoutExpired";
+    case ErrorCode::ResourceExhausted:
+      return "ResourceExhausted";
+    case ErrorCode::ResourceLocked:
+      return "ResourceLocked";
+    case ErrorCode::ResourceCorrupted:
+      return "ResourceCorrupted";
+    case ErrorCode::ResourceConflict:
+      return "ResourceConflict";
+    case ErrorCode::AccessDenied:
+      return "AccessDenied";
+    case ErrorCode::InvalidCredentials:
+      return "InvalidCredentials";
+    case ErrorCode::SecurityViolation:
+      return "SecurityViolation";
+    case ErrorCode::PerformanceDegraded:
+      return "PerformanceDegraded";
+    case ErrorCode::ResourceContention:
+      return "ResourceContention";
+    case ErrorCode::Unknown:
+      return "Unknown";
+    default:
+      return "UnknownErrorCode";
   }
 }
 
 std::string error_category_to_string(ErrorCategory category) {
   switch (category) {
-    case ErrorCategory::Validation: return "Validation";
-    case ErrorCategory::Network: return "Network";
-    case ErrorCategory::FileSystem: return "FileSystem";
-    case ErrorCategory::Memory: return "Memory";
-    case ErrorCategory::Configuration: return "Configuration";
-    case ErrorCategory::Runtime: return "Runtime";
-    case ErrorCategory::Resource: return "Resource";
-    case ErrorCategory::Security: return "Security";
-    case ErrorCategory::Performance: return "Performance";
-    case ErrorCategory::Unknown: return "Unknown";
-    default: return "UnknownCategory";
+    case ErrorCategory::Validation:
+      return "Validation";
+    case ErrorCategory::Network:
+      return "Network";
+    case ErrorCategory::FileSystem:
+      return "FileSystem";
+    case ErrorCategory::Memory:
+      return "Memory";
+    case ErrorCategory::Configuration:
+      return "Configuration";
+    case ErrorCategory::Runtime:
+      return "Runtime";
+    case ErrorCategory::Resource:
+      return "Resource";
+    case ErrorCategory::Security:
+      return "Security";
+    case ErrorCategory::Performance:
+      return "Performance";
+    case ErrorCategory::Unknown:
+      return "Unknown";
+    default:
+      return "UnknownCategory";
   }
 }
 
 std::string error_severity_to_string(ErrorSeverity severity) {
   switch (severity) {
-    case ErrorSeverity::Info: return "Info";
-    case ErrorSeverity::Warning: return "Warning";
-    case ErrorSeverity::Error: return "Error";
-    case ErrorSeverity::Critical: return "Critical";
-    case ErrorSeverity::Fatal: return "Fatal";
-    default: return "UnknownSeverity";
+    case ErrorSeverity::Info:
+      return "Info";
+    case ErrorSeverity::Warning:
+      return "Warning";
+    case ErrorSeverity::Error:
+      return "Error";
+    case ErrorSeverity::Critical:
+      return "Critical";
+    case ErrorSeverity::Fatal:
+      return "Fatal";
+    default:
+      return "UnknownSeverity";
   }
 }
 
 std::string recovery_strategy_to_string(RecoveryStrategy strategy) {
   switch (strategy) {
-    case RecoveryStrategy::None: return "None";
-    case RecoveryStrategy::Retry: return "Retry";
-    case RecoveryStrategy::RetryWithDelay: return "RetryWithDelay";
-    case RecoveryStrategy::RetryWithExponentialBackoff: return "RetryWithExponentialBackoff";
-    case RecoveryStrategy::Fallback: return "Fallback";
-    case RecoveryStrategy::GracefulDegradation: return "GracefulDegradation";
-    case RecoveryStrategy::FailFast: return "FailFast";
-    case RecoveryStrategy::UserInterventionRequired: return "UserInterventionRequired";
-    case RecoveryStrategy::AutomaticRecovery: return "AutomaticRecovery";
-    case RecoveryStrategy::RestartComponent: return "RestartComponent";
-    case RecoveryStrategy::RestartSystem: return "RestartSystem";
-    default: return "UnknownStrategy";
+    case RecoveryStrategy::None:
+      return "None";
+    case RecoveryStrategy::Retry:
+      return "Retry";
+    case RecoveryStrategy::RetryWithDelay:
+      return "RetryWithDelay";
+    case RecoveryStrategy::RetryWithExponentialBackoff:
+      return "RetryWithExponentialBackoff";
+    case RecoveryStrategy::Fallback:
+      return "Fallback";
+    case RecoveryStrategy::GracefulDegradation:
+      return "GracefulDegradation";
+    case RecoveryStrategy::FailFast:
+      return "FailFast";
+    case RecoveryStrategy::UserInterventionRequired:
+      return "UserInterventionRequired";
+    case RecoveryStrategy::AutomaticRecovery:
+      return "AutomaticRecovery";
+    case RecoveryStrategy::RestartComponent:
+      return "RestartComponent";
+    case RecoveryStrategy::RestartSystem:
+      return "RestartSystem";
+    default:
+      return "UnknownStrategy";
   }
 }
 
@@ -1116,32 +1199,39 @@ DetailedError create_error_from_exception(const std::exception& ex, const std::s
   return error;
 }
 
-DetailedError create_validation_error(const std::string& field, const std::string& value, const std::string& expected) {
-  std::string message = "Invalid value for field '" + field + "': got '" + value + "', expected " + expected;
+DetailedError create_validation_error(const std::string& field, const std::string& value,
+                                      const std::string& expected) {
+  std::string message =
+      "Invalid value for field '" + field + "': got '" + value + "', expected " + expected;
   DetailedError error(ErrorCode::InvalidInput, message, ErrorSeverity::Error, "Input validation");
   error.suggestions.push_back("Provide a valid value for " + field);
   error.suggestions.push_back("Expected format: " + expected);
   return error;
 }
 
-DetailedError create_network_error(const std::string& endpoint, const std::string& operation, const std::string& details) {
+DetailedError create_network_error(const std::string& endpoint, const std::string& operation,
+                                   const std::string& details) {
   std::string message = "Network error during " + operation + " to " + endpoint + ": " + details;
-  DetailedError error(ErrorCode::ConnectionFailed, message, ErrorSeverity::Error, "Network operation");
+  DetailedError error(ErrorCode::ConnectionFailed, message, ErrorSeverity::Error,
+                      "Network operation");
   error.suggestions.push_back("Check network connectivity");
   error.suggestions.push_back("Verify endpoint is accessible: " + endpoint);
   error.suggestions.push_back("Try again later");
   return error;
 }
 
-DetailedError create_filesystem_error(const std::string& file_path, const std::string& operation, const std::string& details) {
-  std::string message = "File system error during " + operation + " on " + file_path + ": " + details;
-  DetailedError error(ErrorCode::FileAccessDenied, message, ErrorSeverity::Error, "File system operation");
+DetailedError create_filesystem_error(const std::string& file_path, const std::string& operation,
+                                      const std::string& details) {
+  std::string message =
+      "File system error during " + operation + " on " + file_path + ": " + details;
+  DetailedError error(ErrorCode::FileAccessDenied, message, ErrorSeverity::Error,
+                      "File system operation");
   error.suggestions.push_back("Check file permissions");
   error.suggestions.push_back("Verify file path exists: " + file_path);
   error.suggestions.push_back("Check available disk space");
   return error;
 }
 
-} // namespace ErrorUtils
+}  // namespace ErrorUtils
 
-} // namespace SolarSystem::Utils
+}  // namespace SolarSystem::Utils

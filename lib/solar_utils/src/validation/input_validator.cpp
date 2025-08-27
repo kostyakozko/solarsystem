@@ -7,36 +7,32 @@
 
 #include <algorithm>
 #include <cctype>
+#include <cfloat>
 #include <chrono>
+#include <climits>
 #include <cmath>
 #include <ctime>
 #include <filesystem>
 #include <iomanip>
 #include <iostream>
 #include <sstream>
-#include <climits>
-#include <cfloat>
 
 namespace SolarSystem::Utils::Validation {
 
 // DateTimeValidator static members
 const std::vector<std::regex> DateTimeValidator::date_patterns_ = {
-  std::regex(R"(^(\d{4})-(\d{2})-(\d{2})$)"),           // ISO 8601: YYYY-MM-DD
-  std::regex(R"(^(\d{1,2})/(\d{1,2})/(\d{4})$)"),       // US format: MM/DD/YYYY
-  std::regex(R"(^(\d{1,2})/(\d{1,2})/(\d{4})$)"),       // European: DD/MM/YYYY (same pattern, context dependent)
-  std::regex(R"(^(\d{8})$)"),                          // Compact: YYYYMMDD
-  std::regex(R"(^(today|tomorrow|yesterday|now)$)", std::regex::icase), // Named dates
-  std::regex(R"(^([+-]?\d+)\s*days?$)", std::regex::icase) // Relative: +/-N days
+    std::regex(R"(^(\d{4})-(\d{2})-(\d{2})$)"),      // ISO 8601: YYYY-MM-DD
+    std::regex(R"(^(\d{1,2})/(\d{1,2})/(\d{4})$)"),  // US format: MM/DD/YYYY
+    std::regex(R"(^(\d{1,2})/(\d{1,2})/(\d{4})$)"),  // European: DD/MM/YYYY (same pattern, context
+                                                     // dependent)
+    std::regex(R"(^(\d{8})$)"),                      // Compact: YYYYMMDD
+    std::regex(R"(^(today|tomorrow|yesterday|now)$)", std::regex::icase),  // Named dates
+    std::regex(R"(^([+-]?\d+)\s*days?$)", std::regex::icase)               // Relative: +/-N days
 };
 
 const std::vector<std::string> DateTimeValidator::format_descriptions_ = {
-  "YYYY-MM-DD (ISO 8601)",
-  "MM/DD/YYYY (US format)",
-  "DD/MM/YYYY (European format)",
-  "YYYYMMDD (compact)",
-  "today, tomorrow, yesterday, now",
-  "+/-N days (relative)"
-};
+    "YYYY-MM-DD (ISO 8601)", "MM/DD/YYYY (US format)",          "DD/MM/YYYY (European format)",
+    "YYYYMMDD (compact)",    "today, tomorrow, yesterday, now", "+/-N days (relative)"};
 
 // DateTimeValidator implementation
 ValidationResult DateTimeValidator::validate_date(const std::string& date_str) {
@@ -55,7 +51,7 @@ ValidationResult DateTimeValidator::validate_date(const std::string& date_str) {
     if (std::regex_match(trimmed, matches, date_patterns_[i])) {
       try {
         // Basic validation - just check if we can parse it
-        if (i == 0) { // ISO format
+        if (i == 0) {  // ISO format
           int year = std::stoi(matches[1]);
           int month = std::stoi(matches[2]);
           int day = std::stoi(matches[3]);
@@ -67,11 +63,11 @@ ValidationResult DateTimeValidator::validate_date(const std::string& date_str) {
             result.expected_formats = get_supported_formats();
             return result;
           }
-        } else if (i == 4) { // Named dates
+        } else if (i == 4) {  // Named dates
           // Always valid
-        } else if (i == 5) { // Relative dates
+        } else if (i == 5) {  // Relative dates
           int days = std::stoi(matches[1]);
-          if (std::abs(days) > 36500) { // ~100 years
+          if (std::abs(days) > 36500) {  // ~100 years
             ValidationResult result;
             result.is_valid = false;
             result.error_message = "Relative date too far in the future/past";
@@ -82,7 +78,7 @@ ValidationResult DateTimeValidator::validate_date(const std::string& date_str) {
 
         return ValidationResult(true, trimmed);
       } catch (const std::exception& e) {
-        continue; // Try next pattern
+        continue;  // Try next pattern
       }
     }
   }
@@ -113,9 +109,9 @@ ValidationResult DateTimeValidator::validate_date(const std::string& date_str) {
   return result;
 }
 
-ValidationResult DateTimeValidator::validate_date_with_range(const std::string& date_str,
-                                                           const std::chrono::system_clock::time_point& min_date,
-                                                           const std::chrono::system_clock::time_point& max_date) {
+ValidationResult DateTimeValidator::validate_date_with_range(
+    const std::string& date_str, const std::chrono::system_clock::time_point& min_date,
+    const std::chrono::system_clock::time_point& max_date) {
   auto basic_result = validate_date(date_str);
   if (!basic_result.is_valid) {
     return basic_result;
@@ -134,9 +130,7 @@ ValidationResult DateTimeValidator::validate_date_with_range(const std::string& 
   return basic_result;
 }
 
-std::vector<std::string> DateTimeValidator::get_supported_formats() {
-  return format_descriptions_;
-}
+std::vector<std::string> DateTimeValidator::get_supported_formats() { return format_descriptions_; }
 
 // NumericValidator implementation
 ValidationResult NumericValidator::validate_int(const std::string& str, int min_val, int max_val) {
@@ -174,7 +168,7 @@ ValidationResult NumericValidator::validate_int(const std::string& str, int min_
     // Suggest cleaned version
     std::string cleaned = str;
     cleaned.erase(std::remove_if(cleaned.begin(), cleaned.end(),
-                                [](char c) { return !std::isdigit(c) && c != '-' && c != '+'; }),
+                                 [](char c) { return !std::isdigit(c) && c != '-' && c != '+'; }),
                   cleaned.end());
     if (!cleaned.empty() && cleaned != str) {
       result.suggestions.push_back(cleaned);
@@ -184,7 +178,8 @@ ValidationResult NumericValidator::validate_int(const std::string& str, int min_
   }
 }
 
-ValidationResult NumericValidator::validate_double(const std::string& str, double min_val, double max_val) {
+ValidationResult NumericValidator::validate_double(const std::string& str, double min_val,
+                                                   double max_val) {
   try {
     std::string trimmed = str;
     trimmed.erase(0, trimmed.find_first_not_of(" \t\n\r"));
@@ -217,9 +212,10 @@ ValidationResult NumericValidator::validate_double(const std::string& str, doubl
 
     // Suggest cleaned version
     std::string cleaned = str;
-    cleaned.erase(std::remove_if(cleaned.begin(), cleaned.end(),
-                                [](char c) { return !std::isdigit(c) && c != '.' && c != '-' && c != '+'; }),
-                  cleaned.end());
+    cleaned.erase(
+        std::remove_if(cleaned.begin(), cleaned.end(),
+                       [](char c) { return !std::isdigit(c) && c != '.' && c != '-' && c != '+'; }),
+        cleaned.end());
     if (!cleaned.empty() && cleaned != str) {
       result.suggestions.push_back(cleaned);
     }
@@ -237,7 +233,8 @@ ValidationResult NumericValidator::validate_year(const std::string& str) {
 }
 
 // StringValidator implementation
-ValidationResult StringValidator::validate_choice(const std::string& str, const std::vector<std::string>& allowed_values) {
+ValidationResult StringValidator::validate_choice(const std::string& str,
+                                                  const std::vector<std::string>& allowed_values) {
   std::string trimmed = str;
   trimmed.erase(0, trimmed.find_first_not_of(" \t\n\r"));
   trimmed.erase(trimmed.find_last_not_of(" \t\n\r") + 1);
@@ -246,7 +243,7 @@ ValidationResult StringValidator::validate_choice(const std::string& str, const 
   for (const auto& allowed : allowed_values) {
     if (std::equal(trimmed.begin(), trimmed.end(), allowed.begin(), allowed.end(),
                    [](char a, char b) { return std::tolower(a) == std::tolower(b); })) {
-      return ValidationResult(true, allowed); // Return the canonical form
+      return ValidationResult(true, allowed);  // Return the canonical form
     }
   }
 
@@ -312,8 +309,9 @@ ValidationResult StringValidator::sanitize_input(const std::string& str) {
   std::string result = str;
 
   // Remove control characters
-  result.erase(std::remove_if(result.begin(), result.end(),
-                             [](char c) { return c >= 0 && c < 32 && c != '\t' && c != '\n' && c != '\r'; }),
+  result.erase(std::remove_if(
+                   result.begin(), result.end(),
+                   [](char c) { return c >= 0 && c < 32 && c != '\t' && c != '\n' && c != '\r'; }),
                result.end());
 
   // Trim whitespace
@@ -325,8 +323,8 @@ ValidationResult StringValidator::sanitize_input(const std::string& str) {
 
 // InputValidator implementation
 ValidationResult InputValidator::validate_argument(const std::string& arg_name,
-                                                  const std::string& value,
-                                                  const std::string& expected_type) {
+                                                   const std::string& value,
+                                                   const std::string& expected_type) {
   if (expected_type == "date") {
     return DateTimeValidator::validate_date(value);
   } else if (expected_type == "int") {
@@ -347,8 +345,8 @@ ValidationResult InputValidator::validate_argument(const std::string& arg_name,
   }
 }
 
-std::vector<std::string> InputValidator::get_suggestions(const std::string& invalid_input,
-                                                        const std::vector<std::string>& valid_options) {
+std::vector<std::string> InputValidator::get_suggestions(
+    const std::string& invalid_input, const std::vector<std::string>& valid_options) {
   std::vector<std::string> suggestions;
 
   for (const auto& option : valid_options) {
@@ -377,4 +375,4 @@ std::vector<std::string> InputValidator::get_suggestions(const std::string& inva
   return suggestions;
 }
 
-} // namespace SolarSystem::Utils::Validation
+}  // namespace SolarSystem::Utils::Validation

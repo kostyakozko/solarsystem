@@ -1,56 +1,37 @@
 #pragma once
 
+#include <atomic>
 #include <chrono>
+#include <condition_variable>
 #include <fstream>
+#include <functional>
 #include <iostream>
 #include <memory>
 #include <mutex>
+#include <queue>
 #include <sstream>
 #include <string>
 #include <string_view>
-#include <vector>
-#include <unordered_map>
 #include <thread>
-#include <atomic>
-#include <queue>
-#include <condition_variable>
-#include <functional>
+#include <unordered_map>
+#include <vector>
 
 namespace SolarSystem::Utils {
 
 /**
  * @brief Enhanced log levels for comprehensive logging
  */
-enum class LogLevel {
-  TRACE = 0,
-  DEBUG = 1,
-  INFO = 2,
-  WARN = 3,
-  ERROR = 4,
-  FATAL = 5
-};
+enum class LogLevel { TRACE = 0, DEBUG = 1, INFO = 2, WARN = 3, ERROR = 4, FATAL = 5 };
 
 /**
  * @brief Log output destinations
  */
-enum class LogOutput {
-  CONSOLE,
-  FILE,
-  NETWORK,
-  SYSLOG,
-  MEMORY,
-  BOTH
-};
+enum class LogOutput { CONSOLE, FILE, NETWORK, SYSLOG, MEMORY, BOTH };
 
 /**
  * @brief Log format types
  */
-enum class LogFormat {
-  TEXT,
-  JSON,
-  XML,
-  CSV
-};
+enum class LogFormat { TEXT, JSON, XML, CSV };
 
 /**
  * @brief Enhanced log entry with comprehensive metadata
@@ -77,7 +58,7 @@ struct LogEntry {
  * @brief Log appender interface for different output destinations
  */
 class LogAppender {
-public:
+ public:
   virtual ~LogAppender() = default;
   virtual void append(const LogEntry& entry) = 0;
   virtual void flush() = 0;
@@ -100,7 +81,7 @@ public:
 
   const Statistics& get_statistics() const { return stats_; }
 
-protected:
+ protected:
   std::string name_;
   LogLevel min_level_ = LogLevel::TRACE;
   mutable Statistics stats_;
@@ -119,14 +100,14 @@ protected:
  * @brief Console appender with color support
  */
 class ConsoleAppender : public LogAppender {
-public:
+ public:
   explicit ConsoleAppender(bool use_colors = true);
   void append(const LogEntry& entry) override;
   void flush() override;
   void close() override;
   bool is_open() const override { return true; }
 
-private:
+ private:
   bool use_colors_;
   std::mutex mutex_;
 
@@ -138,10 +119,8 @@ private:
  * @brief File appender with rotation support
  */
 class FileAppender : public LogAppender {
-public:
-  FileAppender(const std::string& filename,
-               size_t max_size = 10 * 1024 * 1024,
-               int max_files = 5);
+ public:
+  FileAppender(const std::string& filename, size_t max_size = 10 * 1024 * 1024, int max_files = 5);
   ~FileAppender();
 
   void append(const LogEntry& entry) override;
@@ -151,7 +130,7 @@ public:
 
   void force_rotation();
 
-private:
+ private:
   std::string filename_;
   std::string base_filename_;
   std::ofstream file_;
@@ -169,7 +148,7 @@ private:
  * @brief Memory appender for in-memory log storage
  */
 class MemoryAppender : public LogAppender {
-public:
+ public:
   explicit MemoryAppender(size_t max_entries = 1000);
 
   void append(const LogEntry& entry) override;
@@ -181,7 +160,7 @@ public:
   void clear();
   size_t size() const;
 
-private:
+ private:
   mutable std::mutex mutex_;
   std::vector<LogEntry> entries_;
   size_t max_entries_;
@@ -193,7 +172,7 @@ private:
  * @brief Asynchronous logger for high-performance logging
  */
 class AsyncLogger {
-public:
+ public:
   AsyncLogger();
   ~AsyncLogger();
 
@@ -220,7 +199,7 @@ public:
   const Metrics& get_metrics() const { return metrics_; }
   std::string get_performance_report() const;
 
-private:
+ private:
   std::vector<std::unique_ptr<LogAppender>> appenders_;
   std::queue<LogEntry> log_queue_;
   std::mutex queue_mutex_;
@@ -297,8 +276,8 @@ class Logger {
    * @brief Enhanced log method with metadata
    */
   void log_enhanced(LogLevel level, std::string_view component, std::string_view message,
-                   const std::string& file = "", int line = 0, const std::string& function = "",
-                   const std::unordered_map<std::string, std::string>& metadata = {});
+                    const std::string& file = "", int line = 0, const std::string& function = "",
+                    const std::unordered_map<std::string, std::string>& metadata = {});
 
   /**
    * @brief Convenience methods for different log levels (backward compatible)
@@ -329,11 +308,12 @@ class Logger {
   /**
    * @brief Appender management
    */
-  void add_console_appender(const std::string& name = "console", LogLevel min_level = LogLevel::INFO);
+  void add_console_appender(const std::string& name = "console",
+                            LogLevel min_level = LogLevel::INFO);
   void add_file_appender(const std::string& name, const std::string& filename,
-                        LogLevel min_level = LogLevel::DEBUG);
+                         LogLevel min_level = LogLevel::DEBUG);
   void add_memory_appender(const std::string& name, size_t max_entries = 1000,
-                          LogLevel min_level = LogLevel::TRACE);
+                           LogLevel min_level = LogLevel::TRACE);
   void remove_appender(const std::string& name);
   LogAppender* get_appender(const std::string& name);
 
@@ -347,7 +327,8 @@ class Logger {
    * @brief Log analysis
    */
   std::vector<LogEntry> get_recent_logs(size_t count = 100) const;
-  std::vector<LogEntry> search_logs(const std::string& pattern, LogLevel min_level = LogLevel::TRACE) const;
+  std::vector<LogEntry> search_logs(const std::string& pattern,
+                                    LogLevel min_level = LogLevel::TRACE) const;
 
   /**
    * @brief Flush all appenders
@@ -373,7 +354,8 @@ class Logger {
 
   // Enhanced logging components
   std::unique_ptr<AsyncLogger> async_logger_;
-  MemoryAppender* memory_appender_ = nullptr; // Raw pointer - ownership transferred to async_logger_
+  MemoryAppender* memory_appender_ =
+      nullptr;  // Raw pointer - ownership transferred to async_logger_
   bool comprehensive_mode_ = false;
   std::atomic<bool> initialized_{false};
 };

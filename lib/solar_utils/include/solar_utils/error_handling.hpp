@@ -26,11 +26,11 @@ namespace SolarSystem::Utils {
  * @brief Error severity levels
  */
 enum class ErrorSeverity {
-  Info,        // Informational messages
-  Warning,     // Warnings that don't prevent operation
-  Error,       // Errors that prevent current operation
-  Critical,    // Critical errors that may affect system stability
-  Fatal        // Fatal errors that require immediate shutdown
+  Info,      // Informational messages
+  Warning,   // Warnings that don't prevent operation
+  Error,     // Errors that prevent current operation
+  Critical,  // Critical errors that may affect system stability
+  Fatal      // Fatal errors that require immediate shutdown
 };
 
 /**
@@ -115,28 +115,28 @@ enum class ErrorCode {
  * @brief Recovery strategies for different error types
  */
 enum class RecoveryStrategy {
-  None,                        // No recovery possible
-  Retry,                       // Retry the operation
-  RetryWithDelay,             // Retry after a delay
-  RetryWithExponentialBackoff, // Retry with exponential backoff
-  Fallback,                   // Use fallback mechanism
-  GracefulDegradation,        // Continue with reduced functionality
-  FailFast,                   // Fail immediately
-  UserInterventionRequired,   // Require user intervention
-  AutomaticRecovery,          // Attempt automatic recovery
-  RestartComponent,           // Restart the failing component
-  RestartSystem              // Restart the entire system
+  None,                         // No recovery possible
+  Retry,                        // Retry the operation
+  RetryWithDelay,               // Retry after a delay
+  RetryWithExponentialBackoff,  // Retry with exponential backoff
+  Fallback,                     // Use fallback mechanism
+  GracefulDegradation,          // Continue with reduced functionality
+  FailFast,                     // Fail immediately
+  UserInterventionRequired,     // Require user intervention
+  AutomaticRecovery,            // Attempt automatic recovery
+  RestartComponent,             // Restart the failing component
+  RestartSystem                 // Restart the entire system
 };
 
 /**
  * @brief Validation levels for error checking
  */
 enum class ValidationLevel {
-  None,        // No validation
-  Basic,       // Basic validation only
-  Standard,    // Standard validation (default)
-  Strict,      // Strict validation
-  Paranoid     // Maximum validation
+  None,      // No validation
+  Basic,     // Basic validation only
+  Standard,  // Standard validation (default)
+  Strict,    // Strict validation
+  Paranoid   // Maximum validation
 };
 
 /**
@@ -157,10 +157,12 @@ struct DetailedError {
   DetailedError() : timestamp(std::chrono::system_clock::now()) {}
 
   DetailedError(ErrorCode code, const std::string& message,
-                ErrorSeverity severity = ErrorSeverity::Error,
-                const std::string& context = "")
-      : code(code), category(get_category_for_code(code)), severity(severity),
-        message(message), context(context),
+                ErrorSeverity severity = ErrorSeverity::Error, const std::string& context = "")
+      : code(code),
+        category(get_category_for_code(code)),
+        severity(severity),
+        message(message),
+        context(context),
         timestamp(std::chrono::system_clock::now()) {}
 
   // Get category based on error code
@@ -192,13 +194,11 @@ struct ValidationResult {
   // Add error
   void add_error(const DetailedError& error);
   void add_error(ErrorCode code, const std::string& message,
-                 ErrorSeverity severity = ErrorSeverity::Error,
-                 const std::string& context = "");
+                 ErrorSeverity severity = ErrorSeverity::Error, const std::string& context = "");
 
   // Add warning
   void add_warning(const DetailedError& warning);
-  void add_warning(ErrorCode code, const std::string& message,
-                   const std::string& context = "");
+  void add_warning(ErrorCode code, const std::string& message, const std::string& context = "");
 
   // Check if has errors of specific severity
   bool has_errors_of_severity(ErrorSeverity severity) const;
@@ -235,7 +235,7 @@ struct RecoveryAction {
  */
 struct ErrorStatistics {
   size_t total_errors = 0;
-  size_t errors_by_severity[5] = {0}; // Index by ErrorSeverity
+  size_t errors_by_severity[5] = {0};  // Index by ErrorSeverity
   std::unordered_map<ErrorCategory, size_t> errors_by_category;
   std::unordered_map<ErrorCode, size_t> errors_by_code;
   std::chrono::system_clock::time_point first_error_time;
@@ -284,26 +284,20 @@ struct ErrorPattern {
  * @brief Error recovery manager
  */
 class ErrorRecoveryManager {
-public:
+ public:
   // Determine recovery strategy for an error
-  [[nodiscard]] RecoveryAction determine_recovery_strategy(
-      const DetailedError& error) const;
+  [[nodiscard]] RecoveryAction determine_recovery_strategy(const DetailedError& error) const;
 
   // Attempt recovery for an error
-  [[nodiscard]] bool attempt_recovery(
-      const DetailedError& error,
-      const RecoveryAction& action);
+  [[nodiscard]] bool attempt_recovery(const DetailedError& error, const RecoveryAction& action);
 
   // Register custom recovery strategy
   void register_recovery_strategy(
-      ErrorCode error_code,
-      std::function<RecoveryAction(const DetailedError&)> strategy_provider);
+      ErrorCode error_code, std::function<RecoveryAction(const DetailedError&)> strategy_provider);
 
   // Register custom recovery action
-  void register_recovery_action(
-      ErrorCode error_code,
-      RecoveryStrategy strategy,
-      std::function<bool(const DetailedError&)> action);
+  void register_recovery_action(ErrorCode error_code, RecoveryStrategy strategy,
+                                std::function<bool(const DetailedError&)> action);
 
   // Get recovery statistics
   ErrorStatistics get_recovery_statistics() const;
@@ -311,8 +305,9 @@ public:
   // Clear recovery statistics
   void clear_statistics();
 
-private:
-  std::unordered_map<ErrorCode, std::function<RecoveryAction(const DetailedError&)>> custom_strategies_;
+ private:
+  std::unordered_map<ErrorCode, std::function<RecoveryAction(const DetailedError&)>>
+      custom_strategies_;
   std::unordered_map<std::string, std::function<bool(const DetailedError&)>> custom_actions_;
   ErrorStatistics statistics_;
   mutable std::mutex statistics_mutex_;
@@ -325,24 +320,12 @@ private:
  * @brief Error logger with multiple output targets
  */
 class ErrorLogger {
-public:
+ public:
   // Log levels
-  enum class LogLevel {
-    Debug,
-    Info,
-    Warning,
-    Error,
-    Critical
-  };
+  enum class LogLevel { Debug, Info, Warning, Error, Critical };
 
   // Log targets
-  enum class LogTarget {
-    Console,
-    File,
-    Syslog,
-    Network,
-    Memory
-  };
+  enum class LogTarget { Console, File, Syslog, Network, Memory };
 
   // Configure logging
   void configure(LogLevel min_level = LogLevel::Warning,
@@ -369,7 +352,7 @@ public:
   // Flush all log targets
   void flush();
 
-private:
+ private:
   LogLevel min_level_ = LogLevel::Warning;
   std::vector<LogTarget> targets_;
   std::string log_file_path_;
@@ -396,7 +379,7 @@ private:
  * @brief Error pattern analyzer for learning and prediction
  */
 class ErrorPatternAnalyzer {
-public:
+ public:
   // Analyze error sequence for patterns
   std::vector<ErrorPattern> analyze_patterns(const std::vector<DetailedError>& errors);
 
@@ -416,7 +399,7 @@ public:
   // Clear pattern history
   void clear_patterns();
 
-private:
+ private:
   std::vector<ErrorPattern> known_patterns_;
   std::vector<DetailedError> error_history_;
   size_t max_history_size_ = 1000;
@@ -436,7 +419,7 @@ private:
  * @brief Comprehensive error handling system
  */
 class ErrorHandlingSystem {
-public:
+ public:
   static ErrorHandlingSystem& instance();
 
   // Configure the error handling system
@@ -449,7 +432,7 @@ public:
   // Error recovery
   bool attempt_error_recovery(const DetailedError& error);
   void register_recovery_strategy(ErrorCode code,
-                                 std::function<RecoveryAction(const DetailedError&)> strategy);
+                                  std::function<RecoveryAction(const DetailedError&)> strategy);
 
   // Error analysis
   ErrorStatistics get_error_statistics() const;
@@ -471,7 +454,7 @@ public:
   void export_error_data(const std::string& file_path) const;
   void import_error_data(const std::string& file_path);
 
-private:
+ private:
   ErrorHandlingSystem() = default;
   ~ErrorHandlingSystem() = default;
 
@@ -501,55 +484,52 @@ private:
  * @brief Utility functions for error handling
  */
 namespace ErrorUtils {
-  // Convert error code to string
-  std::string error_code_to_string(ErrorCode code);
+// Convert error code to string
+std::string error_code_to_string(ErrorCode code);
 
-  // Convert error category to string
-  std::string error_category_to_string(ErrorCategory category);
+// Convert error category to string
+std::string error_category_to_string(ErrorCategory category);
 
-  // Convert error severity to string
-  std::string error_severity_to_string(ErrorSeverity severity);
+// Convert error severity to string
+std::string error_severity_to_string(ErrorSeverity severity);
 
-  // Convert recovery strategy to string
-  std::string recovery_strategy_to_string(RecoveryStrategy strategy);
+// Convert recovery strategy to string
+std::string recovery_strategy_to_string(RecoveryStrategy strategy);
 
-  // Parse error code from string
-  ErrorCode string_to_error_code(const std::string& code_str);
+// Parse error code from string
+ErrorCode string_to_error_code(const std::string& code_str);
 
-  // Create error from exception
-  DetailedError create_error_from_exception(const std::exception& ex,
-                                           const std::string& context = "");
+// Create error from exception
+DetailedError create_error_from_exception(const std::exception& ex,
+                                          const std::string& context = "");
 
-  // Create validation error
-  DetailedError create_validation_error(const std::string& field,
-                                       const std::string& value,
-                                       const std::string& expected);
+// Create validation error
+DetailedError create_validation_error(const std::string& field, const std::string& value,
+                                      const std::string& expected);
 
-  // Create network error
-  DetailedError create_network_error(const std::string& endpoint,
-                                    const std::string& operation,
-                                    const std::string& details);
+// Create network error
+DetailedError create_network_error(const std::string& endpoint, const std::string& operation,
+                                   const std::string& details);
 
-  // Create file system error
-  DetailedError create_filesystem_error(const std::string& file_path,
-                                       const std::string& operation,
-                                       const std::string& details);
-}
+// Create file system error
+DetailedError create_filesystem_error(const std::string& file_path, const std::string& operation,
+                                      const std::string& details);
+}  // namespace ErrorUtils
 
 /**
  * @brief Macros for convenient error handling
  */
-#define SOLAR_ERROR(code, message) \
+#define SOLAR_ERROR(code, message)                                                           \
   SolarSystem::Utils::DetailedError(code, message, SolarSystem::Utils::ErrorSeverity::Error, \
-                                   __FILE__ ":" + std::to_string(__LINE__))
+                                    __FILE__ ":" + std::to_string(__LINE__))
 
-#define SOLAR_WARNING(code, message) \
+#define SOLAR_WARNING(code, message)                                                           \
   SolarSystem::Utils::DetailedError(code, message, SolarSystem::Utils::ErrorSeverity::Warning, \
-                                   __FILE__ ":" + std::to_string(__LINE__))
+                                    __FILE__ ":" + std::to_string(__LINE__))
 
-#define SOLAR_CRITICAL(code, message) \
+#define SOLAR_CRITICAL(code, message)                                                           \
   SolarSystem::Utils::DetailedError(code, message, SolarSystem::Utils::ErrorSeverity::Critical, \
-                                   __FILE__ ":" + std::to_string(__LINE__))
+                                    __FILE__ ":" + std::to_string(__LINE__))
 
 #define SOLAR_REPORT_ERROR(error) \
   SolarSystem::Utils::ErrorHandlingSystem::instance().report_error(error)
@@ -557,11 +537,12 @@ namespace ErrorUtils {
 #define SOLAR_ATTEMPT_RECOVERY(error) \
   SolarSystem::Utils::ErrorHandlingSystem::instance().attempt_error_recovery(error)
 
-#define SOLAR_VALIDATE_AND_REPORT(validation_result) \
-  do { \
-    if (!validation_result.is_valid) { \
-      SolarSystem::Utils::ErrorHandlingSystem::instance().report_validation_result(validation_result); \
-    } \
-  } while(0)
+#define SOLAR_VALIDATE_AND_REPORT(validation_result)                                \
+  do {                                                                              \
+    if (!validation_result.is_valid) {                                              \
+      SolarSystem::Utils::ErrorHandlingSystem::instance().report_validation_result( \
+          validation_result);                                                       \
+    }                                                                               \
+  } while (0)
 
-} // namespace SolarSystem::Utils
+}  // namespace SolarSystem::Utils

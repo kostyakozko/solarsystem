@@ -4,12 +4,13 @@
  */
 
 #include "solar_utils/network_resource_manager.hpp"
-#include "solar_utils/file_resource_manager.hpp"
 
 #include <algorithm>
 #include <cstdio>
 #include <random>
 #include <sstream>
+
+#include "solar_utils/file_resource_manager.hpp"
 
 namespace SolarSystem::Utils {
 
@@ -56,7 +57,8 @@ void NetworkCircuitBreaker::record_failure() {
 
   if (state_ == CircuitBreakerState::Closed) {
     if (failure_count_ >= config_.failure_threshold ||
-        (total_requests_ >= config_.minimum_requests && get_failure_rate() >= config_.failure_rate_threshold)) {
+        (total_requests_ >= config_.minimum_requests &&
+         get_failure_rate() >= config_.failure_rate_threshold)) {
       transition_to_open();
     }
   } else if (state_ == CircuitBreakerState::HalfOpen) {
@@ -113,9 +115,7 @@ ManagedNetworkConnection::ManagedNetworkConnection(const std::string& endpoint, 
   info_.last_used = info_.created_at;
 }
 
-ManagedNetworkConnection::~ManagedNetworkConnection() {
-  disconnect();
-}
+ManagedNetworkConnection::~ManagedNetworkConnection() { disconnect(); }
 
 ManagedNetworkConnection::ManagedNetworkConnection(ManagedNetworkConnection&& other) noexcept
     : endpoint_(std::move(other.endpoint_)),
@@ -128,7 +128,8 @@ ManagedNetworkConnection::ManagedNetworkConnection(ManagedNetworkConnection&& ot
   other.connection_handle_ = nullptr;
 }
 
-ManagedNetworkConnection& ManagedNetworkConnection::operator=(ManagedNetworkConnection&& other) noexcept {
+ManagedNetworkConnection& ManagedNetworkConnection::operator=(
+    ManagedNetworkConnection&& other) noexcept {
   if (this != &other) {
     disconnect();
 
@@ -234,15 +235,14 @@ void ManagedNetworkConnection::disconnect() {
   }
 }
 
-bool ManagedNetworkConnection::is_connected() const {
-  return state_ == ConnectionState::Active;
-}
+bool ManagedNetworkConnection::is_connected() const { return state_ == ConnectionState::Active; }
 
 bool ManagedNetworkConnection::is_healthy() const {
   return is_connected() && info_.error_count < 5;  // Arbitrary threshold
 }
 
-std::string ManagedNetworkConnection::send_request(const std::string& request, std::chrono::seconds timeout) {
+std::string ManagedNetworkConnection::send_request(const std::string& request,
+                                                   std::chrono::seconds timeout) {
   if (!is_connected()) {
     return "";
   }
@@ -258,24 +258,27 @@ std::string ManagedNetworkConnection::send_request(const std::string& request, s
         // For HTTP/HTTPS requests, construct proper HTTP response
         // In a real implementation, this would use libcurl or similar
         if (request.find("GET") == 0) {
-          response = "HTTP/1.1 200 OK\r\n"
-                    "Content-Type: application/json\r\n"
-                    "Content-Length: 25\r\n"
-                    "Connection: keep-alive\r\n"
-                    "\r\n"
-                    "{\"status\": \"success\"}";
+          response =
+              "HTTP/1.1 200 OK\r\n"
+              "Content-Type: application/json\r\n"
+              "Content-Length: 25\r\n"
+              "Connection: keep-alive\r\n"
+              "\r\n"
+              "{\"status\": \"success\"}";
         } else if (request.find("POST") == 0) {
-          response = "HTTP/1.1 201 Created\r\n"
-                    "Content-Type: application/json\r\n"
-                    "Content-Length: 27\r\n"
-                    "Connection: keep-alive\r\n"
-                    "\r\n"
-                    "{\"status\": \"created\"}";
+          response =
+              "HTTP/1.1 201 Created\r\n"
+              "Content-Type: application/json\r\n"
+              "Content-Length: 27\r\n"
+              "Connection: keep-alive\r\n"
+              "\r\n"
+              "{\"status\": \"created\"}";
         } else {
-          response = "HTTP/1.1 200 OK\r\n"
-                    "Content-Length: 13\r\n"
-                    "\r\n"
-                    "Hello, World!";
+          response =
+              "HTTP/1.1 200 OK\r\n"
+              "Content-Length: 13\r\n"
+              "\r\n"
+              "Hello, World!";
         }
         break;
       }
@@ -297,7 +300,8 @@ std::string ManagedNetworkConnection::send_request(const std::string& request, s
     std::this_thread::sleep_for(delay);
 
     auto end_time = std::chrono::steady_clock::now();
-    auto response_time = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
+    auto response_time =
+        std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
 
     update_statistics(request.size(), response.size());
     info_.request_count++;
@@ -413,9 +417,7 @@ std::vector<char> ManagedNetworkConnection::receive_data(size_t max_bytes) {
 void ManagedNetworkConnection::register_with_resource_manager() {
   ResourceInfo info("", ResourceType::NetworkConnection, 0, "", "Network: " + endpoint_);
   info.resource_ptr = this;
-  info.cleanup_function = [this]() {
-    disconnect();
-  };
+  info.cleanup_function = [this]() { disconnect(); };
 
   resource_id_ = ResourceManager::instance().register_resource(info);
 }
@@ -447,14 +449,13 @@ std::string ManagedNetworkConnection::generate_connection_id() const {
 }
 
 // NetworkConnectionPool implementation
-NetworkConnectionPool::NetworkConnectionPool(const ConnectionPoolConfig& config) : config_(config) {}
+NetworkConnectionPool::NetworkConnectionPool(const ConnectionPoolConfig& config)
+    : config_(config) {}
 
-NetworkConnectionPool::~NetworkConnectionPool() {
-  close_all_connections();
-}
+NetworkConnectionPool::~NetworkConnectionPool() { close_all_connections(); }
 
-std::shared_ptr<ManagedNetworkConnection> NetworkConnectionPool::acquire_connection(const std::string& endpoint,
-                                                                                   ConnectionType type) {
+std::shared_ptr<ManagedNetworkConnection> NetworkConnectionPool::acquire_connection(
+    const std::string& endpoint, ConnectionType type) {
   std::lock_guard<std::mutex> lock(pool_mutex_);
 
   std::string pool_key = get_pool_key(endpoint, type);
@@ -484,7 +485,8 @@ std::shared_ptr<ManagedNetworkConnection> NetworkConnectionPool::acquire_connect
   return nullptr;
 }
 
-void NetworkConnectionPool::release_connection(std::shared_ptr<ManagedNetworkConnection> connection) {
+void NetworkConnectionPool::release_connection(
+    std::shared_ptr<ManagedNetworkConnection> connection) {
   if (!connection) {
     return;
   }
@@ -497,7 +499,8 @@ void NetworkConnectionPool::release_connection(std::shared_ptr<ManagedNetworkCon
   auto active_it = active_connections_.find(pool_key);
   if (active_it != active_connections_.end()) {
     auto& active_list = active_it->second;
-    active_list.erase(std::remove(active_list.begin(), active_list.end(), connection), active_list.end());
+    active_list.erase(std::remove(active_list.begin(), active_list.end(), connection),
+                      active_list.end());
   }
 
   // Add to idle connections if healthy and reuse is enabled
@@ -537,8 +540,8 @@ void NetworkConnectionPool::cleanup_idle_connections() {
     auto it = connections.begin();
     while (it != connections.end()) {
       auto connection = *it;
-      auto idle_time = std::chrono::duration_cast<std::chrono::seconds>(
-        now - connection->info().last_used);
+      auto idle_time =
+          std::chrono::duration_cast<std::chrono::seconds>(now - connection->info().last_used);
 
       if (idle_time > config_.idle_timeout || !connection->is_healthy()) {
         connection->disconnect();
@@ -614,7 +617,8 @@ NetworkOperationStats NetworkConnectionPool::get_statistics() const {
   return pool_stats;
 }
 
-std::string NetworkConnectionPool::get_pool_key(const std::string& endpoint, ConnectionType type) const {
+std::string NetworkConnectionPool::get_pool_key(const std::string& endpoint,
+                                                ConnectionType type) const {
   return endpoint + ":" + std::to_string(static_cast<int>(type));
 }
 
@@ -652,8 +656,8 @@ NetworkResourceManager::~NetworkResourceManager() {
   force_close_all_connections();
 }
 
-std::shared_ptr<ManagedNetworkConnection> NetworkResourceManager::create_connection(const std::string& endpoint,
-                                                                                   ConnectionType type) {
+std::shared_ptr<ManagedNetworkConnection> NetworkResourceManager::create_connection(
+    const std::string& endpoint, ConnectionType type) {
   std::lock_guard<std::mutex> lock(network_mutex_);
 
   if (!check_connection_limits()) {
@@ -670,8 +674,8 @@ std::shared_ptr<ManagedNetworkConnection> NetworkResourceManager::create_connect
   return nullptr;
 }
 
-std::shared_ptr<ManagedNetworkConnection> NetworkResourceManager::get_pooled_connection(const std::string& endpoint,
-                                                                                        ConnectionType type) {
+std::shared_ptr<ManagedNetworkConnection> NetworkResourceManager::get_pooled_connection(
+    const std::string& endpoint, ConnectionType type) {
   if (!connection_pool_) {
     connection_pool_ = std::make_unique<NetworkConnectionPool>();
   }
@@ -679,7 +683,8 @@ std::shared_ptr<ManagedNetworkConnection> NetworkResourceManager::get_pooled_con
   return connection_pool_->acquire_connection(endpoint, type);
 }
 
-void NetworkResourceManager::register_circuit_breaker(const std::string& endpoint, const CircuitBreakerConfig& config) {
+void NetworkResourceManager::register_circuit_breaker(const std::string& endpoint,
+                                                      const CircuitBreakerConfig& config) {
   std::lock_guard<std::mutex> lock(network_mutex_);
   circuit_breakers_[endpoint] = std::make_unique<NetworkCircuitBreaker>(config);
 }
@@ -701,8 +706,8 @@ void NetworkResourceManager::remove_circuit_breaker(const std::string& endpoint)
 }
 
 std::string NetworkResourceManager::make_resilient_request(const std::string& endpoint,
-                                                          const std::string& request,
-                                                          size_t max_retries) {
+                                                           const std::string& request,
+                                                           size_t max_retries) {
   auto circuit_breaker = get_circuit_breaker(endpoint);
   if (circuit_breaker && !circuit_breaker->can_execute()) {
     return "";  // Circuit breaker is open
@@ -780,8 +785,8 @@ void NetworkResourceManager::generate_network_usage_report(std::ostream& output)
 
   output << "Active Connections:\n";
   for (const auto& [id, info] : active_connections_) {
-    auto age = std::chrono::duration_cast<std::chrono::seconds>(
-      std::chrono::system_clock::now() - info.created_at);
+    auto age = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now() -
+                                                                info.created_at);
 
     output << "  " << id << " (" << info.endpoint << "): "
            << "age " << age.count() << "s, "
@@ -791,9 +796,8 @@ void NetworkResourceManager::generate_network_usage_report(std::ostream& output)
 
   output << "\nCircuit Breakers: " << circuit_breakers_.size() << "\n";
   for (const auto& [endpoint, breaker] : circuit_breakers_) {
-    output << "  " << endpoint << ": "
-           << static_cast<int>(breaker->get_state()) << " (failures: "
-           << breaker->get_failure_count() << ")\n";
+    output << "  " << endpoint << ": " << static_cast<int>(breaker->get_state())
+           << " (failures: " << breaker->get_failure_count() << ")\n";
   }
 }
 
@@ -850,7 +854,8 @@ void NetworkResourceManager::start_health_monitoring() {
   }
 
   health_monitoring_active_.store(true);
-  health_monitoring_thread_ = std::make_unique<std::thread>(&NetworkResourceManager::health_monitoring_loop, this);
+  health_monitoring_thread_ =
+      std::make_unique<std::thread>(&NetworkResourceManager::health_monitoring_loop, this);
 }
 
 void NetworkResourceManager::stop_health_monitoring() {
@@ -915,10 +920,9 @@ std::string NetworkResourceManager::generate_connection_id() const {
 // NetworkUtils implementation
 namespace NetworkUtils {
 
-NetworkResult<std::string> make_http_request(const std::string& url,
-                                            const std::string& method,
-                                            const std::string& data,
-                                            const std::unordered_map<std::string, std::string>& headers) {
+NetworkResult<std::string> make_http_request(
+    const std::string& url, const std::string& method, const std::string& data,
+    const std::unordered_map<std::string, std::string>& headers) {
   try {
     // Use the managed network connection for HTTP requests
     auto& network_manager = NetworkResourceManager::instance();
@@ -968,7 +972,8 @@ NetworkResult<std::string> download_file(const std::string& url, const std::stri
     // Make HTTP GET request to download file
     auto response_result = make_http_request(url, "GET");
     if (!response_result.is_success()) {
-      return NetworkResult<std::string>("Failed to download from " + url + ": " + response_result.error(), -1);
+      return NetworkResult<std::string>(
+          "Failed to download from " + url + ": " + response_result.error(), -1);
     }
 
     std::string response = response_result.value();
@@ -989,7 +994,8 @@ NetworkResult<std::string> download_file(const std::string& url, const std::stri
       return NetworkResult<std::string>("Failed to write downloaded content to " + output_path, -3);
     }
 
-    std::string success_msg = "Download completed successfully: " + std::to_string(body.size()) + " bytes";
+    std::string success_msg =
+        "Download completed successfully: " + std::to_string(body.size()) + " bytes";
     return NetworkResult<std::string>(std::move(success_msg));
 
   } catch (const std::exception& e) {
@@ -1097,6 +1103,6 @@ std::unordered_map<std::string, std::string> parse_query_string(const std::strin
   return params;
 }
 
-} // namespace NetworkUtils
+}  // namespace NetworkUtils
 
-} // namespace SolarSystem::Utils
+}  // namespace SolarSystem::Utils
