@@ -510,23 +510,32 @@ void Logger::initialize_comprehensive() {
     return;
   }
 
+  // Set comprehensive_mode_ early to prevent recursion
+  comprehensive_mode_ = true;
+
   async_logger_ = std::make_unique<AsyncLogger>();
   async_logger_->set_level(convert_level(config_.min_level));
 
   // Add memory appender for log analysis
-  memory_appender_ = std::make_unique<MemoryAppender>(1000);
-  async_logger_->add_appender(std::unique_ptr<LogAppender>(memory_appender_.get()));
+  auto memory_appender = std::make_unique<MemoryAppender>(1000);
+  memory_appender_ = memory_appender.get(); // Keep raw pointer for access
+  async_logger_->add_appender(std::move(memory_appender)); // Transfer ownership
 
   // Add default appenders based on configuration
   if (config_.output == Output::CONSOLE || config_.output == Output::BOTH) {
-    add_console_appender("default_console", convert_level(config_.min_level));
+    auto appender = std::make_unique<ConsoleAppender>(config_.colored_output);
+    appender->set_name("default_console");
+    appender->set_min_level(convert_level(config_.min_level));
+    async_logger_->add_appender(std::move(appender));
   }
 
   if (config_.output == Output::FILE || config_.output == Output::BOTH) {
-    add_file_appender("default_file", config_.log_file, convert_level(config_.min_level));
+    auto appender = std::make_unique<FileAppender>(config_.log_file);
+    appender->set_name("default_file");
+    appender->set_min_level(convert_level(config_.min_level));
+    async_logger_->add_appender(std::move(appender));
   }
 
-  comprehensive_mode_ = true;
   initialized_ = true;
 }
 

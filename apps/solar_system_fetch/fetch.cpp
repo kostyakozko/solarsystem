@@ -146,6 +146,9 @@ class DataFetcher {
 
     if (!force && factory.has_current_ephemeris_data()) {
       LOG_INFO("Update", "Current data exists, use --force to override");
+      std::cout << "ℹ️  Current ephemeris data is already available for " << target_year << "\n";
+      std::cout << "💡 Use --force to update anyway, or check --status for details\n";
+      show_status(factory);
       return true;
     }
 

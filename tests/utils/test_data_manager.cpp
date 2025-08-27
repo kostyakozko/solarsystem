@@ -318,8 +318,6 @@ std::optional<std::vector<uint8_t>> TestDataManager::read_binary_file(
 
 std::optional<TestDataSet> TestDataManager::load_jpl_responses(const std::string& scenario) {
   auto jpl_path = get_jpl_responses_path();
-  std::cerr << "DEBUG: load_jpl_responses - jpl_path: " << jpl_path << std::endl;
-  std::cerr << "DEBUG: load_jpl_responses - scenario: " << scenario << std::endl;
 
   TestDataSet dataset;
   dataset.name = "jpl_responses_" + scenario;

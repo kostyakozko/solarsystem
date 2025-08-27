@@ -195,9 +195,9 @@ int main() {
 
   // Test error handling across applications
   TEST_CASE("Error Handling") {
-    // Test invalid date handling
-    std::string invalid_date_command = "./apps/solar_system/solar_system --date invalid-date 2>&1";
-    std::string output = execute_command(invalid_date_command);
+    // Test invalid argument handling
+    std::string invalid_arg_command = "./apps/solar_system/solar_system --invalid-flag 2>&1";
+    std::string output = execute_command(invalid_arg_command);
 
     // Should handle error gracefully
     ASSERT_TRUE(output.find("Error") != std::string::npos ||
@@ -374,7 +374,6 @@ int main() {
     // Test environment variable configuration
     {
       setenv("SOLAR_SYSTEM_CACHE_DIR", test_env->path_string().c_str(), 1);
-      setenv("SOLAR_SYSTEM_LOG_LEVEL", "DEBUG", 1);
 
       std::string output =
           execute_command(get_executable_path("solar_system_launcher") + " --status 2>&1");

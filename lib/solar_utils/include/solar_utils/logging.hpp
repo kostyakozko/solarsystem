@@ -373,7 +373,7 @@ class Logger {
 
   // Enhanced logging components
   std::unique_ptr<AsyncLogger> async_logger_;
-  std::unique_ptr<MemoryAppender> memory_appender_;
+  MemoryAppender* memory_appender_ = nullptr; // Raw pointer - ownership transferred to async_logger_
   bool comprehensive_mode_ = false;
   std::atomic<bool> initialized_{false};
 };
