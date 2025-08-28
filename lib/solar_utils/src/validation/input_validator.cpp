@@ -321,6 +321,173 @@ ValidationResult StringValidator::sanitize_input(const std::string& str) {
   return ValidationResult(true, result);
 }
 
+ValidationResult StringValidator::validate_json(const std::string& str) {
+  if (str.empty()) {
+    ValidationResult result;
+    result.is_valid = false;
+    result.error_message = "Empty JSON string";
+    result.expected_formats = {"{ \"key\": \"value\" }"};
+    return result;
+  }
+
+  // Trim whitespace
+  std::string trimmed = str;
+  trimmed.erase(0, trimmed.find_first_not_of(" \t\n\r"));
+  trimmed.erase(trimmed.find_last_not_of(" \t\n\r") + 1);
+
+  if (trimmed.empty()) {
+    ValidationResult result;
+    result.is_valid = false;
+    result.error_message = "Empty JSON content after trimming whitespace";
+    result.expected_formats = {"{ \"key\": \"value\" }"};
+    return result;
+  }
+
+  // Basic JSON structure validation
+  if (!trimmed.starts_with('{') || !trimmed.ends_with('}')) {
+    ValidationResult result;
+    result.is_valid = false;
+    result.error_message = "JSON must start with '{' and end with '}'";
+    result.expected_formats = {"{ \"key\": \"value\" }"};
+    result.suggestions.push_back("Ensure your JSON is wrapped in curly braces");
+    return result;
+  }
+
+  // Simplified JSON validation - check for common syntax errors
+  int brace_count = 0;
+  int bracket_count = 0;
+  bool in_string = false;
+  bool escaped = false;
+  size_t line = 1;
+  size_t column = 1;
+
+  for (size_t i = 0; i < trimmed.length(); ++i) {
+    char c = trimmed[i];
+
+    if (c == '\n') {
+      line++;
+      column = 1;
+    } else {
+      column++;
+    }
+
+    if (in_string) {
+      if (escaped) {
+        escaped = false;
+        continue;
+      }
+      if (c == '\\') {
+        escaped = true;
+        continue;
+      }
+      if (c == '"') {
+        in_string = false;
+      }
+      continue;
+    }
+
+    switch (c) {
+      case '"':
+        in_string = true;
+        break;
+      case '{':
+        brace_count++;
+        break;
+      case '}':
+        brace_count--;
+        if (brace_count < 0) {
+          ValidationResult result;
+          result.is_valid = false;
+          result.error_message = "Unexpected '}' at line " + std::to_string(line) + ", column " + std::to_string(column);
+          result.suggestions.push_back("Check for mismatched braces");
+          return result;
+        }
+        break;
+      case '[':
+        bracket_count++;
+        break;
+      case ']':
+        bracket_count--;
+        if (bracket_count < 0) {
+          ValidationResult result;
+          result.is_valid = false;
+          result.error_message = "Unexpected ']' at line " + std::to_string(line) + ", column " + std::to_string(column);
+          result.suggestions.push_back("Check for mismatched brackets");
+          return result;
+        }
+        break;
+    }
+  }
+
+  if (brace_count != 0) {
+    ValidationResult result;
+    result.is_valid = false;
+    result.error_message = "Mismatched braces - missing " + std::to_string(brace_count) + " closing brace(s)";
+    result.suggestions.push_back("Ensure all '{' have matching '}'");
+    return result;
+  }
+
+  if (bracket_count != 0) {
+    ValidationResult result;
+    result.is_valid = false;
+    result.error_message = "Mismatched brackets - missing " + std::to_string(bracket_count) + " closing bracket(s)";
+    result.suggestions.push_back("Ensure all '[' have matching ']'");
+    return result;
+  }
+
+  if (in_string) {
+    ValidationResult result;
+    result.is_valid = false;
+    result.error_message = "Unterminated string";
+    result.suggestions.push_back("Ensure all strings are properly closed with quotes");
+    return result;
+  }
+
+  // Check for common JSON syntax errors using simple string patterns
+  // Look for missing commas (simplified check)
+  if (trimmed.find("}\n  \"") != std::string::npos ||
+      trimmed.find("}\r\n  \"") != std::string::npos ||
+      trimmed.find("} \"") != std::string::npos) {
+    ValidationResult result;
+    result.is_valid = false;
+    result.error_message = "Missing comma between key-value pairs";
+    result.suggestions.push_back("Add commas between key-value pairs in JSON objects");
+    return result;
+  }
+
+  // Look for missing commas between properties (improved pattern)
+  // Check for pattern: value followed by newline and then key without comma
+  size_t pos = 0;
+  while ((pos = trimmed.find('\n', pos)) != std::string::npos) {
+    // Skip whitespace after newline
+    size_t next_pos = pos + 1;
+    while (next_pos < trimmed.length() && (trimmed[next_pos] == ' ' || trimmed[next_pos] == '\t')) {
+      next_pos++;
+    }
+
+    // Check if we have a quote (start of key) after whitespace
+    if (next_pos < trimmed.length() && trimmed[next_pos] == '"') {
+      // Look backwards from the newline to find the last non-whitespace character
+      size_t prev_pos = pos - 1;
+      while (prev_pos > 0 && (trimmed[prev_pos] == ' ' || trimmed[prev_pos] == '\t' || trimmed[prev_pos] == '\r')) {
+        prev_pos--;
+      }
+
+      // If the last character before newline is not a comma or opening brace, we have an error
+      if (prev_pos > 0 && trimmed[prev_pos] != ',' && trimmed[prev_pos] != '{') {
+        ValidationResult result;
+        result.is_valid = false;
+        result.error_message = "Missing comma between object properties";
+        result.suggestions.push_back("Add commas between object properties in JSON");
+        return result;
+      }
+    }
+    pos++;
+  }
+
+  return ValidationResult(true, trimmed);
+}
+
 // InputValidator implementation
 ValidationResult InputValidator::validate_argument(const std::string& arg_name,
                                                    const std::string& value,

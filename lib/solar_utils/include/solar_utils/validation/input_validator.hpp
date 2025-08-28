@@ -122,6 +122,11 @@ class StringValidator {
    * @brief Sanitize input string
    */
   static ValidationResult sanitize_input(const std::string& str);
+
+  /**
+   * @brief Validate JSON syntax and structure
+   */
+  static ValidationResult validate_json(const std::string& str);
 };
 
 /**

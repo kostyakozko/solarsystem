@@ -18,6 +18,7 @@
 #include <map>
 #include <memory>
 #include <optional>
+#include <regex>
 #include <sstream>
 #include <string>
 #include <string_view>
@@ -71,6 +72,16 @@ struct LauncherConfig {
   std::optional<std::string> config_file;
 
   /**
+   * @brief Load configuration from JSON file
+   */
+  [[nodiscard]] bool load_from_json(const std::string& json_content, std::string* error = nullptr);
+
+  /**
+   * @brief Apply command-line overrides (CLI takes precedence over config file)
+   */
+  void apply_cli_overrides(const LauncherConfig& cli_config);
+
+  /**
    * @brief Validate configuration
    */
   [[nodiscard]] bool is_valid(std::string* error = nullptr) const {
@@ -96,6 +107,280 @@ struct LauncherConfig {
     }
 
     return true;
+  }
+};
+
+/**
+ * @brief JSON configuration parser for LauncherConfig
+ */
+class ConfigurationParser {
+public:
+  /**
+   * @brief Parse JSON configuration into LauncherConfig
+   */
+  static bool parse_json_config(const std::string& json_content, LauncherConfig& config, std::string* error = nullptr) {
+    using namespace SolarSystem::Utils::Validation;
+
+    // First, validate JSON syntax using comprehensive validator
+    auto json_validation = StringValidator::validate_json(json_content);
+    if (!json_validation.is_valid) {
+      if (error) {
+        *error = "JSON validation failed: " + json_validation.error_message;
+        if (!json_validation.suggestions.empty()) {
+          *error += "\nSuggestions: ";
+          for (size_t i = 0; i < json_validation.suggestions.size(); ++i) {
+            if (i > 0) *error += ", ";
+            *error += json_validation.suggestions[i];
+          }
+        }
+        if (!json_validation.expected_formats.empty()) {
+          *error += "\nExpected format: " + json_validation.expected_formats[0];
+        }
+      }
+      return false;
+    }
+
+    // Use the validated JSON content
+    std::string json = json_validation.normalized_value;
+
+    // Parse boolean options
+    if (json.find("\"verbose\"") != std::string::npos) {
+      if (json.find("\"verbose\":\\s*true") != std::string::npos ||
+          json.find("\"verbose\":true") != std::string::npos) {
+        config.verbose_output = true;
+      } else if (json.find("\"verbose\":\\s*false") != std::string::npos ||
+                 json.find("\"verbose\":false") != std::string::npos) {
+        config.verbose_output = false;
+      }
+    }
+
+    if (json.find("\"quiet\"") != std::string::npos) {
+      if (json.find("\"quiet\":\\s*true") != std::string::npos ||
+          json.find("\"quiet\":true") != std::string::npos) {
+        config.quiet_mode = true;
+      } else if (json.find("\"quiet\":\\s*false") != std::string::npos ||
+                 json.find("\"quiet\":false") != std::string::npos) {
+        config.quiet_mode = false;
+      }
+    }
+
+    if (json.find("\"batch_mode\"") != std::string::npos) {
+      if (json.find("\"batch_mode\":\\s*true") != std::string::npos ||
+          json.find("\"batch_mode\":true") != std::string::npos) {
+        config.batch_mode = true;
+      }
+    }
+
+    if (json.find("\"continue_on_error\"") != std::string::npos) {
+      if (json.find("\"continue_on_error\":\\s*true") != std::string::npos ||
+          json.find("\"continue_on_error\":true") != std::string::npos) {
+        config.continue_on_error = true;
+      }
+    }
+
+    if (json.find("\"show_progress\"") != std::string::npos) {
+      if (json.find("\"show_progress\":\\s*false") != std::string::npos ||
+          json.find("\"show_progress\":false") != std::string::npos) {
+        config.show_progress = false;
+      }
+    }
+
+    if (json.find("\"auto_fetch\"") != std::string::npos) {
+      if (json.find("\"auto_fetch\":\\s*true") != std::string::npos ||
+          json.find("\"auto_fetch\":true") != std::string::npos) {
+        config.auto_fetch = true;
+      }
+    }
+
+    // Parse string options
+    std::regex date_pattern("\"target_date\"\\s*:\\s*\"([^\"]+)\"");
+    std::smatch date_match;
+    if (std::regex_search(json, date_match, date_pattern)) {
+      std::string date_str = date_match[1].str();
+      // Validate the date using our shared validation
+      auto date_validation = DateTimeValidator::validate_date(date_str);
+      if (date_validation.is_valid) {
+        config.target_date = date_validation.normalized_value;
+        config.use_current_date = false;
+      } else {
+        if (error) {
+          *error = "Invalid date in configuration: " + date_validation.error_message;
+        }
+        return false;
+      }
+    }
+
+    // Parse timeout with better validation
+    std::regex timeout_pattern("\"timeout_seconds\"\\s*:\\s*(-?\\d+)");
+    std::smatch timeout_match;
+    if (std::regex_search(json, timeout_match, timeout_pattern)) {
+      try {
+        int timeout_seconds = std::stoi(timeout_match[1].str());
+        if (timeout_seconds <= 0) {
+          if (error) *error = "Invalid timeout_seconds: must be a positive integer (got " + std::to_string(timeout_seconds) + ")";
+          return false;
+        }
+        if (timeout_seconds > 86400) {  // 24 hours max
+          if (error) *error = "Invalid timeout_seconds: maximum allowed is 86400 seconds (24 hours), got " + std::to_string(timeout_seconds);
+          return false;
+        }
+        config.timeout = std::chrono::seconds(timeout_seconds);
+      } catch (const std::exception& e) {
+        if (error) *error = "Invalid timeout_seconds value in configuration: " + std::string(e.what());
+        return false;
+      }
+    }
+
+    // Validate that we don't have unknown keys (basic check)
+    std::vector<std::string> known_keys = {
+      "verbose", "quiet", "batch_mode", "continue_on_error",
+      "show_progress", "auto_fetch", "target_date", "timeout_seconds"
+    };
+
+    // Simple check for unknown keys by looking for quoted strings that might be keys
+    std::regex key_pattern("\"([^\"]+)\"\\s*:");
+    std::sregex_iterator iter(json.begin(), json.end(), key_pattern);
+    std::sregex_iterator end;
+
+    for (; iter != end; ++iter) {
+      std::string found_key = (*iter)[1].str();
+      bool is_known = false;
+      for (const auto& known_key : known_keys) {
+        if (found_key == known_key) {
+          is_known = true;
+          break;
+        }
+      }
+      if (!is_known) {
+        if (error) {
+          *error = "Unknown configuration key: \"" + found_key + "\". Known keys are: ";
+          for (size_t i = 0; i < known_keys.size(); ++i) {
+            if (i > 0) *error += ", ";
+            *error += "\"" + known_keys[i] + "\"";
+          }
+        }
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  /**
+   * @brief Validate configuration for internal conflicts
+   */
+  static bool validate_configuration_conflicts(const LauncherConfig& config, std::string* error = nullptr) {
+    // Check for mutually exclusive options
+    if (config.verbose_output && config.quiet_mode) {
+      if (error) {
+        *error = "Conflicting options: 'verbose' and 'quiet' cannot both be true";
+      }
+      return false;
+    }
+
+    // Check for logical inconsistencies
+    if (config.batch_mode && config.show_progress) {
+      // This is actually allowed - batch mode can still show progress
+      // Just noting this for future consideration
+    }
+
+    // Validate timeout value
+    if (config.timeout.has_value() && config.timeout->count() <= 0) {
+      if (error) {
+        *error = "Invalid timeout value: must be positive";
+      }
+      return false;
+    }
+
+    // Validate date if specified
+    if (config.target_date.has_value() && !config.use_current_date) {
+      using namespace SolarSystem::Utils::Validation;
+      auto date_validation = DateTimeValidator::validate_date(*config.target_date);
+      if (!date_validation.is_valid) {
+        if (error) {
+          *error = "Invalid target_date in configuration: " + date_validation.error_message;
+        }
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  /**
+   * @brief Validate final configuration after all overrides
+   */
+  static bool validate_final_configuration(const LauncherConfig& config, std::string* error = nullptr) {
+    // Re-run conflict validation on final configuration
+    if (!validate_configuration_conflicts(config, error)) {
+      return false;
+    }
+
+    // Additional validation for final configuration
+    // Check that we have at least one operation to perform
+    bool has_operation = config.show_status || config.show_help || config.show_version ||
+                        config.fetch_data || config.update_data || config.force_update ||
+                        config.validate_cache || config.clean_cache || config.rebuild_cache ||
+                        config.test_storage || config.run_simulation;
+
+    if (!has_operation) {
+      // This is actually OK - default behavior is to show status
+      // No error needed
+    }
+
+    return true;
+  }
+
+  /**
+   * @brief Apply CLI overrides with clear precedence rules
+   *
+   * PRECEDENCE RULES (highest to lowest priority):
+   * 1. Command-line arguments (highest priority)
+   * 2. Configuration file settings
+   * 3. Application defaults (lowest priority)
+   *
+   * This means CLI arguments will ALWAYS override config file settings,
+   * and config file settings will override application defaults.
+   */
+  static void apply_cli_overrides(LauncherConfig& base_config, const LauncherConfig& cli_config) {
+    // CLI options always take precedence over config file options
+    // We apply CLI overrides to the base config loaded from file
+
+    // Note: This is a simplified approach. In a production system, we would
+    // track which CLI options were explicitly set vs. using defaults.
+
+    // Operation modes (CLI always overrides)
+    if (cli_config.show_status) base_config.show_status = true;
+    if (cli_config.show_help) base_config.show_help = true;
+    if (cli_config.show_version) base_config.show_version = true;
+
+    // Data management operations (CLI always overrides)
+    if (cli_config.fetch_data) base_config.fetch_data = true;
+    if (cli_config.update_data) base_config.update_data = true;
+    if (cli_config.force_update) base_config.force_update = true;
+    if (cli_config.validate_cache) base_config.validate_cache = true;
+    if (cli_config.clean_cache) base_config.clean_cache = true;
+    if (cli_config.rebuild_cache) base_config.rebuild_cache = true;
+    if (cli_config.test_storage) base_config.test_storage = true;
+
+    // Simulation operations (CLI always overrides)
+    if (cli_config.run_simulation) base_config.run_simulation = true;
+    if (cli_config.target_date.has_value()) {
+      base_config.target_date = cli_config.target_date;
+      base_config.use_current_date = cli_config.use_current_date;
+    }
+    if (cli_config.auto_fetch) base_config.auto_fetch = true;
+
+    // Workflow options (CLI always overrides)
+    if (cli_config.batch_mode) base_config.batch_mode = true;
+    if (cli_config.continue_on_error) base_config.continue_on_error = true;
+    if (cli_config.timeout.has_value()) base_config.timeout = cli_config.timeout;
+
+    // Output options (CLI always overrides)
+    if (cli_config.verbose_output) base_config.verbose_output = true;
+    if (cli_config.quiet_mode) base_config.quiet_mode = true;
+    // show_progress is special - --no-progress CLI flag should override config file
+    if (!cli_config.show_progress) base_config.show_progress = false;
   }
 };
 
@@ -927,11 +1212,13 @@ int main(int argc, char* argv[]) {
     }
 
     // Handle configuration file if specified
+    LauncherConfig file_config = *config;  // Start with CLI config as base
     if (config->config_file.has_value()) {
       std::filesystem::path config_path = *config->config_file;
       if (!std::filesystem::exists(config_path)) {
         LOG_ERROR("Config", "Configuration file not found: " + config_path.string());
         std::cerr << "Error: Configuration file not found: " << config_path << "\n";
+        std::cerr << "Expected path: " << config_path << "\n";
         return 1;
       }
 
@@ -940,15 +1227,61 @@ int main(int argc, char* argv[]) {
         std::string config_content((std::istreambuf_iterator<char>(config_stream)),
                                    std::istreambuf_iterator<char>());
 
-        // Basic JSON validation - just check if it starts and ends with braces
-        if (config_content.empty() || (config_content.find('{') == std::string::npos &&
-                                       config_content.find('}') == std::string::npos)) {
-          LOG_ERROR("Config", "Invalid configuration file format");
-          std::cerr << "Error: Invalid configuration file format\n";
+        if (config_content.empty()) {
+          LOG_ERROR("Config", "Configuration file is empty");
+          std::cerr << "Error: Configuration file is empty\n";
           return 1;
         }
 
-        LOG_INFO("Config", "Configuration loaded from: " + config_path.string());
+        // Parse JSON configuration using comprehensive validation
+        LauncherConfig base_config;  // Start with defaults
+        std::string parse_error;
+        if (!ConfigurationParser::parse_json_config(config_content, base_config, &parse_error)) {
+          LOG_ERROR("Config", "Configuration parsing failed: " + parse_error);
+          std::cerr << "Error: Configuration file validation failed\n";
+          std::cerr << parse_error << "\n";
+          std::cerr << "\nConfiguration file format should be valid JSON, example:\n";
+          std::cerr << "{\n";
+          std::cerr << "  \"verbose\": true,\n";
+          std::cerr << "  \"quiet\": false,\n";
+          std::cerr << "  \"batch_mode\": false,\n";
+          std::cerr << "  \"continue_on_error\": true,\n";
+          std::cerr << "  \"show_progress\": true,\n";
+          std::cerr << "  \"auto_fetch\": false,\n";
+          std::cerr << "  \"target_date\": \"2024-01-01\",\n";
+          std::cerr << "  \"timeout_seconds\": 300\n";
+          std::cerr << "}\n";
+          std::cerr << "\nFor more information on JSON syntax, see: https://www.json.org/\n";
+          return 1;
+        }
+
+        // Validate configuration for conflicts before applying CLI overrides
+        std::string conflict_error;
+        if (!ConfigurationParser::validate_configuration_conflicts(base_config, &conflict_error)) {
+          LOG_ERROR("Config", "Configuration conflict detected: " + conflict_error);
+          std::cerr << "Error: Configuration conflict detected\n";
+          std::cerr << conflict_error << "\n";
+          return 1;
+        }
+
+        // Apply CLI overrides (CLI takes precedence over config file)
+        ConfigurationParser::apply_cli_overrides(base_config, *config);
+        *config = base_config;
+
+        // Validate final configuration after CLI overrides
+        if (!ConfigurationParser::validate_final_configuration(*config, &conflict_error)) {
+          LOG_ERROR("Config", "Final configuration validation failed: " + conflict_error);
+          std::cerr << "Error: Configuration validation failed after applying CLI overrides\n";
+          std::cerr << conflict_error << "\n";
+          return 1;
+        }
+
+        LOG_INFO("Config", "Configuration loaded and validated from: " + config_path.string());
+        if (config->verbose_output) {
+          std::cout << "✅ Configuration loaded from: " << config_path << "\n";
+          std::cout << "📋 Option precedence: Command-line arguments override config file settings\n";
+          std::cout << "🔍 Configuration validation: All settings validated for conflicts and consistency\n";
+        }
       } catch (const std::exception& e) {
         LOG_ERROR("Config", "Failed to read configuration file: " + std::string(e.what()));
         std::cerr << "Error: Failed to read configuration file: " << e.what() << "\n";
