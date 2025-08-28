@@ -202,8 +202,9 @@ class DataFetcher {
     std::cout << "🔍 Validating cache integrity...\n";
 
     if (!factory.has_current_ephemeris_data()) {
-      std::cout << "❌ No cache data present\n";
-      return false;
+      std::cout << "ℹ️  No cache data present\n";
+      std::cout << "💡 Run --update to fetch ephemeris data first\n";
+      return true;  // This is informational, not an error
     }
 
     // Test body creation to validate data integrity
