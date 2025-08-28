@@ -448,6 +448,21 @@ BodySelector& BodySelector::where(std::function<bool(const Bodies::CelestialBody
   return *this;
 }
 
+BodySelector& BodySelector::default_set() {
+  return body_set(Bodies::BodyFactory::DefaultBodySet::IMPORTANT);
+}
+
+BodySelector& BodySelector::body_set(Bodies::BodyFactory::DefaultBodySet set) {
+  // Clear existing filters and add names from the standardized body set
+  filters_.clear();
+
+  Bodies::BodyFactory factory;
+  auto body_names = factory.get_bodies_for_set(set);
+  add_name_filter(body_names, true);
+
+  return *this;
+}
+
 std::optional<Bodies::BodyCollection> BodySelector::build(std::string* error_message) {
   // Get all available body definitions
   auto all_definitions = Data::get_all_body_definitions();

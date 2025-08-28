@@ -9,6 +9,7 @@
 #include <vector>
 
 #include "solar_core/bodies/body_collection.hpp"
+#include "solar_core/bodies/body_factory.hpp"
 #include "solar_core/simulation/simulation_engine.hpp"
 #include "solar_utils/logging.hpp"
 
@@ -529,6 +530,16 @@ class BodySelector {
    * @brief Include all available bodies
    */
   BodySelector& all();
+
+  /**
+   * @brief Use standardized default body set (recommended for consistent behavior)
+   */
+  BodySelector& default_set();
+
+  /**
+   * @brief Use specific standardized body set
+   */
+  BodySelector& body_set(Bodies::BodyFactory::DefaultBodySet set);
 
   /**
    * @brief Include bodies by specific names

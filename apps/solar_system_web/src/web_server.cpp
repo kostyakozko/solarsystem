@@ -859,9 +859,9 @@ class SolarSystemAPI {
       // Use modern SimulationBuilder for time travel
       using namespace SolarSystem::Core::Builders;
 
-      // Create body selector for web interface (essential bodies for performance)
+      // Create body selector for web interface (essential bodies for optimal web performance)
       BodySelector selector;
-      selector.essential();  // Sun + 8 planets for smooth web rendering
+      selector.body_set(SolarSystem::Bodies::BodyFactory::DefaultBodySet::ESSENTIAL);  // Sun + 8 planets for smooth web rendering
 
       auto body_collection_result = selector.build();
       if (!body_collection_result.has_value()) {

@@ -107,15 +107,28 @@ bool run_optimized_simulation(Bodies::BodyFactory& factory,
   // OPTIMIZED: NO progress callback to avoid overhead
   // engine.set_progress_callback(...); // REMOVED FOR PERFORMANCE
 
-  // Create ALL solar system bodies (should be 27, not 9)
+  // Create bodies using configured body set (default: complete for comprehensive simulation)
+  SolarSystem::Bodies::BodyFactory::DefaultBodySet body_set;
+  if (config.body_set == "essential") {
+    body_set = SolarSystem::Bodies::BodyFactory::DefaultBodySet::ESSENTIAL;
+  } else if (config.body_set == "important") {
+    body_set = SolarSystem::Bodies::BodyFactory::DefaultBodySet::IMPORTANT;
+  } else if (config.body_set == "complete") {
+    body_set = SolarSystem::Bodies::BodyFactory::DefaultBodySet::COMPLETE;
+  } else {
+    // Default to complete set for main simulation
+    body_set = SolarSystem::Bodies::BodyFactory::DefaultBodySet::COMPLETE;
+  }
+
   Bodies::BodyFactory::CreationOptions body_options{
       .preferred_source = factory.has_current_ephemeris_data()
                               ? Bodies::BodyFactory::DataSource::CACHED_DATA
                               : Bodies::BodyFactory::DataSource::FALLBACK_DATA,
       .reference_time = start_time,
-      .allow_fallback = true};
+      .allow_fallback = true,
+      .default_body_set = body_set};
 
-  auto solar_system_result = factory.create_solar_system(body_options);
+  auto solar_system_result = factory.create_default_bodies(body_options);
   if (!solar_system_result.has_value()) {
     std::cerr << "Failed to create solar system: " << solar_system_result.error() << std::endl;
     return false;

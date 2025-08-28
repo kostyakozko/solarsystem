@@ -771,7 +771,7 @@ class SimulationStep : public WorkflowStep {
 
         // Create body collection for simulation
         BodySelector selector;
-        selector.essential();  // Use essential bodies for launcher simulation
+        selector.body_set(SolarSystem::Bodies::BodyFactory::DefaultBodySet::IMPORTANT);  // Use balanced body set for launcher demonstrations
 
         auto body_collection_result = selector.build();
         if (!body_collection_result.has_value()) {

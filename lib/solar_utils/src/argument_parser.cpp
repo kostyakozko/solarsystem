@@ -591,6 +591,21 @@ SimulationArgumentParser::SimulationArgumentParser(std::string_view program_name
       Option("-v", "--verbose", "Enable verbose output").as_flag().action([this](const auto&) {
         config_.verbose = true;
       }));
+
+  parser_.add_option(Option("", "--body-set", "Select standardized body set (essential|important|complete)")
+                         .requires_value()
+                         .action([this](const std::optional<std::string>& value) {
+                           if (value) {
+                             std::string set = *value;
+                             // Convert to lowercase for case-insensitive comparison
+                             std::transform(set.begin(), set.end(), set.begin(), ::tolower);
+                             if (set == "essential" || set == "important" || set == "complete") {
+                               config_.body_set = set;
+                             } else {
+                               throw std::invalid_argument("Invalid body set. Use: essential, important, or complete");
+                             }
+                           }
+                         }));
 }
 
 ArgumentResult<SimulationConfig> SimulationArgumentParser::parse(int argc,
@@ -661,17 +676,17 @@ void SimulationArgumentParser::print_usage() const {
   parser_.print_help();
   std::cout << "\nExamples:\n";
   std::cout << "  " << parser_.help().substr(7, parser_.help().find(' ', 7) - 7)
-            << "                    # Use current date\n";
+            << "                         # Use current date (complete body set)\n";
   std::cout << "  " << parser_.help().substr(7, parser_.help().find(' ', 7) - 7)
-            << " -d 2025-12-31      # Simulate to Dec 31, 2025\n";
+            << " -d 2025-12-31           # Simulate to Dec 31, 2025\n";
   std::cout << "  " << parser_.help().substr(7, parser_.help().find(' ', 7) - 7)
-            << " --date 2020-01-01  # Simulate to Jan 1, 2020\n";
+            << " --body-set essential    # Fast simulation (9 bodies)\n";
   std::cout << "  " << parser_.help().substr(7, parser_.help().find(' ', 7) - 7)
-            << " -u                 # Update JPL data\n";
+            << " --body-set important    # Balanced simulation (18 bodies)\n";
   std::cout << "  " << parser_.help().substr(7, parser_.help().find(' ', 7) - 7)
-            << " --rebuild          # Rebuild binary cache\n";
+            << " -u                      # Update JPL data\n";
   std::cout << "  " << parser_.help().substr(7, parser_.help().find(' ', 7) - 7)
-            << " --test-storage     # Test storage system\n";
+            << " --rebuild               # Rebuild binary cache\n";
 }
 
 // ExtendedArgumentParser implementation
@@ -944,6 +959,21 @@ RealtimeArgumentParser::RealtimeArgumentParser(std::string_view program_name)
                              }
                            }
                          }));
+
+  parser_.add_option(Option("", "--body-set", "Select standardized body set (essential|important|complete)")
+                         .requires_value()
+                         .action([this](const std::optional<std::string>& value) {
+                           if (value) {
+                             std::string set = *value;
+                             // Convert to lowercase for case-insensitive comparison
+                             std::transform(set.begin(), set.end(), set.begin(), ::tolower);
+                             if (set == "essential" || set == "important" || set == "complete") {
+                               config_.body_set = set;
+                             } else {
+                               throw std::invalid_argument("Invalid body set. Use: essential, important, or complete");
+                             }
+                           }
+                         }));
 }
 
 ArgumentResult<RealtimeConfig> RealtimeArgumentParser::parse(int argc, const char* const argv[]) {
@@ -1045,9 +1075,14 @@ void RealtimeArgumentParser::print_usage() const {
   std::cout << "  --duration N           Stop monitoring after N seconds\n\n";
 
   std::cout << "🌍 Body Selection:\n";
+  std::cout << "  --body-set SET         Use standardized body set (essential|important|complete)\n";
+  std::cout << "                         essential: Sun + 8 planets (9 bodies, fastest)\n";
+  std::cout << "                         important: + major moons + dwarf planets (18 bodies, balanced)\n";
+  std::cout << "                         complete: All available bodies (27 bodies, comprehensive)\n";
+  std::cout << "                         Default: important\n";
   std::cout << "  --bodies LIST          Monitor specific bodies (comma-separated)\n";
   std::cout << "                         Example: --bodies Sun,Earth,Moon,Mars\n";
-  std::cout << "                         Default: Essential and important bodies\n\n";
+  std::cout << "                         Note: Overrides --body-set option\n\n";
 
   std::cout << "⚙️  Options:\n";
   std::cout << "  --auto-fetch           Auto-fetch current JPL data if needed\n";

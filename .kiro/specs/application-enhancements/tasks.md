@@ -232,7 +232,7 @@ This implementation plan systematically enhances all Solar System Suite applicat
   - _Requirements: 6.1, 6.2, 6.3_
   - _Audit References: ACTION_ITEMS.md (Config file validation, option precedence)_
 
-- [ ] 0.5. Standardize body selection defaults across applications
+- [x] 0.5. Standardize body selection defaults across applications
   - **🟡 MEDIUM: Address inconsistent default body selections**
   - **Issue**: Different applications use different default body counts (9 vs 27)
   - Document current body selection behavior across applications

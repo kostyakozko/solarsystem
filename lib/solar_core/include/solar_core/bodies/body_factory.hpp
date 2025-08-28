@@ -50,6 +50,15 @@ class BodyFactory {
     UNKNOWN      // Quality cannot be assessed
   };
 
+  /**
+   * @brief Default body selection policy for consistent behavior across applications
+   */
+  enum class DefaultBodySet {
+    ESSENTIAL,    // Sun + 8 planets (9 bodies) - fast, essential for basic simulations
+    IMPORTANT,    // Essential + major moons + dwarf planets (18 bodies) - balanced
+    COMPLETE      // All 27 bodies - comprehensive but slower
+  };
+
   struct CreationOptions {
     DataSource preferred_source = DataSource::JPL_HORIZONS;
     std::chrono::system_clock::time_point reference_time = std::chrono::system_clock::now();
@@ -60,6 +69,7 @@ class BodyFactory {
     bool allow_partial_data = false;
     bool prefer_recent_data = true;
     std::chrono::hours max_data_age{24 * 30};  // 30 days default
+    DefaultBodySet default_body_set = DefaultBodySet::IMPORTANT;  // Balanced default
   };
 
   // Data quality assessment
@@ -112,6 +122,15 @@ class BodyFactory {
   [[nodiscard]] Utils::Expected<BodyCollection, std::string> create_essential_bodies(
       const CreationOptions& options) const;
 
+  // New standardized default body selection methods
+  [[nodiscard]] Utils::Expected<BodyCollection, std::string> create_default_bodies() const;
+  [[nodiscard]] Utils::Expected<BodyCollection, std::string> create_default_bodies(
+      const CreationOptions& options) const;
+  [[nodiscard]] Utils::Expected<BodyCollection, std::string> create_bodies_for_set(
+      DefaultBodySet body_set) const;
+  [[nodiscard]] Utils::Expected<BodyCollection, std::string> create_bodies_for_set(
+      DefaultBodySet body_set, const CreationOptions& options) const;
+
   // Integration with existing system
   [[nodiscard]] Utils::Expected<CelestialBody, std::string> create_from_legacy_data(
       std::string_view name) const;
@@ -120,6 +139,13 @@ class BodyFactory {
   [[nodiscard]] std::vector<std::string> get_available_bodies() const;
   [[nodiscard]] bool is_body_available(std::string_view name,
                                        std::chrono::system_clock::time_point time) const;
+
+  // Body set information utilities
+  [[nodiscard]] std::vector<std::string> get_bodies_for_set(DefaultBodySet body_set) const;
+  [[nodiscard]] size_t get_body_count_for_set(DefaultBodySet body_set) const;
+  [[nodiscard]] std::string get_body_set_description(DefaultBodySet body_set) const;
+  [[nodiscard]] static DefaultBodySet get_recommended_body_set_for_application(
+      const std::string& application_name);
 
   [[nodiscard]] bool has_current_ephemeris_data() const noexcept {
     return current_source_ != "ORIGINAL_DATA";

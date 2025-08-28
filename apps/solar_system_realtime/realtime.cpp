@@ -217,8 +217,20 @@ class RealtimeMonitor {
 
       return bodies;
     } else {
-      // Use essential bodies by default (Sun + planets)
-      auto bodies = BodySelector().essential().build(&error);
+      // Use standardized body set based on configuration
+      SolarSystem::Bodies::BodyFactory::DefaultBodySet body_set;
+      if (config_.body_set == "essential") {
+        body_set = SolarSystem::Bodies::BodyFactory::DefaultBodySet::ESSENTIAL;
+      } else if (config_.body_set == "important") {
+        body_set = SolarSystem::Bodies::BodyFactory::DefaultBodySet::IMPORTANT;
+      } else if (config_.body_set == "complete") {
+        body_set = SolarSystem::Bodies::BodyFactory::DefaultBodySet::COMPLETE;
+      } else {
+        // Default to important set
+        body_set = SolarSystem::Bodies::BodyFactory::DefaultBodySet::IMPORTANT;
+      }
+
+      auto bodies = BodySelector().body_set(body_set).build(&error);
 
       if (!bodies.has_value()) {
         LOG_ERROR("Monitor", "Failed to select default bodies: " + error);

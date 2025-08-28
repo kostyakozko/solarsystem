@@ -169,6 +169,7 @@ struct SimulationConfig {
   bool rebuild_cache{false};
   bool test_storage{false};
   bool verbose{false};
+  std::string body_set{"complete"};  // Default to complete set for main simulation
 
   /**
    * @brief Get effective target date (current if not specified)
@@ -483,6 +484,7 @@ struct RealtimeConfig {
 
   // Body selection
   std::vector<std::string> selected_bodies;
+  std::string body_set{"important"};  // Default to balanced "important" set
   bool auto_fetch_data{false};
 
   /**

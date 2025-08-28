@@ -160,7 +160,7 @@ Utils::Expected<BodyCollection, std::string> BodyFactory::create_essential_bodie
 
 Utils::Expected<BodyCollection, std::string> BodyFactory::create_essential_bodies(
     const CreationOptions& options) const {
-  return create_solar_system(options);  // Same as solar system for now
+  return create_bodies_for_set(DefaultBodySet::ESSENTIAL, options);
 }
 
 Utils::Expected<CelestialBody, std::string> BodyFactory::create_from_legacy_data(
@@ -1269,6 +1269,90 @@ Utils::Expected<CelestialBody, std::string> BodyFactory::create_with_quality_ass
 
   return Utils::Expected<CelestialBody, std::string>{"Failed to create '" + std::string(name) +
                                                      "' from quality-assessed sources"};
+}
+
+// New standardized default body selection methods
+Utils::Expected<BodyCollection, std::string> BodyFactory::create_default_bodies() const {
+  return create_default_bodies(default_options_);
+}
+
+Utils::Expected<BodyCollection, std::string> BodyFactory::create_default_bodies(
+    const CreationOptions& options) const {
+  return create_bodies_for_set(options.default_body_set, options);
+}
+
+Utils::Expected<BodyCollection, std::string> BodyFactory::create_bodies_for_set(
+    DefaultBodySet body_set) const {
+  return create_bodies_for_set(body_set, default_options_);
+}
+
+Utils::Expected<BodyCollection, std::string> BodyFactory::create_bodies_for_set(
+    DefaultBodySet body_set, const CreationOptions& options) const {
+  std::vector<std::string> body_names = get_bodies_for_set(body_set);
+  return create_collection(body_names, options);
+}
+
+// Body set information utilities
+std::vector<std::string> BodyFactory::get_bodies_for_set(DefaultBodySet body_set) const {
+  switch (body_set) {
+    case DefaultBodySet::ESSENTIAL:
+      // Sun + 8 planets (9 bodies total)
+      return {"Sun", "Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune"};
+
+    case DefaultBodySet::IMPORTANT:
+      // Essential + major moons + dwarf planets (18 bodies total)
+      return {"Sun", "Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune",
+              "Moon", "Io", "Europa", "Ganymede", "Callisto", "Titan", "Pluto", "Charon", "Triton"};
+
+    case DefaultBodySet::COMPLETE:
+      // All 27 bodies - get from body definitions
+      {
+        std::vector<std::string> all_bodies;
+        for (const auto& body_def : Data::get_all_body_definitions()) {
+          all_bodies.emplace_back(body_def.name);
+        }
+        return all_bodies;
+      }
+
+    default:
+      // Fallback to important set
+      return get_bodies_for_set(DefaultBodySet::IMPORTANT);
+  }
+}
+
+size_t BodyFactory::get_body_count_for_set(DefaultBodySet body_set) const {
+  return get_bodies_for_set(body_set).size();
+}
+
+std::string BodyFactory::get_body_set_description(DefaultBodySet body_set) const {
+  switch (body_set) {
+    case DefaultBodySet::ESSENTIAL:
+      return "Essential bodies (Sun + 8 planets) - 9 bodies total. Fast performance, suitable for basic simulations.";
+    case DefaultBodySet::IMPORTANT:
+      return "Important bodies (Essential + major moons + dwarf planets) - 18 bodies total. Balanced performance and completeness.";
+    case DefaultBodySet::COMPLETE:
+      return "Complete solar system (all available bodies) - 27 bodies total. Comprehensive but slower performance.";
+    default:
+      return "Unknown body set";
+  }
+}
+
+BodyFactory::DefaultBodySet BodyFactory::get_recommended_body_set_for_application(
+    const std::string& application_name) {
+  // Recommend body sets based on application characteristics
+  if (application_name == "solar_system_realtime" || application_name == "solar_system_web") {
+    // Real-time applications need fast performance
+    return DefaultBodySet::ESSENTIAL;
+  } else if (application_name == "solar_system_launcher") {
+    // Launcher should use balanced set for demonstrations
+    return DefaultBodySet::IMPORTANT;
+  } else if (application_name == "solar_system") {
+    // Main simulation application can handle complete set
+    return DefaultBodySet::COMPLETE;
+  } else {
+    // Default to balanced set for unknown applications
+    return DefaultBodySet::IMPORTANT;
+  }
 }
 
 }  // namespace SolarSystem::Bodies
