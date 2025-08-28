@@ -29,6 +29,7 @@
 #include "solar_core/builders/simulation_builder.hpp"
 #include "solar_utils/logging.hpp"
 #include "solar_utils/validation/input_validator.hpp"
+#include "solar_utils/workflow_orchestration.hpp"
 
 using namespace SolarSystem::Core::Builders;
 using namespace SolarSystem::Utils;
@@ -1307,53 +1308,109 @@ int main(int argc, char* argv[]) {
       return 0;
     }
 
-    // Determine workflow type and execute
-    std::unique_ptr<WorkflowOrchestrator> orchestrator;
+    // Initialize enhanced workflow orchestration system
+    auto& workflow_orchestrator = SolarSystem::Utils::Workflow::WorkflowOrchestrator::instance();
+    workflow_orchestrator.initialize();
 
+    // Determine workflow type and execute with enhanced orchestration
     bool has_data_ops = config->fetch_data || config->update_data || config->force_update ||
                         config->validate_cache || config->clean_cache || config->rebuild_cache ||
                         config->test_storage;
 
     bool has_sim_ops = config->run_simulation;
 
+    std::string workflow_id;
+    std::unordered_map<std::string, std::string> workflow_variables;
+
+    // Set workflow variables from configuration
+    if (config->target_date.has_value()) {
+      workflow_variables["target_date"] = *config->target_date;
+    }
+    workflow_variables["verbose"] = config->verbose_output ? "true" : "false";
+    workflow_variables["quiet"] = config->quiet_mode ? "true" : "false";
+    workflow_variables["continue_on_error"] = config->continue_on_error ? "true" : "false";
+
     if (has_data_ops && has_sim_ops) {
-      // Complete workflow
-      orchestrator = WorkflowFactory::create_complete_workflow();
-      LOG_INFO("Main", "Executing complete workflow (data + simulation)");
+      // Complete workflow with enhanced JPL error handling
+      workflow_id = "complete_system";
+      LOG_INFO("Main", "Executing enhanced complete workflow (data + simulation)");
     } else if (has_data_ops) {
-      // Data management only
-      orchestrator = WorkflowFactory::create_data_workflow();
-      LOG_INFO("Main", "Executing data management workflow");
+      // Data management only with JPL connectivity recovery
+      workflow_id = "jpl_data_management";
+      LOG_INFO("Main", "Executing enhanced data management workflow");
     } else if (has_sim_ops) {
-      // Simulation only
-      orchestrator = WorkflowFactory::create_simulation_workflow();
-      LOG_INFO("Main", "Executing simulation workflow");
+      // Simulation only with cache validation
+      workflow_id = "simulation_execution";
+      LOG_INFO("Main", "Executing enhanced simulation workflow");
     } else {
-      // Default: show status
+      // Default: show status with system health
       if (!config->quiet_mode) {
         LauncherUI::print_header();
       }
       LauncherUI::print_system_status(factory);
+
+      // Display enhanced system health information
+      if (config->verbose_output) {
+        std::cout << "\n" << workflow_orchestrator.generate_system_health_report() << "\n";
+      }
+
       if (!config->quiet_mode) {
         std::cout << "💡 Use --help for available options\n";
       }
       return 0;
     }
 
-    // Execute workflow
-    bool success = orchestrator->execute(*config, factory);
+    // Execute workflow with enhanced orchestration and progress tracking
+    if (!config->quiet_mode) {
+      std::cout << "🚀 Starting enhanced workflow execution with JPL connectivity management...\n";
+    }
+
+    auto workflow_future = workflow_orchestrator.execute_workflow(workflow_id, workflow_variables);
+
+    // Wait for workflow completion with progress updates
+    bool success = false;
+    if (config->show_progress && !config->quiet_mode) {
+      // Show progress updates while workflow executes
+      std::string execution_id;
+
+      // Get the execution ID (simplified - in production would be returned from execute_workflow)
+      auto active_workflows = workflow_orchestrator.get_component_coordinator().get_all_component_status();
+
+      while (workflow_future.wait_for(std::chrono::milliseconds(500)) != std::future_status::ready) {
+        // Update progress display
+        std::cout << "⏳ Workflow in progress...\r" << std::flush;
+      }
+      std::cout << "\n";
+    }
+
+    success = workflow_future.get();
 
     if (success) {
-      LOG_INFO("Main", "Launcher completed successfully");
+      LOG_INFO("Main", "Enhanced launcher completed successfully");
       if (!config->quiet_mode) {
         std::cout << "\n🎉 Solar System Suite operations completed successfully!\n";
+
+        if (config->verbose_output) {
+          // Show final system health report
+          std::cout << "\n📊 Final System Health Report:\n";
+          std::cout << workflow_orchestrator.generate_system_health_report() << "\n";
+        }
       }
     } else {
-      LOG_ERROR("Main", "Launcher completed with errors");
+      LOG_ERROR("Main", "Enhanced launcher completed with errors");
       if (!config->quiet_mode) {
         std::cout << "\n⚠️  Solar System Suite operations completed with errors!\n";
+
+        // Show system health for troubleshooting
+        if (config->verbose_output) {
+          std::cout << "\n🔍 System Health Report (for troubleshooting):\n";
+          std::cout << workflow_orchestrator.generate_system_health_report() << "\n";
+        }
       }
     }
+
+    // Cleanup workflow orchestration system
+    workflow_orchestrator.shutdown();
 
     return success ? 0 : 1;
 
