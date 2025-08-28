@@ -23,6 +23,7 @@
 #include "solar_core/bodies/body_factory.hpp"
 #include "solar_core/builders/simulation_builder.hpp"
 #include "solar_utils/logging.hpp"
+#include "solar_utils/validation/input_validator.hpp"
 
 using namespace SolarSystem::Utils;
 using namespace SolarSystem::Core::Builders;
@@ -360,10 +361,24 @@ class ArgumentParser {
         options.verbose = true;
       } else if (arg == "-y" || arg == "--year") {
         if (i + 1 < argc) {
-          try {
-            options.target_year = std::stoi(argv[++i]);
-          } catch (const std::exception&) {
-            LOG_ERROR("Parser", "Invalid year format: " + std::string(argv[i]));
+          std::string year_str = argv[++i];
+          // Validate year using shared validation library
+          using namespace SolarSystem::Utils::Validation;
+          auto validation_result = NumericValidator::validate_year(year_str);
+
+          if (validation_result.is_valid) {
+            options.target_year = std::stoi(validation_result.normalized_value);
+          } else {
+            LOG_ERROR("Parser", "Invalid year: " + validation_result.error_message);
+            std::cerr << "Error: Invalid year '" << year_str << "'\n";
+            std::cerr << "Reason: " << validation_result.error_message << "\n";
+            std::cerr << "Expected: Year between 1600 and 2200\n";
+            if (!validation_result.suggestions.empty()) {
+              std::cerr << "Suggestions:\n";
+              for (const auto& suggestion : validation_result.suggestions) {
+                std::cerr << "  - " << suggestion << "\n";
+              }
+            }
             return std::nullopt;
           }
         } else {

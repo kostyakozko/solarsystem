@@ -27,6 +27,7 @@
 #include "solar_core/bodies/body_factory.hpp"
 #include "solar_core/builders/simulation_builder.hpp"
 #include "solar_utils/logging.hpp"
+#include "solar_utils/validation/input_validator.hpp"
 
 using namespace SolarSystem::Core::Builders;
 using namespace SolarSystem::Utils;
@@ -777,8 +778,30 @@ class ArgumentParser {
         }
       } else if (arg == "--date") {
         if (i + 1 < argc) {
-          config.target_date = argv[++i];
-          config.use_current_date = false;
+          std::string date_str = argv[++i];
+          // Validate date using shared validation library
+          using namespace SolarSystem::Utils::Validation;
+          auto validation_result = DateTimeValidator::validate_date(date_str);
+
+          if (validation_result.is_valid) {
+            config.target_date = validation_result.normalized_value;
+            config.use_current_date = false;
+          } else {
+            LOG_ERROR("Parser", "Invalid date format: " + validation_result.error_message);
+            std::cerr << "Error: Invalid date format '" << date_str << "'\n";
+            std::cerr << "Reason: " << validation_result.error_message << "\n";
+            std::cerr << "Expected formats:\n";
+            for (const auto& format : validation_result.expected_formats) {
+              std::cerr << "  - " << format << "\n";
+            }
+            if (!validation_result.suggestions.empty()) {
+              std::cerr << "Suggestions:\n";
+              for (const auto& suggestion : validation_result.suggestions) {
+                std::cerr << "  - " << suggestion << "\n";
+              }
+            }
+            return std::nullopt;
+          }
         } else {
           LOG_ERROR("Parser", "--date requires a value");
           return std::nullopt;

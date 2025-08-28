@@ -41,6 +41,7 @@
 #include "solar_core/bodies/body_factory.hpp"
 #include "solar_core/builders/simulation_builder.hpp"
 #include "solar_utils/logging.hpp"
+#include "solar_utils/validation/input_validator.hpp"
 
 // Global verbose logging flag
 static bool verbose_logging = false;
@@ -758,11 +759,30 @@ class SolarSystemAPI {
       auto date_param = request.get_query_param("date");
 
       if (date_param.has_value()) {
-        // Handle specific date request
-        VERBOSE_LOG_INFO("API", "Solar system data requested for date: " + *date_param);
+        // Validate date parameter using shared validation
+        using namespace SolarSystem::Utils::Validation;
+        auto validation_result = DateTimeValidator::validate_date(*date_param);
 
-        // Modern BodyFactory provides current data automatically
-        // No explicit simulation updates needed for current data
+        if (validation_result.is_valid) {
+          VERBOSE_LOG_INFO("API", "Solar system data requested for validated date: " + validation_result.normalized_value);
+          // Modern BodyFactory provides current data automatically
+          // No explicit simulation updates needed for current data
+        } else {
+          LOG_ERROR("API", "Invalid date in solar system request: " + validation_result.error_message);
+          // Return structured validation error
+          std::ostringstream error_json;
+          error_json << "{\n";
+          error_json << "  \"error\": \"Invalid date parameter\",\n";
+          error_json << "  \"message\": \"" << validation_result.error_message << "\",\n";
+          error_json << "  \"expected_formats\": [";
+          for (size_t i = 0; i < validation_result.expected_formats.size(); ++i) {
+            if (i > 0) error_json << ", ";
+            error_json << "\"" << validation_result.expected_formats[i] << "\"";
+          }
+          error_json << "]\n";
+          error_json << "}";
+          return HttpResponse::error(400, error_json.str());
+        }
       }
 
       // Get current solar system state
@@ -851,17 +871,46 @@ class SolarSystemAPI {
 
       auto bodies = body_collection_result.value();
 
-      // Parse date parameter if provided
+      // Parse date parameter if provided using shared validation
       std::chrono::system_clock::time_point target_time = std::chrono::system_clock::now();
       if (date_param.has_value()) {
-        // Parse date in YYYY-MM-DD format
-        std::istringstream date_stream(*date_param);
-        std::tm tm = {};
-        if (date_stream >> std::get_time(&tm, "%Y-%m-%d")) {
-          target_time = std::chrono::system_clock::from_time_t(std::mktime(&tm));
-          VERBOSE_LOG_INFO("API", "Time travel to date: " + *date_param);
+        using namespace SolarSystem::Utils::Validation;
+        auto validation_result = DateTimeValidator::validate_date(*date_param);
+
+        if (validation_result.is_valid) {
+          // Parse the validated date in ISO format
+          std::istringstream date_stream(validation_result.normalized_value);
+          std::tm tm = {};
+          if (date_stream >> std::get_time(&tm, "%Y-%m-%d")) {
+            target_time = std::chrono::system_clock::from_time_t(std::mktime(&tm));
+            VERBOSE_LOG_INFO("API", "Time travel to validated date: " + validation_result.normalized_value);
+          } else {
+            LOG_ERROR("API", "Failed to parse validated date: " + validation_result.normalized_value);
+          }
         } else {
-          VERBOSE_LOG_INFO("API", "Invalid date format, using current time: " + *date_param);
+          LOG_ERROR("API", "Invalid date format: " + validation_result.error_message);
+          // Return error response with validation details
+          std::ostringstream error_json;
+          error_json << "{\n";
+          error_json << "  \"error\": \"Invalid date format\",\n";
+          error_json << "  \"message\": \"" << validation_result.error_message << "\",\n";
+          error_json << "  \"expected_formats\": [";
+          for (size_t i = 0; i < validation_result.expected_formats.size(); ++i) {
+            if (i > 0) error_json << ", ";
+            error_json << "\"" << validation_result.expected_formats[i] << "\"";
+          }
+          error_json << "],\n";
+          if (!validation_result.suggestions.empty()) {
+            error_json << "  \"suggestions\": [";
+            for (size_t i = 0; i < validation_result.suggestions.size(); ++i) {
+              if (i > 0) error_json << ", ";
+              error_json << "\"" << validation_result.suggestions[i] << "\"";
+            }
+            error_json << "],\n";
+          }
+          error_json << "  \"provided_value\": \"" << *date_param << "\"\n";
+          error_json << "}";
+          return HttpResponse::error(400, error_json.str());
         }
       }
 

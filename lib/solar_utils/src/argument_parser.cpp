@@ -88,8 +88,8 @@ ArgumentResult<Date> Date::from_string(const std::string& date_str) {
     }
   }
 
-  // For other formats, return current time (placeholder)
-  return ArgumentResult<Date>{Date{}};
+  // Invalid date format
+  return ArgumentResult<Date>{ArgumentError::InvalidDateFormat};
 }
 
 ArgumentResult<Date> Date::from_string_format(const std::string& date_str,

@@ -18,11 +18,14 @@ This implementation plan systematically enhances all Solar System Suite applicat
 ### Phase 1: Solar System Launcher Enhancement
 
 - [ ] 1. Implement workflow orchestration system
+  - **Address JPL data update failures in workflow (from audit findings)**
   - Create workflow definition and execution engine
   - Add component coordination and communication
   - Implement workflow progress tracking and reporting
   - Create workflow error handling and recovery
+  - Improve error handling for JPL connectivity issues
   - _Requirements: 1.1, 1.2, 1.4_
+  - _Audit References: ACTION_ITEMS.md (JPL Data Update Failures in Workflow)_
 
 - [ ] 2. Add comprehensive status management
   - Implement real-time component status monitoring
@@ -134,11 +137,14 @@ This implementation plan systematically enhances all Solar System Suite applicat
 ### Phase 6: Cross-Application Configuration Management
 
 - [ ] 16. Implement unified configuration system
+  - **Address command-line vs config file precedence issues (from audit findings)**
   - Create configuration schema and validation
   - Add configuration source management and precedence
   - Implement configuration hot-reloading
   - Create configuration backup and versioning
+  - Document and clarify option precedence rules
   - _Requirements: 6.1, 6.2, 6.4_
+  - _Audit References: ACTION_ITEMS.md (Command-Line vs Config File Precedence Unclear)_
 
 - [ ] 17. Add configuration conflict detection
   - Implement cross-application configuration validation
@@ -181,6 +187,60 @@ This implementation plan systematically enhances all Solar System Suite applicat
   - Create log retention and archiving policies
   - _Requirements: 8.1_
   - _Audit References: ACTION_ITEMS.md (Quiet mode logging)_
+
+### Phase 0.5: Critical Library-Level Fixes (Based on Audit Findings)
+
+- [x] 0.1. Fix JPL HORIZONS API integration failures
+  - **🔴 CRITICAL: Address systematic JPL data fetching failures across all applications**
+  - **Root Cause**: Library-level issue in `lib/solar_jpl/` JPL HORIZONS API integration
+  - **Affected**: solar_system_launcher, solar_system_fetch, solar_system, solar_system_realtime
+  - Debug JPL HORIZONS API connectivity and authentication
+  - Fix underlying library issue to resolve all application failures
+  - Implement robust error handling and fallback mechanisms
+  - Add comprehensive testing for JPL API integration
+  - _Requirements: 2.1, 2.3, 2.5_
+  - _Audit References: ACTION_ITEMS.md (Critical JPL data fetching failures)_
+
+- [x] 0.2. Fix cache management system issues
+  - **🔴 HIGH: Address cache rebuild and validation failures**
+  - **Root Cause**: Library-level issue in cache management within `lib/solar_jpl/`
+  - **Affected Operations**: `--rebuild`, `--validate` operations across applications
+  - Fix JSON to binary cache conversion process
+  - Improve validation logic for empty cache scenarios
+  - Implement robust cache integrity checking
+  - Add graceful handling for missing cache data
+  - _Requirements: 2.2, 2.4_
+  - _Audit References: ACTION_ITEMS.md (Cache rebuild failures, validation UX issues)_
+
+- [x] 0.3. Standardize input validation across applications
+  - **🟡 MEDIUM: Address date validation and input parsing inconsistencies**
+  - **Issue**: Launcher accepts invalid formats that direct applications reject
+  - Implement consistent date validation across all applications
+  - Standardize input validation patterns and error messages
+  - Create shared validation library for common input types
+  - Ensure consistent behavior across application boundaries
+  - _Requirements: 9.1, 10.3_
+  - _Audit References: ACTION_ITEMS.md (Date validation inconsistency)_
+
+- [ ] 0.4. Enhance configuration file validation and precedence
+  - **🟡 MEDIUM: Address JSON validation and option precedence issues**
+  - **Issue**: Launcher accepts invalid JSON without proper validation
+  - Implement proper JSON syntax and structure validation
+  - Clarify and document option precedence rules (CLI vs config file)
+  - Add comprehensive error reporting for malformed configurations
+  - Create configuration validation testing framework
+  - _Requirements: 6.1, 6.2, 6.3_
+  - _Audit References: ACTION_ITEMS.md (Config file validation, option precedence)_
+
+- [ ] 0.5. Standardize body selection defaults across applications
+  - **🟡 MEDIUM: Address inconsistent default body selections**
+  - **Issue**: Different applications use different default body counts (9 vs 27)
+  - Document current body selection behavior across applications
+  - Establish consistent default body selection policy
+  - Implement configuration option for default body sets
+  - Update documentation to clarify body selection behavior
+  - _Requirements: 3.1, 4.1_
+  - _Audit References: ACTION_ITEMS.md (Body selection inconsistency)_
 
 - [ ] 22. Add performance monitoring
   - Implement real-time performance metrics collection
@@ -280,6 +340,91 @@ This implementation plan systematically enhances all Solar System Suite applicat
   - Implement upgrade and migration tools
   - Create deployment monitoring and rollback capabilities
   - _Requirements: All requirements_
+
+## Audit Findings Integration and Task Mapping
+
+### Critical Issues from Application Functionality Audit
+
+This section maps specific audit findings from `application-functionality-audit/ACTION_ITEMS.md` to enhancement tasks:
+
+#### 🔴 **CRITICAL PRIORITY MAPPINGS**
+- **JPL HORIZONS API Integration Failure** → **Task 0.1** (Fix JPL HORIZONS API integration failures)
+  - *Audit Finding*: Systematic failure across all applications when fetching JPL ephemeris data
+  - *Root Cause*: Library-level issue in `lib/solar_jpl/` JPL HORIZONS API integration
+  - *Affected Applications*: solar_system_launcher, solar_system_fetch, solar_system, solar_system_realtime
+  - *Enhancement Task*: Debug and fix underlying library issue to resolve all application failures
+
+#### 🔴 **HIGH PRIORITY MAPPINGS**
+- **Cache Management System Issues** → **Task 0.2** (Fix cache management system issues)
+  - *Audit Finding*: Cache rebuild and validation failures across applications
+  - *Root Cause*: Library-level issue in cache management within `lib/solar_jpl/`
+  - *Affected Operations*: `--rebuild`, `--validate` operations
+  - *Enhancement Task*: Fix JSON to binary cache conversion and improve validation logic
+
+- **JPL Data Update Failures in Workflow** → **Task 1** (Enhance solar_system_launcher workflow orchestration)
+  - *Audit Finding*: Data management workflow fails when updating JPL data
+  - *Root Cause*: Same underlying JPL connectivity issue as fetch app
+  - *Enhancement Task*: Improve workflow error handling and recovery after JPL fixes
+
+#### 🟡 **MEDIUM PRIORITY MAPPINGS**
+- **Configuration File Validation Issues** → **Task 0.4** (Enhance configuration file validation and precedence)
+  - *Audit Finding*: Launcher accepts invalid JSON configuration files without proper validation
+  - *Impact*: Users may not realize their configuration is malformed
+  - *Enhancement Task*: Implement proper JSON validation and error reporting
+
+- **Date Validation Inconsistency Between Applications** → **Task 0.3** (Standardize input validation across applications)
+  - *Audit Finding*: Launcher accepts invalid date formats that direct applications reject
+  - *Impact*: Inconsistent input validation across application boundaries
+  - *Enhancement Task*: Standardize date validation across all applications
+
+- **Body Selection Inconsistency Across Applications** → **Task 0.5** (Standardize body selection defaults across applications)
+  - *Audit Finding*: Different applications use different default body selections (9 vs 27 bodies)
+  - *Impact*: Users may get different results from different applications
+  - *Enhancement Task*: Document and standardize default body selections
+
+- **Command-Line vs Config File Precedence Unclear** → **Task 16** (Implement unified configuration system)
+  - *Audit Finding*: Unclear precedence between command-line options and configuration file settings
+  - *Impact*: Users may not get expected behavior when combining config files and CLI options
+  - *Enhancement Task*: Clarify and document option precedence rules
+
+#### ✅ **COMPLETED/NO ACTION REQUIRED**
+- **Application Documentation Issues** → ✅ **NO ISSUES FOUND**
+  - *Audit Result*: All applications have comprehensive help systems and excellent documentation
+  - *Status*: No enhancement tasks required
+
+- **Application Startup Issues** → ✅ **NO ISSUES FOUND**
+  - *Audit Result*: All applications start reliably and handle basic functionality correctly
+  - *Status*: No enhancement tasks required
+
+- **Application Performance Issues** → ✅ **NO ISSUES FOUND**
+  - *Audit Result*: All applications demonstrate excellent performance and resource management
+  - *Status*: No enhancement tasks required
+
+### Audit Success Criteria Integration
+
+The following audit success criteria have been integrated into enhancement task acceptance criteria:
+
+1. **Functional Success**: All applications provide complete, robust functionality
+   - *Mapped to*: Tasks 0.1, 0.2 (Fix critical JPL and cache issues)
+
+2. **Quality Success**: 100% test coverage for all enhanced functionality
+   - *Mapped to*: Task 30 (Create comprehensive integration test suite)
+
+3. **Integration Success**: All applications work together seamlessly
+   - *Mapped to*: Tasks 18-20 (Application integration and communication)
+
+4. **User Experience Success**: Users can accomplish tasks efficiently and intuitively
+   - *Mapped to*: Tasks 27-29 (User experience and documentation)
+
+### Baseline Metrics from Audit Results
+
+The audit established the following baseline metrics for improvement tracking:
+
+- **Test Success Rate**: 100% (49/49 tests passing) - *Maintain in all enhancements*
+- **Application Startup Time**: <0.2s for all applications - *Maintain or improve*
+- **Memory Usage**: ~2MB peak for typical workloads - *Maintain efficiency*
+- **Simulation Performance**: 0.05-0.38s execution time - *Maintain or improve*
+- **Help System Completeness**: 100% parser option coverage - *Maintain in all changes*
 
 ## Implementation Guidelines
 
