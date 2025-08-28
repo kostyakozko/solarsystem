@@ -11,6 +11,7 @@ add_library(solar_utils STATIC
     src/error_handling.cpp
     src/error_recovery.cpp
     src/workflow_orchestration.cpp
+    src/status_management.cpp
     # src/config.cpp  # Temporarily disabled due to Expected usage issues
 )
 

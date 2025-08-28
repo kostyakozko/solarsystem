@@ -260,14 +260,22 @@ void ComponentCoordinator::start_monitoring() {
 }
 
 void ComponentCoordinator::stop_monitoring() {
-  if (!monitoring_active_.load()) {
-    return;
+  // Use compare_exchange to prevent double shutdown
+  bool expected = true;
+  if (!monitoring_active_.compare_exchange_strong(expected, false)) {
+    return;  // Already stopped or stopping
   }
 
-  monitoring_active_.store(false);
-  if (monitoring_thread_ && monitoring_thread_->joinable()) {
-    monitoring_thread_->join();
+  try {
+    if (monitoring_thread_ && monitoring_thread_->joinable()) {
+      monitoring_thread_->join();
+    }
+  } catch (const std::exception& e) {
+    LOG_ERROR("ComponentCoordinator", "Error joining monitoring thread: " + std::string(e.what()));
+  } catch (...) {
+    LOG_ERROR("ComponentCoordinator", "Unknown error joining monitoring thread");
   }
+
   monitoring_thread_.reset();
 
   LOG_INFO("ComponentCoordinator", "Stopped component health monitoring");
@@ -906,7 +914,6 @@ std::chrono::system_clock::time_point calculate_estimated_completion(
 
 }  // namespace Utils
 
-}  // namespace SolarSystem::Utils::Workflow
 // WorkflowOrchestrator Implementation
 WorkflowOrchestrator& WorkflowOrchestrator::instance() {
   static WorkflowOrchestrator instance;
@@ -1339,7 +1346,7 @@ WorkflowStep WorkflowBuilder::create_jpl_data_fetch_step() {
     return true;  // Always succeed with fallback
   };
 
-  step.recover = [](const DetailedError& error) {
+  step.recover = [](const DetailedError& /* error */) {
     LOG_INFO("JPLDataFetch", "Attempting recovery from JPL data fetch failure");
 
     auto& jpl_manager = WorkflowOrchestrator::instance().get_jpl_connectivity_manager();
@@ -1562,3 +1569,4 @@ WorkflowStep WorkflowBuilder::create_error_recovery_step() {
 
   return step;
 }
+}  // namespace SolarSystem::Utils::Workflow

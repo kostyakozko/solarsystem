@@ -163,6 +163,8 @@ struct WorkflowDefinition {
   std::function<void(const DetailedError&)> on_error;
   std::function<void(WorkflowStatus)> on_status_change;
 
+  WorkflowDefinition() = default;
+
   WorkflowDefinition(const std::string& id, const std::string& name)
       : id(id), name(name) {}
 };
@@ -281,6 +283,23 @@ class ComponentCoordinator {
    * @brief Get overall system health score
    */
   [[nodiscard]] double get_system_health_score() const;
+
+  /**
+   * @brief Destructor - ensures proper thread cleanup
+   */
+  ~ComponentCoordinator() {
+    // Ensure thread is properly cleaned up to avoid std::terminate
+    monitoring_active_.store(false);
+    if (monitoring_thread_ && monitoring_thread_->joinable()) {
+      try {
+        // Give thread a moment to see the flag change
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        monitoring_thread_->detach();  // Detach instead of join to avoid blocking in destructor
+      } catch (...) {
+        // Suppress all exceptions in destructor
+      }
+    }
+  }
 
  private:
   struct ComponentInfo {
@@ -516,7 +535,10 @@ class WorkflowOrchestrator {
 
  private:
   WorkflowOrchestrator() = default;
-  ~WorkflowOrchestrator() = default;
+  ~WorkflowOrchestrator() {
+    // Don't call shutdown in destructor to avoid race conditions
+    // Applications should call shutdown() explicitly before exit
+  }
 
   // Disable copy and move
   WorkflowOrchestrator(const WorkflowOrchestrator&) = delete;
