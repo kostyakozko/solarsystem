@@ -200,6 +200,12 @@ target_link_libraries(test_input_validation_comprehensive test_utils solar_core 
 add_test(NAME UnitTest_InputValidationComprehensive COMMAND test_input_validation_comprehensive)
 set_tests_properties(UnitTest_InputValidationComprehensive PROPERTIES LABELS "unit;input;validation;comprehensive;task13" TIMEOUT 120)
 
+# Data validation tests (Task 6 - Application Enhancements)
+add_executable(test_data_validator test_data_validator.cpp)
+target_link_libraries(test_data_validator test_utils solar_core solar_jpl solar_utils Threads::Threads)
+add_test(NAME UnitTest_DataValidator COMMAND test_data_validator)
+set_tests_properties(UnitTest_DataValidator PROPERTIES LABELS "unit;data;validation;comprehensive;task6" TIMEOUT 120)
+
 # Performance Regression Testing System (Task 22)
 add_executable(test_performance_regression_system_simple test_performance_regression_system_simple.cpp)
 target_link_libraries(test_performance_regression_system_simple test_utils solar_core solar_jpl solar_utils Threads::Threads)
@@ -262,6 +268,7 @@ install(TARGETS
     test_date_time_comprehensive
     test_performance_comprehensive
     test_enhanced_data_management
+    test_data_validator
     RUNTIME DESTINATION bin/tests
     COMPONENT tests
 )

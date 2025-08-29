@@ -28,9 +28,10 @@
 #include "solar_core/bodies/celestial_body.hpp"
 #include "solar_core/math/vector3.hpp"
 
-// Forward declaration for cache manager
+// Forward declarations
 namespace SolarSystem::JPL {
 class CacheManager;
+class DataValidator;
 }
 
 namespace SolarSystem::JPL {
@@ -331,6 +332,11 @@ class JPLClient {
    */
   [[nodiscard]] CacheManager& cache_manager() const;
 
+  /**
+   * @brief Get data validator for comprehensive validation
+   */
+  [[nodiscard]] DataValidator& data_validator() const;
+
   // Network Connectivity and Diagnostics
 
   /**
@@ -378,6 +384,9 @@ class JPLClient {
 
   // Cache manager for intelligent cache operations
   mutable std::unique_ptr<CacheManager> cache_manager_;
+
+  // Data validator for comprehensive validation
+  mutable std::unique_ptr<DataValidator> data_validator_;
 
   /**
    * @brief Fetch single body data (internal)

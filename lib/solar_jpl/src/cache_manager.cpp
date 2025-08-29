@@ -4,6 +4,7 @@
  */
 
 #include "solar_jpl/cache_manager.hpp"
+#include "solar_jpl/data_validator.hpp"
 
 #include <algorithm>
 #include <cmath>
@@ -605,6 +606,49 @@ std::filesystem::path CacheManager::get_backup_directory() const {
  */
 std::filesystem::path CacheManager::get_backup_path(size_t version) const {
   return get_backup_directory() / ("backup_" + std::to_string(version));
+}
+
+/**
+ * @brief Validate cache with comprehensive data validation
+ */
+JPLResult<ValidationReport> CacheManager::validate_cache_comprehensive(ValidationLevel validation_level) {
+  std::lock_guard<std::mutex> lock(impl_->cache_mutex);
+
+  try {
+    statistics_.validation_attempts++;
+
+    if (!data_validator_) {
+      // Create default data validator if not set
+      data_validator_ = DataValidatorFactory::create_default();
+    }
+
+    // Validate cache directory and files
+    auto cache_integrity_result = data_validator_->validate_cache_integrity(config_.cache_directory);
+    if (is_success(cache_integrity_result)) {
+      statistics_.validation_successes++;
+      return get_value(cache_integrity_result);
+    } else {
+      statistics_.validation_failures++;
+      return get_error(cache_integrity_result);
+    }
+  } catch (const std::exception&) {
+    statistics_.validation_failures++;
+    return JPLError::ValidationError;
+  }
+}
+
+/**
+ * @brief Set data validator for comprehensive validation
+ */
+void CacheManager::set_data_validator(std::shared_ptr<DataValidator> validator) {
+  data_validator_ = std::move(validator);
+}
+
+/**
+ * @brief Get data validator
+ */
+std::shared_ptr<DataValidator> CacheManager::get_data_validator() const {
+  return data_validator_;
 }
 
 /**

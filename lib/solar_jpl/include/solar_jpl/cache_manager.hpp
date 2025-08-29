@@ -21,6 +21,12 @@
 
 #include "jpl_client.hpp"
 
+// Forward declaration for data validator
+namespace SolarSystem::JPL {
+class DataValidator;
+struct ValidationReport;
+}
+
 namespace SolarSystem::JPL {
 
 /**
@@ -246,6 +252,13 @@ public:
   );
 
   /**
+   * @brief Validate cache with comprehensive data validation
+   */
+  [[nodiscard]] JPLResult<ValidationReport> validate_cache_comprehensive(
+    ValidationLevel validation_level = ValidationLevel::Comprehensive
+  );
+
+  /**
    * @brief Clear cache with optional backup
    */
   [[nodiscard]] JPLVoidResult clear_cache(bool create_backup = true);
@@ -357,6 +370,16 @@ public:
    */
   [[nodiscard]] JPLVoidResult update_config(const CacheManagerConfig& new_config);
 
+  /**
+   * @brief Set data validator for comprehensive validation
+   */
+  void set_data_validator(std::shared_ptr<DataValidator> validator);
+
+  /**
+   * @brief Get data validator
+   */
+  [[nodiscard]] std::shared_ptr<DataValidator> get_data_validator() const;
+
 private:
   CacheManagerConfig config_;
   CacheStatistics statistics_;
@@ -365,6 +388,9 @@ private:
   // Internal implementation
   struct Impl;
   std::unique_ptr<Impl> impl_;
+
+  // Data validator for comprehensive validation
+  std::shared_ptr<DataValidator> data_validator_;
 
   // Internal methods
   [[nodiscard]] JPLVoidResult ensure_cache_directory();

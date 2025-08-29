@@ -5,6 +5,7 @@
 
 #include "solar_jpl/jpl_client.hpp"
 #include "solar_jpl/cache_manager.hpp"
+#include "solar_jpl/data_validator.hpp"
 
 #include <algorithm>
 #include <cmath>
@@ -236,6 +237,18 @@ JPLClient::JPLClient(JPLClientConfig config)
     // Log warning but don't fail construction
     std::cerr << "Warning: Failed to initialize cache manager" << std::endl;
   }
+
+  // Initialize data validator with comprehensive validation configuration
+  DataValidatorConfig validator_config;
+  validator_config.enable_cross_format_validation = true;
+  validator_config.enable_metadata_validation = true;
+  validator_config.enable_checksum_validation = true;
+  validator_config.enable_statistical_validation = true;
+  validator_config.enable_temporal_validation = true;
+  validator_config.overall_quality_threshold = 0.85;
+  validator_config.enable_detailed_logging = true;
+
+  data_validator_ = std::make_unique<DataValidator>(std::move(validator_config));
 }
 
 /**
@@ -1415,6 +1428,16 @@ CacheManager& JPLClient::cache_manager() const {
     throw std::runtime_error("Cache manager not initialized");
   }
   return *cache_manager_;
+}
+
+/**
+ * @brief Get data validator for comprehensive validation
+ */
+DataValidator& JPLClient::data_validator() const {
+  if (!data_validator_) {
+    throw std::runtime_error("Data validator not initialized");
+  }
+  return *data_validator_;
 }
 
 JPLVoidResult JPLClient::test_storage() {
