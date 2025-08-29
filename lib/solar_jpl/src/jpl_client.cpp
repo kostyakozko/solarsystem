@@ -99,6 +99,51 @@ bool JPLClientConfig::is_valid(std::string* error) const {
     return false;
   }
 
+  // Validate network resilience settings
+  if (enable_exponential_backoff) {
+    if (backoff_multiplier <= 1.0) {
+      if (error) *error = "Backoff multiplier must be greater than 1.0";
+      return false;
+    }
+
+    if (max_backoff_delay <= retry_delay) {
+      if (error) *error = "Max backoff delay must be greater than retry delay";
+      return false;
+    }
+  }
+
+  if (enable_circuit_breaker) {
+    if (circuit_breaker_failure_threshold == 0) {
+      if (error) *error = "Circuit breaker failure threshold must be positive";
+      return false;
+    }
+
+    if (circuit_breaker_timeout <= std::chrono::minutes(0)) {
+      if (error) *error = "Circuit breaker timeout must be positive";
+      return false;
+    }
+  }
+
+  if (enable_connection_pooling) {
+    if (connection_pool_size == 0) {
+      if (error) *error = "Connection pool size must be positive";
+      return false;
+    }
+
+    if (connection_keep_alive <= std::chrono::seconds(0)) {
+      if (error) *error = "Connection keep alive must be positive";
+      return false;
+    }
+  }
+
+  // Validate fallback endpoints
+  for (const auto& endpoint : fallback_endpoints) {
+    if (!Utils::is_valid_endpoint_url(endpoint)) {
+      if (error) *error = "Invalid fallback endpoint URL: " + endpoint;
+      return false;
+    }
+  }
+
   return true;
 }
 
@@ -269,11 +314,30 @@ JPLResult<EphemerisData> JPLClient::fetch_body_internal(
   params << "&VEC_TABLE='2'&REF_PLANE='ECLIPTIC'&REF_SYSTEM='J2000'";
   params << "&VEC_CORR='NONE'&VEC_DELTA_T='NO'&CSV_FORMAT='YES'";
 
-  // Make HTTP request with network resilience
-  auto response = make_request(config_.api_endpoint, params.str());
+  // Check if we should attempt network request or go straight to cache
+  bool should_use_network = true;
+
+  if (is_offline_mode()) {
+    should_use_network = false;
+  } else {
+    // Check network health before making expensive requests
+    auto health_score = get_network_health_score();
+    if (health_score < 0.3) {
+      // Network is unhealthy, prefer cache if available
+      should_use_network = false;
+    }
+  }
+
+  JPLResult<std::string> response = JPLError::NetworkError;
+
+  if (should_use_network) {
+    // Make HTTP request with network resilience
+    response = make_request(config_.api_endpoint, params.str());
+  }
+
   if (!is_success(response)) {
-    // Network request failed, try cache fallback if enabled
-    if (config_.prefer_cache_on_network_failure) {
+    // Network request failed or was skipped, try cache fallback if enabled
+    if (config_.prefer_cache_on_network_failure || config_.enable_offline_mode) {
       // First, detect and recover from any cache corruption
       auto corruption_check = detect_and_recover_cache_corruption();
       if (is_success(corruption_check) && get_value(corruption_check)) {
@@ -283,11 +347,22 @@ JPLResult<EphemerisData> JPLClient::fetch_body_internal(
           // Find the requested body in cached data
           for (const auto& body_data : cached_data) {
             if (body_data.jpl_id == jpl_id) {
+              // Log that we're using cached data due to network issues
+              if (should_use_network) {
+                std::lock_guard<std::mutex> lock(diagnostics_mutex_);
+                network_diagnostics_.last_error_message =
+                    "Using cached data due to network failure for body " + std::to_string(jpl_id);
+              }
               return body_data;  // Return cached ephemeris data directly
             }
           }
         }
       }
+    }
+
+    // If we get here, both network and cache failed
+    if (!should_use_network) {
+      return JPLError::NetworkError;  // Offline mode and no cache
     }
     return get_error(response);
   }
@@ -1551,6 +1626,101 @@ std::string to_string(JPLError error) {
   }
 }
 
+/**
+ * @brief Convert network connectivity status to string
+ */
+std::string to_string(NetworkConnectivityStatus status) {
+  switch (status) {
+    case NetworkConnectivityStatus::Connected:
+      return "Connected";
+    case NetworkConnectivityStatus::Limited:
+      return "Limited";
+    case NetworkConnectivityStatus::Disconnected:
+      return "Disconnected";
+    case NetworkConnectivityStatus::Unknown:
+      return "Unknown";
+    default:
+      return "Invalid";
+  }
+}
+
+/**
+ * @brief Format network diagnostics as human-readable string
+ */
+std::string format_network_diagnostics(const NetworkDiagnostics& diagnostics) {
+  std::ostringstream oss;
+
+  oss << "Network Diagnostics:\n";
+  oss << "  Status: " << to_string(diagnostics.connectivity_status) << "\n";
+  oss << "  Health: " << (diagnostics.is_healthy() ? "Healthy" : "Unhealthy") << "\n";
+  oss << "  Success Rate: " << std::fixed << std::setprecision(1)
+      << (diagnostics.success_rate() * 100.0) << "%\n";
+  oss << "  Packet Loss: " << std::fixed << std::setprecision(1)
+      << (diagnostics.packet_loss_rate * 100.0) << "%\n";
+
+  if (diagnostics.successful_requests > 0) {
+    oss << "  Response Times:\n";
+    oss << "    Average: " << diagnostics.average_response_time.count() << "ms\n";
+    oss << "    Min: " << diagnostics.min_response_time.count() << "ms\n";
+    oss << "    Max: " << diagnostics.max_response_time.count() << "ms\n";
+  }
+
+  oss << "  Requests: " << diagnostics.successful_requests << " successful, "
+      << diagnostics.failed_requests << " failed\n";
+
+  if (!diagnostics.reachable_endpoints.empty()) {
+    oss << "  Reachable Endpoints: ";
+    for (size_t i = 0; i < diagnostics.reachable_endpoints.size(); ++i) {
+      if (i > 0) oss << ", ";
+      oss << diagnostics.reachable_endpoints[i];
+    }
+    oss << "\n";
+  }
+
+  if (!diagnostics.unreachable_endpoints.empty()) {
+    oss << "  Unreachable Endpoints: ";
+    for (size_t i = 0; i < diagnostics.unreachable_endpoints.size(); ++i) {
+      if (i > 0) oss << ", ";
+      oss << diagnostics.unreachable_endpoints[i];
+    }
+    oss << "\n";
+  }
+
+  if (!diagnostics.last_error_message.empty()) {
+    oss << "  Last Error: " << diagnostics.last_error_message << "\n";
+  }
+
+  return oss.str();
+}
+
+/**
+ * @brief Check if endpoint URL is valid
+ */
+bool is_valid_endpoint_url(const std::string& url) {
+  if (url.empty()) {
+    return false;
+  }
+
+  // Basic URL validation
+  if (url.find("http://") != 0 && url.find("https://") != 0) {
+    return false;
+  }
+
+  // Check for minimum length and basic structure
+  if (url.length() < 10) {  // Minimum: "http://a.b"
+    return false;
+  }
+
+  // Check for invalid characters
+  for (char c : url) {
+    if (c < 32 || c > 126) {  // Non-printable ASCII
+      return false;
+    }
+  }
+
+  return true;
+}
+
 }  // namespace Utils
 
 // Enhanced Cache Validation Helper Methods
@@ -2493,23 +2663,63 @@ JPLVoidResult JPLClient::save_cache_metadata(const CacheMetadata& metadata) {
  */
 JPLResult<std::string> JPLClient::make_resilient_request(const std::string& url,
                                                          const std::string& params) {
+  // Check if offline mode is enabled
+  if (is_offline_mode()) {
+    return JPLError::NetworkError;  // Force cache fallback at application layer
+  }
+
+  // Check network connectivity before attempting requests
+  auto connectivity_status = check_network_connectivity();
+  if (connectivity_status == NetworkConnectivityStatus::Disconnected) {
+    // Network is down, don't waste time on requests
+    (void)update_network_diagnostics(false, std::chrono::milliseconds(0), "Network disconnected");
+    return JPLError::NetworkError;
+  }
+
+  auto request_start = std::chrono::steady_clock::now();
+
   // First, try the primary endpoint with circuit breaker protection
   auto primary_result = execute_request_with_circuit_breaker(url, params);
+
+  auto request_end = std::chrono::steady_clock::now();
+  auto request_duration = std::chrono::duration_cast<std::chrono::milliseconds>(request_end - request_start);
+
   if (is_success(primary_result)) {
+    // Update diagnostics with successful request
+    (void)update_network_diagnostics(true, request_duration);
     return primary_result;
   }
 
+  // Update diagnostics with failed primary request
+  (void)update_network_diagnostics(false, request_duration, "Primary endpoint failed");
+
   // If primary endpoint fails, try fallback endpoints
   if (!config_.fallback_endpoints.empty()) {
+    auto fallback_start = std::chrono::steady_clock::now();
     auto fallback_result = try_fallback_endpoints(params);
+    auto fallback_end = std::chrono::steady_clock::now();
+    auto fallback_duration = std::chrono::duration_cast<std::chrono::milliseconds>(fallback_end - fallback_start);
+
     if (is_success(fallback_result)) {
+      // Update diagnostics with successful fallback
+      (void)update_network_diagnostics(true, fallback_duration);
       return fallback_result;
+    } else {
+      // Update diagnostics with failed fallback
+      (void)update_network_diagnostics(false, fallback_duration, "All fallback endpoints failed");
+    }
+  }
+
+  // All network strategies failed, update connectivity status
+  {
+    std::lock_guard<std::mutex> lock(diagnostics_mutex_);
+    if (network_diagnostics_.failed_requests > network_diagnostics_.successful_requests * 2) {
+      // High failure rate, mark as limited connectivity
+      network_diagnostics_.connectivity_status = NetworkConnectivityStatus::Limited;
     }
   }
 
   // Cache fallback is handled at the application layer in fetch_body_internal
-
-  // All fallback strategies failed
   return std::get<JPLError>(primary_result);
 }
 
@@ -2650,16 +2860,31 @@ JPLResult<std::string> JPLClient::try_fallback_endpoints(const std::string& para
 }
 
 /**
- * @brief Acquire connection from pool
+ * @brief Acquire connection from pool with enhanced timeout management
  */
 std::optional<ConnectionPoolEntry*> JPLClient::acquire_connection(const std::string& endpoint) {
+  auto now = std::chrono::system_clock::now();
+
+  // First, clean up any expired connections
+  cleanup_expired_connections();
+
   // Look for existing available connection
   for (auto& entry : connection_pool_) {
     if (entry.endpoint == endpoint && entry.is_available &&
         entry.active_requests < config_.max_concurrent_requests) {
+
+      // Check if connection is still fresh (not too old)
+      auto connection_age = now - entry.last_used;
+      if (connection_age > config_.connection_keep_alive) {
+        // Connection is stale, mark for cleanup
+        entry.is_available = true;
+        entry.active_requests = 0;
+        continue;
+      }
+
       entry.is_available = false;
       entry.active_requests++;
-      entry.last_used = std::chrono::system_clock::now();
+      entry.last_used = now;
       return &entry;
     }
   }
@@ -2668,7 +2893,7 @@ std::optional<ConnectionPoolEntry*> JPLClient::acquire_connection(const std::str
   if (connection_pool_.size() < config_.connection_pool_size) {
     ConnectionPoolEntry new_entry;
     new_entry.endpoint = endpoint;
-    new_entry.last_used = std::chrono::system_clock::now();
+    new_entry.last_used = now;
     new_entry.is_available = false;
     new_entry.active_requests = 1;
 
@@ -2676,7 +2901,18 @@ std::optional<ConnectionPoolEntry*> JPLClient::acquire_connection(const std::str
     return &connection_pool_.back();
   }
 
-  // Pool is full, no available connections
+  // Pool is full, try to find a connection that can be reused
+  for (auto& entry : connection_pool_) {
+    if (entry.endpoint == endpoint && entry.active_requests == 0) {
+      // Reuse idle connection even if marked as unavailable
+      entry.is_available = false;
+      entry.active_requests = 1;
+      entry.last_used = now;
+      return &entry;
+    }
+  }
+
+  // Pool is full and no reusable connections, wait or fail
   return std::nullopt;
 }
 
@@ -2695,19 +2931,36 @@ void JPLClient::release_connection(const std::string& endpoint) {
 }
 
 /**
- * @brief Clean up expired connections from pool
+ * @brief Clean up expired connections from pool with enhanced timeout management
  */
 void JPLClient::cleanup_expired_connections() {
   auto now = std::chrono::system_clock::now();
 
+  // Remove connections that are expired or have been idle too long
   connection_pool_.erase(std::remove_if(connection_pool_.begin(), connection_pool_.end(),
                                         [&](const ConnectionPoolEntry& entry) {
                                           auto age = now - entry.last_used;
-                                          return entry.is_available &&
-                                                 age > config_.connection_keep_alive &&
-                                                 entry.active_requests == 0;
+
+                                          // Remove if connection is expired
+                                          if (age > config_.connection_keep_alive) {
+                                            return true;
+                                          }
+
+                                          // Remove if connection has been idle and available for too long
+                                          if (entry.is_available && entry.active_requests == 0 &&
+                                              age > std::chrono::seconds(60)) {
+                                            return true;
+                                          }
+
+                                          return false;
                                         }),
                          connection_pool_.end());
+
+  // Also update network diagnostics if we're cleaning up many connections
+  if (connection_pool_.size() < config_.connection_pool_size / 2) {
+    std::lock_guard<std::mutex> lock(diagnostics_mutex_);
+    network_diagnostics_.last_error_message = "High connection cleanup rate detected";
+  }
 }
 
 // Circuit Breaker Implementation
@@ -2757,6 +3010,263 @@ void CircuitBreaker::record_failure(const JPLClientConfig& config) {
     state = CircuitBreakerState::Open;
     next_attempt_time = last_failure_time + config.circuit_breaker_timeout;
   }
+}
+
+// Network Connectivity and Diagnostics Implementation
+
+/**
+ * @brief Check network connectivity status
+ */
+NetworkConnectivityStatus JPLClient::check_network_connectivity() {
+  std::lock_guard<std::mutex> lock(diagnostics_mutex_);
+
+  if (offline_mode_enabled_) {
+    return NetworkConnectivityStatus::Disconnected;
+  }
+
+  // Test basic connectivity first
+  auto basic_status = test_basic_connectivity();
+
+  // Update diagnostics
+  network_diagnostics_.connectivity_status = basic_status;
+  network_diagnostics_.last_check_time = std::chrono::system_clock::now();
+
+  return basic_status;
+}
+
+/**
+ * @brief Get comprehensive network diagnostics
+ */
+NetworkDiagnostics JPLClient::get_network_diagnostics() const {
+  std::lock_guard<std::mutex> lock(diagnostics_mutex_);
+  return network_diagnostics_;
+}
+
+/**
+ * @brief Test connectivity to specific endpoint
+ */
+JPLResult<std::chrono::milliseconds> JPLClient::test_endpoint_connectivity(
+    const std::string& endpoint) {
+  return ping_endpoint(endpoint);
+}
+
+/**
+ * @brief Run comprehensive network diagnostics
+ */
+JPLVoidResult JPLClient::run_network_diagnostics() {
+  std::lock_guard<std::mutex> lock(diagnostics_mutex_);
+
+  // Reset diagnostics
+  network_diagnostics_.reachable_endpoints.clear();
+  network_diagnostics_.unreachable_endpoints.clear();
+  network_diagnostics_.last_error_message.clear();
+
+  // Test primary endpoint
+  auto primary_result = ping_endpoint(config_.api_endpoint);
+  if (is_success(primary_result)) {
+    network_diagnostics_.reachable_endpoints.push_back(config_.api_endpoint);
+  } else {
+    network_diagnostics_.unreachable_endpoints.push_back(config_.api_endpoint);
+  }
+
+  // Test fallback endpoints
+  for (const auto& fallback : config_.fallback_endpoints) {
+    auto fallback_result = ping_endpoint(fallback);
+    if (is_success(fallback_result)) {
+      network_diagnostics_.reachable_endpoints.push_back(fallback);
+    } else {
+      network_diagnostics_.unreachable_endpoints.push_back(fallback);
+    }
+  }
+
+  // Update connectivity status based on results
+  if (!network_diagnostics_.reachable_endpoints.empty()) {
+    if (network_diagnostics_.unreachable_endpoints.empty()) {
+      network_diagnostics_.connectivity_status = NetworkConnectivityStatus::Connected;
+    } else {
+      network_diagnostics_.connectivity_status = NetworkConnectivityStatus::Limited;
+    }
+  } else {
+    network_diagnostics_.connectivity_status = NetworkConnectivityStatus::Disconnected;
+  }
+
+  network_diagnostics_.last_check_time = std::chrono::system_clock::now();
+  return std::nullopt;
+}
+
+/**
+ * @brief Enable/disable offline mode
+ */
+void JPLClient::set_offline_mode(bool enabled) {
+  std::lock_guard<std::mutex> lock(diagnostics_mutex_);
+  offline_mode_enabled_ = enabled;
+
+  if (enabled) {
+    network_diagnostics_.connectivity_status = NetworkConnectivityStatus::Disconnected;
+  }
+}
+
+/**
+ * @brief Check if currently in offline mode
+ */
+bool JPLClient::is_offline_mode() const {
+  std::lock_guard<std::mutex> lock(diagnostics_mutex_);
+  return offline_mode_enabled_;
+}
+
+/**
+ * @brief Get network health score (0.0 to 1.0)
+ */
+double JPLClient::get_network_health_score() const {
+  std::lock_guard<std::mutex> lock(diagnostics_mutex_);
+
+  if (offline_mode_enabled_) {
+    return 0.0;
+  }
+
+  double score = 0.0;
+
+  // Connectivity component (40% weight)
+  switch (network_diagnostics_.connectivity_status) {
+    case NetworkConnectivityStatus::Connected:
+      score += 0.4;
+      break;
+    case NetworkConnectivityStatus::Limited:
+      score += 0.2;
+      break;
+    case NetworkConnectivityStatus::Disconnected:
+    case NetworkConnectivityStatus::Unknown:
+      score += 0.0;
+      break;
+  }
+
+  // Success rate component (40% weight)
+  score += network_diagnostics_.success_rate() * 0.4;
+
+  // Response time component (20% weight)
+  if (network_diagnostics_.average_response_time.count() > 0) {
+    // Good response time is under 2 seconds
+    auto response_score = std::max(0.0, 1.0 - (network_diagnostics_.average_response_time.count() / 2000.0));
+    score += response_score * 0.2;
+  }
+
+  return std::min(1.0, score);
+}
+
+/**
+ * @brief Test basic connectivity
+ */
+NetworkConnectivityStatus JPLClient::test_basic_connectivity() {
+  // Test with a simple ping to a reliable endpoint
+  auto ping_result = ping_endpoint("https://www.google.com");
+
+  if (is_success(ping_result)) {
+    return NetworkConnectivityStatus::Connected;
+  }
+
+  // Try alternative connectivity test
+  ping_result = ping_endpoint("https://httpbin.org/get");
+
+  if (is_success(ping_result)) {
+    return NetworkConnectivityStatus::Limited;
+  }
+
+  return NetworkConnectivityStatus::Disconnected;
+}
+
+/**
+ * @brief Ping endpoint to test connectivity
+ */
+JPLResult<std::chrono::milliseconds> JPLClient::ping_endpoint(const std::string& endpoint) {
+  auto start_time = std::chrono::steady_clock::now();
+
+  // Use a simple HEAD request to test connectivity
+  std::ostringstream cmd;
+  cmd << "curl -s --head --max-time 5 --connect-timeout 3 '" << endpoint << "'";
+
+  auto response = impl_->execute_command(cmd.str());
+
+  auto end_time = std::chrono::steady_clock::now();
+  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
+
+  // Check if we got a valid HTTP response
+  if (response.find("HTTP/") != std::string::npos) {
+    // Update diagnostics with successful ping
+    (void)update_network_diagnostics(true, duration);
+    return duration;
+  } else {
+    // Update diagnostics with failed ping
+    (void)update_network_diagnostics(false, duration, "Ping failed");
+    return JPLError::NetworkError;
+  }
+}
+
+/**
+ * @brief Update network diagnostics with request results
+ */
+JPLVoidResult JPLClient::update_network_diagnostics(
+    bool success, std::chrono::milliseconds response_time, const std::string& error) {
+
+  if (success) {
+    network_diagnostics_.successful_requests++;
+
+    // Update response time statistics
+    if (response_time < network_diagnostics_.min_response_time) {
+      network_diagnostics_.min_response_time = response_time;
+    }
+    if (response_time > network_diagnostics_.max_response_time) {
+      network_diagnostics_.max_response_time = response_time;
+    }
+
+    // Update average response time (simple moving average)
+    auto total_requests = network_diagnostics_.successful_requests + network_diagnostics_.failed_requests;
+    if (total_requests > 0) {
+      auto current_avg = network_diagnostics_.average_response_time.count();
+      auto new_avg = (current_avg * (total_requests - 1) + response_time.count()) / total_requests;
+      network_diagnostics_.average_response_time = std::chrono::milliseconds(static_cast<long long>(new_avg));
+    }
+  } else {
+    network_diagnostics_.failed_requests++;
+    if (!error.empty()) {
+      network_diagnostics_.last_error_message = error;
+    }
+  }
+
+  // Update packet loss rate
+  auto total_requests = network_diagnostics_.successful_requests + network_diagnostics_.failed_requests;
+  if (total_requests > 0) {
+    network_diagnostics_.packet_loss_rate =
+        static_cast<double>(network_diagnostics_.failed_requests) / total_requests;
+  }
+
+  return std::nullopt;
+}
+
+/**
+ * @brief Monitor network health continuously
+ */
+JPLVoidResult JPLClient::monitor_network_health() {
+  // This could be called periodically to update network health
+  auto connectivity_status = check_network_connectivity();
+
+  // If network is unhealthy, consider enabling offline mode temporarily
+  if (connectivity_status == NetworkConnectivityStatus::Disconnected) {
+    auto health_score = get_network_health_score();
+    if (health_score < 0.3) {
+      // Network is very unhealthy, but don't automatically enable offline mode
+      // Let the application decide based on its needs
+      network_diagnostics_.last_error_message = "Network health critically low";
+    }
+  }
+
+  return std::nullopt;
+}
+
+/**
+ * @brief Test all configured endpoints
+ */
+JPLVoidResult JPLClient::test_all_endpoints() {
+  return run_network_diagnostics();
 }
 
 }  // namespace SolarSystem::JPL

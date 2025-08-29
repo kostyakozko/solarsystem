@@ -165,6 +165,50 @@ enum class CircuitBreakerState {
 };
 
 /**
+ * @brief Network connectivity status
+ */
+enum class NetworkConnectivityStatus {
+  Connected,      // Full network connectivity
+  Limited,        // Limited connectivity (some endpoints reachable)
+  Disconnected,   // No network connectivity
+  Unknown         // Connectivity status unknown
+};
+
+/**
+ * @brief Network diagnostics information
+ */
+struct NetworkDiagnostics {
+  NetworkConnectivityStatus connectivity_status = NetworkConnectivityStatus::Unknown;
+  std::chrono::system_clock::time_point last_check_time;
+  std::chrono::milliseconds average_response_time{0};
+  std::chrono::milliseconds min_response_time{std::chrono::milliseconds::max()};
+  std::chrono::milliseconds max_response_time{0};
+  size_t successful_requests = 0;
+  size_t failed_requests = 0;
+  size_t timeout_requests = 0;
+  double packet_loss_rate = 0.0;
+  std::vector<std::string> reachable_endpoints;
+  std::vector<std::string> unreachable_endpoints;
+  std::string last_error_message;
+
+  /**
+   * @brief Calculate success rate
+   */
+  [[nodiscard]] double success_rate() const {
+    auto total = successful_requests + failed_requests;
+    return total > 0 ? static_cast<double>(successful_requests) / total : 0.0;
+  }
+
+  /**
+   * @brief Check if network is healthy
+   */
+  [[nodiscard]] bool is_healthy() const {
+    return connectivity_status == NetworkConnectivityStatus::Connected &&
+           success_rate() > 0.8 && packet_loss_rate < 0.2;
+  }
+};
+
+/**
  * @brief Circuit breaker for network failure management
  */
 struct CircuitBreaker {
@@ -287,6 +331,44 @@ class JPLClient {
    */
   [[nodiscard]] CacheManager& cache_manager() const;
 
+  // Network Connectivity and Diagnostics
+
+  /**
+   * @brief Check network connectivity status
+   */
+  [[nodiscard]] NetworkConnectivityStatus check_network_connectivity();
+
+  /**
+   * @brief Get comprehensive network diagnostics
+   */
+  [[nodiscard]] NetworkDiagnostics get_network_diagnostics() const;
+
+  /**
+   * @brief Test connectivity to specific endpoint
+   */
+  [[nodiscard]] JPLResult<std::chrono::milliseconds> test_endpoint_connectivity(
+      const std::string& endpoint);
+
+  /**
+   * @brief Run comprehensive network diagnostics
+   */
+  [[nodiscard]] JPLVoidResult run_network_diagnostics();
+
+  /**
+   * @brief Enable/disable offline mode
+   */
+  void set_offline_mode(bool enabled);
+
+  /**
+   * @brief Check if currently in offline mode
+   */
+  [[nodiscard]] bool is_offline_mode() const;
+
+  /**
+   * @brief Get network health score (0.0 to 1.0)
+   */
+  [[nodiscard]] double get_network_health_score() const;
+
  private:
   JPLClientConfig config_;
 
@@ -389,6 +471,23 @@ class JPLClient {
   mutable CircuitBreaker circuit_breaker_;
   mutable std::vector<ConnectionPoolEntry> connection_pool_;
   mutable std::mutex network_mutex_;
+
+  /**
+   * @brief Network monitoring and diagnostics
+   */
+  mutable NetworkDiagnostics network_diagnostics_;
+  mutable std::mutex diagnostics_mutex_;
+  bool offline_mode_enabled_ = false;
+
+  /**
+   * @brief Network connectivity monitoring methods
+   */
+  [[nodiscard]] NetworkConnectivityStatus test_basic_connectivity();
+  [[nodiscard]] JPLResult<std::chrono::milliseconds> ping_endpoint(const std::string& endpoint);
+  [[nodiscard]] JPLVoidResult update_network_diagnostics(
+      bool success, std::chrono::milliseconds response_time, const std::string& error = "");
+  [[nodiscard]] JPLVoidResult monitor_network_health();
+  [[nodiscard]] JPLVoidResult test_all_endpoints();
 };
 
 /**
@@ -453,6 +552,21 @@ namespace Utils {
  * @brief Convert JPL error to string
  */
 [[nodiscard]] std::string to_string(JPLError error);
+
+/**
+ * @brief Convert network connectivity status to string
+ */
+[[nodiscard]] std::string to_string(NetworkConnectivityStatus status);
+
+/**
+ * @brief Format network diagnostics as human-readable string
+ */
+[[nodiscard]] std::string format_network_diagnostics(const NetworkDiagnostics& diagnostics);
+
+/**
+ * @brief Check if endpoint URL is valid
+ */
+[[nodiscard]] bool is_valid_endpoint_url(const std::string& url);
 
 }  // namespace Utils
 
