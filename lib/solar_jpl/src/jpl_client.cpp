@@ -4,6 +4,7 @@
  */
 
 #include "solar_jpl/jpl_client.hpp"
+#include "solar_jpl/cache_manager.hpp"
 
 #include <algorithm>
 #include <cmath>
@@ -170,6 +171,25 @@ JPLClient::JPLClient(JPLClientConfig config)
   // Create cache directory if it doesn't exist
   if (!std::filesystem::exists(config_.cache_directory)) {
     std::filesystem::create_directories(config_.cache_directory);
+  }
+
+  // Initialize cache manager with intelligent cache management
+  CacheManagerConfig cache_config;
+  cache_config.cache_directory = config_.cache_directory;
+  cache_config.enable_binary_cache = config_.enable_binary_cache;
+  cache_config.enable_json_cache = config_.enable_json_cache;
+  cache_config.cache_validity = config_.cache_validity;
+  cache_config.enable_compression = true;  // Enable intelligent compression
+  cache_config.refresh_strategy = RefreshStrategy::TimeBasedAuto;
+  cache_config.default_validation_level = ValidationLevel::Standard;
+
+  cache_manager_ = std::make_unique<CacheManager>(std::move(cache_config));
+
+  // Initialize cache manager
+  auto init_result = cache_manager_->initialize();
+  if (!is_success(init_result)) {
+    // Log warning but don't fail construction
+    std::cerr << "Warning: Failed to initialize cache manager" << std::endl;
   }
 }
 
@@ -833,6 +853,12 @@ std::optional<CacheMetadata> JPLClient::load_cache_metadata() const {
  * @brief Load ephemeris data from cache
  */
 JPLResult<std::vector<EphemerisData>> JPLClient::load_from_cache() {
+  // Use intelligent cache manager if available
+  if (cache_manager_) {
+    return cache_manager_->load_cache(ValidationLevel::Standard);
+  }
+
+  // Fallback to original implementation
   // Try binary cache first (faster)
   auto binary_path = config_.cache_directory / "ephemeris_cache.bin";
   if (config_.enable_binary_cache && std::filesystem::exists(binary_path)) {
@@ -1073,6 +1099,12 @@ JPLResult<std::vector<EphemerisData>> JPLClient::load_from_cache() {
  * @brief Save ephemeris data to cache
  */
 JPLVoidResult JPLClient::save_to_cache(const std::vector<EphemerisData>& data) {
+  // Use intelligent cache manager if available
+  if (cache_manager_) {
+    return cache_manager_->save_cache(data, true);  // Enable compression
+  }
+
+  // Fallback to original implementation
   try {
     // Ensure cache directory exists
     std::filesystem::create_directories(config_.cache_directory);
@@ -1199,6 +1231,12 @@ JPLVoidResult JPLClient::save_to_cache(const std::vector<EphemerisData>& data) {
  * @brief Validate cache integrity
  */
 JPLResult<bool> JPLClient::validate_cache() const {
+  // Use intelligent cache manager if available
+  if (cache_manager_) {
+    return cache_manager_->validate_cache(ValidationLevel::Comprehensive);
+  }
+
+  // Fallback to original implementation
   try {
     // Level 1: Comprehensive metadata validation
     auto metadata_validation = validate_cache_metadata();
@@ -1245,6 +1283,12 @@ JPLResult<bool> JPLClient::validate_cache() const {
  * @brief Clear all cached data
  */
 JPLVoidResult JPLClient::clear_cache() {
+  // Use intelligent cache manager if available
+  if (cache_manager_) {
+    return cache_manager_->clear_cache(true);  // Create backup before clearing
+  }
+
+  // Fallback to original implementation
   try {
     if (std::filesystem::exists(config_.cache_directory)) {
       std::filesystem::remove_all(config_.cache_directory);
@@ -1257,6 +1301,12 @@ JPLVoidResult JPLClient::clear_cache() {
 }
 
 JPLVoidResult JPLClient::rebuild_cache() {
+  // Use intelligent cache manager if available
+  if (cache_manager_) {
+    return cache_manager_->rebuild_cache();
+  }
+
+  // Fallback to original implementation
   try {
     // Clear existing cache
     auto clear_result = clear_cache();
@@ -1280,6 +1330,16 @@ JPLVoidResult JPLClient::rebuild_cache() {
   } catch (const std::exception&) {
     return error(JPLError::CacheError);
   }
+}
+
+/**
+ * @brief Get cache manager for advanced cache operations
+ */
+CacheManager& JPLClient::cache_manager() const {
+  if (!cache_manager_) {
+    throw std::runtime_error("Cache manager not initialized");
+  }
+  return *cache_manager_;
 }
 
 JPLVoidResult JPLClient::test_storage() {

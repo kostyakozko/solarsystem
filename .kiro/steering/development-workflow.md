@@ -60,6 +60,7 @@ docs: update API documentation - add examples for new simulation methods
 5. **Stage**: Add all relevant changes to git staging (including task status updates)
 6. **Commit**: Create a descriptive commit message
 7. **Confirm**: Verify the commit was created successfully
+8. **CLEAR ALL**: Clear all previous context so new task could be done with fresh session
 
 ### Commit Timing
 - Mark task as completed BEFORE committing (so task status is included in commit)

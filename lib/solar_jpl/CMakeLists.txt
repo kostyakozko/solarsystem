@@ -4,6 +4,7 @@
 # Create modern JPL library
 add_library(solar_jpl STATIC
     src/jpl_client.cpp
+    src/cache_manager.cpp
 )
 
 # Set modern C++20 properties
@@ -17,7 +18,7 @@ set_target_properties(solar_jpl PROPERTIES
 # Include directories
 target_include_directories(solar_jpl PUBLIC
     include
-    
+
 )
 
 # Link dependencies

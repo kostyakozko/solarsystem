@@ -28,6 +28,11 @@
 #include "solar_core/bodies/celestial_body.hpp"
 #include "solar_core/math/vector3.hpp"
 
+// Forward declaration for cache manager
+namespace SolarSystem::JPL {
+class CacheManager;
+}
+
 namespace SolarSystem::JPL {
 
 /**
@@ -277,12 +282,20 @@ class JPLClient {
 
   [[nodiscard]] JPLVoidResult test_storage();
 
+  /**
+   * @brief Get cache manager for advanced cache operations
+   */
+  [[nodiscard]] CacheManager& cache_manager() const;
+
  private:
   JPLClientConfig config_;
 
   // Internal implementation details
   struct Impl;
   std::unique_ptr<Impl> impl_;
+
+  // Cache manager for intelligent cache operations
+  mutable std::unique_ptr<CacheManager> cache_manager_;
 
   /**
    * @brief Fetch single body data (internal)
