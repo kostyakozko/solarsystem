@@ -212,6 +212,12 @@ target_link_libraries(test_performance_regression_system_simple test_utils solar
 add_test(NAME UnitTest_PerformanceRegressionSystemSimple COMMAND test_performance_regression_system_simple)
 set_tests_properties(UnitTest_PerformanceRegressionSystemSimple PROPERTIES LABELS "unit;performance;regression;testing;task22" TIMEOUT 120)
 
+# Advanced Configuration Management System (Task 7)
+add_executable(test_advanced_config test_advanced_config.cpp)
+target_link_libraries(test_advanced_config test_utils solar_core solar_jpl solar_utils Threads::Threads)
+add_test(NAME UnitTest_AdvancedConfig COMMAND test_advanced_config)
+set_tests_properties(UnitTest_AdvancedConfig PROPERTIES LABELS "unit;advanced;config;management;task7" TIMEOUT 120)
+
 message(STATUS "Unit tests configured:")
 message(STATUS "  - Solar Core Library Tests")
 message(STATUS "  - Solar JPL Library Tests")

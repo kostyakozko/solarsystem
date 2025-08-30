@@ -13,6 +13,7 @@ add_library(solar_utils STATIC
     src/workflow_orchestration.cpp
     src/status_management.cpp
     # src/config.cpp  # Temporarily disabled due to Expected usage issues
+    src/advanced_config.cpp
 )
 
 # Link with solar_core for Expected type

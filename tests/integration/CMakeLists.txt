@@ -30,6 +30,11 @@ add_executable(test_cross_component_validation
     test_cross_component_validation.cpp
 )
 
+# Advanced Configuration Management Integration Tests (Task 7)
+add_executable(test_advanced_config_integration
+    test_advanced_config_integration.cpp
+)
+
 # Link libraries
 target_link_libraries(test_application_workflows
     test_utils
@@ -88,6 +93,15 @@ target_link_libraries(test_cross_component_validation
     Threads::Threads
 )
 
+# Link libraries for advanced config integration tests
+target_link_libraries(test_advanced_config_integration
+    test_utils
+    solar_core
+    solar_jpl
+    solar_utils
+    Threads::Threads
+)
+
 # Add integration tests to CTest
 add_test(NAME IntegrationTest_ApplicationWorkflows
          COMMAND tests/integration/test_application_workflows
@@ -100,6 +114,9 @@ add_test(NAME IntegrationTest_EndToEnd COMMAND test_end_to_end)
 add_test(NAME IntegrationTest_EnhancedComponents COMMAND test_enhanced_components_integration)
 add_test(NAME IntegrationTest_PerformanceRegression COMMAND test_performance_regression_integration)
 add_test(NAME IntegrationTest_CrossComponentValidation COMMAND test_cross_component_validation)
+
+# Add advanced config integration tests to CTest
+add_test(NAME IntegrationTest_AdvancedConfigIntegration COMMAND test_advanced_config_integration)
 
 # Set working directory for all integration tests
 set_tests_properties(IntegrationTest_DataPipeline PROPERTIES WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
@@ -141,6 +158,13 @@ set_tests_properties(IntegrationTest_PerformanceRegression PROPERTIES
 set_tests_properties(IntegrationTest_CrossComponentValidation PROPERTIES
     LABELS "integration;validation;task21"
     TIMEOUT 300
+)
+
+# Set properties for advanced config integration tests
+set_tests_properties(IntegrationTest_AdvancedConfigIntegration PROPERTIES
+    LABELS "integration;advanced;config;task7"
+    TIMEOUT 300
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
 
 # Test data directory
