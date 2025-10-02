@@ -501,8 +501,16 @@ int main() {
 
 // Test documentation and web assets
 {
-  std::vector<std::string> doc_files = {"./README.md", "./docs/README.md",
-                                        "./share/solar_system/web/index.html", "./web/index.html"};
+  // Test runs from build directory, so check both build and source locations
+  std::vector<std::string> doc_files = {
+      "./README.md",                              // Build dir
+      "../README.md",                             // Source root from build
+      "./docs/README.md",                         // Build dir docs
+      "../docs/README.md",                        // Source docs
+      "./share/solar_system/web/index.html",     // Installed location
+      "./web/index.html",                         // Build web
+      "../apps/solar_system_web/web/index.html"  // Source web assets
+  };
 
   bool found_readme = false;
   bool found_web_assets = false;
