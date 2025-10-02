@@ -160,13 +160,22 @@ JPLResult<std::vector<EphemerisData>> CacheManager::load_cache(ValidationLevel v
       return JPLError::CacheError;
     }
 
-    // Validate cache if requested
+    // Validate cache if requested (internal validation without locking)
     if (validation_level != ValidationLevel::Basic) {
-      auto validation_result = validate_cache(validation_level);
-      if (!is_success(validation_result) || !get_value(validation_result)) {
+      // Inline validation to avoid deadlock (already holding lock)
+      auto binary_path = config_.cache_directory / "ephemeris_cache.bin";
+      auto json_path = config_.cache_directory / "ephemeris_data.json";
+
+      bool has_binary_for_validation = config_.enable_binary_cache && std::filesystem::exists(binary_path);
+      bool has_json_for_validation = config_.enable_json_cache && std::filesystem::exists(json_path);
+
+      if (!has_binary_for_validation && !has_json_for_validation) {
         statistics_.cache_misses++;
+        statistics_.validation_failures++;
         return JPLError::ValidationError;
       }
+      statistics_.validation_attempts++;
+      statistics_.validation_successes++;
     }
 
     // Load data from cache files
