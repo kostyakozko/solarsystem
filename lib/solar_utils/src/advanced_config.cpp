@@ -1,492 +1,404 @@
-/**
- * @file advanced_config.cpp
- * @brief Implementation of advanced configuration management system
- */
-
 #include "solar_utils/advanced_config.hpp"
 
 #include <algorithm>
-#include <fstream>
-#include <iomanip>
-#include <regex>
 #include <sstream>
-
-// Temporary stub for Config::get_default() since config.cpp is disabled
-namespace SolarSystem::Utils {
-Config::AppConfig Config::get_default() {
-  return Config::AppConfig{};  // Uses default member initializers
-}
-}
 
 namespace SolarSystem::Utils::Advanced {
 
-// AdvancedConfigManager implementation
 AdvancedConfigManager::AdvancedConfigManager() {
   initialize_parameter_definitions();
   initialize_templates();
   initialize_presets();
-  initialize_migration_rules();
-  load_user_presets();
 }
 
-Expected<Config::AppConfig, std::string> AdvancedConfigManager::load_configuration(
-    const std::optional<std::string>& config_file,
-    const std::vector<std::string>& cli_args,
-    const std::string& preset_name,
-    const std::string& template_name) {
-
-  Config::AppConfig config;
-
-  // Start with template if specified
-  if (!template_name.empty()) {
-    auto template_result = apply_template(template_name);
-    if (!template_result.has_value()) {
-      return Expected<Config::AppConfig, std::string>(
-          "Failed to apply template '" + template_name + "': " + template_result.error());
-    }
-    config = template_result.value();
-  } else if (!preset_name.empty()) {
-    // Use preset if specifand no template
-    auto preset_result = load_preset(preset_name);
-    if (!preset_result.has_value()) {
-      return Expected<Config::AppConfig, std::string>(
-          "Failed to load preset '" + preset_name + "': " + preset_result.error());
-    }
-    config = preset_result.value();
-  } else {
-    // Start with default configuration
-    config = Config::get_default();
+ValidationResult AdvancedConfigManager::validate_parameter(const std::string& name,
+                                                           const std::string& value) const {
+  auto def_it = parameter_definitions_.find(name);
+  if (def_it == parameter_definitions_.end()) {
+    ValidationResult result;
+    result.is_valid = false;
+    result.error_message = "Unknown parameter: " + name;
+    return result;
   }
 
-  // For now, skip the standard Config::load since it has compilation issues
-  // In a full implementation, this would be:
-  // auto standard_result = Config::load(config_file, cli_args);
-  // config = Config::merge(config, standard_result.value());
+  const auto& def = def_it->second;
 
-  return Expected<Config::AppConfig, std::string>(config);
+  if (def.type == "int") {
+    return validate_integer_parameter(def, value);
+  } else if (def.type == "double") {
+    return validate_double_parameter(def, value);
+  } else if (def.type == "string") {
+    return validate_string_parameter(def, value);
+  } else if (def.type == "bool") {
+    return validate_bool_parameter(def, value);
+  }
+
+  ValidationResult result;
+  result.is_valid = false;
+  result.error_message = "Unknown parameter type: " + def.type;
+  return result;
 }
 
 ConfigValidationResult AdvancedConfigManager::validate_configuration(
     const Config::AppConfig& config) const {
+  ConfigValidationResult result;
+  result.is_valid = true;
 
-  return ConfigurationValidator::validate_comprehensive(config, parameter_definitions_);
-}
-
-Validation::ValidationResult AdvancedConfigManager::validate_parameter(
-    const std::string& name,
-    const std::string& value) const {
-
-  auto it = parameter_definitions_.find(name);
-  if (it == parameter_definitions_.end()) {
-    return Validation::ValidationResult("Unknown parameter: " + name);
+  // Validate simulation parameters
+  if (config.simulation.timestep <= 0.0) {
+    result.is_valid = false;
+    result.errors.push_back("Simulation timestep must be positive");
+  } else if (config.simulation.timestep < 1.0) {
+    result.warnings.push_back("Very small timestep may cause performance issues");
   }
 
-  return validate_against_definition(it->second, value);
+  if (config.simulation.max_iterations <= 0) {
+    result.is_valid = false;
+    result.errors.push_back("Maximum iterations must be positive");
+  }
+
+  // Validate logging configuration
+  if (config.logging.log_file.empty() && !config.logging.console_output) {
+    result.warnings.push_back("No logging output configured");
+  }
+
+  // Validate output configuration
+  if (config.output.format != "json" && config.output.format != "csv" &&
+      config.output.format != "binary") {
+    result.is_valid = false;
+    result.errors.push_back("Invalid output format: " + config.output.format);
+    result.suggestions.push_back("Use 'json', 'csv', or 'binary'");
+  }
+
+  return result;
 }
 
 std::vector<ConfigConflict> AdvancedConfigManager::detect_conflicts(
     const Config::AppConfig& config) const {
-
   std::vector<ConfigConflict> conflicts;
-  // Simplified implementation for now
+
+  // Check for debug mode with production settings
+  if (config.debug_mode && config.logging.min_level == Logger::Level::ERROR) {
+    ConfigConflict conflict;
+    conflict.parameter1 = "debug_mode";
+    conflict.parameter2 = "logging.min_level";
+    conflict.description = "Debug mode enabled but logging level set to ERROR";
+    conflict.resolution_suggestions.push_back("Set logging level to DEBUG or INFO");
+    conflict.resolution_suggestions.push_back("Disable debug mode for production");
+    conflicts.push_back(conflict);
+  }
+
+  // Check for performance conflicts
+  if (config.simulation.timestep < 1.0 && config.simulation.max_iterations > 1000000) {
+    ConfigConflict conflict;
+    conflict.parameter1 = "simulation.timestep";
+    conflict.parameter2 = "simulation.max_iterations";
+    conflict.description = "Small timestep with high iteration count may cause performance issues";
+    conflict.resolution_suggestions.push_back("Increase timestep or reduce max iterations");
+    conflicts.push_back(conflict);
+  }
+
   return conflicts;
 }
 
-Expected<Config::AppConfig, std::string> AdvancedConfigManager::resolve_conflicts(
-    const Config::AppConfig& config,
-    const std::vector<std::string>& resolution_preferences) const {
+std::optional<Config::AppConfig> AdvancedConfigManager::apply_template(
+    const std::string& name) const {
+  auto template_it = templates_.find(name);
+  if (template_it == templates_.end()) {
+    return std::nullopt;
+  }
 
-  return Expected<Config::AppConfig, std::string>(config);
+  return template_it->second.config;
 }
 
-Expected<Config::AppConfig, std::string> AdvancedConfigManager::apply_template(
-    const std::string& template_name,
-    const std::map<std::string, std::string>& variables) const {
-
-  auto it = templates_.find(template_name);
-  if (it == templates_.end()) {
-    return Expected<Config::AppConfig, std::string>(
-        "Template not found: " + template_name);
+std::vector<std::string> AdvancedConfigManager::get_available_templates() const {
+  std::vector<std::string> names;
+  for (const auto& [name, template_] : templates_) {
+    names.push_back(name);
   }
-
-  return Expected<Config::AppConfig, std::string>(it->second.base_config);
+  return names;
 }
 
-Expected<Config::AppConfig, std::string> AdvancedConfigManager::load_preset(
-    const std::string& preset_name) const {
-
-  auto it = presets_.find(preset_name);
-  if (it == presets_.end()) {
-    return Expected<Config::AppConfig, std::string>(
-        "Preset not found: " + preset_name);
+std::optional<ConfigTemplate> AdvancedConfigManager::get_template(const std::string& name) const {
+  auto template_it = templates_.find(name);
+  if (template_it == templates_.end()) {
+    return std::nullopt;
   }
-
-  return Expected<Config::AppConfig, std::string>(it->second.config);
+  return template_it->second;
 }
 
-Expected<void, std::string> AdvancedConfigManager::save_preset(
-    const std::string& name,
-    const Config::AppConfig& config,
-    const std::string& description,
-    const std::string& use_case) {
+std::optional<Config::AppConfig> AdvancedConfigManager::apply_preset(
+    const std::string& name, const Config::AppConfig& base) const {
+  auto preset_it = presets_.find(name);
+  if (preset_it == presets_.end()) {
+    return std::nullopt;
+  }
 
-  ConfigPreset preset(name, description, use_case);
-  preset.config = config;
-  preset.is_system_preset = false;
+  Config::AppConfig result = base;
+  const auto& preset = preset_it->second;
 
-  // Save to memory
-  presets_[name] = preset;
+  // Apply preset parameters to base configuration
+  for (const auto& [param_name, param_value] : preset.parameters) {
+    // This is a simplified implementation - in a real system you'd have
+    // a more sophisticated parameter application mechanism
+    if (param_name == "simulation.timestep") {
+      result.simulation.timestep = std::stod(param_value);
+    } else if (param_name == "simulation.max_iterations") {
+      result.simulation.max_iterations = std::stoi(param_value);
+    } else if (param_name == "output.format") {
+      result.output.format = param_value;
+    }
+    // Add more parameter mappings as needed
+  }
 
-  return Expected<void, std::string>();  // Success
+  return result;
 }
 
-Expected<Config::AppConfig, std::string> AdvancedConfigManager::migrate_configuration(
-    const Config::AppConfig& old_config,
-    const std::string& from_version,
-    const std::string& to_version) const {
-
-  return Expected<Config::AppConfig, std::string>(old_config);
+std::vector<std::string> AdvancedConfigManager::get_available_presets() const {
+  std::vector<std::string> names;
+  for (const auto& [name, preset] : presets_) {
+    names.push_back(name);
+  }
+  return names;
 }
 
-// Private methods implementation
-void AdvancedConfigManager::initialize_parameter_definitions() {
-  // Simulation parameters
-  {
-    ParameterDefinition param("simulation.timestep",
-                            "Simulation timestep in seconds", "double");
-    param.required = false;
-    param.default_value = 3600.0;
-    param.min_value = 1.0;
-    param.max_value = 86400.0;  // 1 day
-    parameter_definitions_["simulation.timestep"] = param;
+std::optional<ConfigPreset> AdvancedConfigManager::get_preset(const std::string& name) const {
+  auto preset_it = presets_.find(name);
+  if (preset_it == presets_.end()) {
+    return std::nullopt;
   }
-
-  {
-    ParameterDefinition param("simulation.max_iterations",
-                            "Maximum number of simulation iterations", "int");
-    param.required = false;
-    param.default_value = static_cast<int64_t>(1000000);
-    param.min_value = static_cast<int64_t>(1);
-    param.max_value = static_cast<int64_t>(100000000);
-    parameter_definitions_["simulation.max_iterations"] = param;
-  }
-
-  {
-    ParameterDefinition param("simulation.output_format",
-                            "Output format for simulation results", "string");
-    param.required = false;
-    param.default_value = std::string("standard");
-    param.allowed_values = {"standard", "json", "csv", "binary"};
-    parameter_definitions_["simulation.output_format"] = param;
-  }
-}
-
-void AdvancedConfigManager::initialize_templates() {
-  // Development template
-  {
-    ConfigTemplate template_def("development",
-                              "Development configuration with verbose logging",
-                              "development");
-    template_def.base_config = Config::get_default();
-    template_def.base_config.debug_mode = true;
-    template_def.base_config.logging.min_level = Logger::Level::DEBUG;
-    template_def.base_config.logging.colored_output = true;
-    template_def.base_config.simulation.enable_progress = true;
-    template_def.base_config.simulation.verbose_output = true;
-    template_def.usage_example = "Use for development and debugging";
-    templates_["development"] = template_def;
-  }
-
-  // Production template
-  {
-    ConfigTemplate template_def("production",
-                              "Production configuration with optimized settings",
-                              "production");
-    template_def.base_config = Config::get_default();
-    template_def.base_config.debug_mode = false;
-    template_def.base_config.logging.min_level = Logger::Level::INFO;
-    template_def.base_config.logging.colored_output = false;
-    template_def.base_config.simulation.enable_progress = false;
-    template_def.base_config.simulation.verbose_output = false;
-    template_def.usage_example = "Use for production deployments";
-    templates_["production"] = template_def;
-  }
-
-  // High performance template
-  {
-    ConfigTemplate template_def("high_performance",
-                              "High performance configuration for large simulations",
-                              "simulation");
-    template_def.base_config = Config::get_default();
-    template_def.base_config.simulation.enable_simd = true;
-    template_def.base_config.simulation.enable_lto = true;
-    template_def.base_config.simulation.thread_count = 0;  // Auto-detect
-    template_def.base_config.logging.min_level = Logger::Level::WARN;
-    template_def.usage_example = "Use for computationally intensive simulations";
-    templates_["high_performance"] = template_def;
-  }
-}
-
-void AdvancedConfigManager::initialize_presets() {
-  // Fast simulation preset
-  {
-    ConfigPreset preset("fast_simulation",
-                       "Fast simulation with reduced accuracy",
-                       "quick_results");
-    preset.config = Config::get_default();
-    preset.config.simulation.timestep = 7200.0;  // 2 hours
-    preset.config.simulation.max_iterations = 100000;
-    preset.config.simulation.convergence_threshold = 1e-6;  // Reduced accuracy
-    preset.is_system_preset = true;
-    preset.tags = {"fast", "simulation", "reduced_accuracy"};
-    presets_["fast_simulation"] = preset;
-  }
-
-  // High accuracy preset
-  {
-    ConfigPreset preset("high_accuracy",
-                       "High accuracy simulation with fine timestep",
-                       "research");
-    preset.config = Config::get_default();
-    preset.config.simulation.timestep = 900.0;  // 15 minutes
-    preset.config.simulation.max_iterations = 10000000;
-    preset.config.simulation.convergence_threshold = 1e-15;  // High accuracy
-    preset.is_system_preset = true;
-    preset.tags = {"accurate", "simulation", "research"};
-    presets_["high_accuracy"] = preset;
-  }
-
-  // Web server preset
-  {
-    ConfigPreset preset("web_server",
-                       "Optimized for web server deployment",
-                       "web_deployment");
-    preset.config = Config::get_default();
-    preset.config.web.port = 8080;
-    preset.config.web.enable_cors = true;
-    preset.config.web.enable_compression = true;
-    preset.config.web.max_connections = 100;
-    preset.config.logging.min_level = Logger::Level::INFO;
-    preset.is_system_preset = true;
-    preset.tags = {"web", "server", "deployment"};
-    presets_["web_server"] = preset;
-  }
-}
-
-void AdvancedConfigManager::initialize_migration_rules() {
-  // Simplified implementation for now
-}
-
-std::vector<ConfigTemplate> AdvancedConfigManager::get_available_templates() const {
-  std::vector<ConfigTemplate> templates;
-  for (const auto& [name, template_def] : templates_) {
-    templates.push_back(template_def);
-  }
-  return templates;
-}
-
-std::vector<ConfigPreset> AdvancedConfigManager::get_available_presets() const {
-  std::vector<ConfigPreset> presets;
-  for (const auto& [name, preset_def] : presets_) {
-    presets.push_back(preset_def);
-  }
-  return presets;
+  return preset_it->second;
 }
 
 std::vector<ParameterDefinition> AdvancedConfigManager::get_parameter_definitions() const {
   std::vector<ParameterDefinition> definitions;
-  for (const auto& [name, param_def] : parameter_definitions_) {
-    definitions.push_back(param_def);
+  for (const auto& [name, def] : parameter_definitions_) {
+    definitions.push_back(def);
   }
   return definitions;
 }
 
-std::string AdvancedConfigManager::generate_documentation() const {
-  std::ostringstream oss;
-
-  oss << "# Solar System Suite Configuration Documentation\n\n";
-
-  // Parameter definitions
-  oss << "## Configuration Parameters\n\n";
-  for (const auto& [name, param_def] : parameter_definitions_) {
-    oss << "### " << name << "\n";
-    oss << "- **Description**: " << param_def.description << "\n";
-    oss << "- **Type**: " << param_def.type << "\n";
-    oss << "- **Required**: " << (param_def.required ? "Yes" : "No") << "\n";
-    oss << "\n";
+std::optional<ParameterDefinition> AdvancedConfigManager::get_parameter_definition(
+    const std::string& name) const {
+  auto def_it = parameter_definitions_.find(name);
+  if (def_it == parameter_definitions_.end()) {
+    return std::nullopt;
   }
-
-  return oss.str();
+  return def_it->second;
 }
 
-Validation::ValidationResult AdvancedConfigManager::validate_against_definition(
-    const ParameterDefinition& def,
-    const std::string& value) const {
+SolarSystem::Utils::Expected<Config::AppConfig, std::string>
+AdvancedConfigManager::migrate_configuration(const Config::AppConfig& old_config,
+                                              const std::string& from_version,
+                                              const std::string& to_version) const {
+  // Simple migration logic - in a real system this would be more sophisticated
+  Config::AppConfig migrated = old_config;
 
-  // Type-specific validation
-  if (def.type == "int") {
-    auto result = Validation::NumericValidator::validate_int(value);
-    if (!result.is_valid) return result;
-  } else if (def.type == "string") {
-    // Check allowed values
-    if (!def.allowed_values.empty()) {
-      return Validation::StringValidator::validate_choice(value, def.allowed_values);
+  if (from_version == "1.0" && to_version == "2.0") {
+    // Example migration: convert old timestep format
+    if (migrated.simulation.timestep > 86400.0) {
+      migrated.simulation.timestep = 3600.0;  // Convert from days to hours
     }
   }
 
-  return Validation::ValidationResult(true, value);
+  return SolarSystem::Utils::Expected<Config::AppConfig, std::string>{migrated};
 }
 
-std::vector<std::string> AdvancedConfigManager::check_dependencies(
-    const std::string& param_name,
-    const Config::ConfigMap& config_map) const {
-
-  std::vector<std::string> missing_deps;
-  // Simplified implementation
-  return missing_deps;
+SolarSystem::Utils::Expected<Config::AppConfig, std::string>
+AdvancedConfigManager::upgrade_configuration(const Config::AppConfig& config) const {
+  // Upgrade to latest version
+  return migrate_configuration(config, "1.0", "2.0");
 }
 
-std::vector<std::string> AdvancedConfigManager::check_conflicts(
-    const std::string& param_name,
-    const Config::ConfigMap& config_map) const {
+// Private methods
 
-  std::vector<std::string> conflicts;
-  // Simplified implementation
-  return conflicts;
+void AdvancedConfigManager::initialize_parameter_definitions() {
+  // Simulation parameters
+  parameter_definitions_["simulation.timestep"] = {
+      .name = "simulation.timestep",
+      .type = "double",
+      .description = "Simulation timestep in seconds",
+      .default_value = "3600.0",
+      .min_value = 0.1,
+      .max_value = 86400.0,
+      .required = false};
+
+  parameter_definitions_["simulation.max_iterations"] = {
+      .name = "simulation.max_iterations",
+      .type = "int",
+      .description = "Maximum number of simulation iterations",
+      .default_value = "1000000",
+      .min_value = 1,
+      .max_value = 100000000,
+      .required = false};
+
+  parameter_definitions_["simulation.output_format"] = {
+      .name = "simulation.output_format",
+      .type = "string",
+      .description = "Output format for simulation results",
+      .default_value = "json",
+      .allowed_values = {"json", "csv", "binary"},
+      .required = false};
+
+  // Add more parameter definitions as needed
 }
 
-Config::ConfigMap AdvancedConfigManager::apply_migration_rules(
-    const Config::ConfigMap& old_config,
-    const std::string& from_version,
-    const std::string& to_version) const {
+void AdvancedConfigManager::initialize_templates() {
+  // Development template
+  ConfigTemplate dev_template;
+  dev_template.name = "development";
+  dev_template.description = "Configuration optimized for development";
+  dev_template.config = Config::get_default();
+  dev_template.config.debug_mode = true;
+  dev_template.config.logging.min_level = Logger::Level::DEBUG;
+  dev_template.config.logging.colored_output = true;
+  dev_template.config.logging.console_output = true;
+  templates_["development"] = dev_template;
 
-  return old_config;  // Simplified implementation
+  // Production template
+  ConfigTemplate prod_template;
+  prod_template.name = "production";
+  prod_template.description = "Configuration optimized for production";
+  prod_template.config = Config::get_default();
+  prod_template.config.debug_mode = false;
+  prod_template.config.logging.min_level = Logger::Level::INFO;
+  prod_template.config.logging.colored_output = false;
+  prod_template.config.logging.console_output = false;
+  prod_template.config.logging.log_file = "solar_system.log";
+  templates_["production"] = prod_template;
+
+  // Performance template
+  ConfigTemplate perf_template;
+  perf_template.name = "performance";
+  perf_template.description = "Configuration optimized for performance";
+  perf_template.config = Config::get_default();
+  perf_template.config.simulation.timestep = 86400.0;  // 1 day
+  perf_template.config.logging.min_level = Logger::Level::WARNING;
+  templates_["performance"] = perf_template;
 }
 
-Config::ConfigMap AdvancedConfigManager::config_to_map(const Config::AppConfig& config) const {
-  Config::ConfigMap map;
+void AdvancedConfigManager::initialize_presets() {
+  // Fast simulation preset
+  ConfigPreset fast_preset;
+  fast_preset.name = "fast";
+  fast_preset.description = "Fast simulation with reduced accuracy";
+  fast_preset.parameters["simulation.timestep"] = "86400.0";
+  fast_preset.parameters["simulation.max_iterations"] = "100000";
+  fast_preset.parameters["output.format"] = "binary";
+  presets_["fast"] = fast_preset;
 
-  map["simulation.timestep"] = config.simulation.timestep;
-  map["simulation.max_iterations"] = static_cast<int64_t>(config.simulation.max_iterations);
-  map["simulation.output_format"] = config.simulation.output_format;
-
-  return map;
+  // Accurate simulation preset
+  ConfigPreset accurate_preset;
+  accurate_preset.name = "accurate";
+  accurate_preset.description = "Accurate simulation with smaller timestep";
+  accurate_preset.parameters["simulation.timestep"] = "3600.0";
+  accurate_preset.parameters["simulation.max_iterations"] = "10000000";
+  accurate_preset.parameters["output.format"] = "json";
+  presets_["accurate"] = accurate_preset;
 }
 
-Expected<Config::AppConfig, std::string> AdvancedConfigManager::map_to_config(
-    const Config::ConfigMap& map) const {
+ValidationResult AdvancedConfigManager::validate_integer_parameter(
+    const ParameterDefinition& def, const std::string& value) const {
+  ValidationResult result;
 
-  Config::AppConfig config = Config::get_default();
-  // Simplified implementation
-  return Expected<Config::AppConfig, std::string>(config);
-}
+  try {
+    int int_value = std::stoi(value);
 
-void AdvancedConfigManager::load_user_presets() {
-  // Simplified implementation
-}
+    if (def.min_value.has_value() && int_value < def.min_value.value()) {
+      result.is_valid = false;
+      result.error_message = "Value " + value + " is below minimum " +
+                             std::to_string(static_cast<int>(def.min_value.value()));
+      return result;
+    }
 
-Expected<void, std::string> AdvancedConfigManager::save_preset_to_file(
-    const ConfigPreset& preset) const {
+    if (def.max_value.has_value() && int_value > def.max_value.value()) {
+      result.is_valid = false;
+      result.error_message = "Value " + value + " is above maximum " +
+                             std::to_string(static_cast<int>(def.max_value.value()));
+      return result;
+    }
 
-  return Expected<void, std::string>();  // Success
-}
-
-std::filesystem::path AdvancedConfigManager::get_preset_file_path(
-    const std::string& preset_name) const {
-
-  return std::filesystem::current_path() / ".kiro" / "presets" / (preset_name + ".json");
-}
-
-std::filesystem::path AdvancedConfigManager::get_presets_directory() const {
-  return std::filesystem::current_path() / ".kiro" / "presets";
-}
-
-// ConfigurationValidator implementation
-ConfigValidationResult ConfigurationValidator::validate_comprehensive(
-    const Config::AppConfig& config,
-    const std::map<std::string, ParameterDefinition>& parameter_definitions) {
-
-  ConfigValidationResult result(true);
-
-  // Validate simulation configuration
-  auto sim_result = validate_simulation_config(config.simulation);
-  if (!sim_result.is_valid) {
+    result.is_valid = true;
+    result.normalized_value = std::to_string(int_value);
+  } catch (const std::exception&) {
     result.is_valid = false;
-    result.errors.insert(result.errors.end(), sim_result.errors.begin(), sim_result.errors.end());
+    result.error_message = "Invalid integer value: " + value;
   }
 
   return result;
 }
 
-ConfigValidationResult ConfigurationValidator::validate_simulation_config(
-    const Config::SimulationConfig& config) {
+ValidationResult AdvancedConfigManager::validate_double_parameter(
+    const ParameterDefinition& def, const std::string& value) const {
+  ValidationResult result;
 
-  ConfigValidationResult result(true);
+  try {
+    double double_value = std::stod(value);
 
-  // Validate timestep
-  if (config.timestep <= 0) {
-    result.add_error("Simulation timestep must be positive");
-  }
+    if (def.min_value.has_value() && double_value < def.min_value.value()) {
+      result.is_valid = false;
+      result.error_message = "Value " + value + " is below minimum " +
+                             std::to_string(def.min_value.value());
+      return result;
+    }
 
-  // Validate max iterations
-  if (config.max_iterations == 0) {
-    result.add_error("Maximum iterations must be positive");
-  }
+    if (def.max_value.has_value() && double_value > def.max_value.value()) {
+      result.is_valid = false;
+      result.error_message = "Value " + value + " is above maximum " +
+                             std::to_string(def.max_value.value());
+      return result;
+    }
 
-  return result;
-}
-
-ConfigValidationResult ConfigurationValidator::validate_data_config(
-    const Config::DataConfig& config) {
-
-  ConfigValidationResult result(true);
-
-  // Validate cache directory
-  if (config.cache_directory.empty()) {
-    result.add_error("Cache directory cannot be empty");
-  }
-
-  return result;
-}
-
-ConfigValidationResult ConfigurationValidator::validate_logging_config(
-    const Config::LoggingConfig& config) {
-
-  ConfigValidationResult result(true);
-
-  // Validate log file size
-  if (config.max_log_file_size_mb == 0) {
-    result.add_error("Maximum log file size must be positive");
+    result.is_valid = true;
+    result.normalized_value = std::to_string(double_value);
+  } catch (const std::exception&) {
+    result.is_valid = false;
+    result.error_message = "Invalid double value: " + value;
   }
 
   return result;
 }
 
-ConfigValidationResult ConfigurationValidator::validate_web_config(
-    const Config::WebConfig& config) {
+ValidationResult AdvancedConfigManager::validate_string_parameter(
+    const ParameterDefinition& def, const std::string& value) const {
+  ValidationResult result;
 
-  ConfigValidationResult result(true);
-
-  // Validate port
-  if (config.port == 0) {
-    result.add_error("Web server port must be positive");
+  if (!def.allowed_values.empty()) {
+    auto it = std::find(def.allowed_values.begin(), def.allowed_values.end(), value);
+    if (it == def.allowed_values.end()) {
+      result.is_valid = false;
+      result.error_message = "Invalid value: " + value;
+      result.suggestions = def.allowed_values;
+      return result;
+    }
   }
 
+  result.is_valid = true;
+  result.normalized_value = value;
   return result;
 }
 
-std::vector<std::string> ConfigurationValidator::check_common_issues(
-    const Config::AppConfig& config) {
+ValidationResult AdvancedConfigManager::validate_bool_parameter(
+    const ParameterDefinition& def, const std::string& value) const {
+  ValidationResult result;
 
-  std::vector<std::string> issues;
-  return issues;
-}
+  std::string lower_value = value;
+  std::transform(lower_value.begin(), lower_value.end(), lower_value.begin(), ::tolower);
 
-std::vector<std::string> ConfigurationValidator::generate_recommendations(
-    const Config::AppConfig& config) {
+  if (lower_value == "true" || lower_value == "1" || lower_value == "yes" || lower_value == "on") {
+    result.is_valid = true;
+    result.normalized_value = "true";
+  } else if (lower_value == "false" || lower_value == "0" || lower_value == "no" ||
+             lower_value == "off") {
+    result.is_valid = true;
+    result.normalized_value = "false";
+  } else {
+    result.is_valid = false;
+    result.error_message = "Invalid boolean value: " + value;
+    result.suggestions = {"true", "false", "1", "0", "yes", "no", "on", "off"};
+  }
 
-  std::vector<std::string> recommendations;
-  return recommendations;
+  return result;
 }
 
 }  // namespace SolarSystem::Utils::Advanced

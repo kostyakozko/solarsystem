@@ -606,6 +606,64 @@ SimulationArgumentParser::SimulationArgumentParser(std::string_view program_name
                              }
                            }
                          }));
+
+  // Checkpoint options
+  parser_.add_option(Option("", "--enable-checkpointing", "Enable automatic checkpointing during simulation")
+                         .as_flag()
+                         .action([this](const auto&) { config_.enable_checkpointing = true; }));
+
+  parser_.add_option(Option("", "--checkpoint-interval", "Set checkpoint interval in seconds (default: 3600)")
+                         .requires_value()
+                         .validate([](const std::string& value) {
+                           try {
+                             int interval = std::stoi(value);
+                             return interval > 0 && interval <= 86400;  // 1 second to 1 day
+                           } catch (...) {
+                             return false;
+                           }
+                         })
+                         .action([this](const std::optional<std::string>& value) {
+                           if (value) {
+                             config_.checkpoint_interval = *value;
+                           }
+                         }));
+
+  parser_.add_option(Option("", "--checkpoint-dir", "Set checkpoint directory (default: checkpoints)")
+                         .requires_value()
+                         .action([this](const std::optional<std::string>& value) {
+                           if (value) {
+                             config_.checkpoint_directory = *value;
+                           }
+                         }));
+
+  parser_.add_option(Option("", "--resume-from", "Resume simulation from checkpoint ID")
+                         .requires_value()
+                         .action([this](const std::optional<std::string>& value) {
+                           if (value) {
+                             config_.resume_from_checkpoint = *value;
+                           }
+                         }));
+
+  parser_.add_option(Option("", "--list-checkpoints", "List available checkpoints")
+                         .as_flag()
+                         .action([this](const auto&) { config_.list_checkpoints = true; }));
+
+  parser_.add_option(Option("", "--delete-checkpoint", "Delete specified checkpoint")
+                         .requires_value()
+                         .action([this](const std::optional<std::string>& value) {
+                           if (value) {
+                             config_.delete_checkpoint = *value;
+                           }
+                         }));
+
+  parser_.add_option(Option("", "--validate-checkpoint", "Validate checkpoint integrity")
+                         .requires_value()
+                         .action([this](const std::optional<std::string>& value) {
+                           if (value) {
+                             config_.checkpoint_id = *value;
+                             config_.validate_checkpoint = true;
+                           }
+                         }));
 }
 
 ArgumentResult<SimulationConfig> SimulationArgumentParser::parse(int argc,
@@ -687,6 +745,15 @@ void SimulationArgumentParser::print_usage() const {
             << " -u                      # Update JPL data\n";
   std::cout << "  " << parser_.help().substr(7, parser_.help().find(' ', 7) - 7)
             << " --rebuild               # Rebuild binary cache\n";
+  std::cout << "\nCheckpoint Examples:\n";
+  std::cout << "  " << parser_.help().substr(7, parser_.help().find(' ', 7) - 7)
+            << " --enable-checkpointing  # Enable automatic checkpointing\n";
+  std::cout << "  " << parser_.help().substr(7, parser_.help().find(' ', 7) - 7)
+            << " --checkpoint-interval 1800  # Checkpoint every 30 minutes\n";
+  std::cout << "  " << parser_.help().substr(7, parser_.help().find(' ', 7) - 7)
+            << " --list-checkpoints      # List available checkpoints\n";
+  std::cout << "  " << parser_.help().substr(7, parser_.help().find(' ', 7) - 7)
+            << " --resume-from checkpoint_id  # Resume from checkpoint\n";
 }
 
 // ExtendedArgumentParser implementation

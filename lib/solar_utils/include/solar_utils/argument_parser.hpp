@@ -171,6 +171,16 @@ struct SimulationConfig {
   bool verbose{false};
   std::string body_set{"complete"};  // Default to complete set for main simulation
 
+  // Checkpoint options
+  bool enable_checkpointing{false};
+  std::string checkpoint_interval{"3600"};  // Default: 1 hour in seconds
+  std::string checkpoint_directory{"checkpoints"};
+  std::string resume_from_checkpoint;
+  bool list_checkpoints{false};
+  std::string delete_checkpoint;
+  bool validate_checkpoint{false};
+  std::string checkpoint_id;
+
   /**
    * @brief Get effective target date (current if not specified)
    */

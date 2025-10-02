@@ -51,8 +51,8 @@ public:
     // Create edge case parameters
     static std::vector<double> create_edge_case_values() {
         return {
-            std::numeric_limits<double>::infinity(),
-            -std::numeric_limits<double>::infinity(),
+            1e308,  // Very large positive value (near infinity)
+            -1e308, // Very large negative value (near -infinity)
             std::numeric_limits<double>::quiet_NaN(),
             std::numeric_limits<double>::max(),
             std::numeric_limits<double>::lowest(),

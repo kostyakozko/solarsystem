@@ -395,4 +395,16 @@ class Logger {
   SolarSystem::Utils::Logger::instance().log_formatted(SolarSystem::Utils::Logger::Level::ERROR, \
                                                        component, format, __VA_ARGS__)
 
+// Stream operator for Logger::Level to support testing
+inline std::ostream& operator<<(std::ostream& os, const Logger::Level& level) {
+  switch (level) {
+    case Logger::Level::DEBUG: return os << "DEBUG";
+    case Logger::Level::INFO: return os << "INFO";
+    case Logger::Level::WARN: return os << "WARN";
+    case Logger::Level::ERROR: return os << "ERROR";
+    case Logger::Level::FATAL: return os << "FATAL";
+    default: return os << "UNKNOWN";
+  }
+}
+
 }  // namespace SolarSystem::Utils

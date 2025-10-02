@@ -218,6 +218,12 @@ target_link_libraries(test_advanced_config test_utils solar_core solar_jpl solar
 add_test(NAME UnitTest_AdvancedConfig COMMAND test_advanced_config)
 set_tests_properties(UnitTest_AdvancedConfig PROPERTIES LABELS "unit;advanced;config;management;task7" TIMEOUT 120)
 
+# Simulation Checkpointing and Resume (Task 8)
+add_executable(test_checkpoint test_checkpoint.cpp)
+target_link_libraries(test_checkpoint test_utils solar_core solar_jpl solar_utils Threads::Threads)
+add_test(NAME UnitTest_Checkpoint COMMAND test_checkpoint)
+set_tests_properties(UnitTest_Checkpoint PROPERTIES LABELS "unit;checkpoint;simulation;resume;task8" TIMEOUT 120)
+
 message(STATUS "Unit tests configured:")
 message(STATUS "  - Solar Core Library Tests")
 message(STATUS "  - Solar JPL Library Tests")
@@ -275,6 +281,7 @@ install(TARGETS
     test_performance_comprehensive
     test_enhanced_data_management
     test_data_validator
+    test_checkpoint
     RUNTIME DESTINATION bin/tests
     COMPONENT tests
 )
