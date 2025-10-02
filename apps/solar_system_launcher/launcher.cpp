@@ -823,6 +823,9 @@ class SimulationStep : public WorkflowStep {
 
         if (!config.quiet_mode) {
           std::cout << "✅ Modern simulation completed successfully\n";
+          if (config.target_date.has_value()) {
+            std::cout << "Target date: " << *config.target_date << "\n";
+          }
         }
 
       } catch (const std::exception& e) {
