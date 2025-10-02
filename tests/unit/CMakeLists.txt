@@ -224,6 +224,12 @@ target_link_libraries(test_checkpoint test_utils solar_core solar_jpl solar_util
 add_test(NAME UnitTest_Checkpoint COMMAND test_checkpoint)
 set_tests_properties(UnitTest_Checkpoint PROPERTIES LABELS "unit;checkpoint;simulation;resume;task8" TIMEOUT 120)
 
+# Comprehensive Output Formatting (Task 9)
+add_executable(test_output_formatter test_output_formatter.cpp)
+target_link_libraries(test_output_formatter test_utils solar_core solar_jpl solar_utils Threads::Threads)
+add_test(NAME UnitTest_OutputFormatter COMMAND test_output_formatter)
+set_tests_properties(UnitTest_OutputFormatter PROPERTIES LABELS "unit;output;formatting;comprehensive;task9" TIMEOUT 120)
+
 message(STATUS "Unit tests configured:")
 message(STATUS "  - Solar Core Library Tests")
 message(STATUS "  - Solar JPL Library Tests")
@@ -282,6 +288,7 @@ install(TARGETS
     test_enhanced_data_management
     test_data_validator
     test_checkpoint
+    test_output_formatter
     RUNTIME DESTINATION bin/tests
     COMPONENT tests
 )

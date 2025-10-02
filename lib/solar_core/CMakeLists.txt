@@ -14,7 +14,8 @@ add_library(solar_core STATIC
     # Modern API design patterns (Phase 0.3)
     src/builders/simulation_builder.cpp
 
-
+    # Output formatting system (Phase 3 - Task 9)
+    src/output/output_formatter.cpp
 )
 
 # Public headers for other libraries and applications
