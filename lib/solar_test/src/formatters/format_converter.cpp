@@ -406,7 +406,7 @@ std::string FormatConverter::convert_to_csv(const std::vector<ParsedTestResult>&
 
 std::string FormatConverter::xml_escape(const std::string& text) {
   std::string escaped;
-  escaped.reserve(text.length() * 1.2);
+  escaped.reserve(static_cast<size_t>(text.length() * 1.2));
 
   for (char c : text) {
     switch (c) {
@@ -477,7 +477,7 @@ std::string FormatConverter::json_escape(const std::string& text) {
 
 std::string FormatConverter::html_escape(const std::string& text) {
   std::string escaped;
-  escaped.reserve(text.length() * 1.2);
+  escaped.reserve(static_cast<size_t>(text.length() * 1.2));
 
   for (char c : text) {
     switch (c) {

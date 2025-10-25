@@ -860,7 +860,6 @@ Utils::Expected<void, std::string> BodyFactory::validate_body_relationships(
 
 Utils::Expected<CelestialBody, std::string> BodyFactory::create_body_with_intelligent_fallback(
     std::string_view name, const CreationOptions& options) const {
-  auto start_time = std::chrono::steady_clock::now();
 
   // Execute the fallback strategy
   auto fallback_result = execute_fallback_strategy(name, options);
@@ -965,7 +964,7 @@ std::vector<BodyFactory::DataSourceInfo> BodyFactory::assess_data_sources(
 
 BodyFactory::DataQuality BodyFactory::assess_data_quality(
     const CelestialBody& body, DataSource source,
-    std::chrono::system_clock::time_point reference_time) const {
+    std::chrono::system_clock::time_point ) const {
   // Check for basic data validity
   if (body.mass() <= 0.0L) {
     return DataQuality::POOR;
@@ -1190,7 +1189,7 @@ bool BodyFactory::is_data_source_available(DataSource source, std::string_view n
 }
 
 std::chrono::system_clock::time_point BodyFactory::get_data_source_timestamp(
-    DataSource source, std::string_view name) const {
+    DataSource source, std::string_view ) const {
   switch (source) {
     case DataSource::JPL_HORIZONS:
       // JPL data is always current

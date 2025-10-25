@@ -7,6 +7,7 @@
 
 #include <algorithm>
 #include <cstdarg>
+#include <format>
 #include <iomanip>
 #include <iostream>
 #include <sstream>
@@ -181,25 +182,6 @@ void EnhancedTestReporter::write_with_error_handling(const std::string& content)
       throw std::runtime_error("Failed to write content: " + content.substr(0, 100));
     }
   }
-}
-
-void EnhancedTestReporter::write_formatted(const char* format, ...) {
-  va_list args;
-  va_start(args, format);
-
-  // Calculate required buffer size
-  va_list args_copy;
-  va_copy(args_copy, args);
-  int size = vsnprintf(nullptr, 0, format, args_copy);
-  va_end(args_copy);
-
-  if (size > 0) {
-    std::vector<char> buffer(size + 1);
-    vsnprintf(buffer.data(), buffer.size(), format, args);
-    write_with_error_handling(std::string(buffer.data()));
-  }
-
-  va_end(args);
 }
 
 void EnhancedTestReporter::write_line(const std::string& line) {
@@ -385,9 +367,9 @@ void EnhancedXmlReporter::write_testsuite_element(const TestSuiteResult& result)
       std::chrono::duration_cast<std::chrono::milliseconds>(suite_end_time - suite_start_time_);
 
   write_formatted(
-      "  <testsuite name=\"%s\" tests=\"%zu\" failures=\"%zu\" errors=\"0\" skipped=\"%zu\" "
-      "time=\"%.3f\">\n",
-      xml_escape(result.suite_name).c_str(), result.test_results.size(), result.failed_count,
+      "  <testsuite name=\"{}\" tests=\"{}\" failures=\"{}\" errors=\"0\" skipped=\"{}\" "
+      "time=\"{:.3f}\">\n",
+      xml_escape(result.suite_name), result.test_results.size(), result.failed_count,
       result.skipped_count, static_cast<double>(suite_duration.count()) / 1000.0);
 
   for (const auto& test_result : result.test_results) {
@@ -398,17 +380,17 @@ void EnhancedXmlReporter::write_testsuite_element(const TestSuiteResult& result)
 }
 
 void EnhancedXmlReporter::write_testcase_element(const TestResult& result) {
-  write_formatted("    <testcase name=\"%s\" classname=\"%s\" time=\"%.3f\"",
-                  xml_escape(result.test_name).c_str(), xml_escape(current_suite_name_).c_str(),
+  write_formatted("    <testcase name=\"{}\" classname=\"{}\" time=\"{:.3f}\"",
+                  xml_escape(result.test_name), xml_escape(current_suite_name_),
                   static_cast<double>(result.execution_time.count()) / 1000.0);
 
   if (result.status == TestResult::Status::Failed || result.status == TestResult::Status::Error ||
       result.status == TestResult::Status::Timeout) {
     write_line(">");
     write_formatted(
-        "      <failure type=\"%s\" message=\"%s\"/>\n",
+        "      <failure type=\"{}\" message=\"{}\"/>\n",
         result.status == TestResult::Status::Timeout ? "TestTimeout" : "AssertionFailure",
-        xml_escape(result.error_message).c_str());
+        xml_escape(result.error_message));
     write_line("    </testcase>");
   } else if (result.status == TestResult::Status::Skipped) {
     write_line(">");
@@ -421,7 +403,7 @@ void EnhancedXmlReporter::write_testcase_element(const TestResult& result) {
 
 std::string EnhancedXmlReporter::xml_escape(const std::string& text) const {
   std::string escaped;
-  escaped.reserve(text.length() * 1.2);
+  escaped.reserve(static_cast<size_t>(text.length() * 1.2));
 
   for (char c : text) {
     switch (c) {

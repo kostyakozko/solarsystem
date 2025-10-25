@@ -307,7 +307,7 @@ RecoveryAction ErrorRecoveryManager::determine_recovery_strategy(const DetailedE
   return get_default_recovery_strategy(error);
 }
 
-bool ErrorRecoveryManager::attempt_recovery(const DetailedError& error,
+bool ErrorRecoveryManager::attempt_recovery(const DetailedError&,
                                             const RecoveryAction& action) {
   auto start_time = std::chrono::steady_clock::now();
   bool success = false;
@@ -580,7 +580,7 @@ void ErrorLogger::log_to_network(const std::string& message) {
   log_to_console("NETWORK: " + message, LogLevel::Info);
 }
 
-void ErrorLogger::log_to_memory(const std::string& message) {
+void ErrorLogger::log_to_memory(const std::string& ) {
   // Memory logging implementation would go here
   // This could store messages in a circular buffer
 }
@@ -644,7 +644,7 @@ std::vector<ErrorPattern> ErrorPatternAnalyzer::analyze_patterns(
   // Maintain history size limit
   if (error_history_.size() > max_history_size_) {
     error_history_.erase(error_history_.begin(),
-                         error_history_.begin() + (error_history_.size() - max_history_size_));
+                         error_history_.begin() + static_cast<std::ptrdiff_t>(error_history_.size() - max_history_size_));
   }
 
   // Extract new patterns
@@ -1186,7 +1186,7 @@ std::string recovery_strategy_to_string(RecoveryStrategy strategy) {
   }
 }
 
-ErrorCode string_to_error_code(const std::string& code_str) {
+ErrorCode string_to_error_code(const std::string& ) {
   // This would implement reverse lookup
   // For now, return Unknown
   return ErrorCode::Unknown;

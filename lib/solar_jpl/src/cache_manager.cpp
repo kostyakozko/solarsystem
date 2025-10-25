@@ -163,8 +163,8 @@ JPLResult<std::vector<EphemerisData>> CacheManager::load_cache(ValidationLevel v
     // Validate cache if requested (internal validation without locking)
     if (validation_level != ValidationLevel::Basic) {
       // Inline validation to avoid deadlock (already holding lock)
-      auto binary_path = config_.cache_directory / "ephemeris_cache.bin";
-      auto json_path = config_.cache_directory / "ephemeris_data.json";
+      binary_path = config_.cache_directory / "ephemeris_cache.bin";
+      json_path = config_.cache_directory / "ephemeris_data.json";
 
       bool has_binary_for_validation = config_.enable_binary_cache && std::filesystem::exists(binary_path);
       bool has_json_for_validation = config_.enable_json_cache && std::filesystem::exists(json_path);
@@ -324,7 +324,7 @@ JPLVoidResult CacheManager::save_cache(const std::vector<EphemerisData>& data, b
 /**
  * @brief Validate cache integrity with specified level
  */
-JPLResult<bool> CacheManager::validate_cache(ValidationLevel validation_level) {
+JPLResult<bool> CacheManager::validate_cache(ValidationLevel) {
   std::lock_guard<std::mutex> lock(impl_->cache_mutex);
 
   try {
@@ -476,7 +476,7 @@ JPLVoidResult CacheManager::optimize_cache() {
 /**
  * @brief Compress cache files
  */
-JPLVoidResult CacheManager::compress_cache(CompressionAlgorithm algorithm) {
+JPLVoidResult CacheManager::compress_cache(CompressionAlgorithm) {
   try {
     // Placeholder implementation
     statistics_.compressed_cache_size = statistics_.binary_cache_size / 2;
@@ -708,7 +708,7 @@ std::filesystem::path CacheManager::get_backup_path(size_t version) const {
 /**
  * @brief Validate cache with comprehensive data validation
  */
-JPLResult<ValidationReport> CacheManager::validate_cache_comprehensive(ValidationLevel validation_level) {
+JPLResult<ValidationReport> CacheManager::validate_cache_comprehensive(ValidationLevel) {
   std::lock_guard<std::mutex> lock(impl_->cache_mutex);
 
   try {

@@ -17,8 +17,8 @@ void CIIntegration::generate_github_actions_output(const std::vector<RegressionA
   }
 
   size_t total_benchmarks = analyses.size();
-  size_t regressions = std::count_if(analyses.begin(), analyses.end(),
-                                     [](const auto& a) { return a.has_regression; });
+  size_t regressions = static_cast<size_t>(std::count_if(analyses.begin(), analyses.end(),
+                                     [](const auto& a) { return a.has_regression; }));
 
   bool has_critical = std::any_of(analyses.begin(), analyses.end(),
                                   [](const auto& a) { return a.severity == "critical"; });
@@ -63,8 +63,8 @@ void CIIntegration::generate_jenkins_output(const std::vector<RegressionAnalysis
   file << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
   file << "<testsuite name=\"PerformanceRegressionTests\" tests=\"" << analyses.size() << "\"";
 
-  size_t failures = std::count_if(analyses.begin(), analyses.end(),
-                                  [](const auto& a) { return a.has_regression; });
+  size_t failures = static_cast<size_t>(std::count_if(analyses.begin(), analyses.end(),
+                                  [](const auto& a) { return a.has_regression; }));
 
   file << " failures=\"" << failures << "\" time=\"0\">\n";
 
@@ -134,8 +134,8 @@ std::string CIIntegration::generate_performance_badge(
   }
 
   size_t total = analyses.size();
-  size_t regressions = std::count_if(analyses.begin(), analyses.end(),
-                                     [](const auto& a) { return a.has_regression; });
+  size_t regressions = static_cast<size_t>(std::count_if(analyses.begin(), analyses.end(),
+                                     [](const auto& a) { return a.has_regression; }));
 
   double success_rate = 100.0 * (total - regressions) / total;
 
@@ -229,8 +229,8 @@ void PerformanceAlertSystem::send_trend_alert(const TrendAnalysis& analysis) {
 }
 
 void PerformanceAlertSystem::send_batch_alert(const std::vector<RegressionAnalysis>& analyses) {
-  size_t regressions = std::count_if(analyses.begin(), analyses.end(),
-                                     [](const auto& a) { return a.has_regression; });
+  size_t regressions = static_cast<size_t>(std::count_if(analyses.begin(), analyses.end(),
+                                     [](const auto& a) { return a.has_regression; }));
 
   if (regressions == 0) {
     return;

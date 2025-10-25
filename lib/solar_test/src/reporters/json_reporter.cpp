@@ -56,8 +56,8 @@ void JsonReporter::on_error(const std::string& error_message) {
 
 void JsonReporter::write_json_header() {
   write_indented("{\n");
-  write_key_value("format", "solar_test_json", false, 1);
-  write_key_value("version", "1.0", false, 1);
+  write_key_value("format", std::string("solar_test_json"), false, 1);
+  write_key_value("version", std::string("1.0"), false, 1);
 
   auto now = std::chrono::system_clock::now();
   auto time_t = std::chrono::system_clock::to_time_t(now);
@@ -213,7 +213,7 @@ void JsonReporter::write_errors_array() {
 
 std::string JsonReporter::json_escape(const std::string& text) const {
   std::string escaped;
-  escaped.reserve(text.length() * 1.2);  // Reserve some extra space
+  escaped.reserve(static_cast<size_t>(text.length() * 1.2));  // Reserve some extra space
 
   for (char c : text) {
     switch (c) {

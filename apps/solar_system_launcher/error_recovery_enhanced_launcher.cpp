@@ -1294,14 +1294,14 @@ int main(int argc, char* argv[]) {
 
     // Ensure proper shutdown of error recovery system
     try {
-      auto& orchestrator = ErrorRecoveryOrchestrator::instance();
-      if (orchestrator.is_system_healthy()) {
-        orchestrator.shutdown();
+      auto& orchestrator_ = ErrorRecoveryOrchestrator::instance();
+      if (orchestrator_.is_system_healthy()) {
+        orchestrator_.shutdown();
       }
 
-      auto& detection_system = EarlyDetectionSystem::instance();
-      if (detection_system.is_monitoring()) {
-        detection_system.stop_monitoring();
+      auto& detection_system_ = EarlyDetectionSystem::instance();
+      if (detection_system_.is_monitoring()) {
+        detection_system_.stop_monitoring();
       }
     } catch (...) {
       // Ignore shutdown errors

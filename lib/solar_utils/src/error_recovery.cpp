@@ -233,7 +233,7 @@ void AdvancedErrorRecoveryManager::record_recovery_outcome(const DetailedError& 
   if (learning_data_.size() > max_learning_data_points_) {
     learning_data_.erase(
         learning_data_.begin(),
-        learning_data_.begin() + (learning_data_.size() - max_learning_data_points_));
+        learning_data_.begin() + static_cast<std::ptrdiff_t>(learning_data_.size() - max_learning_data_points_));
   }
 }
 
@@ -1051,7 +1051,7 @@ bool ErrorRecoveryOrchestrator::handle_error(const DetailedError& error) {
   }
 }
 
-void ErrorRecoveryOrchestrator::configure_recovery_system(const std::string& config_file) {
+void ErrorRecoveryOrchestrator::configure_recovery_system(const std::string& ) {
   // Configuration loading would be implemented here
   // For now, use default configuration
 }
@@ -1372,7 +1372,7 @@ PreventionRule create_memory_leak_prevention_rule() {
   rule.target_codes = {ErrorCode::OutOfMemory, ErrorCode::MemoryLeak};
   rule.confidence_threshold = 0.8;
 
-  rule.condition = [](const DetailedError& error) {
+  rule.condition = [](const DetailedError& ) {
     // Check if memory usage is trending upward
     auto stats = ResourceManager::instance().get_statistics();
     return stats.current_bytes_allocated > stats.peak_bytes_allocated * 0.9;
@@ -1396,7 +1396,7 @@ PreventionRule create_network_timeout_prevention_rule() {
   rule.target_codes = {ErrorCode::ConnectionTimeout, ErrorCode::NetworkUnavailable};
   rule.confidence_threshold = 0.7;
 
-  rule.condition = [](const DetailedError& error) {
+  rule.condition = [](const DetailedError& ) {
     // Check network health
     return !NetworkUtils::is_endpoint_reachable("8.8.8.8", std::chrono::seconds(2));
   };
@@ -1419,7 +1419,7 @@ PreventionRule create_disk_space_prevention_rule() {
   rule.target_codes = {ErrorCode::DiskFull};
   rule.confidence_threshold = 0.9;
 
-  rule.condition = [](const DetailedError& error) {
+  rule.condition = [](const DetailedError& ) {
     // Check available disk space
     try {
       auto space_info = std::filesystem::space("/");

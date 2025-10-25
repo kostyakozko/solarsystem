@@ -52,8 +52,6 @@ class CoverageReporter : public TestReporter {
   std::ofstream output_file_;
   std::map<std::string, double> file_coverage_data_;
   double overall_coverage_percentage_ = 0.0;
-  size_t total_lines_covered_ = 0;
-  size_t total_lines_ = 0;
 
   // Coverage report generation
   void generate_text_report();

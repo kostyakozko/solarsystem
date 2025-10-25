@@ -183,7 +183,7 @@ void TapReporter::write_bail_out(const std::string& reason) {
 
 std::string TapReporter::escape_tap_string(const std::string& text) const {
   std::string escaped;
-  escaped.reserve(text.length() * 1.1);
+  escaped.reserve(static_cast<size_t>(text.length() * 1.1));
 
   for (char c : text) {
     switch (c) {

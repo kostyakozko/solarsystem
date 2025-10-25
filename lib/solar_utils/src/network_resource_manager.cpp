@@ -146,7 +146,7 @@ ManagedNetworkConnection& ManagedNetworkConnection::operator=(
   return *this;
 }
 
-bool ManagedNetworkConnection::connect(std::chrono::seconds timeout) {
+bool ManagedNetworkConnection::connect(std::chrono::seconds ) {
   if (state_ == ConnectionState::Active) {
     return true;
   }
@@ -242,7 +242,7 @@ bool ManagedNetworkConnection::is_healthy() const {
 }
 
 std::string ManagedNetworkConnection::send_request(const std::string& request,
-                                                   std::chrono::seconds timeout) {
+                                                   std::chrono::seconds ) {
   if (!is_connected()) {
     return "";
   }

@@ -212,7 +212,7 @@ BodyAggregateData SampleCountAggregator::calculate_body_aggregate(const std::str
   return aggregate;
 }
 
-std::vector<const DataPoint*> SampleCountAggregator::get_body_data_points(const std::string& body_name) const {
+std::vector<const DataPoint*> SampleCountAggregator::get_body_data_points(const std::string& ) const {
   // Simplified implementation
   return {};
 }

@@ -63,6 +63,9 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     endif()
 endif()
 
+# Configure warnings as errors BEFORE adding subdirectories
+configure_solar_system_warnings()
+
 # Find required packages
 find_package(Threads REQUIRED)
 
@@ -76,9 +79,6 @@ endif()
 add_subdirectory(lib)
 add_subdirectory(apps)
 add_subdirectory(examples)
-
-# Configure warnings as errors for compilation (but not linking)
-configure_solar_system_warnings()
 
 # Testing framework (optional)
 option(ENABLE_TESTING "Enable comprehensive testing framework" OFF)

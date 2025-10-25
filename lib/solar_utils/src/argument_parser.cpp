@@ -1207,7 +1207,7 @@ SolarSystem::Utils::Option::validate_comprehensive_value(const std::string& valu
 
   // Fall back to legacy validator
   if (validator_ && !validator_(value)) {
-    return Validation::ValidationResult("Value failed validation");
+    return Validation::ValidationResult(false, "Value failed validation");
   }
 
   return Validation::ValidationResult(true, value);

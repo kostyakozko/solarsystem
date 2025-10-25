@@ -33,7 +33,7 @@ FormatValidationResult OutputValidator::validate_xml(const std::string& xml) {
       const std::smatch& match = *iter;
 
       // Update line number
-      size_t current_pos = match.position();
+      size_t current_pos = static_cast<size_t>(match.position());
       for (size_t i = last_pos; i < current_pos; ++i) {
         if (xml[i] == '\n') line_number++;
       }

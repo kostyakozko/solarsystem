@@ -39,7 +39,6 @@ PerformanceMetrics MemoryTracker::stop_tracking() {
 
   tracking_ = false;
   auto end_time = std::chrono::high_resolution_clock::now();
-  size_t end_memory = get_current_usage();
 
   PerformanceMetrics metrics;
   metrics.wall_time = std::chrono::duration_cast<std::chrono::nanoseconds>(end_time - start_time_);
@@ -55,7 +54,7 @@ size_t MemoryTracker::get_current_usage() const {
   struct mach_task_basic_info info;
   mach_msg_type_number_t info_count = MACH_TASK_BASIC_INFO_COUNT;
 
-  if (task_info(mach_task_self(), MACH_TASK_BASIC_INFO, (task_info_t)&info, &info_count) ==
+  if (task_info(mach_task_self(), MACH_TASK_BASIC_INFO, reinterpret_cast<task_info_t>(&info), &info_count) ==
       KERN_SUCCESS) {
     return info.resident_size;
   }

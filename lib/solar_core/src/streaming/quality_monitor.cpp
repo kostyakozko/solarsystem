@@ -452,7 +452,7 @@ double QualityMonitor::calculate_data_completeness(const DataPoint& data_point) 
   return completeness;
 }
 
-double QualityMonitor::calculate_data_consistency(const DataPoint& data_point) const {
+double QualityMonitor::calculate_data_consistency(const DataPoint& ) const {
   // Simplified: assume consistent for now
   // In a real implementation, this would compare with historical data
   return 1.0;
@@ -471,7 +471,7 @@ bool QualityMonitor::detect_anomaly(const DataPoint& data_point) const {
   return calculate_data_accuracy(data_point) < 0.5;
 }
 
-bool QualityMonitor::is_outlier(const DataPoint& data_point, const std::string& body_name) const {
+bool QualityMonitor::is_outlier(const DataPoint& , const std::string& ) const {
   // Simplified outlier detection
   return false;
 }

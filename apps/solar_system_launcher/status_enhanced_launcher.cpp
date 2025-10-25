@@ -704,8 +704,8 @@ class StatusComponentRegistrar {
 
         if (jpl_manager.is_jpl_service_available()) {
           metrics.response_time = std::chrono::milliseconds(200 + (rand() % 300));  // 200-500ms
-          metrics.success_count = 95 + (rand() % 5);  // 95-99%
-          metrics.error_count = rand() % 2;  // 0-1 errors
+          metrics.success_count = 95 + static_cast<size_t>(rand() % 5);  // 95-99%
+          metrics.error_count = static_cast<size_t>(rand() % 2);  // 0-1 errors
         } else {
           metrics.response_time = std::chrono::milliseconds(5000);  // Timeout
           metrics.success_count = 0;
@@ -839,9 +839,9 @@ class StatusComponentRegistrar {
         // Simulation performance metrics
         metrics.response_time = std::chrono::milliseconds(50 + (rand() % 200));  // 50-250ms
         metrics.cpu_usage_percent = 20.0 + (rand() % 30);  // 20-50%
-        metrics.memory_usage_bytes = 10 * 1024 * 1024 + (rand() % (20 * 1024 * 1024));  // 10-30MB
-        metrics.success_count = 98 + (rand() % 2);  // 98-99%
-        metrics.error_count = rand() % 2;  // 0-1 errors
+        metrics.memory_usage_bytes = 10 * 1024 * 1024 + static_cast<size_t>(rand() % (20 * 1024 * 1024));  // 10-30MB
+        metrics.success_count = 98 + static_cast<size_t>(rand() % 2);  // 98-99%
+        metrics.error_count = static_cast<size_t>(rand() % 2);  // 0-1 errors
         metrics.throughput_operations_per_second = 10.0 + (rand() % 20);  // 10-30 ops/sec
 
         return metrics;

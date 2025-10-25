@@ -379,7 +379,7 @@ ValidationResult AdvancedConfigManager::validate_string_parameter(
 }
 
 ValidationResult AdvancedConfigManager::validate_bool_parameter(
-    const ParameterDefinition& def, const std::string& value) const {
+    const ParameterDefinition& , const std::string& value) const {
   ValidationResult result;
 
   std::string lower_value = value;

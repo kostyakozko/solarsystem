@@ -110,8 +110,8 @@ ValidationResult DateTimeValidator::validate_date(const std::string& date_str) {
 }
 
 ValidationResult DateTimeValidator::validate_date_with_range(
-    const std::string& date_str, const std::chrono::system_clock::time_point& min_date,
-    const std::chrono::system_clock::time_point& max_date) {
+    const std::string& date_str, const std::chrono::system_clock::time_point& ,
+    const std::chrono::system_clock::time_point& ) {
   auto basic_result = validate_date(date_str);
   if (!basic_result.is_valid) {
     return basic_result;
@@ -489,7 +489,7 @@ ValidationResult StringValidator::validate_json(const std::string& str) {
 }
 
 // InputValidator implementation
-ValidationResult InputValidator::validate_argument(const std::string& arg_name,
+ValidationResult InputValidator::validate_argument(const std::string& ,
                                                    const std::string& value,
                                                    const std::string& expected_type) {
   if (expected_type == "date") {

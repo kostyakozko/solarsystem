@@ -92,7 +92,7 @@ void StreamingOutputManager::optimize_memory_usage() {
   // This is a placeholder for more sophisticated memory management
 
   // Force garbage collection of any cached data
-  if (buffer_.tellp() > static_cast<std::streampos>(config_.buffer_size)) {
+  if (static_cast<size_t>(buffer_.tellp()) > config_.buffer_size) {
     buffer_.str("");
     buffer_.clear();
   }

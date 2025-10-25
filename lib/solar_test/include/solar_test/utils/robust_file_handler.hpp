@@ -235,7 +235,7 @@ struct FileOperationStats {
 
   void update_average_time() {
     average_time = total_operations > 0
-                       ? std::chrono::milliseconds(total_time.count() / total_operations)
+                       ? std::chrono::milliseconds(static_cast<uint64_t>(total_time.count()) / total_operations)
                        : std::chrono::milliseconds{0};
   }
 };

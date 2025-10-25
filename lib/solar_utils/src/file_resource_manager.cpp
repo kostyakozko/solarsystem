@@ -186,9 +186,9 @@ std::vector<char> ManagedFileHandle::read_binary(size_t bytes) {
   std::istream* stream = input_stream_ ? static_cast<std::istream*>(input_stream_.get())
                                        : static_cast<std::istream*>(bidirectional_stream_.get());
   std::vector<char> buffer(bytes);
-  stream->read(buffer.data(), bytes);
+  stream->read(buffer.data(), static_cast<std::streamsize>(bytes));
 
-  size_t actual_bytes = stream->gcount();
+  size_t actual_bytes = static_cast<size_t>(stream->gcount());
   buffer.resize(actual_bytes);
 
   bytes_read_ += actual_bytes;
@@ -204,9 +204,9 @@ size_t ManagedFileHandle::read(char* buffer, size_t size) {
 
   std::istream* stream = input_stream_ ? static_cast<std::istream*>(input_stream_.get())
                                        : static_cast<std::istream*>(bidirectional_stream_.get());
-  stream->read(buffer, size);
+  stream->read(buffer, static_cast<std::streamsize>(size));
 
-  size_t actual_bytes = stream->gcount();
+  size_t actual_bytes = static_cast<size_t>(stream->gcount());
   bytes_read_ += actual_bytes;
   update_access_time();
 
@@ -240,7 +240,7 @@ bool ManagedFileHandle::write_binary(const std::vector<char>& data) {
 
   std::ostream* stream = output_stream_ ? static_cast<std::ostream*>(output_stream_.get())
                                         : static_cast<std::ostream*>(bidirectional_stream_.get());
-  stream->write(data.data(), data.size());
+  stream->write(data.data(), static_cast<std::streamsize>(data.size()));
 
   if (stream->good()) {
     bytes_written_ += data.size();
@@ -258,7 +258,7 @@ bool ManagedFileHandle::write(const char* data, size_t size) {
 
   std::ostream* stream = output_stream_ ? static_cast<std::ostream*>(output_stream_.get())
                                         : static_cast<std::ostream*>(bidirectional_stream_.get());
-  stream->write(data, size);
+  stream->write(data, static_cast<std::streamsize>(size));
 
   if (stream->good()) {
     bytes_written_ += size;

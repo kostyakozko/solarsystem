@@ -1,8 +1,8 @@
 # CompilerWarnings.cmake
 # Solar System Suite - Compiler Warning Configuration
-# Treats compilation warnings as errors while ignoring linking problems
+# Ensures all warnings and warnings-as-errors are applied to ALL targets
 
-# Function to configure global warning flags
+# Function to configure warning flags for all targets
 function(configure_solar_system_warnings)
     set(MSVC_WARNINGS
         /W4     # Baseline reasonable warnings
@@ -26,6 +26,7 @@ function(configure_solar_system_warnings)
         /w14906 # string literal cast to 'LPWSTR'
         /w14928 # illegal copy-initialization; more than one user-defined conversion has been implicitly applied
         /permissive- # standards conformance mode for MSVC compiler.
+        /WX     # Treat warnings as errors
     )
 
     set(CLANG_WARNINGS
@@ -44,6 +45,7 @@ function(configure_solar_system_warnings)
         -Wdouble-promotion # warn if float is implicit promoted to double
         -Wformat=2 # warn on security issues around functions that format output (ie printf)
         -Wimplicit-fallthrough # warn on statements that fallthrough without an explicit annotation
+        -Werror # Treat warnings as errors
     )
 
     if(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
@@ -61,24 +63,26 @@ function(configure_solar_system_warnings)
         set(PROJECT_WARNINGS_CXX ${MSVC_WARNINGS})
     endif()
 
-    # Add warnings as errors for COMPILATION ONLY (if enabled)
-    if(WARNINGS_AS_ERRORS)
-        if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-            list(APPEND PROJECT_WARNINGS_CXX -Werror)
-        elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-            list(APPEND PROJECT_WARNINGS_CXX /WX)
-        endif()
-        message(STATUS "Warnings as errors enabled globally")
-    else()
-        message(STATUS "Warnings as errors disabled globally")
-    endif()
+    # Store warning flags for use by all targets
+    set(SOLAR_SYSTEM_WARNING_FLAGS ${PROJECT_WARNINGS_CXX} CACHE INTERNAL "Warning flags for all targets")
 
-    # Convert list to string for CMAKE_CXX_FLAGS
+    # Apply globally via CMAKE_CXX_FLAGS (most reliable method)
     string(JOIN " " WARNING_FLAGS_STRING ${PROJECT_WARNINGS_CXX})
-
-    # Apply globally to all C++ compilation
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${WARNING_FLAGS_STRING}" PARENT_SCOPE)
+    
+    # Also apply via add_compile_options for any targets that might override CMAKE_CXX_FLAGS
+    add_compile_options(${PROJECT_WARNINGS_CXX})
 
-    message(STATUS "Applied warning flags globally: ${WARNING_FLAGS_STRING}")
-    message(STATUS "Solar System Suite: All current and future targets will use warnings-as-errors for compilation")
+    message(STATUS "Warnings as errors enabled for ALL targets")
+    message(STATUS "Applied warning flags: ${WARNING_FLAGS_STRING}")
+endfunction()
+
+# Function to apply warnings to a specific target (for manual application if needed)
+function(apply_solar_system_warnings target_name)
+    if(DEFINED SOLAR_SYSTEM_WARNING_FLAGS)
+        target_compile_options(${target_name} PRIVATE ${SOLAR_SYSTEM_WARNING_FLAGS})
+        message(STATUS "Applied warnings to target: ${target_name}")
+    else()
+        message(WARNING "Warning flags not configured. Call configure_solar_system_warnings() first.")
+    endif()
 endfunction()

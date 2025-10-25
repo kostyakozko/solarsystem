@@ -126,12 +126,12 @@ Utils::Expected<CheckpointData, CheckpointResult> CheckpointManager::load_checkp
 
   // Read remaining data
   file.seekg(0, std::ios::end);
-  size_t file_size = file.tellg();
+  size_t file_size = static_cast<size_t>(file.tellg());
   file.seekg(17, std::ios::beg);  // Skip checksum header
 
   size_t data_size = file_size - 17;
   std::vector<uint8_t> file_data(data_size);
-  file.read(reinterpret_cast<char*>(file_data.data()), data_size);
+  file.read(reinterpret_cast<char*>(file_data.data()), static_cast<std::streamsize>(data_size));
 
   if (!file) {
     return Utils::Expected<CheckpointData, CheckpointResult>{CheckpointResult::FileError};
@@ -461,7 +461,7 @@ Utils::Expected<std::vector<uint8_t>, CheckpointResult> CheckpointManager::decom
 std::string CheckpointManager::calculate_checksum(const std::vector<uint8_t>& data) const {
   // Simple checksum using CRC32
   uLong crc = crc32(0L, Z_NULL, 0);
-  crc = crc32(crc, data.data(), data.size());
+  crc = crc32(crc, data.data(), static_cast<uInt>(data.size()));
 
   std::ostringstream oss;
   oss << std::hex << crc;
@@ -499,7 +499,7 @@ Utils::Expected<void, CheckpointResult> CheckpointManager::write_checkpoint_file
   file.write(checksum_header.c_str(), 17);
 
   // Write data
-  file.write(reinterpret_cast<const char*>(data.data()), data.size());
+  file.write(reinterpret_cast<const char*>(data.data()), static_cast<std::streamsize>(data.size()));
   if (!file) {
     return Utils::Expected<void, CheckpointResult>{CheckpointResult::FileError};
   }
@@ -521,7 +521,7 @@ Utils::Expected<std::vector<uint8_t>, CheckpointResult> CheckpointManager::read_
   }
 
   file.seekg(0, std::ios::end);
-  size_t file_size = file.tellg();
+  size_t file_size = static_cast<size_t>(file.tellg());
   file.seekg(0, std::ios::beg);
 
   // Read checksum header (17 bytes)
@@ -534,7 +534,7 @@ Utils::Expected<std::vector<uint8_t>, CheckpointResult> CheckpointManager::read_
   // Read remaining data
   size_t data_size = file_size - 17;
   std::vector<uint8_t> data(data_size);
-  file.read(reinterpret_cast<char*>(data.data()), data_size);
+  file.read(reinterpret_cast<char*>(data.data()), static_cast<std::streamsize>(data_size));
 
   if (!file) {
     return Utils::Expected<std::vector<uint8_t>, CheckpointResult>{CheckpointResult::FileError};

@@ -593,14 +593,14 @@ JPLResult<EphemerisData> JPLClient::parse_jpl_response(const std::string& respon
             if (tokens.size() > static_cast<size_t>(strategy[5])) {
               try {
                 // Parse position coordinates
-                double x = std::stod(tokens[strategy[0]]);
-                double y = std::stod(tokens[strategy[1]]);
-                double z = std::stod(tokens[strategy[2]]);
+                double x = std::stod(tokens[static_cast<size_t>(strategy[0])]);
+                double y = std::stod(tokens[static_cast<size_t>(strategy[1])]);
+                double z = std::stod(tokens[static_cast<size_t>(strategy[2])]);
 
                 // Parse velocity coordinates
-                double vx = std::stod(tokens[strategy[3]]);
-                double vy = std::stod(tokens[strategy[4]]);
-                double vz = std::stod(tokens[strategy[5]]);
+                double vx = std::stod(tokens[static_cast<size_t>(strategy[3])]);
+                double vy = std::stod(tokens[static_cast<size_t>(strategy[4])]);
+                double vz = std::stod(tokens[static_cast<size_t>(strategy[5])]);
 
                 // Validate coordinate values are reasonable
                 if (std::isfinite(x) && std::isfinite(y) && std::isfinite(z) && std::isfinite(vx) &&
@@ -2946,7 +2946,7 @@ void JPLClient::release_connection(const std::string& endpoint) {
   for (auto& entry : connection_pool_) {
     if (entry.endpoint == endpoint && !entry.is_available) {
       entry.is_available = true;
-      entry.active_requests = std::max(0, static_cast<int>(entry.active_requests) - 1);
+      entry.active_requests = static_cast<size_t>(std::max(0, static_cast<int>(entry.active_requests) - 1));
       entry.last_used = std::chrono::system_clock::now();
       break;
     }
@@ -2991,7 +2991,7 @@ void JPLClient::cleanup_expired_connections() {
 /**
  * @brief Check if circuit breaker should allow request
  */
-bool CircuitBreaker::should_allow_request(const JPLClientConfig& config) const {
+bool CircuitBreaker::should_allow_request(const JPLClientConfig& ) const {
   auto now = std::chrono::system_clock::now();
 
   switch (state) {
@@ -3244,8 +3244,8 @@ JPLVoidResult JPLClient::update_network_diagnostics(
     // Update average response time (simple moving average)
     auto total_requests = network_diagnostics_.successful_requests + network_diagnostics_.failed_requests;
     if (total_requests > 0) {
-      auto current_avg = network_diagnostics_.average_response_time.count();
-      auto new_avg = (current_avg * (total_requests - 1) + response_time.count()) / total_requests;
+      auto current_avg = static_cast<uint64_t>(network_diagnostics_.average_response_time.count());
+      auto new_avg = (current_avg * (total_requests - 1) + static_cast<uint64_t>(response_time.count())) / total_requests;
       network_diagnostics_.average_response_time = std::chrono::milliseconds(static_cast<long long>(new_avg));
     }
   } else {

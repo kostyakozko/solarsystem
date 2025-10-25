@@ -92,7 +92,10 @@ class EnhancedTestReporter : public TestReporter {
 
   // Utility methods for derived classes
   void write_with_error_handling(const std::string& content);
-  void write_formatted(const char* format, ...);
+  template<typename... Args>
+  void write_formatted(const std::string& format, Args&&... args) {
+    write_with_error_handling(std::vformat(format, std::make_format_args(args...)));
+  }
   void write_line(const std::string& line);
   void write_separator(char separator = '-', size_t length = 80);
 

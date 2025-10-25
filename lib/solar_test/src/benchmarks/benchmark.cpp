@@ -35,7 +35,6 @@ std::string BenchmarkResult::to_csv_row() const {
   double min_ms = static_cast<double>(min_time.count()) / 1e6;
   double max_ms = static_cast<double>(max_time.count()) / 1e6;
   double mean_ms = static_cast<double>(mean_time.count()) / 1e6;
-  double median_ms = static_cast<double>(median_time.count()) / 1e6;
   double std_dev_ms = static_cast<double>(std_dev.count()) / 1e6;
 
   oss << name << "," << mean_ms << "," << min_ms << "," << max_ms << "," << std_dev_ms << ","
@@ -121,7 +120,7 @@ size_t Benchmark::get_current_memory_usage() const {
   struct mach_task_basic_info info;
   mach_msg_type_number_t info_count = MACH_TASK_BASIC_INFO_COUNT;
 
-  if (task_info(mach_task_self(), MACH_TASK_BASIC_INFO, (task_info_t)&info, &info_count) ==
+  if (task_info(mach_task_self(), MACH_TASK_BASIC_INFO, reinterpret_cast<task_info_t>(&info), &info_count) ==
       KERN_SUCCESS) {
     return info.resident_size;
   }

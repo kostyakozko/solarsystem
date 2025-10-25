@@ -23,7 +23,7 @@ DataVersion EnhancedTestDataManager::current_version_{1, 2, 0, "Enhanced test da
                                                       std::chrono::system_clock::now()};
 
 std::mt19937 TestDataGenerator::random_generator_(
-    std::chrono::steady_clock::now().time_since_epoch().count());
+    static_cast<std::mt19937::result_type>(std::chrono::steady_clock::now().time_since_epoch().count()));
 std::uniform_real_distribution<double> TestDataGenerator::real_dist_(0.0, 1.0);
 std::uniform_int_distribution<int> TestDataGenerator::int_dist_(0, 255);
 
@@ -424,7 +424,7 @@ std::string TestDataGenerator::mutate_data(const std::string& original_data,
     default:
       // Add random corruption
       if (!mutated.empty()) {
-        size_t pos = int_dist_(random_generator_) % mutated.length();
+        size_t pos = static_cast<size_t>(int_dist_(random_generator_)) % mutated.length();
         mutated[pos] = static_cast<char>(int_dist_(random_generator_));
       }
       break;
@@ -515,7 +515,7 @@ std::string TestDataGenerator::generate_random_string(size_t length) {
   const std::string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
   for (size_t i = 0; i < length; ++i) {
-    result += chars[int_dist_(random_generator_) % chars.length()];
+    result += chars[static_cast<size_t>(int_dist_(random_generator_)) % chars.length()];
   }
 
   return result;

@@ -169,7 +169,7 @@ FileAppender::FileAppender(const std::string& filename, size_t max_size, int max
   file_.open(filename_, std::ios::app);
   if (file_.is_open()) {
     file_.seekp(0, std::ios::end);
-    current_size_ = file_.tellp();
+    current_size_ = static_cast<size_t>(file_.tellp());
   }
 }
 
@@ -274,7 +274,7 @@ void FileAppender::cleanup_old_files() {
             });
 
   // Remove excess files
-  for (size_t i = max_files_; i < log_files.size(); ++i) {
+  for (size_t i = static_cast<size_t>(max_files_); i < log_files.size(); ++i) {
     std::filesystem::remove(log_files[i]);
   }
 }
@@ -478,7 +478,7 @@ void AsyncLogger::process_entry(const LogEntry& entry) {
       std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
 
   metrics_.messages_logged++;
-  metrics_.total_processing_time_us += processing_time.count();
+  metrics_.total_processing_time_us += static_cast<uint64_t>(processing_time.count());
 }
 
 // Logger implementation (backward compatible with enhancements)
@@ -747,7 +747,7 @@ std::vector<LogEntry> Logger::get_recent_logs(size_t count) const {
       return all_entries;
     }
 
-    return std::vector<LogEntry>(all_entries.end() - count, all_entries.end());
+    return std::vector<LogEntry>(all_entries.end() - static_cast<std::ptrdiff_t>(count), all_entries.end());
   }
 
   return {};

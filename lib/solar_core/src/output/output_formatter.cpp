@@ -38,7 +38,7 @@ std::string OutputMetadata::to_json() const {
   return oss.str();
 }
 
-Utils::Expected<OutputMetadata, std::string> OutputMetadata::from_json(const std::string& json) {
+Utils::Expected<OutputMetadata, std::string> OutputMetadata::from_json(const std::string& ) {
   // Simple JSON parsing (in production, use a proper JSON library)
   OutputMetadata metadata;
   // For now, return a basic implementation

@@ -1270,7 +1270,7 @@ std::function<PerformanceMetrics()> create_performance_collector(const std::stri
     static std::uniform_int_distribution<> response_dist(1, 1000);  // 1ms to 1s
 
     metrics.cpu_usage_percent = cpu_dist(gen);
-    metrics.memory_usage_bytes = memory_dist(gen);
+    metrics.memory_usage_bytes = static_cast<size_t>(memory_dist(gen));
     metrics.response_time = std::chrono::milliseconds(response_dist(gen));
     metrics.success_count = 95 + (gen() % 5);  // 95-99 successes
     metrics.error_count = gen() % 3;  // 0-2 errors
