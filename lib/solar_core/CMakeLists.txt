@@ -39,6 +39,13 @@ add_library(solar_core STATIC
     src/security/rate_limiter.cpp
     src/security/security_monitor.cpp
     src/security/security_headers.cpp
+
+    # Performance optimization (Phase 5 - Task 14)
+    src/performance/request_handler.cpp
+    src/performance/response_cache.cpp
+    src/performance/compression.cpp
+    src/performance/connection_pool.cpp
+    src/performance/load_balancer.cpp
 )
 
 # Public headers for other libraries and applications
