@@ -31,6 +31,14 @@ add_library(solar_core STATIC
     # Robust connection management (Phase 4 - Task 12)
     src/connection/connection_manager.cpp
     src/connection/streaming_connection.cpp
+
+    # Comprehensive security hardening (Phase 5 - Task 13)
+    src/security/security_manager.cpp
+    src/security/input_sanitizer.cpp
+    src/security/session_manager.cpp
+    src/security/rate_limiter.cpp
+    src/security/security_monitor.cpp
+    src/security/security_headers.cpp
 )
 
 # Public headers for other libraries and applications
