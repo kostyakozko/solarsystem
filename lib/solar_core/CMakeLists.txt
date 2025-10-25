@@ -16,6 +16,13 @@ add_library(solar_core STATIC
 
     # Output formatting system (Phase 3 - Task 9)
     src/output/output_formatter.cpp
+
+    # Live data streaming system (Phase 4 - Task 10)
+    src/streaming/data_stream.cpp
+    src/streaming/realtime_stream.cpp
+    src/streaming/stream_filter.cpp
+    src/streaming/stream_aggregator.cpp
+    src/streaming/quality_monitor.cpp
 )
 
 # Public headers for other libraries and applications

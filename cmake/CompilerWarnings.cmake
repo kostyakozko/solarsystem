@@ -75,16 +75,10 @@ function(configure_solar_system_warnings)
 
     # Convert list to string for CMAKE_CXX_FLAGS
     string(JOIN " " WARNING_FLAGS_STRING ${PROJECT_WARNINGS_CXX})
-    
+
     # Apply globally to all C++ compilation
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${WARNING_FLAGS_STRING}" PARENT_SCOPE)
-    
+
     message(STATUS "Applied warning flags globally: ${WARNING_FLAGS_STRING}")
     message(STATUS "Solar System Suite: All current and future targets will use warnings-as-errors for compilation")
-endfunction()
-
-# Legacy function for backward compatibility (now does nothing)
-function(set_project_warnings target_name)
-    # This function is now a no-op since warnings are applied globally
-    # Kept for backward compatibility in case any CMakeLists.txt files call it directly
 endfunction()

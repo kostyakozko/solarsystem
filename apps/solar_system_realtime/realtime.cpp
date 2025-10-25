@@ -1,13 +1,16 @@
 /**
  * @file realtime_modern.cpp
- * @brief Modern C++20 Solar System Real-Time Monitoring
+ * @brief Modern C++20 Solar System Real-Time Monitoring with Live Data Streaming
  *
- * Live simulation application with:
+ * Enhanced live simulation application with:
  * - Phase 0.3: Fluent interfaces and builder patterns
  * - Modern C++20: Async operations, coroutines-ready design
  * - Beautiful UI: Rich terminal interface with live updates
  * - RAII: Automatic resource management and graceful shutdown
  * - Type safety: Compile-time validation and structured error handling
+ * - Live Data Streaming: Efficient real-time data updates with quality monitoring
+ * - Data Filtering: Advanced filtering and aggregation capabilities
+ * - Quality Monitoring: Comprehensive data quality assessment and reporting
  */
 
 #include <atomic>
@@ -26,11 +29,16 @@
 // Modern Solar System Suite APIs
 #include "solar_core/bodies/body_factory.hpp"
 #include "solar_core/builders/simulation_builder.hpp"
+#include "solar_core/streaming/realtime_stream.hpp"
+#include "solar_core/streaming/stream_filter.hpp"
+#include "solar_core/streaming/stream_aggregator.hpp"
+#include "solar_core/streaming/quality_monitor.hpp"
 #include "solar_utils/argument_parser.hpp"
 #include "solar_utils/logging.hpp"
 
 using namespace SolarSystem::Core::Builders;
 using namespace SolarSystem::Utils;
+using namespace SolarSystem::Streaming;
 using namespace std::chrono_literals;
 using namespace SolarSystem::Utils;
 
@@ -124,7 +132,7 @@ class TerminalStateGuard {
 };
 
 /**
- * @brief Modern real-time solar system monitor
+ * @brief Modern real-time solar system monitor with live data streaming
  */
 class RealtimeMonitor {
  public:
@@ -134,6 +142,26 @@ class RealtimeMonitor {
   explicit RealtimeMonitor(MonitorConfig config) : config_(std::move(config)) {
     if (config_.verbose_output) {
       LOG_INFO("RealtimeMonitor", "Initialized with verbose output enabled");
+    }
+
+    // Initialize streaming components
+    initialize_streaming_system();
+  }
+
+  /**
+   * @brief Destructor - ensure proper cleanup order
+   */
+  ~RealtimeMonitor() {
+    try {
+      // Ensure streaming system is stopped before destruction
+      if (realtime_stream_ && realtime_stream_->is_running()) {
+        stop();
+      } else if (quality_monitor_ && quality_monitor_->is_running()) {
+        stop();
+      }
+    } catch (const std::exception& e) {
+      // Log error but don't throw from destructor
+      LOG_ERROR("RealtimeMonitor", "Error during destruction: " + std::string(e.what()));
     }
   }
 
@@ -179,6 +207,12 @@ class RealtimeMonitor {
         print_startup_info();
       }
 
+      // Start streaming system
+      if (!start_streaming()) {
+        LOG_ERROR("Monitor", "Failed to start streaming system");
+        return false;
+      }
+
       // Start monitoring loop
       return run_monitoring_loop();
 
@@ -194,11 +228,44 @@ class RealtimeMonitor {
   void stop() {
     LOG_INFO("Monitor", "Stopping real-time monitoring");
     g_shutdown_requested.store(true);
+
+    // Stop streaming system in proper order
+    // 1. Stop quality monitor first (it depends on stream data)
+    if (quality_monitor_) {
+      quality_monitor_->stop();
+    }
+
+    // 2. Stop the stream (this will stop worker threads)
+    if (realtime_stream_) {
+      auto stop_result = realtime_stream_->stop();
+      (void)stop_result;  // Suppress unused result warning
+    }
+
+    // 3. Give threads time to finish cleanup
+    std::this_thread::sleep_for(std::chrono::milliseconds{100});
   }
 
  private:
   MonitorConfig config_;
   std::optional<SolarSystem::Bodies::BodyCollection> bodies_;
+
+  // Streaming system components
+  std::unique_ptr<RealtimeStream> realtime_stream_;
+  std::unique_ptr<FilterChain> filter_chain_;
+  std::unique_ptr<StreamAggregator> aggregator_;
+  std::unique_ptr<QualityMonitor> quality_monitor_;
+
+  // Streaming statistics
+  std::atomic<size_t> total_snapshots_received_{0};
+  std::atomic<size_t> total_snapshots_filtered_{0};
+  std::atomic<double> current_quality_score_{1.0};
+  std::chrono::system_clock::time_point last_data_update_;
+
+  // Display state
+  mutable std::mutex display_mutex_;
+  DataSnapshot latest_snapshot_;
+  AggregateSnapshot latest_aggregate_;
+  bool has_streaming_data_ = false;
 
   /**
    * @brief Create body collection using modern BodySelector
@@ -266,16 +333,15 @@ class RealtimeMonitor {
   }
 
   /**
-   * @brief Main monitoring loop with modern timing
+   * @brief Main monitoring loop with streaming data updates
    */
   [[nodiscard]] bool run_monitoring_loop() {
     TerminalStateGuard terminal_guard;
 
     auto start_time = std::chrono::steady_clock::now();
-    auto last_update = start_time;
     auto last_display = start_time;
 
-    size_t update_count = 0;
+    size_t display_count = 0;
 
     do {
       auto now = std::chrono::steady_clock::now();
@@ -291,19 +357,12 @@ class RealtimeMonitor {
         }
       }
 
-      // Check if it's time to update simulation
-      auto update_elapsed = std::chrono::duration_cast<std::chrono::seconds>(now - last_update);
-      if (update_elapsed >= config_.update_interval) {
-        update_simulation();
-        last_update = now;
-        update_count++;
-      }
-
       // Check if it's time to update display
       auto display_elapsed = std::chrono::duration_cast<std::chrono::seconds>(now - last_display);
       if (display_elapsed >= config_.display_interval) {
-        display_current_state(update_count);
+        display_streaming_state(display_count);
         last_display = now;
+        display_count++;
       }
 
       // Sleep briefly to avoid busy waiting
@@ -313,109 +372,186 @@ class RealtimeMonitor {
 
     if (!config_.quiet_mode) {
       std::cout << "\n✨ Monitoring completed successfully!\n";
-      std::cout << "📊 Total updates: " << update_count << "\n";
+      std::cout << "📊 Total displays: " << display_count << "\n";
+
+      // Show final streaming statistics
+      if (has_streaming_data_) {
+        std::cout << "📈 Final Streaming Statistics:\n";
+        std::cout << "  Snapshots Received: " << total_snapshots_received_.load() << "\n";
+        std::cout << "  Snapshots Filtered: " << total_snapshots_filtered_.load() << "\n";
+        std::cout << "  Final Quality Score: " << std::fixed << std::setprecision(3)
+                  << current_quality_score_.load() << "\n";
+
+        if (quality_monitor_) {
+          std::cout << "  Quality Report:\n";
+          auto report = quality_monitor_->get_quality_report();
+          std::cout << "    " << report << "\n";
+        }
+      }
     }
 
     return true;
   }
 
   /**
-   * @brief Update simulation to current time
+   * @brief Display current streaming state
    */
-  void update_simulation() {
-    try {
-      // Modern BodyFactory provides current data automatically
-      // No explicit simulation update needed
-
-      if (config_.verbose_output) {
-        LOG_DEBUG("Monitor", "Using modern BodyFactory for current data");
-      }
-
-    } catch (const std::exception& e) {
-      LOG_ERROR("Monitor", "Failed to update simulation: " + std::string(e.what()));
-    }
-  }
-
-  /**
-   * @brief Display current solar system state
-   */
-  void display_current_state(size_t update_count) {
+  void display_streaming_state(size_t display_count) {
     try {
       if (config_.continuous_mode && !config_.quiet_mode) {
         TerminalUI::clear_screen();
-        TerminalUI::print_header("Solar System Real-Time Monitor");
+        TerminalUI::print_header("Solar System Real-Time Monitor (Streaming)");
       }
 
-      // Status line with timestamp and update count
-      std::string status = "Update #" + std::to_string(update_count) +
-                           " │ Bodies: " + std::to_string(bodies_->size());
+      // Status line with streaming information
+      std::string status = "Display #" + std::to_string(display_count);
+
+      if (has_streaming_data_) {
+        std::lock_guard<std::mutex> lock(display_mutex_);
+        status += " │ Bodies: " + std::to_string(latest_snapshot_.data_points.size());
+        status += " │ Quality: " + std::to_string(static_cast<int>(latest_snapshot_.overall_quality * 100)) + "%";
+        status += " │ Latency: " + std::to_string(latest_snapshot_.processing_time.count()) + "ms";
+      } else {
+        status += " │ Waiting for streaming data...";
+      }
 
       if (!config_.quiet_mode) {
         TerminalUI::print_status_line(status);
       }
 
-      // Display body information
-      display_bodies();
+      // Display streaming body information
+      if (has_streaming_data_) {
+        display_streaming_bodies();
 
-      if (config_.show_summary && !config_.quiet_mode) {
-        display_summary();
+        if (config_.show_summary && !config_.quiet_mode) {
+          display_streaming_summary();
+        }
+      } else {
+        if (!config_.quiet_mode) {
+          std::cout << "⏳ Initializing streaming data...\n";
+          std::cout << "   This may take a few moments while the system\n";
+          std::cout << "   establishes connections and begins data flow.\n\n";
+        }
       }
 
     } catch (const std::exception& e) {
-      LOG_ERROR("Monitor", "Failed to display state: " + std::string(e.what()));
+      LOG_ERROR("Monitor", "Failed to display streaming state: " + std::string(e.what()));
     }
   }
 
   /**
-   * @brief Display celestial bodies with modern formatting
+   * @brief Display celestial bodies with streaming data
    */
-  void display_bodies() const {
+  void display_streaming_bodies() const {
     if (config_.quiet_mode) return;
 
-    // Use modern BodyCollection iteration
-    if (!bodies_.has_value()) {
-      LOG_WARN("Display", "No bodies available for display");
+    std::lock_guard<std::mutex> lock(display_mutex_);
+
+    if (latest_snapshot_.data_points.empty()) {
+      std::cout << "⏳ No streaming data available yet...\n\n";
       return;
     }
 
-    const auto& body_collection = *bodies_;
-    std::cout << "🌌 Celestial Bodies:\n";
-    std::cout << "┌─────────────────┬─────────────────────────────────────────────┐\n";
-    std::cout << "│ Body            │ Position (km)                               │";
+    std::cout << "🌌 Celestial Bodies (Live Stream):\n";
+    std::cout << "┌─────────────────┬─────────────────────────────────────────────┬─────────┬─────────┐\n";
+    std::cout << "│ Body            │ Position (km)                               │ Quality │ Latency │";
 
     if (config_.show_velocities) {
       std::cout << " Velocity (km/s)                         │";
     }
     std::cout << "\n";
-    std::cout << "├─────────────────┼─────────────────────────────────────────────┤\n";
+    std::cout << "├─────────────────┼─────────────────────────────────────────────┼─────────┼─────────┤\n";
 
-    // Modern BodyCollection iteration with range-based for loop
-    for (const auto& body : body_collection) {
-      std::cout << "│ " << std::setw(15) << std::left << body.name() << " │ ";
+    // Display streaming data points
+    for (const auto& point : latest_snapshot_.data_points) {
+      std::cout << "│ " << std::setw(15) << std::left << point.body_name << " │ ";
 
-      // Position display (placeholder values for real-time display)
-      std::cout << std::fixed << std::setprecision(2);
-      std::cout << "(" << std::setw(12) << 0.0   // body.position.x
-                << ", " << std::setw(12) << 0.0  // body.position.y
-                << ", " << std::setw(12) << 0.0  // body.position.z
+      // Position display (convert from meters to kilometers)
+      std::cout << std::fixed << std::setprecision(0);
+      std::cout << "(" << std::setw(12) << point.position.x() / 1000.0
+                << ", " << std::setw(12) << point.position.y() / 1000.0
+                << ", " << std::setw(12) << point.position.z() / 1000.0
                 << ")";
 
+      // Quality and latency
+      std::cout << " │ " << std::setw(5) << std::setprecision(1)
+                << (point.quality_score * 100.0) << "% │ ";
+      std::cout << std::setw(5) << point.latency.count() << "ms │";
+
       if (config_.show_velocities) {
-        std::cout << " (" << std::setprecision(4);
-        std::cout << std::setw(8) << 0.0          // body.velocity.x
-                  << ", " << std::setw(8) << 0.0  // body.velocity.y
-                  << ", " << std::setw(8) << 0.0  // body.velocity.z
-                  << ")";
+        std::cout << " (" << std::setprecision(2);
+        std::cout << std::setw(8) << point.velocity.x() / 1000.0
+                  << ", " << std::setw(8) << point.velocity.y() / 1000.0
+                  << ", " << std::setw(8) << point.velocity.z() / 1000.0
+                  << ") │";
       }
 
-      std::cout << " │\n";
+      std::cout << "\n";
     }
 
-    std::cout << "└─────────────────┴─────────────────────────────────────────────┘\n\n";
+    std::cout << "└─────────────────┴─────────────────────────────────────────────┴─────────┴─────────┘\n\n";
   }
 
   /**
-   * @brief Display monitoring summary
+   * @brief Display streaming summary with aggregated data
+   */
+  void display_streaming_summary() const {
+    if (config_.quiet_mode) return;
+
+    std::lock_guard<std::mutex> lock(display_mutex_);
+
+    auto now = std::chrono::system_clock::now();
+    auto current_time_t = std::chrono::system_clock::to_time_t(now);
+    auto tm = *std::localtime(&current_time_t);
+
+    std::cout << "📈 Streaming Summary:\n";
+    std::cout << "  Current Time: " << std::put_time(&tm, "%Y-%m-%d %H:%M:%S %Z") << "\n";
+
+    if (!latest_snapshot_.data_points.empty()) {
+      auto snapshot_time_t = std::chrono::system_clock::to_time_t(latest_snapshot_.timestamp);
+      auto snapshot_tm = *std::localtime(&snapshot_time_t);
+      std::cout << "  Data Time: " << std::put_time(&snapshot_tm, "%Y-%m-%d %H:%M:%S %Z") << "\n";
+    }
+
+    std::cout << "  Bodies Tracked: " << latest_snapshot_.data_points.size() << "\n";
+    std::cout << "  Overall Quality: " << std::fixed << std::setprecision(1)
+              << (latest_snapshot_.overall_quality * 100.0) << "%\n";
+    std::cout << "  Processing Time: " << latest_snapshot_.processing_time.count() << "ms\n";
+
+    // Aggregated statistics
+    if (aggregator_ && aggregator_->has_sufficient_data()) {
+      std::cout << "  📊 Aggregated Statistics:\n";
+      std::cout << "    Total Samples: " << latest_aggregate_.total_samples << "\n";
+      std::cout << "    Avg Quality: " << std::fixed << std::setprecision(1)
+                << (latest_aggregate_.overall_avg_quality * 100.0) << "%\n";
+      std::cout << "    Avg Latency: " << latest_aggregate_.overall_avg_latency.count() << "ms\n";
+
+      // Note: system_warnings not implemented in simplified version
+      if (latest_aggregate_.total_samples > 0) {
+        std::cout << "    📊 Total Samples: " << latest_aggregate_.total_samples << "\n";
+      }
+    }
+
+    // Quality monitoring status
+    if (quality_monitor_ && quality_monitor_->is_running()) {
+      auto current_quality = quality_monitor_->get_current_quality_score();
+      auto current_latency = quality_monitor_->get_current_latency();
+
+      std::cout << "  🔍 Quality Monitor:\n";
+      std::cout << "    Current Score: " << std::fixed << std::setprecision(1)
+                << (current_quality * 100.0) << "%\n";
+      std::cout << "    Current Latency: " << current_latency.count() << "ms\n";
+    }
+
+    if (config_.continuous_mode) {
+      std::cout << "  Press Ctrl+C to stop monitoring\n";
+    }
+
+    std::cout << "\n";
+  }
+
+  /**
+   * @brief Display monitoring summary with streaming statistics
    */
   void display_summary() const {
     auto now = std::chrono::system_clock::now();
@@ -428,11 +564,178 @@ class RealtimeMonitor {
     std::cout << "  Update Interval: " << config_.update_interval.count() << "s\n";
     std::cout << "  Display Interval: " << config_.display_interval.count() << "s\n";
 
+    // Streaming statistics
+    if (has_streaming_data_) {
+      std::cout << "  📊 Streaming Statistics:\n";
+      std::cout << "    Snapshots Received: " << total_snapshots_received_.load() << "\n";
+      std::cout << "    Snapshots Filtered: " << total_snapshots_filtered_.load() << "\n";
+      std::cout << "    Current Quality: " << std::fixed << std::setprecision(3)
+                << current_quality_score_.load() << "\n";
+
+      if (realtime_stream_) {
+        const auto& stats = realtime_stream_->get_stats();
+        std::cout << "    Generated: " << stats.total_snapshots_generated.load() << "\n";
+        std::cout << "    Delivered: " << stats.total_snapshots_delivered.load() << "\n";
+        std::cout << "    Dropped: " << stats.total_snapshots_dropped.load() << "\n";
+        std::cout << "    Avg Quality: " << std::fixed << std::setprecision(3)
+                  << stats.avg_quality_score << "\n";
+      }
+
+      // Time since last update
+      if (last_data_update_ != std::chrono::system_clock::time_point{}) {
+        auto time_since_update = std::chrono::duration_cast<std::chrono::seconds>(
+            now - last_data_update_);
+        std::cout << "    Last Update: " << time_since_update.count() << "s ago\n";
+      }
+    }
+
     if (config_.continuous_mode) {
       std::cout << "  Press Ctrl+C to stop monitoring\n";
     }
 
     std::cout << "\n";
+  }
+
+  /**
+   * @brief Initialize the streaming system components
+   */
+  void initialize_streaming_system() {
+    // Configure streaming
+    StreamConfig stream_config;
+    stream_config.update_interval = config_.update_interval;
+    stream_config.max_buffer_size = 100;
+    stream_config.enable_quality_monitoring = true;
+    stream_config.min_quality_threshold = 0.7;
+    stream_config.use_background_thread = true;
+
+    // Configure real-time streaming
+    RealtimeStream::RealtimeConfig realtime_config;
+    realtime_config.sync_with_system_time = true;
+    realtime_config.enable_prediction = true;
+    realtime_config.auto_correct_drift = true;
+
+    // Create streaming components
+    realtime_stream_ = std::make_unique<RealtimeStream>(stream_config, realtime_config);
+    filter_chain_ = FilterFactory::create_realtime_filter_chain();
+    aggregator_ = AggregatorFactory::create_realtime_aggregator(config_.update_interval);
+    quality_monitor_ = QualityMonitorFactory::create_realtime_monitor();
+
+    // Set up callbacks
+    realtime_stream_->set_data_callback([this](const DataSnapshot& snapshot) {
+      handle_data_snapshot(snapshot);
+    });
+
+    realtime_stream_->set_error_callback([this](const std::string& error) {
+      handle_streaming_error(error);
+    });
+
+    realtime_stream_->set_quality_callback([this](const StreamStats& stats) {
+      handle_quality_update(stats);
+    });
+
+    // Set up quality monitoring callbacks
+    quality_monitor_->set_quality_alert_callback([this](const std::string& alert,
+                                                        const SnapshotQuality& quality) {
+      handle_quality_alert(alert, quality);
+    });
+
+    LOG_INFO("RealtimeMonitor", "Streaming system initialized");
+  }
+
+  /**
+   * @brief Handle incoming data snapshots from the stream
+   */
+  void handle_data_snapshot(const DataSnapshot& snapshot) {
+    total_snapshots_received_.fetch_add(1);
+
+    // Apply filters
+    auto filtered_snapshot = filter_chain_->apply(snapshot);
+    if (!filtered_snapshot) {
+      total_snapshots_filtered_.fetch_add(1);
+      return;
+    }
+
+    // Update aggregator
+    aggregator_->add_snapshot(*filtered_snapshot);
+
+    // Update quality monitor
+    quality_monitor_->process_snapshot(*filtered_snapshot);
+
+    // Update display state
+    {
+      std::lock_guard<std::mutex> lock(display_mutex_);
+      latest_snapshot_ = *filtered_snapshot;
+      latest_aggregate_ = aggregator_->get_aggregate();
+      has_streaming_data_ = true;
+      last_data_update_ = std::chrono::system_clock::now();
+    }
+
+    current_quality_score_.store(filtered_snapshot->overall_quality);
+  }
+
+  /**
+   * @brief Handle streaming errors
+   */
+  void handle_streaming_error(const std::string& error) {
+    LOG_ERROR("RealtimeMonitor", "Streaming error: " + error);
+    if (config_.verbose_output && !config_.quiet_mode) {
+      std::cout << "⚠️  Streaming error: " << error << "\n";
+    }
+  }
+
+  /**
+   * @brief Handle quality updates
+   */
+  void handle_quality_update(const StreamStats& stats) {
+    if (config_.verbose_output) {
+      LOG_DEBUG("RealtimeMonitor", "Quality update: avg=" +
+                std::to_string(stats.avg_quality_score) +
+                ", generated=" + std::to_string(stats.total_snapshots_generated.load()));
+    }
+  }
+
+  /**
+   * @brief Handle quality alerts
+   */
+  void handle_quality_alert(const std::string& alert, const SnapshotQuality& quality) {
+    LOG_WARN("RealtimeMonitor", "Quality alert: " + alert);
+    if (!config_.quiet_mode) {
+      std::cout << "🚨 Quality Alert: " << alert << " (Score: "
+                << std::fixed << std::setprecision(3) << quality.overall_score << ")\n";
+    }
+  }
+
+  /**
+   * @brief Start the streaming system
+   */
+  [[nodiscard]] bool start_streaming() {
+    if (!bodies_.has_value()) {
+      LOG_ERROR("RealtimeMonitor", "Cannot start streaming without bodies");
+      return false;
+    }
+
+    // Set data source for streaming
+    auto bodies_ptr = std::make_shared<SolarSystem::Bodies::BodyCollection>(*bodies_);
+    auto set_result = realtime_stream_->set_data_source(bodies_ptr);
+    if (!set_result) {
+      LOG_ERROR("RealtimeMonitor", "Failed to set streaming data source: " + set_result.error());
+      return false;
+    }
+
+    // Start streaming components
+    auto stream_result = realtime_stream_->start();
+    if (!stream_result) {
+      LOG_ERROR("RealtimeMonitor", "Failed to start stream: " + stream_result.error());
+      return false;
+    }
+
+    if (!quality_monitor_->start()) {
+      LOG_ERROR("RealtimeMonitor", "Failed to start quality monitor");
+      return false;
+    }
+
+    LOG_INFO("RealtimeMonitor", "Streaming system started successfully");
+    return true;
   }
 };
 
