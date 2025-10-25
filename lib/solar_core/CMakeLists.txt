@@ -46,6 +46,9 @@ add_library(solar_core STATIC
     src/performance/compression.cpp
     src/performance/connection_pool.cpp
     src/performance/load_balancer.cpp
+
+    # Comprehensive API management (Phase 5 - Task 15)
+    src/api/api_manager.cpp
 )
 
 # Public headers for other libraries and applications
