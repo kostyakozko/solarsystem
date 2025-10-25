@@ -27,6 +27,10 @@ add_library(solar_core STATIC
     # Multiple visualization modes (Phase 4 - Task 11)
     src/visualization/visualization_modes.cpp
     src/visualization/visualization_mode_manager.cpp
+
+    # Robust connection management (Phase 4 - Task 12)
+    src/connection/connection_manager.cpp
+    src/connection/streaming_connection.cpp
 )
 
 # Public headers for other libraries and applications
