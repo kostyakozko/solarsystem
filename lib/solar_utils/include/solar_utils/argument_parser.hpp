@@ -497,6 +497,11 @@ struct RealtimeConfig {
   std::string body_set{"important"};  // Default to balanced "important" set
   bool auto_fetch_data{false};
 
+  // Visualization options
+  std::string visualization_mode{"table"};  // Default visualization mode
+  bool enable_export{true};                 // Enable export functionality
+  std::string export_format{"text"};        // Default export format
+
   /**
    * @brief Validate configuration
    */

@@ -1041,6 +1041,41 @@ RealtimeArgumentParser::RealtimeArgumentParser(std::string_view program_name)
                              }
                            }
                          }));
+
+  // Visualization options
+  parser_.add_option(Option("", "--viz-mode", "Visualization mode (table|grid|list|minimal|detailed|dashboard)")
+                         .requires_value()
+                         .action([this](const std::optional<std::string>& value) {
+                           if (value) {
+                             std::string mode = *value;
+                             std::transform(mode.begin(), mode.end(), mode.begin(), ::tolower);
+                             if (mode == "table" || mode == "grid" || mode == "list" ||
+                                 mode == "minimal" || mode == "detailed" || mode == "dashboard") {
+                               config_.visualization_mode = mode;
+                             } else {
+                               throw std::invalid_argument("Invalid visualization mode. Use: table, grid, list, minimal, detailed, or dashboard");
+                             }
+                           }
+                         }));
+
+  parser_.add_option(Option("", "--export-format", "Export format (text|csv|json|html|markdown)")
+                         .requires_value()
+                         .action([this](const std::optional<std::string>& value) {
+                           if (value) {
+                             std::string format = *value;
+                             std::transform(format.begin(), format.end(), format.begin(), ::tolower);
+                             if (format == "text" || format == "csv" || format == "json" ||
+                                 format == "html" || format == "markdown") {
+                               config_.export_format = format;
+                             } else {
+                               throw std::invalid_argument("Invalid export format. Use: text, csv, json, html, or markdown");
+                             }
+                           }
+                         }));
+
+  parser_.add_option(Option("", "--no-export", "Disable export functionality")
+                         .as_flag()
+                         .action([this](const auto&) { config_.enable_export = false; }));
 }
 
 ArgumentResult<RealtimeConfig> RealtimeArgumentParser::parse(int argc, const char* const argv[]) {
@@ -1151,6 +1186,17 @@ void RealtimeArgumentParser::print_usage() const {
   std::cout << "                         Example: --bodies Sun,Earth,Moon,Mars\n";
   std::cout << "                         Note: Overrides --body-set option\n\n";
 
+  std::cout << "🎨 Visualization Options:\n";
+  std::cout << "  --viz-mode MODE        Visualization mode (default: table)\n";
+  std::cout << "                         table: Organized columns for structured data\n";
+  std::cout << "                         grid: Card layout for visual organization\n";
+  std::cout << "                         list: Simple sequential display\n";
+  std::cout << "                         minimal: Compact essential information\n";
+  std::cout << "                         detailed: Comprehensive verbose view\n";
+  std::cout << "                         dashboard: Multi-panel overview\n";
+  std::cout << "  --export-format FMT    Export format (text|csv|json|html|markdown)\n";
+  std::cout << "  --no-export            Disable export functionality\n\n";
+
   std::cout << "⚙️  Options:\n";
   std::cout << "  --auto-fetch           Auto-fetch current JPL data if needed\n";
   std::cout << "  -q, --quiet            Minimal output (positions only)\n";
@@ -1161,6 +1207,9 @@ void RealtimeArgumentParser::print_usage() const {
   std::cout << "  " << program_name_ << "                           # Basic real-time monitoring\n";
   std::cout << "  " << program_name_
             << " --velocities              # Show positions and velocities\n";
+  std::cout << "  " << program_name_ << " --viz-mode grid           # Use grid visualization\n";
+  std::cout << "  " << program_name_ << " --viz-mode dashboard      # Multi-panel dashboard\n";
+  std::cout << "  " << program_name_ << " --export-format json      # Export in JSON format\n";
   std::cout << "  " << program_name_ << " --update-interval 5       # Update every 5 seconds\n";
   std::cout << "  " << program_name_ << " --duration 60             # Monitor for 1 minute\n";
   std::cout << "  " << program_name_ << " --bodies Sun,Earth,Moon   # Monitor specific bodies\n";
@@ -1169,12 +1218,22 @@ void RealtimeArgumentParser::print_usage() const {
             << " --quiet --auto-fetch      # Minimal output with data fetch\n\n";
 
   std::cout << "🌟 Modern Features:\n";
+  std::cout << "  • Multiple visualization modes (table, grid, list, dashboard, etc.)\n";
+  std::cout << "  • Interactive controls for mode switching and export\n";
+  std::cout << "  • Export to multiple formats (text, CSV, JSON, HTML, Markdown)\n";
   std::cout << "  • Beautiful real-time terminal interface with Unicode\n";
   std::cout << "  • Structured logging with colors and timestamps\n";
   std::cout << "  • Type-safe configuration with validation\n";
   std::cout << "  • Integration with Solar System Suite fluent APIs\n";
   std::cout << "  • Graceful shutdown handling (Ctrl+C)\n";
-  std::cout << "  • RAII-based resource management\n";
+  std::cout << "  • RAII-based resource management\n\n";
+
+  std::cout << "🎮 Interactive Controls (during execution):\n";
+  std::cout << "  • 'v' - Cycle through visualization modes\n";
+  std::cout << "  • '1-6' - Switch to specific visualization mode\n";
+  std::cout << "  • 'e' - Export current view to file\n";
+  std::cout << "  • 'h' - Show help and available modes\n";
+  std::cout << "  • 'q' or Ctrl+C - Quit monitoring\n";
 }
 
 }  // namespace SolarSystem::Utils

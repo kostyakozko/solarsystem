@@ -16,6 +16,7 @@
 #include <atomic>
 #include <chrono>
 #include <csignal>
+#include <fstream>
 #include <future>
 #include <iomanip>
 #include <iostream>
@@ -33,6 +34,7 @@
 #include "solar_core/streaming/stream_filter.hpp"
 #include "solar_core/streaming/stream_aggregator.hpp"
 #include "solar_core/streaming/quality_monitor.hpp"
+#include "solar_core/visualization/visualization_modes.hpp"
 #include "solar_utils/argument_parser.hpp"
 #include "solar_utils/logging.hpp"
 
@@ -146,6 +148,9 @@ class RealtimeMonitor {
 
     // Initialize streaming components
     initialize_streaming_system();
+
+    // Initialize visualization system
+    initialize_visualization_system();
   }
 
   /**
@@ -254,6 +259,11 @@ class RealtimeMonitor {
   std::unique_ptr<FilterChain> filter_chain_;
   std::unique_ptr<StreamAggregator> aggregator_;
   std::unique_ptr<QualityMonitor> quality_monitor_;
+
+  // Visualization system components
+  std::unique_ptr<SolarSystem::Visualization::VisualizationModeManager> viz_manager_;
+  SolarSystem::Visualization::VisualizationMode current_viz_mode_ =
+      SolarSystem::Visualization::VisualizationMode::TABLE;
 
   // Streaming statistics
   std::atomic<size_t> total_snapshots_received_{0};
@@ -365,6 +375,11 @@ class RealtimeMonitor {
         display_count++;
       }
 
+      // Handle keyboard input (non-blocking check)
+      // Note: This is a simplified implementation. A full implementation would
+      // use proper terminal input handling or a UI library
+      handle_keyboard_input();
+
       // Sleep briefly to avoid busy waiting
       std::this_thread::sleep_for(100ms);
 
@@ -373,6 +388,7 @@ class RealtimeMonitor {
     if (!config_.quiet_mode) {
       std::cout << "\n✨ Monitoring completed successfully!\n";
       std::cout << "📊 Total displays: " << display_count << "\n";
+      std::cout << "🎨 Final visualization mode: " << SolarSystem::Visualization::to_string(current_viz_mode_) << "\n";
 
       // Show final streaming statistics
       if (has_streaming_data_) {
@@ -388,13 +404,109 @@ class RealtimeMonitor {
           std::cout << "    " << report << "\n";
         }
       }
+
+      // Show available visualization modes
+      std::cout << "🎨 Available visualization modes: ";
+      for (const auto& mode : viz_manager_->get_available_modes()) {
+        std::cout << SolarSystem::Visualization::to_string(mode) << " ";
+      }
+      std::cout << "\n";
     }
 
     return true;
   }
 
   /**
-   * @brief Display current streaming state
+   * @brief Switch visualization mode
+   */
+  void switch_visualization_mode(SolarSystem::Visualization::VisualizationMode mode) {
+    auto result = viz_manager_->set_active_mode(mode);
+    if (result) {
+      current_viz_mode_ = mode;
+      LOG_INFO("RealtimeMonitor", "Switched to visualization mode: " +
+               SolarSystem::Visualization::to_string(mode));
+    } else {
+      LOG_ERROR("RealtimeMonitor", "Failed to switch visualization mode: " + result.error());
+    }
+  }
+
+  /**
+   * @brief Cycle to next visualization mode
+   */
+  void cycle_visualization_mode() {
+    auto available_modes = viz_manager_->get_available_modes();
+    if (available_modes.empty()) return;
+
+    auto current_it = std::find(available_modes.begin(), available_modes.end(), current_viz_mode_);
+    if (current_it != available_modes.end()) {
+      ++current_it;
+      if (current_it == available_modes.end()) {
+        current_it = available_modes.begin();
+      }
+      switch_visualization_mode(*current_it);
+    }
+  }
+
+  /**
+   * @brief Export current visualization
+   */
+  void export_current_visualization(std::optional<SolarSystem::Visualization::ExportFormat> format = std::nullopt) {
+    // Use configured format if not specified
+    SolarSystem::Visualization::ExportFormat export_format = SolarSystem::Visualization::ExportFormat::TEXT;
+    if (format) {
+      export_format = *format;
+    } else {
+      auto format_result = SolarSystem::Visualization::parse_export_format(config_.export_format);
+      if (format_result) {
+        export_format = format_result.value();
+      }
+    }
+    if (!has_streaming_data_) {
+      LOG_WARN("RealtimeMonitor", "No data available for export");
+      return;
+    }
+
+    try {
+      std::lock_guard<std::mutex> lock(display_mutex_);
+      auto render_result = viz_manager_->render(latest_snapshot_);
+      if (!render_result) {
+        LOG_ERROR("RealtimeMonitor", "Failed to render for export: " + render_result.error());
+        return;
+      }
+
+      auto export_result = render_result.value().export_to(export_format);
+      if (!export_result) {
+        LOG_ERROR("RealtimeMonitor", "Failed to export: " + export_result.error().message);
+        return;
+      }
+
+      // Save to file with timestamp
+      auto now = std::chrono::system_clock::now();
+      auto time_t = std::chrono::system_clock::to_time_t(now);
+      auto tm = *std::localtime(&time_t);
+
+      std::ostringstream filename;
+      filename << "solar_system_export_" << std::put_time(&tm, "%Y%m%d_%H%M%S");
+      filename << "." << SolarSystem::Visualization::to_string(export_format);
+
+      std::ofstream file(filename.str());
+      if (file.is_open()) {
+        file << export_result.value();
+        file.close();
+        LOG_INFO("RealtimeMonitor", "Exported visualization to: " + filename.str());
+        if (!config_.quiet_mode) {
+          std::cout << "📁 Exported to: " << filename.str() << "\n";
+        }
+      } else {
+        LOG_ERROR("RealtimeMonitor", "Failed to write export file: " + filename.str());
+      }
+    } catch (const std::exception& e) {
+      LOG_ERROR("RealtimeMonitor", "Exception during export: " + std::string(e.what()));
+    }
+  }
+
+  /**
+   * @brief Display current streaming state with new visualization system
    */
   void display_streaming_state(size_t display_count) {
     try {
@@ -403,8 +515,9 @@ class RealtimeMonitor {
         TerminalUI::print_header("Solar System Real-Time Monitor (Streaming)");
       }
 
-      // Status line with streaming information
+      // Status line with streaming information and visualization mode
       std::string status = "Display #" + std::to_string(display_count);
+      status += " │ Mode: " + SolarSystem::Visualization::to_string(current_viz_mode_);
 
       if (has_streaming_data_) {
         std::lock_guard<std::mutex> lock(display_mutex_);
@@ -419,9 +532,9 @@ class RealtimeMonitor {
         TerminalUI::print_status_line(status);
       }
 
-      // Display streaming body information
+      // Display streaming body information using new visualization system
       if (has_streaming_data_) {
-        display_streaming_bodies();
+        display_with_visualization_system();
 
         if (config_.show_summary && !config_.quiet_mode) {
           display_streaming_summary();
@@ -431,6 +544,11 @@ class RealtimeMonitor {
           std::cout << "⏳ Initializing streaming data...\n";
           std::cout << "   This may take a few moments while the system\n";
           std::cout << "   establishes connections and begins data flow.\n\n";
+          std::cout << "   Available visualization modes:\n";
+          for (const auto& mode : viz_manager_->get_available_modes()) {
+            std::cout << "   - " << SolarSystem::Visualization::to_string(mode) << "\n";
+          }
+          std::cout << "   Press 'v' to cycle through modes, 'e' to export\n\n";
         }
       }
 
@@ -440,7 +558,35 @@ class RealtimeMonitor {
   }
 
   /**
-   * @brief Display celestial bodies with streaming data
+   * @brief Display data using the new visualization system
+   */
+  void display_with_visualization_system() const {
+    if (config_.quiet_mode) return;
+
+    try {
+      std::lock_guard<std::mutex> lock(display_mutex_);
+
+      auto render_result = viz_manager_->render(latest_snapshot_);
+      if (!render_result) {
+        std::cout << "⚠️  Visualization error: " << render_result.error() << "\n\n";
+        return;
+      }
+
+      const auto& frame = render_result.value();
+      std::cout << frame.content << "\n";
+
+      // Show interactive controls hint
+      if (config_.continuous_mode) {
+        std::cout << "💡 Controls: 'v' = cycle modes, 'e' = export, 'q' = quit, Ctrl+C = stop\n";
+      }
+
+    } catch (const std::exception& e) {
+      std::cout << "⚠️  Visualization exception: " << e.what() << "\n\n";
+    }
+  }
+
+  /**
+   * @brief Display celestial bodies with streaming data (legacy method)
    */
   void display_streaming_bodies() const {
     if (config_.quiet_mode) return;
@@ -597,6 +743,87 @@ class RealtimeMonitor {
   }
 
   /**
+   * @brief Initialize the visualization system components
+   */
+  void initialize_visualization_system() {
+    viz_manager_ = std::make_unique<SolarSystem::Visualization::VisualizationModeManager>();
+
+    // Register all available visualization modes
+    auto table_config = SolarSystem::Visualization::VisualizationConfig::create_default(
+        SolarSystem::Visualization::VisualizationMode::TABLE);
+    table_config.max_width = 120;
+    table_config.use_colors = !config_.quiet_mode;
+    auto table_renderer = std::make_unique<SolarSystem::Visualization::VisualizationRenderer>(table_config);
+    auto table_result = viz_manager_->register_mode(SolarSystem::Visualization::VisualizationMode::TABLE, std::move(table_renderer));
+    if (!table_result) {
+      LOG_ERROR("RealtimeMonitor", "Failed to register table mode: " + table_result.error());
+    }
+
+    auto grid_config = SolarSystem::Visualization::VisualizationConfig::create_default(
+        SolarSystem::Visualization::VisualizationMode::GRID);
+    grid_config.max_width = 120;
+    grid_config.use_colors = !config_.quiet_mode;
+    auto grid_renderer = std::make_unique<SolarSystem::Visualization::VisualizationRenderer>(grid_config);
+    auto grid_result = viz_manager_->register_mode(SolarSystem::Visualization::VisualizationMode::GRID, std::move(grid_renderer));
+    if (!grid_result) {
+      LOG_ERROR("RealtimeMonitor", "Failed to register grid mode: " + grid_result.error());
+    }
+
+    auto list_config = SolarSystem::Visualization::VisualizationConfig::create_default(
+        SolarSystem::Visualization::VisualizationMode::LIST);
+    list_config.max_width = 120;
+    list_config.use_colors = !config_.quiet_mode;
+    auto list_renderer = std::make_unique<SolarSystem::Visualization::VisualizationRenderer>(list_config);
+    auto list_result = viz_manager_->register_mode(SolarSystem::Visualization::VisualizationMode::LIST, std::move(list_renderer));
+    if (!list_result) {
+      LOG_ERROR("RealtimeMonitor", "Failed to register list mode: " + list_result.error());
+    }
+
+    auto minimal_config = SolarSystem::Visualization::VisualizationConfig::create_default(
+        SolarSystem::Visualization::VisualizationMode::MINIMAL);
+    minimal_config.max_width = 80;
+    minimal_config.use_colors = !config_.quiet_mode;
+    auto minimal_renderer = std::make_unique<SolarSystem::Visualization::VisualizationRenderer>(minimal_config);
+    auto minimal_result = viz_manager_->register_mode(SolarSystem::Visualization::VisualizationMode::MINIMAL, std::move(minimal_renderer));
+    if (!minimal_result) {
+      LOG_ERROR("RealtimeMonitor", "Failed to register minimal mode: " + minimal_result.error());
+    }
+
+    auto detailed_config = SolarSystem::Visualization::VisualizationConfig::create_default(
+        SolarSystem::Visualization::VisualizationMode::DETAILED);
+    detailed_config.max_width = 140;
+    detailed_config.use_colors = !config_.quiet_mode;
+    auto detailed_renderer = std::make_unique<SolarSystem::Visualization::VisualizationRenderer>(detailed_config);
+    auto detailed_result = viz_manager_->register_mode(SolarSystem::Visualization::VisualizationMode::DETAILED, std::move(detailed_renderer));
+    if (!detailed_result) {
+      LOG_ERROR("RealtimeMonitor", "Failed to register detailed mode: " + detailed_result.error());
+    }
+
+    auto dashboard_config = SolarSystem::Visualization::VisualizationConfig::create_default(
+        SolarSystem::Visualization::VisualizationMode::DASHBOARD);
+    dashboard_config.max_width = 120;
+    dashboard_config.use_colors = !config_.quiet_mode;
+    auto dashboard_renderer = std::make_unique<SolarSystem::Visualization::VisualizationRenderer>(dashboard_config);
+    auto dashboard_result = viz_manager_->register_mode(SolarSystem::Visualization::VisualizationMode::DASHBOARD, std::move(dashboard_renderer));
+    if (!dashboard_result) {
+      LOG_ERROR("RealtimeMonitor", "Failed to register dashboard mode: " + dashboard_result.error());
+    }
+
+    // Set mode from configuration
+    auto mode_result = SolarSystem::Visualization::parse_visualization_mode(config_.visualization_mode);
+    if (mode_result) {
+      current_viz_mode_ = mode_result.value();
+    }
+    auto active_result = viz_manager_->set_active_mode(current_viz_mode_);
+    if (!active_result) {
+      LOG_ERROR("RealtimeMonitor", "Failed to set active mode: " + active_result.error());
+    }
+
+    LOG_INFO("RealtimeMonitor", "Visualization system initialized with " +
+             std::to_string(viz_manager_->get_available_modes().size()) + " modes");
+  }
+
+  /**
    * @brief Initialize the streaming system components
    */
   void initialize_streaming_system() {
@@ -703,6 +930,89 @@ class RealtimeMonitor {
       std::cout << "🚨 Quality Alert: " << alert << " (Score: "
                 << std::fixed << std::setprecision(3) << quality.overall_score << ")\n";
     }
+  }
+
+  /**
+   * @brief Handle keyboard input for interactive controls
+   */
+  void handle_keyboard_input() {
+    // Note: This is a simplified implementation for demonstration.
+    // A production implementation would use proper non-blocking terminal input
+    // or integrate with a terminal UI library like ncurses.
+
+    // For now, we'll just document the available controls in the display
+    // The actual keyboard handling would be implemented by the calling application
+    // or through a proper terminal UI framework.
+  }
+
+  /**
+   * @brief Process keyboard command
+   */
+  void process_keyboard_command(char key) {
+    switch (key) {
+      case 'v':
+      case 'V':
+        cycle_visualization_mode();
+        break;
+      case 'e':
+      case 'E':
+        export_current_visualization();
+        break;
+      case '1':
+        switch_visualization_mode(SolarSystem::Visualization::VisualizationMode::TABLE);
+        break;
+      case '2':
+        switch_visualization_mode(SolarSystem::Visualization::VisualizationMode::GRID);
+        break;
+      case '3':
+        switch_visualization_mode(SolarSystem::Visualization::VisualizationMode::LIST);
+        break;
+      case '4':
+        switch_visualization_mode(SolarSystem::Visualization::VisualizationMode::MINIMAL);
+        break;
+      case '5':
+        switch_visualization_mode(SolarSystem::Visualization::VisualizationMode::DETAILED);
+        break;
+      case '6':
+        switch_visualization_mode(SolarSystem::Visualization::VisualizationMode::DASHBOARD);
+        break;
+      case 'h':
+      case 'H':
+        show_help();
+        break;
+      default:
+        // Unknown command - ignore
+        break;
+    }
+  }
+
+  /**
+   * @brief Show help information
+   */
+  void show_help() const {
+    if (config_.quiet_mode) return;
+
+    std::cout << "\n=== Solar System Real-Time Monitor - Help ===\n";
+    std::cout << "Visualization Modes:\n";
+    std::cout << "  1 - Table view (organized columns)\n";
+    std::cout << "  2 - Grid view (card layout)\n";
+    std::cout << "  3 - List view (simple list)\n";
+    std::cout << "  4 - Minimal view (compact)\n";
+    std::cout << "  5 - Detailed view (comprehensive)\n";
+    std::cout << "  6 - Dashboard view (multi-panel)\n";
+    std::cout << "  v - Cycle through modes\n\n";
+    std::cout << "Export Options:\n";
+    std::cout << "  e - Export current view to file\n\n";
+    std::cout << "General Controls:\n";
+    std::cout << "  h - Show this help\n";
+    std::cout << "  q - Quit (or Ctrl+C)\n\n";
+    std::cout << "Available modes: ";
+    for (const auto& mode : viz_manager_->get_available_modes()) {
+      std::cout << SolarSystem::Visualization::to_string(mode) << " ";
+    }
+    std::cout << "\n";
+    std::cout << "Current mode: " << SolarSystem::Visualization::to_string(current_viz_mode_) << "\n";
+    std::cout << "============================================\n\n";
   }
 
   /**

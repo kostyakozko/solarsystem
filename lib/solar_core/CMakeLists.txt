@@ -23,6 +23,10 @@ add_library(solar_core STATIC
     src/streaming/stream_filter.cpp
     src/streaming/stream_aggregator.cpp
     src/streaming/quality_monitor.cpp
+
+    # Multiple visualization modes (Phase 4 - Task 11)
+    src/visualization/visualization_modes.cpp
+    src/visualization/visualization_mode_manager.cpp
 )
 
 # Public headers for other libraries and applications
