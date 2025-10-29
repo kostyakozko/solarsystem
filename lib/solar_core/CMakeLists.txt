@@ -56,6 +56,9 @@ add_library(solar_core STATIC
     # Standardized communication protocols (Phase 7 - Task 18)
     src/communication/message.cpp
     src/communication/protocol.cpp
+
+    # Data sharing and synchronization (Phase 7 - Task 19)
+    src/data/shared_data_manager.cpp
 )
 
 # Public headers for other libraries and applications
