@@ -89,6 +89,8 @@ target_link_libraries(solar_core PUBLIC
     solar_jpl       # Needs JPL data integration for BodyFactory
     Threads::Threads
     ZLIB::ZLIB      # For checkpoint compression
+    OpenSSL::SSL    # For encryption and secure operations
+    OpenSSL::Crypto # For hashing and cryptographic functions
 )
 
 # Aggressive optimization for core physics calculations

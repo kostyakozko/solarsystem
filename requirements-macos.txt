@@ -1,0 +1,6 @@
+# Solar System Suite - macOS Dependencies
+# Install with: xargs -a requirements-macos.txt brew install
+
+cmake
+openssl@3
+curl

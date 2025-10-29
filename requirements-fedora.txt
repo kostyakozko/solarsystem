@@ -1,0 +1,7 @@
+# Solar System Suite - Fedora/RHEL/CentOS Dependencies
+# Install with: xargs -a requirements-fedora.txt sudo dnf install -y
+
+cmake
+gcc-c++
+openssl-devel
+libcurl-devel

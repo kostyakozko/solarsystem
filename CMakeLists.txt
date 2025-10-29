@@ -69,6 +69,19 @@ configure_solar_system_warnings()
 # Find required packages
 find_package(Threads REQUIRED)
 
+# Find OpenSSL (required for security features)
+find_package(OpenSSL REQUIRED)
+if(OPENSSL_FOUND)
+    message(STATUS "OpenSSL found: ${OPENSSL_VERSION}")
+    message(STATUS "OpenSSL include: ${OPENSSL_INCLUDE_DIR}")
+    message(STATUS "OpenSSL libraries: ${OPENSSL_LIBRARIES}")
+else()
+    message(FATAL_ERROR "OpenSSL is required for security features. Install with:\n"
+                        "  macOS: brew install openssl@3\n"
+                        "  Ubuntu: sudo apt-get install libssl-dev\n"
+                        "  Fedora: sudo dnf install openssl-devel")
+endif()
+
 # Check for curl (required for JPL data fetching)
 find_program(CURL_EXECUTABLE curl REQUIRED)
 if(NOT CURL_EXECUTABLE)

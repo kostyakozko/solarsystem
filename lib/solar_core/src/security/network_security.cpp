@@ -9,6 +9,17 @@
 #include <random>
 #include <sstream>
 #include <iomanip>
+#include <cstring>
+
+#include <openssl/evp.h>
+#include <openssl/rand.h>
+#include <openssl/sha.h>
+#include <openssl/err.h>
+#include <openssl/evp.h>
+#include <openssl/rand.h>
+#include <openssl/sha.h>
+#include <openssl/aes.h>
+#include <cstring>
 
 namespace SolarSystem::Security {
 
@@ -89,41 +100,149 @@ std::optional<std::string> EncryptionManager::encrypt(
     return std::nullopt;
   }
 
-  // Simple XOR encryption for demonstration
-  // In production, use proper encryption libraries
-  std::string encrypted = data;
-  for (size_t i = 0; i < encrypted.size(); ++i) {
-    encrypted[i] ^= key[i % key.size()];
+  // Use AES-256-CBC encryption with OpenSSL
+  EVP_CIPHER_CTX* ctx = EVP_CIPHER_CTX_new();
+  if (!ctx) {
+    return std::nullopt;
   }
 
-  return encrypted;
+  // Generate random IV
+  unsigned char iv[EVP_MAX_IV_LENGTH];
+  if (RAND_bytes(iv, EVP_MAX_IV_LENGTH) != 1) {
+    EVP_CIPHER_CTX_free(ctx);
+    return std::nullopt;
+  }
+
+  // Derive key from password using SHA-256
+  unsigned char derived_key[32];
+  SHA256(reinterpret_cast<const unsigned char*>(key.c_str()), key.size(), derived_key);
+
+  // Initialize encryption
+  if (EVP_EncryptInit_ex(ctx, EVP_aes_256_cbc(), nullptr, derived_key, iv) != 1) {
+    EVP_CIPHER_CTX_free(ctx);
+    return std::nullopt;
+  }
+
+  // Allocate output buffer
+  std::vector<unsigned char> ciphertext(data.size() + static_cast<size_t>(EVP_CIPHER_block_size(EVP_aes_256_cbc())));
+  int len = 0;
+  int ciphertext_len = 0;
+
+  // Encrypt data
+  if (EVP_EncryptUpdate(ctx, ciphertext.data(), &len,
+                        reinterpret_cast<const unsigned char*>(data.c_str()),
+                        static_cast<int>(data.size())) != 1) {
+    EVP_CIPHER_CTX_free(ctx);
+    return std::nullopt;
+  }
+  ciphertext_len = len;
+
+  // Finalize encryption
+  if (EVP_EncryptFinal_ex(ctx, ciphertext.data() + len, &len) != 1) {
+    EVP_CIPHER_CTX_free(ctx);
+    return std::nullopt;
+  }
+  ciphertext_len += len;
+
+  EVP_CIPHER_CTX_free(ctx);
+
+  // Prepend IV to ciphertext
+  std::string result;
+  result.append(reinterpret_cast<char*>(iv), EVP_MAX_IV_LENGTH);
+  result.append(reinterpret_cast<char*>(ciphertext.data()), static_cast<size_t>(ciphertext_len));
+
+  return result;
 }
 
 std::optional<std::string> EncryptionManager::decrypt(
     const std::string& encrypted_data,
     const std::string& key) const {
 
-  // XOR encryption is symmetric
-  return encrypt(encrypted_data, key);
+  if (!validate_key(key) || encrypted_data.size() < EVP_MAX_IV_LENGTH) {
+    return std::nullopt;
+  }
+
+  // Extract IV from beginning of encrypted data
+  unsigned char iv[EVP_MAX_IV_LENGTH];
+  std::memcpy(iv, encrypted_data.data(), EVP_MAX_IV_LENGTH);
+
+  // Derive key from password using SHA-256
+  unsigned char derived_key[32];
+  SHA256(reinterpret_cast<const unsigned char*>(key.c_str()), key.size(), derived_key);
+
+  // Initialize decryption
+  EVP_CIPHER_CTX* ctx = EVP_CIPHER_CTX_new();
+  if (!ctx) {
+    return std::nullopt;
+  }
+
+  if (EVP_DecryptInit_ex(ctx, EVP_aes_256_cbc(), nullptr, derived_key, iv) != 1) {
+    EVP_CIPHER_CTX_free(ctx);
+    return std::nullopt;
+  }
+
+  // Allocate output buffer
+  size_t ciphertext_len = encrypted_data.size() - EVP_MAX_IV_LENGTH;
+  std::vector<unsigned char> plaintext(ciphertext_len + static_cast<size_t>(EVP_CIPHER_block_size(EVP_aes_256_cbc())));
+  int len = 0;
+  int plaintext_len = 0;
+
+  // Decrypt data
+  if (EVP_DecryptUpdate(ctx, plaintext.data(), &len,
+                        reinterpret_cast<const unsigned char*>(encrypted_data.data() + EVP_MAX_IV_LENGTH),
+                        static_cast<int>(ciphertext_len)) != 1) {
+    EVP_CIPHER_CTX_free(ctx);
+    return std::nullopt;
+  }
+  plaintext_len = len;
+
+  // Finalize decryption
+  if (EVP_DecryptFinal_ex(ctx, plaintext.data() + len, &len) != 1) {
+    EVP_CIPHER_CTX_free(ctx);
+    return std::nullopt;
+  }
+  plaintext_len += len;
+
+  EVP_CIPHER_CTX_free(ctx);
+
+  return std::string(reinterpret_cast<char*>(plaintext.data()), static_cast<size_t>(plaintext_len));
 }
 
 std::string EncryptionManager::generate_key(size_t key_size) const {
-  static const char charset[] =
-      "0123456789"
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-      "abcdefghijklmnopqrstuvwxyz";
+  // Use OpenSSL's cryptographically secure random number generator
+  std::vector<unsigned char> random_bytes(key_size);
 
-  std::random_device rd;
-  std::mt19937 gen(rd());
-  std::uniform_int_distribution<> dis(0, sizeof(charset) - 2);
+  if (RAND_bytes(random_bytes.data(), static_cast<int>(key_size)) != 1) {
+    // Fallback to less secure method if OpenSSL fails
+    static const char charset[] =
+        "0123456789"
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        "abcdefghijklmnopqrstuvwxyz";
 
-  std::string key;
-  key.reserve(key_size);
-  for (size_t i = 0; i < key_size; ++i) {
-    key += charset[dis(gen)];
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dis(0, sizeof(charset) - 2);
+
+    std::string key;
+    key.reserve(key_size);
+    for (size_t i = 0; i < key_size; ++i) {
+      key += charset[dis(gen)];
+    }
+    return key;
   }
 
-  return key;
+  // Convert random bytes to hex string
+  std::ostringstream oss;
+  for (unsigned char byte : random_bytes) {
+    oss << std::hex << std::setfill('0') << std::setw(2) << static_cast<int>(byte);
+  }
+
+  std::string result = oss.str();
+  if (result.size() > key_size) {
+    result.resize(key_size);
+  }
+
+  return result;
 }
 
 bool EncryptionManager::validate_key(const std::string& key) const {
@@ -131,13 +250,16 @@ bool EncryptionManager::validate_key(const std::string& key) const {
 }
 
 std::string EncryptionManager::hash(const std::string& data) const {
-  // Simple hash for demonstration
-  // In production, use proper hashing libraries (SHA-256, etc.)
-  std::hash<std::string> hasher;
-  size_t hash_value = hasher(data);
+  // Use SHA-256 for secure hashing
+  unsigned char hash_bytes[SHA256_DIGEST_LENGTH];
+  SHA256(reinterpret_cast<const unsigned char*>(data.c_str()), data.size(), hash_bytes);
 
+  // Convert to hex string
   std::ostringstream oss;
-  oss << std::hex << std::setfill('0') << std::setw(16) << hash_value;
+  for (int i = 0; i < SHA256_DIGEST_LENGTH; ++i) {
+    oss << std::hex << std::setfill('0') << std::setw(2) << static_cast<int>(hash_bytes[i]);
+  }
+
   return oss.str();
 }
 
