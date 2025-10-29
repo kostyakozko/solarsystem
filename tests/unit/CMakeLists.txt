@@ -97,6 +97,12 @@ target_link_libraries(test_logging test_utils solar_utils Threads::Threads)
 add_test(NAME UnitTest_Logging COMMAND test_logging)
 set_tests_properties(UnitTest_Logging PROPERTIES LABELS "unit;logging;monitoring;diagnostics;task21" TIMEOUT ${TEST_TIMEOUT})
 
+# Performance monitoring system test (Task 22)
+add_executable(test_performance_monitor test_performance_monitor.cpp)
+target_link_libraries(test_performance_monitor test_utils solar_core solar_utils Threads::Threads)
+add_test(NAME UnitTest_PerformanceMonitor COMMAND test_performance_monitor)
+set_tests_properties(UnitTest_PerformanceMonitor PROPERTIES LABELS "unit;performance;monitoring;metrics;task22" TIMEOUT ${TEST_TIMEOUT})
+
 add_test(NAME UnitTest_ModernBodyFactory COMMAND test_modern_body_factory)
 set_tests_properties(UnitTest_ModernBodyFactory PROPERTIES LABELS "unit;modern;bodies;factory" TIMEOUT ${TEST_TIMEOUT})
 
@@ -346,6 +352,7 @@ install(TARGETS
     test_shared_data_manager
     test_workflow_coordinator
     test_logging
+    test_performance_monitor
     RUNTIME DESTINATION bin/tests
     COMPONENT tests
 )

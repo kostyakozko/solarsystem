@@ -62,6 +62,9 @@ add_library(solar_core STATIC
 
     # Workflow coordination system (Phase 7 - Task 20)
     src/workflow/workflow_coordinator.cpp
+
+    # Performance monitoring system (Phase 8 - Task 22)
+    src/performance/performance_monitor.cpp
 )
 
 # Public headers for other libraries and applications
