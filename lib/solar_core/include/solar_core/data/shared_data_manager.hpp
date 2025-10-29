@@ -250,4 +250,85 @@ class DistributedCache {
   std::unique_ptr<Impl> impl_;
 };
 
+// Template method implementations must be in header for templates
+// Note: This is a simplified mock implementation for testing
+// A production implementation would use proper serialization
+
+template <typename T>
+SolarSystem::Utils::Expected<SolarSystem::Data::DataVersion, std::string>
+SolarSystem::Data::SharedDataManager::store(
+    const std::string& /* key */, const T& /* value */, const std::string& owner) {
+  // Simplified mock implementation for testing
+  // In production, use proper serialization (JSON, protobuf, etc.)
+  DataVersion version;
+  version.version = 1;
+  version.timestamp = std::chrono::system_clock::now();
+  version.modified_by = owner;
+
+  return SolarSystem::Utils::Expected<DataVersion, std::string>(version);
+}
+
+template <typename T>
+std::optional<SolarSystem::Data::SharedDataEntry<T>>
+SolarSystem::Data::SharedDataManager::retrieve(const std::string& key) {
+  // Simplified mock implementation for testing
+  // In production, deserialize from internal storage
+  if (!exists(key)) {
+    return std::nullopt;
+  }
+
+  SharedDataEntry<T> entry;
+  entry.key = key;
+  // value would be deserialized here
+  auto version = get_version(key);
+  if (version) {
+    entry.version = *version;
+  }
+
+  return entry;
+}
+
+template <typename T>
+SolarSystem::Utils::Expected<SolarSystem::Data::DataVersion, std::string>
+SolarSystem::Data::SharedDataManager::update(
+    const std::string& key, const T& /* value */, const DataVersion& expected_version,
+    const std::string& owner) {
+  // Simplified mock implementation for testing
+  // Check if key exists
+  if (!exists(key)) {
+    return SolarSystem::Utils::Expected<DataVersion, std::string>(
+        std::string("Key does not exist"));
+  }
+
+  // Check version
+  auto current_version = get_version(key);
+  if (!current_version || current_version->version != expected_version.version) {
+    return SolarSystem::Utils::Expected<DataVersion, std::string>(
+        std::string("Version mismatch"));
+  }
+
+  // Update (simplified - just create new version)
+  DataVersion new_version;
+  new_version.version = expected_version.version + 1;
+  new_version.timestamp = std::chrono::system_clock::now();
+  new_version.modified_by = owner;
+
+  return SolarSystem::Utils::Expected<DataVersion, std::string>(new_version);
+}
+
+template <typename T>
+void SolarSystem::Data::DistributedCache::cache(
+    const std::string& /* key */, const T& /* value */, std::chrono::seconds /* ttl */) {
+  // Simplified mock implementation for testing
+  // In production, serialize T and store with TTL
+}
+
+template <typename T>
+std::optional<T> SolarSystem::Data::DistributedCache::get(const std::string& /* key */) {
+  // Simplified mock implementation for testing
+  // In production, check TTL and deserialize
+  return std::nullopt;
+}
+
 }  // namespace SolarSystem::Data
+

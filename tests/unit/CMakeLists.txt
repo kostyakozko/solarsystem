@@ -78,6 +78,13 @@ add_executable(test_communication test_communication.cpp)
 target_link_libraries(test_communication test_utils solar_core solar_utils Threads::Threads)
 add_test(NAME UnitTest_Communication COMMAND test_communication)
 set_tests_properties(UnitTest_Communication PROPERTIES LABELS "unit;communication;protocols;task18" TIMEOUT ${TEST_TIMEOUT})
+
+# Shared data manager and synchronization test (Task 19)
+add_executable(test_shared_data_manager test_shared_data_manager.cpp)
+target_link_libraries(test_shared_data_manager test_utils solar_core solar_utils Threads::Threads)
+add_test(NAME UnitTest_SharedDataManager COMMAND test_shared_data_manager)
+set_tests_properties(UnitTest_SharedDataManager PROPERTIES LABELS "unit;data;sharing;synchronization;task19" TIMEOUT ${TEST_TIMEOUT})
+
 add_test(NAME UnitTest_ModernBodyFactory COMMAND test_modern_body_factory)
 set_tests_properties(UnitTest_ModernBodyFactory PROPERTIES LABELS "unit;modern;bodies;factory" TIMEOUT ${TEST_TIMEOUT})
 
@@ -319,6 +326,12 @@ install(TARGETS
     test_data_validator
     test_checkpoint
     test_output_formatter
+    test_connection_management
+    test_security
+    test_api_management
+    test_config_manager
+    test_communication
+    test_shared_data_manager
     RUNTIME DESTINATION bin/tests
     COMPONENT tests
 )
