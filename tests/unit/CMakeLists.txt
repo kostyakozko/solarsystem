@@ -49,6 +49,30 @@ set_tests_properties(UnitTest_SimulationBuilder PROPERTIES LABELS "unit;modern;b
 add_executable(test_modern_body_factory test_modern_body_factory.cpp)
 target_link_libraries(test_modern_body_factory test_utils solar_core solar_jpl solar_utils Threads::Threads)
 
+# Connection management test (Task 12)
+add_executable(test_connection_management test_connection_management.cpp)
+target_link_libraries(test_connection_management test_utils solar_core solar_utils Threads::Threads)
+add_test(NAME UnitTest_ConnectionManagement COMMAND test_connection_management)
+set_tests_properties(UnitTest_ConnectionManagement PROPERTIES LABELS "unit;connection;management;task12" TIMEOUT ${TEST_TIMEOUT})
+
+# Security system test (Task 13)
+add_executable(test_security test_security.cpp)
+target_link_libraries(test_security test_utils solar_core solar_utils Threads::Threads)
+add_test(NAME UnitTest_Security COMMAND test_security)
+set_tests_properties(UnitTest_Security PROPERTIES LABELS "unit;security;hardening;task13" TIMEOUT ${TEST_TIMEOUT})
+
+# API management test (Task 15)
+add_executable(test_api_management test_api_management.cpp)
+target_link_libraries(test_api_management test_utils solar_core solar_utils Threads::Threads)
+add_test(NAME UnitTest_APIManagement COMMAND test_api_management)
+set_tests_properties(UnitTest_APIManagement PROPERTIES LABELS "unit;api;management;task15" TIMEOUT ${TEST_TIMEOUT})
+
+# Configuration manager test (Tasks 16 & 17)
+add_executable(test_config_manager test_config_manager.cpp)
+target_link_libraries(test_config_manager test_utils solar_core solar_utils Threads::Threads)
+add_test(NAME UnitTest_ConfigManager COMMAND test_config_manager)
+set_tests_properties(UnitTest_ConfigManager PROPERTIES LABELS "unit;config;manager;task16;task17" TIMEOUT ${TEST_TIMEOUT})
+
 # Communication protocols test (Task 18)
 add_executable(test_communication test_communication.cpp)
 target_link_libraries(test_communication test_utils solar_core solar_utils Threads::Threads)
