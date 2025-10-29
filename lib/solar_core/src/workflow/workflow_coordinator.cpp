@@ -251,8 +251,16 @@ SolarSystem::Utils::Expected<void, std::string> DistributedWorkflowExecutor::exe
     }
   }
 
-  // For now, execute locally
-  // In a full implementation, this would distribute steps across nodes
+  // Simplified: Execute locally only
+  // TODO: Implement true distributed execution across multiple nodes
+  // Tracked in: unimplemented-functions-completion spec, Phase 3.5, Task 10.12
+  // Impact: Cannot distribute workflow steps across multiple nodes
+  // Full implementation would:
+  //   - Serialize transaction steps
+  //   - Distribute steps to available nodes
+  //   - Coordinate execution across nodes
+  //   - Aggregate results from distributed execution
+  //   - Handle node failures and retry logic
   return transaction->execute();
 }
 
