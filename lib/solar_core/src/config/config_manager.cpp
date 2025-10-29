@@ -8,7 +8,10 @@
 #include <algorithm>
 #include <cstdlib>
 #include <fstream>
+#include <functional>
+#include <set>
 #include <sstream>
+#include <thread>
 
 namespace SolarSystem::Core::Config {
 
@@ -19,6 +22,9 @@ ConfigurationManager::ConfigurationManager() {
   // Initialize with default configuration
   default_config_ = Utils::Config::get_default();
   merged_config_ = default_config_;
+
+  // Initialize default dependencies
+  initialize_default_dependencies();
 }
 
 ConfigResult<void> ConfigurationManager::load_from_file(const std::filesystem::path& config_path) {
@@ -477,4 +483,322 @@ ConfigResult<void> GlobalConfig::initialize(const std::filesystem::path& config_
   return instance_->apply_cli_overrides(cli_overrides);
 }
 
+// Cross-application conflict detection
+std::vector<CrossAppConflict> ConfigurationManager::detect_cross_app_conflicts(
+    const std::map<std::string, Utils::Config::AppConfig>& app_configs) const {
+  std::vector<CrossAppConflict> conflicts;
+
+  // Check for conflicting port assig
+  std::map<int, std::string> port_assignments;
+  for (const auto& [app_name, config] : app_configs) {
+    // Assuming web server uses a port (this would need to be extended for actual port config)
+    // This is a placeholder for demonstration
+    if (app_name == "web_server") {
+      // Check if port is already assigned
+      // In a real implementation, you'd extract port from config
+    }
+  }
+
+  // Check for conflicting output directories
+  std::map<std::string, std::string> output_dirs;
+  for (const auto& [app_name, config] : app_configs) {
+    std::string output_dir = config.output.output_directory.string();
+    auto it = output_dirs.find(output_dir);
+    if (it != output_dirs.end()) {
+      CrossAppConflict conflict;
+      conflict.application1 = it->second;
+      conflict.application2 = app_name;
+      conflict.parameter = "output.output_directory";
+      conflict.conflict_description =
+          "Both applications writing to the same output directory may cause file conflicts";
+      conflict.resolution_suggestions.push_back(
+          "Use different output directories for each application");
+      conflict.resolution_suggestions.push_back(
+          "Use application-specific subdirectories");
+      conflicts.push_back(conflict);
+    } else {
+      output_dirs[output_dir] = app_name;
+    }
+  }
+
+  // Check for conflicting log files
+  std::map<std::string, std::string> log_files;
+  for (const auto& [app_name, config] : app_configs) {
+    if (!config.logging.log_file.empty()) {
+      auto it = log_files.find(config.logging.log_file);
+      if (it != log_files.end()) {
+        CrossAppConflict conflict;
+        conflict.application1 = it->second;
+        conflict.application2 = app_name;
+        conflict.parameter = "logging.log_file";
+        conflict.conflict_description =
+            "Both applications writing to the same log file may cause log corruption";
+        conflict.resolution_suggestions.push_back(
+            "Use different log files for each application");
+        conflict.resolution_suggestions.push_back(
+            "Use application-specific log file names");
+        conflicts.push_back(conflict);
+      } else {
+        log_files[config.logging.log_file] = app_name;
+      }
+    }
+  }
+
+  // Check for resource conflicts (thread count)
+  int total_threads = 0;
+  for (const auto& [app_name, config] : app_configs) {
+    if (config.performance.thread_count > 0) {
+      total_threads += config.performance.thread_count;
+    }
+  }
+
+  // Warn if total threads exceed reasonable limits
+  unsigned int hardware_threads_unsigned = std::thread::hardware_concurrency();
+  int hardware_threads = static_cast<int>(hardware_threads_unsigned);
+  if (total_threads > hardware_threads * 2) {
+    CrossAppConflict conflict;
+    conflict.application1 = "system";
+    conflict.application2 = "all_applications";
+    conflict.parameter = "performance.thread_count";
+    conflict.conflict_description =
+        "Total thread count (" + std::to_string(total_threads) +
+        ") significantly exceeds hardware threads (" + std::to_string(hardware_threads) + ")";
+    conflict.resolution_suggestions.push_back(
+        "Reduce thread count in individual applications");
+    conflict.resolution_suggestions.push_back(
+        "Use thread_count=0 for auto-detection in some applications");
+    conflicts.push_back(conflict);
+  }
+
+  return conflicts;
+}
+
+// Dependency management
+void ConfigurationManager::register_dependency(const ConfigDependency& dependency) {
+  dependencies_.push_back(dependency);
+
+  // Update dependency map
+  for (const auto& dep : dependency.depends_on) {
+    parameter_dependencies_[dependency.parameter].push_back(dep);
+  }
+}
+
+ValidationResult ConfigurationManager::validate_dependencies() const {
+  ValidationResult result;
+  result.is_valid = true;
+
+  for (const auto& dependency : dependencies_) {
+    // Run custom validation function if provided
+    if (dependency.validation_func) {
+      if (!dependency.validation_func(merged_config_)) {
+        result.is_valid = false;
+        result.errors.push_back("Dependency validation failed for " + dependency.parameter +
+                               ": " + dependency.description);
+      }
+    }
+  }
+
+  // Check for circular dependencies
+  for (const auto& [param, deps] : parameter_dependencies_) {
+    if (has_circular_dependency(param)) {
+      result.is_valid = false;
+      result.errors.push_back("Circular dependency detected for parameter: " + param);
+      result.suggestions.push_back("Review parameter dependencies and remove circular references");
+    }
+  }
+
+  return result;
+}
+
+ImpactAnalysis ConfigurationManager::analyze_impact(const std::string& parameter_name,
+                                                   const std::string& new_value) const {
+  ImpactAnalysis analysis;
+  analysis.changed_parameter = parameter_name;
+
+  // Find parameters that depend on this one
+  analysis.affected_parameters = get_dependent_parameters(parameter_name);
+
+  // Analyze impact on applications
+  if (parameter_name.find("simulation.") == 0) {
+    analysis.affected_applications.push_back("solar_system");
+    analysis.affected_applications.push_back("solar_system_launcher");
+  } else if (parameter_name.find("logging.") == 0) {
+    analysis.affected_applications.push_back("all_applications");
+  } else if (parameter_name.find("output.") == 0) {
+    analysis.affected_applications.push_back("solar_system");
+    analysis.affected_applications.push_back("solar_system_fetch");
+  } else if (parameter_name.find("network.") == 0) {
+    analysis.affected_applications.push_back("solar_system_fetch");
+    analysis.affected_applications.push_back("solar_system_web");
+  }
+
+  // Generate warnings based on the change
+  if (parameter_name == "simulation.timestep") {
+    try {
+      double timestep = std::stod(new_value);
+      if (timestep < 1.0) {
+        analysis.warnings.push_back(
+            "Very small timestep may significantly increase simulation time");
+      } else if (timestep > 86400.0) {
+        analysis.warnings.push_back("Large timestep may reduce simulation accuracy");
+      }
+    } catch (...) {
+      analysis.warnings.push_back("Invalid timestep value");
+    }
+  }
+
+  if (parameter_name == "performance.thread_count") {
+    try {
+      int threads = std::stoi(new_value);
+      unsigned int hardware_threads_unsigned = std::thread::hardware_concurrency();
+      int hardware_threads = static_cast<int>(hardware_threads_unsigned);
+      if (threads > hardware_threads) {
+        analysis.warnings.push_back("Thread count exceeds hardware threads, may cause contention");
+        analysis.recommendations.push_back(
+            "Consider using thread_count=0 for automatic detection");
+      }
+    } catch (...) {
+      analysis.warnings.push_back("Invalid thread count value");
+    }
+  }
+
+  if (parameter_name == "logging.min_level") {
+    analysis.recommendations.push_back(
+        "Changing log level affects all logging output across applications");
+    analysis.recommendations.push_back("Consider restarting applications for change to take effect");
+  }
+
+  return analysis;
+}
+
+std::vector<ConfigDependency> ConfigurationManager::get_dependencies() const {
+  return dependencies_;
+}
+
+bool ConfigurationManager::would_cause_conflict(const std::string& parameter_name,
+                                               const std::string& new_value) const {
+  // Create a temporary config with the proposed change
+  Utils::Config::AppConfig temp_config = merged_config_;
+
+  // Apply the change (simplified)
+  auto result = const_cast<ConfigurationManager*>(this)->apply_config_value(
+      temp_config, parameter_name, new_value);
+
+  if (!result.has_value()) {
+    return true;  // Invalid value would cause a conflict
+  }
+
+  // Check dependencies
+  for (const auto& dependency : dependencies_) {
+    if (dependency.validation_func && !dependency.validation_func(temp_config)) {
+      return true;  // Dependency validation failed
+    }
+  }
+
+  return false;
+}
+
+void ConfigurationManager::initialize_default_dependencies() {
+  // Dependency: adaptive timestep requires tolerance to be set
+  ConfigDependency adaptive_dep;
+  adaptive_dep.parameter = "simulation.enable_adaptive_timestep";
+  adaptive_dep.depends_on = {"simulation.tolerance"};
+  adaptive_dep.description = "Adaptive timestep requires tolerance parameter";
+  adaptive_dep.validation_func = [](const Utils::Config::AppConfig& config) {
+    if (config.simulation.enable_adaptive_timestep) {
+      return config.simulation.tolerance > 0.0;
+    }
+    return true;
+  };
+  register_dependency(adaptive_dep);
+
+  // Dependency: file logging requires log file path
+  ConfigDependency file_logging_dep;
+  file_logging_dep.parameter = "logging.enable_file_logging";
+  file_logging_dep.depends_on = {"logging.log_file"};
+  file_logging_dep.description = "File logging requires log file path";
+  file_logging_dep.validation_func = [](const Utils::Config::AppConfig& config) {
+    if (config.logging.enable_file_logging) {
+      return !config.logging.log_file.empty();
+    }
+    return true;
+  };
+  register_dependency(file_logging_dep);
+
+  // Dependency: compression requires output format that supports it
+  ConfigDependency compression_dep;
+  compression_dep.parameter = "output.compress_output";
+  compression_dep.depends_on = {"output.format"};
+  compression_dep.description = "Output compression depends on format";
+  compression_dep.validation_func = [](const Utils::Config::AppConfig& config) {
+    if (config.output.compress_output) {
+      // Binary format supports compression best
+      return config.output.format == "binary" || config.output.format == "json";
+    }
+    return true;
+  };
+  register_dependency(compression_dep);
+
+  // Dependency: GPU acceleration requires appropriate thread count
+  ConfigDependency gpu_dep;
+  gpu_dep.parameter = "performance.enable_gpu_acceleration";
+  gpu_dep.depends_on = {"performance.thread_count"};
+  gpu_dep.description = "GPU acceleration may conflict with high thread counts";
+  gpu_dep.validation_func = [](const Utils::Config::AppConfig& config) {
+    if (config.performance.enable_gpu_acceleration && config.performance.thread_count > 0) {
+      // Warn if using both GPU and many CPU threads
+      return config.performance.thread_count <= 4;
+    }
+    return true;
+  };
+  register_dependency(gpu_dep);
+}
+
+bool ConfigurationManager::has_circular_dependency(const std::string& param) const {
+  std::set<std::string> visited;
+  std::set<std::string> recursion_stack;
+
+  std::function<bool(const std::string&)> check_circular = [&](const std::string& current) -> bool {
+    if (recursion_stack.find(current) != recursion_stack.end()) {
+      return true;  // Circular dependency found
+    }
+
+    if (visited.find(current) != visited.end()) {
+      return false;  // Already checked this path
+    }
+
+    visited.insert(current);
+    recursion_stack.insert(current);
+
+    auto it = parameter_dependencies_.find(current);
+    if (it != parameter_dependencies_.end()) {
+      for (const auto& dep : it->second) {
+        if (check_circular(dep)) {
+          return true;
+        }
+      }
+    }
+
+    recursion_stack.erase(current);
+    return false;
+  };
+
+  return check_circular(param);
+}
+
+std::vector<std::string> ConfigurationManager::get_dependent_parameters(
+    const std::string& param) const {
+  std::vector<std::string> dependents;
+
+  for (const auto& [dependent_param, dependencies] : parameter_dependencies_) {
+    if (std::find(dependencies.begin(), dependencies.end(), param) != dependencies.end()) {
+      dependents.push_back(dependent_param);
+    }
+  }
+
+  return dependents;
+}
+
 }  // namespace SolarSystem::Core::Config
+
+

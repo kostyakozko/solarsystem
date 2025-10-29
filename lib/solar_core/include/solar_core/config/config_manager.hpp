@@ -113,6 +113,38 @@ template <typename T>
 using ConfigResult = SolarSystem::Utils::Expected<T, ConfigErrorDetail>;
 
 /**
+ * @brief Configuration dependency information
+ */
+struct ConfigDependency {
+  std::string parameter;
+  std::vector<std::string> depends_on;
+  std::string description;
+  std::function<bool(const Utils::Config::AppConfig&)> validation_func;
+};
+
+/**
+ * @brief Configuration impact analysis result
+ */
+struct ImpactAnalysis {
+  std::string changed_parameter;
+  std::vector<std::string> affected_parameters;
+  std::vector<std::string> affected_applications;
+  std::vector<std::string> warnings;
+  std::vector<std::string> recommendations;
+};
+
+/**
+ * @brief Cross-application conflict information
+ */
+struct CrossAppConflict {
+  std::string application1;
+  std::string application2;
+  std::string parameter;
+  std::string conflict_description;
+  std::vector<std::string> resolution_suggestions;
+};
+
+/**
  * @brief Unified configuration manager
  *
  * Manages configuration from multiple sources with clear precedence rules:
@@ -254,6 +286,49 @@ class ConfigurationManager {
    */
   void reset_to_defaults();
 
+  /**
+   * @brief Detect cross-application configuration conflicts
+   * @param app_configs Map of application names to their configurations
+   * @return List of detected conflicts
+   */
+  [[nodiscard]] std::vector<CrossAppConflict> detect_cross_app_conflicts(
+      const std::map<std::string, Utils::Config::AppConfig>& app_configs) const;
+
+  /**
+   * @brief Register configuration dependency
+   * @param dependency Dependency information
+   */
+  void register_dependency(const ConfigDependency& dependency);
+
+  /**
+   * @brief Validate configuration dependencies
+   * @return Validation result with dependency violations
+   */
+  [[nodiscard]] ValidationResult validate_dependencies() const;
+
+  /**
+   * @brief Analyze impact of configuration change
+   * @param parameter_name Parameter being changed
+   * @param new_value New value for the parameter
+   * @return Impact analysis result
+   */
+  [[nodiscard]] ImpactAnalysis analyze_impact(const std::string& parameter_name,
+                                              const std::string& new_value) const;
+
+  /**
+   * @brief Get all registered dependencies
+   */
+  [[nodiscard]] std::vector<ConfigDependency> get_dependencies() const;
+
+  /**
+   * @brief Check if configuration change would cause conflicts
+   * @param parameter_name Parameter to change
+   * @param new_value New value
+   * @return True if change would cause conflicts
+   */
+  [[nodiscard]] bool would_cause_conflict(const std::string& parameter_name,
+                                          const std::string& new_value) const;
+
  private:
   // Configuration from different sources
   Utils::Config::AppConfig default_config_;
@@ -279,6 +354,10 @@ class ConfigurationManager {
   // Backup management
   std::vector<ConfigSnapshot> backups_;
   static constexpr size_t MAX_BACKUPS = 10;
+
+  // Dependency tracking
+  std::vector<ConfigDependency> dependencies_;
+  std::map<std::string, std::vector<std::string>> parameter_dependencies_;  // param -> depends on
 
   /**
    * @brief Merge configurations according to precedence rules
@@ -318,6 +397,22 @@ class ConfigurationManager {
   [[nodiscard]] ConfigResult<void> apply_config_value(Utils::Config::AppConfig& config,
                                                       const std::string& param_name,
                                                       const std::string& value);
+
+  /**
+   * @brief Initialize default dependencies
+   */
+  void initialize_default_dependencies();
+
+  /**
+   * @brief Check for circular dependencies
+   */
+  [[nodiscard]] bool has_circular_dependency(const std::string& param) const;
+
+  /**
+   * @brief Get parameters that depend on the given parameter
+   */
+  [[nodiscard]] std::vector<std::string> get_dependent_parameters(
+      const std::string& param) const;
 };
 
 /**
