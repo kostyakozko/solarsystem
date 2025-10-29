@@ -85,6 +85,12 @@ target_link_libraries(test_shared_data_manager test_utils solar_core solar_utils
 add_test(NAME UnitTest_SharedDataManager COMMAND test_shared_data_manager)
 set_tests_properties(UnitTest_SharedDataManager PROPERTIES LABELS "unit;data;sharing;synchronization;task19" TIMEOUT ${TEST_TIMEOUT})
 
+# Workflow coordination system test (Task 20)
+add_executable(test_workflow_coordinator test_workflow_coordinator.cpp)
+target_link_libraries(test_workflow_coordinator test_utils solar_core solar_utils Threads::Threads)
+add_test(NAME UnitTest_WorkflowCoordinator COMMAND test_workflow_coordinator)
+set_tests_properties(UnitTest_WorkflowCoordinator PROPERTIES LABELS "unit;workflow;coordination;transaction;task20" TIMEOUT ${TEST_TIMEOUT})
+
 add_test(NAME UnitTest_ModernBodyFactory COMMAND test_modern_body_factory)
 set_tests_properties(UnitTest_ModernBodyFactory PROPERTIES LABELS "unit;modern;bodies;factory" TIMEOUT ${TEST_TIMEOUT})
 
@@ -332,6 +338,7 @@ install(TARGETS
     test_config_manager
     test_communication
     test_shared_data_manager
+    test_workflow_coordinator
     RUNTIME DESTINATION bin/tests
     COMPONENT tests
 )

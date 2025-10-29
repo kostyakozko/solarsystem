@@ -25,6 +25,9 @@ Watch for these patterns in code that indicate unimplemented/simplified function
 - `// Placeholder`
 - `// Not implemented`
 - `// Temporary`
+- `// For now`
+- `// To be implemented`
+- `// In a full`
 
 ### Function Implementations
 - Functions that return hardcoded values

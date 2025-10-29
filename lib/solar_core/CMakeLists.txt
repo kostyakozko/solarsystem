@@ -59,6 +59,9 @@ add_library(solar_core STATIC
 
     # Data sharing and synchronization (Phase 7 - Task 19)
     src/data/shared_data_manager.cpp
+
+    # Workflow coordination system (Phase 7 - Task 20)
+    src/workflow/workflow_coordinator.cpp
 )
 
 # Public headers for other libraries and applications
