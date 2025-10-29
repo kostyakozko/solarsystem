@@ -65,6 +65,9 @@ add_library(solar_core STATIC
 
     # Performance monitoring system (Phase 8 - Task 22)
     src/performance/performance_monitor.cpp
+
+    # Diagnostic and troubleshooting system (Phase 8 - Task 23)
+    src/diagnostics/diagnostic_system.cpp
 )
 
 # Public headers for other libraries and applications
