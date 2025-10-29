@@ -48,6 +48,12 @@ set_tests_properties(UnitTest_SimulationBuilder PROPERTIES LABELS "unit;modern;b
 # Re-enabled: Modern body factory test (JPL linking issues fixed)
 add_executable(test_modern_body_factory test_modern_body_factory.cpp)
 target_link_libraries(test_modern_body_factory test_utils solar_core solar_jpl solar_utils Threads::Threads)
+
+# Communication protocols test (Task 18)
+add_executable(test_communication test_communication.cpp)
+target_link_libraries(test_communication test_utils solar_core solar_utils Threads::Threads)
+add_test(NAME UnitTest_Communication COMMAND test_communication)
+set_tests_properties(UnitTest_Communication PROPERTIES LABELS "unit;communication;protocols;task18" TIMEOUT ${TEST_TIMEOUT})
 add_test(NAME UnitTest_ModernBodyFactory COMMAND test_modern_body_factory)
 set_tests_properties(UnitTest_ModernBodyFactory PROPERTIES LABELS "unit;modern;bodies;factory" TIMEOUT ${TEST_TIMEOUT})
 
