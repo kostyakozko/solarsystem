@@ -52,6 +52,10 @@ add_library(solar_core STATIC
 
     # Unified configuration system (Phase 6 - Task 16)
     src/config/config_manager.cpp
+
+    # Standardized communication protocols (Phase 7 - Task 18)
+    src/communication/message.cpp
+    src/communication/protocol.cpp
 )
 
 # Public headers for other libraries and applications
