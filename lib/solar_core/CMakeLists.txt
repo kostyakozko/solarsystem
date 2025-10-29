@@ -49,6 +49,9 @@ add_library(solar_core STATIC
 
     # Comprehensive API management (Phase 5 - Task 15)
     src/api/api_manager.cpp
+
+    # Unified configuration system (Phase 6 - Task 16)
+    src/config/config_manager.cpp
 )
 
 # Public headers for other libraries and applications

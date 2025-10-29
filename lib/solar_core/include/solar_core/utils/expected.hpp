@@ -141,11 +141,50 @@ template <typename E>
 class Expected<void, E> {
  public:
   // Constructor for success case
-  Expected() : has_value_(true) {}
+  Expected() : has_value_(true), error_storage_() {}
 
   // Constructor for error case
-  Expected(const E& error) : has_value_(false), error_(error) {}
-  Expected(E&& error) : has_value_(false), error_(std::move(error)) {}
+  Expected(const E& error) : has_value_(false) { new (&error_storage_) E(error); }
+
+  Expected(E&& error) : has_value_(false) { new (&error_storage_) E(std::move(error)); }
+
+  // Copy constructor
+  Expected(const Expected& other) : has_value_(other.has_value_) {
+    if (!has_value_) {
+      new (&error_storage_) E(reinterpret_cast<const E&>(other.error_storage_));
+    }
+  }
+
+  // Move constructor
+  Expected(Expected&& other) noexcept : has_value_(other.has_value_) {
+    if (!has_value_) {
+      new (&error_storage_) E(std::move(reinterpret_cast<E&>(other.error_storage_)));
+    }
+  }
+
+  // Destructor
+  ~Expected() {
+    if (!has_value_) {
+      reinterpret_cast<E*>(&error_storage_)->~E();
+    }
+  }
+
+  // Assignment operators
+  Expected& operator=(const Expected& other) {
+    if (this != &other) {
+      this->~Expected();
+      new (this) Expected(other);
+    }
+    return *this;
+  }
+
+  Expected& operator=(Expected&& other) noexcept {
+    if (this != &other) {
+      this->~Expected();
+      new (this) Expected(std::move(other));
+    }
+    return *this;
+  }
 
   // Check if contains value
   [[nodiscard]] bool has_value() const noexcept { return has_value_; }
@@ -156,19 +195,19 @@ class Expected<void, E> {
     if (has_value_) {
       throw std::runtime_error("Expected contains success, not error");
     }
-    return error_;
+    return *reinterpret_cast<const E*>(&error_storage_);
   }
 
   [[nodiscard]] E& error() & {
     if (has_value_) {
       throw std::runtime_error("Expected contains success, not error");
     }
-    return error_;
+    return *reinterpret_cast<E*>(&error_storage_);
   }
 
  private:
   bool has_value_;
-  E error_;  // Only valid when has_value_ is false
+  std::aligned_storage_t<sizeof(E), alignof(E)> error_storage_;  // Only valid when has_value_ is false
 };
 
 // Helper function to create success Expected
