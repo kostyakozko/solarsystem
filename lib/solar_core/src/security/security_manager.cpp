@@ -12,6 +12,11 @@
 #include <random>
 #include <sstream>
 #include <unordered_map>
+#include <cstring>
+
+#include <openssl/evp.h>
+#include <openssl/rand.h>
+#include <openssl/sha.h>
 
 #include "solar_utils/logging.hpp"
 
@@ -44,18 +49,46 @@ std::optional<UserRole> parse_role(const std::string& str) {
 }
 
 /**
- * @brief Password hasher implementation
+ * @brief Password hasher implementation using PBKDF2
  */
 std::string PasswordHasher::hash(const std::string& password) {
-  // Simple hash for demonstration - use bcrypt/argon2 in production
-  std::hash<std::string> hasher;
+  // Use PBKDF2 with SHA-256 for secure password hashing
   auto salt = generate_salt();
-  auto salted = password + salt;
-  auto hash_value = hasher(salted);
 
+  // PBKDF2 parameters
+  const int iterations = 100000;  // OWASP recommended minimum
+  const int key_length = 32;      // 256 bits
+
+  unsigned char derived_key[32];
+
+  // Derive key using PBKDF2
+  if (PKCS5_PBKDF2_HMAC(password.c_str(), static_cast<int>(password.size()),
+                        reinterpret_cast<const unsigned char*>(salt.c_str()),
+                        static_cast<int>(salt.size()),
+                        iterations, EVP_sha256(),
+                        key_length, derived_key) != 1) {
+    // Fallback to SHA-256 if PBKDF2 fails
+    unsigned char hash_bytes[SHA256_DIGEST_LENGTH];
+    std::string salted = password + salt;
+    SHA256(reinterpret_cast<const unsigned char*>(salted.c_str()),
+           salted.size(), hash_bytes);
+
+    std::ostringstream oss;
+    for (int i = 0; i < SHA256_DIGEST_LENGTH; ++i) {
+      oss << std::hex << std::setfill('0') << std::setw(2)
+          << static_cast<int>(hash_bytes[i]);
+    }
+    return oss.str() + ":" + salt;
+  }
+
+  // Convert derived key to hex string
   std::ostringstream oss;
-  oss << std::hex << hash_value << ":" << salt;
-  return oss.str();
+  for (int i = 0; i < key_length; ++i) {
+    oss << std::hex << std::setfill('0') << std::setw(2)
+        << static_cast<int>(derived_key[i]);
+  }
+
+  return oss.str() + ":" + salt;
 }
 
 bool PasswordHasher::verify(const std::string& password, const std::string& hash) {
@@ -66,13 +99,27 @@ bool PasswordHasher::verify(const std::string& password, const std::string& hash
   auto stored_hash = hash.substr(0, colon_pos);
   auto salt = hash.substr(colon_pos + 1);
 
-  // Hash password with extracted salt
-  std::hash<std::string> hasher;
-  auto salted = password + salt;
-  auto computed_hash = hasher(salted);
+  // PBKDF2 parameters (must match hash() function)
+  const int iterations = 100000;
+  const int key_length = 32;
 
+  unsigned char derived_key[32];
+
+  // Derive key using PBKDF2
+  if (PKCS5_PBKDF2_HMAC(password.c_str(), static_cast<int>(password.size()),
+                        reinterpret_cast<const unsigned char*>(salt.c_str()),
+                        static_cast<int>(salt.size()),
+                        iterations, EVP_sha256(),
+                        key_length, derived_key) != 1) {
+    return false;
+  }
+
+  // Convert derived key to hex string
   std::ostringstream oss;
-  oss << std::hex << computed_hash;
+  for (int i = 0; i < key_length; ++i) {
+    oss << std::hex << std::setfill('0') << std::setw(2)
+        << static_cast<int>(derived_key[i]);
+  }
 
   return oss.str() == stored_hash;
 }

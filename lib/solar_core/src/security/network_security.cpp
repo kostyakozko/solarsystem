@@ -15,10 +15,7 @@
 #include <openssl/rand.h>
 #include <openssl/sha.h>
 #include <openssl/err.h>
-#include <openssl/evp.h>
-#include <openssl/rand.h>
-#include <openssl/sha.h>
-#include <openssl/aes.h>
+#include <curl/curl.h>
 #include <cstring>
 
 namespace SolarSystem::Security {
@@ -353,11 +350,18 @@ std::vector<std::string> NetworkSecurity::get_audit_log() const {
   return audit_log_;
 }
 
+// Callback function to write response data
+static size_t WriteCallback(void* contents, size_t size, size_t nmemb, std::string* response) {
+  size_t total_size = size * nmemb;
+  response->append(static_cast<char*>(contents), total_size);
+  return total_size;
+}
+
 // SecureNetworkOperations implementation
 std::optional<std::string> SecureNetworkOperations::secure_request(
     const std::string& url,
-    const std::string& /* method */,
-    const std::string& /* data */) {
+    const std::string& method,
+    const std::string& data) {
 
   if (!validate_url(url)) {
     return std::nullopt;
@@ -369,9 +373,74 @@ std::optional<std::string> SecureNetworkOperations::secure_request(
     return std::nullopt;
   }
 
-  // Placeholder for actual network request
-  // In production, use proper HTTP library
-  return "Response from " + url;
+  // Initialize libcurl
+  CURL* curl = curl_easy_init();
+  if (!curl) {
+    return std::nullopt;
+  }
+
+  std::string response;
+  CURLcode res;
+
+  // Set URL
+  curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+
+  // Set callback function to capture response
+  curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+  curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
+
+  // Set HTTP method
+  if (method == "POST") {
+    curl_easy_setopt(curl, CURLOPT_POST, 1L);
+    if (!data.empty()) {
+      curl_easy_setopt(curl, CURLOPT_POSTFIELDS, data.c_str());
+    }
+  } else if (method == "PUT") {
+    curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "PUT");
+    if (!data.empty()) {
+      curl_easy_setopt(curl, CURLOPT_POSTFIELDS, data.c_str());
+    }
+  } else if (method == "DELETE") {
+    curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "DELETE");
+  }
+  // GET is default
+
+  // Security settings
+  curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);  // Follow redirects
+  curl_easy_setopt(curl, CURLOPT_MAXREDIRS, 5L);       // Max 5 redirects
+  curl_easy_setopt(curl, CURLOPT_TIMEOUT, 30L);        // 30 second timeout
+  curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 10L);  // 10 second connect timeout
+
+  // SSL/TLS settings for HTTPS
+  if (is_secure_url(url)) {
+    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 1L);
+    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 2L);
+  }
+
+  // Set User-Agent
+  curl_easy_setopt(curl, CURLOPT_USERAGENT, "SolarSystem-Suite/4.0.0");
+
+  // Perform the request
+  res = curl_easy_perform(curl);
+
+  // Check for errors
+  if (res != CURLE_OK) {
+    curl_easy_cleanup(curl);
+    return std::nullopt;
+  }
+
+  // Check HTTP response code
+  long response_code;
+  curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
+
+  curl_easy_cleanup(curl);
+
+  // Return response only for successful HTTP codes
+  if (response_code >= 200 && response_code < 300) {
+    return response;
+  }
+
+  return std::nullopt;
 }
 
 bool SecureNetworkOperations::validate_url(const std::string& url) {
