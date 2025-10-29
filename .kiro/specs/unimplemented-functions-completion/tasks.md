@@ -410,6 +410,21 @@ This implementation plan systematically completes all unimplemented, placeholder
   - _Requirements: 6.1, 6.2, 6.4 (Configuration management)_
   - _Impact_: Unknown until reviewed
 
+- [ ] 10.12 Implement Distributed Workflow Execution (Task 20)
+  - **Location**: `lib/solar_core/src/workflow/workflow_coordinator.cpp` (Lines 243-261)
+  - **Priority**: LOW - Advanced scalability feature
+  - Replace local-only execution with true distributed execution across nodes
+  - Implement `DistributedWorkflowExecutor::execute_distributed()` with:
+    - Transaction step serialization using Protocol Buffers
+    - Distribution of steps to available nodes
+    - Coordination of execution across multiple nodes
+    - Result aggregation from distributed execution
+    - Node failure handling and retry logic
+    - Load balancing across nodes
+  - **Strategy**: Use gRPC for node communication, Protocol Buffers for serialization, Raft for coordination
+  - _Requirements: 7.5 (Distributed workflow execution)_
+  - _Impact_: Cannot leverage multiple nodes for parallel workflow execution; single-node execution works fine for most use cases
+
 ### Phase 4: Integration and Validation
 
 - [ ] 11. Create Comprehensive Integration Tests
