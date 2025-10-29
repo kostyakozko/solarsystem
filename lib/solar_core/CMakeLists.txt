@@ -68,6 +68,10 @@ add_library(solar_core STATIC
 
     # Diagnostic and troubleshooting system (Phase 8 - Task 23)
     src/diagnostics/diagnostic_system.cpp
+
+    # File system and network security (Phase 9 - Task 25)
+    src/security/file_security.cpp
+    src/security/network_security.cpp
 )
 
 # Public headers for other libraries and applications
