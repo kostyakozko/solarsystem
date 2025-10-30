@@ -72,6 +72,10 @@ add_library(solar_core STATIC
     # File system and network security (Phase 9 - Task 25)
     src/security/file_security.cpp
     src/security/network_security.cpp
+
+    # Data protection and backup systems (Phase 9 - Task 26)
+    src/backup/backup_manager.cpp
+    src/backup/data_protection.cpp
 )
 
 # Public headers for other libraries and applications
@@ -88,9 +92,10 @@ target_link_libraries(solar_core PUBLIC
     solar_utils     # Needs args.h for simulation parameters
     solar_jpl       # Needs JPL data integration for BodyFactory
     Threads::Threads
-    ZLIB::ZLIB      # For checkpoint compression
+    ZLIB::ZLIB      # For checkpoint compression and backup compression
     OpenSSL::SSL    # For encryption and secure operations
     OpenSSL::Crypto # For hashing and cryptographic functions
+    CURL::libcurl   # For HTTP operations in network security
 )
 
 # Aggressive optimization for core physics calculations

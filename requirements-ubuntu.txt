@@ -5,3 +5,4 @@ cmake
 build-essential
 libssl-dev
 libcurl4-openssl-dev
+zlib1g-dev

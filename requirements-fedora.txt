@@ -5,3 +5,4 @@ cmake
 gcc-c++
 openssl-devel
 libcurl-devel
+zlib-devel

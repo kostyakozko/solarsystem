@@ -115,6 +115,12 @@ target_link_libraries(test_file_network_security test_utils solar_core solar_uti
 add_test(NAME UnitTest_FileNetworkSecurity COMMAND test_file_network_security)
 set_tests_properties(UnitTest_FileNetworkSecurity PROPERTIES LABELS "unit;security;filesystem;network;task25" TIMEOUT ${TEST_TIMEOUT})
 
+# Backup and data protection test (Task 26)
+add_executable(test_backup_data_protection test_backup_data_protection.cpp)
+target_link_libraries(test_backup_data_protection test_utils solar_core solar_utils Threads::Threads)
+add_test(NAME UnitTest_BackupDataProtection COMMAND test_backup_data_protection)
+set_tests_properties(UnitTest_BackupDataProtection PROPERTIES LABELS "unit;backup;protection;recovery;task26" TIMEOUT ${TEST_TIMEOUT})
+
 add_test(NAME UnitTest_ModernBodyFactory COMMAND test_modern_body_factory)
 set_tests_properties(UnitTest_ModernBodyFactory PROPERTIES LABELS "unit;modern;bodies;factory" TIMEOUT ${TEST_TIMEOUT})
 
@@ -367,6 +373,7 @@ install(TARGETS
     test_performance_monitor
     test_diagnostic_system
     test_file_network_security
+    test_backup_data_protection
     RUNTIME DESTINATION bin/tests
     COMPONENT tests
 )

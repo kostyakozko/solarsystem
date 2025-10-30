@@ -82,10 +82,36 @@ else()
                         "  Fedora: sudo dnf install openssl-devel")
 endif()
 
-# Check for curl (required for JPL data fetching)
+# Find libcurl (required for HTTP operations)
+find_package(CURL REQUIRED)
+if(CURL_FOUND)
+    message(STATUS "libcurl found: ${CURL_VERSION_STRING}")
+    message(STATUS "libcurl include: ${CURL_INCLUDE_DIRS}")
+    message(STATUS "libcurl libraries: ${CURL_LIBRARIES}")
+else()
+    message(FATAL_ERROR "libcurl is required for HTTP operations. Install with:\n"
+                        "  macOS: brew install curl\n"
+                        "  Ubuntu: sudo apt-get install libcurl4-openssl-dev\n"
+                        "  Fedora: sudo dnf install libcurl-devel")
+endif()
+
+# Find zlib (required for compression)
+find_package(ZLIB REQUIRED)
+if(ZLIB_FOUND)
+    message(STATUS "zlib found: ${ZLIB_VERSION_STRING}")
+    message(STATUS "zlib include: ${ZLIB_INCLUDE_DIRS}")
+    message(STATUS "zlib libraries: ${ZLIB_LIBRARIES}")
+else()
+    message(FATAL_ERROR "zlib is required for compression. Install with:\n"
+                        "  macOS: brew install zlib\n"
+                        "  Ubuntu: sudo apt-get install zlib1g-dev\n"
+                        "  Fedora: sudo dnf install zlib-devel")
+endif()
+
+# Check for curl executable (required for JPL data fetching)
 find_program(CURL_EXECUTABLE curl REQUIRED)
 if(NOT CURL_EXECUTABLE)
-    message(FATAL_ERROR "curl is required for JPL HORIZONS data fetching")
+    message(FATAL_ERROR "curl executable is required for JPL HORIZONS data fetching")
 endif()
 
 # Add subdirectories for modular build
