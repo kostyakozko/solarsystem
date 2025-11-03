@@ -133,6 +133,12 @@ target_link_libraries(test_error_messaging test_utils solar_core solar_utils Thr
 add_test(NAME UnitTest_ErrorMessaging COMMAND test_error_messaging)
 set_tests_properties(UnitTest_ErrorMessaging PROPERTIES LABELS "unit;error;messaging;recovery;task29" TIMEOUT ${TEST_TIMEOUT})
 
+# UI system test (Task 28)
+add_executable(test_ui_system test_ui_system.cpp)
+target_link_libraries(test_ui_system test_utils solar_core solar_utils Threads::Threads)
+add_test(NAME UnitTest_UISystem COMMAND test_ui_system)
+set_tests_properties(UnitTest_UISystem PROPERTIES LABELS "unit;ui;interface;accessibility;task28" TIMEOUT ${TEST_TIMEOUT})
+
 add_test(NAME UnitTest_ModernBodyFactory COMMAND test_modern_body_factory)
 set_tests_properties(UnitTest_ModernBodyFactory PROPERTIES LABELS "unit;modern;bodies;factory" TIMEOUT ${TEST_TIMEOUT})
 
@@ -388,6 +394,7 @@ install(TARGETS
     test_backup_data_protection
     test_help_system
     test_error_messaging
+    test_ui_system
     RUNTIME DESTINATION bin/tests
     COMPONENT tests
 )

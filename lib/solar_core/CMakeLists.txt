@@ -82,6 +82,13 @@ add_library(solar_core STATIC
 
     # Comprehensive error messaging (Phase 10 - Task 29)
     src/error/error_messaging.cpp
+
+    # User-friendly interfaces (Phase 10 - Task 28)
+    src/ui/user_interface.cpp
+    src/ui/progress_indicator.cpp
+    src/ui/status_display.cpp
+    src/ui/accessibility.cpp
+    src/ui/cli_interface.cpp
 )
 
 # Public headers for other libraries and applications
