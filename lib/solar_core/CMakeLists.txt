@@ -76,6 +76,9 @@ add_library(solar_core STATIC
     # Data protection and backup systems (Phase 9 - Task 26)
     src/backup/backup_manager.cpp
     src/backup/data_protection.cpp
+
+    # Comprehensive help systems (Phase 10 - Task 27)
+    src/help/help_system.cpp
 )
 
 # Public headers for other libraries and applications
