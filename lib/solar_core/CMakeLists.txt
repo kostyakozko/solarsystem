@@ -79,6 +79,9 @@ add_library(solar_core STATIC
 
     # Comprehensive help systems (Phase 10 - Task 27)
     src/help/help_system.cpp
+
+    # Comprehensive error messaging (Phase 10 - Task 29)
+    src/error/error_messaging.cpp
 )
 
 # Public headers for other libraries and applications
