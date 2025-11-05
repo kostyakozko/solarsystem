@@ -1,0 +1,92 @@
+# Docker ignore file for Solar System Suite
+# Excludes unnecessary files from Docker build context
+
+# Build artifacts
+build/
+install/
+*.o
+*.a
+*.so
+*.dylib
+
+# Cache files
+cache/
+test_cache/
+*.bin
+ephemeris_cache.bin
+ephemeris_data.json
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Git files
+.git/
+.gitignore
+.gitattributes
+
+# Documentation build artifacts
+docs/api/html/
+docs/api/latex/
+
+# Test results and reports
+Testing/
+test_execution_report_*.txt
+performance_reports/
+benchmark_archives/
+baseline_performance/
+performance_baselines/
+
+# Local CI artifacts
+local-ci/
+.local-ci/
+
+# Temporary files
+*.tmp
+*.log
+*.bak
+
+# macOS specific
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Linux specific
+.directory
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# CMake cache
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+
+# Backup files
+*~
+*.orig
+*.rej
+
+# Large data files
+*.tar.gz
+*.zip
+*.tgz
+
+# Node modules (if any)
+node_modules/
+
+# Coverage reports
+*.gcov
+*.gcda
+*.gcno
+coverage/
+
+# Profiling data
+gmon.out
+*.prof

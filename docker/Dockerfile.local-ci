@@ -1,0 +1,48 @@
+# Dockerfile for Local CI Testing
+# Matches GitHub Actions CI environment exactly
+# Based on: .github/workflows/ci.yml
+
+FROM ubuntu:22.04
+
+# Prevent interactive prompts during package installation
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Set environment variables matching GitHub Actions CI
+ENV BUILD_TYPE=Release
+ENV CC=gcc
+ENV CXX=g++
+ENV GITHUB_ACTIONS=true
+ENV CI=true
+
+# Install exact dependencies matching GitHub Actions CI
+# See: .github/workflows/ci.yml - Install dependencies (Ubuntu)
+RUN apt-get update && apt-get install -y \
+    cmake \
+    build-essential \
+    curl \
+    doxygen \
+    graphviz \
+    lcov \
+    git \
+    bc \
+    libssl-dev \
+    libcurl4-openssl-dev \
+    zlib1g-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Verify compiler versions
+RUN gcc --version && g++ --version && cmake --version
+
+# Set up working directory
+WORKDIR /workspace
+
+# Default shell
+SHELL ["/bin/bash", "-c"]
+
+# Labels for documentation
+LABEL maintainer="Solar System Suite Team"
+LABEL description="Local CI testing environment matching GitHub Actions"
+LABEL version="1.0"
+
+# Default command (will be overridden by run script)
+CMD ["/bin/bash"]

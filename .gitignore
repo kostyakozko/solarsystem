@@ -48,5 +48,10 @@ test_*_verification.cpp
 temp_*.cpp
 
 # Performance baseline CSV files (generated artifacts)
+
+# Local CI testing artifacts
+local-ci/
+.local-ci/
+docker-compose.override.yml
 baseline_performance/*.csv
 build/tests/benchmarks/benchmark_results/*.csv
