@@ -35,6 +35,11 @@ add_executable(test_advanced_config_integration
     test_advanced_config_integration.cpp
 )
 
+# Comprehensive Integration Test Suite (Task 30)
+add_executable(test_comprehensive_integration
+    test_comprehensive_integration_simple.cpp
+)
+
 # Link libraries
 target_link_libraries(test_application_workflows
     test_utils
@@ -102,6 +107,15 @@ target_link_libraries(test_advanced_config_integration
     Threads::Threads
 )
 
+# Link libraries for comprehensive integration test
+target_link_libraries(test_comprehensive_integration
+    test_utils
+    solar_core
+    solar_jpl
+    solar_utils
+    Threads::Threads
+)
+
 # Add integration tests to CTest
 add_test(NAME IntegrationTest_ApplicationWorkflows
          COMMAND tests/integration/test_application_workflows
@@ -117,6 +131,9 @@ add_test(NAME IntegrationTest_CrossComponentValidation COMMAND test_cross_compon
 
 # Add advanced config integration tests to CTest
 add_test(NAME IntegrationTest_AdvancedConfigIntegration COMMAND test_advanced_config_integration)
+
+# Add comprehensive integration test to CTest (Task 30)
+add_test(NAME IntegrationTest_Comprehensive COMMAND test_comprehensive_integration)
 
 # Set working directory for all integration tests
 set_tests_properties(IntegrationTest_DataPipeline PROPERTIES WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
@@ -167,6 +184,13 @@ set_tests_properties(IntegrationTest_AdvancedConfigIntegration PROPERTIES
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
 
+# Set properties for comprehensive integration test (Task 30)
+set_tests_properties(IntegrationTest_Comprehensive PROPERTIES
+    LABELS "integration;comprehensive;task30;phase11"
+    TIMEOUT 300
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+)
+
 # Test data directory
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/test_data)
 
@@ -185,4 +209,5 @@ message(STATUS "  - End-to-End Tests")
 message(STATUS "  - Enhanced Components Integration Tests (Task 21)")
 message(STATUS "  - Performance Regression Integration Tests (Task 21)")
 message(STATUS "  - Cross-Component Validation Tests (Task 21)")
+message(STATUS "  - Comprehensive Integration Test Suite (Task 30)")
 message(STATUS "  - Test data directory: ${CMAKE_CURRENT_BINARY_DIR}/test_data")
