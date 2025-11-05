@@ -4,9 +4,9 @@
 
 | Status | Count | Percentage |
 |--------|-------|------------|
-| ✅ **Completed** | 5 | 38% |
+| ✅ **Completed** | 6 | 46% |
 | 🚧 **In Progress** | 0 | 0% |
-| 📋 **Ready to Start** | 8 | 61% |
+| 📋 **Ready to Start** | 7 | 53% |
 | **Total Specs** | **13** | **100%** |
 
 ---
@@ -51,7 +51,7 @@
 - **Why Important**: Adds missing CLI options (--bodies, --duration, etc.) that tests expect
 
 #### 6. 📋 **compiler-warnings-enforcement** - READY TO START
-- **Status**: 📋 Ready (0/23 tasks completed)
+- **Status**: 📋 Ready (23/23 tasks completed)
 - **Priority**: 🟡 **MEDIUM**
 - **Dependencies**: None (can run in parallel)
 - **Estimated Duration**: 1 week
@@ -152,7 +152,7 @@
 - **Why Ready**: Applications are functional, ready for feature additions
 
 #### compiler-warnings-enforcement
-- **Tasks**: 0/23 completed
+- **Tasks**: 23/23 completed
 - **Focus**: Enforce consistent compiler warnings across build system
 - **Key Areas**: CMake configuration, warning flags, CI integration
 - **Why Ready**: Independent of other specs, can run in parallel
