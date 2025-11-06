@@ -35,9 +35,11 @@ ctest --test-dir build -R UnitTest_Logging  # Sometimes passes, sometimes segfau
 - Or run full suite multiple times (usually passes 2 out of 3 runs)
 
 **Recommendation**:
-- Fix test_logging.cpp in a separate task
+- Fix as part of `unimplemented-functions-completion` spec, Task 2 (Implement Error Handling and Logging System)
 - Likely needs proper Logger singleton cleanup/reset between tests
 - May need mutex protection or better state isolation
+- The logging system has simplified/unimplemented functions that need completion
 
+**Related Spec**: `.kiro/specs/unimplemented-functions-completion/tasks.md` - Task 2
 **Date Identified**: 2025-11-07
 **Identified By**: Task 3 implementation testing
