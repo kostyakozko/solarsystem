@@ -13,7 +13,7 @@ This implementation plan systematically replaces all placeholder tests with comp
   - Implement SimulationEngine tests with all integration methods
   - _Requirements: 1.1, 1.2, 1.4_
 
-- [ ] 2. Replace placeholder unit tests for Solar JPL library
+- [-] 2. Replace placeholder unit tests for Solar JPL library
   - Implement comprehensive JPLClient testing with network scenarios
   - Add complete ephemeris data parsing and validation tests
   - Create thorough cache management and integrity tests
