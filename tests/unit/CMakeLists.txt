@@ -49,6 +49,12 @@ set_tests_properties(UnitTest_SimulationBuilder PROPERTIES LABELS "unit;modern;b
 add_executable(test_modern_body_factory test_modern_body_factory.cpp)
 target_link_libraries(test_modern_body_factory test_utils solar_core solar_jpl solar_utils Threads::Threads)
 
+# Edge case and boundary testing (Task 4)
+add_executable(test_edge_cases test_edge_cases.cpp)
+target_link_libraries(test_edge_cases test_utils solar_core solar_jpl solar_utils Threads::Threads)
+add_test(NAME UnitTest_EdgeCases COMMAND test_edge_cases)
+set_tests_properties(UnitTest_EdgeCases PROPERTIES LABELS "unit;edge;boundary;task4" TIMEOUT ${TEST_TIMEOUT})
+
 # Connection management test (Task 12)
 add_executable(test_connection_management test_connection_management.cpp)
 target_link_libraries(test_connection_management test_utils solar_core solar_utils Threads::Threads)
