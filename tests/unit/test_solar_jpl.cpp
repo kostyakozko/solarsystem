@@ -19,7 +19,7 @@ int main() {
     auto client = JPLClientFactory::create_for_testing();
 
     // Clear any existing cache
-    client->clear_cache();
+    (void)client->clear_cache();
 
     // Create test data
     std::vector<EphemerisData> test_data;
@@ -43,7 +43,7 @@ int main() {
     test_data.push_back(earth);
 
     // Save to cache
-    auto save_result = client->save_to_cache(test_data);
+    (void)client->save_to_cache(test_data);
 
     // Load from cache
     auto load_result = client->load_from_cache();
@@ -85,13 +85,13 @@ int main() {
     auto cache_mgr = CacheManagerFactory::create_for_testing();
     ASSERT_TRUE(cache_mgr != nullptr);
 
-    auto init_result = cache_mgr->initialize();
+    (void)cache_mgr->initialize();
     // Initialization should succeed
   });
 
   suite.run_test("Cache Manager Statistics", []() {
     auto cache_mgr = CacheManagerFactory::create_for_testing();
-    cache_mgr->initialize();
+    (void)cache_mgr->initialize();
 
     const auto& stats = cache_mgr->get_statistics();
     ASSERT_EQ(0.0, stats.hit_ratio());  // No reads yet
@@ -103,11 +103,11 @@ int main() {
 
   suite.run_test("Cache Manager Refresh Strategy", []() {
     auto cache_mgr = CacheManagerFactory::create_for_testing();
-    cache_mgr->initialize();
+    (void)cache_mgr->initialize();
 
-    cache_mgr->set_refresh_strategy(RefreshStrategy::Manual);
-    cache_mgr->set_refresh_strategy(RefreshStrategy::TimeBasedAuto);
-    cache_mgr->set_refresh_strategy(RefreshStrategy::Intelligent);
+    (void)cache_mgr->set_refresh_strategy(RefreshStrategy::Manual);
+    (void)cache_mgr->set_refresh_strategy(RefreshStrategy::TimeBasedAuto);
+    (void)cache_mgr->set_refresh_strategy(RefreshStrategy::Intelligent);
 
     // Just verify we can set different strategies
   });
@@ -128,7 +128,7 @@ int main() {
     valid_data.velocity = SolarSystem::Math::Vector3d{0.0, 13070.0, 0.0};
     valid_data.mass = 1.89813e27;
 
-    auto result = validator->validate_ephemeris_data(valid_data);
+    (void)validator->validate_ephemeris_data(valid_data);
     // Should succeed for valid data
   });
 
@@ -143,7 +143,7 @@ int main() {
     invalid_data.velocity = SolarSystem::Math::Vector3d{0.0, 1000.0, 0.0};
     invalid_data.mass = 1e24;
 
-    auto result = validator->validate_ephemeris_data(invalid_data);
+    (void)validator->validate_ephemeris_data(invalid_data);
     // Should detect invalid position
   });
 
@@ -158,7 +158,7 @@ int main() {
     invalid_data.velocity = SolarSystem::Math::Vector3d{0.0, 1000.0, 0.0};
     invalid_data.mass = 1e5;  // Too small
 
-    auto result = validator->validate_ephemeris_data(invalid_data);
+    (void)validator->validate_ephemeris_data(invalid_data);
     // Should detect invalid mass
   });
 
@@ -185,7 +185,7 @@ int main() {
     mars.mass = 6.41693e23;
     collection.push_back(mars);
 
-    auto result = validator->validate_ephemeris_collection(collection);
+    (void)validator->validate_ephemeris_collection(collection);
     // Should validate collection
   });
 
@@ -203,7 +203,7 @@ int main() {
     earth.mass = 5.97219e24;
     collection.push_back(earth);
 
-    auto result = validator->assess_data_quality(collection);
+    (void)validator->assess_data_quality(collection);
     // Should generate quality metrics
   });
 
@@ -227,7 +227,7 @@ int main() {
     auto diagnostics = client->get_network_diagnostics();
 
     // Check connectivity
-    auto status = client->check_network_connectivity();
+    (void)client->check_network_connectivity();
 
     // Get health score
     double health = client->get_network_health_score();
@@ -242,7 +242,7 @@ int main() {
     ASSERT_TRUE(client->is_offline_mode());
 
     // Try to load from cache (should work in offline mode)
-    auto result = client->load_from_cache();
+    (void)client->load_from_cache();
 
     // Disable offline mode
     client->set_offline_mode(false);
@@ -253,7 +253,7 @@ int main() {
     auto client = JPLClientFactory::create_for_testing();
 
     // Validate cache
-    auto result = client->validate_cache();
+    (void)client->validate_cache();
     // Result depends on cache state
   });
 
@@ -261,7 +261,7 @@ int main() {
     auto client = JPLClientFactory::create_for_testing();
 
     // 1. Clear cache
-    client->clear_cache();
+    (void)client->clear_cache();
 
     // 2. Create test data
     std::vector<EphemerisData> data;
@@ -279,10 +279,10 @@ int main() {
     auto validation_result = validator.validate_ephemeris_collection(data);
 
     // 4. Save to cache
-    auto save_result = client->save_to_cache(data);
+    (void)client->save_to_cache(data);
 
     // 5. Validate cache
-    auto cache_validation = client->validate_cache();
+    (void)client->validate_cache();
 
     // 6. Load from cache
     auto load_result = client->load_from_cache();
