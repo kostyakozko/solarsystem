@@ -40,6 +40,11 @@ add_executable(test_comprehensive_integration
     test_comprehensive_integration_simple.cpp
 )
 
+# Component Interface and Communication Tests (Task 6)
+add_executable(test_component_interface_communication
+    test_component_interface_communication.cpp
+)
+
 # Link libraries
 target_link_libraries(test_application_workflows
     test_utils
@@ -116,6 +121,15 @@ target_link_libraries(test_comprehensive_integration
     Threads::Threads
 )
 
+# Link libraries for component interface communication tests
+target_link_libraries(test_component_interface_communication
+    test_utils
+    solar_core
+    solar_jpl
+    solar_utils
+    Threads::Threads
+)
+
 # Add integration tests to CTest
 add_test(NAME IntegrationTest_ApplicationWorkflows
          COMMAND tests/integration/test_application_workflows
@@ -134,6 +148,11 @@ add_test(NAME IntegrationTest_AdvancedConfigIntegration COMMAND test_advanced_co
 
 # Add comprehensive integration test to CTest (Task 30)
 add_test(NAME IntegrationTest_Comprehensive COMMAND test_comprehensive_integration)
+
+# Add component interface communication tests to CTest (Task 6)
+add_test(NAME IntegrationTest_ComponentInterfaceCommunication
+         COMMAND test_component_interface_communication
+         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 
 # Set working directory for all integration tests
 set_tests_properties(IntegrationTest_DataPipeline PROPERTIES WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
@@ -191,6 +210,13 @@ set_tests_properties(IntegrationTest_Comprehensive PROPERTIES
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
 
+# Set properties for component interface communication tests (Task 6)
+set_tests_properties(IntegrationTest_ComponentInterfaceCommunication PROPERTIES
+    LABELS "integration;component;interface;communication;task6;phase2"
+    TIMEOUT 300
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+)
+
 # Test data directory
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/test_data)
 
@@ -209,5 +235,6 @@ message(STATUS "  - End-to-End Tests")
 message(STATUS "  - Enhanced Components Integration Tests (Task 21)")
 message(STATUS "  - Performance Regression Integration Tests (Task 21)")
 message(STATUS "  - Cross-Component Validation Tests (Task 21)")
+message(STATUS "  - Component Interface and Communication Tests (Task 6)")
 message(STATUS "  - Comprehensive Integration Test Suite (Task 30)")
 message(STATUS "  - Test data directory: ${CMAKE_CURRENT_BINARY_DIR}/test_data")
