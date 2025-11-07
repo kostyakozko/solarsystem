@@ -45,6 +45,11 @@ add_executable(test_component_interface_communication
     test_component_interface_communication.cpp
 )
 
+# Realistic Environment Simulation Tests (Task 7)
+add_executable(test_realistic_environment_simulation
+    test_realistic_environment_simulation.cpp
+)
+
 # Link libraries
 target_link_libraries(test_application_workflows
     test_utils
@@ -130,6 +135,15 @@ target_link_libraries(test_component_interface_communication
     Threads::Threads
 )
 
+# Link libraries for realistic environment simulation tests
+target_link_libraries(test_realistic_environment_simulation
+    test_utils
+    solar_core
+    solar_jpl
+    solar_utils
+    Threads::Threads
+)
+
 # Add integration tests to CTest
 add_test(NAME IntegrationTest_ApplicationWorkflows
          COMMAND tests/integration/test_application_workflows
@@ -152,6 +166,11 @@ add_test(NAME IntegrationTest_Comprehensive COMMAND test_comprehensive_integrati
 # Add component interface communication tests to CTest (Task 6)
 add_test(NAME IntegrationTest_ComponentInterfaceCommunication
          COMMAND test_component_interface_communication
+         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+
+# Add realistic environment simulation tests to CTest (Task 7)
+add_test(NAME IntegrationTest_RealisticEnvironmentSimulation
+         COMMAND test_realistic_environment_simulation
          WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 
 # Set working directory for all integration tests
@@ -217,6 +236,13 @@ set_tests_properties(IntegrationTest_ComponentInterfaceCommunication PROPERTIES
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
 
+# Set properties for realistic environment simulation tests (Task 7)
+set_tests_properties(IntegrationTest_RealisticEnvironmentSimulation PROPERTIES
+    LABELS "integration;environment;simulation;realistic;task7;phase2"
+    TIMEOUT 300
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+)
+
 # Test data directory
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/test_data)
 
@@ -236,5 +262,6 @@ message(STATUS "  - Enhanced Components Integration Tests (Task 21)")
 message(STATUS "  - Performance Regression Integration Tests (Task 21)")
 message(STATUS "  - Cross-Component Validation Tests (Task 21)")
 message(STATUS "  - Component Interface and Communication Tests (Task 6)")
+message(STATUS "  - Realistic Environment Simulation Tests (Task 7)")
 message(STATUS "  - Comprehensive Integration Test Suite (Task 30)")
 message(STATUS "  - Test data directory: ${CMAKE_CURRENT_BINARY_DIR}/test_data")
