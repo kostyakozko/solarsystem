@@ -23,6 +23,10 @@ target_link_libraries(scalability_tests test_utils solar_test solar_core solar_j
 add_executable(test_performance_measurement_framework test_performance_measurement_framework.cpp)
 target_link_libraries(test_performance_measurement_framework test_utils solar_test solar_core solar_jpl solar_utils Threads::Threads)
 
+# Baseline Management System Tests (Task 9)
+add_executable(test_baseline_management_system test_baseline_management_system.cpp)
+target_link_libraries(test_baseline_management_system test_utils solar_test solar_core solar_jpl solar_utils Threads::Threads)
+
 # Add benchmark tests to CTest
 add_test(NAME Benchmark_JPLData COMMAND benchmark_jpl_data)
 add_test(NAME Benchmark_WebServer COMMAND benchmark_web_server)
@@ -31,6 +35,7 @@ add_test(NAME Benchmark_CorePerformance COMMAND benchmark_core_performance)
 add_test(NAME Benchmark_RegressionDetector COMMAND regression_detector)
 add_test(NAME Benchmark_ScalabilityTests COMMAND scalability_tests)
 add_test(NAME Benchmark_PerformanceMeasurementFramework COMMAND test_performance_measurement_framework)
+add_test(NAME Benchmark_BaselineManagementSystem COMMAND test_baseline_management_system)
 
 # Set benchmark properties
 set_tests_properties(Benchmark_JPLData PROPERTIES
@@ -68,6 +73,11 @@ set_tests_properties(Benchmark_PerformanceMeasurementFramework PROPERTIES
     TIMEOUT 300
 )
 
+set_tests_properties(Benchmark_BaselineManagementSystem PROPERTIES
+    LABELS "benchmark;baseline;management;regression;task9;phase3"
+    TIMEOUT 300
+)
+
 # Create benchmark results directory
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/benchmark_results)
 
@@ -79,4 +89,5 @@ message(STATUS "  - Core Performance Validation Tests")
 message(STATUS "  - Performance Regression Detection")
 message(STATUS "  - Scalability Analysis")
 message(STATUS "  - Performance Measurement Framework Tests (Task 8)")
+message(STATUS "  - Baseline Management System Tests (Task 9)")
 message(STATUS "  - Results directory: ${CMAKE_CURRENT_BINARY_DIR}/benchmark_results")
