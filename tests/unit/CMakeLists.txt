@@ -405,3 +405,9 @@ install(TARGETS
     COMPONENT tests
 )
 
+
+# Mock System Tests (Task 11)
+add_executable(test_mock_system test_mock_system.cpp)
+target_link_libraries(test_mock_system test_utils solar_core solar_jpl solar_utils Threads::Threads)
+add_test(NAME UnitTest_MockSystem COMMAND test_mock_system)
+set_tests_properties(UnitTest_MockSystem PROPERTIES LABELS "unit;mock;task11;phase4" TIMEOUT ${TEST_TIMEOUT})
