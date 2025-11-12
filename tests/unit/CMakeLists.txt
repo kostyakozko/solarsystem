@@ -465,3 +465,9 @@ add_executable(test_input_validation_security test_input_validation_security.cpp
 target_link_libraries(test_input_validation_security test_utils solar_core solar_utils Threads::Threads)
 add_test(NAME UnitTest_InputValidationSecurity COMMAND test_input_validation_security)
 set_tests_properties(UnitTest_InputValidationSecurity PROPERTIES LABELS "unit;security;input;validation;task20;phase7" TIMEOUT ${TEST_TIMEOUT})
+
+# Authentication and Authorization Security Tests (Task 21)
+add_executable(test_auth_security test_auth_security.cpp)
+target_link_libraries(test_auth_security test_utils solar_core solar_utils Threads::Threads)
+add_test(NAME UnitTest_AuthSecurity COMMAND test_auth_security)
+set_tests_properties(UnitTest_AuthSecurity PROPERTIES LABELS "unit;security;auth;task21;phase7" TIMEOUT ${TEST_TIMEOUT})
