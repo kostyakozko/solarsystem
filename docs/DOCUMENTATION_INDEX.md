@@ -42,11 +42,15 @@ All required documentation for Task 32 (Create comprehensive user documentation)
 - **[Migration Guide](MIGRATION_GUIDE.md)** - Migrating from legacy to modern architecture
 
 #### Testing and Quality
+- **[Testing Guide](../tests/TESTING_GUIDE.md)** - Complete testing reference with development guidelines, execution procedures, troubleshooting, and API documentation
+- **[Testing Tutorial](../tests/TESTING_TUTORIAL.md)** - Step-by-step tutorials for test development, TDD, mocking, performance testing, and more
+- **[Testing Troubleshooting](../tests/TROUBLESHOOTING.md)** - Quick reference for common testing issues and solutions
+- **[Testing Onboarding](../tests/ONBOARDING.md)** - 3-week structured training program for new contributors
+- **[Testing Quick Reference](../tests/QUICK_REFERENCE.md)** - Command reference card for common testing operations
 - **[Testing User Guide](developer/TESTING_USER_GUIDE.md)** - Comprehensive testing guide
 - **[Testing Framework API](developer/TESTING_FRAMEWORK_API.md)** - Testing framework reference
 - **[Testing Standards](developer/TESTING_STANDARDS_AND_CONVENTIONS.md)** - Testing conventions
 - **[Testing Templates](developer/TESTING_TEMPLATES.md)** - Test templates and examples
-- **[Testing Troubleshooting](developer/TESTING_TROUBLESHOOTING.md)** - Testing issue resolution
 - **[Testing CI Integration](developer/TESTING_CI_INTEGRATION.md)** - CI/CD integration guide
 
 #### API and Examples
@@ -99,11 +103,16 @@ All required documentation for Task 32 (Create comprehensive user documentation)
 4. **[Migration Guide](MIGRATION_GUIDE.md)** - Legacy migration
 
 ### Testing
-1. **[Testing User Guide](developer/TESTING_USER_GUIDE.md)** - Testing overview
-2. **[Testing Framework API](developer/TESTING_FRAMEWORK_API.md)** - Framework reference
-3. **[Testing Standards](developer/TESTING_STANDARDS_AND_CONVENTIONS.md)** - Standards
-4. **[Testing Examples](examples/TESTING_EXAMPLES.md)** - Example tests
-5. **[Testing CI Integration](developer/TESTING_CI_INTEGRATION.md)** - CI/CD integration
+1. **[Testing Guide](../tests/TESTING_GUIDE.md)** - Complete testing reference (NEW!)
+2. **[Testing Tutorial](../tests/TESTING_TUTORIAL.md)** - Step-by-step tutorials (NEW!)
+3. **[Testing Onboarding](../tests/ONBOARDING.md)** - 3-week training program (NEW!)
+4. **[Testing Quick Reference](../tests/QUICK_REFERENCE.md)** - Command reference (NEW!)
+5. **[Testing Troubleshooting](../tests/TROUBLESHOOTING.md)** - Quick problem-solving (NEW!)
+6. **[Testing User Guide](developer/TESTING_USER_GUIDE.md)** - Testing overview
+7. **[Testing Framework API](developer/TESTING_FRAMEWORK_API.md)** - Framework reference
+8. **[Testing Standards](developer/TESTING_STANDARDS_AND_CONVENTIONS.md)** - Standards
+9. **[Testing Examples](examples/TESTING_EXAMPLES.md)** - Example tests
+10. **[Testing CI Integration](developer/TESTING_CI_INTEGRATION.md)** - CI/CD integration
 
 ### API Reference
 1. **[API Documentation](api/html/index.html)** - Complete API reference
@@ -243,7 +252,9 @@ All required documentation for Task 32 (Create comprehensive user documentation)
 2. Study [Architecture](architecture/ARCHITECTURE.md)
 3. Review [API Documentation](api/html/index.html)
 4. Check [Examples](examples/EXAMPLES.md)
-5. Follow [Testing Guide](developer/TESTING_USER_GUIDE.md)
+5. Follow [Testing Guide](../tests/TESTING_GUIDE.md) - Start here for testing!
+6. Complete [Testing Tutorial](../tests/TESTING_TUTORIAL.md) - Hands-on learning
+7. Use [Testing Quick Reference](../tests/QUICK_REFERENCE.md) - Daily reference
 
 ### For Administrators
 1. Review [Installation Guide](INSTALLATION.md)

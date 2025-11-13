@@ -327,7 +327,7 @@ cd /path/to/install
 
 **Web Interface Features**:
 - **Time Travel Mode**: Jump to any historical date (1990, 2000, 2010, 2020+)
-- **Intelligent Data Handling**: 
+- **Intelligent Data Handling**:
   - Manual time travel → JPL HORIZONS data fetching
   - Animation playback → Real-time simulation
   - Automatic fallback for missing spacecraft in historical dates
@@ -490,6 +490,47 @@ rm -rf build && mkdir build && cd build && cmake ..
 
 ## 🧪 Testing & Validation
 
+### **Comprehensive Test Suite**
+
+The Solar System Suite includes a complete testing framework with 100+ tests covering all aspects of the system.
+
+**📚 Testing Documentation**:
+- **[Testing Guide](tests/TESTING_GUIDE.md)** - Complete testing reference with development guidelines, execution procedures, troubleshooting, and API documentation
+- **[Testing Tutorial](tests/TESTING_TUTORIAL.md)** - Step-by-step tutorials for test development, TDD, mocking, performance testing, and more
+- **[Troubleshooting Guide](tests/TROUBLESHOOTING.md)** - Quick reference for common testing issues and solutions
+- **[Onboarding Guide](tests/ONBOARDING.md)** - 3-week structured training program for new contributors
+- **[Quick Reference](tests/QUICK_REFERENCE.md)** - Command reference card for common testing operations
+
+### **Running Tests**
+
+```bash
+# Build with testing enabled
+cmake -DENABLE_TESTING=ON ..
+cmake --build . -j$(nproc)
+
+# Run all tests
+ctest --test-dir build --output-on-failure
+
+# Run specific test categories
+ctest --test-dir build -L "unit"           # Unit tests
+ctest --test-dir build -L "integration"    # Integration tests
+ctest --test-dir build -L "security"       # Security tests
+ctest --test-dir build -L "concurrency"    # Thread safety tests
+
+# Run tests in parallel
+ctest --test-dir build -j$(nproc)
+```
+
+### **Test Coverage**
+
+- ✅ **Unit Tests** (81 tests) - All libraries and components
+- ✅ **Integration Tests** - Complete workflows and data flow
+- ✅ **Performance Tests** - Benchmarks and optimization validation
+- ✅ **Security Tests** - Input validation, authentication, vulnerability scanning
+- ✅ **Concurrency Tests** - Thread safety and race condition detection
+- ✅ **Platform Tests** - Cross-platform compatibility (macOS, Linux, Windows)
+- ✅ **CI/CD Integration** - Automated testing on every commit
+
 ### **Data Validation**
 ```bash
 # Test storage system
@@ -523,6 +564,14 @@ make
 time ./solar_system_fetch --update  # First run
 time ./solar_system_fetch --update  # Cached run (should be ~0.008s)
 ```
+
+### **For Contributors**
+
+New to testing? Start here:
+1. Read the [Testing Tutorial](tests/TESTING_TUTORIAL.md) for hands-on lessons
+2. Follow the [Onboarding Guide](tests/ONBOARDING.md) for structured learning
+3. Use the [Quick Reference](tests/QUICK_REFERENCE.md) for common commands
+4. Check the [Testing Guide](tests/TESTING_GUIDE.md) for comprehensive documentation
 
 ## 🌐 Integration & Deployment
 
@@ -728,9 +777,9 @@ ls -la ephemeris_*.*
 
 ---
 
-**Solar System Suite** - Professional N-body gravitational simulation with real-time JPL data integration and interactive web-based time travel visualization  
-**Version**: 3.0.0 (Interactive Web Visualization)  
-**Last Updated**: June 2025  
+**Solar System Suite** - Professional N-body gravitational simulation with real-time JPL data integration and interactive web-based time travel visualization
+**Version**: 3.0.0 (Interactive Web Visualization)
+**Last Updated**: June 2025
 **Status**: Production Ready with Web Interface 🚀🌐
 
 ## 🌟 **Quick Demo**
