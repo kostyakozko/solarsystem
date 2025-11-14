@@ -546,8 +546,24 @@ ErrorStatistics ErrorLogger::get_log_statistics() const {
 }
 
 void ErrorLogger::flush() {
-  // Flush file streams if needed
-  // This is a simplified implementation
+  std::lock_guard<std::mutex> lock(log_mutex_);
+
+  // Flush file stream if logging to file
+  if (!log_file_path_.empty()) {
+    std::ofstream file(log_file_path_, std::ios::app);
+    if (file.is_open()) {
+      file.flush();
+    }
+  }
+
+  // Flush console streams
+  std::cout.flush();
+  std::cerr.flush();
+
+  // Flush syslog (on Unix systems, syslog is typically unbuffered)
+#ifndef _WIN32
+  // No explicit flush needed for syslog
+#endif
 }
 
 void ErrorLogger::log_to_console(const std::string& message, LogLevel level) {
@@ -987,7 +1003,54 @@ void ErrorHandlingSystem::configure(const std::string& config_file) {
 
   // Load configuration from file if provided
   if (!config_file.empty()) {
-    // Configuration loading would be implemented here
+    std::ifstream file(config_file);
+    if (!file.is_open()) {
+      // Configuration file not found, use defaults
+      return;
+    }
+
+    // Simple line-based configuration parsing
+    // Format: key=value
+    std::string line;
+    while (std::getline(file, line)) {
+      // Skip comments and empty lines
+      if (line.empty() || line[0] == '#') {
+        continue;
+      }
+
+      size_t equals_pos = line.find('=');
+      if (equals_pos == std::string::npos) {
+        continue;
+      }
+
+      std::string key = line.substr(0, equals_pos);
+      std::string value = line.substr(equals_pos + 1);
+
+      // Trim whitespace
+      key.erase(0, key.find_first_not_of(" \t"));
+      key.erase(key.find_last_not_of(" \t") + 1);
+      value.erase(0, value.find_first_not_of(" \t"));
+      value.erase(value.find_last_not_of(" \t") + 1);
+
+      // Apply configuration
+      if (key == "log_level") {
+        if (value == "debug") logger_->configure(ErrorLogger::LogLevel::Debug, {ErrorLogger::LogTarget::Console});
+        else if (value == "info") logger_->configure(ErrorLogger::LogLevel::Info, {ErrorLogger::LogTarget::Console});
+        else if (value == "warning") logger_->configure(ErrorLogger::LogLevel::Warning, {ErrorLogger::LogTarget::Console});
+        else if (value == "error") logger_->configure(ErrorLogger::LogLevel::Error, {ErrorLogger::LogTarget::Console});
+        else if (value == "critical") logger_->configure(ErrorLogger::LogLevel::Critical, {ErrorLogger::LogTarget::Console});
+      } else if (key == "log_file") {
+        logger_->set_log_file(value);
+      } else if (key == "network_endpoint") {
+        logger_->set_network_endpoint(value);
+      } else if (key == "max_recent_errors") {
+        try {
+          max_recent_errors_ = static_cast<size_t>(std::stoul(value));
+        } catch (...) {
+          // Invalid value, keep default
+        }
+      }
+    }
   }
 }
 
@@ -1155,14 +1218,51 @@ void ErrorHandlingSystem::import_error_data(const std::string& file_path) {
     return;
   }
 
+  std::lock_guard<std::mutex> lock(system_mutex_);
+
   std::string line;
   while (std::getline(file, line)) {
     if (line.empty() || line[0] == '#') {
       continue;
     }
 
-    // Parse error data (simplified implementation)
-    // Real implementation would parse CSV format properly
+    // Parse CSV format: ERROR,code,severity,timestamp,message
+    if (line.find("ERROR,") == 0) {
+      std::istringstream iss(line.substr(6)); // Skip "ERROR,"
+      std::string code_str, severity_str, timestamp_str, message;
+
+      if (std::getline(iss, code_str, ',') &&
+          std::getline(iss, severity_str, ',') &&
+          std::getline(iss, timestamp_str, ',') &&
+          std::getline(iss, message)) {
+
+        try {
+          ErrorCode code = static_cast<ErrorCode>(std::stoi(code_str));
+          ErrorSeverity severity = static_cast<ErrorSeverity>(std::stoi(severity_str));
+
+          DetailedError error(code, message, severity);
+
+          // Parse timestamp
+          try {
+            auto timestamp_value = std::stoll(timestamp_str);
+            error.timestamp = std::chrono::system_clock::time_point(
+                std::chrono::system_clock::duration(timestamp_value));
+          } catch (...) {
+            // Use current time if timestamp parsing fails
+          }
+
+          recent_errors_.push_back(error);
+
+          // Maintain size limit
+          if (recent_errors_.size() > max_recent_errors_) {
+            recent_errors_.erase(recent_errors_.begin());
+          }
+        } catch (...) {
+          // Skip malformed entries
+          continue;
+        }
+      }
+    }
   }
 }
 
@@ -1184,6 +1284,19 @@ void ErrorHandlingSystem::initialize_components() {
 void ErrorHandlingSystem::update_health_metrics() {
   // Health metrics are updated based on recent error patterns
   // This is called after each error is reported
+
+  // Update statistics in recovery manager if available
+  if (recovery_manager_ && !recent_errors_.empty()) {
+    recovery_manager_->get_recovery_statistics();
+  }
+
+  // Trigger pattern analysis for recent errors
+  if (pattern_analyzer_ && recent_errors_.size() >= 2) {
+    std::vector<DetailedError> recent_subset;
+    size_t start = recent_errors_.size() > 10 ? recent_errors_.size() - 10 : 0;
+    recent_subset.assign(recent_errors_.begin() + static_cast<std::ptrdiff_t>(start), recent_errors_.end());
+    pattern_analyzer_->analyze_patterns(recent_subset);
+  }
 }
 
 double ErrorHandlingSystem::calculate_health_score() const {
