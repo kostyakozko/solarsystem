@@ -9,8 +9,42 @@
 #include <cstdio>
 #include <random>
 #include <sstream>
+#include <curl/curl.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <netdb.h>
+#include <unistd.h>
 
 #include "solar_utils/file_resource_manager.hpp"
+
+namespace {
+// RAII wrapper for CURL global initialization
+class CurlGlobalInit {
+ public:
+  CurlGlobalInit() {
+    curl_global_init(CURL_GLOBAL_ALL);
+  }
+  ~CurlGlobalInit() {
+    curl_global_cleanup();
+  }
+};
+
+// Ensure curl is initialized once
+CurlGlobalInit& get_curl_init() {
+  static CurlGlobalInit init;
+  return init;
+}
+
+// Callback for libcurl to write response data
+size_t solar_curl_write_callback(void* contents, size_t size, size_t nmemb, void* userp) {
+  size_t total_size = size * nmemb;
+  std::string* response = static_cast<std::string*>(userp);
+  response->append(static_cast<char*>(contents), total_size);
+  return total_size;
+}
+
+}  // anonymous namespace
 
 namespace SolarSystem::Utils {
 
@@ -146,7 +180,7 @@ ManagedNetworkConnection& ManagedNetworkConnection::operator=(
   return *this;
 }
 
-bool ManagedNetworkConnection::connect(std::chrono::seconds ) {
+bool ManagedNetworkConnection::connect(std::chrono::seconds timeout) {
   if (state_ == ConnectionState::Active) {
     return true;
   }
@@ -155,20 +189,77 @@ bool ManagedNetworkConnection::connect(std::chrono::seconds ) {
   info_.state = ConnectionState::Connecting;
 
   try {
+    // Ensure curl is initialized
+    get_curl_init();
+
     // Implement actual connection logic based on connection type
     switch (type_) {
       case ConnectionType::HTTP:
       case ConnectionType::HTTPS: {
-        // For HTTP/HTTPS, we'll use a simplified connection model
-        // In a real implementation, this would use libcurl or similar
-        connection_handle_ = reinterpret_cast<void*>(1);  // Non-null indicates connected
+        // Create real libcurl handle
+        CURL* curl = curl_easy_init();
+        if (!curl) {
+          state_ = ConnectionState::Failed;
+          info_.state = ConnectionState::Failed;
+          info_.error_count++;
+          return false;
+        }
+
+        // Set basic options
+        curl_easy_setopt(curl, CURLOPT_URL, endpoint_.c_str());
+        curl_easy_setopt(curl, CURLOPT_TIMEOUT, static_cast<long>(timeout.count()));
+        curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, static_cast<long>(timeout.count()));
+        curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+        curl_easy_setopt(curl, CURLOPT_MAXREDIRS, 5L);
+        curl_easy_setopt(curl, CURLOPT_USERAGENT, "SolarSystem-Suite/4.0.0");
+
+        // SSL/TLS settings for HTTPS
+        if (type_ == ConnectionType::HTTPS) {
+          curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 1L);
+          curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 2L);
+        }
+
+        connection_handle_ = curl;
         break;
       }
-      case ConnectionType::TCP:
+      case ConnectionType::TCP: {
+        // Create real TCP socket
+        int sockfd = socket(AF_INET, SOCK_STREAM, 0);
+        if (sockfd < 0) {
+          state_ = ConnectionState::Failed;
+          info_.state = ConnectionState::Failed;
+          info_.error_count++;
+          return false;
+        }
+
+        // Set socket timeout
+        struct timeval tv;
+        tv.tv_sec = timeout.count();
+        tv.tv_usec = 0;
+        setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv));
+        setsockopt(sockfd, SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof(tv));
+
+        connection_handle_ = reinterpret_cast<void*>(static_cast<intptr_t>(sockfd));
+        break;
+      }
       case ConnectionType::UDP: {
-        // For TCP/UDP, we would create actual socket connections
-        // For now, simulate successful connection
-        connection_handle_ = reinterpret_cast<void*>(2);
+        // Create real UDP socket
+        int sockfd = socket(AF_INET, SOCK_DGRAM, 0);
+        if (sockfd < 0) {
+          state_ = ConnectionState::Failed;
+          info_.state = ConnectionState::Failed;
+          info_.error_count++;
+          return false;
+        }
+
+        // Set socket timeout
+        struct timeval tv;
+        tv.tv_sec = timeout.count();
+        tv.tv_usec = 0;
+        setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv));
+        setsockopt(sockfd, SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof(tv));
+
+        connection_handle_ = reinterpret_cast<void*>(static_cast<intptr_t>(sockfd));
         break;
       }
       case ConnectionType::Custom: {
@@ -212,14 +303,16 @@ void ManagedNetworkConnection::disconnect() {
       switch (type_) {
         case ConnectionType::HTTP:
         case ConnectionType::HTTPS: {
-          // Close HTTP/HTTPS connection
-          // In a real implementation, this would clean up libcurl handles
+          // Clean up libcurl handle
+          CURL* curl = static_cast<CURL*>(connection_handle_);
+          curl_easy_cleanup(curl);
           break;
         }
         case ConnectionType::TCP:
         case ConnectionType::UDP: {
-          // Close socket connections
-          // In a real implementation, this would call close() on socket descriptors
+          // Close socket
+          int sockfd = static_cast<int>(reinterpret_cast<intptr_t>(connection_handle_));
+          close(sockfd);
           break;
         }
         case ConnectionType::Custom: {
@@ -242,7 +335,7 @@ bool ManagedNetworkConnection::is_healthy() const {
 }
 
 std::string ManagedNetworkConnection::send_request(const std::string& request,
-                                                   std::chrono::seconds ) {
+                                                   std::chrono::seconds timeout) {
   if (!is_connected()) {
     return "";
   }
@@ -255,37 +348,89 @@ std::string ManagedNetworkConnection::send_request(const std::string& request,
     switch (type_) {
       case ConnectionType::HTTP:
       case ConnectionType::HTTPS: {
-        // For HTTP/HTTPS requests, construct proper HTTP response
-        // In a real implementation, this would use libcurl or similar
-        if (request.find("GET") == 0) {
-          response =
-              "HTTP/1.1 200 OK\r\n"
-              "Content-Type: application/json\r\n"
-              "Content-Length: 25\r\n"
-              "Connection: keep-alive\r\n"
-              "\r\n"
-              "{\"status\": \"success\"}";
-        } else if (request.find("POST") == 0) {
-          response =
-              "HTTP/1.1 201 Created\r\n"
-              "Content-Type: application/json\r\n"
-              "Content-Length: 27\r\n"
-              "Connection: keep-alive\r\n"
-              "\r\n"
-              "{\"status\": \"created\"}";
-        } else {
-          response =
-              "HTTP/1.1 200 OK\r\n"
-              "Content-Length: 13\r\n"
-              "\r\n"
-              "Hello, World!";
+        // Use real libcurl for HTTP/HTTPS requests
+        CURL* curl = static_cast<CURL*>(connection_handle_);
+        if (!curl) {
+          info_.error_count++;
+          return "";
+        }
+
+        // Set timeout
+        curl_easy_setopt(curl, CURLOPT_TIMEOUT, static_cast<long>(timeout.count()));
+
+        // Set write callback
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, solar_curl_write_callback);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
+
+        // Parse request to determine HTTP method and data
+        std::string method = "GET";
+        std::string data;
+        if (request.find("POST") == 0) {
+          method = "POST";
+          curl_easy_setopt(curl, CURLOPT_POST, 1L);
+          // Extract data from request if present
+          size_t body_start = request.find("\r\n\r\n");
+          if (body_start != std::string::npos) {
+            data = request.substr(body_start + 4);
+            curl_easy_setopt(curl, CURLOPT_POSTFIELDS, data.c_str());
+          }
+        } else if (request.find("PUT") == 0) {
+          method = "PUT";
+          curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "PUT");
+          size_t body_start = request.find("\r\n\r\n");
+          if (body_start != std::string::npos) {
+            data = request.substr(body_start + 4);
+            curl_easy_setopt(curl, CURLOPT_POSTFIELDS, data.c_str());
+          }
+        } else if (request.find("DELETE") == 0) {
+          method = "DELETE";
+          curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "DELETE");
+        }
+
+        // Perform the request
+        CURLcode res = curl_easy_perform(curl);
+
+        if (res != CURLE_OK) {
+          info_.error_count++;
+          return "";
+        }
+
+        break;
+      }
+      case ConnectionType::TCP: {
+        // For TCP, send data through socket
+        int sockfd = static_cast<int>(reinterpret_cast<intptr_t>(connection_handle_));
+        ssize_t sent = send(sockfd, request.c_str(), request.size(), 0);
+        if (sent < 0) {
+          info_.error_count++;
+          return "";
+        }
+
+        // Receive response
+        char buffer[8192];
+        ssize_t received = recv(sockfd, buffer, sizeof(buffer) - 1, 0);
+        if (received > 0) {
+          buffer[received] = '\0';
+          response = std::string(buffer, static_cast<size_t>(received));
         }
         break;
       }
-      case ConnectionType::TCP:
       case ConnectionType::UDP: {
-        // For raw TCP/UDP, echo the request
-        response = "ECHO: " + request;
+        // For UDP, send datagram
+        int sockfd = static_cast<int>(reinterpret_cast<intptr_t>(connection_handle_));
+        ssize_t sent = send(sockfd, request.c_str(), request.size(), 0);
+        if (sent < 0) {
+          info_.error_count++;
+          return "";
+        }
+
+        // Receive response
+        char buffer[8192];
+        ssize_t received = recv(sockfd, buffer, sizeof(buffer) - 1, 0);
+        if (received > 0) {
+          buffer[received] = '\0';
+          response = std::string(buffer, static_cast<size_t>(received));
+        }
         break;
       }
       case ConnectionType::Custom: {
@@ -294,10 +439,6 @@ std::string ManagedNetworkConnection::send_request(const std::string& request,
         break;
       }
     }
-
-    // Simulate network delay based on request size
-    auto delay = std::chrono::milliseconds(10 + (request.size() / 100));
-    std::this_thread::sleep_for(delay);
 
     auto end_time = std::chrono::steady_clock::now();
     auto response_time =
@@ -326,18 +467,34 @@ bool ManagedNetworkConnection::send_data(const std::vector<char>& data) {
     switch (type_) {
       case ConnectionType::HTTP:
       case ConnectionType::HTTPS: {
-        // For HTTP, data would be sent as request body
-        // In a real implementation, this would use libcurl
+        // For HTTP, data would be sent as request body using libcurl
+        CURL* curl = static_cast<CURL*>(connection_handle_);
+        if (!curl) {
+          info_.error_count++;
+          return false;
+        }
+        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, data.data());
+        curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, data.size());
         break;
       }
       case ConnectionType::TCP: {
         // For TCP, send data through socket
-        // In a real implementation, this would use send() system call
+        int sockfd = static_cast<int>(reinterpret_cast<intptr_t>(connection_handle_));
+        ssize_t sent = send(sockfd, data.data(), data.size(), 0);
+        if (sent < 0) {
+          info_.error_count++;
+          return false;
+        }
         break;
       }
       case ConnectionType::UDP: {
         // For UDP, send datagram
-        // In a real implementation, this would use sendto() system call
+        int sockfd = static_cast<int>(reinterpret_cast<intptr_t>(connection_handle_));
+        ssize_t sent = send(sockfd, data.data(), data.size(), 0);
+        if (sent < 0) {
+          info_.error_count++;
+          return false;
+        }
         break;
       }
       case ConnectionType::Custom: {
@@ -345,10 +502,6 @@ bool ManagedNetworkConnection::send_data(const std::vector<char>& data) {
         break;
       }
     }
-
-    // Simulate sending delay based on data size
-    auto delay = std::chrono::microseconds(data.size() / 10);
-    std::this_thread::sleep_for(delay);
 
     update_statistics(data.size(), 0);
     info_.last_used = std::chrono::system_clock::now();
@@ -371,25 +524,48 @@ std::vector<char> ManagedNetworkConnection::receive_data(size_t max_bytes) {
     switch (type_) {
       case ConnectionType::HTTP:
       case ConnectionType::HTTPS: {
-        // For HTTP, receive response data
-        // In a real implementation, this would use libcurl
-        std::string sample_data = "Sample HTTP response data";
-        data.assign(sample_data.begin(), sample_data.end());
+        // For HTTP, receive response data using libcurl
+        CURL* curl = static_cast<CURL*>(connection_handle_);
+        if (!curl) {
+          info_.error_count++;
+          return {};
+        }
+
+        std::string response;
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, solar_curl_write_callback);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
+
+        CURLcode res = curl_easy_perform(curl);
+        if (res != CURLE_OK) {
+          info_.error_count++;
+          return {};
+        }
+
+        data.assign(response.begin(), response.end());
         break;
       }
       case ConnectionType::TCP: {
         // For TCP, receive data from socket
-        // In a real implementation, this would use recv() system call
-        data.resize(std::min(max_bytes, size_t(1024)));
-        // Fill with sample data
-        std::fill(data.begin(), data.end(), 'T');
+        int sockfd = static_cast<int>(reinterpret_cast<intptr_t>(connection_handle_));
+        data.resize(max_bytes);
+        ssize_t received = recv(sockfd, data.data(), max_bytes, 0);
+        if (received < 0) {
+          info_.error_count++;
+          return {};
+        }
+        data.resize(static_cast<size_t>(received));
         break;
       }
       case ConnectionType::UDP: {
         // For UDP, receive datagram
-        // In a real implementation, this would use recvfrom() system call
-        data.resize(std::min(max_bytes, size_t(512)));
-        std::fill(data.begin(), data.end(), 'U');
+        int sockfd = static_cast<int>(reinterpret_cast<intptr_t>(connection_handle_));
+        data.resize(max_bytes);
+        ssize_t received = recv(sockfd, data.data(), max_bytes, 0);
+        if (received < 0) {
+          info_.error_count++;
+          return {};
+        }
+        data.resize(static_cast<size_t>(received));
         break;
       }
       case ConnectionType::Custom: {
@@ -399,10 +575,6 @@ std::vector<char> ManagedNetworkConnection::receive_data(size_t max_bytes) {
         break;
       }
     }
-
-    // Simulate receiving delay
-    auto delay = std::chrono::microseconds(data.size() / 10);
-    std::this_thread::sleep_for(delay);
 
     update_statistics(0, data.size());
     info_.last_used = std::chrono::system_clock::now();
@@ -1028,26 +1200,38 @@ bool is_endpoint_reachable(const std::string& endpoint, std::chrono::seconds tim
 
 std::string resolve_hostname(const std::string& hostname) {
   try {
-    // Basic hostname resolution
-    // In a real implementation, this would use getaddrinfo() or similar
-
     // Check if it's already an IP address
     if (hostname.find_first_not_of("0123456789.") == std::string::npos) {
       // Looks like an IPv4 address
       return hostname;
     }
 
-    // For common hostnames, return mock IP addresses
-    if (hostname == "localhost" || hostname == "127.0.0.1") {
-      return "127.0.0.1";
-    } else if (hostname == "google.com" || hostname == "www.google.com") {
-      return "8.8.8.8";  // Mock Google DNS IP
-    } else if (hostname.find("github.com") != std::string::npos) {
-      return "140.82.112.3";  // Mock GitHub IP
+    // Use getaddrinfo() for real DNS resolution
+    struct addrinfo hints, *result = nullptr;
+    std::memset(&hints, 0, sizeof(hints));
+    hints.ai_family = AF_INET;  // IPv4
+    hints.ai_socktype = SOCK_STREAM;
+
+    int status = getaddrinfo(hostname.c_str(), nullptr, &hints, &result);
+    if (status != 0) {
+      return "";
     }
 
-    // For other hostnames, return a mock IP
-    return "192.168.1.1";
+    if (!result) {
+      return "";
+    }
+
+    // Extract IP address from first result
+    std::string ip_address;
+    if (result->ai_family == AF_INET) {
+      struct sockaddr_in* ipv4 = reinterpret_cast<struct sockaddr_in*>(result->ai_addr);
+      char ip_str[INET_ADDRSTRLEN];
+      inet_ntop(AF_INET, &(ipv4->sin_addr), ip_str, INET_ADDRSTRLEN);
+      ip_address = ip_str;
+    }
+
+    freeaddrinfo(result);
+    return ip_address;
 
   } catch (const std::exception&) {
     return "";
