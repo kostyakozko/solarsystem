@@ -4,6 +4,7 @@
  */
 
 #include "solar_utils/error_handling.hpp"
+#include "solar_utils/network_resource_manager.hpp"
 
 #include <algorithm>
 #include <fstream>
@@ -12,6 +13,13 @@
 #include <mutex>
 #include <sstream>
 #include <thread>
+
+// Platform-specific includes for syslog
+#ifdef _WIN32
+#include <windows.h>
+#else
+#include <syslog.h>
+#endif
 
 namespace SolarSystem::Utils {
 
@@ -569,15 +577,114 @@ void ErrorLogger::log_to_file(const std::string& message) {
 }
 
 void ErrorLogger::log_to_syslog(const std::string& message, LogLevel level) {
-  // Platform-specific syslog implementation would go here
-  // For now, just log to console as fallback
-  log_to_console("SYSLOG: " + message, level);
+#ifdef _WIN32
+  // Windows Event Log implementation
+  HANDLE hEventLog = RegisterEventSourceA(nullptr, "SolarSystemSuite");
+  if (hEventLog) {
+    WORD event_type;
+    switch (level) {
+      case LogLevel::Debug:
+      case LogLevel::Info:
+        event_type = EVENTLOG_INFORMATION_TYPE;
+        break;
+      case LogLevel::Warning:
+        event_type = EVENTLOG_WARNING_TYPE;
+        break;
+      case LogLevel::Error:
+      case LogLevel::Critical:
+        event_type = EVENTLOG_ERROR_TYPE;
+        break;
+      default:
+        event_type = EVENTLOG_INFORMATION_TYPE;
+    }
+
+    const char* strings[1] = {message.c_str()};
+    ReportEventA(hEventLog, event_type, 0, 0, nullptr, 1, 0, strings, nullptr);
+    DeregisterEventSource(hEventLog);
+  } else {
+    // Fallback to console if Event Log unavailable
+    log_to_console("SYSLOG: " + message, level);
+  }
+#else
+  // Unix/Linux/macOS syslog implementation
+  static bool syslog_opened = false;
+  if (!syslog_opened) {
+    openlog("SolarSystemSuite", LOG_PID | LOG_CONS, LOG_USER);
+    syslog_opened = true;
+  }
+
+  // Map LogLevel to syslog priority
+  int priority;
+  switch (level) {
+    case LogLevel::Debug:
+      priority = LOG_DEBUG;
+      break;
+    case LogLevel::Info:
+      priority = LOG_INFO;
+      break;
+    case LogLevel::Warning:
+      priority = LOG_WARNING;
+      break;
+    case LogLevel::Error:
+      priority = LOG_ERR;
+      break;
+    case LogLevel::Critical:
+      priority = LOG_CRIT;
+      break;
+    default:
+      priority = LOG_INFO;
+  }
+
+  // Write to syslog
+  syslog(priority, "%s", message.c_str());
+#endif
 }
 
 void ErrorLogger::log_to_network(const std::string& message) {
-  // Network logging implementation would go here
-  // For now, just log to console as fallback
-  log_to_console("NETWORK: " + message, LogLevel::Info);
+  if (network_endpoint_.empty()) {
+    // No network endpoint configured, skip network logging
+    return;
+  }
+
+  try {
+    // Use the network resource manager we implemented in Task 1
+    auto& network_manager = NetworkResourceManager::instance();
+    auto connection = network_manager.get_pooled_connection(network_endpoint_, ConnectionType::HTTP);
+
+    if (!connection) {
+      // Failed to get connection, fallback to console
+      log_to_console("NETWORK_ERROR: Failed to connect to " + network_endpoint_, LogLevel::Warning);
+      return;
+    }
+
+    // Create JSON payload for the log message
+    std::ostringstream json_payload;
+    auto now = std::chrono::system_clock::now();
+    auto time_t = std::chrono::system_clock::to_time_t(now);
+
+    json_payload << "{"
+                 << "\"timestamp\":\"" << std::put_time(std::localtime(&time_t), "%Y-%m-%d %H:%M:%S") << "\","
+                 << "\"application\":\"SolarSystemSuite\","
+                 << "\"message\":\"" << message << "\""
+                 << "}";
+
+    // Build HTTP POST request
+    std::ostringstream request;
+    request << "POST /api/logs HTTP/1.1\r\n"
+            << "Host: " << network_endpoint_ << "\r\n"
+            << "Content-Type: application/json\r\n"
+            << "Content-Length: " << json_payload.str().size() << "\r\n"
+            << "User-Agent: SolarSystemSuite/4.0.0\r\n"
+            << "\r\n"
+            << json_payload.str();
+
+    // Send the request (fire and forget, don't wait for response)
+    connection->send_request(request.str(), std::chrono::seconds(5));
+
+  } catch (const std::exception& ex) {
+    // Network logging failed, log to console as fallback
+    log_to_console("NETWORK_ERROR: " + std::string(ex.what()), LogLevel::Warning);
+  }
 }
 
 namespace {
@@ -1269,9 +1376,80 @@ std::string recovery_strategy_to_string(RecoveryStrategy strategy) {
   }
 }
 
-ErrorCode string_to_error_code(const std::string& ) {
-  // This would implement reverse lookup
-  // For now, return Unknown
+ErrorCode string_to_error_code(const std::string& error_string) {
+  // Implement reverse lookup using a static map
+  static const std::unordered_map<std::string, ErrorCode> error_code_map = {
+      // Validation errors (1000-1999)
+      {"InvalidInput", ErrorCode::InvalidInput},
+      {"InvalidFormat", ErrorCode::InvalidFormat},
+      {"InvalidRange", ErrorCode::InvalidRange},
+      {"MissingRequired", ErrorCode::MissingRequired},
+      {"ConflictingParameters", ErrorCode::ConflictingParameters},
+
+      // Network errors (2000-2999)
+      {"ConnectionFailed", ErrorCode::ConnectionFailed},
+      {"ConnectionTimeout", ErrorCode::ConnectionTimeout},
+      {"NetworkUnavailable", ErrorCode::NetworkUnavailable},
+      {"InvalidResponse", ErrorCode::InvalidResponse},
+      {"AuthenticationFailed", ErrorCode::AuthenticationFailed},
+
+      // File system errors (3000-3999)
+      {"FileNotFound", ErrorCode::FileNotFound},
+      {"FileAccessDenied", ErrorCode::FileAccessDenied},
+      {"FileCorrupted", ErrorCode::FileCorrupted},
+      {"DiskFull", ErrorCode::DiskFull},
+      {"DirectoryNotFound", ErrorCode::DirectoryNotFound},
+
+      // Memory errors (4000-4999)
+      {"OutOfMemory", ErrorCode::OutOfMemory},
+      {"MemoryLeak", ErrorCode::MemoryLeak},
+      {"InvalidPointer", ErrorCode::InvalidPointer},
+      {"BufferOverflow", ErrorCode::BufferOverflow},
+
+      // Configuration errors (5000-5999)
+      {"ConfigNotFound", ErrorCode::ConfigNotFound},
+      {"ConfigInvalid", ErrorCode::ConfigInvalid},
+      {"ConfigMissing", ErrorCode::ConfigMissing},
+      {"ConfigConflict", ErrorCode::ConfigConflict},
+
+      // Runtime errors (6000-6999)
+      {"OperationFailed", ErrorCode::OperationFailed},
+      {"StateInvalid", ErrorCode::StateInvalid},
+      {"ResourceUnavailable", ErrorCode::ResourceUnavailable},
+      {"TimeoutExpired", ErrorCode::TimeoutExpired},
+
+      // Resource errors (7000-7999)
+      {"ResourceExhausted", ErrorCode::ResourceExhausted},
+      {"ResourceLocked", ErrorCode::ResourceLocked},
+      {"ResourceCorrupted", ErrorCode::ResourceCorrupted},
+      {"ResourceConflict", ErrorCode::ResourceConflict},
+
+      // Security errors (8000-8999)
+      {"AccessDenied", ErrorCode::AccessDenied},
+      {"InvalidCredentials", ErrorCode::InvalidCredentials},
+      {"SecurityViolation", ErrorCode::SecurityViolation},
+
+      // Performance errors (9000-9999)
+      {"PerformanceDegraded", ErrorCode::PerformanceDegraded},
+      {"ResourceContention", ErrorCode::ResourceContention},
+
+      // Unknown
+      {"Unknown", ErrorCode::Unknown}
+  };
+
+  auto it = error_code_map.find(error_string);
+  if (it != error_code_map.end()) {
+    return it->second;
+  }
+
+  // Try parsing as numeric code
+  try {
+    int code_value = std::stoi(error_string);
+    return static_cast<ErrorCode>(code_value);
+  } catch (...) {
+    // Not a valid number, return Unknown
+  }
+
   return ErrorCode::Unknown;
 }
 
