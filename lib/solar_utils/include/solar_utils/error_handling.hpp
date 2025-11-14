@@ -349,6 +349,12 @@ class ErrorLogger {
   // Get log statistics
   ErrorStatistics get_log_statistics() const;
 
+  // Get memory logs (for testing and debugging)
+  static std::vector<std::string> get_memory_logs(size_t max_entries = 1000);
+
+  // Clear memory logs
+  static void clear_memory_logs();
+
   // Flush all log targets
   void flush();
 

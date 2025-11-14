@@ -580,9 +580,92 @@ void ErrorLogger::log_to_network(const std::string& message) {
   log_to_console("NETWORK: " + message, LogLevel::Info);
 }
 
-void ErrorLogger::log_to_memory(const std::string& ) {
-  // Memory logging implementation would go here
-  // This could store messages in a circular buffer
+namespace {
+// Shared memory log buffer state
+struct MemoryLogBuffer {
+  static const size_t MAX_SIZE = 10000;
+  std::vector<std::string> buffer;
+  size_t current_index = 0;
+  bool is_full = false;
+  std::mutex mutex;
+};
+
+MemoryLogBuffer& get_memory_log_buffer() {
+  static MemoryLogBuffer instance;
+  return instance;
+}
+}  // anonymous namespace
+
+void ErrorLogger::log_to_memory(const std::string& message) {
+  auto& mem_log = get_memory_log_buffer();
+  std::lock_guard<std::mutex> lock(mem_log.mutex);
+
+  // Add timestamp to message
+  auto now = std::chrono::system_clock::now();
+  auto time_t = std::chrono::system_clock::to_time_t(now);
+  std::ostringstream oss;
+  oss << "[" << std::put_time(std::localtime(&time_t), "%Y-%m-%d %H:%M:%S") << "] " << message;
+  std::string timestamped_message = oss.str();
+
+  // Circular buffer implementation
+  if (!mem_log.is_full && mem_log.buffer.size() < MemoryLogBuffer::MAX_SIZE) {
+    // Buffer not yet full, just append
+    mem_log.buffer.push_back(timestamped_message);
+    mem_log.current_index = mem_log.buffer.size();
+  } else {
+    // Buffer is full, overwrite oldest entry
+    if (mem_log.buffer.size() < MemoryLogBuffer::MAX_SIZE) {
+      mem_log.buffer.resize(MemoryLogBuffer::MAX_SIZE);
+    }
+    mem_log.is_full = true;
+    mem_log.buffer[mem_log.current_index % MemoryLogBuffer::MAX_SIZE] = timestamped_message;
+    mem_log.current_index++;
+  }
+}
+
+std::vector<std::string> ErrorLogger::get_memory_logs(size_t max_entries) {
+  auto& mem_log = get_memory_log_buffer();
+  std::lock_guard<std::mutex> lock(mem_log.mutex);
+
+  std::vector<std::string> result;
+
+  if (mem_log.buffer.empty()) {
+    return result;
+  }
+
+  size_t entries_to_return = std::min(max_entries, mem_log.buffer.size());
+
+  if (!mem_log.is_full) {
+    // Buffer not full yet, return from beginning
+    size_t start = mem_log.buffer.size() > entries_to_return
+                   ? mem_log.buffer.size() - entries_to_return
+                   : 0;
+    result.assign(mem_log.buffer.begin() + static_cast<std::ptrdiff_t>(start),
+                  mem_log.buffer.end());
+  } else {
+    // Buffer is full, return most recent entries in chronological order
+    size_t start_idx = mem_log.current_index >= entries_to_return
+                       ? (mem_log.current_index - entries_to_return) % mem_log.buffer.size()
+                       : 0;
+
+    for (size_t i = 0; i < entries_to_return; ++i) {
+      size_t idx = (start_idx + i) % mem_log.buffer.size();
+      if (!mem_log.buffer[idx].empty()) {
+        result.push_back(mem_log.buffer[idx]);
+      }
+    }
+  }
+
+  return result;
+}
+
+void ErrorLogger::clear_memory_logs() {
+  auto& mem_log = get_memory_log_buffer();
+  std::lock_guard<std::mutex> lock(mem_log.mutex);
+
+  mem_log.buffer.clear();
+  mem_log.current_index = 0;
+  mem_log.is_full = false;
 }
 
 std::string ErrorLogger::format_log_message(const DetailedError& error) const {
