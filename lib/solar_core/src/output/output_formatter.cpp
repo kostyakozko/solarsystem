@@ -5,6 +5,7 @@
 #include <fstream>
 #include <iomanip>
 #include <sstream>
+#include <zlib.h>
 
 namespace SolarSystem::Output {
 
@@ -378,24 +379,71 @@ ValidationResult OutputFormatter::validate_output(const Bodies::BodyCollection& 
 std::string OutputFormatter::compress(const std::string& data,
                                      CompressionType type,
                                      int level) {
-  // Placeholder implementation - in production, use zlib or similar
-  (void)level;
-  if (type == CompressionType::NONE) {
+  if (type == CompressionType::NONE || data.empty()) {
     return data;
   }
 
-  // For now, return uncompressed data with a note
-  return data;  // TODO: Implement actual compression
+  // Use zlib for compression
+  uLongf compressed_size = compressBound(static_cast<uLong>(data.size()));
+  std::vector<uint8_t> compressed_data(compressed_size);
+
+  // Map compression level (0-9 for zlib)
+  int zlib_level = Z_DEFAULT_COMPRESSION;
+  if (level >= 0 && level <= 9) {
+    zlib_level = level;
+  }
+
+  int result = compress2(compressed_data.data(), &compressed_size,
+                        reinterpret_cast<const uint8_t*>(data.data()),
+                        static_cast<uLong>(data.size()),
+                        zlib_level);
+
+  if (result != Z_OK) {
+    // Compression failed, return original data
+    return data;
+  }
+
+  // Resize to actual compressed size
+  compressed_data.resize(compressed_size);
+
+  // Convert to string
+  return std::string(reinterpret_cast<char*>(compressed_data.data()), compressed_size);
 }
 
 std::string OutputFormatter::decompress(
     const std::string& compressed_data, CompressionType type) {
-  // Placeholder implementation
-  if (type == CompressionType::NONE) {
+  if (type == CompressionType::NONE || compressed_data.empty()) {
     return compressed_data;
   }
 
-  return compressed_data;  // TODO: Implement actual decompression
+  // Use zlib for decompression
+  // Start with a reasonable buffer size (4x compressed size)
+  uLongf uncompressed_size = compressed_data.size() * 4;
+  std::vector<uint8_t> uncompressed_data(uncompressed_size);
+
+  int result = uncompress(uncompressed_data.data(), &uncompressed_size,
+                         reinterpret_cast<const uint8_t*>(compressed_data.data()),
+                         static_cast<uLong>(compressed_data.size()));
+
+  // If buffer was too small, try with larger buffer
+  if (result == Z_BUF_ERROR) {
+    uncompressed_size = compressed_data.size() * 10;
+    uncompressed_data.resize(uncompressed_size);
+    result = uncompress(uncompressed_data.data(), &uncompressed_size,
+                       reinterpret_cast<const uint8_t*>(compressed_data.data()),
+                       static_cast<uLong>(compressed_data.size()));
+  }
+
+  if (result != Z_OK) {
+    // Decompression failed, return empty string
+    return "";
+  }
+
+  // Resize to actual uncompressed size
+  uncompressed_data.resize(uncompressed_size);
+
+  // Convert to string
+  return std::string(reinterpret_cast<char*>(uncompressed_data.data()), uncompressed_size);
 }
 
 std::vector<OutputFormat> OutputFormatter::supported_formats() {
@@ -758,29 +806,173 @@ Bodies::BodyCollection OutputFormatter::apply_filter(const Bodies::BodyCollectio
 Utils::Expected<void, std::string> OutputArchiver::create_archive(
     const std::vector<std::filesystem::path>& files, const std::filesystem::path& archive_path,
     CompressionType compression) {
-  // Placeholder implementation
-  // In production, use libarchive or similar
-  (void)files;
-  (void)archive_path;
-  (void)compression;
-  return Utils::Expected<void, std::string>(std::string("Archive creation not yet implemented"));
+  try {
+    std::ofstream archive(archive_path, std::ios::binary);
+    if (!archive.is_open()) {
+      return Utils::Expected<void, std::string>("Failed to create archive file");
+    }
+
+    // Write archive header: "SOLAR_ARCHIVE" + version
+    const char* header = "SOLAR_ARCHIVE_V1";
+    archive.write(header, 16);
+
+    // Write number of files
+    uint32_t file_count = static_cast<uint32_t>(files.size());
+    archive.write(reinterpret_cast<const char*>(&file_count), sizeof(file_count));
+
+    // Write each file
+    for (const auto& file_path : files) {
+      if (!std::filesystem::exists(file_path)) {
+        return Utils::Expected<void, std::string>("File not found: " + file_path.string());
+      }
+
+      // Read file content
+      std::ifstream file(file_path, std::ios::binary);
+      if (!file.is_open()) {
+        return Utils::Expected<void, std::string>("Failed to open file: " + file_path.string());
+      }
+
+      std::string content((std::istreambuf_iterator<char>(file)),
+                         std::istreambuf_iterator<char>());
+      file.close();
+
+      // Compress if requested
+      if (compression != CompressionType::NONE) {
+        OutputFormatter formatter;
+        content = formatter.compress(content, compression, 6);
+      }
+
+      // Write file entry: name_length + name + content_length + content
+      std::string filename = file_path.filename().string();
+      uint32_t name_length = static_cast<uint32_t>(filename.size());
+      uint32_t content_length = static_cast<uint32_t>(content.size());
+
+      archive.write(reinterpret_cast<const char*>(&name_length), sizeof(name_length));
+      archive.write(filename.c_str(), static_cast<std::streamsize>(name_length));
+      archive.write(reinterpret_cast<const char*>(&content_length), sizeof(content_length));
+      archive.write(content.c_str(), static_cast<std::streamsize>(content_length));
+    }
+
+    archive.close();
+    return Utils::Expected<void, std::string>();
+
+  } catch (const std::exception& ex) {
+    return Utils::Expected<void, std::string>(std::string("Archive creation failed: ") + ex.what());
+  }
 }
 
 Utils::Expected<std::vector<std::filesystem::path>, std::string> OutputArchiver::extract_archive(
     const std::filesystem::path& archive_path, const std::filesystem::path& destination) {
-  // Placeholder implementation
-  (void)archive_path;
-  (void)destination;
-  return Utils::Expected<std::vector<std::filesystem::path>, std::string>(
-      std::string("Archive extraction not yet implemented"));
+  try {
+    std::ifstream archive(archive_path, std::ios::binary);
+    if (!archive.is_open()) {
+      return Utils::Expected<std::vector<std::filesystem::path>, std::string>(
+          "Failed to open archive file");
+    }
+
+    // Read and verify header
+    char header[16];
+    archive.read(header, 16);
+    if (std::string(header, 16) != "SOLAR_ARCHIVE_V1") {
+      return Utils::Expected<std::vector<std::filesystem::path>, std::string>(
+          "Invalid archive format");
+    }
+
+    // Read number of files
+    uint32_t file_count;
+    archive.read(reinterpret_cast<char*>(&file_count), sizeof(file_count));
+
+    std::vector<std::filesystem::path> extracted_files;
+
+    // Extract each file
+    for (uint32_t i = 0; i < file_count; ++i) {
+      // Read file name
+      uint32_t name_length;
+      archive.read(reinterpret_cast<char*>(&name_length), sizeof(name_length));
+
+      std::vector<char> name_buffer(name_length);
+      archive.read(name_buffer.data(), static_cast<std::streamsize>(name_length));
+      std::string filename(name_buffer.begin(), name_buffer.end());
+
+      // Read file content
+      uint32_t content_length;
+      archive.read(reinterpret_cast<char*>(&content_length), sizeof(content_length));
+
+      std::vector<char> content_buffer(content_length);
+      archive.read(content_buffer.data(), static_cast<std::streamsize>(content_length));
+      std::string content(content_buffer.begin(), content_buffer.end());
+
+      // Write extracted file
+      std::filesystem::path output_path = destination / filename;
+      std::ofstream output(output_path, std::ios::binary);
+      if (!output.is_open()) {
+        return Utils::Expected<std::vector<std::filesystem::path>, std::string>(
+            "Failed to create output file: " + output_path.string());
+      }
+
+      output.write(content.c_str(), static_cast<std::streamsize>(content.size()));
+      output.close();
+
+      extracted_files.push_back(output_path);
+    }
+
+    archive.close();
+    return Utils::Expected<std::vector<std::filesystem::path>, std::string>(extracted_files);
+
+  } catch (const std::exception& ex) {
+    return Utils::Expected<std::vector<std::filesystem::path>, std::string>(
+        std::string("Archive extraction failed: ") + ex.what());
+  }
 }
 
 Utils::Expected<std::vector<std::string>, std::string> OutputArchiver::list_archive(
     const std::filesystem::path& archive_path) {
-  // Placeholder implementation
-  (void)archive_path;
-  return Utils::Expected<std::vector<std::string>, std::string>(
-      std::string("Archive listing not yet implemented"));
+  try {
+    std::ifstream archive(archive_path, std::ios::binary);
+    if (!archive.is_open()) {
+      return Utils::Expected<std::vector<std::string>, std::string>(
+          "Failed to open archive file");
+    }
+
+    // Read and verify header
+    char header[16];
+    archive.read(header, 16);
+    if (std::string(header, 16) != "SOLAR_ARCHIVE_V1") {
+      return Utils::Expected<std::vector<std::string>, std::string>(
+          "Invalid archive format");
+    }
+
+    // Read number of files
+    uint32_t file_count;
+    archive.read(reinterpret_cast<char*>(&file_count), sizeof(file_count));
+
+    std::vector<std::string> file_list;
+
+    // List each file
+    for (uint32_t i = 0; i < file_count; ++i) {
+      // Read file name
+      uint32_t name_length;
+      archive.read(reinterpret_cast<char*>(&name_length), sizeof(name_length));
+
+      std::vector<char> name_buffer(name_length);
+      archive.read(name_buffer.data(), static_cast<std::streamsize>(name_length));
+      std::string filename(name_buffer.begin(), name_buffer.end());
+
+      file_list.push_back(filename);
+
+      // Skip content
+      uint32_t content_length;
+      archive.read(reinterpret_cast<char*>(&content_length), sizeof(content_length));
+      archive.seekg(content_length, std::ios::cur);
+    }
+
+    archive.close();
+    return Utils::Expected<std::vector<std::string>, std::string>(file_list);
+
+  } catch (const std::exception& ex) {
+    return Utils::Expected<std::vector<std::string>, std::string>(
+        std::string("Archive listing failed: ") + ex.what());
+  }
 }
 
 // ============================================================================
