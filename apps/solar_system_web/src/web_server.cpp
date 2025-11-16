@@ -576,7 +576,70 @@ class HttpServer {
   }
 
   /**
-   * @brief Serve static files from web root
+   * @brief Get MIME type for file extension
+   */
+  [[nodiscard]] static std::string get_mime_type(const std::string& extension) {
+    static const std::map<std::string, std::string> mime_types = {
+        // Text formats
+        {".html", "text/html"},
+        {".htm", "text/html"},
+        {".css", "text/css"},
+        {".txt", "text/plain"},
+        {".xml", "text/xml"},
+        {".csv", "text/csv"},
+
+        // JavaScript
+        {".js", "application/javascript"},
+        {".mjs", "application/javascript"},
+        {".json", "application/json"},
+
+        // Images
+        {".png", "image/png"},
+        {".jpg", "image/jpeg"},
+        {".jpeg", "image/jpeg"},
+        {".gif", "image/gif"},
+        {".svg", "image/svg+xml"},
+        {".ico", "image/x-icon"},
+        {".webp", "image/webp"},
+
+        // Fonts
+        {".woff", "font/woff"},
+        {".woff2", "font/woff2"},
+        {".ttf", "font/ttf"},
+        {".otf", "font/otf"},
+        {".eot", "application/vnd.ms-fontobject"},
+
+        // Media
+        {".mp3", "audio/mpeg"},
+        {".mp4", "video/mp4"},
+        {".webm", "video/webm"},
+        {".ogg", "audio/ogg"},
+        {".wav", "audio/wav"},
+
+        // Archives
+        {".zip", "application/zip"},
+        {".tar", "application/x-tar"},
+        {".gz", "application/gzip"},
+
+        // Documents
+        {".pdf", "application/pdf"},
+        {".doc", "application/msword"},
+        {".docx",
+         "application/vnd.openxmlformats-officedocument.wordprocessingml.document"},
+
+        // Other
+        {".wasm", "application/wasm"},
+        {".bin", "application/octet-stream"}};
+
+    auto it = mime_types.find(extension);
+    if (it != mime_types.end()) {
+      return it->second;
+    }
+    return "application/octet-stream";  // Default fallback
+  }
+
+  /**
+   * @brief Serve static files from web root with caching and security
    */
   [[nodiscard]] HttpResponse serve_static_file(const std::string& path) {
     std::filesystem::path file_path = config_.web_root;
@@ -590,21 +653,64 @@ class HttpServer {
         clean_path = clean_path.substr(1);
       }
 
-      // Basic security check
+      // Enhanced security checks
       if (clean_path.find("..") != std::string::npos) {
+        LOG_ERROR("HttpServer", "Directory traversal attempt: " + clean_path);
+        return HttpResponse::error(403, "Forbidden");
+      }
+
+      // Prevent access to hidden files
+      if (clean_path.starts_with(".") || clean_path.find("/.") != std::string::npos) {
+        LOG_ERROR("HttpServer", "Hidden file access attempt: " + clean_path);
         return HttpResponse::error(403, "Forbidden");
       }
 
       file_path /= clean_path;
     }
 
+    // Verify the resolved path is still within web root (canonical path check)
+    try {
+      auto canonical_file = std::filesystem::canonical(file_path);
+      auto canonical_root = std::filesystem::canonical(config_.web_root);
+
+      // Check if file is within web root
+      auto rel_path = std::filesystem::relative(canonical_file, canonical_root);
+      if (rel_path.string().starts_with("..")) {
+        LOG_ERROR("HttpServer", "Path escape attempt: " + path);
+        return HttpResponse::error(403, "Forbidden");
+      }
+    } catch (const std::filesystem::filesystem_error&) {
+      // File doesn't exist or can't be accessed
+      VERBOSE_LOG_DEBUG("HttpServer", "File not found: " + file_path.string());
+      return HttpResponse::error(404, "Not Found");
+    }
+
     if (!std::filesystem::exists(file_path)) {
       return HttpResponse::error(404, "Not Found");
+    }
+
+    // Don't serve directories
+    if (std::filesystem::is_directory(file_path)) {
+      // Try index.html in directory
+      auto index_path = file_path / "index.html";
+      if (std::filesystem::exists(index_path)) {
+        file_path = index_path;
+      } else {
+        return HttpResponse::error(403, "Forbidden");
+      }
+    }
+
+    // Check file size (prevent serving huge files)
+    auto file_size = std::filesystem::file_size(file_path);
+    if (file_size > 100 * 1024 * 1024) {  // 100 MB limit
+      LOG_ERROR("HttpServer", "File too large: " + file_path.string());
+      return HttpResponse::error(413, "Payload Too Large");
     }
 
     // Read file
     std::ifstream file(file_path, std::ios::binary);
     if (!file) {
+      LOG_ERROR("HttpServer", "Failed to open file: " + file_path.string());
       return HttpResponse::error(500, "Failed to read file");
     }
 
@@ -615,19 +721,35 @@ class HttpServer {
 
     // Set content type based on file extension
     auto extension = file_path.extension().string();
-    if (extension == ".html") {
-      response.html();
-    } else if (extension == ".js") {
-      response.headers["Content-Type"] = "application/javascript";
-    } else if (extension == ".css") {
-      response.headers["Content-Type"] = "text/css";
-    } else if (extension == ".json") {
-      response.json();
+    response.headers["Content-Type"] = get_mime_type(extension);
+
+    // Add caching headers for static assets
+    if (extension == ".js" || extension == ".css" || extension == ".png" || extension == ".jpg" ||
+        extension == ".jpeg" || extension == ".gif" || extension == ".svg" ||
+        extension == ".woff" || extension == ".woff2" || extension == ".ttf") {
+      // Cache static assets for 1 hour
+      response.headers["Cache-Control"] = "public, max-age=3600";
+    } else if (extension == ".html") {
+      // Don't cache HTML files (or cache briefly)
+      response.headers["Cache-Control"] = "no-cache, must-revalidate";
     }
+
+    // Add ETag for cache validation
+    auto last_write_time = std::filesystem::last_write_time(file_path);
+    auto time_since_epoch = last_write_time.time_since_epoch().count();
+    response.headers["ETag"] = "\"" + std::to_string(static_cast<long long>(time_since_epoch)) + "-" +
+                               std::to_string(static_cast<unsigned long long>(file_size)) + "\"";
+
+    // Add security headers
+    response.headers["X-Content-Type-Options"] = "nosniff";
+    response.headers["X-Frame-Options"] = "SAMEORIGIN";
 
     if (config_.enable_cors) {
       response.cors();
     }
+
+    VERBOSE_LOG_DEBUG("HttpServer", "Served file: " + file_path.string() + " (" +
+                                        std::to_string(file_size) + " bytes)");
 
     return response;
   }
@@ -750,6 +872,132 @@ class SolarSystemAPI {
   }
 
   /**
+   * @brief Get celestial bodies data with filtering and pagination
+   */
+  static HttpResponse handle_bodies(const HttpRequest& request,
+                                    SolarSystem::Bodies::BodyFactory& factory) {
+    try {
+      // Parse query parameters for filtering
+      auto type_filter = request.get_query_param("type");
+      auto name_filter = request.get_query_param("name");
+      auto limit_param = request.get_query_param("limit");
+      auto offset_param = request.get_query_param("offset");
+
+      // Parse pagination parameters
+      size_t limit = 100;  // Default limit
+      size_t offset = 0;   // Default offset
+
+      if (limit_param.has_value()) {
+        try {
+          limit = std::stoull(*limit_param);
+          if (limit > 1000) limit = 1000;  // Cap at 1000
+        } catch (...) {
+          return HttpResponse::error(400, "Invalid limit parameter");
+        }
+      }
+
+      if (offset_param.has_value()) {
+        try {
+          offset = std::stoull(*offset_param);
+        } catch (...) {
+          return HttpResponse::error(400, "Invalid offset parameter");
+        }
+      }
+
+      VERBOSE_LOG_INFO("API", "Bodies request - Type: " +
+                                  (type_filter.has_value() ? *type_filter : "all") +
+                                  ", Name: " + (name_filter.has_value() ? *name_filter : "all") +
+                                  ", Limit: " + std::to_string(limit) +
+                                  ", Offset: " + std::to_string(offset));
+
+      // Get available bodies from factory
+      auto available_bodies = factory.get_available_bodies();
+
+      // Build JSON response with metadata only (fast response)
+      std::ostringstream json;
+      json << "{\n";
+      json << "  \"total\": " << available_bodies.size() << ",\n";
+      json << "  \"limit\": " << limit << ",\n";
+      json << "  \"offset\": " << offset << ",\n";
+      json << "  \"bodies\": [\n";
+
+      bool first = true;
+      size_t count = 0;
+      size_t index = 0;
+
+      for (const auto& body_name : available_bodies) {
+        // Apply offset
+        if (index < offset) {
+          index++;
+          continue;
+        }
+
+        // Apply limit
+        if (count >= limit) {
+          break;
+        }
+
+        // Apply name filter
+        if (name_filter.has_value()) {
+          std::string lower_name = body_name;
+          std::string lower_filter = *name_filter;
+          std::transform(lower_name.begin(), lower_name.end(), lower_name.begin(), ::tolower);
+          std::transform(lower_filter.begin(), lower_filter.end(), lower_filter.begin(),
+                         ::tolower);
+          if (lower_name.find(lower_filter) == std::string::npos) {
+            index++;
+            continue;
+          }
+        }
+
+        // Determine body type based on name (without creating the body - fast!)
+        std::string body_type = "unknown";
+        if (body_name == "Sun") {
+          body_type = "star";
+        } else if (body_name == "Mercury" || body_name == "Venus" || body_name == "Earth" ||
+                   body_name == "Mars" || body_name == "Jupiter" || body_name == "Saturn" ||
+                   body_name == "Uranus" || body_name == "Neptune") {
+          body_type = "planet";
+        } else if (body_name == "Moon") {
+          body_type = "moon";
+        } else if (body_name == "Pluto" || body_name == "Ceres" || body_name == "Eris") {
+          body_type = "dwarf_planet";
+        } else {
+          body_type = "celestial_body";
+        }
+
+        // Apply type filter
+        if (type_filter.has_value() && body_type != *type_filter) {
+          index++;
+          continue;
+        }
+
+        // Return metadata only (name and type) for fast response
+        // Full body data with position/velocity available via /api/solar_system
+        if (!first) json << ",\n";
+        first = false;
+
+        json << "    {\n";
+        json << "      \"name\": \"" << body_name << "\",\n";
+        json << "      \"type\": \"" << body_type << "\"\n";
+        json << "    }";
+
+        count++;
+        index++;
+      }
+
+      json << "\n  ]\n";
+      json << "}";
+
+      return HttpResponse::json_response(json.str());
+
+    } catch (const std::exception& e) {
+      LOG_ERROR("API", "Bodies handler exception: " + std::string(e.what()));
+      return HttpResponse::error(500, "Failed to get bodies data");
+    }
+  }
+
+  /**
    * @brief Get solar system data
    */
   static HttpResponse handle_solar_system(const HttpRequest& request,
@@ -844,24 +1092,57 @@ class SolarSystemAPI {
   }
 
   /**
-   * @brief Handle simulation request
+   * @brief Handle simulation request with state management
    */
   static HttpResponse handle_simulate(const HttpRequest& request,
                                       SolarSystem::Bodies::BodyFactory&) {
     try {
       auto date_param = request.get_query_param("date");
       auto speed_param = request.get_query_param("speed");
+      auto steps_param = request.get_query_param("steps");
+      auto timestep_param = request.get_query_param("timestep");
 
       VERBOSE_LOG_INFO("API", "Simulation request - Date: " +
                                   (date_param.has_value() ? *date_param : "current") +
                                   ", Speed: " + (speed_param.has_value() ? *speed_param : "1.0"));
+
+      // Parse simulation parameters
+      double speed = 1.0;
+      if (speed_param.has_value()) {
+        try {
+          speed = std::stod(*speed_param);
+          if (speed <= 0.0) speed = 1.0;
+        } catch (...) {
+          return HttpResponse::error(400, "Invalid speed parameter");
+        }
+      }
+
+      size_t steps = 100;  // Default steps
+      if (steps_param.has_value()) {
+        try {
+          steps = std::stoull(*steps_param);
+          if (steps > 10000) steps = 10000;  // Cap at 10000
+        } catch (...) {
+          return HttpResponse::error(400, "Invalid steps parameter");
+        }
+      }
+
+      double timestep = 3600.0;  // Default 1 hour
+      if (timestep_param.has_value()) {
+        try {
+          timestep = std::stod(*timestep_param);
+          if (timestep <= 0.0) timestep = 3600.0;
+        } catch (...) {
+          return HttpResponse::error(400, "Invalid timestep parameter");
+        }
+      }
 
       // Use modern SimulationBuilder for time travel
       using namespace SolarSystem::Core::Builders;
 
       // Create body selector for web interface (essential bodies for optimal web performance)
       BodySelector selector;
-      selector.body_set(SolarSystem::Bodies::BodyFactory::DefaultBodySet::ESSENTIAL);  // Sun + 8 planets for smooth web rendering
+      selector.body_set(SolarSystem::Bodies::BodyFactory::DefaultBodySet::ESSENTIAL);
 
       auto body_collection_result = selector.build();
       if (!body_collection_result.has_value()) {
@@ -883,7 +1164,8 @@ class SolarSystemAPI {
           std::tm tm = {};
           if (date_stream >> std::get_time(&tm, "%Y-%m-%d")) {
             target_time = std::chrono::system_clock::from_time_t(std::mktime(&tm));
-            VERBOSE_LOG_INFO("API", "Time travel to validated date: " + validation_result.normalized_value);
+            VERBOSE_LOG_INFO("API", "Time travel to validated date: " +
+                                        validation_result.normalized_value);
           } else {
             LOG_ERROR("API", "Failed to parse validated date: " + validation_result.normalized_value);
           }
@@ -918,8 +1200,8 @@ class SolarSystemAPI {
       SimulationBuilder sim_builder;
       std::string error_message;
       auto simulation = sim_builder.with_bodies(std::move(bodies))
-                            .with_timestep(3600.0)  // 1 hour timestep for web interface
-                            .with_max_iterations(1000)
+                            .with_timestep(timestep * speed)
+                            .with_max_iterations(steps)
                             .build(&error_message);
 
       if (!simulation) {
@@ -927,19 +1209,67 @@ class SolarSystemAPI {
         return HttpResponse::error(500, "Simulation configuration failed: " + error_message);
       }
 
+      // Run simulation steps
+      size_t completed_steps = 0;
+      for (size_t i = 0; i < steps; ++i) {
+        auto step_result = simulation->step();
+        if (step_result.has_value()) {
+          completed_steps++;
+        } else {
+          LOG_ERROR("API", "Simulation step failed: " + step_result.error());
+          break;
+        }
+      }
+
+      // Get final state
+      const auto& final_bodies = simulation->get_bodies();
+
+      // Build response with simulation results
       std::ostringstream json;
       json << "{\n";
       json << "  \"status\": \"success\",\n";
-      json << "  \"message\": \"Simulation updated\",\n";
-      json << "  \"date\": \"" << (date_param.has_value() ? *date_param : "current") << "\",\n";
-      json << "  \"speed\": " << (speed_param.has_value() ? *speed_param : "1.0") << "\n";
+      json << "  \"message\": \"Simulation completed\",\n";
+      json << "  \"configuration\": {\n";
+      json << "    \"date\": \"" << (date_param.has_value() ? *date_param : "current") << "\",\n";
+      json << "    \"speed\": " << speed << ",\n";
+      json << "    \"timestep\": " << timestep << ",\n";
+      json << "    \"requested_steps\": " << steps << ",\n";
+      json << "    \"completed_steps\": " << completed_steps << "\n";
+      json << "  },\n";
+      json << "  \"results\": {\n";
+      json << "    \"body_count\": " << final_bodies.size() << ",\n";
+      json << "    \"simulation_time\": " << (completed_steps * timestep * speed) << ",\n";
+      json << "    \"bodies\": [\n";
+
+      bool first = true;
+      for (const auto& body : final_bodies) {
+        if (!first) json << ",\n";
+        first = false;
+
+        json << "      {\n";
+        json << "        \"name\": \"" << body.name() << "\",\n";
+        json << "        \"position\": {\n";
+        json << "          \"x\": " << body.position().x() << ",\n";
+        json << "          \"y\": " << body.position().y() << ",\n";
+        json << "          \"z\": " << body.position().z() << "\n";
+        json << "        },\n";
+        json << "        \"velocity\": {\n";
+        json << "          \"x\": " << body.velocity().x() << ",\n";
+        json << "          \"y\": " << body.velocity().y() << ",\n";
+        json << "          \"z\": " << body.velocity().z() << "\n";
+        json << "        }\n";
+        json << "      }";
+      }
+
+      json << "\n    ]\n";
+      json << "  }\n";
       json << "}";
 
       return HttpResponse::json_response(json.str());
 
     } catch (const std::exception& e) {
       LOG_ERROR("API", "Simulate handler exception: " + std::string(e.what()));
-      return HttpResponse::error(500, "Simulation failed");
+      return HttpResponse::error(500, "Simulation failed: " + std::string(e.what()));
     }
   }
 };
@@ -1063,10 +1393,14 @@ class ArgumentParser {
 
     std::cout << "🌟 API Endpoints:\n";
     std::cout << "  GET  /                     # Main web interface\n";
+    std::cout << "  GET  /api/health           # Health check\n";
     std::cout << "  GET  /api/status           # Server and system status\n";
+    std::cout << "  GET  /api/bodies           # List all celestial bodies\n";
+    std::cout << "  GET  /api/bodies?type=planet&limit=10  # Filter and paginate bodies\n";
     std::cout << "  GET  /api/solar_system     # Current solar system state\n";
     std::cout << "  GET  /api/solar_system?date=YYYY-MM-DD  # Historical data\n";
-    std::cout << "  POST /api/simulate         # Update simulation\n\n";
+    std::cout << "  GET  /api/simulation       # Run simulation with parameters\n";
+    std::cout << "  GET  /api/simulation?date=YYYY-MM-DD&steps=100  # Time travel simulation\n\n";
 
     std::cout << "🌟 Modern Features:\n";
     std::cout << "  • RESTful API with JSON responses\n";
@@ -1143,12 +1477,20 @@ int main(int argc, char* argv[]) {
                 [factory](const HttpRequest& req) {
                   return SolarSystemAPI::handle_status(req, *factory);
                 })
+        .handle("/api/bodies",
+                [factory](const HttpRequest& req) {
+                  return SolarSystemAPI::handle_bodies(req, *factory);
+                })
         .handle("/api/solar_system",
                 [factory](const HttpRequest& req) {
                   return SolarSystemAPI::handle_solar_system(req, *factory);
                 })
+        .handle("/api/simulation",
+                [factory](const HttpRequest& req) {
+                  return SolarSystemAPI::handle_simulate(req, *factory);
+                })
         .handle("/api/simulate", [factory](const HttpRequest& req) {
-          return SolarSystemAPI::handle_solar_system(req, *factory);
+          return SolarSystemAPI::handle_simulate(req, *factory);
         });
 
     // Start server
