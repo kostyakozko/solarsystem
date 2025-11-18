@@ -423,10 +423,83 @@ void PerformanceAlertSystem::send_email_alert(const std::string& subject, const 
 }
 
 void PerformanceAlertSystem::send_slack_alert(const std::string& message) {
-  // Simplified Slack implementation - in production, use HTTP client to send to webhook
-  std::cout << "SLACK ALERT (would be sent if configured):\n";
-  std::cout << "Webhook: " << config_.slack_webhook_url << "\n";
-  std::cout << "Message: " << message << "\n\n";
+  if (config_.slack_webhook_url.empty()) {
+    std::cout << "SLACK ALERT: No webhook URL configured\n";
+    return;
+  }
+
+  CURL* curl = curl_easy_init();
+  if (!curl) {
+    std::cout << "SLACK ALERT: Failed to initialize curl\n";
+    return;
+  }
+
+  // Escape JSON string
+  auto escape_json = [](const std::string& str) -> std::string {
+    std::string escaped;
+    for (char c : str) {
+      switch (c) {
+        case '"':
+          escaped += "\\\"";
+          break;
+        case '\\':
+          escaped += "\\\\";
+          break;
+        case '\n':
+          escaped += "\\n";
+          break;
+        case '\r':
+          escaped += "\\r";
+          break;
+        case '\t':
+          escaped += "\\t";
+          break;
+        default:
+          escaped += c;
+      }
+    }
+    return escaped;
+  };
+
+  // Build Slack JSON payload
+  std::ostringstream json_payload;
+  json_payload << "{"
+               << "\"text\":\"" << escape_json(message) << "\","
+               << "\"username\":\"Solar System Performance Monitor\","
+               << "\"icon_emoji\":\":rocket:\""
+               << "}";
+
+  std::string payload = json_payload.str();
+
+  // Configure curl
+  curl_easy_setopt(curl, CURLOPT_URL, config_.slack_webhook_url.c_str());
+  curl_easy_setopt(curl, CURLOPT_POSTFIELDS, payload.c_str());
+
+  // Set headers
+  struct curl_slist* headers = nullptr;
+  headers = curl_slist_append(headers, "Content-Type: application/json");
+  curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+
+  // SSL/TLS settings
+  curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 1L);
+  curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 2L);
+
+  // Timeouts
+  curl_easy_setopt(curl, CURLOPT_TIMEOUT, 10L);
+  curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 5L);
+
+  // Perform the request
+  CURLcode res = curl_easy_perform(curl);
+
+  // Cleanup
+  curl_slist_free_all(headers);
+  curl_easy_cleanup(curl);
+
+  if (res == CURLE_OK) {
+    std::cout << "SLACK ALERT: Sent successfully\n";
+  } else {
+    std::cout << "SLACK ALERT: Failed to send - " << curl_easy_strerror(res) << "\n";
+  }
 }
 
 void PerformanceAlertSystem::create_github_issue(const std::string& title,
