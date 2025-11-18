@@ -277,15 +277,70 @@ void PerformanceAlertSystem::send_batch_alert(const std::vector<RegressionAnalys
 }
 
 void PerformanceAlertSystem::send_email_alert(const std::string& subject, const std::string& body) {
-  // Simplified email implementation - in production, use a proper email library
-  std::cout << "EMAIL ALERT (would be sent if configured):\n";
-  std::cout << "Subject: " << subject << "\n";
-  std::cout << "Body:\n" << body << "\n";
-  std::cout << "Recipients: ";
-  for (const auto& recipient : config_.email_recipients) {
-    std::cout << recipient << " ";
+  if (config_.email_recipients.empty()) {
+    std::cout << "EMAIL ALERT: No recipients configured\n";
+    return;
   }
-  std::cout << "\n\n";
+
+  // Try to send email using available system tools
+  bool sent = false;
+
+#ifdef __APPLE__
+  // macOS: Try using osascript with Mail.app
+  for (const auto& recipient : config_.email_recipients) {
+    std::ostringstream cmd;
+    cmd << "osascript -e 'tell application \"Mail\" to make new outgoing message with properties "
+        << "{subject:\"" << subject << "\", content:\"" << body << "\", visible:false}' "
+        << "-e 'tell result to make new to recipient at end of to recipients with properties "
+        << "{address:\"" << recipient << "\"}' "
+        << "-e 'tell application \"Mail\" to send result' 2>/dev/null";
+
+    if (system(cmd.str().c_str()) == 0) {
+      sent = true;
+    }
+  }
+#endif
+
+#ifdef __linux__
+  // Linux: Try using sendmail or mail command
+  if (!sent && system("which sendmail >/dev/null 2>&1") == 0) {
+    for (const auto& recipient : config_.email_recipients) {
+      std::ostringstream cmd;
+      cmd << "echo \"" << body << "\" | sendmail -t <<EOF\n"
+          << "To: " << recipient << "\n"
+          << "Subject: " << subject << "\n"
+          << "\n" << body << "\nEOF";
+
+      if (system(cmd.str().c_str()) == 0) {
+        sent = true;
+      }
+    }
+  }
+
+  if (!sent && system("which mail >/dev/null 2>&1") == 0) {
+    for (const auto& recipient : config_.email_recipients) {
+      std::ostringstream cmd;
+      cmd << "echo \"" << body << "\" | mail -s \"" << subject << "\" " << recipient;
+
+      if (system(cmd.str().c_str()) == 0) {
+        sent = true;
+      }
+    }
+  }
+#endif
+
+  // Fallback: Log to console
+  if (!sent) {
+    std::cout << "EMAIL ALERT (system mail not available, logging to console):\n";
+    std::cout << "Subject: " << subject << "\n";
+    std::cout << "Recipients: ";
+    for (const auto& recipient : config_.email_recipients) {
+      std::cout << recipient << " ";
+    }
+    std::cout << "\nBody:\n" << body << "\n\n";
+  } else {
+    std::cout << "EMAIL ALERT: Sent to " << config_.email_recipients.size() << " recipient(s)\n";
+  }
 }
 
 void PerformanceAlertSystem::send_slack_alert(const std::string& message) {
