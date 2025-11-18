@@ -551,8 +551,53 @@ std::chrono::system_clock::time_point JPLMock::parse_epoch_from_params(
   std::smatch match;
 
   if (std::regex_search(params, match, time_regex)) {
-    // For simplicity, just return current time
-    // In a real implementation, this would parse the date string
+    std::string date_str = match[1].str();
+
+    // Try to parse the date string in various formats
+    // Format 1: YYYY-MM-DD HH:MM:SS
+    std::tm tm = {};
+    std::istringstream ss1(date_str);
+    ss1 >> std::get_time(&tm, "%Y-%m-%d %H:%M:%S");
+    if (!ss1.fail()) {
+      return std::chrono::system_clock::from_time_t(std::mktime(&tm));
+    }
+
+    // Format 2: YYYY-MM-DD
+    tm = {};
+    std::istringstream ss2(date_str);
+    ss2 >> std::get_time(&tm, "%Y-%m-%d");
+    if (!ss2.fail()) {
+      return std::chrono::system_clock::from_time_t(std::mktime(&tm));
+    }
+
+    // Format 3: YYYY/MM/DD
+    tm = {};
+    std::istringstream ss3(date_str);
+    ss3 >> std::get_time(&tm, "%Y/%m/%d");
+    if (!ss3.fail()) {
+      return std::chrono::system_clock::from_time_t(std::mktime(&tm));
+    }
+
+    // Format 4: Julian Date (JD)
+    if (date_str.find("JD") != std::string::npos || date_str.find("jd") != std::string::npos) {
+      try {
+        // Extract numeric part
+        std::regex jd_regex(R"((\d+\.?\d*))");
+        std::smatch jd_match;
+        if (std::regex_search(date_str, jd_match, jd_regex)) {
+          double jd = std::stod(jd_match[1].str());
+          // Convert Julian Date to Unix timestamp
+          // JD 2440587.5 = Unix epoch (1970-01-01 00:00:00)
+          double days_since_epoch = jd - 2440587.5;
+          auto seconds = static_cast<long long>(days_since_epoch * 86400.0);
+          return std::chrono::system_clock::from_time_t(seconds);
+        }
+      } catch (...) {
+        // Fall through to default
+      }
+    }
+
+    // If all parsing attempts fail, return current time as fallback
     return std::chrono::system_clock::now();
   }
 

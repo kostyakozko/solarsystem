@@ -205,10 +205,86 @@ void NetworkMock::set_default_response(const MockHttpResponse& response) {
   default_response_ = response;
 }
 
-bool NetworkMock::load_mock_responses_from_directory(const std::string&) {
-  // Simplified implementation - in a real implementation, this would
-  // load response files from the directory
-  return true;
+bool NetworkMock::load_mock_responses_from_directory(const std::string& directory_path) {
+  // Check if directory exists
+  if (!std::filesystem::exists(directory_path)) {
+    return false;
+  }
+
+  if (!std::filesystem::is_directory(directory_path)) {
+    return false;
+  }
+
+  std::lock_guard<std::mutex> lock(network_mutex_);
+  size_t loaded_count = 0;
+
+  try {
+    // Iterate through all files in the directory
+    for (const auto& entry : std::filesystem::directory_iterator(directory_path)) {
+      if (!entry.is_regular_file()) {
+        continue;
+      }
+
+      const auto& file_path = entry.path();
+      std::string filename = file_path.filename().string();
+
+      // Skip non-response files
+      if (filename.find("response") == std::string::npos &&
+          filename.find(".txt") == std::string::npos &&
+          filename.find(".json") == std::string::npos) {
+        continue;
+      }
+
+      // Read file content
+      std::ifstream file(file_path);
+      if (!file.is_open()) {
+        continue;
+      }
+
+      std::string content((std::istreambuf_iterator<char>(file)),
+                          std::istreambuf_iterator<char>());
+      file.close();
+
+      // Extract URL pattern from filename
+      // Expected format: response_<url_pattern>.txt or <url_pattern>_response.json
+      std::string url_pattern;
+      if (filename.find("response_") == 0) {
+        url_pattern = filename.substr(9);  // Remove "response_" prefix
+        auto ext_pos = url_pattern.find_last_of('.');
+        if (ext_pos != std::string::npos) {
+          url_pattern = url_pattern.substr(0, ext_pos);
+        }
+      } else {
+        auto response_pos = filename.find("_response");
+        if (response_pos != std::string::npos) {
+          url_pattern = filename.substr(0, response_pos);
+        } else {
+          // Use filename without extension as pattern
+          auto ext_pos = filename.find_last_of('.');
+          url_pattern = (ext_pos != std::string::npos) ? filename.substr(0, ext_pos) : filename;
+        }
+      }
+
+      // Replace underscores with slashes for URL pattern
+      std::replace(url_pattern.begin(), url_pattern.end(), '_', '/');
+
+      // Create mock response
+      MockHttpResponse response;
+      response.status_code = 200;
+      response.body = content;
+      response.headers["Content-Type"] = filename.ends_with(".json") ? "application/json" : "text/plain";
+      response.headers["Content-Length"] = std::to_string(content.length());
+
+      // Store response for URL pattern
+      url_responses_[url_pattern] = response;
+      loaded_count++;
+    }
+
+    return loaded_count > 0;
+
+  } catch (const std::exception&) {
+    return false;
+  }
 }
 
 void NetworkMock::set_error_response(MockNetworkError error_type,
