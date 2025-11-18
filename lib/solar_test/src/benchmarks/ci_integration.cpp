@@ -504,12 +504,114 @@ void PerformanceAlertSystem::send_slack_alert(const std::string& message) {
 
 void PerformanceAlertSystem::create_github_issue(const std::string& title,
                                                  const std::string& body) {
-  // Simplified GitHub issue creation - in production, use GitHub API
-  std::cout << "GITHUB ISSUE (would be created if configured):\n";
-  std::cout << "Title: " << title << "\n";
-  std::cout << "Body: " << body << "\n";
-  std::cout << "Token: " << (config_.github_issue_token.empty() ? "not configured" : "configured")
-            << "\n\n";
+  if (config_.github_issue_token.empty()) {
+    std::cout << "GITHUB ISSUE: No token configured\n";
+    return;
+  }
+
+  // Get GitHub repo from environment (format: owner/repo)
+  const char* github_repo_env = std::getenv("GITHUB_REPOSITORY");
+  std::string github_repo = github_repo_env ? github_repo_env : "";
+
+  if (github_repo.empty()) {
+    std::cout << "GITHUB ISSUE: GITHUB_REPOSITORY env var not set (format: owner/repo)\n";
+    return;
+  }
+
+  CURL* curl = curl_easy_init();
+  if (!curl) {
+    std::cout << "GITHUB ISSUE: Failed to initialize curl\n";
+    return;
+  }
+
+  // Escape JSON string
+  auto escape_json = [](const std::string& str) -> std::string {
+    std::string escaped;
+    for (char c : str) {
+      switch (c) {
+        case '"':
+          escaped += "\\\"";
+          break;
+        case '\\':
+          escaped += "\\\\";
+          break;
+        case '\n':
+          escaped += "\\n";
+          break;
+        case '\r':
+          escaped += "\\r";
+          break;
+        case '\t':
+          escaped += "\\t";
+          break;
+        default:
+          escaped += c;
+      }
+    }
+    return escaped;
+  };
+
+  // Build GitHub API URL
+  std::string api_url = "https://api.github.com/repos/" + github_repo + "/issues";
+
+  // Build JSON payload
+  std::ostringstream json_payload;
+  json_payload << "{"
+               << "\"title\":\"" << escape_json(title) << "\","
+               << "\"body\":\"" << escape_json(body) << "\","
+               << "\"labels\":[\"performance\",\"automated\"]"
+               << "}";
+
+  std::string payload = json_payload.str();
+
+  // Configure curl
+  curl_easy_setopt(curl, CURLOPT_URL, api_url.c_str());
+  curl_easy_setopt(curl, CURLOPT_POSTFIELDS, payload.c_str());
+
+  // Set headers
+  struct curl_slist* headers = nullptr;
+  headers = curl_slist_append(headers, "Content-Type: application/json");
+  headers = curl_slist_append(headers, "Accept: application/vnd.github.v3+json");
+  headers = curl_slist_append(headers, ("Authorization: token " + config_.github_issue_token).c_str());
+  headers = curl_slist_append(headers, "User-Agent: SolarSystem-Suite/4.0.0");
+  curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+
+  // SSL/TLS settings
+  curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 1L);
+  curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 2L);
+
+  // Timeouts
+  curl_easy_setopt(curl, CURLOPT_TIMEOUT, 30L);
+  curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 10L);
+
+  // Capture response
+  std::string response;
+  curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION,
+                   +[](char* ptr, size_t size, size_t nmemb, void* userdata) -> size_t {
+                     std::string* str = static_cast<std::string*>(userdata);
+                     str->append(ptr, size * nmemb);
+                     return size * nmemb;
+                   });
+  curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
+
+  // Perform the request
+  CURLcode res = curl_easy_perform(curl);
+
+  // Get HTTP response code
+  long http_code = 0;
+  curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
+
+  // Cleanup
+  curl_slist_free_all(headers);
+  curl_easy_cleanup(curl);
+
+  if (res == CURLE_OK && http_code == 201) {
+    std::cout << "GITHUB ISSUE: Created successfully (#" << github_repo << ")\n";
+  } else if (res == CURLE_OK) {
+    std::cout << "GITHUB ISSUE: Failed with HTTP " << http_code << "\n";
+  } else {
+    std::cout << "GITHUB ISSUE: Failed - " << curl_easy_strerror(res) << "\n";
+  }
 }
 
 }  // namespace SolarSystem::Testing
