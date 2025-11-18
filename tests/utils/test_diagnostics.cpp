@@ -14,6 +14,9 @@
 #include <sys/resource.h>
 #elif __linux__
 #include <unistd.h>
+#elif _WIN32
+#include <windows.h>
+#include <psapi.h>
 #endif
 
 #include "test_port_manager.hpp"
@@ -901,18 +904,92 @@ PlatformMemoryMonitor::SystemMemoryInfo PlatformMemoryMonitor::get_system_memory
 
 #endif
 
-// Windows implementation placeholder
+// Windows implementation
 PlatformMemoryMonitor::MemoryInfo PlatformMemoryMonitor::get_memory_usage_windows() {
   MemoryInfo info;
   info.measurement_time = std::chrono::system_clock::now();
-  // TODO: Implement Windows-specific memory monitoring using Windows API
+
+#ifdef _WIN32
+  // Get process memory information
+  PROCESS_MEMORY_COUNTERS_EX pmc;
+  if (GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc))) {
+    info.resident_set_size = pmc.WorkingSetSize;           // Current physical memory
+    info.peak_resident_set_size = pmc.PeakWorkingSetSize;  // Peak physical memory
+    info.virtual_memory_size = pmc.PrivateUsage;           // Private virtual memory
+    info.private_memory = pmc.PrivateUsage;                // Private memory
+
+    // PagefileUsage is the commit charge (virtual memory committed)
+    info.heap_size = pmc.PagefileUsage;
+  }
+
+  // Get system memory info for percentage calculation
+  MEMORYSTATUSEX memStatus;
+  memStatus.dwLength = sizeof(memStatus);
+  if (GlobalMemoryStatusEx(&memStatus)) {
+    if (memStatus.ullTotalPhys > 0) {
+      info.memory_usage_percent =
+          (static_cast<double>(info.resident_set_size) / static_cast<double>(memStatus.ullTotalPhys)) * 100.0;
+    }
+  }
+
+  // Get page size
+  SYSTEM_INFO sysInfo;
+  GetSystemInfo(&sysInfo);
+  // Stack size is typically one page, but this is an approximation
+  info.stack_size = sysInfo.dwPageSize;
+
+  // Shared memory is harder to get on Windows, approximate as difference
+  // between working set and private bytes
+  if (info.resident_set_size > info.private_memory) {
+    info.shared_memory = info.resident_set_size - info.private_memory;
+  }
+#endif
+
   return info;
 }
 
 PlatformMemoryMonitor::SystemMemoryInfo PlatformMemoryMonitor::get_system_memory_windows() {
   SystemMemoryInfo info;
   info.measurement_time = std::chrono::system_clock::now();
-  // TODO: Implement Windows-specific system memory monitoring
+
+#ifdef _WIN32
+  // Get global memory status
+  MEMORYSTATUSEX memStatus;
+  memStatus.dwLength = sizeof(memStatus);
+
+  if (GlobalMemoryStatusEx(&memStatus)) {
+    // Physical memory
+    info.total_physical_memory = static_cast<size_t>(memStatus.ullTotalPhys);
+    info.available_physical_memory = static_cast<size_t>(memStatus.ullAvailPhys);
+    info.used_physical_memory = info.total_physical_memory - info.available_physical_memory;
+
+    // Virtual memory (page file)
+    info.total_virtual_memory = static_cast<size_t>(memStatus.ullTotalPageFile);
+    info.available_virtual_memory = static_cast<size_t>(memStatus.ullAvailPageFile);
+    info.used_virtual_memory = info.total_virtual_memory - info.available_virtual_memory;
+
+    // Memory pressure (0.0 to 1.0)
+    info.memory_pressure = static_cast<double>(memStatus.dwMemoryLoad) / 100.0;
+  }
+
+  // Get page size
+  SYSTEM_INFO sysInfo;
+  GetSystemInfo(&sysInfo);
+  info.page_size = sysInfo.dwPageSize;
+
+  // Get performance information for cache and buffer memory
+  PERFORMANCE_INFORMATION perfInfo;
+  perfInfo.cb = sizeof(PERFORMANCE_INFORMATION);
+
+  if (GetPerformanceInfo(&perfInfo, sizeof(perfInfo))) {
+    // System cache is available in performance info
+    info.cache_memory = static_cast<size_t>(perfInfo.SystemCache) * info.page_size;
+
+    // Kernel memory can be considered as buffer memory
+    info.buffer_memory = static_cast<size_t>(perfInfo.KernelTotal) * info.page_size;
+  }
+#endif
+
   return info;
 }
 
