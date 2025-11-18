@@ -1226,7 +1226,7 @@ JPLVoidResult DataValidator::update_config(const DataValidatorConfig& new_config
   return success();
 }
 
-// Private method placeholder implementations
+// Private validation method implementations
 JPLResult<bool> DataValidator::validate_position_vector(const SolarSystem::Math::Vector3d& position, const std::string& body_name, std::vector<ValidationIssue>& issues) const {
   double magnitude = position.magnitude();
 
