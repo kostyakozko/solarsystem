@@ -5,10 +5,7 @@
 #include <iostream>
 #include <sstream>
 
-// Socket includes for SMTP
-#include <netdb.h>
-#include <sys/socket.h>
-#include <unistd.h>
+#include <curl/curl.h>
 
 #include "solar_test/benchmarks/regression_detector.hpp"
 
@@ -282,59 +279,95 @@ void PerformanceAlertSystem::send_batch_alert(const std::vector<RegressionAnalys
   }
 }
 
-// Simple SMTP client using sockets
-static bool send_smtp_email(const std::string& smtp_server, int port, const std::string& from,
+// Email payload structure for libcurl
+struct EmailPayload {
+  std::vector<std::string> lines;
+  size_t current_line = 0;
+};
+
+// Callback for libcurl to read email data
+static size_t payload_source(char* ptr, size_t size, size_t nmemb, void* userp) {
+  EmailPayload* payload = static_cast<EmailPayload*>(userp);
+
+  if (size == 0 || nmemb == 0 || size * nmemb < 1) {
+    return 0;
+  }
+
+  if (payload->current_line < payload->lines.size()) {
+    const std::string& line = payload->lines[payload->current_line];
+    size_t len = line.length();
+
+    if (len > size * nmemb) {
+      len = size * nmemb;
+    }
+
+    memcpy(ptr, line.c_str(), len);
+    payload->current_line++;
+    return len;
+  }
+
+  return 0;
+}
+
+// Send email using libcurl SMTP
+static bool send_smtp_email(const std::string& smtp_url, const std::string& from,
                             const std::string& to, const std::string& subject,
-                            const std::string& body) {
-  int sock = socket(AF_INET, SOCK_STREAM, 0);
-  if (sock < 0) return false;
-
-  struct hostent* server = gethostbyname(smtp_server.c_str());
-  if (!server) {
-    close(sock);
+                            const std::string& body, const std::string& username = "",
+                            const std::string& password = "") {
+  CURL* curl = curl_easy_init();
+  if (!curl) {
     return false;
   }
 
-  struct sockaddr_in serv_addr;
-  memset(&serv_addr, 0, sizeof(serv_addr));
-  serv_addr.sin_family = AF_INET;
-  memcpy(&serv_addr.sin_addr.s_addr, server->h_addr, static_cast<size_t>(server->h_length));
-  serv_addr.sin_port = htons(static_cast<uint16_t>(port));
+  // Prepare email payload
+  EmailPayload payload;
+  payload.lines.push_back("From: <" + from + ">\r\n");
+  payload.lines.push_back("To: <" + to + ">\r\n");
+  payload.lines.push_back("Subject: " + subject + "\r\n");
+  payload.lines.push_back("\r\n");
 
-  if (connect(sock, reinterpret_cast<struct sockaddr*>(&serv_addr), sizeof(serv_addr)) < 0) {
-    close(sock);
-    return false;
+  // Split body into lines
+  std::istringstream body_stream(body);
+  std::string line;
+  while (std::getline(body_stream, line)) {
+    payload.lines.push_back(line + "\r\n");
   }
 
-  auto send_cmd = [sock](const std::string& cmd) {
-    return send(sock, cmd.c_str(), cmd.length(), 0) >= 0;
-  };
+  // Configure libcurl
+  curl_easy_setopt(curl, CURLOPT_URL, smtp_url.c_str());
+  curl_easy_setopt(curl, CURLOPT_MAIL_FROM, ("<" + from + ">").c_str());
 
-  auto read_resp = [sock]() {
-    char buf[1024];
-    ssize_t n = recv(sock, buf, sizeof(buf) - 1, 0);
-    return n > 0;
-  };
+  struct curl_slist* recipients = nullptr;
+  recipients = curl_slist_append(recipients, ("<" + to + ">").c_str());
+  curl_easy_setopt(curl, CURLOPT_MAIL_RCPT, recipients);
 
-  read_resp();  // Greeting
-  send_cmd("HELO localhost\r\n");
-  read_resp();
-  send_cmd("MAIL FROM:<" + from + ">\r\n");
-  read_resp();
-  send_cmd("RCPT TO:<" + to + ">\r\n");
-  read_resp();
-  send_cmd("DATA\r\n");
-  read_resp();
+  curl_easy_setopt(curl, CURLOPT_READFUNCTION, payload_source);
+  curl_easy_setopt(curl, CURLOPT_READDATA, &payload);
+  curl_easy_setopt(curl, CURLOPT_UPLOAD, 1L);
 
-  std::ostringstream email;
-  email << "From: " << from << "\r\nTo: " << to << "\r\nSubject: " << subject << "\r\n\r\n" << body
-        << "\r\n.\r\n";
-  send_cmd(email.str());
-  read_resp();
-  send_cmd("QUIT\r\n");
+  // Authentication if provided
+  if (!username.empty()) {
+    curl_easy_setopt(curl, CURLOPT_USERNAME, username.c_str());
+    curl_easy_setopt(curl, CURLOPT_PASSWORD, password.c_str());
+  }
 
-  close(sock);
-  return true;
+  // TLS/SSL settings
+  curl_easy_setopt(curl, CURLOPT_USE_SSL, CURLUSESSL_TRY);
+  curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 1L);
+  curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 2L);
+
+  // Timeouts
+  curl_easy_setopt(curl, CURLOPT_TIMEOUT, 30L);
+  curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 10L);
+
+  // Perform the send
+  CURLcode res = curl_easy_perform(curl);
+
+  // Cleanup
+  curl_slist_free_all(recipients);
+  curl_easy_cleanup(curl);
+
+  return res == CURLE_OK;
 }
 
 void PerformanceAlertSystem::send_email_alert(const std::string& subject, const std::string& body) {
@@ -343,24 +376,44 @@ void PerformanceAlertSystem::send_email_alert(const std::string& subject, const 
     return;
   }
 
-  const char* smtp_server_env = std::getenv("SMTP_SERVER");
-  const char* smtp_port_env = std::getenv("SMTP_PORT");
-  const char* smtp_from_env = std::getenv("SMTP_FROM");
+  // Get SMTP configuration from environment
+  const char* smtp_server = std::getenv("SMTP_SERVER");
+  const char* smtp_port = std::getenv("SMTP_PORT");
+  const char* smtp_from = std::getenv("SMTP_FROM");
+  const char* smtp_user = std::getenv("SMTP_USER");
+  const char* smtp_pass = std::getenv("SMTP_PASS");
+  const char* smtp_tls = std::getenv("SMTP_TLS");
 
-  std::string smtp_server = smtp_server_env ? smtp_server_env : "localhost";
-  int smtp_port = smtp_port_env ? std::atoi(smtp_port_env) : 25;
-  std::string smtp_from = smtp_from_env ? smtp_from_env : "noreply@solarsystem.local";
+  // Build SMTP URL (supports smtp://, smtps://, smtp+tls://)
+  std::string smtp_url;
+  if (smtp_server) {
+    bool use_tls = smtp_tls && std::string(smtp_tls) == "1";
+    smtp_url = use_tls ? "smtps://" : "smtp://";
+    smtp_url += smtp_server;
+    if (smtp_port) {
+      smtp_url += ":" + std::string(smtp_port);
+    }
+  } else {
+    smtp_url = "smtp://localhost:25";
+  }
 
+  std::string from = smtp_from ? smtp_from : "noreply@solarsystem.local";
+  std::string username = smtp_user ? smtp_user : "";
+  std::string password = smtp_pass ? smtp_pass : "";
+
+  // Send to all recipients
   bool sent = false;
   for (const auto& recipient : config_.email_recipients) {
-    if (send_smtp_email(smtp_server, smtp_port, smtp_from, recipient, subject, body)) {
+    if (send_smtp_email(smtp_url, from, recipient, subject, body, username, password)) {
       sent = true;
-      std::cout << "EMAIL ALERT: Sent to " << recipient << " via SMTP\n";
+      std::cout << "EMAIL ALERT: Sent to " << recipient << " via " << smtp_url << "\n";
+    } else {
+      std::cout << "EMAIL ALERT: Failed to send to " << recipient << "\n";
     }
   }
 
   if (!sent) {
-    std::cout << "EMAIL ALERT (SMTP unavailable, set SMTP_SERVER env var):\n";
+    std::cout << "EMAIL ALERT (SMTP failed, check SMTP_SERVER/SMTP_USER/SMTP_PASS):\n";
     std::cout << "Subject: " << subject << "\nRecipients: ";
     for (const auto& recipient : config_.email_recipients) {
       std::cout << recipient << " ";
