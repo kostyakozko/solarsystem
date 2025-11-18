@@ -1,8 +1,14 @@
 #include <cstdlib>
+#include <cstring>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
 #include <sstream>
+
+// Socket includes for SMTP
+#include <netdb.h>
+#include <sys/socket.h>
+#include <unistd.h>
 
 #include "solar_test/benchmarks/regression_detector.hpp"
 
@@ -276,70 +282,90 @@ void PerformanceAlertSystem::send_batch_alert(const std::vector<RegressionAnalys
   }
 }
 
+// Simple SMTP client using sockets
+static bool send_smtp_email(const std::string& smtp_server, int port, const std::string& from,
+                            const std::string& to, const std::string& subject,
+                            const std::string& body) {
+  int sock = socket(AF_INET, SOCK_STREAM, 0);
+  if (sock < 0) return false;
+
+  struct hostent* server = gethostbyname(smtp_server.c_str());
+  if (!server) {
+    close(sock);
+    return false;
+  }
+
+  struct sockaddr_in serv_addr;
+  memset(&serv_addr, 0, sizeof(serv_addr));
+  serv_addr.sin_family = AF_INET;
+  memcpy(&serv_addr.sin_addr.s_addr, server->h_addr, static_cast<size_t>(server->h_length));
+  serv_addr.sin_port = htons(static_cast<uint16_t>(port));
+
+  if (connect(sock, reinterpret_cast<struct sockaddr*>(&serv_addr), sizeof(serv_addr)) < 0) {
+    close(sock);
+    return false;
+  }
+
+  auto send_cmd = [sock](const std::string& cmd) {
+    return send(sock, cmd.c_str(), cmd.length(), 0) >= 0;
+  };
+
+  auto read_resp = [sock]() {
+    char buf[1024];
+    ssize_t n = recv(sock, buf, sizeof(buf) - 1, 0);
+    return n > 0;
+  };
+
+  read_resp();  // Greeting
+  send_cmd("HELO localhost\r\n");
+  read_resp();
+  send_cmd("MAIL FROM:<" + from + ">\r\n");
+  read_resp();
+  send_cmd("RCPT TO:<" + to + ">\r\n");
+  read_resp();
+  send_cmd("DATA\r\n");
+  read_resp();
+
+  std::ostringstream email;
+  email << "From: " << from << "\r\nTo: " << to << "\r\nSubject: " << subject << "\r\n\r\n" << body
+        << "\r\n.\r\n";
+  send_cmd(email.str());
+  read_resp();
+  send_cmd("QUIT\r\n");
+
+  close(sock);
+  return true;
+}
+
 void PerformanceAlertSystem::send_email_alert(const std::string& subject, const std::string& body) {
   if (config_.email_recipients.empty()) {
     std::cout << "EMAIL ALERT: No recipients configured\n";
     return;
   }
 
-  // Try to send email using available system tools
+  const char* smtp_server_env = std::getenv("SMTP_SERVER");
+  const char* smtp_port_env = std::getenv("SMTP_PORT");
+  const char* smtp_from_env = std::getenv("SMTP_FROM");
+
+  std::string smtp_server = smtp_server_env ? smtp_server_env : "localhost";
+  int smtp_port = smtp_port_env ? std::atoi(smtp_port_env) : 25;
+  std::string smtp_from = smtp_from_env ? smtp_from_env : "noreply@solarsystem.local";
+
   bool sent = false;
-
-#ifdef __APPLE__
-  // macOS: Try using osascript with Mail.app
   for (const auto& recipient : config_.email_recipients) {
-    std::ostringstream cmd;
-    cmd << "osascript -e 'tell application \"Mail\" to make new outgoing message with properties "
-        << "{subject:\"" << subject << "\", content:\"" << body << "\", visible:false}' "
-        << "-e 'tell result to make new to recipient at end of to recipients with properties "
-        << "{address:\"" << recipient << "\"}' "
-        << "-e 'tell application \"Mail\" to send result' 2>/dev/null";
-
-    if (system(cmd.str().c_str()) == 0) {
+    if (send_smtp_email(smtp_server, smtp_port, smtp_from, recipient, subject, body)) {
       sent = true;
-    }
-  }
-#endif
-
-#ifdef __linux__
-  // Linux: Try using sendmail or mail command
-  if (!sent && system("which sendmail >/dev/null 2>&1") == 0) {
-    for (const auto& recipient : config_.email_recipients) {
-      std::ostringstream cmd;
-      cmd << "echo \"" << body << "\" | sendmail -t <<EOF\n"
-          << "To: " << recipient << "\n"
-          << "Subject: " << subject << "\n"
-          << "\n" << body << "\nEOF";
-
-      if (system(cmd.str().c_str()) == 0) {
-        sent = true;
-      }
+      std::cout << "EMAIL ALERT: Sent to " << recipient << " via SMTP\n";
     }
   }
 
-  if (!sent && system("which mail >/dev/null 2>&1") == 0) {
-    for (const auto& recipient : config_.email_recipients) {
-      std::ostringstream cmd;
-      cmd << "echo \"" << body << "\" | mail -s \"" << subject << "\" " << recipient;
-
-      if (system(cmd.str().c_str()) == 0) {
-        sent = true;
-      }
-    }
-  }
-#endif
-
-  // Fallback: Log to console
   if (!sent) {
-    std::cout << "EMAIL ALERT (system mail not available, logging to console):\n";
-    std::cout << "Subject: " << subject << "\n";
-    std::cout << "Recipients: ";
+    std::cout << "EMAIL ALERT (SMTP unavailable, set SMTP_SERVER env var):\n";
+    std::cout << "Subject: " << subject << "\nRecipients: ";
     for (const auto& recipient : config_.email_recipients) {
       std::cout << recipient << " ";
     }
     std::cout << "\nBody:\n" << body << "\n\n";
-  } else {
-    std::cout << "EMAIL ALERT: Sent to " << config_.email_recipients.size() << " recipient(s)\n";
   }
 }
 
