@@ -324,7 +324,7 @@ JPLVoidResult CacheManager::save_cache(const std::vector<EphemerisData>& data, b
 /**
  * @brief Validate cache integrity with specified level
  */
-JPLResult<bool> CacheManager::validate_cache(ValidationLevel) {
+JPLResult<bool> CacheManager::validate_cache(ValidationLevel level) {
   std::lock_guard<std::mutex> lock(impl_->cache_mutex);
 
   try {
@@ -336,9 +336,132 @@ JPLResult<bool> CacheManager::validate_cache(ValidationLevel) {
     bool has_binary = config_.enable_binary_cache && std::filesystem::exists(binary_path);
     bool has_json = config_.enable_json_cache && std::filesystem::exists(json_path);
 
+    // Check if at least one cache file exists
     if (!has_binary && !has_json) {
       statistics_.validation_failures++;
       return false;
+    }
+
+    // Basic validation: check file existence and readability
+    if (level == ValidationLevel::Basic) {
+      // Verify files are readable and non-empty
+      if (has_binary) {
+        auto size = std::filesystem::file_size(binary_path);
+        if (size == 0) {
+          statistics_.validation_failures++;
+          return false;
+        }
+      }
+
+      if (has_json) {
+        auto size = std::filesystem::file_size(json_path);
+        if (size == 0) {
+          statistics_.validation_failures++;
+          return false;
+        }
+      }
+
+      statistics_.validation_successes++;
+      return true;
+    }
+
+    // Standard validation: include format and checksum validation
+    if (level == ValidationLevel::Standard || level == ValidationLevel::Comprehensive) {
+      // Validate binary format if present
+      if (has_binary) {
+        std::ifstream binary_file(binary_path, std::ios::binary);
+        if (!binary_file.is_open()) {
+          statistics_.validation_failures++;
+          return false;
+        }
+
+        // Check magic number (first 4 bytes should be "EPHE" = 0x45504845)
+        uint32_t magic;
+        binary_file.read(reinterpret_cast<char*>(&magic), sizeof(magic));
+        const uint32_t expected_magic = 0x45504845;
+
+        if (!binary_file.good() || magic != expected_magic) {
+          statistics_.validation_failures++;
+          return false;
+        }
+
+        // Check version (next 4 bytes)
+        uint32_t version;
+        binary_file.read(reinterpret_cast<char*>(&version), sizeof(version));
+
+        if (!binary_file.good()) {
+          statistics_.validation_failures++;
+          return false;
+        }
+
+        // Version compatibility check (major version should be 1)
+        uint16_t major_version = (version >> 16) & 0xFFFF;
+        if (major_version != 1) {
+          statistics_.validation_failures++;
+          return false;  // Incompatible version
+        }
+      }
+
+      // Validate JSON format if present
+      if (has_json) {
+        std::ifstream json_file(json_path);
+        if (!json_file.is_open()) {
+          statistics_.validation_failures++;
+          return false;
+        }
+
+        // Read first and last characters to check basic JSON structure
+        json_file.seekg(0, std::ios::end);
+        auto file_size = json_file.tellg();
+
+        if (file_size < 2) {
+          statistics_.validation_failures++;
+          return false;
+        }
+
+        json_file.seekg(0, std::ios::beg);
+        char first_char;
+        json_file.get(first_char);
+
+        json_file.seekg(-1, std::ios::end);
+        char last_char;
+        json_file.get(last_char);
+
+        // JSON should start with '[' or '{' and end with ']' or '}'
+        bool valid_json = (first_char == '[' || first_char == '{') &&
+                         (last_char == ']' || last_char == '}');
+
+        if (!valid_json) {
+          statistics_.validation_failures++;
+          return false;
+        }
+      }
+
+      // Checksum validation if metadata exists
+      if (entry_metadata_) {
+        // Load cache data and recalculate checksum
+        auto load_result = load_cache();
+        if (is_success(load_result)) {
+          const auto& data = get_value(load_result);
+
+          // Recalculate checksum
+          uint64_t calculated_checksum = 0;
+          for (const auto& body_data : data) {
+            calculated_checksum += static_cast<uint64_t>(body_data.jpl_id);
+            std::hash<std::string> hasher;
+            calculated_checksum += hasher(body_data.body_name);
+          }
+
+          // Compare with stored checksum
+          if (calculated_checksum != entry_metadata_->checksum) {
+            statistics_.validation_failures++;
+            return false;  // Checksum mismatch - data corrupted
+          }
+        }
+      }
+
+      statistics_.validation_successes++;
+      return true;
     }
 
     statistics_.validation_successes++;
