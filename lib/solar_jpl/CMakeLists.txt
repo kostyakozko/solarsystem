@@ -6,6 +6,7 @@ add_library(solar_jpl STATIC
     src/jpl_client.cpp
     src/cache_manager.cpp
     src/data_validator.cpp
+    src/cache_recovery.cpp
 )
 
 # Set modern C++20 properties
