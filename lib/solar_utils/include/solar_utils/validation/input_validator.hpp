@@ -60,6 +60,29 @@ class DateTimeValidator {
       const std::chrono::system_clock::time_point& max_date);
 
   /**
+   * @brief Validate date with timezone information
+   */
+  static ValidationResult validate_date_with_timezone(
+      const std::string& date_str, const std::string& timezone = "UTC");
+
+  /**
+   * @brief Validate leap year
+   */
+  static bool is_leap_year(int year);
+
+  /**
+   * @brief Validate day of month for given year and month
+   */
+  static bool is_valid_day_of_month(int year, int month, int day);
+
+  /**
+   * @brief Convert between calendar systems (Gregorian/Julian)
+   */
+  static ValidationResult convert_calendar_system(
+      const std::string& date_str, const std::string& from_calendar,
+      const std::string& to_calendar);
+
+  /**
    * @brief Get supported date formats
    */
   static std::vector<std::string> get_supported_formats();

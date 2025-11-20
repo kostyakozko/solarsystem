@@ -110,24 +110,257 @@ ValidationResult DateTimeValidator::validate_date(const std::string& date_str) {
 }
 
 ValidationResult DateTimeValidator::validate_date_with_range(
-    const std::string& date_str, const std::chrono::system_clock::time_point& ,
-    const std::chrono::system_clock::time_point& ) {
+    const std::string& date_str,
+    const std::chrono::system_clock::time_point& min_date,
+    const std::chrono::system_clock::time_point& max_date) {
+
   auto basic_result = validate_date(date_str);
   if (!basic_result.is_valid) {
     return basic_result;
   }
 
-  // For the test, we need to actually check if the date is in the future
-  // The test is checking "2030-01-01" against a range ending at "now"
-  // So we should reject future dates
-  if (date_str.find("2030") != std::string::npos) {
+  // Parse the date string to a time_point for range checking
+  std::tm tm = {};
+  std::istringstream ss(basic_result.normalized_value);
+
+  // Try ISO format first (YYYY-MM-DD)
+  ss >> std::get_time(&tm, "%Y-%m-%d");
+
+  if (ss.fail()) {
+    // Try other formats
+    ss.clear();
+    ss.str(basic_result.normalized_value);
+    ss >> std::get_time(&tm, "%Y/%m/%d");
+  }
+
+  if (ss.fail()) {
     ValidationResult result;
     result.is_valid = false;
-    result.error_message = "Date is outside valid range";
+    result.error_message = "Could not parse date for range validation";
     return result;
   }
 
+  // Convert to time_point
+  auto parsed_time = std::chrono::system_clock::from_time_t(std::mktime(&tm));
+
+  // Check range
+  if (parsed_time < min_date) {
+    ValidationResult result;
+    result.is_valid = false;
+    result.error_message = "Date is before minimum allowed date";
+
+    // Format min_date for error message
+    auto min_time_t = std::chrono::system_clock::to_time_t(min_date);
+    std::tm* min_tm = std::gmtime(&min_time_t);
+    if (min_tm) {
+      std::ostringstream oss;
+      oss << std::put_time(min_tm, "%Y-%m-%d");
+      result.error_message += " (" + oss.str() + ")";
+    }
+
+    return result;
+  }
+
+  if (parsed_time > max_date) {
+    ValidationResult result;
+    result.is_valid = false;
+    result.error_message = "Date is after maximum allowed date";
+
+    // Format max_date for error message
+    auto max_time_t = std::chrono::system_clock::to_time_t(max_date);
+    std::tm* max_tm = std::gmtime(&max_time_t);
+    if (max_tm) {
+      std::ostringstream oss;
+      oss << std::put_time(max_tm, "%Y-%m-%d");
+      result.error_message += " (" + oss.str() + ")";
+    }
+
+    return result;
+  }
+
+  // Date is within range
   return basic_result;
+}
+
+/**
+ * @brief Validate date with timezone information
+ */
+ValidationResult DateTimeValidator::validate_date_with_timezone(
+    const std::string& date_str, const std::string& timezone) {
+
+  auto basic_result = validate_date(date_str);
+  if (!basic_result.is_valid) {
+    return basic_result;
+  }
+
+  // Validate timezone string
+  // Common timezone formats: UTC, GMT, EST, PST, +0000, -0500, etc.
+  std::regex tz_pattern(R"(^(UTC|GMT|[A-Z]{3}|[+-]\d{4}|[+-]\d{2}:\d{2})$)", std::regex::icase);
+
+  if (!std::regex_match(timezone, tz_pattern)) {
+    ValidationResult result;
+    result.is_valid = false;
+    result.error_message = "Invalid timezone format: " + timezone;
+    result.suggestions.push_back("UTC");
+    result.suggestions.push_back("GMT");
+    result.suggestions.push_back("+0000");
+    result.suggestions.push_back("-0500");
+    return result;
+  }
+
+  // Timezone is valid
+  ValidationResult result = basic_result;
+  result.normalized_value += " " + timezone;
+  return result;
+}
+
+/**
+ * @brief Check if year is a leap year
+ */
+bool DateTimeValidator::is_leap_year(int year) {
+  // Leap year rules:
+  // 1. Divisible by 4
+  // 2. If divisible by 100, must also be divisible by 400
+  if (year % 4 != 0) {
+    return false;
+  }
+  if (year % 100 != 0) {
+    return true;
+  }
+  return (year % 400 == 0);
+}
+
+/**
+ * @brief Validate day of month for given year and month
+ */
+bool DateTimeValidator::is_valid_day_of_month(int year, int month, int day) {
+  if (month < 1 || month > 12) {
+    return false;
+  }
+
+  if (day < 1) {
+    return false;
+  }
+
+  // Days in each month
+  static const int days_in_month[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+
+  int max_day = days_in_month[month - 1];
+
+  // Adjust for leap year in February
+  if (month == 2 && is_leap_year(year)) {
+    max_day = 29;
+  }
+
+  return day <= max_day;
+}
+
+/**
+ * @brief Convert between calendar systems
+ */
+ValidationResult DateTimeValidator::convert_calendar_system(
+    const std::string& date_str,
+    const std::string& from_calendar,
+    const std::string& to_calendar) {
+
+  // Validate input date
+  auto basic_result = validate_date(date_str);
+  if (!basic_result.is_valid) {
+    return basic_result;
+  }
+
+  // Parse the date
+  std::tm tm = {};
+  std::istringstream ss(basic_result.normalized_value);
+  ss >> std::get_time(&tm, "%Y-%m-%d");
+
+  if (ss.fail()) {
+    ValidationResult result;
+    result.is_valid = false;
+    result.error_message = "Could not parse date for calendar conversion";
+    return result;
+  }
+
+  int year = tm.tm_year + 1900;
+  int month = tm.tm_mon + 1;
+  int day = tm.tm_mday;
+
+  // Support Gregorian and Julian calendars
+  if (from_calendar == "Gregorian" && to_calendar == "Julian") {
+    // Gregorian to Julian conversion
+    // The Julian calendar is 13 days behind the Gregorian (as of 1900-2099)
+    // This is a simplified conversion
+
+    // Calculate Julian Day Number for Gregorian date
+    int a = (14 - month) / 12;
+    int y = year + 4800 - a;
+    int m = month + 12 * a - 3;
+
+    int jdn = day + (153 * m + 2) / 5 + 365 * y + y / 4 - y / 100 + y / 400 - 32045;
+
+    // Convert back to Julian calendar
+    (void)0; // Placeholder
+    int c = jdn + 32082;
+    int d = (4 * c + 3) / 1461;
+    int e = c - (1461 * d) / 4;
+    int f = (5 * e + 2) / 153;
+
+    int julian_day = e - (153 * f + 2) / 5 + 1;
+    int julian_month = f + 3 - 12 * (f / 10);
+    int julian_year = d - 4800 + f / 10;
+
+    std::ostringstream oss;
+    oss << std::setfill('0') << std::setw(4) << julian_year << "-"
+        << std::setw(2) << julian_month << "-"
+        << std::setw(2) << julian_day;
+
+    ValidationResult result;
+    result.is_valid = true;
+    result.normalized_value = oss.str();
+    return result;
+
+  } else if (from_calendar == "Julian" && to_calendar == "Gregorian") {
+    // Julian to Gregorian conversion
+    int a = (14 - month) / 12;
+    int y = year + 4800 - a;
+    int m = month + 12 * a - 3;
+
+    int jdn = day + (153 * m + 2) / 5 + 365 * y + y / 4 - 32083;
+
+    // Convert to Gregorian
+    int b = jdn + 32044;
+    int c = (4 * b + 3) / 146097;
+    int d = b - (146097 * c) / 4;
+    int e = (4 * d + 3) / 1461;
+    int f = d - (1461 * e) / 4;
+    int g = (5 * f + 2) / 153;
+
+    int greg_day = f - (153 * g + 2) / 5 + 1;
+    int greg_month = g + 3 - 12 * (g / 10);
+    int greg_year = 100 * c + e - 4800 + g / 10;
+
+    std::ostringstream oss;
+    oss << std::setfill('0') << std::setw(4) << greg_year << "-"
+        << std::setw(2) << greg_month << "-"
+        << std::setw(2) << greg_day;
+
+    ValidationResult result;
+    result.is_valid = true;
+    result.normalized_value = oss.str();
+    return result;
+
+  } else if (from_calendar == to_calendar) {
+    // No conversion needed
+    return basic_result;
+
+  } else {
+    ValidationResult result;
+    result.is_valid = false;
+    result.error_message = "Unsupported calendar conversion: " + from_calendar + " to " + to_calendar;
+    result.suggestions.push_back("Gregorian");
+    result.suggestions.push_back("Julian");
+    return result;
+  }
 }
 
 std::vector<std::string> DateTimeValidator::get_supported_formats() { return format_descriptions_; }
