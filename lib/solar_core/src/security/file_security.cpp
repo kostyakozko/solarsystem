@@ -95,11 +95,105 @@ bool FileSystemSecurity::check_permissions(const std::filesystem::path& path) co
     return false;
   }
 
-  // Basic permission check
-  std::error_code ec;
-  std::filesystem::status(path, ec);
-  return !ec;
+  // Platform-specific permission checking
+#ifdef _WIN32
+  return check_permissions_windows(path);
+#else
+  return check_permissions_posix(path);
+#endif
 }
+
+#ifdef _WIN32
+#include <windows.h>
+#include <aclapi.h>
+
+bool FileSystemSecurity::check_permissions_windows(const std::filesystem::path& path) const {
+  // Get file security descriptor
+  PSECURITY_DESCRIPTOR pSD = nullptr;
+  PACL pDacl = nullptr;
+
+  DWORD result = GetNamedSecurityInfoW(
+      path.wstring().c_str(),
+      SE_FILE_OBJECT,
+      DACL_SECURITY_INFORMATION,
+      nullptr,
+      nullptr,
+      &pDacl,
+      nullptr,
+      &pSD
+  );
+
+  if (result != ERROR_SUCCESS) {
+    return false;
+  }
+
+  // Check if we have access
+  HANDLE hToken = nullptr;
+  if (!OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, &hToken)) {
+    if (pSD) LocalFree(pSD);
+    return false;
+  }
+
+  // Check read access
+  DWORD accessMask = GENERIC_READ;
+  PRIVILEGE_SET privilegeSet;
+  DWORD privilegeSetLength = sizeof(PRIVILEGE_SET);
+  DWORD grantedAccess = 0;
+  BOOL accessStatus = FALSE;
+
+  GENERIC_MAPPING mapping = {
+      FILE_GENERIC_READ,
+      FILE_GENERIC_WRITE,
+      FILE_GENERIC_EXECUTE,
+      FILE_ALL_ACCESS
+  };
+
+  MapGenericMask(&accessMask, &mapping);
+
+  BOOL result_check = AccessCheck(
+      pSD,
+      hToken,
+      accessMask,
+      &mapping,
+      &privilegeSet,
+      &privilegeSetLength,
+      &grantedAccess,
+      &accessStatus
+  );
+
+  CloseHandle(hToken);
+  if (pSD) LocalFree(pSD);
+
+  return result_check && accessStatus;
+}
+#else
+#include <sys/stat.h>
+#include <unistd.h>
+
+bool FileSystemSecurity::check_permissions_posix(const std::filesystem::path& path) const {
+  struct stat st;
+  if (stat(path.c_str(), &st) != 0) {
+    return false;
+  }
+
+  // Get current user and group
+  uid_t uid = getuid();
+  gid_t gid = getgid();
+
+  // Check owner permissions
+  if (st.st_uid == uid) {
+    return (st.st_mode & S_IRUSR) != 0;
+  }
+
+  // Check group permissions
+  if (st.st_gid == gid) {
+    return (st.st_mode & S_IRGRP) != 0;
+  }
+
+  // Check other permissions
+  return (st.st_mode & S_IROTH) != 0;
+}
+#endif
 
 bool FileSystemSecurity::is_safe_path(const std::filesystem::path& path) const {
   std::string path_str = path.string();

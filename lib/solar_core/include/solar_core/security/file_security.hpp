@@ -104,6 +104,13 @@ private:
 
   std::shared_ptr<FileSecurityPolicy> policy_;
   mutable std::vector<std::string> audit_log_;
+
+  // Platform-specific implementations
+#ifdef _WIN32
+  bool check_permissions_windows(const std::filesystem::path& path) const;
+#else
+  bool check_permissions_posix(const std::filesystem::path& path) const;
+#endif
 };
 
 /**
