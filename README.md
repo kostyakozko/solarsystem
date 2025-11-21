@@ -2,6 +2,10 @@
 
 A comprehensive, high-performance N-body gravitational simulation suite with real-time JPL HORIZONS ephemeris data integration, modular architecture, professional installation system, and **interactive web-based time travel visualization**.
 
+## Motivation
+
+The Solar System Suite was created to provide researchers, educators, and space enthusiasts with a professional-grade tool for exploring and understanding our solar system's dynamics. By combining accurate NASA JPL HORIZONS data with modern C++20 architecture and interactive web visualization, we enable users to travel through time and witness the intricate dance of celestial bodies. Whether you're conducting scientific research, teaching orbital mechanics, or simply fascinated by space, this suite offers the tools to explore the cosmos with precision and beauty.
+
 ## 📋 Table of Contents
 
 - [🌟 Features Overview](#-features-overview)
@@ -196,6 +200,20 @@ cd /path/to/install
 # Direct simulation
 ./bin/solar_system --date 2025-07-01
 ```
+
+## Usage
+
+The Solar System Suite provides multiple ways to interact with the simulation:
+
+**For Quick Exploration**: Use the unified launcher to coordinate all operations with a single command. The launcher handles data fetching, cache management, and simulation execution automatically.
+
+**For Interactive Visualization**: Start the web server and explore the solar system through your browser. Travel to any date in history, adjust simulation speed, and watch planets orbit in real-time with beautiful trail effects.
+
+**For Scientific Analysis**: Use individual applications for specific tasks - fetch precise JPL data, run high-performance batch simulations, or monitor the solar system in real-time with configurable update intervals.
+
+**For Development**: The modular architecture allows easy integration into your own projects. Use the static libraries (solar_core, solar_jpl, solar_utils) to build custom applications with full access to JPL data and simulation capabilities.
+
+See the detailed [Applications Guide](#-applications-guide) below for comprehensive usage examples and configuration options.
 
 ## 📱 Applications Guide
 
