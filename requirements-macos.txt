@@ -5,3 +5,4 @@ cmake
 openssl@3
 curl
 zlib
+boost

@@ -80,7 +80,7 @@ The Solar System Suite was created to provide researchers, educators, and space 
 - **Optimized Compilation**: Native CPU instructions and LTO
 - **Configurable Parameters**: Flexible simulation settings
 - **Cross-Platform**: macOS, Linux, Windows support
-- **Zero Dependencies**: Built entirely with standard libraries
+- **Minimal Dependencies**: Standard library + header-only serialization libraries (nlohmann/json v3.11.3, msgpack-cxx v6.1.0)
 
 ### 🌐 **Interactive Web Visualization**
 - **Time Travel Interface**: Simulate from any historical date
@@ -712,7 +712,7 @@ ls -la ephemeris_*.*
 - **Modular Design**: Clean separation of concerns
 - **Comprehensive Testing**: Validate all applications
 - **Documentation**: Update README.md for new features
-- **Zero Dependencies**: Maintain standard library only approach
+- **Minimal Dependencies**: Maintain standard library focus with header-only libraries for serialization
 
 ## 📈 Roadmap
 

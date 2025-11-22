@@ -117,6 +117,11 @@ target_compile_options(solar_core PRIVATE
     $<$<CONFIG:Debug>:-g -O0>
 )
 
+# Disable old-style-cast and double-promotion warnings for message.cpp due to MessagePack library
+set_source_files_properties(src/communication/message.cpp PROPERTIES
+    COMPILE_FLAGS "-Wno-old-style-cast -Wno-double-promotion"
+)
+
 # Enable profiling if requested
 if(ENABLE_PROFILING)
     target_compile_options(solar_core PRIVATE -pg)
