@@ -14,7 +14,7 @@ namespace SolarSystem::Data {
 
 // SharedDataManager implementation
 struct SharedDataManager::Impl {
-  std::map<std::string, std::string> data_store;  // Simplified: string storage
+  std::map<std::string, std::string> data_store;  // Stores JSON-serialized data
   std::map<std::string, DataVersion> versions;
   std::map<std::string, std::string> locks;  // key -> owner
   std::map<std::string, std::chrono::system_clock::time_point> lock_expiry;
@@ -198,7 +198,7 @@ SharedDataManager::Statistics SharedDataManager::get_statistics() const {
 
 // DistributedCache implementation
 struct DistributedCache::Impl {
-  std::map<std::string, std::string> cache_store;  // Simplified
+  std::map<std::string, std::string> cache_store;  // Stores JSON-serialized cached data
   std::map<std::string, std::chrono::system_clock::time_point> expiry;
   mutable std::mutex mutex;
   CacheStats stats;
