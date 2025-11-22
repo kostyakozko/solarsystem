@@ -8,6 +8,8 @@
 #include <fstream>
 #include <sstream>
 #include <cstdlib>
+#include <algorithm>
+#include <sys/stat.h>
 
 #ifdef _WIN32
 #include <windows.h>
@@ -65,14 +67,52 @@ std::optional<ProcessInfo> SystemAPIs::get_process_info(int pid) {
 
   CloseHandle(hProcess);
 #else
-  // Unix-like implementation
+  // Unix-like implementation using /proc filesystem
   std::ifstream stat_file("/proc/" + std::to_string(pid) + "/stat");
   if (stat_file.is_open()) {
     std::string line;
     std::getline(stat_file, line);
-    // Parse /proc/pid/stat for process information
-    // This is simplified - full implementation would parse all fields
-    info.name = "process_" + std::to_string(pid);
+
+    // Parse /proc/pid/stat format: pid (name) state ppid ...
+    size_t start = line.find('(');
+    size_t end = line.rfind(')');
+    if (start != std::string::npos && end != std::string::npos && end > start) {
+      info.name = line.substr(start + 1, end - start - 1);
+    } else {
+      info.name = "process_" + std::to_string(pid);
+    }
+
+    // Parse memory usage from /proc/pid/status
+    std::ifstream status_file("/proc/" + std::to_string(pid) + "/status");
+    if (status_file.is_open()) {
+      std::string status_line;
+      while (std::getline(status_file, status_line)) {
+        if (status_line.find("VmRSS:") == 0) {
+          std::istringstream iss(status_line.substr(6));
+          size_t mem_kb;
+          if (iss >> mem_kb) {
+            info.memory_usage_kb = mem_kb;
+          }
+          break;
+        }
+      }
+    }
+
+    // Get command line
+    std::ifstream cmdline_file("/proc/" + std::to_string(pid) + "/cmdline");
+    if (cmdline_file.is_open()) {
+      std::getline(cmdline_file, info.command_line, '\0');
+    }
+
+    // Get user
+    struct stat st;
+    std::string proc_path = "/proc/" + std::to_string(pid);
+    if (stat(proc_path.c_str(), &st) == 0) {
+      struct passwd* pw = getpwuid(st.st_uid);
+      if (pw) {
+        info.user = std::string(pw->pw_name);
+      }
+    }
   } else {
     return std::nullopt;
   }
@@ -105,7 +145,23 @@ std::vector<ProcessInfo> SystemAPIs::list_processes() {
   CloseHandle(hSnapshot);
 #else
   // Unix-like: read /proc directory
-  // Simplified implementation
+  try {
+    for (const auto& entry : std::filesystem::directory_iterator("/proc")) {
+      if (entry.is_directory()) {
+        std::string dirname = entry.path().filename().string();
+        // Check if directory name is a number (PID)
+        if (!dirname.empty() && std::all_of(dirname.begin(), dirname.end(), ::isdigit)) {
+          int pid = std::stoi(dirname);
+          auto proc_info = get_process_info(pid);
+          if (proc_info) {
+            processes.push_back(*proc_info);
+          }
+        }
+      }
+    }
+  } catch (...) {
+    // Failed to read /proc
+  }
 #endif
 
   return processes;
@@ -297,8 +353,33 @@ bool MacOSAPIs::is_apple_silicon() {
 }
 
 std::optional<std::string> MacOSAPIs::get_bundle_identifier() {
-  // This would require CoreFoundation framework
-  // Simplified implementation
+  // Get bundle identifier from Info.plist
+  // First try to find the main bundle's Info.plist
+  const char* paths[] = {
+    "../Resources/Info.plist",
+    "../../Resources/Info.plist",
+    "../../../Resources/Info.plist"
+  };
+
+  for (const char* path : paths) {
+    std::ifstream plist(path);
+    if (plist.is_open()) {
+      std::string line;
+      bool found_key = false;
+      while (std::getline(plist, line)) {
+        if (line.find("CFBundleIdentifier") != std::string::npos) {
+          found_key = true;
+        } else if (found_key && line.find("<string>") != std::string::npos) {
+          size_t start = line.find("<string>") + 8;
+          size_t end = line.find("</string>");
+          if (end != std::string::npos && end > start) {
+            return line.substr(start, end - start);
+          }
+        }
+      }
+    }
+  }
+
   return std::nullopt;
 }
 
