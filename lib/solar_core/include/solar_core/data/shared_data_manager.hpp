@@ -202,6 +202,19 @@ class SharedDataManager {
  private:
   struct Impl;
   std::unique_ptr<Impl> impl_;
+
+  // Template implementation methods (defined in shared_data_manager_impl.hpp)
+  template <typename T>
+  SolarSystem::Utils::Expected<DataVersion, std::string> store_impl(
+      const std::string& key, const T& value, const std::string& owner);
+
+  template <typename T>
+  std::optional<SharedDataEntry<T>> retrieve_impl(const std::string& key);
+
+  template <typename T>
+  SolarSystem::Utils::Expected<DataVersion, std::string> update_impl(
+      const std::string& key, const T& value, const DataVersion& expected_version,
+      const std::string& owner);
 };
 
 /**
@@ -250,71 +263,29 @@ class DistributedCache {
  private:
   struct Impl;
   std::unique_ptr<Impl> impl_;
+
+  // Template implementation methods (defined in shared_data_manager_impl.hpp)
+  template <typename T>
+  void cache_impl(const std::string& key, const T& value, std::chrono::seconds ttl);
+
+  template <typename T>
+  std::optional<T> get_impl(const std::string& key);
 };
 
-// Template method implementations must be in header for templates
-// Uses standard library serialization for zero-dependency approach
+// Template method implementations - forward to impl methods
+// Full implementations with JSON serialization are in shared_data_manager_impl.hpp
 
 template <typename T>
 SolarSystem::Utils::Expected<SolarSystem::Data::DataVersion, std::string>
 SolarSystem::Data::SharedDataManager::store(
     const std::string& key, const T& value, const std::string& owner) {
-
-  // Serialize the value to string using standard library
-  std::ostringstream oss;
-  if constexpr (std::is_arithmetic_v<T>) {
-    oss << value;
-  } else if constexpr (std::is_same_v<T, std::string>) {
-    oss << value;
-  } else {
-    // For complex types, use operator<< if available
-    oss << value;
-  }
-
-  std::string serialized = oss.str();
-  if (serialized.empty()) {
-    return SolarSystem::Utils::Expected<DataVersion, std::string>(
-        std::string("Failed to serialize value"));
-  }
-
-  // Note: Full implementation would store serialized data in impl_
-  // This demonstrates the serialization approach using standard library
-  // Production code would call a non-template internal method
-
-  (void)key;  // Suppress unused warning in simplified implementation
-
-  DataVersion version;
-  version.version = 1;
-  version.timestamp = std::chrono::system_clock::now();
-  version.modified_by = owner;
-
-  return SolarSystem::Utils::Expected<DataVersion, std::string>(version);
+  return store_impl(key, value, owner);
 }
 
 template <typename T>
 std::optional<SolarSystem::Data::SharedDataEntry<T>>
 SolarSystem::Data::SharedDataManager::retrieve(const std::string& key) {
-
-  // Check if key exists
-  if (!exists(key)) {
-    return std::nullopt;
-  }
-
-  // Note: Full implementation would deserialize from impl_->data_store
-  // This demonstrates the deserialization approach
-  // Example: std::istringstream iss(serialized_data);
-  // if constexpr (std::is_arithmetic_v<T>) { iss >> value; }
-
-  SharedDataEntry<T> entry;
-  entry.key = key;
-  // value would be deserialized here in full implementation
-
-  auto version = get_version(key);
-  if (version) {
-    entry.version = *version;
-  }
-
-  return entry;
+  return retrieve_impl<T>(key);
 }
 
 template <typename T>
@@ -322,85 +293,18 @@ SolarSystem::Utils::Expected<SolarSystem::Data::DataVersion, std::string>
 SolarSystem::Data::SharedDataManager::update(
     const std::string& key, const T& value, const DataVersion& expected_version,
     const std::string& owner) {
-
-  // Check if key exists
-  if (!exists(key)) {
-    return SolarSystem::Utils::Expected<DataVersion, std::string>(
-        std::string("Key does not exist"));
-  }
-
-  // Check version
-  auto current_version = get_version(key);
-  if (!current_version || current_version->version != expected_version.version) {
-    return SolarSystem::Utils::Expected<DataVersion, std::string>(
-        std::string("Version mismatch"));
-  }
-
-  // Serialize the new value
-  std::ostringstream oss;
-  if constexpr (std::is_arithmetic_v<T>) {
-    oss << value;
-  } else if constexpr (std::is_same_v<T, std::string>) {
-    oss << value;
-  } else {
-    oss << value;
-  }
-
-  std::string serialized = oss.str();
-  if (serialized.empty()) {
-    return SolarSystem::Utils::Expected<DataVersion, std::string>(
-        std::string("Failed to serialize value"));
-  }
-
-  // Note: Full implementation would update impl_->data_store with serialized data
-  // This demonstrates the serialization and version checking approach
-
-  DataVersion new_version;
-  new_version.version = expected_version.version + 1;
-  new_version.timestamp = std::chrono::system_clock::now();
-  new_version.modified_by = owner;
-
-  return SolarSystem::Utils::Expected<DataVersion, std::string>(new_version);
+  return update_impl(key, value, expected_version, owner);
 }
 
 template <typename T>
 void SolarSystem::Data::DistributedCache::cache(
     const std::string& key, const T& value, std::chrono::seconds ttl) {
-
-  // Serialize the value using standard library
-  std::ostringstream oss;
-  if constexpr (std::is_arithmetic_v<T>) {
-    oss << value;
-  } else if constexpr (std::is_same_v<T, std::string>) {
-    oss << value;
-  } else {
-    oss << value;
-  }
-
-  std::string serialized = oss.str();
-  if (serialized.empty()) {
-    return;  // Failed to serialize
-  }
-
-  // Note: Full implementation would store in impl_->cache_store with TTL
-  // This demonstrates the serialization approach with TTL handling
-  // TTL expiry would be: std::chrono::system_clock::now() + ttl
-  (void)key;  // Suppress unused warning
-  (void)ttl;  // Suppress unused warning
+  cache_impl(key, value, ttl);
 }
 
 template <typename T>
 std::optional<T> SolarSystem::Data::DistributedCache::get(const std::string& key) {
-
-  // Note: Full implementation would:
-  // 1. Check if key exists in impl_->cache_store
-  // 2. Check TTL expiry
-  // 3. Deserialize using: std::istringstream iss(serialized);
-  //    if constexpr (std::is_arithmetic_v<T>) { iss >> value; }
-  //    else if constexpr (std::is_same_v<T, std::string>) { value = serialized; }
-
-  (void)key;  // Suppress unused warning
-  return std::nullopt;
+  return get_impl<T>(key);
 }
 
 }  // namespace SolarSystem::Data

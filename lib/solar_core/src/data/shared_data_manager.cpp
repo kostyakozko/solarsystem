@@ -4,6 +4,7 @@
  */
 
 #include "solar_core/data/shared_data_manager.hpp"
+#include "solar_utils/json.hpp"
 
 #include <algorithm>
 #include <map>
@@ -229,5 +230,208 @@ DistributedCache::CacheStats DistributedCache::get_stats() const {
   }
   return impl_->stats;
 }
+
+// Template method implementations with JSON serialization
+
+template <typename T>
+SolarSystem::Utils::Expected<DataVersion, std::string>
+SharedDataManager::store_impl(const std::string& key, const T& value, const std::string& owner) {
+  try {
+    // Serialize to JSON
+    nlohmann::json j = value;
+    std::string serialized = j.dump();
+
+    std::lock_guard<std::mutex> lock(impl_->mutex);
+
+    // Create new version
+    DataVersion version;
+    auto existing_version_it = impl_->versions.find(key);
+    version.version = existing_version_it != impl_->versions.end()
+                      ? existing_version_it->second.version + 1
+                      : 1;
+    version.timestamp = std::chrono::system_clock::now();
+    version.modified_by = owner;
+
+    // Store data and version
+    impl_->data_store[key] = serialized;
+    impl_->versions[key] = version;
+    impl_->stats.total_writes++;
+
+    return SolarSystem::Utils::Expected<DataVersion, std::string>(version);
+  } catch (const std::exception& e) {
+    return SolarSystem::Utils::Expected<DataVersion, std::string>(
+        std::string("Serialization failed: ") + e.what());
+  }
+}
+
+template <typename T>
+std::optional<SharedDataEntry<T>>
+SharedDataManager::retrieve_impl(const std::string& key) {
+  try {
+    std::lock_guard<std::mutex> lock(impl_->mutex);
+
+    // Check if key exists
+    auto it = impl_->data_store.find(key);
+    if (it == impl_->data_store.end()) {
+      return std::nullopt;
+    }
+
+    // Deserialize from JSON
+    nlohmann::json j = nlohmann::json::parse(it->second);
+    T value = j.get<T>();
+
+    // Create entry
+    SharedDataEntry<T> entry;
+    entry.key = key;
+    entry.value = value;
+
+    auto version_it = impl_->versions.find(key);
+    if (version_it != impl_->versions.end()) {
+      entry.version = version_it->second;
+    }
+
+    impl_->stats.total_reads++;
+
+    return entry;
+  } catch (const std::exception&) {
+    return std::nullopt;
+  }
+}
+
+template <typename T>
+SolarSystem::Utils::Expected<DataVersion, std::string>
+SharedDataManager::update_impl(const std::string& key, const T& value,
+                               const DataVersion& expected_version, const std::string& owner) {
+  try {
+    std::lock_guard<std::mutex> lock(impl_->mutex);
+
+    // Check if key exists
+    if (impl_->data_store.find(key) == impl_->data_store.end()) {
+      return SolarSystem::Utils::Expected<DataVersion, std::string>(
+          std::string("Key does not exist"));
+    }
+
+    // Check version
+    auto version_it = impl_->versions.find(key);
+    if (version_it == impl_->versions.end() ||
+        version_it->second.version != expected_version.version) {
+      return SolarSystem::Utils::Expected<DataVersion, std::string>(
+          std::string("Version mismatch"));
+    }
+
+    // Serialize to JSON
+    nlohmann::json j = value;
+    std::string serialized = j.dump();
+
+    // Update with new version
+    DataVersion new_version;
+    new_version.version = expected_version.version + 1;
+    new_version.timestamp = std::chrono::system_clock::now();
+    new_version.modified_by = owner;
+
+    impl_->data_store[key] = serialized;
+    impl_->versions[key] = new_version;
+    impl_->stats.total_writes++;
+
+    return SolarSystem::Utils::Expected<DataVersion, std::string>(new_version);
+  } catch (const std::exception& e) {
+    return SolarSystem::Utils::Expected<DataVersion, std::string>(
+        std::string("Update failed: ") + e.what());
+  }
+}
+
+template <typename T>
+void DistributedCache::cache_impl(const std::string& key, const T& value, std::chrono::seconds ttl) {
+  try {
+    std::lock_guard<std::mutex> lock(impl_->mutex);
+
+    // Serialize to JSON
+    nlohmann::json j = value;
+    std::string serialized = j.dump();
+
+    // Store with TTL
+    impl_->cache_store[key] = serialized;
+    impl_->expiry[key] = std::chrono::system_clock::now() + ttl;
+    impl_->stats.total_entries = impl_->cache_store.size();
+  } catch (const std::exception&) {
+    // Failed to serialize
+  }
+}
+
+template <typename T>
+std::optional<T> DistributedCache::get_impl(const std::string& key) {
+  try {
+    std::lock_guard<std::mutex> lock(impl_->mutex);
+
+    // Check if key exists
+    auto it = impl_->cache_store.find(key);
+    if (it == impl_->cache_store.end()) {
+      impl_->stats.misses++;
+      return std::nullopt;
+    }
+
+    // Check TTL
+    auto expiry_it = impl_->expiry.find(key);
+    if (expiry_it != impl_->expiry.end()) {
+      if (std::chrono::system_clock::now() > expiry_it->second) {
+        // Expired - remove and return nullopt
+        impl_->cache_store.erase(it);
+        impl_->expiry.erase(expiry_it);
+        impl_->stats.misses++;
+        return std::nullopt;
+      }
+    }
+
+    // Deserialize from JSON
+    nlohmann::json j = nlohmann::json::parse(it->second);
+    T value = j.get<T>();
+
+    impl_->stats.hits++;
+    return value;
+  } catch (const std::exception&) {
+    impl_->stats.misses++;
+    return std::nullopt;
+  }
+}
+
+// Explicit template instantiations for common types
+template SolarSystem::Utils::Expected<DataVersion, std::string>
+SharedDataManager::store_impl<int>(const std::string&, const int&, const std::string&);
+
+template SolarSystem::Utils::Expected<DataVersion, std::string>
+SharedDataManager::store_impl<double>(const std::string&, const double&, const std::string&);
+
+template SolarSystem::Utils::Expected<DataVersion, std::string>
+SharedDataManager::store_impl<std::string>(const std::string&, const std::string&, const std::string&);
+
+template std::optional<SharedDataEntry<int>>
+SharedDataManager::retrieve_impl<int>(const std::string&);
+
+template std::optional<SharedDataEntry<double>>
+SharedDataManager::retrieve_impl<double>(const std::string&);
+
+template std::optional<SharedDataEntry<std::string>>
+SharedDataManager::retrieve_impl<std::string>(const std::string&);
+
+template SolarSystem::Utils::Expected<DataVersion, std::string>
+SharedDataManager::update_impl<int>(const std::string&, const int&, const DataVersion&, const std::string&);
+
+template SolarSystem::Utils::Expected<DataVersion, std::string>
+SharedDataManager::update_impl<double>(const std::string&, const double&, const DataVersion&, const std::string&);
+
+template SolarSystem::Utils::Expected<DataVersion, std::string>
+SharedDataManager::update_impl<std::string>(const std::string&, const std::string&, const DataVersion&, const std::string&);
+
+template void DistributedCache::cache_impl<int>(const std::string&, const int&, std::chrono::seconds);
+
+template void DistributedCache::cache_impl<double>(const std::string&, const double&, std::chrono::seconds);
+
+template void DistributedCache::cache_impl<std::string>(const std::string&, const std::string&, std::chrono::seconds);
+
+template std::optional<int> DistributedCache::get_impl<int>(const std::string&);
+
+template std::optional<double> DistributedCache::get_impl<double>(const std::string&);
+
+template std::optional<std::string> DistributedCache::get_impl<std::string>(const std::string&);
 
 }  // namespace SolarSystem::Data
