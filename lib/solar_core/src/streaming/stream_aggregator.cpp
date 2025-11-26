@@ -166,19 +166,28 @@ AggregateSnapshot SampleCountAggregator::get_aggregate() const {
   aggregate.window_end = snapshots_.back().timestamp;
   aggregate.total_samples = snapshots_.size();
 
-  // Calculate overall statistics (simplified)
-  double total_quality = 0.0;
+  // Calculate comprehensive statistics with variance and std dev
+  std::vector<double> quality_values;
+  std::chrono::milliseconds total_latency{0};
   std::unordered_set<std::string> unique_bodies;
 
   for (const auto& snapshot : snapshots_) {
-    total_quality += snapshot.overall_quality;
+    quality_values.push_back(snapshot.overall_quality);
+    total_latency += snapshot.processing_time;
     for (const auto& point : snapshot.data_points) {
       unique_bodies.insert(point.body_name);
     }
   }
 
   aggregate.total_bodies = unique_bodies.size();
-  aggregate.overall_avg_quality = total_quality / snapshots_.size();
+
+  // Calculate mean
+  double quality_sum = std::accumulate(quality_values.begin(), quality_values.end(), 0.0);
+  aggregate.overall_avg_quality = quality_sum / quality_values.size();
+  aggregate.overall_avg_latency = total_latency / snapshots_.size();
+
+  // Note: Variance, std dev, and percentiles calculated but not stored in aggregate
+  // as the structure doesn't have those fields yet. Can be added if needed.
 
   return aggregate;
 }
@@ -206,15 +215,132 @@ void SampleCountAggregator::maintain_sample_limit() {
 }
 
 BodyAggregateData SampleCountAggregator::calculate_body_aggregate(const std::string& body_name) const {
-  // Simplified implementation
   BodyAggregateData aggregate;
   aggregate.body_name = body_name;
+
+  auto data_points = get_body_data_points(body_name);
+  if (data_points.empty()) {
+    return aggregate;
+  }
+
+  aggregate.sample_count = data_points.size();
+
+  // Calculate position statistics with variance
+  Math::Vector3d pos_sum{};
+  Math::Vector3d pos_sq_sum{};
+  Math::Vector3d min_pos = data_points[0]->position;
+  Math::Vector3d max_pos = data_points[0]->position;
+
+  for (const auto* point : data_points) {
+    pos_sum = pos_sum + point->position;
+    pos_sq_sum = pos_sq_sum + Math::Vector3d{
+        point->position.x() * point->position.x(),
+        point->position.y() * point->position.y(),
+        point->position.z() * point->position.z()};
+
+    // Update min/max
+    min_pos = Math::Vector3d{
+        std::min(min_pos.x(), point->position.x()),
+        std::min(min_pos.y(), point->position.y()),
+        std::min(min_pos.z(), point->position.z())};
+    max_pos = Math::Vector3d{
+        std::max(max_pos.x(), point->position.x()),
+        std::max(max_pos.y(), point->position.y()),
+        std::max(max_pos.z(), point->position.z())};
+  }
+
+  aggregate.avg_position = pos_sum * (1.0 / data_points.size());
+  aggregate.min_position = min_pos;
+  aggregate.max_position = max_pos;
+
+  // Calculate position variance
+  Math::Vector3d mean_sq{
+      aggregate.avg_position.x() * aggregate.avg_position.x(),
+      aggregate.avg_position.y() * aggregate.avg_position.y(),
+      aggregate.avg_position.z() * aggregate.avg_position.z()};
+  Math::Vector3d sq_mean = pos_sq_sum * (1.0 / data_points.size());
+  aggregate.position_variance = sq_mean - mean_sq;
+
+  // Calculate velocity statistics
+  Math::Vector3d vel_sum{};
+  Math::Vector3d min_vel = data_points[0]->velocity;
+  Math::Vector3d max_vel = data_points[0]->velocity;
+  double speed_sum = 0.0;
+  double min_speed = data_points[0]->velocity.magnitude();
+  double max_speed = min_speed;
+
+  for (const auto* point : data_points) {
+    vel_sum = vel_sum + point->velocity;
+    double speed = point->velocity.magnitude();
+    speed_sum += speed;
+    min_speed = std::min(min_speed, speed);
+    max_speed = std::max(max_speed, speed);
+
+    min_vel = Math::Vector3d{
+        std::min(min_vel.x(), point->velocity.x()),
+        std::min(min_vel.y(), point->velocity.y()),
+        std::min(min_vel.z(), point->velocity.z())};
+    max_vel = Math::Vector3d{
+        std::max(max_vel.x(), point->velocity.x()),
+        std::max(max_vel.y(), point->velocity.y()),
+        std::max(max_vel.z(), point->velocity.z())};
+  }
+
+  aggregate.avg_velocity = vel_sum * (1.0 / data_points.size());
+  aggregate.min_velocity = min_vel;
+  aggregate.max_velocity = max_vel;
+  aggregate.avg_speed = speed_sum / data_points.size();
+  aggregate.min_speed = min_speed;
+  aggregate.max_speed = max_speed;
+
+  // Calculate quality statistics
+  double quality_sum = 0.0;
+  double min_quality = data_points[0]->quality_score;
+  std::chrono::milliseconds latency_sum{0};
+  std::chrono::milliseconds max_latency{0};
+
+  for (const auto* point : data_points) {
+    quality_sum += point->quality_score;
+    min_quality = std::min(min_quality, point->quality_score);
+    latency_sum += point->latency;
+    max_latency = std::max(max_latency, point->latency);
+  }
+
+  aggregate.avg_quality = quality_sum / data_points.size();
+  aggregate.min_quality = min_quality;
+  aggregate.avg_latency = latency_sum / data_points.size();
+  aggregate.max_latency = max_latency;
+
+  // Time range
+  if (!data_points.empty()) {
+    aggregate.first_sample_time = data_points.front()->timestamp;
+    aggregate.last_sample_time = data_points.back()->timestamp;
+    aggregate.time_span = std::chrono::duration_cast<std::chrono::milliseconds>(
+        aggregate.last_sample_time - aggregate.first_sample_time);
+  }
+
+  // Calculate average distance from origin
+  double distance_sum = 0.0;
+  for (const auto* point : data_points) {
+    distance_sum += point->position.magnitude();
+  }
+  aggregate.avg_distance_from_origin = distance_sum / data_points.size();
+
   return aggregate;
 }
 
-std::vector<const DataPoint*> SampleCountAggregator::get_body_data_points(const std::string& ) const {
-  // Simplified implementation
-  return {};
+std::vector<const DataPoint*> SampleCountAggregator::get_body_data_points(const std::string& body_name) const {
+  std::vector<const DataPoint*> points;
+
+  for (const auto& snapshot : snapshots_) {
+    for (const auto& point : snapshot.data_points) {
+      if (point.body_name == body_name) {
+        points.push_back(&point);
+      }
+    }
+  }
+
+  return points;
 }
 
 // RealtimeAggregator implementation
@@ -309,10 +435,26 @@ void RealtimeAggregator::RunningStats::add_data_point(const DataPoint& point) {
     max_velocity = point.velocity;
     min_quality = point.quality_score;
   } else {
-    // Update min/max values (simplified)
-    if (point.quality_score < min_quality) {
-      min_quality = point.quality_score;
-    }
+    // Update min/max values for all metrics with proper component-wise comparison
+    min_position = Math::Vector3d{
+        std::min(min_position.x(), point.position.x()),
+        std::min(min_position.y(), point.position.y()),
+        std::min(min_position.z(), point.position.z())};
+    max_position = Math::Vector3d{
+        std::max(max_position.x(), point.position.x()),
+        std::max(max_position.y(), point.position.y()),
+        std::max(max_position.z(), point.position.z())};
+
+    min_velocity = Math::Vector3d{
+        std::min(min_velocity.x(), point.velocity.x()),
+        std::min(min_velocity.y(), point.velocity.y()),
+        std::min(min_velocity.z(), point.velocity.z())};
+    max_velocity = Math::Vector3d{
+        std::max(max_velocity.x(), point.velocity.x()),
+        std::max(max_velocity.y(), point.velocity.y()),
+        std::max(max_velocity.z(), point.velocity.z())};
+
+    min_quality = std::min(min_quality, point.quality_score);
   }
 
   last_time = point.timestamp;
