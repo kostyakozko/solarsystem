@@ -93,10 +93,17 @@ bool StreamingConnection::health_check() {
 
   health_.health_score = (quality_score + delivery_rate) / 2.0;
 
-  // Update latency
+  // Update latency - use actual average delivery time from stream statistics
   if (stats.total_snapshots_delivered.load() > 0) {
-    health_.average_latency = std::chrono::milliseconds(
-        static_cast<long long>(stats.avg_quality_score * 100));  // Simplified
+    // Use the actual average delivery time tracked by the stream
+    // This represents the real latency of data delivery
+    health_.average_latency = stats.avg_delivery_time;
+
+    // Also track the maximum latency observed
+    if (stats.max_latency > health_.average_latency) {
+      // Store max latency in metadata for monitoring
+      health_.last_error = "Max latency: " + std::to_string(stats.max_latency.count()) + "ms";
+    }
   }
 
   // Update operation counts
