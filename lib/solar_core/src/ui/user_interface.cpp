@@ -9,6 +9,7 @@
 #include <iomanip>
 #include <algorithm>
 #include <cmath>
+#include <iostream>
 
 namespace SolarSystem::UI {
 
@@ -203,27 +204,127 @@ std::string InteractiveInput::prompt(const InputPrompt& config) {
     return config.default_value;
   }
 
-  // In a real implementation, this would read from stdin
-  // For now, return default value
-  return config.default_value;
+  // Display prompt
+  std::cout << config.prompt_text;
+
+  // Show default value if provided
+  if (!config.default_value.empty()) {
+    std::cout << " [" << config.default_value << "]";
+  }
+
+  std::cout << ": ";
+  std::cout.flush();
+
+  // Read input from stdin
+  std::string input;
+  if (!std::getline(std::cin, input)) {
+    // EOF or error - return default
+    return config.default_value;
+  }
+
+  // Trim whitespace
+  input.erase(0, input.find_first_not_of(" \t\n\r"));
+  input.erase(input.find_last_not_of(" \t\n\r") + 1);
+
+  // If empty input, use default
+  if (input.empty()) {
+    return config.default_value;
+  }
+
+  // Validate input if validator provided
+  if (config.validator && !config.validator(input)) {
+    std::cout << "Invalid input. ";
+    if (!config.validation_message.empty()) {
+      std::cout << config.validation_message;
+    }
+    std::cout << std::endl;
+
+    // Retry
+    return prompt(config);
+  }
+
+  return input;
 }
 
-bool InteractiveInput::confirm(const std::string& /* question */, bool default_yes) {
+bool InteractiveInput::confirm(const std::string& question, bool default_yes) {
   if (!interactive_mode_) {
     return default_yes;
   }
 
-  // In a real implementation, this would read from stdin
+  // Display question with default
+  std::cout << question << " [" << (default_yes ? "Y/n" : "y/N") << "]: ";
+  std::cout.flush();
+
+  // Read input
+  std::string input;
+  if (!std::getline(std::cin, input)) {
+    // EOF or error - return default
+    return default_yes;
+  }
+
+  // Trim and convert to lowercase
+  input.erase(0, input.find_first_not_of(" \t\n\r"));
+  input.erase(input.find_last_not_of(" \t\n\r") + 1);
+  std::transform(input.begin(), input.end(), input.begin(), ::tolower);
+
+  // Empty input uses default
+  if (input.empty()) {
+    return default_yes;
+  }
+
+  // Check for yes/no
+  if (input == "y" || input == "yes") {
+    return true;
+  } else if (input == "n" || input == "no") {
+    return false;
+  }
+
+  // Invalid input, use default
   return default_yes;
 }
 
-std::string InteractiveInput::select(const std::string& /* prompt */,
+std::string InteractiveInput::select(const std::string& prompt_text,
                                     const std::vector<std::string>& options) {
   if (!interactive_mode_ || options.empty()) {
     return options.empty() ? "" : options[0];
   }
 
-  // In a real implementation, this would present options and read selection
+  // Display prompt and options
+  std::cout << prompt_text << std::endl;
+  for (size_t i = 0; i < options.size(); ++i) {
+    std::cout << "  " << (i + 1) << ". " << options[i] << std::endl;
+  }
+  std::cout << "Select (1-" << options.size() << "): ";
+  std::cout.flush();
+
+  // Read selection
+  std::string input;
+  if (!std::getline(std::cin, input)) {
+    // EOF or error - return first option
+    return options[0];
+  }
+
+  // Trim whitespace
+  input.erase(0, input.find_first_not_of(" \t\n\r"));
+  input.erase(input.find_last_not_of(" \t\n\r") + 1);
+
+  // Try to parse as number
+  try {
+    size_t selection = std::stoull(input);
+    if (selection >= 1 && selection <= options.size()) {
+      return options[selection - 1];
+    }
+  } catch (...) {
+    // Not a valid number, check if it matches an option text
+    for (const auto& option : options) {
+      if (input == option) {
+        return option;
+      }
+    }
+  }
+
+  // Invalid selection, return first option
+  std::cout << "Invalid selection. Using default." << std::endl;
   return options[0];
 }
 

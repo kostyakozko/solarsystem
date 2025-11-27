@@ -10,6 +10,23 @@
 #include <iomanip>
 #include <chrono>
 
+// Platform-specific includes for command execution
+#ifdef _WIN32
+#include <windows.h>
+#else
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <unistd.h>
+#include <signal.h>
+#endif
+
+// libcurl for HTTP error reporting
+#ifdef CURL_VERSION_MAJOR
+#include <curl/curl.h>
+#endif
+
+#include <cstdlib>  // For getenv
+
 namespace SolarSystem::Error {
 
 // ErrorMessageBuilder implementation
@@ -289,12 +306,136 @@ std::vector<RecoveryAction> ErrorMessaging::suggest_recovery_actions(const std::
 }
 
 bool ErrorMessaging::execute_recovery_action(const RecoveryAction& action) {
-  if (action.automatic && !action.command.empty()) {
-    // In a real implementation, this would execute the command
-    // For now, just return true to indicate it would be executed
-    return true;
+  if (!action.automatic || action.command.empty()) {
+    return false;
   }
-  return false;
+
+  // Security validation - only allow whitelisted commands
+  static const std::vector<std::string> allowed_commands = {
+    "restart", "clear_cache", "reset_config", "reload", "cleanup"
+  };
+
+  // Extract command name (first word)
+  std::string command_name = action.command.substr(0, action.command.find(' '));
+
+  bool is_allowed = std::find(allowed_commands.begin(), allowed_commands.end(),
+                              command_name) != allowed_commands.end();
+
+  if (!is_allowed) {
+    // Log security violation
+    return false;
+  }
+
+  try {
+#ifdef _WIN32
+    // Windows implementation using CreateProcess
+    STARTUPINFOA si;
+    PROCESS_INFORMATION pi;
+    ZeroMemory(&si, sizeof(si));
+    si.cb = sizeof(si);
+    ZeroMemory(&pi, sizeof(pi));
+
+    // Create mutable copy of command for CreateProcess
+    std::string cmd_copy = action.command;
+
+    // Start the child process with timeout
+    if (!CreateProcessA(
+        nullptr,                    // No module name (use command line)
+        &cmd_copy[0],              // Command line (mutable)
+        nullptr,                    // Process handle not inheritable
+        nullptr,                    // Thread handle not inheritable
+        FALSE,                      // Set handle inheritance to FALSE
+        CREATE_NO_WINDOW,          // No console window
+        nullptr,                    // Use parent's environment block
+        nullptr,                    // Use parent's starting directory
+        &si,                       // Pointer to STARTUPINFO structure
+        &pi))                      // Pointer to PROCESS_INFORMATION structure
+    {
+      return false;
+    }
+
+    // Wait for process to complete with timeout (30 seconds)
+    DWORD wait_result = WaitForSingleObject(pi.hProcess, 30000);
+
+    DWORD exit_code = 0;
+    bool success = false;
+
+    if (wait_result == WAIT_OBJECT_0) {
+      // Process completed
+      GetExitCodeProcess(pi.hProcess, &exit_code);
+      success = (exit_code == 0);
+    } else if (wait_result == WAIT_TIMEOUT) {
+      // Timeout - terminate process
+      TerminateProcess(pi.hProcess, 1);
+      success = false;
+    }
+
+    // Close process and thread handles
+    CloseHandle(pi.hProcess);
+    CloseHandle(pi.hThread);
+
+    return success;
+
+#else
+    // Unix/Linux/macOS implementation using fork/exec
+    pid_t pid = fork();
+
+    if (pid == -1) {
+      // Fork failed
+      return false;
+    } else if (pid == 0) {
+      // Child process
+
+      // Parse command into arguments
+      std::vector<std::string> args;
+      std::istringstream iss(action.command);
+      std::string arg;
+      while (iss >> arg) {
+        args.push_back(arg);
+      }
+
+      // Convert to char* array for execvp
+      std::vector<char*> argv;
+      for (auto& a : args) {
+        argv.push_back(&a[0]);
+      }
+      argv.push_back(nullptr);
+
+      // Execute command
+      execvp(argv[0], argv.data());
+
+      // If execvp returns, it failed
+      _exit(1);
+    } else {
+      // Parent process - wait for child with timeout
+      int status;
+      int timeout_seconds = 30;
+
+      // Use alarm for timeout
+      alarm(static_cast<unsigned int>(timeout_seconds));
+
+      pid_t result = waitpid(pid, &status, 0);
+
+      alarm(0);  // Cancel alarm
+
+      if (result == -1) {
+        // Wait failed or timeout
+        kill(pid, SIGKILL);  // Kill child process
+        waitpid(pid, nullptr, 0);  // Clean up zombie
+        return false;
+      }
+
+      // Check if process exited normally with success
+      if (WIFEXITED(status)) {
+        return WEXITSTATUS(status) == 0;
+      }
+
+      return false;
+    }
+#endif
+  } catch (const std::exception&) {
+    return false;
+  }
 }
 
 void ErrorMessaging::set_language(const std::string& language) {
@@ -369,10 +510,75 @@ std::string ErrorFeedback::generate_error_report(const ErrorMessage& error) cons
   return oss.str();
 }
 
-bool ErrorFeedback::send_error_report(const std::string& /* report */) {
-  // In a real implementation, this would send the report to a server
-  // For now, just return true to indicate success
-  return true;
+bool ErrorFeedback::send_error_report(const std::string& report) {
+  // Check if error reporting is configured
+  const char* report_url = std::getenv("SOLAR_ERROR_REPORT_URL");
+  if (!report_url || std::string(report_url).empty()) {
+    // No reporting URL configured, skip silently
+    return true;
+  }
+
+#ifdef CURL_VERSION_MAJOR
+  // Use libcurl for HTTP POST
+  CURL* curl = curl_easy_init();
+  if (!curl) {
+    return false;
+  }
+
+  bool success = false;
+
+  try {
+    // Set URL
+    curl_easy_setopt(curl, CURLOPT_URL, report_url);
+
+    // Set POST data
+    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, report.c_str());
+    curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, static_cast<long>(report.size()));
+
+    // Set headers for JSON content
+    struct curl_slist* headers = nullptr;
+    headers = curl_slist_append(headers, "Content-Type: application/json");
+    headers = curl_slist_append(headers, "User-Agent: SolarSystemSuite/4.0");
+    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+
+    // Set timeout (10 seconds)
+    curl_easy_setopt(curl, CURLOPT_TIMEOUT, 10L);
+
+    // Follow redirects
+    curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+
+    // Disable SSL verification for internal servers (can be configured)
+    const char* verify_ssl = std::getenv("SOLAR_ERROR_REPORT_VERIFY_SSL");
+    if (verify_ssl && std::string(verify_ssl) == "false") {
+      curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
+      curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
+    }
+
+    // Perform the request
+    CURLcode res = curl_easy_perform(curl);
+
+    if (res == CURLE_OK) {
+      // Check HTTP response code
+      long response_code = 0;
+      curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
+      success = (response_code >= 200 && response_code < 300);
+    }
+
+    // Cleanup
+    curl_slist_free_all(headers);
+    curl_easy_cleanup(curl);
+
+  } catch (...) {
+    curl_easy_cleanup(curl);
+    return false;
+  }
+
+  return success;
+#else
+  // libcurl not available, cannot send reports
+  (void)report;  // Suppress unused parameter warning
+  return false;
+#endif
 }
 
 }  // namespace SolarSystem::Error
