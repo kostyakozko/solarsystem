@@ -12,6 +12,14 @@
 #include "solar_utils/json.hpp"
 #include "msgpack.hpp"
 
+// OpenSSL for cryptographic signature validation
+#ifdef OPENSSL_VERSION_NUMBER
+#include <openssl/bio.h>
+#include <openssl/evp.h>
+#include <openssl/pem.h>
+#include <openssl/err.h>
+#endif
+
 namespace SolarSystem::Communication {
 
 namespace {
@@ -133,11 +141,82 @@ bool MessageValidator::validate_payload(const MessagePayload& /* payload */) {
   return true;
 }
 
-bool MessageValidator::validate_signature(const Message& /* message */,
-                                         const std::string& /* public_key */) {
-  // Signature validation would be implemented here
-  // For now, return true if no signature is present
-  return true;
+bool MessageValidator::validate_signature(const Message& message,
+                                         const std::string& public_key_pem) {
+  // If no signature is present, validation passes (unsigned message)
+  if (!message.signature || message.signature->empty()) {
+    return true;
+  }
+
+  // If signature is present but no public key provided, validation fails
+  if (public_key_pem.empty()) {
+    return false;
+  }
+
+#ifdef OPENSSL_VERSION_NUMBER
+  // Use OpenSSL for signature verification
+
+  // Create a message digest of the message content
+  std::string message_content = message.header.message_id +
+                                message.header.source_application +
+                                message.header.destination_application;
+
+  // Add payload to message content
+  for (const auto& [key, value] : message.payload) {
+    message_content += key;
+    if (std::holds_alternative<std::string>(value)) {
+      message_content += std::get<std::string>(value);
+    }
+  }
+
+  // Load public key from PEM format
+  BIO* bio = BIO_new_mem_buf(public_key_pem.data(), static_cast<int>(public_key_pem.size()));
+  if (!bio) {
+    return false;
+  }
+
+  EVP_PKEY* pkey = PEM_read_bio_PUBKEY(bio, nullptr, nullptr, nullptr);
+  BIO_free(bio);
+
+  if (!pkey) {
+    return false;
+  }
+
+  // Create verification context
+  EVP_MD_CTX* ctx = EVP_MD_CTX_new();
+  if (!ctx) {
+    EVP_PKEY_free(pkey);
+    return false;
+  }
+
+  // Initialize verification with SHA256
+  if (EVP_DigestVerifyInit(ctx, nullptr, EVP_sha256(), nullptr, pkey) != 1) {
+    EVP_MD_CTX_free(ctx);
+    EVP_PKEY_free(pkey);
+    return false;
+  }
+
+  // Update with message content
+  if (EVP_DigestVerifyUpdate(ctx, message_content.data(), message_content.size()) != 1) {
+    EVP_MD_CTX_free(ctx);
+    EVP_PKEY_free(pkey);
+    return false;
+  }
+
+  // Verify signature
+  int result = EVP_DigestVerifyFinal(ctx,
+                                     reinterpret_cast<const unsigned char*>(message.signature->data()),
+                                     message.signature->size());
+
+  // Cleanup
+  EVP_MD_CTX_free(ctx);
+  EVP_PKEY_free(pkey);
+
+  return result == 1;
+#else
+  // OpenSSL not available, cannot verify signatures
+  return false;
+#endif
 }
 
 bool MessageValidator::check_size_limits(const Message& message, size_t max_size) {
