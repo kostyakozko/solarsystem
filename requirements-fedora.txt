@@ -7,3 +7,5 @@ openssl-devel
 libcurl-devel
 zlib-devel
 boost-devel
+cairo-devel
+libpng-devel

@@ -100,6 +100,23 @@ target_include_directories(solar_core PUBLIC
 # Find zlib for checkpoint compression
 find_package(ZLIB REQUIRED)
 
+# Find Cairo for PNG/PDF export (optional)
+find_package(PkgConfig)
+if(PKG_CONFIG_FOUND)
+    pkg_check_modules(CAIRO cairo)
+    if(CAIRO_FOUND)
+        message(STATUS "Cairo found - PNG/PDF export will be enabled")
+        target_compile_definitions(solar_core PRIVATE HAVE_CAIRO)
+        target_include_directories(solar_core PRIVATE ${CAIRO_INCLUDE_DIRS})
+    else()
+        message(STATUS "Cairo not found - PNG/PDF export will be disabled")
+        message(STATUS "To enable PNG/PDF export, install cairo development packages:")
+        message(STATUS "  Ubuntu/Debian: sudo apt-get install libcairo2-dev libpng-dev")
+        message(STATUS "  Fedora/RHEL: sudo dnf install cairo-devel libpng-devel")
+        message(STATUS "  macOS: brew install cairo libpng")
+    endif()
+endif()
+
 # Link dependencies
 target_link_libraries(solar_core PUBLIC
     solar_utils     # Needs args.h for simulation parameters
@@ -110,6 +127,11 @@ target_link_libraries(solar_core PUBLIC
     OpenSSL::Crypto # For hashing and cryptographic functions
     CURL::libcurl   # For HTTP operations in network security
 )
+
+# Link Cairo if available
+if(CAIRO_FOUND)
+    target_link_libraries(solar_core PRIVATE ${CAIRO_LIBRARIES})
+endif()
 
 # Aggressive optimization for core physics calculations
 target_compile_options(solar_core PRIVATE

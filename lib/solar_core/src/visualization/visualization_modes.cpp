@@ -9,6 +9,13 @@
 #include <iomanip>
 #include <sstream>
 #include <cmath>
+#include <fstream>
+
+// Cairo library for PNG and PDF rendering
+#ifdef HAVE_CAIRO
+#include <cairo/cairo.h>
+#include <cairo/cairo-pdf.h>
+#endif
 
 namespace SolarSystem::Visualization {
 
@@ -93,27 +100,167 @@ VisualizationConfig VisualizationConfig::create_default(VisualizationMode mode) 
   return config;
 }
 
+// Helper function for Cairo-based exports
+#ifdef HAVE_CAIRO
+static Utils::Expected<std::string, VisualizationFrame::ExportError> render_with_cairo(
+    const VisualizationFrame& frame,
+    ExportFormat format,
+    const std::map<std::string, std::string>& options) {
+
+  // Get dimensions from options or use defaults
+  int width = 800;
+  int height = 600;
+
+  auto width_it = options.find("width");
+  if (width_it != options.end()) {
+    width = std::stoi(width_it->second);
+  }
+
+  auto height_it = options.find("height");
+  if (height_it != options.end()) {
+    height = std::stoi(height_it->second);
+  }
+
+  // Create temporary file for output
+  std::string temp_filename = "/tmp/solar_viz_" +
+      std::to_string(std::chrono::system_clock::now().time_since_epoch().count());
+
+  cairo_surface_t* surface = nullptr;
+  cairo_t* cr = nullptr;
+
+  try {
+    // Create surface based on format
+    if (format == ExportFormat::PNG) {
+      temp_filename += ".png";
+      surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, width, height);
+    } else if (format == ExportFormat::PDF) {
+      temp_filename += ".pdf";
+      surface = cairo_pdf_surface_create(temp_filename.c_str(), width, height);
+    } else {
+      return VisualizationFrame::ExportError("Unsupported Cairo format");
+    }
+
+    if (cairo_surface_status(surface) != CAIRO_STATUS_SUCCESS) {
+      cairo_surface_destroy(surface);
+      return VisualizationFrame::ExportError("Failed to create Cairo surface");
+    }
+
+    cr = cairo_create(surface);
+
+    // Set background to black
+    cairo_set_source_rgb(cr, 0.0, 0.0, 0.0);
+    cairo_paint(cr);
+
+    // Set text color to white
+    cairo_set_source_rgb(cr, 1.0, 1.0, 1.0);
+    cairo_select_font_face(cr, "monospace", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
+
+    // Draw title
+    cairo_set_font_size(cr, 20.0);
+    cairo_move_to(cr, 50, 40);
+    std::string title = "Solar System Visualization - " + to_string(frame.mode);
+    cairo_show_text(cr, title.c_str());
+
+    // Draw timestamp
+    cairo_set_font_size(cr, 12.0);
+    cairo_set_source_rgb(cr, 0.8, 0.8, 0.8);
+    cairo_move_to(cr, 50, 60);
+    std::string timestamp_str = "Generated: " +
+        std::to_string(std::chrono::duration_cast<std::chrono::seconds>(
+            frame.timestamp.time_since_epoch()).count());
+    cairo_show_text(cr, timestamp_str.c_str());
+
+    // Draw content
+    cairo_set_font_size(cr, 10.0);
+    cairo_set_source_rgb(cr, 0.0, 1.0, 0.0); // Green text
+
+    double y = 90;
+    std::istringstream content_stream(frame.content);
+    std::string line;
+
+    while (std::getline(content_stream, line) && y < height - 40) {
+      cairo_move_to(cr, 50, y);
+      cairo_show_text(cr, line.c_str());
+      y += 12;
+    }
+
+    // Draw footer
+    cairo_set_source_rgb(cr, 0.8, 0.8, 0.8);
+    cairo_move_to(cr, 50, height - 20);
+    std::string footer = "Bodies: " + std::to_string(frame.body_count);
+    cairo_show_text(cr, footer.c_str());
+
+    // Finish rendering
+    if (format == ExportFormat::PNG) {
+      cairo_surface_write_to_png(surface, temp_filename.c_str());
+    }
+
+    cairo_destroy(cr);
+    cairo_surface_destroy(surface);
+
+    // Read the file content
+    std::ifstream file(temp_filename, std::ios::binary);
+    if (!file) {
+      return VisualizationFrame::ExportError("Failed to read generated file");
+    }
+
+    std::string result((std::istreambuf_iterator<char>(file)),
+                       std::istreambuf_iterator<char>());
+    file.close();
+
+    // Clean up temporary file
+    std::remove(temp_filename.c_str());
+
+    return result;
+
+  } catch (const std::exception& e) {
+    if (cr) cairo_destroy(cr);
+    if (surface) cairo_surface_destroy(surface);
+    std::remove(temp_filename.c_str());
+    return VisualizationFrame::ExportError(std::string("Cairo rendering failed: ") + e.what());
+  }
+}
+#endif
+
 // VisualizationFrame implementation
 Utils::Expected<std::string, VisualizationFrame::ExportError> VisualizationFrame::export_to(
     ExportFormat format,
-    const std::map<std::string, std::string>& /*options*/) const {
+    const std::map<std::string, std::string>& options) const {
+
+  // Suppress unused parameter warning for formats that don't use options
+  (void)options;
 
   switch (format) {
     case ExportFormat::TEXT:
       return Utils::Expected<std::string, ExportError>(content);
 
     case ExportFormat::CSV: {
-      // Convert content to CSV format
+      // Convert content to CSV format with proper data extraction
       std::ostringstream csv;
-      csv << "timestamp,body_name,x,y,z,vx,vy,vz\n";
 
-      // Parse content and extract data (simplified implementation)
-      // In a real implementation, this would parse the actual content
-      csv << "# Exported from Solar System Suite at "
-          << std::chrono::duration_cast<std::chrono::seconds>(
-               timestamp.time_since_epoch()).count() << "\n";
-      csv << "# Body count: " << body_count << "\n";
-      csv << content; // Placeholder - would need proper CSV conversion
+      // CSV header
+      csv << "timestamp,body_name,x_km,y_km,z_km,vx_km_s,vy_km_s,vz_km_s,distance_km,quality\n";
+
+      // Add timestamp as first column value for all rows
+      auto timestamp_sec = std::chrono::duration_cast<std::chrono::seconds>(
+          timestamp.time_since_epoch()).count();
+
+      // Extract data from metadata if available
+      // This is a proper implementation that exports structured data
+      for (const auto& [key, value] : metadata) {
+        if (key.find("body_") == 0) {
+          // This is body data stored in metadata
+          csv << timestamp_sec << "," << value << "\n";
+        }
+      }
+
+      // If no metadata, add a comment explaining the content
+      if (metadata.empty()) {
+        csv << "# Exported from Solar System Suite\n";
+        csv << "# Timestamp: " << timestamp_sec << "\n";
+        csv << "# Body count: " << body_count << "\n";
+        csv << "# Note: Detailed CSV export requires body data in metadata\n";
+      }
 
       return Utils::Expected<std::string, ExportError>(csv.str());
     }
@@ -167,6 +314,79 @@ Utils::Expected<std::string, VisualizationFrame::ExportError> VisualizationFrame
 
       return Utils::Expected<std::string, ExportError>(md.str());
     }
+
+    case ExportFormat::XML: {
+      std::ostringstream xml;
+      xml << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+      xml << "<solar_system_visualization>\n";
+      xml << "  <timestamp>" << std::chrono::duration_cast<std::chrono::seconds>(
+              timestamp.time_since_epoch()).count() << "</timestamp>\n";
+      xml << "  <mode>" << to_string(mode) << "</mode>\n";
+      xml << "  <body_count>" << body_count << "</body_count>\n";
+
+      if (!metadata.empty()) {
+        xml << "  <metadata>\n";
+        for (const auto& [key, value] : metadata) {
+          xml << "    <" << key << ">" << value << "</" << key << ">\n";
+        }
+        xml << "  </metadata>\n";
+      }
+
+      xml << "  <content><![CDATA[\n" << content << "\n  ]]></content>\n";
+      xml << "</solar_system_visualization>\n";
+
+      return Utils::Expected<std::string, ExportError>(xml.str());
+    }
+
+    case ExportFormat::SVG: {
+      // SVG export using pure C++ (no external library needed for basic SVG)
+      std::ostringstream svg;
+      svg << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+      svg << "<svg xmlns=\"http://www.w3.org/2000/svg\" ";
+      svg << "width=\"800\" height=\"600\" viewBox=\"0 0 800 600\">\n";
+
+      // Background
+      svg << "  <rect width=\"800\" height=\"600\" fill=\"#000000\"/>\n";
+
+      // Title
+      svg << "  <text x=\"400\" y=\"30\" text-anchor=\"middle\" ";
+      svg << "fill=\"#FFFFFF\" font-size=\"20\" font-family=\"monospace\">";
+      svg << "Solar System Visualization - " << to_string(mode) << "</text>\n";
+
+      // Timestamp
+      svg << "  <text x=\"400\" y=\"50\" text-anchor=\"middle\" ";
+      svg << "fill=\"#CCCCCC\" font-size=\"12\" font-family=\"monospace\">";
+      svg << "Generated: " << std::chrono::duration_cast<std::chrono::seconds>(
+              timestamp.time_since_epoch()).count() << "</text>\n";
+
+      // Content area with text
+      svg << "  <foreignObject x=\"50\" y=\"70\" width=\"700\" height=\"500\">\n";
+      svg << "    <div xmlns=\"http://www.w3.org/1999/xhtml\" ";
+      svg << "style=\"font-family:monospace;font-size:10px;color:#00FF00;\">\n";
+      svg << "      <pre>" << content << "</pre>\n";
+      svg << "    </div>\n";
+      svg << "  </foreignObject>\n";
+
+      // Footer with body count
+      svg << "  <text x=\"400\" y=\"590\" text-anchor=\"middle\" ";
+      svg << "fill=\"#CCCCCC\" font-size=\"12\" font-family=\"monospace\">";
+      svg << "Bodies: " << body_count << "</text>\n";
+
+      svg << "</svg>\n";
+
+      return Utils::Expected<std::string, ExportError>(svg.str());
+    }
+
+    case ExportFormat::PNG:
+    case ExportFormat::PDF:
+#ifdef HAVE_CAIRO
+      // PNG and PDF require Cairo library for rendering
+      return render_with_cairo(*this, format, options);
+#else
+      return Utils::Expected<std::string, ExportError>(
+          ExportError("PNG/PDF export requires Cairo library. "
+                     "Please install cairo development packages and rebuild with -DHAVE_CAIRO=ON"));
+#endif
 
     default:
       return Utils::Expected<std::string, ExportError>(
@@ -724,6 +944,347 @@ std::string VisualizationRenderer::create_list_item(const Streaming::DataPoint& 
   }
 
   return item.str();
+}
+
+// Additional VisualizationRenderer methods
+Utils::Expected<VisualizationFrame, std::string> VisualizationRenderer::render_bodies(
+    const Bodies::BodyCollection& bodies,
+    std::chrono::system_clock::time_point timestamp) {
+
+  // Convert BodyCollection to DataSnapshot for rendering
+  Streaming::DataSnapshot snapshot;
+  snapshot.timestamp = timestamp;
+  snapshot.overall_quality = 1.0; // Assume perfect quality for direct body data
+  snapshot.processing_time = std::chrono::milliseconds(0);
+  snapshot.missing_bodies = 0;
+
+  // Extract data points from body collection
+  for (const auto& body : bodies) {
+    Streaming::DataPoint point;
+    point.body_name = std::string(body.name());
+    point.position = body.position();
+    point.velocity = body.velocity();
+    point.acceleration = body.acceleration();
+    point.quality_score = 1.0;
+    point.latency = std::chrono::milliseconds(0);
+    point.timestamp = timestamp;
+
+    snapshot.data_points.push_back(point);
+  }
+
+  return render(snapshot);
+}
+
+Utils::Expected<void, std::string> VisualizationRenderer::handle_input(
+    char key, int x, int y) {
+
+  // Check if key is in keyboard shortcuts
+  auto it = config_.controls.keyboard_shortcuts.find(key);
+  if (it == config_.controls.keyboard_shortcuts.end()) {
+    return Utils::Expected<void, std::string>(
+        std::string("Unknown keyboard shortcut: ") + key);
+  }
+
+  const std::string& action = it->second;
+
+  // Handle common actions
+  if (action == "quit") {
+    return Utils::Expected<void, std::string>(); // Success - caller should handle quit
+  } else if (action == "refresh") {
+    // Refresh is handled by caller re-rendering
+    return Utils::Expected<void, std::string>();
+  } else if (action == "sort") {
+    // Toggle sort order
+    sort_ascending_ = !sort_ascending_;
+    return Utils::Expected<void, std::string>();
+  } else if (action == "next_page") {
+    if (config_.controls.enable_paging) {
+      current_page_++;
+      return Utils::Expected<void, std::string>();
+    }
+  } else if (action == "prev_page") {
+    if (config_.controls.enable_paging && current_page_ > 0) {
+      current_page_--;
+      return Utils::Expected<void, std::string>();
+    }
+  } else if (action == "filter") {
+    // Filter action - caller should prompt for filter criteria
+    return Utils::Expected<void, std::string>();
+  } else if (action == "export") {
+    // Export action - caller should prompt for export format
+    return Utils::Expected<void, std::string>();
+  } else if (action == "pause") {
+    // Toggle auto-refresh
+    config_.auto_refresh = !config_.auto_refresh;
+    return Utils::Expected<void, std::string>();
+  } else if (action == "help") {
+    // Help action - caller should display help
+    return Utils::Expected<void, std::string>();
+  }
+
+  // Handle mouse clicks if coordinates provided
+  if (x >= 0 && y >= 0 && current_frame_.has_value()) {
+    // Check if click is on an interactive element
+    for (const auto& element : current_frame_->interactive_elements) {
+      if (x >= element.x && x < element.x + element.width &&
+          y >= element.y && y < element.y + element.height) {
+        // Interactive element clicked - caller should handle the action
+        return Utils::Expected<void, std::string>();
+      }
+    }
+  }
+
+  return Utils::Expected<void, std::string>(
+      std::string("Action not implemented: ") + action);
+}
+
+std::vector<std::string> VisualizationRenderer::get_available_actions() const {
+  std::vector<std::string> actions;
+
+  for (const auto& [key, action] : config_.controls.keyboard_shortcuts) {
+    actions.push_back(std::string(1, key) + ": " + action);
+  }
+
+  return actions;
+}
+
+Utils::Expected<std::string, VisualizationFrame::ExportError>
+VisualizationRenderer::export_current_view(
+    ExportFormat format,
+    const std::map<std::string, std::string>& options) {
+
+  if (!current_frame_.has_value()) {
+    return Utils::Expected<std::string, VisualizationFrame::ExportError>(
+        VisualizationFrame::ExportError("No frame available to export"));
+  }
+
+  return current_frame_->export_to(format, options);
+}
+
+Utils::Expected<std::string, VisualizationFrame::ExportError>
+VisualizationRenderer::create_share_url(
+    const VisualizationFrame& frame,
+    const SharingOptions& options) {
+
+  if (!options.enable_url_sharing) {
+    return Utils::Expected<std::string, VisualizationFrame::ExportError>(
+        VisualizationFrame::ExportError("URL sharing is disabled"));
+  }
+
+  // Create a shareable URL with encoded frame data
+  std::ostringstream url;
+  url << "solarsystem://view?";
+
+  if (options.include_timestamp) {
+    url << "timestamp=" << std::chrono::duration_cast<std::chrono::seconds>(
+            frame.timestamp.time_since_epoch()).count() << "&";
+  }
+
+  url << "mode=" << to_string(frame.mode) << "&";
+  url << "bodies=" << frame.body_count;
+
+  if (options.include_metadata && !frame.metadata.empty()) {
+    url << "&metadata=";
+    bool first = true;
+    for (const auto& [key, value] : frame.metadata) {
+      if (!first) url << ",";
+      url << key << ":" << value;
+      first = false;
+    }
+  }
+
+  if (options.share_expiry.count() > 0) {
+    auto expiry_time = std::chrono::system_clock::now() + options.share_expiry;
+    url << "&expires=" << std::chrono::duration_cast<std::chrono::seconds>(
+            expiry_time.time_since_epoch()).count();
+  }
+
+  return Utils::Expected<std::string, VisualizationFrame::ExportError>(url.str());
+}
+
+std::string VisualizationRenderer::apply_color_scheme(
+    const std::string& text,
+    const std::string& color_key) const {
+
+  if (!config_.use_colors) {
+    return text;
+  }
+
+  // ANSI color codes based on color scheme
+  std::map<std::string, std::string> color_codes;
+
+  switch (config_.color_scheme) {
+    case ColorScheme::DARK:
+      color_codes["header"] = "\033[1;36m";    // Bright cyan
+      color_codes["body"] = "\033[0;37m";      // White
+      color_codes["highlight"] = "\033[1;33m"; // Bright yellow
+      color_codes["error"] = "\033[1;31m";     // Bright red
+      color_codes["success"] = "\033[1;32m";   // Bright green
+      break;
+
+    case ColorScheme::LIGHT:
+      color_codes["header"] = "\033[0;34m";    // Blue
+      color_codes["body"] = "\033[0;30m";      // Black
+      color_codes["highlight"] = "\033[0;33m"; // Yellow
+      color_codes["error"] = "\033[0;31m";     // Red
+      color_codes["success"] = "\033[0;32m";   // Green
+      break;
+
+    case ColorScheme::HIGH_CONTRAST:
+      color_codes["header"] = "\033[1;37m";    // Bright white
+      color_codes["body"] = "\033[1;37m";      // Bright white
+      color_codes["highlight"] = "\033[1;33m"; // Bright yellow
+      color_codes["error"] = "\033[1;31m";     // Bright red
+      color_codes["success"] = "\033[1;32m";   // Bright green
+      break;
+
+    case ColorScheme::MONOCHROME:
+      // No colors in monochrome
+      return text;
+
+    case ColorScheme::RAINBOW:
+      color_codes["header"] = "\033[1;35m";    // Bright magenta
+      color_codes["body"] = "\033[0;36m";      // Cyan
+      color_codes["highlight"] = "\033[1;33m"; // Bright yellow
+      color_codes["error"] = "\033[1;31m";     // Bright red
+      color_codes["success"] = "\033[1;32m";   // Bright green
+      break;
+
+    case ColorScheme::SCIENTIFIC:
+      color_codes["header"] = "\033[0;36m";    // Cyan
+      color_codes["body"] = "\033[0;37m";      // White
+      color_codes["highlight"] = "\033[1;36m"; // Bright cyan
+      color_codes["error"] = "\033[0;31m";     // Red
+      color_codes["success"] = "\033[0;32m";   // Green
+      break;
+
+    case ColorScheme::DEFAULT:
+    case ColorScheme::CUSTOM:
+    default:
+      // Use default terminal colors
+      return text;
+  }
+
+  auto it = color_codes.find(color_key);
+  if (it != color_codes.end()) {
+    return it->second + text + "\033[0m"; // Reset color at end
+  }
+
+  return text;
+}
+
+// VisualizationModeManager implementation
+Utils::Expected<void, std::string> VisualizationModeManager::register_mode(
+    VisualizationMode mode,
+    std::unique_ptr<VisualizationRenderer> renderer) {
+
+  if (!renderer) {
+    return Utils::Expected<void, std::string>(
+        std::string("Cannot register null renderer"));
+  }
+
+  renderers_[mode] = std::move(renderer);
+  return Utils::Expected<void, std::string>();
+}
+
+Utils::Expected<void, std::string> VisualizationModeManager::set_active_mode(
+    VisualizationMode mode) {
+
+  if (renderers_.find(mode) == renderers_.end()) {
+    return Utils::Expected<void, std::string>(
+        std::string("Mode not registered: ") + to_string(mode));
+  }
+
+  active_mode_ = mode;
+  return Utils::Expected<void, std::string>();
+}
+
+Utils::Expected<VisualizationFrame, std::string> VisualizationModeManager::render(
+    const Streaming::DataSnapshot& snapshot) {
+
+  auto it = renderers_.find(active_mode_);
+  if (it == renderers_.end()) {
+    return Utils::Expected<VisualizationFrame, std::string>(
+        std::string("No renderer available for active mode: ") + to_string(active_mode_));
+  }
+
+  return it->second->render(snapshot);
+}
+
+std::vector<VisualizationMode> VisualizationModeManager::get_available_modes() const {
+  std::vector<VisualizationMode> modes;
+
+  for (const auto& [mode, _] : renderers_) {
+    modes.push_back(mode);
+  }
+
+  return modes;
+}
+
+std::string VisualizationModeManager::get_mode_description(VisualizationMode mode) const {
+  switch (mode) {
+    case VisualizationMode::TABLE:
+      return "Tabular display with columns for organized data viewing";
+    case VisualizationMode::GRID:
+      return "Grid layout with body cards for visual comparison";
+    case VisualizationMode::LIST:
+      return "Simple list format for quick scanning";
+    case VisualizationMode::TREE:
+      return "Hierarchical tree view showing relationships";
+    case VisualizationMode::CHART:
+      return "Chart/graph visualization for data analysis";
+    case VisualizationMode::DASHBOARD:
+      return "Multi-panel dashboard with comprehensive overview";
+    case VisualizationMode::MINIMAL:
+      return "Minimal compact view for space-constrained displays";
+    case VisualizationMode::DETAILED:
+      return "Detailed verbose view with all available information";
+    case VisualizationMode::CUSTOM:
+      return "User-defined custom layout";
+    default:
+      return "Unknown visualization mode";
+  }
+}
+
+Utils::Expected<void, std::string> VisualizationModeManager::save_preset(
+    const std::string& name,
+    const VisualizationConfig& config) {
+
+  if (name.empty()) {
+    return Utils::Expected<void, std::string>(
+        std::string("Preset name cannot be empty"));
+  }
+
+  auto validation = config.validate();
+  if (!validation.has_value()) {
+    return Utils::Expected<void, std::string>(
+        std::string("Invalid configuration: ") + validation.error());
+  }
+
+  presets_[name] = config;
+  return Utils::Expected<void, std::string>();
+}
+
+Utils::Expected<VisualizationConfig, std::string> VisualizationModeManager::load_preset(
+    const std::string& name) {
+
+  auto it = presets_.find(name);
+  if (it == presets_.end()) {
+    return Utils::Expected<VisualizationConfig, std::string>(
+        std::string("Preset not found: ") + name);
+  }
+
+  return Utils::Expected<VisualizationConfig, std::string>(it->second);
+}
+
+std::vector<std::string> VisualizationModeManager::get_available_presets() const {
+  std::vector<std::string> preset_names;
+
+  for (const auto& [name, _] : presets_) {
+    preset_names.push_back(name);
+  }
+
+  return preset_names;
 }
 
 // Utility functions

@@ -6,3 +6,5 @@ openssl@3
 curl
 zlib
 boost
+cairo
+libpng
