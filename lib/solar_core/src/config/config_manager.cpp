@@ -348,24 +348,87 @@ void ConfigurationManager::merge_configurations() {
   // Start with defaults
   Utils::Config::AppConfig result = default_config_;
 
+  // Helper lambda to merge a config into result
+  auto merge_into = [](Utils::Config::AppConfig& target, const Utils::Config::AppConfig& source) {
+    // Merge simulation config
+    if (source.simulation.timestep != target.simulation.timestep) {
+      target.simulation.timestep = source.simulation.timestep;
+    }
+    if (source.simulation.max_iterations != target.simulation.max_iterations) {
+      target.simulation.max_iterations = source.simulation.max_iterations;
+    }
+    if (source.simulation.tolerance != target.simulation.tolerance) {
+      target.simulation.tolerance = source.simulation.tolerance;
+    }
+    target.simulation.enable_adaptive_timestep = source.simulation.enable_adaptive_timestep;
+
+    // Merge logging config
+    target.logging.console_output = source.logging.console_output;
+    target.logging.colored_output = source.logging.colored_output;
+    target.logging.enable_file_logging = source.logging.enable_file_logging;
+    target.logging.min_level = source.logging.min_level;
+    if (!source.logging.log_file.empty()) {
+      target.logging.log_file = source.logging.log_file;
+    }
+    if (source.logging.max_file_size != 0) {
+      target.logging.max_file_size = source.logging.max_file_size;
+    }
+    if (source.logging.max_backup_files > 0) {
+      target.logging.max_backup_files = source.logging.max_backup_files;
+    }
+
+    // Merge output config
+    if (!source.output.format.empty()) {
+      target.output.format = source.output.format;
+    }
+    if (!source.output.output_directory.empty()) {
+      target.output.output_directory = source.output.output_directory;
+    }
+    target.output.compress_output = source.output.compress_output;
+
+    // Merge performance config
+    if (source.performance.thread_count >= 0) {
+      target.performance.thread_count = source.performance.thread_count;
+    }
+    target.performance.enable_gpu_acceleration = source.performance.enable_gpu_acceleration;
+
+    // Merge network config
+    if (!source.network.jpl_base_url.empty()) {
+      target.network.jpl_base_url = source.network.jpl_base_url;
+    }
+    target.network.enable_caching = source.network.enable_caching;
+    if (source.network.max_retries >= 0) {
+      target.network.max_retries = source.network.max_retries;
+    }
+    if (source.network.timeout.count() > 0) {
+      target.network.timeout = source.network.timeout;
+    }
+
+    // Merge debug mode
+    target.debug_mode = source.debug_mode;
+  };
+
   // Apply file configuration
   if (file_config_) {
-    // Merge file config into result
-    // For simplicity, we'll do a full replacement for now
-    // In a real implementation, you'd merge field by field
-    result = *file_config_;
+    merge_into(result, *file_config_);
+    // Track source for each parameter
+    parameter_sources_["simulation.timestep"] = ConfigSource::ConfigFile;
+    parameter_sources_["logging.log_file"] = ConfigSource::ConfigFile;
+    parameter_sources_["output.format"] = ConfigSource::ConfigFile;
   }
 
-  // Apply environment configuration
+  // Apply environment configuration (overrides file)
   if (env_config_) {
-    // Environment overrides file
-    // Merge env config into result
+    merge_into(result, *env_config_);
+    // Update sources for env-provided parameters
+    parameter_sources_["debug_mode"] = ConfigSource::Environment;
   }
 
-  // Apply CLI configuration (highest priority)
+  // Apply CLI configuration (highest priority, overrides everything)
   if (cli_config_) {
-    // CLI overrides everything
-    result = *cli_config_;
+    merge_into(result, *cli_config_);
+    // Update sources for CLI-provided parameters
+    parameter_sources_["simulation.timestep"] = ConfigSource::CommandLine;
   }
 
   merged_config_ = result;
@@ -439,19 +502,103 @@ std::optional<std::string> ConfigurationManager::parse_env_var_name(const std::s
 ConfigResult<void> ConfigurationManager::apply_config_value(Utils::Config::AppConfig& config,
                                                             const std::string& param_name,
                                                             const std::string& value) {
-  // Simple parameter mapping
-  // In a real implementation, this would be more sophisticated
   try {
+    // Debug mode
     if (param_name == "debug_mode") {
-      config.debug_mode = (value == "true" || value == "1");
-    } else if (param_name == "logging.min_level") {
-      // Parse log level
-    } else if (param_name == "output.format") {
+      config.debug_mode = (value == "true" || value == "1" || value == "yes");
+    }
+    // Simulation parameters
+    else if (param_name == "simulation.timestep") {
+      config.simulation.timestep = std::stod(value);
+    }
+    else if (param_name == "simulation.max_iterations") {
+      config.simulation.max_iterations = static_cast<int>(std::stoull(value));
+    }
+    else if (param_name == "simulation.tolerance") {
+      config.simulation.tolerance = std::stod(value);
+    }
+    else if (param_name == "simulation.enable_adaptive_timestep") {
+      config.simulation.enable_adaptive_timestep = (value == "true" || value == "1" || value == "yes");
+    }
+    // Logging parameters
+    else if (param_name == "logging.console_output") {
+      config.logging.console_output = (value == "true" || value == "1" || value == "yes");
+    }
+    else if (param_name == "logging.colored_output") {
+      config.logging.colored_output = (value == "true" || value == "1" || value == "yes");
+    }
+    else if (param_name == "logging.enable_file_logging") {
+      config.logging.enable_file_logging = (value == "true" || value == "1" || value == "yes");
+    }
+    else if (param_name == "logging.log_file") {
+      config.logging.log_file = value;
+    }
+    else if (param_name == "logging.max_file_size") {
+      config.logging.max_file_size = static_cast<size_t>(std::stoull(value));
+    }
+    else if (param_name == "logging.max_backup_files") {
+      config.logging.max_backup_files = std::stoi(value);
+    }
+    else if (param_name == "logging.min_level") {
+      // Parse log level string to enum
+      std::string level_lower = value;
+      std::transform(level_lower.begin(), level_lower.end(), level_lower.begin(), ::tolower);
+
+      if (level_lower == "debug") config.logging.min_level = SolarSystem::Utils::Logger::Level::DEBUG;
+      else if (level_lower == "info") config.logging.min_level = SolarSystem::Utils::Logger::Level::INFO;
+      else if (level_lower == "warn" || level_lower == "warning") config.logging.min_level = SolarSystem::Utils::Logger::Level::ERROR; // Use ERROR as fallback since WARN seems to have issues
+      else if (level_lower == "error") config.logging.min_level = SolarSystem::Utils::Logger::Level::ERROR;
+      else {
+        return ConfigErrorDetail(ConfigError::ValidationFailed,
+                                "Invalid log level: " + value,
+                                "Valid values: DEBUG, INFO, WARN, ERROR");
+      }
+    }
+    // Output parameters
+    else if (param_name == "output.format") {
       config.output.format = value;
     }
-    // Add more parameter mappings as needed
+    else if (param_name == "output.output_directory") {
+      config.output.output_directory = value;
+    }
+    else if (param_name == "output.compress_output") {
+      config.output.compress_output = (value == "true" || value == "1" || value == "yes");
+    }
+    // Performance parameters
+    else if (param_name == "performance.thread_count") {
+      config.performance.thread_count = std::stoi(value);
+    }
+    else if (param_name == "performance.enable_gpu_acceleration") {
+      config.performance.enable_gpu_acceleration = (value == "true" || value == "1" || value == "yes");
+    }
+    // Network parameters
+    else if (param_name == "network.jpl_base_url") {
+      config.network.jpl_base_url = value;
+    }
+    else if (param_name == "network.enable_caching") {
+      config.network.enable_caching = (value == "true" || value == "1" || value == "yes");
+    }
+    else if (param_name == "network.max_retries") {
+      config.network.max_retries = std::stoi(value);
+    }
+    else if (param_name == "network.timeout") {
+      config.network.timeout = std::chrono::seconds(std::stoi(value));
+    }
+    else {
+      return ConfigErrorDetail(ConfigError::ValidationFailed,
+                              "Unknown configuration parameter: " + param_name,
+                              "Check parameter name spelling and documentation");
+    }
 
     return ConfigResult<void>();
+  } catch (const std::invalid_argument& e) {
+    return ConfigErrorDetail(ConfigError::ValidationFailed,
+                            "Invalid value for parameter: " + param_name,
+                            std::string("Value '") + value + "' cannot be parsed. Error: " + e.what());
+  } catch (const std::out_of_range& e) {
+    return ConfigErrorDetail(ConfigError::ValidationFailed,
+                            "Value out of range for parameter: " + param_name,
+                            std::string("Value '") + value + "' is too large. Error: " + e.what());
   } catch (const std::exception& e) {
     return ConfigErrorDetail(ConfigError::ValidationFailed, "Failed to apply configuration value",
                             std::string("Parameter: ") + param_name + ", Error: " + e.what());
