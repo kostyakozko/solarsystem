@@ -9,3 +9,6 @@ zlib1g-dev
 libboost-dev
 libcairo2-dev
 libpng-dev
+libgrpc++-dev
+libprotobuf-dev
+protobuf-compiler

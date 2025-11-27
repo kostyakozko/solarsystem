@@ -8,3 +8,5 @@ zlib
 boost
 cairo
 libpng
+grpc
+protobuf

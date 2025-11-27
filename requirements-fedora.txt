@@ -9,3 +9,6 @@ zlib-devel
 boost-devel
 cairo-devel
 libpng-devel
+grpc-devel
+protobuf-devel
+protobuf-compiler
