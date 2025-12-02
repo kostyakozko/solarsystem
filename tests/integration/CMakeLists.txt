@@ -50,6 +50,21 @@ add_executable(test_realistic_environment_simulation
     test_realistic_environment_simulation.cpp
 )
 
+# Unimplemented Functions Integration Tests (Task 11.1)
+add_executable(test_unimplemented_functions_integration
+    test_unimplemented_functions_integration.cpp
+)
+
+# Workflow Validation Tests (Task 11.2)
+add_executable(test_workflow_validation
+    test_workflow_validation.cpp
+)
+
+# Data Validation Integration Tests (Task 11)
+add_executable(test_data_validation_integration
+    test_data_validation_integration.cpp
+)
+
 # Link libraries
 target_link_libraries(test_application_workflows
     test_utils
@@ -144,6 +159,33 @@ target_link_libraries(test_realistic_environment_simulation
     Threads::Threads
 )
 
+# Link libraries for unimplemented functions integration tests
+target_link_libraries(test_unimplemented_functions_integration
+    test_utils
+    solar_core
+    solar_jpl
+    solar_utils
+    Threads::Threads
+)
+
+# Link libraries for workflow validation tests
+target_link_libraries(test_workflow_validation
+    test_utils
+    solar_core
+    solar_jpl
+    solar_utils
+    Threads::Threads
+)
+
+# Link libraries for data validation integration tests
+target_link_libraries(test_data_validation_integration
+    test_utils
+    solar_core
+    solar_jpl
+    solar_utils
+    Threads::Threads
+)
+
 # Add integration tests to CTest
 add_test(NAME IntegrationTest_ApplicationWorkflows
          COMMAND tests/integration/test_application_workflows
@@ -171,6 +213,21 @@ add_test(NAME IntegrationTest_ComponentInterfaceCommunication
 # Add realistic environment simulation tests to CTest (Task 7)
 add_test(NAME IntegrationTest_RealisticEnvironmentSimulation
          COMMAND test_realistic_environment_simulation
+         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+
+# Add unimplemented functions integration tests to CTest (Task 11.1)
+add_test(NAME IntegrationTest_UnimplementedFunctions
+         COMMAND test_unimplemented_functions_integration
+         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+
+# Add workflow validation tests to CTest (Task 11.2)
+add_test(NAME IntegrationTest_WorkflowValidation
+         COMMAND test_workflow_validation
+         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+
+# Add data validation integration tests to CTest (Task 11)
+add_test(NAME IntegrationTest_DataValidation
+         COMMAND test_data_validation_integration
          WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 
 # Set working directory for all integration tests
@@ -243,6 +300,27 @@ set_tests_properties(IntegrationTest_RealisticEnvironmentSimulation PROPERTIES
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
 
+# Set properties for unimplemented functions integration tests (Task 11.1)
+set_tests_properties(IntegrationTest_UnimplementedFunctions PROPERTIES
+    LABELS "integration;unimplemented;functions;task11.1;phase4"
+    TIMEOUT 300
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+)
+
+# Set properties for workflow validation tests (Task 11.2)
+set_tests_properties(IntegrationTest_WorkflowValidation PROPERTIES
+    LABELS "integration;workflow;validation;task11.2;phase4"
+    TIMEOUT 300
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+)
+
+# Set properties for data validation integration tests (Task 11)
+set_tests_properties(IntegrationTest_DataValidation PROPERTIES
+    LABELS "integration;data;validation;task11;phase4"
+    TIMEOUT 300
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+)
+
 # Test data directory
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/test_data)
 
@@ -264,4 +342,7 @@ message(STATUS "  - Cross-Component Validation Tests (Task 21)")
 message(STATUS "  - Component Interface and Communication Tests (Task 6)")
 message(STATUS "  - Realistic Environment Simulation Tests (Task 7)")
 message(STATUS "  - Comprehensive Integration Test Suite (Task 30)")
+message(STATUS "  - Unimplemented Functions Integration Tests (Task 11.1)")
+message(STATUS "  - Workflow Validation Tests (Task 11.2)")
+message(STATUS "  - Data Validation Integration Tests (Task 11)")
 message(STATUS "  - Test data directory: ${CMAKE_CURRENT_BINARY_DIR}/test_data")
