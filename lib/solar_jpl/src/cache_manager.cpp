@@ -204,8 +204,16 @@ JPLResult<std::vector<EphemerisData>> CacheManager::load_cache(ValidationLevel v
             body_data.body_name.resize(name_length);
             binary_file.read(&body_data.body_name[0], name_length);
 
+            // Read epoch
+            std::time_t epoch_time;
+            binary_file.read(reinterpret_cast<char*>(&epoch_time), sizeof(epoch_time));
+            body_data.epoch = std::chrono::system_clock::from_time_t(epoch_time);
+
             binary_file.read(reinterpret_cast<char*>(&body_data.position), sizeof(body_data.position));
             binary_file.read(reinterpret_cast<char*>(&body_data.velocity), sizeof(body_data.velocity));
+
+            // Read mass
+            binary_file.read(reinterpret_cast<char*>(&body_data.mass), sizeof(body_data.mass));
 
             data.push_back(std::move(body_data));
           }
@@ -276,10 +284,15 @@ JPLVoidResult CacheManager::save_cache(const std::vector<EphemerisData>& data, b
           json_file << "  {\n";
           json_file << "    \"jpl_id\": " << body_data.jpl_id << ",\n";
           json_file << "    \"body_name\": \"" << body_data.body_name << "\",\n";
-          json_file << "    \"position\": [" << body_data.position.x() << ", "
-                    << body_data.position.y() << ", " << body_data.position.z() << "],\n";
-          json_file << "    \"velocity\": [" << body_data.velocity.x() << ", "
-                    << body_data.velocity.y() << ", " << body_data.velocity.z() << "]\n";
+          json_file << "    \"epoch\": " << std::chrono::system_clock::to_time_t(body_data.epoch) << ",\n";
+          json_file << "    \"position\": [" << std::scientific << std::setprecision(15)
+                    << body_data.position.x() << ", " << body_data.position.y() << ", "
+                    << body_data.position.z() << "],\n";
+          json_file << "    \"velocity\": [" << std::scientific << std::setprecision(15)
+                    << body_data.velocity.x() << ", " << body_data.velocity.y() << ", "
+                    << body_data.velocity.z() << "],\n";
+          json_file << "    \"mass\": " << std::scientific << std::setprecision(15)
+                    << body_data.mass << "\n";
           json_file << "  }";
           if (i < data.size() - 1) json_file << ",";
           json_file << "\n";
@@ -308,8 +321,15 @@ JPLVoidResult CacheManager::save_cache(const std::vector<EphemerisData>& data, b
           binary_file.write(reinterpret_cast<const char*>(&name_length), sizeof(name_length));
           binary_file.write(body_data.body_name.c_str(), name_length);
 
+          // Write epoch
+          auto epoch_time = std::chrono::system_clock::to_time_t(body_data.epoch);
+          binary_file.write(reinterpret_cast<const char*>(&epoch_time), sizeof(epoch_time));
+
           binary_file.write(reinterpret_cast<const char*>(&body_data.position), sizeof(body_data.position));
           binary_file.write(reinterpret_cast<const char*>(&body_data.velocity), sizeof(body_data.velocity));
+
+          // Write mass
+          binary_file.write(reinterpret_cast<const char*>(&body_data.mass), sizeof(body_data.mass));
         }
         binary_file.close();
       }

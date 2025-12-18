@@ -65,6 +65,11 @@ add_executable(test_data_validation_integration
     test_data_validation_integration.cpp
 )
 
+# Performance and Security Validation Tests (Task 12)
+add_executable(test_performance_security_validation
+    test_performance_security_validation.cpp
+)
+
 # Link libraries
 target_link_libraries(test_application_workflows
     test_utils
@@ -186,6 +191,15 @@ target_link_libraries(test_data_validation_integration
     Threads::Threads
 )
 
+# Link libraries for performance and security validation tests
+target_link_libraries(test_performance_security_validation
+    test_utils
+    solar_core
+    solar_jpl
+    solar_utils
+    Threads::Threads
+)
+
 # Add integration tests to CTest
 add_test(NAME IntegrationTest_ApplicationWorkflows
          COMMAND tests/integration/test_application_workflows
@@ -228,6 +242,11 @@ add_test(NAME IntegrationTest_WorkflowValidation
 # Add data validation integration tests to CTest (Task 11)
 add_test(NAME IntegrationTest_DataValidation
          COMMAND test_data_validation_integration
+         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+
+# Add performance and security validation tests to CTest (Task 12)
+add_test(NAME IntegrationTest_PerformanceSecurityValidation
+         COMMAND test_performance_security_validation
          WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 
 # Set working directory for all integration tests
@@ -321,6 +340,13 @@ set_tests_properties(IntegrationTest_DataValidation PROPERTIES
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
 
+# Set properties for performance and security validation tests (Task 12)
+set_tests_properties(IntegrationTest_PerformanceSecurityValidation PROPERTIES
+    LABELS "integration;performance;security;validation;task12;phase4"
+    TIMEOUT 300
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+)
+
 # Test data directory
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/test_data)
 
@@ -345,4 +371,5 @@ message(STATUS "  - Comprehensive Integration Test Suite (Task 30)")
 message(STATUS "  - Unimplemented Functions Integration Tests (Task 11.1)")
 message(STATUS "  - Workflow Validation Tests (Task 11.2)")
 message(STATUS "  - Data Validation Integration Tests (Task 11)")
+message(STATUS "  - Performance and Security Validation Tests (Task 12)")
 message(STATUS "  - Test data directory: ${CMAKE_CURRENT_BINARY_DIR}/test_data")
