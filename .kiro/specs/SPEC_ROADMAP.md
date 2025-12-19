@@ -26,14 +26,22 @@
 - **Achievement**: Test framework is fully functional
 - **Impact**: Enables reliable testing for all future development
 
-#### 3. 📋 **application-functionality-audit** - READY TO START
+#### 3. � **abuild-modernization** - IN PROGRESS
+- **Status**: 🚧 In Progress (4/57 tasks completed)
+- **Current Phase**: Phase 1 - Build Infrastructure Setup
+- **Completed**: CMake shared library support, RPATH configuration, platform-specific settings
+- **Next Steps**: Symbol visibility infrastructure, external dependencies integration
+- **Priority**: 🔥 **HIGH** - Modernizes build system
+- **Impact**: Enables shared libraries, reduces build times, improves modularity
+
+#### 4. 📋 **application-functionality-audit** - READY TO START
 - **Status**: 📋 Ready (10/10 tasks completed)
 - **Priority**: 🔥 **HIGH** - Next recommended spec
 - **Dependencies**: None (can start immediately)
 - **Estimated Duration**: 1-2 weeks
 - **Why Next**: Validates current application functionality before enhancements
 
-#### 4. 📋 **library-core-enhancements** - READY TO START
+#### 5. 📋 **library-core-enhancements** - READY TO START
 - **Status**: 📋 Ready (25/25 tasks completed)
 - **Priority**: 🔥 **HIGH**
 - **Dependencies**: Should follow application-functionality-audit
@@ -43,7 +51,7 @@
 ### **Phase 2: Feature Enhancement** (Short-term)
 *Focus: Add missing functionality and improve user experience*
 
-#### 5. 📋 **application-enhancements** - READY TO START
+#### 6. 📋 **application-enhancements** - READY TO START
 - **Status**: 📋 Ready (39/39 tasks completed)
 - **Priority**: 🔥 **HIGH**
 - **Dependencies**: Requires library-core-enhancements completion
@@ -106,6 +114,28 @@
 ---
 
 ## 📋 Detailed Spec Status
+
+### 🚧 **IN PROGRESS SPECS**
+
+#### build-modernization
+- **Completion**: 4/57 tasks (7%)
+- **Current Phase**: Phase 1 - Build Infrastructure Setup
+- **Completed Tasks**:
+  - ✅ Add CMake shared library support
+  - ✅ Configure root CMakeLists.txt
+  - ✅ Update library CMakeLists.txt files
+  - ✅ Configure platform-specific settings
+- **Next Tasks**:
+  - Create symbol visibility infrastructure
+  - Integrate Google Test
+  - Integrate nlohmann/json
+  - Generate pkg-config files
+- **Key Achievements**:
+  - Shared library builds working on macOS, Linux, Windows
+  - RPATH configuration complete
+  - Circular dependencies resolved
+  - Both static and shared builds functional
+- **Impact**: Modernizes build system, enables shared libraries, reduces incremental build times
 
 ### ✅ **COMPLETED SPECS**
 
