@@ -1,7 +1,7 @@
 # Solar Core Library - High-Performance Physics Engine with Modern C++20 Architecture
-# Static library only for maximum performance and LTO benefits
+# Supports both static and shared library builds
 
-add_library(solar_core STATIC
+add_library(solar_core
     # Modern C++20 classes - Pure modern architecture
     src/math/vector3.cpp
     src/bodies/celestial_body.cpp
@@ -156,3 +156,34 @@ set_target_properties(solar_core PROPERTIES
     CXX_STANDARD_REQUIRED ON
     CXX_EXTENSIONS OFF
 )
+
+# Shared library specific properties
+if(BUILD_SHARED_LIBS)
+    set_target_properties(solar_core PROPERTIES
+        VERSION ${PROJECT_VERSION}
+        SOVERSION ${PROJECT_VERSION_MAJOR}
+        CXX_VISIBILITY_PRESET hidden
+        VISIBILITY_INLINES_HIDDEN YES
+    )
+    target_compile_definitions(solar_core PRIVATE SOLAR_CORE_EXPORTS)
+
+    # Platform-specific settings
+    if(APPLE)
+        # macOS: Set install_name for dylib
+        set_target_properties(solar_core PROPERTIES
+            INSTALL_NAME_DIR "@rpath"
+            BUILD_WITH_INSTALL_NAME_DIR TRUE
+        )
+    elseif(UNIX)
+        # Linux: Set SONAME for .so files
+        set_target_properties(solar_core PROPERTIES
+            SOVERSION ${PROJECT_VERSION_MAJOR}
+        )
+    elseif(WIN32)
+        # Windows: Set output directories for DLLs and import libraries
+        set_target_properties(solar_core PROPERTIES
+            RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
+            ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
+        )
+    endif()
+endif()

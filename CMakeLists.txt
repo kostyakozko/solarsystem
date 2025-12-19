@@ -6,10 +6,51 @@ configure_solar_system_compiler()
 
 project(SolarSystemSuite VERSION 4.0.0 LANGUAGES CXX)
 
+# Project versioning for shared libraries
+set(PROJECT_VERSION_MAJOR 4)
+set(PROJECT_VERSION_MINOR 0)
+set(PROJECT_VERSION_PATCH 0)
+
 # Modern C++20 standard for Phase 0 architecture refactoring
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
+
+# RPATH configuration for shared libraries
+if(BUILD_SHARED_LIBS)
+    # Set RPATH for installed binaries
+    set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
+    set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+
+    # For development builds
+    set(CMAKE_BUILD_RPATH "${CMAKE_BINARY_DIR}/lib")
+    set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
+
+    # Platform-specific RPATH settings
+    if(APPLE)
+        # macOS: Use @rpath for dynamic library loading
+        set(CMAKE_MACOSX_RPATH TRUE)
+        set(CMAKE_INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
+    elseif(UNIX)
+        # Linux: Use $ORIGIN for relative RPATH
+        set(CMAKE_INSTALL_RPATH "$ORIGIN/../${CMAKE_INSTALL_LIBDIR}")
+        # Enable RUNPATH instead of RPATH for better security
+        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--enable-new-dtags")
+    elseif(WIN32)
+        # Windows: DLLs must be in PATH or same directory as executable
+        # Copy DLLs to bin directory during build
+        set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+        set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
+        set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
+    endif()
+
+    message(STATUS "Shared library build enabled")
+    message(STATUS "  Install RPATH: ${CMAKE_INSTALL_RPATH}")
+    message(STATUS "  Build RPATH: ${CMAKE_BUILD_RPATH}")
+    if(WIN32)
+        message(STATUS "  Windows DLL output: ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
+    endif()
+endif()
 
 # Include compiler warnings configuration
 include(cmake/CompilerWarnings.cmake)
@@ -17,6 +58,22 @@ include(cmake/CompilerWarnings.cmake)
 # Build type
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
+endif()
+
+# Build system modernization options
+# NOTE: BUILD_SHARED_LIBS currently has circular dependency issues between solar_core and solar_jpl
+# This needs to be resolved before shared libraries can be fully supported
+# See .kiro/specs/build-modernization for details
+option(BUILD_SHARED_LIBS "Build shared libraries instead of static (EXPERIMENTAL)" OFF)
+option(USE_SYSTEM_GTEST "Use system-installed Google Test instead of FetchContent" OFF)
+option(USE_SYSTEM_JSON "Use system-installed nlohmann/json instead of FetchContent" OFF)
+option(ENABLE_SYMBOL_VISIBILITY "Enable symbol visibility control for shared libraries" ON)
+
+# Warn if shared libraries are enabled
+if(BUILD_SHARED_LIBS)
+    message(WARNING "Shared library build is EXPERIMENTAL and has known circular dependency issues")
+    message(WARNING "The circular dependency between solar_core and solar_jpl needs to be resolved")
+    message(WARNING "Consider using static libraries (BUILD_SHARED_LIBS=OFF) for production builds")
 endif()
 
 # Compiler warnings configuration - enabled by default
@@ -229,6 +286,11 @@ message(STATUS "  LTO enabled: ${CMAKE_INTERPROCEDURAL_OPTIMIZATION}")
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
     message(STATUS "  Optimization flags: ${CMAKE_CXX_FLAGS_RELEASE}")
 endif()
+message(STATUS "  Build system modernization:")
+message(STATUS "    Shared libraries: ${BUILD_SHARED_LIBS}")
+message(STATUS "    System Google Test: ${USE_SYSTEM_GTEST}")
+message(STATUS "    System nlohmann/json: ${USE_SYSTEM_JSON}")
+message(STATUS "    Symbol visibility: ${ENABLE_SYMBOL_VISIBILITY}")
 message(STATUS "  Libraries: solar_core, solar_jpl, solar_utils")
 message(STATUS "  Applications: solar_system, solar_system_fetch, solar_system_launcher, solar_system_realtime, solar_system_web")
 message(STATUS "  Install prefix: ${CMAKE_INSTALL_PREFIX}")

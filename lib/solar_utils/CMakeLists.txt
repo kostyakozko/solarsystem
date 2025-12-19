@@ -1,7 +1,7 @@
 # Solar Utils Library - Common Utilities
-# Static library for now, shared library option can be added later
+# Supports both static and shared library builds
 
-add_library(solar_utils STATIC
+add_library(solar_utils
     src/argument_parser.cpp
     src/logging.cpp
     src/validation/input_validator.cpp
@@ -43,3 +43,34 @@ set_target_properties(solar_utils PROPERTIES
     CXX_STANDARD_REQUIRED ON
     CXX_EXTENSIONS OFF
 )
+
+# Shared library specific properties
+if(BUILD_SHARED_LIBS)
+    set_target_properties(solar_utils PROPERTIES
+        VERSION ${PROJECT_VERSION}
+        SOVERSION ${PROJECT_VERSION_MAJOR}
+        CXX_VISIBILITY_PRESET hidden
+        VISIBILITY_INLINES_HIDDEN YES
+    )
+    target_compile_definitions(solar_utils PRIVATE SOLAR_UTILS_EXPORTS)
+
+    # Platform-specific settings
+    if(APPLE)
+        # macOS: Set install_name for dylib
+        set_target_properties(solar_utils PROPERTIES
+            INSTALL_NAME_DIR "@rpath"
+            BUILD_WITH_INSTALL_NAME_DIR TRUE
+        )
+    elseif(UNIX)
+        # Linux: Set SONAME for .so files
+        set_target_properties(solar_utils PROPERTIES
+            SOVERSION ${PROJECT_VERSION_MAJOR}
+        )
+    elseif(WIN32)
+        # Windows: Set output directories for DLLs and import libraries
+        set_target_properties(solar_utils PROPERTIES
+            RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
+            ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
+        )
+    endif()
+endif()

@@ -1,8 +1,9 @@
 # Modern Solar JPL Library
 # C++20 JPL HORIZONS API client with async support and type safety
+# Supports both static and shared library builds
 
 # Create modern JPL library
-add_library(solar_jpl STATIC
+add_library(solar_jpl
     src/jpl_client.cpp
     src/cache_manager.cpp
     src/data_validator.cpp
@@ -63,6 +64,37 @@ install(DIRECTORY include/solar_jpl
     DESTINATION include
     FILES_MATCHING PATTERN "*.hpp"
 )
+
+# Shared library specific properties
+if(BUILD_SHARED_LIBS)
+    set_target_properties(solar_jpl PROPERTIES
+        VERSION ${PROJECT_VERSION}
+        SOVERSION ${PROJECT_VERSION_MAJOR}
+        CXX_VISIBILITY_PRESET hidden
+        VISIBILITY_INLINES_HIDDEN YES
+    )
+    target_compile_definitions(solar_jpl PRIVATE SOLAR_JPL_EXPORTS)
+
+    # Platform-specific settings
+    if(APPLE)
+        # macOS: Set install_name for dylib
+        set_target_properties(solar_jpl PROPERTIES
+            INSTALL_NAME_DIR "@rpath"
+            BUILD_WITH_INSTALL_NAME_DIR TRUE
+        )
+    elseif(UNIX)
+        # Linux: Set SONAME for .so files
+        set_target_properties(solar_jpl PROPERTIES
+            SOVERSION ${PROJECT_VERSION_MAJOR}
+        )
+    elseif(WIN32)
+        # Windows: Set output directories for DLLs and import libraries
+        set_target_properties(solar_jpl PROPERTIES
+            RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
+            ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
+        )
+    endif()
+endif()
 
 # Install library
 install(TARGETS solar_jpl
