@@ -23,7 +23,7 @@
 #include <string_view>
 #include <vector>
 
-#include "solar_core/utils/expected.hpp"
+#include "solar_utils/expected.hpp"
 #include "solar_utils/validation/input_validator.hpp"
 
 namespace SolarSystem::Utils {

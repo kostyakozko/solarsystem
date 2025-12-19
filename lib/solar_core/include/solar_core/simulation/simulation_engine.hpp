@@ -7,7 +7,7 @@
 
 #include "solar_core/bodies/body_collection.hpp"
 #include "solar_core/math/vector3.hpp"
-#include "solar_core/utils/expected.hpp"
+#include "solar_utils/expected.hpp"
 
 namespace SolarSystem::Simulation {
 

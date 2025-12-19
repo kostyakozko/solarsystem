@@ -70,8 +70,8 @@ if(BUILD_SHARED_LIBS)
     set_target_properties(solar_jpl PROPERTIES
         VERSION ${PROJECT_VERSION}
         SOVERSION ${PROJECT_VERSION_MAJOR}
-        CXX_VISIBILITY_PRESET hidden
-        VISIBILITY_INLINES_HIDDEN YES
+        CXX_VISIBILITY_PRESET default
+        VISIBILITY_INLINES_HIDDEN NO
     )
     target_compile_definitions(solar_jpl PRIVATE SOLAR_JPL_EXPORTS)
 

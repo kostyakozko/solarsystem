@@ -23,7 +23,7 @@
 #include <string>
 #include <vector>
 
-#include "solar_core/utils/expected.hpp"
+#include "solar_utils/expected.hpp"
 
 namespace SolarSystem::Data {
 

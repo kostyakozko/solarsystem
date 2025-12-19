@@ -16,46 +16,6 @@
 namespace SolarSystem::UI {
 
 /**
- * @brief Progress indicator styles
- */
-enum class ProgressStyle {
-  BAR,
-  SPINNER,
-  PERCENTAGE,
-  DOTS,
-  MINIMAL
-};
-
-/**
- * @brief Progress indicator
- */
-class ProgressIndicator {
- public:
-  ProgressIndicator(const std::string& task_name, size_t total_steps);
-
-  void update(size_t current_step);
-  void update(size_t current_step, const std::string& status_message);
-  void complete();
-  void fail(const std::string& error_message);
-
-  void set_style(ProgressStyle style);
-  std::string render() const;
-
-  double get_percentage() const;
-  bool is_complete() const;
-
- private:
-  std::string task_name_;
-  size_t total_steps_;
-  size_t current_step_;
-  ProgressStyle style_;
-  bool completed_;
-  bool failed_;
-  std::string status_message_;
-  std::chrono::steady_clock::time_point start_time_;
-};
-
-/**
  * @brief Status feedback levels
  */
 enum class StatusLevel {

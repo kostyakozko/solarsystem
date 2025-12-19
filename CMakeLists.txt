@@ -16,6 +16,11 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+# Set installation directories
+if(NOT CMAKE_INSTALL_LIBDIR)
+    set(CMAKE_INSTALL_LIBDIR "lib")
+endif()
+
 # RPATH configuration for shared libraries
 if(BUILD_SHARED_LIBS)
     # Set RPATH for installed binaries
@@ -61,20 +66,10 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 # Build system modernization options
-# NOTE: BUILD_SHARED_LIBS currently has circular dependency issues between solar_core and solar_jpl
-# This needs to be resolved before shared libraries can be fully supported
-# See .kiro/specs/build-modernization for details
-option(BUILD_SHARED_LIBS "Build shared libraries instead of static (EXPERIMENTAL)" OFF)
+option(BUILD_SHARED_LIBS "Build shared libraries instead of static" OFF)
 option(USE_SYSTEM_GTEST "Use system-installed Google Test instead of FetchContent" OFF)
 option(USE_SYSTEM_JSON "Use system-installed nlohmann/json instead of FetchContent" OFF)
 option(ENABLE_SYMBOL_VISIBILITY "Enable symbol visibility control for shared libraries" ON)
-
-# Warn if shared libraries are enabled
-if(BUILD_SHARED_LIBS)
-    message(WARNING "Shared library build is EXPERIMENTAL and has known circular dependency issues")
-    message(WARNING "The circular dependency between solar_core and solar_jpl needs to be resolved")
-    message(WARNING "Consider using static libraries (BUILD_SHARED_LIBS=OFF) for production builds")
-endif()
 
 # Compiler warnings configuration - enabled by default
 option(WARNINGS_AS_ERRORS "Treat compilation warnings as errors (linking warnings ignored)" ON)
@@ -173,6 +168,16 @@ endif()
 
 # Add subdirectories for modular build
 add_subdirectory(lib)
+
+# For shared libraries, create a combined library to avoid circular dependencies
+if(BUILD_SHARED_LIBS)
+    # Create solar_system_combined that includes both solar_core and solar_jpl
+    add_library(solar_system_combined INTERFACE)
+    target_link_libraries(solar_system_combined INTERFACE solar_jpl solar_core)
+
+    message(STATUS "Shared library build: Applications will link solar_system_combined")
+endif()
+
 add_subdirectory(apps)
 add_subdirectory(examples)
 

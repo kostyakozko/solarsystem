@@ -10,7 +10,7 @@
 #include "solar_core/bodies/body_collection.hpp"
 #include "solar_core/bodies/celestial_body.hpp"
 #include "solar_core/data/body_definitions.hpp"
-#include "solar_core/utils/expected.hpp"
+#include "solar_utils/expected.hpp"
 #include "solar_jpl/jpl_client.hpp"
 
 namespace SolarSystem::Bodies {

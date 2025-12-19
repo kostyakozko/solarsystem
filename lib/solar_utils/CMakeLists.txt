@@ -16,8 +16,13 @@ add_library(solar_utils
     src/advanced_config.cpp
 )
 
-# Link with solar_core for Expected type
-target_link_libraries(solar_utils PUBLIC solar_core)
+# No dependencies on other solar libraries - utils is the base layer
+# Link external dependencies needed by utils
+target_link_libraries(solar_utils PUBLIC
+    CURL::libcurl   # For network operations
+    OpenSSL::SSL    # For security operations
+    OpenSSL::Crypto # For cryptographic operations
+)
 
 # Public headers for other libraries and applications
 target_include_directories(solar_utils PUBLIC
@@ -49,8 +54,8 @@ if(BUILD_SHARED_LIBS)
     set_target_properties(solar_utils PROPERTIES
         VERSION ${PROJECT_VERSION}
         SOVERSION ${PROJECT_VERSION_MAJOR}
-        CXX_VISIBILITY_PRESET hidden
-        VISIBILITY_INLINES_HIDDEN YES
+        CXX_VISIBILITY_PRESET default
+        VISIBILITY_INLINES_HIDDEN NO
     )
     target_compile_definitions(solar_utils PRIVATE SOLAR_UTILS_EXPORTS)
 
@@ -74,3 +79,17 @@ if(BUILD_SHARED_LIBS)
         )
     endif()
 endif()
+
+# Install library
+install(TARGETS solar_utils
+    EXPORT SolarSystemTargets
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+    RUNTIME DESTINATION bin
+)
+
+# Install headers
+install(DIRECTORY include/solar_utils
+    DESTINATION include
+    FILES_MATCHING PATTERN "*.hpp"
+)

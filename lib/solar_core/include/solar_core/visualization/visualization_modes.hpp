@@ -18,7 +18,7 @@
 
 #include "solar_core/bodies/body_collection.hpp"
 #include "solar_core/streaming/data_stream.hpp"
-#include "solar_core/utils/expected.hpp"
+#include "solar_utils/expected.hpp"
 
 namespace SolarSystem::Visualization {
 

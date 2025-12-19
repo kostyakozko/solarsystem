@@ -120,13 +120,32 @@ endif()
 # Link dependencies
 target_link_libraries(solar_core PUBLIC
     solar_utils     # Needs args.h for simulation parameters
-    solar_jpl       # Needs JPL data integration for BodyFactory
     Threads::Threads
     ZLIB::ZLIB      # For checkpoint compression and backup compression
     OpenSSL::SSL    # For encryption and secure operations
     OpenSSL::Crypto # For hashing and cryptographic functions
     CURL::libcurl   # For HTTP operations in network security
 )
+
+# solar_jpl dependency handled differently for static vs shared
+if(NOT BUILD_SHARED_LIBS)
+    # Static: normal linking
+    target_link_libraries(solar_core PUBLIC solar_jpl)
+else()
+    # Shared: only headers, actual linking deferred to applications
+    # This breaks the circular dependency
+    target_include_directories(solar_core PUBLIC
+        ${CMAKE_SOURCE_DIR}/lib/solar_jpl/include
+    )
+    # Allow undefined symbols - they'll be resolved when applications link both libraries
+    if(APPLE)
+        target_link_options(solar_core PRIVATE "-Wl,-undefined,dynamic_lookup")
+    elseif(UNIX)
+        target_link_options(solar_core PRIVATE "-Wl,--allow-shlib-undefined")
+    endif()
+endif()
+
+
 
 # Link Cairo if available
 if(CAIRO_FOUND)
@@ -162,8 +181,8 @@ if(BUILD_SHARED_LIBS)
     set_target_properties(solar_core PROPERTIES
         VERSION ${PROJECT_VERSION}
         SOVERSION ${PROJECT_VERSION_MAJOR}
-        CXX_VISIBILITY_PRESET hidden
-        VISIBILITY_INLINES_HIDDEN YES
+        CXX_VISIBILITY_PRESET default
+        VISIBILITY_INLINES_HIDDEN NO
     )
     target_compile_definitions(solar_core PRIVATE SOLAR_CORE_EXPORTS)
 
@@ -187,3 +206,17 @@ if(BUILD_SHARED_LIBS)
         )
     endif()
 endif()
+
+# Install library
+install(TARGETS solar_core
+    EXPORT SolarSystemTargets
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+    RUNTIME DESTINATION bin
+)
+
+# Install headers
+install(DIRECTORY include/solar_core
+    DESTINATION include
+    FILES_MATCHING PATTERN "*.hpp"
+)
