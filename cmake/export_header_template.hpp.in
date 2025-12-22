@@ -1,0 +1,112 @@
+/**
+ * @file @LIBRARY_NAME@_export.hpp
+ * @brief Export/import macros for @LIBRARY_NAME@ library
+ *
+ * This file provides platform-specific macros for controlling symbol visibility
+ * in shared libraries. It handles Windows DLL export/import and Unix visibility
+ * attributes.
+ */
+
+#ifndef @LIBRARY_NAME_UPPER@_EXPORT_HPP
+#define @LIBRARY_NAME_UPPER@_EXPORT_HPP
+
+// Platform detection
+#if defined(_WIN32) || defined(_WIN64) || defined(__CYGWIN__)
+  #define @LIBRARY_NAME_UPPER@_PLATFORM_WINDOWS
+#elif defined(__APPLE__) && defined(__MACH__)
+  #define @LIBRARY_NAME_UPPER@_PLATFORM_MACOS
+#elif defined(__linux__)
+  #define @LIBRARY_NAME_UPPER@_PLATFORM_LINUX
+#elif defined(__unix__) || defined(__unix)
+  #define @LIBRARY_NAME_UPPER@_PLATFORM_UNIX
+#endif
+
+// Shared library detection
+#if defined(@LIBRARY_NAME_UPPER@_STATIC_DEFINE)
+  #define @LIBRARY_NAME_UPPER@_SHARED_LIBRARY 0
+#else
+  #define @LIBRARY_NAME_UPPER@_SHARED_LIBRARY 1
+#endif
+
+// Export/import macros for Windows
+#if defined(@LIBRARY_NAME_UPPER@_PLATFORM_WINDOWS)
+  #if @LIBRARY_NAME_UPPER@_SHARED_LIBRARY
+    #if defined(@LIBRARY_NAME_UPPER@_EXPORTS)
+      // Building the library - export symbols
+      #define @LIBRARY_NAME_UPPER@_API __declspec(dllexport)
+    #else
+      // Using the library - import symbols
+      #define @LIBRARY_NAME_UPPER@_API __declspec(dllimport)
+    #endif
+  #else
+    // Static library - no export/import needed
+    #define @LIBRARY_NAME_UPPER@_API
+  #endif
+
+  // Windows doesn't need visibility for local symbols
+  #define @LIBRARY_NAME_UPPER@_LOCAL
+
+// Export/import macros for GCC/Clang on Unix-like systems
+#elif defined(__GNUC__) || defined(__clang__)
+  #if @LIBRARY_NAME_UPPER@_SHARED_LIBRARY
+    #if defined(@LIBRARY_NAME_UPPER@_EXPORTS)
+      // Building the library - export symbols
+      #define @LIBRARY_NAME_UPPER@_API __attribute__((visibility("default")))
+    #else
+      // Using the library - symbols are visible by default
+      #define @LIBRARY_NAME_UPPER@_API __attribute__((visibility("default")))
+    #endif
+    // Mark internal symbols as hidden
+    #define @LIBRARY_NAME_UPPER@_LOCAL __attribute__((visibility("hidden")))
+  #else
+    // Static library - no visibility attributes needed
+    #define @LIBRARY_NAME_UPPER@_API
+    #define @LIBRARY_NAME_UPPER@_LOCAL
+  #endif
+
+// Fallback for unknown compilers
+#else
+  #define @LIBRARY_NAME_UPPER@_API
+  #define @LIBRARY_NAME_UPPER@_LOCAL
+  #warning "Symbol visibility not supported on this compiler"
+#endif
+
+// Convenience macros for common use cases
+
+/**
+ * @brief Mark a class for export
+ * Usage: class @LIBRARY_NAME_UPPER@_API MyClass { ... };
+ */
+#define @LIBRARY_NAME_UPPER@_CLASS_API @LIBRARY_NAME_UPPER@_API
+
+/**
+ * @brief Mark a function for export
+ * Usage: @LIBRARY_NAME_UPPER@_FUNCTION_API void myFunction();
+ */
+#define @LIBRARY_NAME_UPPER@_FUNCTION_API @LIBRARY_NAME_UPPER@_API
+
+/**
+ * @brief Mark a template class for export (header-only, no export needed)
+ * Usage: template<typename T> class @LIBRARY_NAME_UPPER@_TEMPLATE_API MyTemplate { ... };
+ */
+#define @LIBRARY_NAME_UPPER@_TEMPLATE_API
+
+/**
+ * @brief Mark internal implementation details (not part of public API)
+ * Usage: class @LIBRARY_NAME_UPPER@_INTERNAL MyInternalClass { ... };
+ */
+#define @LIBRARY_NAME_UPPER@_INTERNAL @LIBRARY_NAME_UPPER@_LOCAL
+
+/**
+ * @brief Deprecated API marker
+ * Usage: @LIBRARY_NAME_UPPER@_DEPRECATED("Use newFunction instead") void oldFunction();
+ */
+#if defined(__GNUC__) || defined(__clang__)
+  #define @LIBRARY_NAME_UPPER@_DEPRECATED(msg) __attribute__((deprecated(msg)))
+#elif defined(_MSC_VER)
+  #define @LIBRARY_NAME_UPPER@_DEPRECATED(msg) __declspec(deprecated(msg))
+#else
+  #define @LIBRARY_NAME_UPPER@_DEPRECATED(msg)
+#endif
+
+#endif // @LIBRARY_NAME_UPPER@_EXPORT_HPP

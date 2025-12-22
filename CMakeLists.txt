@@ -60,6 +60,9 @@ endif()
 # Include compiler warnings configuration
 include(cmake/CompilerWarnings.cmake)
 
+# Include export header generation
+include(cmake/GenerateExportHeader.cmake)
+
 # Build type
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
@@ -168,6 +171,14 @@ endif()
 
 # Add subdirectories for modular build
 add_subdirectory(lib)
+
+# Generate export headers for shared library builds
+if(BUILD_SHARED_LIBS AND ENABLE_SYMBOL_VISIBILITY)
+    generate_library_export_header(solar_core)
+    generate_library_export_header(solar_jpl)
+    generate_library_export_header(solar_utils)
+    message(STATUS "Export headers generated for shared library build")
+endif()
 
 # For shared libraries, create a combined library to avoid circular dependencies
 if(BUILD_SHARED_LIBS)

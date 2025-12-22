@@ -37,7 +37,7 @@ This implementation plan systematically modernizes the Solar System Suite's buil
   - Configure platform-appropriate library installation paths
   - _Requirements: 1.5, 9.1, 9.2, 9.3_
 
-- [ ] 2. Create symbol visibility infrastructure
+- [x] 2. Create symbol visibility infrastructure
   - Create export header template
   - Generate export headers for each library
   - Configure compiler visibility settings
@@ -45,7 +45,7 @@ This implementation plan systematically modernizes the Solar System Suite's buil
   - Document symbol visibility guidelines
   - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5_
 
-- [ ] 2.1 Create export header template
+- [x] 2.1 Create export header template
   - Create cmake/export_header_template.hpp.in
   - Add platform detection (Windows, Unix)
   - Add export/import macros for Windows (__declspec)
@@ -53,7 +53,7 @@ This implementation plan systematically modernizes the Solar System Suite's buil
   - Add class and function export macros
   - _Requirements: 2.2, 2.3_
 
-- [ ] 2.2 Generate library-specific export headers
+- [x] 2.2 Generate library-specific export headers
   - Generate lib/solar_core/include/solar_core/export.hpp (SOLAR_CORE_API)
   - Generate lib/solar_jpl/include/solar_jpl/export.hpp (SOLAR_JPL_API)
   - Generate lib/solar_utils/include/solar_utils/export.hpp (SOLAR_UTILS_API)
@@ -61,7 +61,7 @@ This implementation plan systematically modernizes the Solar System Suite's buil
   - Add export headers to CMake configuration
   - _Requirements: 2.1, 2.2_
 
-- [ ] 2.3 Configure compiler visibility settings
+- [x] 2.3 Configure compiler visibility settings
   - Set CXX_VISIBILITY_PRESET to hidden for shared libraries
   - Set VISIBILITY_INLINES_HIDDEN for shared libraries
   - Add -fvisibility=hidden to compiler flags (GCC/Clang)

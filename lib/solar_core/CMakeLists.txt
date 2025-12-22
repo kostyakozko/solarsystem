@@ -181,10 +181,22 @@ if(BUILD_SHARED_LIBS)
     set_target_properties(solar_core PROPERTIES
         VERSION ${PROJECT_VERSION}
         SOVERSION ${PROJECT_VERSION_MAJOR}
-        CXX_VISIBILITY_PRESET default
-        VISIBILITY_INLINES_HIDDEN NO
     )
     target_compile_definitions(solar_core PRIVATE SOLAR_CORE_EXPORTS)
+
+    # Configure symbol visibility
+    if(ENABLE_SYMBOL_VISIBILITY)
+        set_target_properties(solar_core PROPERTIES
+            CXX_VISIBILITY_PRESET hidden
+            VISIBILITY_INLINES_HIDDEN YES
+        )
+        message(STATUS "solar_core: Symbol visibility set to hidden")
+    else()
+        set_target_properties(solar_core PROPERTIES
+            CXX_VISIBILITY_PRESET default
+            VISIBILITY_INLINES_HIDDEN NO
+        )
+    endif()
 
     # Platform-specific settings
     if(APPLE)
