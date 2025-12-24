@@ -11,6 +11,8 @@
 #include <chrono>
 #include <map>
 
+#include "solar_core/export.hpp"
+
 namespace SolarSystem::Security {
 
 /**
@@ -65,7 +67,7 @@ struct NetworkSecurityResult {
 /**
  * @brief IP address filter
  */
-class IPFilter {
+class SOLAR_CORE_API IPFilter {
 public:
   void add_whitelist(const std::string& ip_pattern);
   void add_blacklist(const std::string& ip_pattern);
@@ -85,7 +87,7 @@ private:
 /**
  * @brief Network encryption manager
  */
-class EncryptionManager {
+class SOLAR_CORE_API EncryptionManager {
 public:
   static EncryptionManager& instance();
 
@@ -110,7 +112,7 @@ private:
 /**
  * @brief Network security manager
  */
-class NetworkSecurity {
+class SOLAR_CORE_API NetworkSecurity {
 public:
   static NetworkSecurity& instance();
 
@@ -153,15 +155,15 @@ private:
 /**
  * @brief Secure network operations wrapper
  */
-class SecureNetworkOperations {
+class SOLAR_CORE_API SecureNetworkOperations {
 public:
-  static std::optional<std::string> secure_request(
+  static SOLAR_CORE_API std::optional<std::string> secure_request(
       const std::string& url,
       const std::string& method = "GET",
       const std::string& data = "");
 
-  static bool validate_url(const std::string& url);
-  static bool is_secure_url(const std::string& url);
+  static SOLAR_CORE_API bool validate_url(const std::string& url);
+  static SOLAR_CORE_API bool is_secure_url(const std::string& url);
 };
 
 }  // namespace SolarSystem::Security

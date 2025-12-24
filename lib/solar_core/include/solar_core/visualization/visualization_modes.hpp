@@ -16,6 +16,7 @@
 #include <string>
 #include <vector>
 
+#include "solar_core/export.hpp"
 #include "solar_core/bodies/body_collection.hpp"
 #include "solar_core/streaming/data_stream.hpp"
 #include "solar_utils/expected.hpp"
@@ -150,7 +151,7 @@ struct SharingOptions {
 /**
  * @brief Complete visualization configuration
  */
-struct VisualizationConfig {
+struct SOLAR_CORE_API VisualizationConfig {
   VisualizationMode mode = VisualizationMode::TABLE;
   DisplayLayout layout = DisplayLayout::ADAPTIVE;
   ColorScheme color_scheme = ColorScheme::DEFAULT;
@@ -217,7 +218,7 @@ struct VisualizationFrame {
 /**
  * @brief Main visualization renderer
  */
-class VisualizationRenderer {
+class SOLAR_CORE_API VisualizationRenderer {
 public:
   explicit VisualizationRenderer(VisualizationConfig config = {});
   ~VisualizationRenderer() = default;
@@ -302,7 +303,7 @@ private:
 /**
  * @brief Visualization mode manager
  */
-class VisualizationModeManager {
+class SOLAR_CORE_API VisualizationModeManager {
 public:
   VisualizationModeManager() = default;
   ~VisualizationModeManager() = default;
@@ -340,12 +341,12 @@ private:
 };
 
 // Utility functions
-[[nodiscard]] std::string to_string(VisualizationMode mode);
+[[nodiscard]] SOLAR_CORE_API std::string to_string(VisualizationMode mode);
 [[nodiscard]] std::string to_string(DisplayLayout layout);
 [[nodiscard]] std::string to_string(ColorScheme scheme);
 [[nodiscard]] std::string to_string(ExportFormat format);
 
-[[nodiscard]] Utils::Expected<VisualizationMode, std::string> parse_visualization_mode(
+[[nodiscard]] SOLAR_CORE_API Utils::Expected<VisualizationMode, std::string> parse_visualization_mode(
     const std::string& mode_str);
 
 [[nodiscard]] Utils::Expected<ExportFormat, std::string> parse_export_format(

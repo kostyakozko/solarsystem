@@ -18,6 +18,8 @@
 #include <functional>
 #include <memory>
 #include <mutex>
+
+#include "solar_utils/export.hpp"
 #include <optional>
 #include <string>
 #include <thread>
@@ -323,7 +325,7 @@ struct StatusDecisionRule {
 /**
  * @brief Real-time status monitor
  */
-class RealTimeStatusMonitor {
+class SOLAR_UTILS_API RealTimeStatusMonitor {
  public:
   /**
    * @brief Constructor
@@ -432,7 +434,7 @@ class RealTimeStatusMonitor {
 /**
  * @brief Status dashboard for displaying system status
  */
-class StatusDashboard {
+class SOLAR_UTILS_API StatusDashboard {
  public:
   /**
    * @brief Constructor
@@ -503,7 +505,7 @@ class StatusDashboard {
 /**
  * @brief Status-based decision engine
  */
-class StatusDecisionEngine {
+class SOLAR_UTILS_API StatusDecisionEngine {
  public:
   /**
    * @brief Constructor
@@ -561,7 +563,7 @@ class StatusDecisionEngine {
 /**
  * @brief Comprehensive status management system
  */
-class StatusManager {
+class SOLAR_UTILS_API StatusManager {
  public:
   /**
    * @brief Get singleton instance
@@ -646,28 +648,28 @@ namespace Utils {
 /**
  * @brief Convert system status to string
  */
-[[nodiscard]] std::string to_string(SystemStatus status);
+[[nodiscard]] SOLAR_UTILS_API std::string to_string(SystemStatus status);
 
 /**
  * @brief Convert alert severity to string
  */
-[[nodiscard]] std::string to_string(AlertSeverity severity);
+[[nodiscard]] SOLAR_UTILS_API std::string to_string(AlertSeverity severity);
 
 /**
  * @brief Convert alert type to string
  */
-[[nodiscard]] std::string to_string(AlertType type);
+[[nodiscard]] SOLAR_UTILS_API std::string to_string(AlertType type);
 
 /**
  * @brief Create performance metrics collector
  */
-[[nodiscard]] std::function<PerformanceMetrics()> create_performance_collector(
+[[nodiscard]] SOLAR_UTILS_API std::function<PerformanceMetrics()> create_performance_collector(
     const std::string& component_name);
 
 /**
  * @brief Create status alert
  */
-[[nodiscard]] StatusAlert create_alert(
+[[nodiscard]] SOLAR_UTILS_API StatusAlert create_alert(
     AlertType type,
     AlertSeverity severity,
     const std::string& title,
@@ -678,7 +680,7 @@ namespace Utils {
 /**
  * @brief Calculate component availability
  */
-[[nodiscard]] double calculate_availability(
+[[nodiscard]] SOLAR_UTILS_API double calculate_availability(
     const std::vector<Workflow::ComponentStatus>& status_history,
     std::chrono::hours window = std::chrono::hours(24));
 

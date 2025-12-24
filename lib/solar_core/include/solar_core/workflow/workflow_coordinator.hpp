@@ -18,6 +18,7 @@
 #include <string>
 #include <vector>
 
+#include "solar_core/export.hpp"
 #include "solar_utils/expected.hpp"
 
 namespace SolarSystem::Workflow {
@@ -47,7 +48,7 @@ struct StepResult {
 /**
  * @brief Workflow transaction
  */
-class WorkflowTransaction {
+class SOLAR_CORE_API WorkflowTransaction {
  public:
   using StepFunction = std::function<StepResult()>;
   using RollbackFunction = std::function<void()>;
@@ -102,7 +103,7 @@ class WorkflowTransaction {
 /**
  * @brief Workflow coordinator with transaction support
  */
-class WorkflowCoordinator {
+class SOLAR_CORE_API WorkflowCoordinator {
  public:
   WorkflowCoordinator();
   ~WorkflowCoordinator();
@@ -172,7 +173,7 @@ class WorkflowCoordinator {
 /**
  * @brief Distributed workflow executor
  */
-class DistributedWorkflowExecutor {
+class SOLAR_CORE_API DistributedWorkflowExecutor {
  public:
   DistributedWorkflowExecutor();
   ~DistributedWorkflowExecutor();

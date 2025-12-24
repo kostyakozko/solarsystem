@@ -14,6 +14,7 @@
 
 #include "solar_core/bodies/celestial_body.hpp"
 #include "solar_core/bodies/body_collection.hpp"
+#include "solar_core/export.hpp"
 #include "solar_core/math/vector3.hpp"
 #include "solar_utils/expected.hpp"
 
@@ -117,7 +118,7 @@ using QualityCallback = std::function<void(const StreamStats&)>;
 /**
  * @brief Main data streaming interface
  */
-class DataStream {
+class SOLAR_CORE_API DataStream {
 public:
   explicit DataStream(StreamConfig config = {});
   virtual ~DataStream();

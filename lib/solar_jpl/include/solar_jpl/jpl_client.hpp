@@ -24,6 +24,7 @@
 #include <variant>
 #include <vector>
 
+#include "solar_jpl/export.hpp"
 #include "solar_core/bodies/body_mappings.hpp"
 #include "solar_core/bodies/celestial_body.hpp"
 #include "solar_core/math/vector3.hpp"
@@ -103,7 +104,7 @@ using JPLVoidResult = std::optional<JPLError>;
 /**
  * @brief Ephemeris data for a single celestial body
  */
-struct EphemerisData {
+struct SOLAR_JPL_API EphemerisData {
   std::string body_name;
   int jpl_id;
   std::chrono::system_clock::time_point epoch;
@@ -120,7 +121,7 @@ struct EphemerisData {
 /**
  * @brief Configuration for JPL client
  */
-struct JPLClientConfig {
+struct SOLAR_JPL_API JPLClientConfig {
   std::string api_endpoint = "https://ssd.jpl.nasa.gov/api/horizons.api";
   std::chrono::seconds request_timeout = std::chrono::seconds(30);
   std::chrono::milliseconds request_delay = std::chrono::milliseconds(200);
@@ -212,7 +213,7 @@ struct NetworkDiagnostics {
 /**
  * @brief Circuit breaker for network failure management
  */
-struct CircuitBreaker {
+struct SOLAR_JPL_API CircuitBreaker {
   CircuitBreakerState state = CircuitBreakerState::Closed;
   size_t failure_count = 0;
   std::chrono::system_clock::time_point last_failure_time;
@@ -236,7 +237,7 @@ struct ConnectionPoolEntry {
 /**
  * @brief Cache metadata
  */
-struct CacheMetadata {
+struct SOLAR_JPL_API CacheMetadata {
   std::chrono::system_clock::time_point created_at;
   std::chrono::system_clock::time_point epoch;
   std::string source;
@@ -252,7 +253,7 @@ struct CacheMetadata {
 /**
  * @brief Modern JPL HORIZONS API client
  */
-class JPLClient {
+class SOLAR_JPL_API JPLClient {
  public:
   /**
    * @brief Construct JPL client with configuration
@@ -502,7 +503,7 @@ class JPLClient {
 /**
  * @brief Factory for creating JPL clients
  */
-class JPLClientFactory {
+class SOLAR_JPL_API JPLClientFactory {
  public:
   /**
    * @brief Create default JPL client with cache relative to executable
@@ -534,48 +535,48 @@ namespace Utils {
 /**
  * @brief Convert system_clock time point to JPL date string
  */
-[[nodiscard]] std::string to_jpl_date_string(std::chrono::system_clock::time_point tp);
+[[nodiscard]] SOLAR_JPL_API std::string to_jpl_date_string(std::chrono::system_clock::time_point tp);
 
 /**
  * @brief Parse JPL date string to system_clock time point
  */
-[[nodiscard]] std::optional<std::chrono::system_clock::time_point> from_jpl_date_string(
+[[nodiscard]] SOLAR_JPL_API std::optional<std::chrono::system_clock::time_point> from_jpl_date_string(
     std::string_view date_str);
 
 /**
  * @brief Get current year as time point (January 1st)
  */
-[[nodiscard]] std::chrono::system_clock::time_point get_current_year_epoch();
+[[nodiscard]] SOLAR_JPL_API std::chrono::system_clock::time_point get_current_year_epoch();
 
 /**
  * @brief Get JPL ID for body name
  */
-[[nodiscard]] std::optional<int> get_jpl_id_for_body(std::string_view body_name);
+[[nodiscard]] SOLAR_JPL_API std::optional<int> get_jpl_id_for_body(std::string_view body_name);
 
 /**
  * @brief Get all known JPL IDs
  */
-[[nodiscard]] std::vector<int> get_all_jpl_ids();
+[[nodiscard]] SOLAR_JPL_API std::vector<int> get_all_jpl_ids();
 
 /**
  * @brief Convert JPL error to string
  */
-[[nodiscard]] std::string to_string(JPLError error);
+[[nodiscard]] SOLAR_JPL_API std::string to_string(JPLError error);
 
 /**
  * @brief Convert network connectivity status to string
  */
-[[nodiscard]] std::string to_string(NetworkConnectivityStatus status);
+[[nodiscard]] SOLAR_JPL_API std::string to_string(NetworkConnectivityStatus status);
 
 /**
  * @brief Format network diagnostics as human-readable string
  */
-[[nodiscard]] std::string format_network_diagnostics(const NetworkDiagnostics& diagnostics);
+[[nodiscard]] SOLAR_JPL_API std::string format_network_diagnostics(const NetworkDiagnostics& diagnostics);
 
 /**
  * @brief Check if endpoint URL is valid
  */
-[[nodiscard]] bool is_valid_endpoint_url(const std::string& url);
+[[nodiscard]] SOLAR_JPL_API bool is_valid_endpoint_url(const std::string& url);
 
 }  // namespace Utils
 

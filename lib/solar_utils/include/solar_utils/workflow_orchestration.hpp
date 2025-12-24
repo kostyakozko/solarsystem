@@ -18,6 +18,8 @@
 #include <functional>
 #include <future>
 #include <memory>
+
+#include "solar_utils/export.hpp"
 #include <mutex>
 #include <optional>
 #include <queue>
@@ -194,7 +196,7 @@ struct WorkflowContext {
 /**
  * @brief JPL connectivity manager for handling JPL-specific issues
  */
-class JPLConnectivityManager {
+class SOLAR_UTILS_API JPLConnectivityManager {
  public:
   /**
    * @brief Check JPL service availability
@@ -239,7 +241,7 @@ class JPLConnectivityManager {
 /**
  * @brief Component coordinator for managing suite components
  */
-class ComponentCoordinator {
+class SOLAR_UTILS_API ComponentCoordinator {
  public:
   /**
    * @brief Register a component for monitoring
@@ -326,7 +328,7 @@ class ComponentCoordinator {
 /**
  * @brief Workflow progress tracker
  */
-class ProgressTracker {
+class SOLAR_UTILS_API ProgressTracker {
  public:
   /**
    * @brief Start tracking progress for a workflow
@@ -388,7 +390,7 @@ class ProgressTracker {
 /**
  * @brief Workflow execution engine
  */
-class WorkflowExecutionEngine {
+class SOLAR_UTILS_API WorkflowExecutionEngine {
  public:
   /**
    * @brief Constructor
@@ -453,7 +455,7 @@ class WorkflowExecutionEngine {
 /**
  * @brief Comprehensive workflow orchestrator
  */
-class WorkflowOrchestrator {
+class SOLAR_UTILS_API WorkflowOrchestrator {
  public:
   /**
    * @brief Get singleton instance
@@ -605,44 +607,44 @@ namespace Utils {
 /**
  * @brief Convert workflow status to string
  */
-[[nodiscard]] std::string to_string(WorkflowStatus status);
+[[nodiscard]] SOLAR_UTILS_API std::string to_string(WorkflowStatus status);
 
 /**
  * @brief Convert component type to string
  */
-[[nodiscard]] std::string to_string(ComponentType type);
+[[nodiscard]] SOLAR_UTILS_API std::string to_string(ComponentType type);
 
 /**
  * @brief Convert component health to string
  */
-[[nodiscard]] std::string to_string(ComponentHealth health);
+[[nodiscard]] SOLAR_UTILS_API std::string to_string(ComponentHealth health);
 
 /**
  * @brief Convert step priority to string
  */
-[[nodiscard]] std::string to_string(StepPriority priority);
+[[nodiscard]] SOLAR_UTILS_API std::string to_string(StepPriority priority);
 
 /**
  * @brief Create progress callback function
  */
-[[nodiscard]] std::function<void(const ProgressInfo&)> create_progress_callback(
+[[nodiscard]] SOLAR_UTILS_API std::function<void(const ProgressInfo&)> create_progress_callback(
     const std::string& execution_id);
 
 /**
  * @brief Create error callback function
  */
-[[nodiscard]] std::function<void(const DetailedError&)> create_error_callback(
+[[nodiscard]] SOLAR_UTILS_API std::function<void(const DetailedError&)> create_error_callback(
     const std::string& execution_id);
 
 /**
  * @brief Validate workflow definition
  */
-[[nodiscard]] ValidationResult validate_workflow_definition(const WorkflowDefinition& workflow);
+[[nodiscard]] SOLAR_UTILS_API ValidationResult validate_workflow_definition(const WorkflowDefinition& workflow);
 
 /**
  * @brief Calculate estimated completion time
  */
-[[nodiscard]] std::chrono::system_clock::time_point calculate_estimated_completion(
+[[nodiscard]] SOLAR_UTILS_API std::chrono::system_clock::time_point calculate_estimated_completion(
     const WorkflowDefinition& workflow, double current_progress);
 
 }  // namespace Utils

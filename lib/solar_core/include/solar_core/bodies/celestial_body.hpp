@@ -6,6 +6,7 @@
 #include <string>
 #include <string_view>
 
+#include "solar_core/export.hpp"
 #include "solar_core/math/vector3.hpp"
 
 namespace SolarSystem::Bodies {
@@ -27,7 +28,7 @@ enum class BodyPriority {
 /**
  * @brief Modern celestial body class with RAII and strong typing
  */
-class CelestialBody {
+class SOLAR_CORE_API CelestialBody {
  public:
   /**
    * @brief Properties structure for celestial body construction
@@ -114,11 +115,11 @@ class CelestialBody {
 /**
  * @brief Convert BodyType to string representation
  */
-[[nodiscard]] std::string_view to_string(BodyType type) noexcept;
+[[nodiscard]] SOLAR_CORE_API std::string_view to_string(BodyType type) noexcept;
 
 /**
  * @brief Convert BodyPriority to string representation
  */
-[[nodiscard]] std::string_view to_string(BodyPriority priority) noexcept;
+[[nodiscard]] SOLAR_CORE_API std::string_view to_string(BodyPriority priority) noexcept;
 
 }  // namespace SolarSystem::Bodies

@@ -11,6 +11,7 @@
 
 #pragma once
 
+#include "solar_core/export.hpp"
 #include "solar_core/ui/accessibility.hpp"
 #include "solar_core/ui/progress_indicator.hpp"
 #include "solar_core/ui/status_display.hpp"
@@ -37,7 +38,7 @@ struct CLIConfig {
 /**
  * @brief Unified CLI interface manager
  */
-class CLIInterface {
+class SOLAR_CORE_API CLIInterface {
  public:
   /**
    * @brief Construct CLI interface with configuration
@@ -160,7 +161,7 @@ class CLIInterface {
 /**
  * @brief RAII helper for CLI operations
  */
-class CLIOperation {
+class SOLAR_CORE_API CLIOperation {
  public:
   CLIOperation(CLIInterface& cli, const std::string& operation_name);
   ~CLIOperation();

@@ -6,6 +6,7 @@
 #include <optional>
 
 #include "solar_core/bodies/body_collection.hpp"
+#include "solar_core/export.hpp"
 #include "solar_core/math/vector3.hpp"
 #include "solar_utils/expected.hpp"
 
@@ -54,7 +55,7 @@ using CollisionCallback =
  * Provides high-performance simulation of celestial body interactions using
  * modern C++ design patterns and numerical integration methods.
  */
-class SimulationEngine {
+class SOLAR_CORE_API SimulationEngine {
  public:
   // Integration methods
   enum class IntegrationMethod {
@@ -162,8 +163,8 @@ class SimulationEngine {
 };
 
 // Utility functions
-[[nodiscard]] std::string to_string(SimulationEngine::IntegrationMethod method);
-[[nodiscard]] SimulationEngine::IntegrationMethod integration_method_from_string(
+[[nodiscard]] SOLAR_CORE_API std::string to_string(SimulationEngine::IntegrationMethod method);
+[[nodiscard]] SOLAR_CORE_API SimulationEngine::IntegrationMethod integration_method_from_string(
     std::string_view str);
 
 }  // namespace SolarSystem::Simulation

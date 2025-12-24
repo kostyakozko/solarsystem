@@ -10,6 +10,7 @@
 #include "solar_core/bodies/body_collection.hpp"
 #include "solar_core/bodies/celestial_body.hpp"
 #include "solar_core/data/body_definitions.hpp"
+#include "solar_core/export.hpp"
 #include "solar_utils/expected.hpp"
 #include "solar_jpl/jpl_client.hpp"
 
@@ -25,7 +26,7 @@ namespace SolarSystem::Bodies {
  * - Hardcoded fallback data (from constants.cpp)
  */
 
-class BodyFactory {
+class SOLAR_CORE_API BodyFactory {
  public:
   enum class DataSource {
     JPL_HORIZONS,  // Fetch from JPL API

@@ -7,6 +7,7 @@
 #include <unordered_set>
 #include <chrono>
 
+#include "solar_core/export.hpp"
 #include "solar_core/streaming/data_stream.hpp"
 #include "solar_core/bodies/celestial_body.hpp"
 #include "solar_core/math/vector3.hpp"
@@ -16,7 +17,7 @@ namespace SolarSystem::Streaming {
 /**
  * @brief Base class for data stream filters
  */
-class StreamFilter {
+class SOLAR_CORE_API StreamFilter {
 public:
   virtual ~StreamFilter() = default;
 
@@ -49,7 +50,7 @@ protected:
 /**
  * @brief Filter that selects only specific celestial bodies
  */
-class BodySelectionFilter : public StreamFilter {
+class SOLAR_CORE_API BodySelectionFilter : public StreamFilter {
 public:
   explicit BodySelectionFilter(std::vector<std::string> selected_bodies);
   explicit BodySelectionFilter(std::unordered_set<std::string> selected_bodies);
@@ -70,7 +71,7 @@ private:
 /**
  * @brief Filter that removes data points below a quality threshold
  */
-class QualityFilter : public StreamFilter {
+class SOLAR_CORE_API QualityFilter : public StreamFilter {
 public:
   explicit QualityFilter(double min_quality = 0.7);
 
@@ -92,7 +93,7 @@ private:
 /**
  * @brief Filter that removes data points with excessive latency
  */
-class LatencyFilter : public StreamFilter {
+class SOLAR_CORE_API LatencyFilter : public StreamFilter {
 public:
   explicit LatencyFilter(std::chrono::milliseconds max_latency = std::chrono::milliseconds{2000});
 
@@ -110,7 +111,7 @@ private:
 /**
  * @brief Filter that applies rate limiting to reduce update frequency
  */
-class RateLimitFilter : public StreamFilter {
+class SOLAR_CORE_API RateLimitFilter : public StreamFilter {
 public:
   explicit RateLimitFilter(std::chrono::milliseconds min_interval = std::chrono::milliseconds{100});
 
@@ -131,7 +132,7 @@ private:
 /**
  * @brief Filter that removes duplicate or nearly identical data points
  */
-class DuplicationFilter : public StreamFilter {
+class SOLAR_CORE_API DuplicationFilter : public StreamFilter {
 public:
   explicit DuplicationFilter(double position_tolerance = 1000.0,  // meters
                            double velocity_tolerance = 1.0);      // m/s
@@ -160,7 +161,7 @@ private:
 /**
  * @brief Custom filter using user-provided predicate function
  */
-class PredicateFilter : public StreamFilter {
+class SOLAR_CORE_API PredicateFilter : public StreamFilter {
 public:
   using SnapshotPredicate = std::function<bool(const DataSnapshot&)>;
   using DataPointPredicate = std::function<bool(const DataPoint&)>;
@@ -180,7 +181,7 @@ private:
 /**
  * @brief Composite filter that applies multiple filters in sequence
  */
-class FilterChain : public StreamFilter {
+class SOLAR_CORE_API FilterChain : public StreamFilter {
 public:
   FilterChain() = default;
   explicit FilterChain(std::vector<std::unique_ptr<StreamFilter>> filters);
@@ -209,7 +210,7 @@ private:
 /**
  * @brief Factory for creating common filter configurations
  */
-class FilterFactory {
+class SOLAR_CORE_API FilterFactory {
 public:
   // Predefined filter chains
   [[nodiscard]] static std::unique_ptr<FilterChain> create_basic_filter_chain();

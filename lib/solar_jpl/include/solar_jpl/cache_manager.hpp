@@ -11,6 +11,8 @@
 
 #pragma once
 
+#include "solar_jpl/export.hpp"
+
 #include <chrono>
 #include <filesystem>
 #include <memory>
@@ -199,7 +201,7 @@ struct CacheEntryMetadata {
 /**
  * @brief Intelligent Cache Manager
  */
-class CacheManager {
+class SOLAR_JPL_API CacheManager {
 public:
   /**
    * @brief Construct cache manager with configuration
@@ -406,7 +408,7 @@ private:
 /**
  * @brief Cache Manager Factory
  */
-class CacheManagerFactory {
+class SOLAR_JPL_API CacheManagerFactory {
 public:
   /**
    * @brief Create default cache manager

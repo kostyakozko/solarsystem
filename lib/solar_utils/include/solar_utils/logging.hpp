@@ -16,6 +16,8 @@
 #include <unordered_map>
 #include <vector>
 
+#include "solar_utils/export.hpp"
+
 namespace SolarSystem::Utils {
 
 /**
@@ -48,10 +50,10 @@ struct LogEntry {
   std::unordered_map<std::string, std::string> metadata;
   uint64_t sequence_number = 0;
 
-  std::string to_string() const;
-  std::string to_json() const;
-  std::string to_xml() const;
-  std::string to_csv() const;
+  SOLAR_UTILS_API std::string to_string() const;
+  SOLAR_UTILS_API std::string to_json() const;
+  SOLAR_UTILS_API std::string to_xml() const;
+  SOLAR_UTILS_API std::string to_csv() const;
 };
 
 /**
@@ -99,7 +101,7 @@ class LogAppender {
 /**
  * @brief Console appender with color support
  */
-class ConsoleAppender : public LogAppender {
+class SOLAR_UTILS_API ConsoleAppender : public LogAppender {
  public:
   explicit ConsoleAppender(bool use_colors = true);
   void append(const LogEntry& entry) override;
@@ -118,7 +120,7 @@ class ConsoleAppender : public LogAppender {
 /**
  * @brief File appender with rotation support
  */
-class FileAppender : public LogAppender {
+class SOLAR_UTILS_API FileAppender : public LogAppender {
  public:
   FileAppender(const std::string& filename, size_t max_size = 10 * 1024 * 1024, int max_files = 5);
   ~FileAppender();
@@ -147,7 +149,7 @@ class FileAppender : public LogAppender {
 /**
  * @brief Memory appender for in-memory log storage
  */
-class MemoryAppender : public LogAppender {
+class SOLAR_UTILS_API MemoryAppender : public LogAppender {
  public:
   explicit MemoryAppender(size_t max_entries = 1000);
 
@@ -171,7 +173,7 @@ class MemoryAppender : public LogAppender {
 /**
  * @brief Asynchronous logger for high-performance logging
  */
-class AsyncLogger {
+class SOLAR_UTILS_API AsyncLogger {
  public:
   AsyncLogger();
   ~AsyncLogger();
@@ -221,7 +223,7 @@ class AsyncLogger {
  * Provides thread-safe, configurable logging with multiple output targets,
  * structured formatting, performance monitoring, and advanced features.
  */
-class Logger {
+class SOLAR_UTILS_API Logger {
  public:
   // Maintain backward compatibility with existing Level enum
   enum class Level { DEBUG = 1, INFO = 2, WARN = 3, ERROR = 4, FATAL = 5 };

@@ -12,6 +12,8 @@
 #include <optional>
 #include <functional>
 
+#include "solar_core/export.hpp"
+
 namespace SolarSystem::Error {
 
 /**
@@ -69,7 +71,7 @@ struct ErrorMessage {
 /**
  * @brief Error message builder
  */
-class ErrorMessageBuilder {
+class SOLAR_CORE_API ErrorMessageBuilder {
  public:
   ErrorMessageBuilder& code(const std::string& error_code);
   ErrorMessageBuilder& title(const std::string& title);
@@ -92,7 +94,7 @@ class ErrorMessageBuilder {
 /**
  * @brief Error messaging system
  */
-class ErrorMessaging {
+class SOLAR_CORE_API ErrorMessaging {
  public:
   static ErrorMessaging& instance();
 
@@ -141,7 +143,7 @@ class ErrorMessaging {
 /**
  * @brief Error feedback system
  */
-class ErrorFeedback {
+class SOLAR_CORE_API ErrorFeedback {
  public:
   static ErrorFeedback& instance();
 

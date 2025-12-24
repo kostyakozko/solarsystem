@@ -16,6 +16,7 @@
 #include <vector>
 
 #include "solar_core/communication/message.hpp"
+#include "solar_core/export.hpp"
 #include "solar_utils/expected.hpp"
 
 namespace SolarSystem::Communication {
@@ -101,7 +102,7 @@ class IProtocol {
 /**
  * @brief In-process protocol (for same-process communication)
  */
-class InProcessProtocol : public IProtocol {
+class SOLAR_CORE_API InProcessProtocol : public IProtocol {
  public:
   InProcessProtocol();
   ~InProcessProtocol() override;
@@ -126,7 +127,7 @@ class InProcessProtocol : public IProtocol {
 /**
  * @brief File-based protocol (for inter-process communication via files)
  */
-class FileProtocol : public IProtocol {
+class SOLAR_CORE_API FileProtocol : public IProtocol {
  public:
   explicit FileProtocol(const std::string& directory);
   ~FileProtocol() override;

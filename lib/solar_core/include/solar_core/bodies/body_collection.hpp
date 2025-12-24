@@ -12,6 +12,7 @@
 #include <vector>
 
 #include "solar_core/bodies/celestial_body.hpp"
+#include "solar_core/export.hpp"
 
 namespace SolarSystem::Bodies {
 
@@ -21,7 +22,7 @@ namespace SolarSystem::Bodies {
  * Provides efficient storage, lookup, and filtering of celestial bodies
  * with modern C++ features like ranges, algorithms, and type safety.
  */
-class BodyCollection {
+class SOLAR_CORE_API BodyCollection {
  public:
   // Type aliases for modern C++ style
   using iterator = std::vector<CelestialBody>::iterator;

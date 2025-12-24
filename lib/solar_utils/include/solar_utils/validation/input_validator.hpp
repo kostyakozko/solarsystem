@@ -19,6 +19,8 @@
 #include <unordered_map>
 #include <vector>
 
+#include "solar_utils/export.hpp"
+
 namespace SolarSystem::Utils::Validation {
 
 /**
@@ -45,7 +47,7 @@ struct ValidationResult {
 /**
  * @brief Date/time validator with multiple format support (Requirement 5.2)
  */
-class DateTimeValidator {
+class SOLAR_UTILS_API DateTimeValidator {
  public:
   /**
    * @brief Parse date with automatic format detection
@@ -95,7 +97,7 @@ class DateTimeValidator {
 /**
  * @brief Numeric validator with range checking (Requirements 5.1, 5.4)
  */
-class NumericValidator {
+class SOLAR_UTILS_API NumericValidator {
  public:
   /**
    * @brief Validate integer with range checking
@@ -123,7 +125,7 @@ class NumericValidator {
 /**
  * @brief String validator with pattern matching (Requirement 5.1)
  */
-class StringValidator {
+class SOLAR_UTILS_API StringValidator {
  public:
   /**
    * @brief Validate string against allowed values
@@ -155,7 +157,7 @@ class StringValidator {
 /**
  * @brief Input validator that combines all validation types
  */
-class InputValidator {
+class SOLAR_UTILS_API InputValidator {
  public:
   /**
    * @brief Validate argument based on expected type

@@ -1,4 +1,5 @@
 #include "solar_core/math/vector3.hpp"
+#include "solar_core/export.hpp"
 
 #include <iomanip>
 #include <sstream>
@@ -6,9 +7,9 @@
 namespace SolarSystem::Math {
 
 // Explicit template instantiations for common types
-template class Vector3<float>;
-template class Vector3<double>;
-template class Vector3<long double>;
+template class SOLAR_CORE_API Vector3<float>;
+template class SOLAR_CORE_API Vector3<double>;
+template class SOLAR_CORE_API Vector3<long double>;
 
 // Free function implementations
 template <typename T>
@@ -20,8 +21,8 @@ std::string to_string(const Vector3<T>& vec) {
 }
 
 // Explicit instantiations for to_string
-template std::string to_string(const Vector3<float>&);
-template std::string to_string(const Vector3<double>&);
-template std::string to_string(const Vector3<long double>&);
+template SOLAR_CORE_API std::string to_string(const Vector3<float>&);
+template SOLAR_CORE_API std::string to_string(const Vector3<double>&);
+template SOLAR_CORE_API std::string to_string(const Vector3<long double>&);
 
 }  // namespace SolarSystem::Math

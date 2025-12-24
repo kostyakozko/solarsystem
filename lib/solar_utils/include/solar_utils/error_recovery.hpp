@@ -22,6 +22,7 @@
 #include <unordered_set>
 
 #include "error_handling.hpp"
+#include "solar_utils/export.hpp"
 
 namespace SolarSystem::Utils {
 
@@ -184,7 +185,7 @@ struct LearningDataPoint {
 /**
  * @brief Advanced error recovery manager
  */
-class AdvancedErrorRecoveryManager {
+class SOLAR_UTILS_API AdvancedErrorRecoveryManager {
  public:
   static AdvancedErrorRecoveryManager& instance();
 
@@ -257,7 +258,7 @@ class AdvancedErrorRecoveryManager {
 /**
  * @brief Error prevention system
  */
-class ErrorPreventionSystem {
+class SOLAR_UTILS_API ErrorPreventionSystem {
  public:
   static ErrorPreventionSystem& instance();
 
@@ -302,7 +303,7 @@ class ErrorPreventionSystem {
 /**
  * @brief Early detection system
  */
-class EarlyDetectionSystem {
+class SOLAR_UTILS_API EarlyDetectionSystem {
  public:
   static EarlyDetectionSystem& instance();
 
@@ -353,7 +354,7 @@ class EarlyDetectionSystem {
 /**
  * @brief Machine learning-based error pattern analyzer
  */
-class MLErrorPatternAnalyzer {
+class SOLAR_UTILS_API MLErrorPatternAnalyzer {
  public:
   static MLErrorPatternAnalyzer& instance();
 
@@ -405,7 +406,7 @@ class MLErrorPatternAnalyzer {
 /**
  * @brief Comprehensive error recovery orchestrator
  */
-class ErrorRecoveryOrchestrator {
+class SOLAR_UTILS_API ErrorRecoveryOrchestrator {
  public:
   static ErrorRecoveryOrchestrator& instance();
 

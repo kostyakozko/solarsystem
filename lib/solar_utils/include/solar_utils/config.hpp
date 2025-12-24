@@ -1,5 +1,7 @@
 #pragma once
 
+#include "solar_utils/export.hpp"
+
 #include <chrono>
 #include <filesystem>
 #include <string>
@@ -91,12 +93,12 @@ struct AppConfig {
 /**
  * @brief Get default configuration
  */
-AppConfig get_default();
+SOLAR_UTILS_API AppConfig get_default();
 
 /**
  * @brief Load configuration from file
  */
-AppConfig load_from_file(const std::filesystem::path& config_file);
+SOLAR_UTILS_API AppConfig load_from_file(const std::filesystem::path& config_file);
 
 /**
  * @brief Save configuration to file

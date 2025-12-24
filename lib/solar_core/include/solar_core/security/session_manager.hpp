@@ -18,6 +18,8 @@
 #include <optional>
 #include <string>
 
+#include "solar_core/export.hpp"
+
 namespace SolarSystem::Security {
 
 /**
@@ -48,7 +50,7 @@ struct SessionConfig {
 /**
  * @brief Session manager
  */
-class SessionManager {
+class SOLAR_CORE_API SessionManager {
  public:
   /**
    * @brief Construct with configuration

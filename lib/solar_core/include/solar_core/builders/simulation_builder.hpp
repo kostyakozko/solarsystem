@@ -10,6 +10,7 @@
 
 #include "solar_core/bodies/body_collection.hpp"
 #include "solar_core/bodies/body_factory.hpp"
+#include "solar_core/export.hpp"
 #include "solar_core/simulation/simulation_engine.hpp"
 #include "solar_utils/logging.hpp"
 
@@ -229,7 +230,7 @@ struct PhysicalConstraints {
  * }
  * @endcode
  */
-class SimulationBuilder {
+class SOLAR_CORE_API SimulationBuilder {
  public:
   /**
    * @brief Progress callback function type
@@ -504,7 +505,7 @@ class SimulationBuilder {
  * Provides a chainable interface for selecting which celestial bodies
  * to include in the simulation based on various criteria.
  */
-class BodySelector {
+class SOLAR_CORE_API BodySelector {
  public:
   /**
    * @brief Default constructor

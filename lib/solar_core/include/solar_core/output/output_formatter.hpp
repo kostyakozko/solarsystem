@@ -17,6 +17,7 @@
 #include <string>
 #include <vector>
 
+#include "solar_core/export.hpp"
 #include "solar_core/bodies/body_collection.hpp"
 #include "solar_core/simulation/simulation_engine.hpp"
 #include "solar_utils/expected.hpp"
@@ -58,7 +59,7 @@ enum class CompressionType {
 /**
  * @brief Output metadata
  */
-struct OutputMetadata {
+struct SOLAR_CORE_API OutputMetadata {
   std::string format_version = "1.0";
   std::chrono::system_clock::time_point generated_at;
   std::string generator = "Solar System Suite";
@@ -102,7 +103,7 @@ struct OutputMetadata {
 /**
  * @brief Output filter configuration
  */
-struct OutputFilter {
+struct SOLAR_CORE_API OutputFilter {
   // Body filtering
   std::vector<std::string> include_bodies;
   std::vector<std::string> exclude_bodies;
@@ -132,7 +133,7 @@ struct OutputFilter {
 /**
  * @brief Output formatting options
  */
-struct OutputOptions {
+struct SOLAR_CORE_API OutputOptions {
   OutputFormat format = OutputFormat::TEXT;
   QualityLevel quality = QualityLevel::STANDARD;
   OutputFilter filter;
@@ -223,7 +224,7 @@ struct FormattedOutput {
 /**
  * @brief Main output formatter class
  */
-class OutputFormatter {
+class SOLAR_CORE_API OutputFormatter {
  public:
   /**
    * @brief Format simulation results
@@ -329,7 +330,7 @@ class OutputFormatter {
 /**
  * @brief Output archiver for managing multiple output files
  */
-class OutputArchiver {
+class SOLAR_CORE_API OutputArchiver {
  public:
   /**
    * @brief Create archive from multiple outputs
@@ -355,8 +356,8 @@ class OutputArchiver {
 };
 
 // Utility functions
-[[nodiscard]] std::string to_string(OutputFormat format);
-[[nodiscard]] std::string to_string(QualityLevel quality);
-[[nodiscard]] std::string to_string(CompressionType compression);
+[[nodiscard]] SOLAR_CORE_API std::string to_string(OutputFormat format);
+[[nodiscard]] SOLAR_CORE_API std::string to_string(QualityLevel quality);
+[[nodiscard]] SOLAR_CORE_API std::string to_string(CompressionType compression);
 
 }  // namespace SolarSystem::Output

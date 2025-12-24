@@ -13,6 +13,8 @@
 #include <string>
 #include <vector>
 
+#include "solar_core/export.hpp"
+
 namespace SolarSystem::Diagnostics {
 
 /**
@@ -133,14 +135,14 @@ struct DiagnosticReport {
   std::vector<DiagnosticCheckResult> check_results;
   std::map<std::string, std::string> system_info;
 
-  std::string to_string() const;
-  std::string to_json() const;
+  SOLAR_CORE_API std::string to_string() const;
+  SOLAR_CORE_API std::string to_json() const;
 };
 
 /**
  * @brief Diagnostic system
  */
-class DiagnosticSystem {
+class SOLAR_CORE_API DiagnosticSystem {
 public:
   static DiagnosticSystem& instance();
 
@@ -194,21 +196,21 @@ private:
 /**
  * @brief Built-in diagnostic checks
  */
-class BuiltInChecks {
+class SOLAR_CORE_API BuiltInChecks {
 public:
-  static DiagnosticCheckResult check_memory_usage();
-  static DiagnosticCheckResult check_disk_space();
-  static DiagnosticCheckResult check_file_permissions();
-  static DiagnosticCheckResult check_configuration();
-  static DiagnosticCheckResult check_dependencies();
-  static DiagnosticCheckResult check_network_connectivity();
-  static DiagnosticCheckResult check_data_integrity();
+  static SOLAR_CORE_API DiagnosticCheckResult check_memory_usage();
+  static SOLAR_CORE_API DiagnosticCheckResult check_disk_space();
+  static SOLAR_CORE_API DiagnosticCheckResult check_file_permissions();
+  static SOLAR_CORE_API DiagnosticCheckResult check_configuration();
+  static SOLAR_CORE_API DiagnosticCheckResult check_dependencies();
+  static SOLAR_CORE_API DiagnosticCheckResult check_network_connectivity();
+  static SOLAR_CORE_API DiagnosticCheckResult check_data_integrity();
 };
 
 /**
  * @brief Troubleshooting assistant
  */
-class TroubleshootingAssistant {
+class SOLAR_CORE_API TroubleshootingAssistant {
 public:
   static TroubleshootingAssistant& instance();
 
@@ -235,9 +237,9 @@ private:
 /**
  * @brief Utility functions
  */
-std::string severity_to_string(DiagnosticSeverity severity);
-std::string category_to_string(DiagnosticCategory category);
-DiagnosticSeverity string_to_severity(const std::string& str);
-DiagnosticCategory string_to_category(const std::string& str);
+SOLAR_CORE_API std::string severity_to_string(DiagnosticSeverity severity);
+SOLAR_CORE_API std::string category_to_string(DiagnosticCategory category);
+SOLAR_CORE_API DiagnosticSeverity string_to_severity(const std::string& str);
+SOLAR_CORE_API DiagnosticCategory string_to_category(const std::string& str);
 
 }  // namespace SolarSystem::Diagnostics

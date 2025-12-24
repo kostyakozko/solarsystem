@@ -19,6 +19,7 @@
 #include <unordered_map>
 #include <vector>
 
+#include "solar_jpl/export.hpp"
 #include "jpl_client.hpp"
 
 // Forward declaration to avoid circular dependency
@@ -128,7 +129,7 @@ struct ValidationIssue {
 /**
  * @brief Comprehensive validation report
  */
-struct ValidationReport {
+struct SOLAR_JPL_API ValidationReport {
   std::chrono::system_clock::time_point validation_timestamp;
   ValidationLevel validation_level;
 
@@ -178,7 +179,7 @@ struct ValidationReport {
 /**
  * @brief Data validation configuration
  */
-struct DataValidatorConfig {
+struct SOLAR_JPL_API DataValidatorConfig {
   // Validation thresholds
   double position_min_km = 1e3;           // 1,000 km minimum distance
   double position_max_km = 1e12;          // 1 trillion km maximum distance
@@ -213,7 +214,7 @@ struct DataValidatorConfig {
 /**
  * @brief Comprehensive Data Validator
  */
-class DataValidator {
+class SOLAR_JPL_API DataValidator {
 public:
   /**
    * @brief Construct data validator with configuration
@@ -446,7 +447,7 @@ private:
 /**
  * @brief Data Validator Factory
  */
-class DataValidatorFactory {
+class SOLAR_JPL_API DataValidatorFactory {
 public:
   /**
    * @brief Create default data validator
@@ -472,17 +473,17 @@ namespace ValidationUtils {
 /**
  * @brief Convert validation error type to string
  */
-[[nodiscard]] std::string to_string(ValidationErrorType error_type);
+[[nodiscard]] SOLAR_JPL_API std::string to_string(ValidationErrorType error_type);
 
 /**
  * @brief Convert validation severity to string
  */
-[[nodiscard]] std::string to_string(ValidationSeverity severity);
+[[nodiscard]] SOLAR_JPL_API std::string to_string(ValidationSeverity severity);
 
 /**
  * @brief Check if value is within reasonable astronomical range
  */
-[[nodiscard]] bool is_reasonable_astronomical_value(
+[[nodiscard]] SOLAR_JPL_API bool is_reasonable_astronomical_value(
   double value,
   const std::string& value_type
 );
@@ -490,7 +491,7 @@ namespace ValidationUtils {
 /**
  * @brief Calculate statistical outliers in data collection
  */
-[[nodiscard]] std::vector<size_t> find_statistical_outliers(
+[[nodiscard]] SOLAR_JPL_API std::vector<size_t> find_statistical_outliers(
   const std::vector<double>& values,
   double threshold = 3.0  // Standard deviations
 );
@@ -498,7 +499,7 @@ namespace ValidationUtils {
 /**
  * @brief Generate validation report summary
  */
-[[nodiscard]] std::string generate_validation_summary(
+[[nodiscard]] SOLAR_JPL_API std::string generate_validation_summary(
   const ValidationReport& report
 );
 

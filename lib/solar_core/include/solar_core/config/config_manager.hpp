@@ -21,6 +21,7 @@
 #include <string>
 #include <vector>
 
+#include "solar_core/export.hpp"
 #include "solar_utils/expected.hpp"
 #include "solar_utils/config.hpp"
 
@@ -153,7 +154,7 @@ struct CrossAppConflict {
  * 3. Configuration files
  * 4. Built-in defaults (lowest priority)
  */
-class ConfigurationManager {
+class SOLAR_CORE_API ConfigurationManager {
  public:
   ConfigurationManager();
   ~ConfigurationManager() = default;

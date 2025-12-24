@@ -68,7 +68,7 @@ This implementation plan systematically modernizes the Solar System Suite's buil
   - Configure MSVC export settings
   - _Requirements: 2.1, 2.4_
 
-- [ ] 3. Audit and mark public API
+- [x] 3. Audit and mark public API
   - Identify public API classes and functions
   - Add export macros to public headers
   - Verify internal symbols are hidden
@@ -76,29 +76,29 @@ This implementation plan systematically modernizes the Solar System Suite's buil
   - Document public API surface
   - _Requirements: 2.1, 2.2, 2.5_
 
-- [ ] 3.1 Audit solar_core public API
-  - Review all public h solar_core/include/
+- [x] 3.1 Audit solar_core public API
+  - Review all public headers in solar_core/include/
   - Mark public classes with SOLAR_CORE_API
   - Mark public functions with SOLAR_CORE_API
   - Verify template classes don't need export (header-only)
   - Test that internal implementation details are hidden
   - _Requirements: 2.1, 2.5_
 
-- [ ] 3.2 Audit solar_jpl public API
+- [x] 3.2 Audit solar_jpl public API
   - Review all public headers in solar_jpl/include/
   - Mark JPLClient and related classes with SOLAR_JPL_API
   - Mark public utility functions with SOLAR_JPL_API
   - Ensure cache and internal classes are not exported
   - _Requirements: 2.1, 2.5_
 
-- [ ] 3.3 Audit solar_utils public API
+- [x] 3.3 Audit solar_utils public API
   - Review all public headers in solar_utils/include/
   - Mark utility classes with SOLAR_UTILS_API
   - Mark validation and error handling functions with SOLAR_UTILS_API
   - Keep internal helpers unexported
   - _Requirements: 2.1, 2.5_
 
-- [ ] 3.4 Audit solar_test public API
+- [x] 3.4 Audit solar_test public API
   - Review test framework headers
   - Mark test utilities with SOLAR_TEST_API
   - Mark mock classes with SOLAR_TEST_API

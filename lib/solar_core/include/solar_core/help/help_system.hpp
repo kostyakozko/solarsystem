@@ -12,6 +12,8 @@
 #include <optional>
 #include <functional>
 
+#include "solar_core/export.hpp"
+
 namespace SolarSystem::Help {
 
 /**
@@ -86,7 +88,7 @@ struct Tutorial {
 /**
  * @brief Comprehensive help system
  */
-class HelpSystem {
+class SOLAR_CORE_API HelpSystem {
  public:
   static HelpSystem& instance();
 
@@ -142,7 +144,7 @@ class HelpSystem {
 /**
  * @brief Interactive help assistant
  */
-class HelpAssistant {
+class SOLAR_CORE_API HelpAssistant {
  public:
   static HelpAssistant& instance();
 

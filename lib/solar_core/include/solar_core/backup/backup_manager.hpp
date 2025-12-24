@@ -13,6 +13,8 @@
 #include <functional>
 #include <memory>
 
+#include "solar_core/export.hpp"
+
 namespace SolarSystem::Backup {
 
 /**
@@ -62,7 +64,7 @@ struct RecoveryResult {
 /**
  * @brief Backup manager for data protection
  */
-class BackupManager {
+class SOLAR_CORE_API BackupManager {
  public:
   static BackupManager& instance();
 

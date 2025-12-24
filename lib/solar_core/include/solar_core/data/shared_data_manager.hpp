@@ -23,6 +23,7 @@
 #include <string>
 #include <vector>
 
+#include "solar_core/export.hpp"
 #include "solar_utils/expected.hpp"
 
 namespace SolarSystem::Data {
@@ -100,7 +101,7 @@ struct SyncResult {
 /**
  * @brief Shared data manager for inter-application data sharing
  */
-class SharedDataManager {
+class SOLAR_CORE_API SharedDataManager {
  public:
   SharedDataManager();
   ~SharedDataManager();
@@ -220,7 +221,7 @@ class SharedDataManager {
 /**
  * @brief Distributed cache for shared data
  */
-class DistributedCache {
+class SOLAR_CORE_API DistributedCache {
  public:
   DistributedCache();
   ~DistributedCache();
@@ -241,12 +242,12 @@ class DistributedCache {
   /**
    * @brief Invalidate cache entry
    */
-  void invalidate(const std::string& key);
+  SOLAR_CORE_API void invalidate(const std::string& key);
 
   /**
    * @brief Clear all cache
    */
-  void clear();
+  SOLAR_CORE_API void clear();
 
   /**
    * @brief Get cache statistics

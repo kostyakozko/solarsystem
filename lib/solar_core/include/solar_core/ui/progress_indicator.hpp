@@ -11,6 +11,8 @@
 
 #pragma once
 
+#include "solar_core/export.hpp"
+
 #include <atomic>
 #include <chrono>
 #include <functional>
@@ -48,7 +50,7 @@ struct ProgressConfig {
 /**
  * @brief Thread-safe progress indicator for CLI applications
  */
-class ProgressIndicator {
+class SOLAR_CORE_API ProgressIndicator {
  public:
   /**
    * @brief Construct progress indicator with configuration
@@ -112,7 +114,7 @@ class ProgressIndicator {
 /**
  * @brief RAII progress indicator that auto-completes
  */
-class ScopedProgress {
+class SOLAR_CORE_API ScopedProgress {
  public:
   ScopedProgress(ProgressIndicator& indicator, const std::string& task_name)
       : indicator_(indicator) {

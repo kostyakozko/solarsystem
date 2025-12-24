@@ -3,6 +3,7 @@
 #include <memory>
 
 #include "solar_core/bodies/body_factory.hpp"
+#include "solar_core/export.hpp"
 #include "solar_core/simulation/simulation_engine.hpp"
 #include "solar_core/streaming/data_stream.hpp"
 
@@ -15,7 +16,7 @@ namespace SolarSystem::Streaming {
  * and velocities for celestial bodies, providing a continuous stream of
  * current solar system state.
  */
-class RealtimeStream : public DataStream {
+class SOLAR_CORE_API RealtimeStream : public DataStream {
 public:
   /**
    * @brief Configuration specific to real-time streaming

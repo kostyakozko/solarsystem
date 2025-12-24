@@ -20,6 +20,8 @@
 #include <string>
 #include <vector>
 
+#include "solar_core/export.hpp"
+
 namespace SolarSystem::Connection {
 
 /**
@@ -37,7 +39,7 @@ enum class ConnectionState {
 /**
  * @brief Convert connection state to string
  */
-[[nodiscard]] std::string to_string(ConnectionState state);
+[[nodiscard]] SOLAR_CORE_API std::string to_string(ConnectionState state);
 
 /**
  * @brief Connection health status
@@ -110,7 +112,7 @@ class IConnection {
 /**
  * @brief Connection manager with robust reconnection and health monitoring
  */
-class ConnectionManager {
+class SOLAR_CORE_API ConnectionManager {
  public:
   /**
    * @brief Construct connection manager with configuration
@@ -199,7 +201,7 @@ class ConnectionManager {
 /**
  * @brief Exponential backoff calculator
  */
-class ExponentialBackoff {
+class SOLAR_CORE_API ExponentialBackoff {
  public:
   /**
    * @brief Construct with configuration
@@ -235,7 +237,7 @@ class ExponentialBackoff {
 /**
  * @brief Connection pool for load balancing
  */
-class ConnectionPool {
+class SOLAR_CORE_API ConnectionPool {
  public:
   /**
    * @brief Construct connection pool

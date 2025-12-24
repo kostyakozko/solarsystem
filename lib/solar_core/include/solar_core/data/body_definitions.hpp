@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "solar_core/bodies/celestial_body.hpp"
+#include "solar_core/export.hpp"
 #include "solar_core/math/constants.hpp"
 
 namespace SolarSystem::Data {
@@ -17,7 +18,7 @@ namespace SolarSystem::Data {
  * This data serves as a backup and for offline operation.
  */
 
-struct BodyDefinition {
+struct SOLAR_CORE_API BodyDefinition {
   std::string_view name;
   double mass;              // kg
   Math::Vector3d position;  // meters (J2000 ecliptic)
@@ -264,26 +265,26 @@ constexpr std::array<BodyDefinition, BODY_COUNT> FALLBACK_SOLAR_SYSTEM = {
 /**
  * @brief Get fallback body definition by name
  */
-[[nodiscard]] std::optional<BodyDefinition> get_fallback_body(std::string_view name);
+[[nodiscard]] SOLAR_CORE_API std::optional<BodyDefinition> get_fallback_body(std::string_view name);
 
 /**
  * @brief Get all essential bodies from fallback data
  */
-[[nodiscard]] std::vector<BodyDefinition> get_essential_bodies();
+[[nodiscard]] SOLAR_CORE_API std::vector<BodyDefinition> get_essential_bodies();
 
 /**
  * @brief Get ALL bodies from fallback data (all 27 bodies)
  */
-[[nodiscard]] std::vector<BodyDefinition> get_all_body_definitions();
+[[nodiscard]] SOLAR_CORE_API std::vector<BodyDefinition> get_all_body_definitions();
 
 /**
  * @brief Get all bodies of a specific type from fallback data
  */
-[[nodiscard]] std::vector<BodyDefinition> get_bodies_by_type(Bodies::BodyType type);
+[[nodiscard]] SOLAR_CORE_API std::vector<BodyDefinition> get_bodies_by_type(Bodies::BodyType type);
 
 /**
  * @brief Get all bodies of a specific priority from fallback data
  */
-[[nodiscard]] std::vector<BodyDefinition> get_bodies_by_priority(Bodies::BodyPriority priority);
+[[nodiscard]] SOLAR_CORE_API std::vector<BodyDefinition> get_bodies_by_priority(Bodies::BodyPriority priority);
 
 }  // namespace SolarSystem::Data

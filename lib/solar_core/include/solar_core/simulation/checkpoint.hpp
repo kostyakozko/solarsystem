@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 
+#include "solar_core/export.hpp"
 #include "solar_core/bodies/body_collection.hpp"
 #include "solar_core/simulation/simulation_engine.hpp"
 #include "solar_utils/expected.hpp"
@@ -84,7 +85,7 @@ struct CheckpointStats {
 /**
  * @brief Checkpoint manager for simulation state persistence
  */
-class CheckpointManager {
+class SOLAR_CORE_API CheckpointManager {
  public:
   explicit CheckpointManager(CheckpointConfig config = {});
 
@@ -156,7 +157,7 @@ class CheckpointManager {
 /**
  * @brief Automatic checkpoint scheduler for long-running simulations
  */
-class CheckpointScheduler {
+class SOLAR_CORE_API CheckpointScheduler {
  public:
   explicit CheckpointScheduler(CheckpointManager& manager, CheckpointConfig config = {});
 
@@ -187,7 +188,7 @@ class CheckpointScheduler {
 };
 
 // Utility functions
-[[nodiscard]] std::string to_string(CheckpointResult result);
+[[nodiscard]] SOLAR_CORE_API std::string to_string(CheckpointResult result);
 [[nodiscard]] CheckpointResult checkpoint_result_from_string(std::string_view str);
 
 }  // namespace SolarSystem::Simulation

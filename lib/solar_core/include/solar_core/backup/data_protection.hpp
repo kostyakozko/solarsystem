@@ -12,6 +12,8 @@
 #include <chrono>
 #include <functional>
 
+#include "solar_core/export.hpp"
+
 namespace SolarSystem::Backup {
 
 /**
@@ -62,7 +64,7 @@ struct DisasterRecoveryPlan {
 /**
  * @brief Data protection manager
  */
-class DataProtection {
+class SOLAR_CORE_API DataProtection {
  public:
   static DataProtection& instance();
 

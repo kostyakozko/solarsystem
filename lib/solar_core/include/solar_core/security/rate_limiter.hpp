@@ -16,6 +16,8 @@
 #include <string>
 #include <unordered_map>
 
+#include "solar_core/export.hpp"
+
 namespace SolarSystem::Security {
 
 /**
@@ -42,7 +44,7 @@ struct RateLimitResult {
 /**
  * @brief Rate limiter using token bucket algorithm
  */
-class RateLimiter {
+class SOLAR_CORE_API RateLimiter {
  public:
   /**
    * @brief Construct with configuration

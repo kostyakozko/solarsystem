@@ -11,6 +11,8 @@
 #include <optional>
 #include <functional>
 
+#include "solar_core/export.hpp"
+
 namespace SolarSystem::Security {
 
 /**
@@ -49,7 +51,7 @@ public:
 /**
  * @brief Whitelist-based file security policy
  */
-class WhitelistPolicy : public FileSecurityPolicy {
+class SOLAR_CORE_API WhitelistPolicy : public FileSecurityPolicy {
 public:
   void add_allowed_directory(const std::filesystem::path& dir);
   void add_allowed_file(const std::filesystem::path& file);
@@ -67,7 +69,7 @@ private:
 /**
  * @brief File system security manager
  */
-class FileSystemSecurity {
+class SOLAR_CORE_API FileSystemSecurity {
 public:
   static FileSystemSecurity& instance();
 
@@ -116,7 +118,7 @@ private:
 /**
  * @brief Secure file operations wrapper
  */
-class SecureFileOperations {
+class SOLAR_CORE_API SecureFileOperations {
 public:
   static std::optional<std::string> read_file(
       const std::filesystem::path& path);

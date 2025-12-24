@@ -20,6 +20,8 @@
 #include <unordered_map>
 #include <vector>
 
+#include "solar_utils/export.hpp"
+
 namespace SolarSystem::Utils {
 
 /**
@@ -166,7 +168,7 @@ struct DetailedError {
         timestamp(std::chrono::system_clock::now()) {}
 
   // Get category based on error code
-  static ErrorCategory get_category_for_code(ErrorCode code);
+  static SOLAR_UTILS_API ErrorCategory get_category_for_code(ErrorCode code);
 
   // Convert to string representation
   std::string to_string() const;
@@ -283,7 +285,7 @@ struct ErrorPattern {
 /**
  * @brief Error recovery manager
  */
-class ErrorRecoveryManager {
+class SOLAR_UTILS_API ErrorRecoveryManager {
  public:
   // Determine recovery strategy for an error
   [[nodiscard]] RecoveryAction determine_recovery_strategy(const DetailedError& error) const;
@@ -319,7 +321,7 @@ class ErrorRecoveryManager {
 /**
  * @brief Error logger with multiple output targets
  */
-class ErrorLogger {
+class SOLAR_UTILS_API ErrorLogger {
  public:
   // Log levels
   enum class LogLevel { Debug, Info, Warning, Error, Critical };
@@ -384,7 +386,7 @@ class ErrorLogger {
 /**
  * @brief Error pattern analyzer for learning and prediction
  */
-class ErrorPatternAnalyzer {
+class SOLAR_UTILS_API ErrorPatternAnalyzer {
  public:
   // Analyze error sequence for patterns
   std::vector<ErrorPattern> analyze_patterns(const std::vector<DetailedError>& errors);
@@ -424,7 +426,7 @@ class ErrorPatternAnalyzer {
 /**
  * @brief Comprehensive error handling system
  */
-class ErrorHandlingSystem {
+class SOLAR_UTILS_API ErrorHandlingSystem {
  public:
   static ErrorHandlingSystem& instance();
 
@@ -491,34 +493,34 @@ class ErrorHandlingSystem {
  */
 namespace ErrorUtils {
 // Convert error code to string
-std::string error_code_to_string(ErrorCode code);
+SOLAR_UTILS_API std::string error_code_to_string(ErrorCode code);
 
 // Convert error category to string
-std::string error_category_to_string(ErrorCategory category);
+SOLAR_UTILS_API std::string error_category_to_string(ErrorCategory category);
 
 // Convert error severity to string
-std::string error_severity_to_string(ErrorSeverity severity);
+SOLAR_UTILS_API std::string error_severity_to_string(ErrorSeverity severity);
 
 // Convert recovery strategy to string
-std::string recovery_strategy_to_string(RecoveryStrategy strategy);
+SOLAR_UTILS_API std::string recovery_strategy_to_string(RecoveryStrategy strategy);
 
 // Parse error code from string
-ErrorCode string_to_error_code(const std::string& code_str);
+SOLAR_UTILS_API ErrorCode string_to_error_code(const std::string& code_str);
 
 // Create error from exception
-DetailedError create_error_from_exception(const std::exception& ex,
+SOLAR_UTILS_API DetailedError create_error_from_exception(const std::exception& ex,
                                           const std::string& context = "");
 
 // Create validation error
-DetailedError create_validation_error(const std::string& field, const std::string& value,
+SOLAR_UTILS_API DetailedError create_validation_error(const std::string& field, const std::string& value,
                                       const std::string& expected);
 
 // Create network error
-DetailedError create_network_error(const std::string& endpoint, const std::string& operation,
+SOLAR_UTILS_API DetailedError create_network_error(const std::string& endpoint, const std::string& operation,
                                    const std::string& details);
 
 // Create file system error
-DetailedError create_filesystem_error(const std::string& file_path, const std::string& operation,
+SOLAR_UTILS_API DetailedError create_filesystem_error(const std::string& file_path, const std::string& operation,
                                       const std::string& details);
 }  // namespace ErrorUtils
 

@@ -11,6 +11,8 @@
 
 #pragma once
 
+#include "solar_utils/export.hpp"
+
 #include <atomic>
 #include <chrono>
 #include <functional>
@@ -191,7 +193,7 @@ class ResourceGuard {
 /**
  * @brief Comprehensive resource management system
  */
-class ResourceManager {
+class SOLAR_UTILS_API ResourceManager {
  public:
   static ResourceManager& instance();
 

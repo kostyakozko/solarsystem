@@ -13,6 +13,8 @@
 #include <string>
 #include <vector>
 
+#include "solar_core/export.hpp"
+
 namespace SolarSystem::Performance {
 
 /**
@@ -100,7 +102,7 @@ private:
 /**
  * @brief Performance histogram - distribution of values
  */
-class Histogram {
+class SOLAR_CORE_API Histogram {
 public:
   explicit Histogram(std::string name, std::vector<double> buckets = {});
 
@@ -131,7 +133,7 @@ private:
 /**
  * @brief Performance timer - duration measurements
  */
-class Timer {
+class SOLAR_CORE_API Timer {
 public:
   explicit Timer(std::string name) : name_(std::move(name)), histogram_(name) {}
 
@@ -205,7 +207,7 @@ struct PerformanceAlert {
 /**
  * @brief Performance monitoring system
  */
-class PerformanceMonitor {
+class SOLAR_CORE_API PerformanceMonitor {
 public:
   static PerformanceMonitor& instance();
 

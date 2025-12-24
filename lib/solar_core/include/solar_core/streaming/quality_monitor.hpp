@@ -9,6 +9,7 @@
 #include <unordered_map>
 #include <vector>
 
+#include "solar_core/export.hpp"
 #include "solar_core/streaming/data_stream.hpp"
 
 namespace SolarSystem::Streaming {
@@ -166,7 +167,7 @@ using AnomalyDetectionCallback = std::function<void(const std::string& body_name
 /**
  * @brief Comprehensive quality monitoring system for data streams
  */
-class QualityMonitor {
+class SOLAR_CORE_API QualityMonitor {
 public:
   explicit QualityMonitor(QualityMonitorConfig config = {});
   ~QualityMonitor();
@@ -289,7 +290,7 @@ private:
 /**
  * @brief Factory for creating quality monitors with common configurations
  */
-class QualityMonitorFactory {
+class SOLAR_CORE_API QualityMonitorFactory {
 public:
   [[nodiscard]] static std::unique_ptr<QualityMonitor> create_basic_monitor();
   [[nodiscard]] static std::unique_ptr<QualityMonitor> create_strict_monitor();

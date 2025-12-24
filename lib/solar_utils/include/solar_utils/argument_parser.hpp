@@ -12,6 +12,8 @@
 
 #pragma once
 
+#include "solar_utils/export.hpp"
+
 #include <chrono>
 #include <concepts>
 #include <functional>
@@ -80,7 +82,7 @@ struct ConflictReport {
 /**
  * @brief Convert ArgumentError to string for error messages
  */
-std::string to_string(ArgumentError error);
+SOLAR_UTILS_API std::string to_string(ArgumentError error);
 
 /**
  * @brief Result type for argument parsing operations
@@ -105,7 +107,7 @@ concept Parseable = requires(const std::string& str) {
 /**
  * @brief Enhanced date representation with comprehensive parsing capabilities
  */
-class Date {
+class SOLAR_UTILS_API Date {
  public:
   Date() = default;
   explicit Date(std::chrono::system_clock::time_point tp) : time_point_(tp) {}
@@ -161,7 +163,7 @@ class Date {
 /**
  * @brief Configuration structure for simulation arguments
  */
-struct SimulationConfig {
+struct SOLAR_UTILS_API SimulationConfig {
   std::optional<Date> target_date;
   bool use_current_date{true};
   std::string date_string;
@@ -190,7 +192,7 @@ struct SimulationConfig {
 /**
  * @brief Extended configuration for specialized applications
  */
-struct ExtendedConfig {
+struct SOLAR_UTILS_API ExtendedConfig {
   // Simulation options
   std::optional<Date> target_date;
   bool use_current_date{true};
@@ -218,7 +220,7 @@ struct ExtendedConfig {
 /**
  * @brief Option definition for argument parser
  */
-class Option {
+class SOLAR_UTILS_API Option {
  public:
   Option(std::string_view short_name, std::string_view long_name, std::string_view description)
       : short_name_(short_name), long_name_(long_name), description_(description) {}
@@ -334,7 +336,7 @@ class Option {
 /**
  * @brief Modern C++20 argument parser with intelligent error reporting
  */
-class ArgumentParser {
+class SOLAR_UTILS_API ArgumentParser {
  public:
   explicit ArgumentParser(std::string_view program_name) : program_name_(program_name) {}
 
@@ -434,7 +436,7 @@ class ArgumentParser {
 /**
  * @brief Builder for simulation argument parser
  */
-class SimulationArgumentParser {
+class SOLAR_UTILS_API SimulationArgumentParser {
  public:
   explicit SimulationArgumentParser(std::string_view program_name);
 
@@ -511,7 +513,7 @@ struct RealtimeConfig {
 /**
  * @brief Builder for realtime argument parser
  */
-class RealtimeArgumentParser {
+class SOLAR_UTILS_API RealtimeArgumentParser {
  public:
   explicit RealtimeArgumentParser(std::string_view program_name);
 

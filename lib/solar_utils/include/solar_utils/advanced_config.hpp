@@ -1,5 +1,7 @@
 #pragma once
 
+#include "solar_utils/export.hpp"
+
 #include <filesystem>
 #include <map>
 #include <optional>
@@ -77,7 +79,7 @@ struct ConfigPreset {
 /**
  * @brief Advanced configuration manager
  */
-class AdvancedConfigManager {
+class SOLAR_UTILS_API AdvancedConfigManager {
  public:
   AdvancedConfigManager();
   ~AdvancedConfigManager() = default;

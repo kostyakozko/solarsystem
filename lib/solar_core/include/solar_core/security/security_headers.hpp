@@ -17,6 +17,8 @@
 #include <string>
 #include <vector>
 
+#include "solar_core/export.hpp"
+
 namespace SolarSystem::Security {
 
 /**
@@ -51,7 +53,7 @@ struct SecurityHeadersConfig {
 /**
  * @brief Security headers manager
  */
-class SecurityHeaders {
+class SOLAR_CORE_API SecurityHeaders {
  public:
   /**
    * @brief Construct with configuration

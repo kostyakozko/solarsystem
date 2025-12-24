@@ -15,6 +15,7 @@
 #include <variant>
 #include <vector>
 
+#include "solar_core/export.hpp"
 #include "solar_utils/expected.hpp"
 
 namespace SolarSystem::Communication {
@@ -76,45 +77,45 @@ struct Message {
   /**
    * @brief Create a request message
    */
-  static Message create_request(const std::string& source, const std::string& destination,
+  static SOLAR_CORE_API Message create_request(const std::string& source, const std::string& destination,
                                 const MessagePayload& payload);
 
   /**
    * @brief Create a response message
    */
-  static Message create_response(const Message& request, const MessagePayload& payload);
+  static SOLAR_CORE_API Message create_response(const Message& request, const MessagePayload& payload);
 
   /**
    * @brief Create a notification message
    */
-  static Message create_notification(const std::string& source, const std::string& destination,
+  static SOLAR_CORE_API Message create_notification(const std::string& source, const std::string& destination,
                                      const MessagePayload& payload);
 
   /**
    * @brief Create an error message
    */
-  static Message create_error(const std::string& source, const std::string& destination,
+  static SOLAR_CORE_API Message create_error(const std::string& source, const std::string& destination,
                               const std::string& error_message, int error_code = -1);
 
   /**
    * @brief Create a heartbeat message
    */
-  static Message create_heartbeat(const std::string& source);
+  static SOLAR_CORE_API Message create_heartbeat(const std::string& source);
 
   /**
    * @brief Validate message structure
    */
-  [[nodiscard]] bool is_valid() const;
+  [[nodiscard]] SOLAR_CORE_API bool is_valid() const;
 
   /**
    * @brief Check if message has expired
    */
-  [[nodiscard]] bool is_expired() const;
+  [[nodiscard]] SOLAR_CORE_API bool is_expired() const;
 
   /**
    * @brief Get message age
    */
-  [[nodiscard]] std::chrono::milliseconds get_age() const;
+  [[nodiscard]] SOLAR_CORE_API std::chrono::milliseconds get_age() const;
 };
 
 /**
@@ -156,7 +157,7 @@ class IMessageSerializer {
 /**
  * @brief JSON message serializer
  */
-class JsonMessageSerializer : public IMessageSerializer {
+class SOLAR_CORE_API JsonMessageSerializer : public IMessageSerializer {
  public:
   [[nodiscard]] SolarSystem::Utils::Expected<std::vector<uint8_t>, SerializationError> serialize(
       const Message& message) const override;
@@ -170,7 +171,7 @@ class JsonMessageSerializer : public IMessageSerializer {
 /**
  * @brief Binary message serializer (more efficient)
  */
-class BinaryMessageSerializer : public IMessageSerializer {
+class SOLAR_CORE_API BinaryMessageSerializer : public IMessageSerializer {
  public:
   [[nodiscard]] SolarSystem::Utils::Expected<std::vector<uint8_t>, SerializationError> serialize(
       const Message& message) const override;
@@ -184,7 +185,7 @@ class BinaryMessageSerializer : public IMessageSerializer {
 /**
  * @brief Message validator
  */
-class MessageValidator {
+class SOLAR_CORE_API MessageValidator {
  public:
   /**
    * @brief Validate message structure
@@ -216,7 +217,7 @@ class MessageValidator {
 /**
  * @brief Message builder for fluent API
  */
-class MessageBuilder {
+class SOLAR_CORE_API MessageBuilder {
  public:
   MessageBuilder() = default;
 

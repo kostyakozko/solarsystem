@@ -12,6 +12,7 @@
 
 #pragma once
 
+#include "solar_core/export.hpp"
 #include "solar_core/performance/request_handler.hpp"
 #include "solar_core/security/rate_limiter.hpp"
 
@@ -33,8 +34,8 @@ struct APIVersion {
   int minor = 0;
   int patch = 0;
 
-  [[nodiscard]] std::string to_string() const;
-  [[nodiscard]] static std::optional<APIVersion> parse(const std::string& str);
+  [[nodiscard]] SOLAR_CORE_API std::string to_string() const;
+  [[nodiscard]] static SOLAR_CORE_API std::optional<APIVersion> parse(const std::string& str);
 };
 
 /**
@@ -84,7 +85,7 @@ struct APIStatistics {
 /**
  * @brief API manager
  */
-class APIManager {
+class SOLAR_CORE_API APIManager {
  public:
   /**
    * @brief Construct API manager

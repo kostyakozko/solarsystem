@@ -11,6 +11,8 @@
 
 #pragma once
 
+#include "solar_core/export.hpp"
+
 #include <optional>
 #include <string>
 
@@ -30,7 +32,7 @@ struct AccessibilityConfig {
 /**
  * @brief Accessibility manager for CLI applications
  */
-class AccessibilityManager {
+class SOLAR_CORE_API AccessibilityManager {
  public:
   /**
    * @brief Get singleton instance
@@ -87,7 +89,7 @@ class AccessibilityManager {
 /**
  * @brief Keyboard shortcut manager
  */
-class KeyboardShortcuts {
+class SOLAR_CORE_API KeyboardShortcuts {
  public:
   /**
    * @brief Display available keyboard shortcuts
@@ -108,7 +110,7 @@ class KeyboardShortcuts {
 /**
  * @brief Color scheme manager for accessibility
  */
-class ColorScheme {
+class SOLAR_CORE_API ColorScheme {
  public:
   enum class Scheme {
     DEFAULT,        // Standard colors

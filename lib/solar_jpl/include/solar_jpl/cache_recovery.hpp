@@ -18,6 +18,7 @@
 #include <string>
 #include <vector>
 
+#include "solar_jpl/export.hpp"
 #include "jpl_client.hpp"
 
 namespace SolarSystem::JPL {
@@ -65,7 +66,7 @@ struct RecoveryOptions {
 /**
  * @brief Cache Recovery Manager
  */
-class CacheRecoveryManager {
+class SOLAR_JPL_API CacheRecoveryManager {
  public:
   /**
    * @brief Construct recovery manager

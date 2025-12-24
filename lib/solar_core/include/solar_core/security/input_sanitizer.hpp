@@ -16,6 +16,8 @@
 #include <string>
 #include <vector>
 
+#include "solar_core/export.hpp"
+
 namespace SolarSystem::Security {
 
 /**
@@ -30,7 +32,7 @@ struct ValidationResult {
 /**
  * @brief Input sanitizer for security
  */
-class InputSanitizer {
+class SOLAR_CORE_API InputSanitizer {
  public:
   /**
    * @brief Sanitize string for SQL

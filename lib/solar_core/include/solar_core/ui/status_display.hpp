@@ -15,6 +15,8 @@
 #include <string>
 #include <vector>
 
+#include "solar_core/export.hpp"
+
 namespace SolarSystem::UI {
 
 /**
@@ -42,7 +44,7 @@ struct StatusConfig {
 /**
  * @brief Status display system for consistent user feedback
  */
-class StatusDisplay {
+class SOLAR_CORE_API StatusDisplay {
  public:
   /**
    * @brief Construct status display with configuration
@@ -126,7 +128,7 @@ class StatusDisplay {
 /**
  * @brief Formatted box display for important messages
  */
-class BoxDisplay {
+class SOLAR_CORE_API BoxDisplay {
  public:
   /**
    * @brief Display message in a box
@@ -148,6 +150,11 @@ class BoxDisplay {
    * @brief Display info box
    */
   static void info(const std::string& title, const std::vector<std::string>& lines);
+
+  /**
+   * @brief Display warning box
+   */
+  static void warning(const std::string& title, const std::vector<std::string>& lines);
 };
 
 }  // namespace SolarSystem::UI

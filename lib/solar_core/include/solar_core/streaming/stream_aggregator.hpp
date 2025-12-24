@@ -8,6 +8,7 @@
 #include <unordered_map>
 #include <vector>
 
+#include "solar_core/export.hpp"
 #include "solar_core/streaming/data_stream.hpp"
 #include "solar_core/math/vector3.hpp"
 
@@ -77,7 +78,7 @@ struct AggregateSnapshot {
 /**
  * @brief Base class for stream aggregators
  */
-class StreamAggregator {
+class SOLAR_CORE_API StreamAggregator {
 public:
   virtual ~StreamAggregator() = default;
 
@@ -110,7 +111,7 @@ public:
 /**
  * @brief Time-window based aggregator that maintains statistics over a sliding window
  */
-class TimeWindowAggregator : public StreamAggregator {
+class SOLAR_CORE_API TimeWindowAggregator : public StreamAggregator {
 public:
   explicit TimeWindowAggregator(std::chrono::milliseconds window_duration = std::chrono::minutes{5});
 
@@ -142,7 +143,7 @@ private:
 /**
  * @brief Sample-count based aggregator that maintains statistics over a fixed number of samples
  */
-class SampleCountAggregator : public StreamAggregator {
+class SOLAR_CORE_API SampleCountAggregator : public StreamAggregator {
 public:
   explicit SampleCountAggregator(size_t max_samples = 100);
 
@@ -174,7 +175,7 @@ private:
 /**
  * @brief Real-time aggregator that provides continuous statistics updates
  */
-class RealtimeAggregator : public StreamAggregator {
+class SOLAR_CORE_API RealtimeAggregator : public StreamAggregator {
 public:
   explicit RealtimeAggregator(std::chrono::milliseconds update_interval = std::chrono::seconds{1});
 
@@ -241,7 +242,7 @@ private:
 /**
  * @brief Callback-based aggregator that triggers user-defined functions on aggregation events
  */
-class CallbackAggregator : public StreamAggregator {
+class SOLAR_CORE_API CallbackAggregator : public StreamAggregator {
 public:
   using AggregateCallback = std::function<void(const AggregateSnapshot&)>;
   using ThresholdCallback = std::function<void(const std::string&, const BodyAggregateData&)>;
@@ -282,7 +283,7 @@ private:
 /**
  * @brief Factory for creating common aggregator configurations
  */
-class AggregatorFactory {
+class SOLAR_CORE_API AggregatorFactory {
 public:
   // Predefined aggregators
   [[nodiscard]] static std::unique_ptr<TimeWindowAggregator> create_time_window_aggregator(
