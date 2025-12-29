@@ -47,6 +47,7 @@
 // We map to ASSERT_* to match the original behavior (test stops on failure).
 
 // Note: Google Test already provides ASSERT_TRUE, ASSERT_FALSE, ASSERT_EQ, etc.
+// The custom framework macros are compatible with Google Test's ASSERT_* macros.
 // We only need to provide compatibility for macros with different signatures.
 
 // ASSERT_NEAR compatibility - Google Test uses (val1, val2, abs_error)
@@ -61,6 +62,34 @@
 #ifndef ASSERT_NULL
 #define ASSERT_NULL(ptr) ASSERT_EQ(nullptr, ptr)
 #endif
+
+// ============================================================================
+// EXPECT_* Macro Aliases (for migration convenience)
+// ============================================================================
+// These provide explicit mappings from custom ASSERT_* to Google Test EXPECT_*
+// Use EXPECT_* when you want the test to continue after a failure
+
+#ifndef EXPECT_NOT_NULL
+#define EXPECT_NOT_NULL(ptr) EXPECT_NE(nullptr, ptr)
+#endif
+
+#ifndef EXPECT_NULL
+#define EXPECT_NULL(ptr) EXPECT_EQ(nullptr, ptr)
+#endif
+
+// Mapping table for reference (all these work identically in both frameworks):
+// Custom Framework    -> Google Test (fatal)  -> Google Test (non-fatal)
+// ASSERT_TRUE(x)      -> ASSERT_TRUE(x)       -> EXPECT_TRUE(x)
+// ASSERT_FALSE(x)     -> ASSERT_FALSE(x)      -> EXPECT_FALSE(x)
+// ASSERT_EQ(a, b)     -> ASSERT_EQ(a, b)      -> EXPECT_EQ(a, b)
+// ASSERT_NE(a, b)     -> ASSERT_NE(a, b)      -> EXPECT_NE(a, b)
+// ASSERT_LT(a, b)     -> ASSERT_LT(a, b)      -> EXPECT_LT(a, b)
+// ASSERT_LE(a, b)     -> ASSERT_LE(a, b)      -> EXPECT_LE(a, b)
+// ASSERT_GT(a, b)     -> ASSERT_GT(a, b)      -> EXPECT_GT(a, b)
+// ASSERT_GE(a, b)     -> ASSERT_GE(a, b)      -> EXPECT_GE(a, b)
+// ASSERT_NEAR(a,b,t)  -> ASSERT_NEAR(a,b,t)   -> EXPECT_NEAR(a,b,t)
+// ASSERT_NOT_NULL(p)  -> ASSERT_NE(nullptr,p) -> EXPECT_NE(nullptr,p)
+// ASSERT_NULL(p)      -> ASSERT_EQ(nullptr,p) -> EXPECT_EQ(nullptr,p)
 
 // ============================================================================
 // Test Suite Compatibility Class
@@ -170,10 +199,30 @@ class GTestCompatSuite {
 
 // For tests that use the old pattern with current_suite
 // This is a transitional helper - prefer TEST/TEST_F for new tests
-#define LEGACY_TEST_SUITE(name)       \
-  GTestCompatSuite* current_suite;    \
-  GTestCompatSuite suite(name);       \
+#define LEGACY_TEST_SUITE(name)    \
+  GTestCompatSuite* current_suite; \
+  GTestCompatSuite suite(name);    \
   current_suite = &suite
+
+// ============================================================================
+// TEST_CASE Macro Mapping
+// ============================================================================
+// Maps the custom TEST_CASE macro to Google Test TEST macro
+// The old pattern: TEST_CASE("name") { ... });
+// The new pattern: TEST(SuiteName, TestName) { ... }
+
+// For use with GTestCompatSuite - runs test through the compatibility layer
+#define TEST_CASE_COMPAT(suite_ptr, name) (suite_ptr)->run_test(name, []()
+
+// Direct mapping to Google Test TEST macro for new code
+// Usage: GTEST_CASE(SuiteName, TestName) { ... }
+#define GTEST_CASE(suite_name, test_name) TEST(suite_name, test_name)
+
+// Macro to help convert old TEST_CASE pattern to Google Test
+// This creates a test that can be discovered by gtest_discover_tests
+// Usage: MIGRATED_TEST_CASE(OldSuiteName, "Old Test Name") { ... }
+// Note: Test names with spaces need to be converted to CamelCase or underscores
+#define MIGRATED_TEST_CASE(suite_name, test_name) TEST(suite_name, test_name)
 
 // ============================================================================
 // Test Utilities Namespace
