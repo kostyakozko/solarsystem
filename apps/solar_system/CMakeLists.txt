@@ -15,8 +15,9 @@ target_link_libraries(solar_system PRIVATE
 )
 
 # Aggressive optimization for all executables
+# Note: -ffast-math removed as it causes issues with JSON parsing (infinity handling)
 target_compile_options(solar_system PRIVATE
-    $<$<CONFIG:Release>:-O3 -march=native -mtune=native -flto -ffast-math -funroll-loops>
+    $<$<CONFIG:Release>:-O3 -march=native -mtune=native -flto -fno-math-errno -fno-trapping-math -funroll-loops>
     $<$<CONFIG:Debug>:-g -O0>
 )
 

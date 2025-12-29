@@ -153,8 +153,9 @@ if(CAIRO_FOUND)
 endif()
 
 # Aggressive optimization for core physics calculations
+# Note: -ffast-math removed as it causes issues with JSON parsing (infinity handling)
 target_compile_options(solar_core PRIVATE
-    $<$<CONFIG:Release>:-O3 -march=native -mtune=native -flto -ffast-math -funroll-loops>
+    $<$<CONFIG:Release>:-O3 -march=native -mtune=native -flto -fno-math-errno -fno-trapping-math -funroll-loops>
     $<$<CONFIG:Debug>:-g -O0>
 )
 

@@ -9,6 +9,63 @@ enable_testing()
 # Find required packages for testing
 find_package(Threads REQUIRED)
 
+# ============================================================================
+# Google Test Integration
+# ============================================================================
+# Supports both system-installed Google Test and FetchContent download
+# Use -DUSE_SYSTEM_GTEST=ON to use system installation
+
+if(USE_SYSTEM_GTEST)
+  # Try to find system-installed Google Test
+  find_package(GTest QUIET)
+  if(GTest_FOUND)
+    message(STATUS "Using system-installed Google Test")
+    set(GTEST_AVAILABLE TRUE)
+  else()
+    message(WARNING "System Google Test not found, falling back to FetchContent")
+    set(USE_SYSTEM_GTEST OFF)
+  endif()
+endif()
+
+if(NOT USE_SYSTEM_GTEST)
+  # Download Google Test via FetchContent
+  include(FetchContent)
+
+  FetchContent_Declare(
+    googletest
+    GIT_REPOSITORY https://github.com/google/googletest.git
+    GIT_TAG        v1.14.0
+    GIT_SHALLOW    TRUE
+  )
+
+  # Prevent Google Test from overriding compiler/linker options
+  set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+  set(BUILD_GMOCK ON CACHE BOOL "" FORCE)
+  set(INSTALL_GTEST OFF CACHE BOOL "" FORCE)
+
+  FetchContent_MakeAvailable(googletest)
+
+  # Disable strict warnings for Google Test targets (they have their own warnings)
+  if(TARGET gtest)
+    target_compile_options(gtest PRIVATE -w)
+  endif()
+  if(TARGET gtest_main)
+    target_compile_options(gtest_main PRIVATE -w)
+  endif()
+  if(TARGET gmock)
+    target_compile_options(gmock PRIVATE -w)
+  endif()
+  if(TARGET gmock_main)
+    target_compile_options(gmock_main PRIVATE -w)
+  endif()
+
+  message(STATUS "Using FetchContent Google Test v1.14.0")
+  set(GTEST_AVAILABLE TRUE)
+endif()
+
+# Enable automatic test discovery for Google Test
+include(GoogleTest)
+
 # Test configuration
 set(TEST_TIMEOUT 30 CACHE STRING "Test timeout in seconds")
 set(BENCHMARK_ITERATIONS 1000 CACHE STRING "Number of benchmark iterations")
@@ -105,6 +162,12 @@ add_custom_target(test-install
 )
 
 message(STATUS "Testing Framework Configuration:")
+message(STATUS "  Google Test: ${GTEST_AVAILABLE}")
+if(USE_SYSTEM_GTEST)
+  message(STATUS "    Source: System installation")
+else()
+  message(STATUS "    Source: FetchContent (v1.14.0)")
+endif()
 message(STATUS "  Test timeout: ${TEST_TIMEOUT} seconds")
 message(STATUS "  Benchmark iterations: ${BENCHMARK_ITERATIONS}")
 message(STATUS "  Coverage tools: ${GCOV_EXECUTABLE} ${LCOV_EXECUTABLE} ${GENHTML_EXECUTABLE}")

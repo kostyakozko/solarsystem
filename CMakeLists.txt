@@ -106,7 +106,9 @@ set(CMAKE_INSTALL_DATADIR "share/solar_system")
 # Compiler-specific optimizations
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     # Release optimizations (matching current performance)
-    set(CMAKE_CXX_FLAGS_RELEASE "-O3 -march=native -mtune=native -flto -ffast-math -funroll-loops")
+    # Note: -ffast-math removed as it causes issues with JSON parsing (infinity handling)
+    # Using -fno-math-errno and -fno-trapping-math for safe optimizations
+    set(CMAKE_CXX_FLAGS_RELEASE "-O3 -march=native -mtune=native -flto -fno-math-errno -fno-trapping-math -funroll-loops")
 
     # Debug flags
     set(CMAKE_CXX_FLAGS_DEBUG "-g -O0 -Wall -Wextra")

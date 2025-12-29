@@ -115,7 +115,7 @@ This implementation plan systematically modernizes the Solar System Suite's buil
   - Document Google Test usage
   - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5_
 
-- [ ] 4.1 Add Google Test to build system
+- [x] 4.1 Add Google Test to build system
   - Add FetchContent configuration for Google Test in tests/CMakeLists.txt
   - Add USE_SYSTEM_GTEST option for system installations
   - Configure find_package fallback for system Google Test
