@@ -1,10 +1,9 @@
 # Unit Tests for Solar System Suite Libraries
 
-# Modern C++20 class tests
+# Modern C++20 class tests - Migrated to Google Test
 add_executable(test_modern_vector3 test_modern_vector3.cpp)
-target_link_libraries(test_modern_vector3 test_utils solar_core solar_utils Threads::Threads)
-add_test(NAME UnitTest_ModernVector3 COMMAND test_modern_vector3)
-set_tests_properties(UnitTest_ModernVector3 PROPERTIES LABELS "unit;modern;math;vector3" TIMEOUT ${TEST_TIMEOUT})
+target_link_libraries(test_modern_vector3 GTest::gtest_main solar_core solar_utils Threads::Threads)
+gtest_discover_tests(test_modern_vector3 PROPERTIES LABELS "unit;modern;math;vector3" DISCOVERY_TIMEOUT 30)
 
 add_executable(test_modern_celestial_body test_modern_celestial_body.cpp)
 target_link_libraries(test_modern_celestial_body test_utils solar_core solar_utils Threads::Threads)
@@ -148,11 +147,10 @@ set_tests_properties(UnitTest_UISystem PROPERTIES LABELS "unit;ui;interface;acce
 add_test(NAME UnitTest_ModernBodyFactory COMMAND test_modern_body_factory)
 set_tests_properties(UnitTest_ModernBodyFactory PROPERTIES LABELS "unit;modern;bodies;factory" TIMEOUT ${TEST_TIMEOUT})
 
-# Existing tests that have source files
+# Existing tests that have source files - Migrated to Google Test
 add_executable(test_jpl_data_only test_jpl_data.cpp)
-target_link_libraries(test_jpl_data_only test_utils solar_jpl solar_core solar_utils)
-add_test(NAME UnitTest_JPLData COMMAND test_jpl_data_only)
-set_tests_properties(UnitTest_JPLData PROPERTIES LABELS "unit;jpl;data")
+target_link_libraries(test_jpl_data_only GTest::gtest_main solar_jpl solar_core solar_utils)
+gtest_discover_tests(test_jpl_data_only PROPERTIES LABELS "unit;jpl;data" DISCOVERY_TIMEOUT 30)
 
 add_executable(test_jpl_bodies test_jpl_bodies.cpp)
 target_link_libraries(test_jpl_bodies test_utils solar_jpl solar_core solar_utils)
@@ -160,14 +158,12 @@ add_test(NAME UnitTest_JPLBodies COMMAND test_jpl_bodies)
 set_tests_properties(UnitTest_JPLBodies PROPERTIES LABELS "unit;jpl;bodies")
 
 add_executable(test_solar_utils test_solar_utils.cpp)
-target_link_libraries(test_solar_utils test_utils solar_utils Threads::Threads)
-add_test(NAME UnitTest_SolarUtils COMMAND test_solar_utils)
-set_tests_properties(UnitTest_SolarUtils PROPERTIES LABELS "unit;utils" TIMEOUT ${TEST_TIMEOUT})
+target_link_libraries(test_solar_utils GTest::gtest_main solar_utils Threads::Threads)
+gtest_discover_tests(test_solar_utils PROPERTIES LABELS "unit;utils" DISCOVERY_TIMEOUT 30)
 
 add_executable(test_args test_args.cpp)
-target_link_libraries(test_args test_utils solar_utils)
-add_test(NAME UnitTest_Args COMMAND test_args)
-set_tests_properties(UnitTest_Args PROPERTIES LABELS "unit;args")
+target_link_libraries(test_args GTest::gtest_main solar_utils)
+gtest_discover_tests(test_args PROPERTIES LABELS "unit;args" DISCOVERY_TIMEOUT 30)
 
 add_executable(test_solar_jpl test_solar_jpl.cpp)
 target_link_libraries(test_solar_jpl test_utils solar_jpl solar_core solar_utils)

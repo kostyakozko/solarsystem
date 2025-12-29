@@ -1,282 +1,283 @@
 /**
  * @file test_solar_utils.cpp
  * @brief Comprehensive unit tests for solar_utils library
+ * @note Migrated to Google Test
  */
 
-#include "../utils/test_framework.h"
-#include "solar_utils/logging.hpp"
-#include "solar_utils/error_handling.hpp"
+#include <gtest/gtest.h>
+
 #include <chrono>
 #include <thread>
 
+#include "solar_utils/error_handling.hpp"
+#include "solar_utils/logging.hpp"
+
 using namespace SolarSystem::Utils;
 
-int main() {
-  TestSuite suite("Solar Utils Library Tests");
+// ============================================================================
+// LogLevel Tests
+// ============================================================================
 
-  // Test LogLevel enum
-  suite.run_test("LogLevel Enum Values", []() {
-    ASSERT_TRUE(LogLevel::TRACE < LogLevel::DEBUG);
-    ASSERT_TRUE(LogLevel::DEBUG < LogLevel::INFO);
-    ASSERT_TRUE(LogLevel::INFO < LogLevel::WARN);
-    ASSERT_TRUE(LogLevel::WARN < LogLevel::ERROR);
-    ASSERT_TRUE(LogLevel::ERROR < LogLevel::FATAL);
-  });
+TEST(LogLevel, EnumValues) {
+  EXPECT_LT(static_cast<int>(LogLevel::TRACE), static_cast<int>(LogLevel::DEBUG));
+  EXPECT_LT(static_cast<int>(LogLevel::DEBUG), static_cast<int>(LogLevel::INFO));
+  EXPECT_LT(static_cast<int>(LogLevel::INFO), static_cast<int>(LogLevel::WARN));
+  EXPECT_LT(static_cast<int>(LogLevel::WARN), static_cast<int>(LogLevel::ERROR));
+  EXPECT_LT(static_cast<int>(LogLevel::ERROR), static_cast<int>(LogLevel::FATAL));
+}
 
-  // Test LogEntry creation
-  suite.run_test("LogEntry Creation", []() {
-    LogEntry entry;
-    entry.timestamp = std::chrono::system_clock::now();
-    entry.level = LogLevel::INFO;
-    entry.component = "TestComponent";
-    entry.message = "Test message";
-    entry.file = "test.cpp";
-    entry.line = 42;
-    entry.function = "test_function";
-    entry.thread_id = std::this_thread::get_id();
-    entry.sequence_number = 1;
+TEST(LogLevel, Comparison) {
+  EXPECT_EQ(0, static_cast<int>(LogLevel::TRACE));
+  EXPECT_EQ(1, static_cast<int>(LogLevel::DEBUG));
+  EXPECT_EQ(2, static_cast<int>(LogLevel::INFO));
+  EXPECT_EQ(3, static_cast<int>(LogLevel::WARN));
+  EXPECT_EQ(4, static_cast<int>(LogLevel::ERROR));
+  EXPECT_EQ(5, static_cast<int>(LogLevel::FATAL));
+}
 
-    ASSERT_EQ("TestComponent", entry.component);
-    ASSERT_EQ("Test message", entry.message);
-    ASSERT_EQ(42, entry.line);
-    ASSERT_EQ(1, entry.sequence_number);
-  });
+// ============================================================================
+// LogEntry Tests
+// ============================================================================
 
-  // Test LogEntry to_string
-  suite.run_test("LogEntry to_string", []() {
-    LogEntry entry;
-    entry.timestamp = std::chrono::system_clock::now();
-    entry.level = LogLevel::INFO;
-    entry.component = "Test";
-    entry.message = "Hello";
-    entry.file = "test.cpp";
-    entry.line = 10;
-    entry.function = "main";
-    entry.thread_id = std::this_thread::get_id();
+TEST(LogEntry, Creation) {
+  LogEntry entry;
+  entry.timestamp = std::chrono::system_clock::now();
+  entry.level = LogLevel::INFO;
+  entry.component = "TestComponent";
+  entry.message = "Test message";
+  entry.file = "test.cpp";
+  entry.line = 42;
+  entry.function = "test_function";
+  entry.thread_id = std::this_thread::get_id();
+  entry.sequence_number = 1;
 
-    std::string str = entry.to_string();
-    ASSERT_FALSE(str.empty());
-    ASSERT_TRUE(str.find("Test") != std::string::npos);
-    ASSERT_TRUE(str.find("Hello") != std::string::npos);
-  });
+  EXPECT_EQ("TestComponent", entry.component);
+  EXPECT_EQ("Test message", entry.message);
+  EXPECT_EQ(42, entry.line);
+  EXPECT_EQ(1, entry.sequence_number);
+}
 
-  // Test LogEntry to_json
-  suite.run_test("LogEntry to_json", []() {
-    LogEntry entry;
-    entry.timestamp = std::chrono::system_clock::now();
-    entry.level = LogLevel::ERROR;
-    entry.component = "ErrorTest";
-    entry.message = "Error occurred";
-    entry.file = "error.cpp";
-    entry.line = 100;
+TEST(LogEntry, ToString) {
+  LogEntry entry;
+  entry.timestamp = std::chrono::system_clock::now();
+  entry.level = LogLevel::INFO;
+  entry.component = "Test";
+  entry.message = "Hello";
+  entry.file = "test.cpp";
+  entry.line = 10;
+  entry.function = "main";
+  entry.thread_id = std::this_thread::get_id();
 
-    std::string json = entry.to_json();
-    ASSERT_FALSE(json.empty());
-    ASSERT_TRUE(json.find("ErrorTest") != std::string::npos);
-    ASSERT_TRUE(json.find("Error occurred") != std::string::npos);
-  });
+  std::string str = entry.to_string();
+  EXPECT_FALSE(str.empty());
+  EXPECT_NE(std::string::npos, str.find("Test"));
+  EXPECT_NE(std::string::npos, str.find("Hello"));
+}
 
-  // Test LogEntry metadata
-  suite.run_test("LogEntry Metadata", []() {
-    LogEntry entry;
-    entry.metadata["key1"] = "value1";
-    entry.metadata["key2"] = "value2";
+TEST(LogEntry, ToJson) {
+  LogEntry entry;
+  entry.timestamp = std::chrono::system_clock::now();
+  entry.level = LogLevel::ERROR;
+  entry.component = "ErrorTest";
+  entry.message = "Error occurred";
+  entry.file = "error.cpp";
+  entry.line = 100;
 
-    ASSERT_EQ(2, entry.metadata.size());
-    ASSERT_EQ("value1", entry.metadata["key1"]);
-    ASSERT_EQ("value2", entry.metadata["key2"]);
-  });
+  std::string json = entry.to_json();
+  EXPECT_FALSE(json.empty());
+  EXPECT_NE(std::string::npos, json.find("ErrorTest"));
+  EXPECT_NE(std::string::npos, json.find("Error occurred"));
+}
 
-  // Test ErrorSeverity enum
-  suite.run_test("ErrorSeverity Enum Values", []() {
-    ASSERT_TRUE(ErrorSeverity::Info < ErrorSeverity::Warning);
-    ASSERT_TRUE(ErrorSeverity::Warning < ErrorSeverity::Error);
-    ASSERT_TRUE(ErrorSeverity::Error < ErrorSeverity::Critical);
-    ASSERT_TRUE(ErrorSeverity::Critical < ErrorSeverity::Fatal);
-  });
+TEST(LogEntry, Metadata) {
+  LogEntry entry;
+  entry.metadata["key1"] = "value1";
+  entry.metadata["key2"] = "value2";
 
-  // Test ErrorCategory enum
-  suite.run_test("ErrorCategory Enum", []() {
-    ErrorCategory cat1 = ErrorCategory::Validation;
-    ErrorCategory cat2 = ErrorCategory::Network;
-    ErrorCategory cat3 = ErrorCategory::FileSystem;
+  EXPECT_EQ(2u, entry.metadata.size());
+  EXPECT_EQ("value1", entry.metadata["key1"]);
+  EXPECT_EQ("value2", entry.metadata["key2"]);
+}
 
-    ASSERT_TRUE(cat1 == ErrorCategory::Validation);
-    ASSERT_TRUE(cat2 == ErrorCategory::Network);
-    ASSERT_TRUE(cat3 == ErrorCategory::FileSystem);
-  });
+TEST(LogEntry, ToCsv) {
+  LogEntry entry;
+  entry.timestamp = std::chrono::system_clock::now();
+  entry.level = LogLevel::WARN;
+  entry.component = "Warning";
+  entry.message = "Warning message";
+  entry.file = "warn.cpp";
+  entry.line = 50;
 
-  // Test ErrorCode enum values
-  suite.run_test("ErrorCode Validation Codes", []() {
-    ASSERT_TRUE(ErrorCode::InvalidInput == ErrorCode::InvalidInput);
-    ASSERT_TRUE(ErrorCode::InvalidFormat != ErrorCode::InvalidRange);
-    ASSERT_TRUE(ErrorCode::MissingRequired != ErrorCode::ConflictingParameters);
-  });
+  std::string csv = entry.to_csv();
+  EXPECT_FALSE(csv.empty());
+  EXPECT_NE(std::string::npos, csv.find(","));
+}
 
-  suite.run_test("ErrorCode Network Codes", []() {
-    ASSERT_TRUE(ErrorCode::ConnectionFailed == ErrorCode::ConnectionFailed);
-    ASSERT_TRUE(ErrorCode::ConnectionTimeout != ErrorCode::NetworkUnavailable);
-    ASSERT_TRUE(ErrorCode::InvalidResponse != ErrorCode::AuthenticationFailed);
-  });
+TEST(LogEntry, ToXml) {
+  LogEntry entry;
+  entry.timestamp = std::chrono::system_clock::now();
+  entry.level = LogLevel::DEBUG;
+  entry.component = "Debug";
+  entry.message = "Debug info";
+  entry.file = "debug.cpp";
+  entry.line = 25;
 
-  suite.run_test("ErrorCode FileSystem Codes", []() {
-    ASSERT_TRUE(ErrorCode::FileNotFound == ErrorCode::FileNotFound);
-    ASSERT_TRUE(ErrorCode::FileAccessDenied != ErrorCode::FileCorrupted);
-    ASSERT_TRUE(ErrorCode::DiskFull != ErrorCode::DirectoryNotFound);
-  });
+  std::string xml = entry.to_xml();
+  EXPECT_FALSE(xml.empty());
+  EXPECT_NE(std::string::npos, xml.find("<"));
+  EXPECT_NE(std::string::npos, xml.find(">"));
+}
 
-  suite.run_test("ErrorCode Memory Codes", []() {
-    ASSERT_TRUE(ErrorCode::OutOfMemory == ErrorCode::OutOfMemory);
-    ASSERT_TRUE(ErrorCode::MemoryLeak != ErrorCode::InvalidPointer);
-  });
+TEST(LogEntry, ThreadId) {
+  LogEntry entry;
+  entry.thread_id = std::this_thread::get_id();
+  EXPECT_EQ(std::this_thread::get_id(), entry.thread_id);
+}
 
-  // Test LogOutput enum
-  suite.run_test("LogOutput Enum", []() {
-    LogOutput out1 = LogOutput::CONSOLE;
-    LogOutput out2 = LogOutput::FILE;
-    LogOutput out3 = LogOutput::BOTH;
+TEST(LogEntry, TimestampOrdering) {
+  LogEntry entry1;
+  entry1.timestamp = std::chrono::system_clock::now();
 
-    ASSERT_TRUE(out1 == LogOutput::CONSOLE);
-    ASSERT_TRUE(out2 == LogOutput::FILE);
-    ASSERT_TRUE(out3 == LogOutput::BOTH);
-  });
+  std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
-  // Test LogFormat enum
-  suite.run_test("LogFormat Enum", []() {
-    LogFormat fmt1 = LogFormat::TEXT;
-    LogFormat fmt2 = LogFormat::JSON;
-    LogFormat fmt3 = LogFormat::XML;
-    LogFormat fmt4 = LogFormat::CSV;
+  LogEntry entry2;
+  entry2.timestamp = std::chrono::system_clock::now();
 
-    ASSERT_TRUE(fmt1 == LogFormat::TEXT);
-    ASSERT_TRUE(fmt2 == LogFormat::JSON);
-    ASSERT_TRUE(fmt3 == LogFormat::XML);
-    ASSERT_TRUE(fmt4 == LogFormat::CSV);
-  });
+  EXPECT_LT(entry1.timestamp, entry2.timestamp);
+}
 
-  // Test LogEntry CSV format
-  suite.run_test("LogEntry to_csv", []() {
-    LogEntry entry;
-    entry.timestamp = std::chrono::system_clock::now();
-    entry.level = LogLevel::WARN;
-    entry.component = "Warning";
-    entry.message = "Warning message";
-    entry.file = "warn.cpp";
-    entry.line = 50;
+TEST(LogEntry, SequenceNumbers) {
+  LogEntry entry1;
+  entry1.sequence_number = 1;
 
-    std::string csv = entry.to_csv();
-    ASSERT_FALSE(csv.empty());
-    // CSV should contain comma-separated values
-    ASSERT_TRUE(csv.find(",") != std::string::npos);
-  });
+  LogEntry entry2;
+  entry2.sequence_number = 2;
 
-  // Test LogEntry XML format
-  suite.run_test("LogEntry to_xml", []() {
-    LogEntry entry;
-    entry.timestamp = std::chrono::system_clock::now();
-    entry.level = LogLevel::DEBUG;
-    entry.component = "Debug";
-    entry.message = "Debug info";
-    entry.file = "debug.cpp";
-    entry.line = 25;
+  LogEntry entry3;
+  entry3.sequence_number = 3;
 
-    std::string xml = entry.to_xml();
-    ASSERT_FALSE(xml.empty());
-    // XML should contain tags
-    ASSERT_TRUE(xml.find("<") != std::string::npos);
-    ASSERT_TRUE(xml.find(">") != std::string::npos);
-  });
+  EXPECT_LT(entry1.sequence_number, entry2.sequence_number);
+  EXPECT_LT(entry2.sequence_number, entry3.sequence_number);
+}
 
-  // Test thread ID capture
-  suite.run_test("LogEntry Thread ID", []() {
-    LogEntry entry;
-    entry.thread_id = std::this_thread::get_id();
+TEST(LogEntry, EmptyMessage) {
+  LogEntry entry;
+  entry.message = "";
+  entry.component = "Test";
+  entry.level = LogLevel::INFO;
 
-    // Thread ID should be captured
-    ASSERT_TRUE(entry.thread_id == std::this_thread::get_id());
-  });
+  std::string str = entry.to_string();
+  EXPECT_FALSE(str.empty());
+}
 
-  // Test timestamp ordering
-  suite.run_test("LogEntry Timestamp Ordering", []() {
-    LogEntry entry1;
-    entry1.timestamp = std::chrono::system_clock::now();
+TEST(LogEntry, LongMessage) {
+  LogEntry entry;
+  entry.message = std::string(1000, 'A');
+  entry.component = "Test";
+  entry.level = LogLevel::INFO;
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+  std::string str = entry.to_string();
+  EXPECT_FALSE(str.empty());
+  EXPECT_NE(std::string::npos, str.find("AAA"));
+}
 
-    LogEntry entry2;
-    entry2.timestamp = std::chrono::system_clock::now();
+TEST(LogEntry, SpecialCharacters) {
+  LogEntry entry;
+  entry.message = "Test\nNew\tLine\"Quote";
+  entry.component = "Test";
+  entry.level = LogLevel::INFO;
 
-    ASSERT_TRUE(entry1.timestamp < entry2.timestamp);
-  });
+  std::string str = entry.to_string();
+  EXPECT_FALSE(str.empty());
+}
 
-  // Test sequence numbers
-  suite.run_test("LogEntry Sequence Numbers", []() {
-    LogEntry entry1;
-    entry1.sequence_number = 1;
+TEST(LogEntry, MultipleMetadata) {
+  LogEntry entry;
+  for (int i = 0; i < 10; ++i) {
+    entry.metadata["key" + std::to_string(i)] = "value" + std::to_string(i);
+  }
 
-    LogEntry entry2;
-    entry2.sequence_number = 2;
+  EXPECT_EQ(10u, entry.metadata.size());
+}
 
-    LogEntry entry3;
-    entry3.sequence_number = 3;
+// ============================================================================
+// ErrorSeverity Tests
+// ============================================================================
 
-    ASSERT_TRUE(entry1.sequence_number < entry2.sequence_number);
-    ASSERT_TRUE(entry2.sequence_number < entry3.sequence_number);
-  });
+TEST(ErrorSeverity, EnumValues) {
+  EXPECT_LT(static_cast<int>(ErrorSeverity::Info), static_cast<int>(ErrorSeverity::Warning));
+  EXPECT_LT(static_cast<int>(ErrorSeverity::Warning), static_cast<int>(ErrorSeverity::Error));
+  EXPECT_LT(static_cast<int>(ErrorSeverity::Error), static_cast<int>(ErrorSeverity::Critical));
+  EXPECT_LT(static_cast<int>(ErrorSeverity::Critical), static_cast<int>(ErrorSeverity::Fatal));
+}
 
-  // Test empty message handling
-  suite.run_test("LogEntry Empty Message", []() {
-    LogEntry entry;
-    entry.message = "";
-    entry.component = "Test";
-    entry.level = LogLevel::INFO;
+// ============================================================================
+// ErrorCategory Tests
+// ============================================================================
 
-    std::string str = entry.to_string();
-    ASSERT_FALSE(str.empty());  // Should still produce output
-  });
+TEST(ErrorCategory, EnumValues) {
+  ErrorCategory cat1 = ErrorCategory::Validation;
+  ErrorCategory cat2 = ErrorCategory::Network;
+  ErrorCategory cat3 = ErrorCategory::FileSystem;
 
-  // Test long message handling
-  suite.run_test("LogEntry Long Message", []() {
-    LogEntry entry;
-    entry.message = std::string(1000, 'A');  // 1000 character message
-    entry.component = "Test";
-    entry.level = LogLevel::INFO;
+  EXPECT_EQ(ErrorCategory::Validation, cat1);
+  EXPECT_EQ(ErrorCategory::Network, cat2);
+  EXPECT_EQ(ErrorCategory::FileSystem, cat3);
+}
 
-    std::string str = entry.to_string();
-    ASSERT_FALSE(str.empty());
-    ASSERT_TRUE(str.find("AAA") != std::string::npos);
-  });
+// ============================================================================
+// ErrorCode Tests
+// ============================================================================
 
-  // Test special characters in message
-  suite.run_test("LogEntry Special Characters", []() {
-    LogEntry entry;
-    entry.message = "Test\nNew\tLine\"Quote";
-    entry.component = "Test";
-    entry.level = LogLevel::INFO;
+TEST(ErrorCode, ValidationCodes) {
+  EXPECT_EQ(ErrorCode::InvalidInput, ErrorCode::InvalidInput);
+  EXPECT_NE(ErrorCode::InvalidFormat, ErrorCode::InvalidRange);
+  EXPECT_NE(ErrorCode::MissingRequired, ErrorCode::ConflictingParameters);
+}
 
-    std::string str = entry.to_string();
-    ASSERT_FALSE(str.empty());
-  });
+TEST(ErrorCode, NetworkCodes) {
+  EXPECT_EQ(ErrorCode::ConnectionFailed, ErrorCode::ConnectionFailed);
+  EXPECT_NE(ErrorCode::ConnectionTimeout, ErrorCode::NetworkUnavailable);
+  EXPECT_NE(ErrorCode::InvalidResponse, ErrorCode::AuthenticationFailed);
+}
 
-  // Test multiple metadata entries
-  suite.run_test("LogEntry Multiple Metadata", []() {
-    LogEntry entry;
-    for (int i = 0; i < 10; ++i) {
-      entry.metadata["key" + std::to_string(i)] = "value" + std::to_string(i);
-    }
+TEST(ErrorCode, FileSystemCodes) {
+  EXPECT_EQ(ErrorCode::FileNotFound, ErrorCode::FileNotFound);
+  EXPECT_NE(ErrorCode::FileAccessDenied, ErrorCode::FileCorrupted);
+  EXPECT_NE(ErrorCode::DiskFull, ErrorCode::DirectoryNotFound);
+}
 
-    ASSERT_EQ(10, entry.metadata.size());
-  });
+TEST(ErrorCode, MemoryCodes) {
+  EXPECT_EQ(ErrorCode::OutOfMemory, ErrorCode::OutOfMemory);
+  EXPECT_NE(ErrorCode::MemoryLeak, ErrorCode::InvalidPointer);
+}
 
-  // Test LogLevel comparison
-  suite.run_test("LogLevel Comparison", []() {
-    ASSERT_TRUE(static_cast<int>(LogLevel::TRACE) == 0);
-    ASSERT_TRUE(static_cast<int>(LogLevel::DEBUG) == 1);
-    ASSERT_TRUE(static_cast<int>(LogLevel::INFO) == 2);
-    ASSERT_TRUE(static_cast<int>(LogLevel::WARN) == 3);
-    ASSERT_TRUE(static_cast<int>(LogLevel::ERROR) == 4);
-    ASSERT_TRUE(static_cast<int>(LogLevel::FATAL) == 5);
-  });
+// ============================================================================
+// LogOutput Tests
+// ============================================================================
 
-  return suite.all_passed() ? 0 : suite.get_failed_count();
+TEST(LogOutput, EnumValues) {
+  LogOutput out1 = LogOutput::CONSOLE;
+  LogOutput out2 = LogOutput::FILE;
+  LogOutput out3 = LogOutput::BOTH;
+
+  EXPECT_EQ(LogOutput::CONSOLE, out1);
+  EXPECT_EQ(LogOutput::FILE, out2);
+  EXPECT_EQ(LogOutput::BOTH, out3);
+}
+
+// ============================================================================
+// LogFormat Tests
+// ============================================================================
+
+TEST(LogFormat, EnumValues) {
+  LogFormat fmt1 = LogFormat::TEXT;
+  LogFormat fmt2 = LogFormat::JSON;
+  LogFormat fmt3 = LogFormat::XML;
+  LogFormat fmt4 = LogFormat::CSV;
+
+  EXPECT_EQ(LogFormat::TEXT, fmt1);
+  EXPECT_EQ(LogFormat::JSON, fmt2);
+  EXPECT_EQ(LogFormat::XML, fmt3);
+  EXPECT_EQ(LogFormat::CSV, fmt4);
 }

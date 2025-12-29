@@ -1,5 +1,6 @@
 # Testing Framework for Solar System Suite
 # Comprehensive unit tests, integration tests, and benchmarks
+# Supports both legacy custom framework and Google Test
 
 cmake_minimum_required(VERSION 3.15)
 
@@ -8,6 +9,13 @@ enable_testing()
 
 # Find required packages for testing
 find_package(Threads REQUIRED)
+
+# ============================================================================
+# Test Configuration
+# ============================================================================
+set(TEST_TIMEOUT 30 CACHE STRING "Test timeout in seconds")
+set(BENCHMARK_ITERATIONS 1000 CACHE STRING "Number of benchmark iterations")
+set(TEST_PARALLEL_LEVEL 8 CACHE STRING "Number of parallel test jobs")
 
 # ============================================================================
 # Google Test Integration
@@ -66,9 +74,50 @@ endif()
 # Enable automatic test discovery for Google Test
 include(GoogleTest)
 
-# Test configuration
-set(TEST_TIMEOUT 30 CACHE STRING "Test timeout in seconds")
-set(BENCHMARK_ITERATIONS 1000 CACHE STRING "Number of benchmark iterations")
+# ============================================================================
+# Helper Function: Create Google Test Executable
+# ============================================================================
+# Usage: add_gtest_executable(test_name source1.cpp source2.cpp ...)
+# This function creates a test executable linked with Google Test
+function(add_gtest_executable TEST_NAME)
+  if(NOT GTEST_AVAILABLE)
+    message(WARNING "Google Test not available, skipping ${TEST_NAME}")
+    return()
+  endif()
+
+  add_executable(${TEST_NAME} ${ARGN})
+  target_link_libraries(${TEST_NAME}
+    GTest::gtest_main
+    GTest::gmock
+    solar_core
+    solar_jpl
+    solar_utils
+    Threads::Threads
+  )
+
+  # Use gtest_discover_tests for automatic test discovery
+  gtest_discover_tests(${TEST_NAME}
+    DISCOVERY_TIMEOUT ${TEST_TIMEOUT}
+    PROPERTIES
+      TIMEOUT ${TEST_TIMEOUT}
+  )
+endfunction()
+
+# ============================================================================
+# Helper Function: Create Legacy Test Executable
+# ============================================================================
+# Usage: add_legacy_test_executable(test_name source1.cpp source2.cpp ...)
+# This function creates a test executable using the legacy custom framework
+function(add_legacy_test_executable TEST_NAME)
+  add_executable(${TEST_NAME} ${ARGN})
+  target_link_libraries(${TEST_NAME}
+    test_utils
+    solar_core
+    solar_jpl
+    solar_utils
+    Threads::Threads
+  )
+endfunction()
 
 # Include directories for tests
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../lib/solar_core)
@@ -78,7 +127,6 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../lib/solar_utils)
 # Test utilities library
 add_library(test_utils STATIC
     utils/test_framework.cpp
-    utils/test_data.cpp
     utils/test_data_manager.cpp
     utils/benchmark_utils.cpp
     utils/test_port_manager.cpp
@@ -106,28 +154,35 @@ add_subdirectory(integration)
 # Performance Benchmarks
 add_subdirectory(benchmarks)
 
-# Custom targets for different test categories
+# Custom targets for different test categories with parallel execution
 add_custom_target(test-unit
-    COMMAND ${CMAKE_CTEST_COMMAND} -L "unit" --output-on-failure
-    COMMENT "Running unit tests"
+    COMMAND ${CMAKE_CTEST_COMMAND} -L "unit" --output-on-failure -j ${TEST_PARALLEL_LEVEL}
+    COMMENT "Running unit tests (parallel: ${TEST_PARALLEL_LEVEL})"
     VERBATIM
 )
 
 add_custom_target(test-integration
-    COMMAND ${CMAKE_CTEST_COMMAND} -L "integration" --output-on-failure
-    COMMENT "Running integration tests"
+    COMMAND ${CMAKE_CTEST_COMMAND} -L "integration" --output-on-failure -j ${TEST_PARALLEL_LEVEL}
+    COMMENT "Running integration tests (parallel: ${TEST_PARALLEL_LEVEL})"
     VERBATIM
 )
 
 add_custom_target(test-benchmarks
     COMMAND ${CMAKE_CTEST_COMMAND} -L "benchmark" --output-on-failure
-    COMMENT "Running performance benchmarks"
+    COMMENT "Running performance benchmarks (sequential for accurate timing)"
     VERBATIM
 )
 
 add_custom_target(test-all
-    COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
-    COMMENT "Running all tests"
+    COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure -j ${TEST_PARALLEL_LEVEL}
+    COMMENT "Running all tests (parallel: ${TEST_PARALLEL_LEVEL})"
+    VERBATIM
+)
+
+# Google Test specific targets
+add_custom_target(test-gtest
+    COMMAND ${CMAKE_CTEST_COMMAND} -L "gtest" --output-on-failure -j ${TEST_PARALLEL_LEVEL}
+    COMMENT "Running Google Test tests only"
     VERBATIM
 )
 
@@ -169,6 +224,8 @@ else()
   message(STATUS "    Source: FetchContent (v1.14.0)")
 endif()
 message(STATUS "  Test timeout: ${TEST_TIMEOUT} seconds")
+message(STATUS "  Parallel level: ${TEST_PARALLEL_LEVEL} jobs")
 message(STATUS "  Benchmark iterations: ${BENCHMARK_ITERATIONS}")
 message(STATUS "  Coverage tools: ${GCOV_EXECUTABLE} ${LCOV_EXECUTABLE} ${GENHTML_EXECUTABLE}")
 message(STATUS "  Test categories: unit, integration, benchmarks")
+message(STATUS "  Migration status: Transitioning from custom framework to Google Test")
