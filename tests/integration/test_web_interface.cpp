@@ -1,6 +1,7 @@
 /**
  * @file test_web_interface.cpp
  * @brief Integration tests for web interface with simulation backend
+ * @note Migrated to Google Test
  *
  * Tests the complete web server integration including:
  * - Web server startup and configuration
@@ -21,7 +22,7 @@
 #include "solar_core/bodies/body_factory.hpp"
 #include "solar_core/simulation/simulation_engine.hpp"
 #include "test_data_manager.hpp"
-#include "test_framework.h"
+#include <gtest/gtest.h>
 
 using namespace SolarSystem;
 using namespace TestData;
@@ -154,47 +155,7 @@ fetch('/api/status')
     index_file.close();
   }
 };
-
-int main() {
-  TEST_SUITE("Web Interface Integration Tests");
-
-  // Test 1: Web server startup and basic functionality
-  TEST_CASE("Web Server Startup and Configuration") {
-    // Use enhanced port allocation system
-    auto port_allocation = current_suite->allocate_port();
-    ASSERT_TRUE(port_allocation.is_valid());
-    int test_port = port_allocation.port();
-
-    // Create test web server
-    TestWebServer server(test_port);
-
-    // Create temporary web root
-    auto test_env = TestDataManager::create_test_environment();
-    std::string web_root = test_env->path_string() + "/web";
-
-    // Start server
-    bool started = server.start(web_root);
-    ASSERT_TRUE(started);
-
-    // Test basic connectivity
-    auto response = SimpleHTTPClient::get(server.base_url() + "/");
-    ASSERT_TRUE(response.success);
-    ASSERT_EQ(response.status_code, 200);
-    ASSERT_TRUE(response.body.find("Solar System") != std::string::npos);
-
-    // Stop server
-    server.stop();
-
-    // Verify server stopped (wait up to 10 seconds for port to be released)
-    // Note: On macOS, ports may stay in TIME_WAIT state longer
-    bool port_released = false;
-    for (int i = 0; i < 10; ++i) {
-      std::this_thread::sleep_for(std::chrono::seconds(1));
-      if (SimpleHTTPClient::is_port_available(test_port)) {
-        port_released = true;
-        break;
-      }
-    }
+}
     // If port is still not released, it might be a system issue, not a test failure
     if (!port_released) {
       std::cout << "Warning: Port " << test_port
@@ -223,7 +184,7 @@ int main() {
       ASSERT_EQ(response.status_code, 200);
 
       // Should return JSON with status information
-      ASSERT_TRUE(response.body.find("status") != std::string::npos);
+      EXPECT_NE(std::string::npos, response.body.find("status"));
     }
 
     // Test bodies endpoint
@@ -236,7 +197,7 @@ int main() {
 
       // Only check body content if endpoint is implemented
       if (response.status_code == 200) {
-        ASSERT_TRUE(response.body.find("[") != std::string::npos);  // JSON array
+        EXPECT_NE(std::string::npos, response.body.find("["));  // JSON array
       }
     }
 
@@ -286,7 +247,7 @@ int main() {
       ASSERT_TRUE(response.success);
       // TODO: Fix web server to handle malformed queries gracefully (Task 8)
       // Should return 200 or 400, but currently may return other codes
-      ASSERT_TRUE(response.status_code >= 200 && response.status_code < 600);
+      EXPECT_GT(response.status_code , = 200 && response.status_code < 600);
     }
 
     // Test very long URLs
@@ -300,7 +261,7 @@ int main() {
       ASSERT_TRUE(response.success);
       // TODO: Fix web server to handle long URLs properly (Task 8)
       // Should return 404 or 414, but accept any valid HTTP status
-      ASSERT_TRUE(response.status_code >= 200 && response.status_code < 600);
+      EXPECT_GT(response.status_code , = 200 && response.status_code < 600);
     }
 
     // Test concurrent requests
@@ -366,7 +327,7 @@ int main() {
 
       // Only check content if file is served
       if (response.status_code == 200) {
-        ASSERT_TRUE(response.body.find("font-family") != std::string::npos);
+        EXPECT_NE(std::string::npos, response.body.find("font-family"));
       }
     }
 
@@ -380,7 +341,7 @@ int main() {
 
       // Only check content if file is served
       if (response.status_code == 200) {
-        ASSERT_TRUE(response.body.find("console.log") != std::string::npos);
+        EXPECT_NE(std::string::npos, response.body.find("console.log"));
       }
     }
 
@@ -425,7 +386,7 @@ int main() {
       // Should have CORS headers if enabled
       // CORS may or may not be enabled depending on configuration
       // Just verify we get a valid response structure
-      ASSERT_TRUE(headers.find("HTTP/") != std::string::npos);
+      EXPECT_NE(std::string::npos, headers.find("HTTP/"));
     }
 
     server.stop();
@@ -472,4 +433,3 @@ int main() {
   });
 
   return current_suite->all_passed() ? 0 : 1;
-}

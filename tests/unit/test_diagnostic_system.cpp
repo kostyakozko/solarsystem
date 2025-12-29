@@ -1,19 +1,16 @@
 /**
  * @file test_diagnostic_system.cpp
  * @brief Unit tests for diagnostic and troubleshooting system
+ * @note Migrated to Google Test
  */
 
-#include "../utils/test_framework.h"
+#include <gtest/gtest.h>
 
 #include "solar_core/diagnostics/diagnostic_system.hpp"
 
 using namespace SolarSystem::Diagnostics;
-
-int main() {
-  TestSuite suite("Diagnostic System Tests");
-
   // Utility function tests
-  suite.run_test("Severity String Conversion", []() {
+TEST(DiagnosticSystemTests, Severity_String_Conversion) {
     if (severity_to_string(DiagnosticSeverity::INFO) != "INFO") {
       throw std::runtime_error("Wrong INFO string");
     }
@@ -33,9 +30,9 @@ int main() {
     if (string_to_severity("WARNING") != DiagnosticSeverity::WARNING) {
       throw std::runtime_error("Wrong WARNING parse");
     }
-  });
+}
 
-  suite.run_test("Category String Conversion", []() {
+TEST(DiagnosticSystemTests, Category_String_Conversion) {
     if (category_to_string(DiagnosticCategory::SYSTEM) != "SYSTEM") {
       throw std::runtime_error("Wrong SYSTEM string");
     }
@@ -49,10 +46,10 @@ int main() {
     if (string_to_category("MEMORY") != DiagnosticCategory::MEMORY) {
       throw std::runtime_error("Wrong MEMORY parse");
     }
-  });
+}
 
   // DiagnosticIssue tests
-  suite.run_test("Diagnostic Issue Creation", []() {
+TEST(DiagnosticSystemTests, Diagnostic_Issue_Creation) {
     DiagnosticIssue issue;
     issue.id = "TEST_001";
     issue.severity = DiagnosticSeverity::WARNING;
@@ -66,10 +63,10 @@ int main() {
     if (issue.id != "TEST_001") throw std::runtime_error("Wrong ID");
     if (issue.severity != DiagnosticSeverity::WARNING) throw std::runtime_error("Wrong severity");
     if (issue.suggested_fixes.size() != 2) throw std::runtime_error("Wrong fixes count");
-  });
+}
 
   // DiagnosticCheck tests
-  suite.run_test("Diagnostic Check Registration", []() {
+TEST(DiagnosticSystemTests, Diagnostic_Check_Registration) {
     auto& diag = DiagnosticSystem::instance();
 
     DiagnosticCheck check;
@@ -92,9 +89,9 @@ int main() {
     if (result.check_name != "test_check") throw std::runtime_error("Wrong check name");
 
     diag.unregister_check("test_check");
-  });
+}
 
-  suite.run_test("Diagnostic Check Enable/Disable", []() {
+TEST(DiagnosticSystemTests, Diagnostic_Check_EnableDisable) {
     auto& diag = DiagnosticSystem::instance();
 
     DiagnosticCheck check;
@@ -120,10 +117,10 @@ int main() {
     if (!result.passed) throw std::runtime_error("Enabled check should pass");
 
     diag.unregister_check("enable_test");
-  });
+}
 
   // System health tests
-  suite.run_test("System Health Status", []() {
+TEST(DiagnosticSystemTests, System_Health_Status) {
     auto& diag = DiagnosticSystem::instance();
 
     auto health = diag.get_system_health();
@@ -131,18 +128,18 @@ int main() {
     // Health should have valid status
     if (health.total_checks < 0) throw std::runtime_error("Invalid total checks");
     if (health.passed_checks < 0) throw std::runtime_error("Invalid passed checks");
-  });
+}
 
   // Issue management tests
-  suite.run_test("Issue Management", []() {
+TEST(DiagnosticSystemTests, Issue_Management) {
     auto& diag = DiagnosticSystem::instance();
     diag.clear_issues();
 
     auto issues = diag.get_issues();
     if (!issues.empty()) throw std::runtime_error("Should have no issues after clear");
-  });
+}
 
-  suite.run_test("Issues By Severity", []() {
+TEST(DiagnosticSystemTests, Issues_By_Severity) {
     auto& diag = DiagnosticSystem::instance();
     diag.clear_issues();
 
@@ -183,9 +180,9 @@ int main() {
 
     diag.unregister_check("severity_test");
     diag.clear_issues();
-  });
+}
 
-  suite.run_test("Issues By Category", []() {
+TEST(DiagnosticSystemTests, Issues_By_Category) {
     auto& diag = DiagnosticSystem::instance();
     diag.clear_issues();
 
@@ -216,10 +213,10 @@ int main() {
 
     diag.unregister_check("category_test");
     diag.clear_issues();
-  });
+}
 
   // Auto-fix tests
-  suite.run_test("Auto-Fix Registration", []() {
+TEST(DiagnosticSystemTests, Auto_Fix_Registration) {
     auto& diag = DiagnosticSystem::instance();
 
     bool fix_called = false;
@@ -237,10 +234,10 @@ int main() {
     if (!fix_called) throw std::runtime_error("Fix function should be called");
 
     diag.unregister_auto_fix("TEST_FIX");
-  });
+}
 
   // Report generation tests
-  suite.run_test("Report Generation", []() {
+TEST(DiagnosticSystemTests, Report_Generation) {
     auto& diag = DiagnosticSystem::instance();
     diag.clear_issues();
 
@@ -250,9 +247,9 @@ int main() {
     if (report.check_results.empty()) {
       // It's okay if no checks are registered
     }
-  });
+}
 
-  suite.run_test("Report String Format", []() {
+TEST(DiagnosticSystemTests, Report_String_Format) {
     auto& diag = DiagnosticSystem::instance();
     diag.clear_issues();
 
@@ -263,9 +260,9 @@ int main() {
     if (report_str.find("Diagnostic Report") == std::string::npos) {
       throw std::runtime_error("Report should contain title");
     }
-  });
+}
 
-  suite.run_test("Report JSON Format", []() {
+TEST(DiagnosticSystemTests, Report_JSON_Format) {
     auto& diag = DiagnosticSystem::instance();
     diag.clear_issues();
 
@@ -276,9 +273,9 @@ int main() {
     if (json.find("report_id") == std::string::npos) {
       throw std::runtime_error("JSON should contain report_id");
     }
-  });
+}
 
-  suite.run_test("Summary Generation", []() {
+TEST(DiagnosticSystemTests, Summary_Generation) {
     auto& diag = DiagnosticSystem::instance();
 
     std::string summary = diag.generate_summary();
@@ -287,33 +284,33 @@ int main() {
     if (summary.find("System Health") == std::string::npos) {
       throw std::runtime_error("Summary should contain health status");
     }
-  });
+}
 
   // Built-in checks tests
-  suite.run_test("Built-in Memory Check", []() {
+TEST(DiagnosticSystemTests, Built_in_Memory_Check) {
     auto result = BuiltInChecks::check_memory_usage();
     if (result.check_name.empty()) throw std::runtime_error("Check should have name");
-  });
+}
 
-  suite.run_test("Built-in Disk Check", []() {
+TEST(DiagnosticSystemTests, Built_in_Disk_Check) {
     auto result = BuiltInChecks::check_disk_space();
     if (result.check_name.empty()) throw std::runtime_error("Check should have name");
-  });
+}
 
-  suite.run_test("Built-in Configuration Check", []() {
+TEST(DiagnosticSystemTests, Built_in_Configuration_Check) {
     auto result = BuiltInChecks::check_configuration();
     if (result.check_name.empty()) throw std::runtime_error("Check should have name");
-  });
+}
 
   // Troubleshooting assistant tests
-  suite.run_test("Troubleshooting Assistant Problem Detection", []() {
+TEST(DiagnosticSystemTests, Troubleshooting_Assistant_Problem_Detection) {
     auto& assistant = TroubleshootingAssistant::instance();
 
     auto problems = assistant.detect_problems();
     // Should return list of problems (may be empty)
-  });
+}
 
-  suite.run_test("Troubleshooting Assistant Solution Database", []() {
+TEST(DiagnosticSystemTests, Troubleshooting_Assistant_Solution_Database) {
     auto& assistant = TroubleshootingAssistant::instance();
 
     assistant.add_solution("memory", "Increase memory allocation");
@@ -321,9 +318,9 @@ int main() {
 
     auto solutions = assistant.find_solutions("memory leak detected");
     if (solutions.size() < 2) throw std::runtime_error("Should find at least 2 solutions");
-  });
+}
 
-  suite.run_test("Troubleshooting Assistant Issue Classification", []() {
+TEST(DiagnosticSystemTests, Troubleshooting_Assistant_Issue_Classification) {
     auto& assistant = TroubleshootingAssistant::instance();
 
     DiagnosticIssue memory_issue;
@@ -339,20 +336,20 @@ int main() {
     if (!assistant.is_configuration_issue(config_issue)) {
       throw std::runtime_error("Should identify as configuration issue");
     }
-  });
+}
 
   // System info tests
-  suite.run_test("System Info Collection", []() {
+TEST(DiagnosticSystemTests, System_Info_Collection) {
     auto& diag = DiagnosticSystem::instance();
 
     diag.collect_system_info();
     auto info = diag.get_system_info();
 
     if (info.empty()) throw std::runtime_error("Should have system info");
-  });
+}
 
   // Category checks tests
-  suite.run_test("Run Category Checks", []() {
+TEST(DiagnosticSystemTests, Run_Category_Checks) {
     auto& diag = DiagnosticSystem::instance();
 
     DiagnosticCheck check;
@@ -373,8 +370,5 @@ int main() {
     if (results.empty()) throw std::runtime_error("Should have performance check results");
 
     diag.unregister_check("category_check_test");
-  });
-
-  suite.print_summary();
-  return suite.all_passed() ? 0 : 1;
 }
+

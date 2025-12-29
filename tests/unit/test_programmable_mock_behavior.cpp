@@ -1,6 +1,7 @@
 /**
  * @file test_programmable_mock_behavior.cpp
  * @brief Programmable mock behavior system tests (Task 12)
+ * @note Migrated to Google Test
  *
  * Tests programmable mock behavior:
  * - Flexible mock configuration and response programming
@@ -17,7 +18,7 @@
 #include <string>
 #include <vector>
 
-#include "test_framework.h"
+#include <gtest/gtest.h>
 
 /**
  * @brief Programmable mock behavior system
@@ -116,8 +117,6 @@ class ProgrammableMock {
   std::vector<std::string> interactions_;
   std::vector<Response> recorded_responses_;
 };
-
-int main() {
   TEST_SUITE("Programmable Mock Behavior Tests");
 
   // Test 1: Flexible mock configuration
@@ -159,7 +158,7 @@ int main() {
       });
 
       auto resp = mock.execute("echo_hello");
-      ASSERT_TRUE(resp.data.find("echo_hello") != std::string::npos);
+      EXPECT_NE(std::string::npos, resp.data.find("echo_hello"));
     }
   });
 
@@ -327,7 +326,7 @@ int main() {
 
       for (size_t i = 0; i < 5; ++i) {
         auto played = mock2.playback(i);
-        ASSERT_TRUE(played.data.find("seq_") != std::string::npos);
+        EXPECT_NE(std::string::npos, played.data.find("seq_"));
       }
     }
   });
@@ -385,9 +384,8 @@ int main() {
 
       // Playback
       auto played = mock.playback(0);
-      ASSERT_TRUE(played.data.find("test1") != std::string::npos);
+      EXPECT_NE(std::string::npos, played.data.find("test1"));
     }
   });
 
   return current_suite->all_passed() ? 0 : 1;
-}

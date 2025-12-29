@@ -1,26 +1,20 @@
 /**
  * @file test_user_interface.cpp
  * @brief Unit tests for user-friendly interface components
+ * @note Migrated to Google Test
  */
 
-#include "../utils/test_framework.h"
+#include <gtest/gtest.h>
 #include "solar_core/ui/user_interface.hpp"
 
 using namespace SolarSystem::UI;
-
-int main() {
-  TestSuite suite("User Interface Tests");
-
-  // Test 1: Progress indicator creation
-  suite.run_test("Progress Indicator Creation", []() {
+TEST(UserInterfaceTests, Progress_Indicator_Creation) {
     ProgressIndicator progress("Test Task", 100);
 
     if (progress.get_percentage() != 0.0) throw std::runtime_error("Initial percentage should be 0");
     if (progress.is_complete()) throw std::runtime_error("Should not be complete initially");
-  });
-
-  // Test 2: Progress indicator update
-  suite.run_test("Progress Indicator Update", []() {
+}
+TEST(UserInterfaceTests, Progress_Indicator_Update) {
     ProgressIndicator progress("Test Task", 100);
 
     progress.update(50);
@@ -28,29 +22,23 @@ int main() {
 
     progress.update(75, "Processing...");
     if (progress.get_percentage() != 75.0) throw std::runtime_error("Percentage should be 75");
-  });
-
-  // Test 3: Progress indicator completion
-  suite.run_test("Progress Indicator Completion", []() {
+}
+TEST(UserInterfaceTests, Progress_Indicator_Completion) {
     ProgressIndicator progress("Test Task", 100);
 
     progress.complete();
     if (!progress.is_complete()) throw std::runtime_error("Should be complete");
     if (progress.get_percentage() != 100.0) throw std::runtime_error("Percentage should be 100");
-  });
-
-  // Test 4: Progress indicator rendering
-  suite.run_test("Progress Indicator Rendering", []() {
+}
+TEST(UserInterfaceTests, Progress_Indicator_Rendering) {
     ProgressIndicator progress("Test Task", 100);
     progress.update(50);
 
     std::string rendered = progress.render();
     if (rendered.empty()) throw std::runtime_error("Rendered output is empty");
     if (rendered.find("Test Task") == std::string::npos) throw std::runtime_error("Task name not in output");
-  });
-
-  // Test 5: Progress styles
-  suite.run_test("Progress Styles", []() {
+}
+TEST(UserInterfaceTests, Progress_Styles) {
     ProgressIndicator progress("Test Task", 100);
     progress.update(50);
 
@@ -65,10 +53,8 @@ int main() {
     progress.set_style(ProgressStyle::MINIMAL);
     std::string minimal = progress.render();
     if (minimal.empty()) throw std::runtime_error("Minimal style output is empty");
-  });
-
-  // Test 6: Status feedback
-  suite.run_test("Status Feedback", []() {
+}
+TEST(UserInterfaceTests, Status_Feedback) {
     auto& status = StatusFeedback::instance();
     status.clear();
 
@@ -81,10 +67,8 @@ int main() {
     if (messages.size() != 4) throw std::runtime_error("Should have 4 messages");
     if (messages[0].level != StatusLevel::INFO) throw std::runtime_error("First message should be INFO");
     if (messages[1].level != StatusLevel::SUCCESS) throw std::runtime_error("Second message should be SUCCESS");
-  });
-
-  // Test 7: Status message formatting
-  suite.run_test("Status Message Formatting", []() {
+}
+TEST(UserInterfaceTests, Status_Message_Formatting) {
     auto& status = StatusFeedback::instance();
     status.clear();
 
@@ -94,10 +78,8 @@ int main() {
     std::string formatted = status.format_message(messages[0]);
     if (formatted.empty()) throw std::runtime_error("Formatted message is empty");
     if (formatted.find("Test info") == std::string::npos) throw std::runtime_error("Message text not in output");
-  });
-
-  // Test 8: Interactive input
-  suite.run_test("Interactive Input", []() {
+}
+TEST(UserInterfaceTests, Interactive_Input) {
     auto& input = InteractiveInput::instance();
 
     input.set_interactive_mode(false);
@@ -110,10 +92,8 @@ int main() {
 
     std::string result = input.prompt(prompt);
     if (result != "default") throw std::runtime_error("Should return default value");
-  });
-
-  // Test 9: Accessibility support
-  suite.run_test("Accessibility Support", []() {
+}
+TEST(UserInterfaceTests, Accessibility_Support) {
     auto& accessibility = AccessibilitySupport::instance();
 
     accessibility.enable_screen_reader_mode(true);
@@ -124,20 +104,16 @@ int main() {
 
     accessibility.set_text_scale(1.5);
     if (accessibility.get_text_scale() != 1.5) throw std::runtime_error("Text scale mismatch");
-  });
-
-  // Test 10: Alt text
-  suite.run_test("Alt Text", []() {
+}
+TEST(UserInterfaceTests, Alt_Text) {
     auto& accessibility = AccessibilitySupport::instance();
 
     accessibility.set_alt_text("element1", "Description of element 1");
     std::string alt = accessibility.get_alt_text("element1");
 
     if (alt != "Description of element 1") throw std::runtime_error("Alt text mismatch");
-  });
-
-  // Test 11: Format table
-  suite.run_test("Format Table", []() {
+}
+TEST(UserInterfaceTests, Format_Table) {
     std::vector<std::string> headers = {"Name", "Value", "Status"};
     std::vector<std::vector<std::string>> data = {
       {"Item1", "100", "OK"},
@@ -147,10 +123,8 @@ int main() {
     std::string table = FormattingUtils::format_table(data, headers);
     if (table.empty()) throw std::runtime_error("Table output is empty");
     if (table.find("Name") == std::string::npos) throw std::runtime_error("Header not in table");
-  });
-
-  // Test 12: Format list
-  suite.run_test("Format List", []() {
+}
+TEST(UserInterfaceTests, Format_List) {
     std::vector<std::string> items = {"Item 1", "Item 2", "Item 3"};
 
     std::string bulleted = FormattingUtils::format_list(items, false);
@@ -159,24 +133,17 @@ int main() {
     std::string numbered = FormattingUtils::format_list(items, true);
     if (numbered.empty()) throw std::runtime_error("Numbered list is empty");
     if (numbered.find("1.") == std::string::npos) throw std::runtime_error("Numbering not in list");
-  });
-
-  // Test 13: Format box
-  suite.run_test("Format Box", []() {
+}
+TEST(UserInterfaceTests, Format_Box) {
     std::string box = FormattingUtils::format_box("Test content", "Test Title");
     if (box.empty()) throw std::runtime_error("Box output is empty");
     if (box.find("Test Title") == std::string::npos) throw std::runtime_error("Title not in box");
-  });
-
-  // Test 14: Text formatting
-  suite.run_test("Text Formatting", []() {
+}
+TEST(UserInterfaceTests, Text_Formatting) {
     std::string bold = FormattingUtils::bold("Bold text");
     if (bold.empty()) throw std::runtime_error("Bold output is empty");
 
     std::string colored = FormattingUtils::colorize("Red text", "red");
     if (colored.empty()) throw std::runtime_error("Colored output is empty");
-  });
-
-  suite.print_summary();
-  return suite.get_failed_count() > 0 ? 1 : 0;
 }
+

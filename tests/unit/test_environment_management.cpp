@@ -1,6 +1,7 @@
 /**
  * @file test_environment_management.cpp
  * @brief Isolated test environment management tests (Task 16)
+ * @note Migrated to Google Test
  *
  * Tests environment management capabilities:
  * - Temporary test environment creation and cleanup
@@ -19,7 +20,7 @@
 #include <string>
 #include <vector>
 
-#include "test_framework.h"
+#include <gtest/gtest.h>
 
 namespace fs = std::filesystem;
 
@@ -270,8 +271,6 @@ class TestEnvironmentManager {
     }
   }
 };
-
-int main() {
   TEST_SUITE("Test Environment Management Tests");
 
   // Test 1: Temporary test environment creation and cleanup
@@ -564,4 +563,3 @@ int main() {
   });
 
   return current_suite->all_passed() ? 0 : 1;
-}

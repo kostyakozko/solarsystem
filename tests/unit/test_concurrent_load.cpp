@@ -1,6 +1,7 @@
 /**
  * @file test_concurrent_load.cpp
  * @brief Concurrent load and stress testing (Task 24)
+ * @note Migrated to Google Test
  *
  * Tests system behavior under concurrent load:
  * - Realistic concurrent usage pattern testing
@@ -25,7 +26,7 @@
 #include <thread>
 #include <vector>
 
-#include "test_framework.h"
+#include <gtest/gtest.h>
 
 /**
  * @brief Resource monitor for tracking system usage
@@ -176,8 +177,6 @@ class LoadGenerator {
 
   bool is_running() const { return running_; }
 };
-
-int main() {
   TEST_SUITE("Concurrent Load and Stress Tests");
 
   // Test 1: Realistic concurrent usage patterns

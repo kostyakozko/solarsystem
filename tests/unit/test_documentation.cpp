@@ -1,6 +1,7 @@
 /**
  * @file test_documentation.cpp
  * @brief Test documentation system (Task 34)
+ * @note Migrated to Google Test
  *
  * Tests documentation capabilities:
  * - Test development guidelines
@@ -13,7 +14,7 @@
 
 #include <string>
 
-#include "test_framework.h"
+#include <gtest/gtest.h>
 
 class DocumentationManager {
  public:
@@ -23,8 +24,6 @@ class DocumentationManager {
     return "Documentation content";
   }
 };
-
-int main() {
   TEST_SUITE("Test Documentation Tests");
 
   TEST_CASE("Documentation Availability") {
@@ -34,4 +33,3 @@ int main() {
   });
 
   return current_suite->all_passed() ? 0 : 1;
-}

@@ -1,18 +1,14 @@
 /**
  * @file test_help_system.cpp
  * @brief Unit tests for comprehensive help system
+ * @note Migrated to Google Test
  */
 
-#include "../utils/test_framework.h"
+#include <gtest/gtest.h>
 #include "solar_core/help/help_system.hpp"
 
 using namespace SolarSystem::Help;
-
-int main() {
-  TestSuite suite("Help System Tests");
-
-  // Test 1: Register and retrieve topic
-  suite.run_test("Register and Retrieve Topic", []() {
+TEST(HelpSystemTests, Register_and_Retrieve_Topic) {
     auto& help = HelpSystem::instance();
 
     HelpTopic topic;
@@ -28,10 +24,8 @@ int main() {
     auto retrieved = help.get_topic("test_topic");
     if (!retrieved) throw std::runtime_error("Topic not found");
     if (retrieved->title != "Test Topic") throw std::runtime_error("Title mismatch");
-  });
-
-  // Test 2: Search functionality
-  suite.run_test("Search Functionality", []() {
+}
+TEST(HelpSystemTests, Search_Functionality) {
     auto& help = HelpSystem::instance();
 
     HelpTopic topic;
@@ -47,18 +41,14 @@ int main() {
     auto results = help.search("search");
     if (results.empty()) throw std::runtime_error("No search results found");
     if (results[0].relevance_score <= 0.0) throw std::runtime_error("Invalid relevance score");
-  });
-
-  // Test 3: Get topics by category
-  suite.run_test("Get Topics by Category", []() {
+}
+TEST(HelpSystemTests, Get_Topics_by_Category) {
     auto& help = HelpSystem::instance();
 
     auto topics = help.get_topics_by_category(HelpCategory::GETTING_STARTED);
     if (topics.empty()) throw std::runtime_error("No topics found in category");
-  });
-
-  // Test 4: Tutorial registration
-  suite.run_test("Tutorial Registration", []() {
+}
+TEST(HelpSystemTests, Tutorial_Registration) {
     auto& help = HelpSystem::instance();
 
     Tutorial tutorial;
@@ -78,10 +68,8 @@ int main() {
     auto retrieved = help.get_tutorial("test_tutorial");
     if (!retrieved) throw std::runtime_error("Tutorial not found");
     if (retrieved->steps.size() != 1) throw std::runtime_error("Step count mismatch");
-  });
-
-  // Test 5: Format topic
-  suite.run_test("Format Topic", []() {
+}
+TEST(HelpSystemTests, Format_Topic) {
     auto& help = HelpSystem::instance();
 
     HelpTopic topic;
@@ -97,10 +85,8 @@ int main() {
     std::string formatted = help.format_topic(topic, HelpFormat::PLAIN_TEXT);
     if (formatted.empty()) throw std::runtime_error("Formatted output is empty");
     if (formatted.find("Format Test") == std::string::npos) throw std::runtime_error("Title not in output");
-  });
-
-  // Test 6: Quick help
-  suite.run_test("Quick Help", []() {
+}
+TEST(HelpSystemTests, Quick_Help) {
     auto& help = HelpSystem::instance();
 
     HelpTopic topic;
@@ -115,10 +101,8 @@ int main() {
 
     std::string quick_help = help.get_quick_help("quick");
     if (quick_help.empty()) throw std::runtime_error("Quick help is empty");
-  });
-
-  // Test 7: Help assistant workflow
-  suite.run_test("Help Assistant Workflow", []() {
+}
+TEST(HelpSystemTests, Help_Assistant_Workflow) {
     auto& help = HelpSystem::instance();
     auto& assistant = HelpAssistant::instance();
 
@@ -150,10 +134,8 @@ int main() {
     assistant.complete_current_step();
 
     if (!assistant.is_workflow_complete()) throw std::runtime_error("Workflow should be complete");
-  });
-
-  // Test 8: Search by keyword
-  suite.run_test("Search by Keyword", []() {
+}
+TEST(HelpSystemTests, Search_by_Keyword) {
     auto& help = HelpSystem::instance();
 
     HelpTopic topic;
@@ -168,10 +150,8 @@ int main() {
 
     auto results = help.search_by_keyword("special_keyword");
     if (results.empty()) throw std::runtime_error("No results for keyword search");
-  });
-
-  // Test 9: Topic suggestions
-  suite.run_test("Topic Suggestions", []() {
+}
+TEST(HelpSystemTests, Topic_Suggestions) {
     auto& help = HelpSystem::instance();
 
     HelpTopic topic;
@@ -185,16 +165,11 @@ int main() {
 
     auto suggestions = help.suggest_topics("Suggestion");
     if (suggestions.empty()) throw std::runtime_error("No suggestions found");
-  });
-
-  // Test 10: Troubleshooting assistance
-  suite.run_test("Troubleshooting Assistance", []() {
+}
+TEST(HelpSystemTests, Troubleshooting_Assistance) {
     auto& assistant = HelpAssistant::instance();
 
     auto steps = assistant.get_troubleshooting_steps("test problem");
     if (steps.empty()) throw std::runtime_error("No troubleshooting steps");
-  });
-
-  suite.print_summary();
-  return suite.get_failed_count() > 0 ? 1 : 0;
 }
+

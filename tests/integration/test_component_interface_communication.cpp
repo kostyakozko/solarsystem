@@ -1,6 +1,7 @@
 /**
  * @file test_component_interface_communication.cpp
  * @brief Component interface and communication integration tests (Task 6)
+ * @note Migrated to Google Test
  *
  * Tests comprehensive component interface and communication including:
  * - Inter-component data flow validation
@@ -25,7 +26,7 @@
 #include "solar_core/simulation/simulation_engine.hpp"
 #include "solar_jpl/jpl_client.hpp"
 #include "test_data_manager.hpp"
-#include "test_framework.h"
+#include <gtest/gtest.h>
 
 using namespace SolarSystem;
 using namespace TestData;
@@ -77,8 +78,6 @@ class ComponentInterfaceTestUtils {
     return true;
   }
 };
-
-int main() {
   TEST_SUITE("Component Interface and Communication Integration Tests");
 
   // ============================================================================
@@ -301,8 +300,8 @@ int main() {
 
       std::string content((std::istreambuf_iterator<char>(config)),
                           std::istreambuf_iterator<char>());
-      ASSERT_TRUE(content.find("simulation") != std::string::npos);
-      ASSERT_TRUE(content.find("time_step") != std::string::npos);
+      EXPECT_NE(std::string::npos, content.find("simulation"));
+      EXPECT_NE(std::string::npos, content.find("time_step"));
     }
 
     // Test 3.2: Configuration consistency across components
@@ -657,5 +656,3 @@ int main() {
   });
 
   return current_suite->all_passed() ? 0 : 1;
-}
-

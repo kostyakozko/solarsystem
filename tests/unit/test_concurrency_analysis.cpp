@@ -1,6 +1,7 @@
 /**
  * @file test_concurrency_analysis.cpp
  * @brief Concurrency debugging and analysis tools (Task 25)
+ * @note Migrated to Google Test
  *
  * Tests concurrency analysis capabilities:
  * - Thread execution tracing and analysis
@@ -26,7 +27,7 @@
 #include <thread>
 #include <vector>
 
-#include "test_framework.h"
+#include <gtest/gtest.h>
 
 /**
  * @brief Thread execution event
@@ -346,8 +347,6 @@ class ConcurrencyProfiler {
     operation_stats_.clear();
   }
 };
-
-int main() {
   TEST_SUITE("Concurrency Debugging and Analysis Tests");
 
   // Test 1: Thread execution tracing

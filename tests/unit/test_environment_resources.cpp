@@ -1,6 +1,7 @@
 /**
  * @file test_environment_resources.cpp
  * @brief Environment and resource testing (Task 28)
+ * @note Migrated to Google Test
  *
  * Tests environment and resources:
  * - Resource usage and limit testing
@@ -17,7 +18,7 @@
 #include <string>
 #include <vector>
 
-#include "test_framework.h"
+#include <gtest/gtest.h>
 
 /**
  * @brief Environment variable manager
@@ -226,8 +227,6 @@ class ResourceLimitTester {
     return true;
   }
 };
-
-int main() {
   TEST_SUITE("Environment and Resource Tests");
 
   // Test 1: Environment variable access
@@ -395,4 +394,3 @@ int main() {
   });
 
   return current_suite->all_passed() ? 0 : 1;
-}

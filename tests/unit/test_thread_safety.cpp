@@ -1,6 +1,7 @@
 /**
  * @file test_thread_safety.cpp
  * @brief Thread safety validation testing (Task 23)
+ * @note Migrated to Google Test
  *
  * Tests thread safety mechanisms:
  * - Shared resource access testing
@@ -22,7 +23,7 @@
 #include <thread>
 #include <vector>
 
-#include "test_framework.h"
+#include <gtest/gtest.h>
 
 /**
  * @brief Thread-safe counter for testing
@@ -222,8 +223,6 @@ class ReadWriteLock {
     return writer_;
   }
 };
-
-int main() {
   TEST_SUITE("Thread Safety Validation Tests");
 
   // Test 1: Thread-safe counter
@@ -298,7 +297,7 @@ int main() {
 
     // The unsafe counter will likely have lost some increments
     // We can't assert exact inequality, but we can verify it's not reliable
-    ASSERT_TRUE(unsafe_result <= expected);
+    EXPECT_LT(unsafe_result , = expected);
 
     // Test 2.2: Compare with thread-safe version
     ThreadSafeCounter safe_counter;

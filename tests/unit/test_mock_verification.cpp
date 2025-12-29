@@ -1,6 +1,7 @@
 /**
  * @file test_mock_verification.cpp
  * @brief Comprehensive mock verification system tests (Task 13)
+ * @note Migrated to Google Test
  *
  * Tests mock verification capabilities:
  * - Detailed mock interaction verification
@@ -17,7 +18,7 @@
 #include <string>
 #include <vector>
 
-#include "test_framework.h"
+#include <gtest/gtest.h>
 
 /**
  * @brief Mock verification system
@@ -262,8 +263,6 @@ class MockVerifier {
     return report;
   }
 };
-
-int main() {
   TEST_SUITE("Mock Verification System Tests");
 
   // Test 1: Detailed mock interacrification
@@ -297,8 +296,8 @@ int main() {
     // Test 1.3: Verify timestamps
     {
       const auto& history = verifier.get_call_history();
-      ASSERT_TRUE(history[0].timestamp <= history[1].timestamp);
-      ASSERT_TRUE(history[1].timestamp <= history[2].timestamp);
+      EXPECT_LT(history[0].timestamp , = history[1].timestamp);
+      EXPECT_LT(history[1].timestamp , = history[2].timestamp);
     }
 
     // Test 1.4: Verify call indices
@@ -330,8 +329,7 @@ int main() {
       auto result = verifier.verify_call_count("fetch", 5);
       ASSERT_FALSE(result.passed);
       ASSERT_FALSE(result.errors.empty());
-      ASSERT_TRUE(result.errors[0].find("expected 5 calls, got 3") !=
-                  std::string::npos);
+      EXPECT_NE(std::string::npos, result.errors[0].find("expected 5 calls, got 3"));
     }
 
     // Test 2.3: Call count range verification
@@ -390,7 +388,7 @@ int main() {
       auto result = verifier.verify_call_order(expected_order);
       ASSERT_FALSE(result.passed);
       ASSERT_FALSE(result.errors.empty());
-      ASSERT_TRUE(result.errors[0].find("position 0") != std::string::npos);
+      EXPECT_NE(std::string::npos, result.errors[0].find("position 0"));
     }
 
     // Test 3.3: Partial order verification
@@ -415,8 +413,7 @@ int main() {
       std::vector<std::string> expected_order = {"a", "b", "c"};
       auto result = verifier.verify_call_order(expected_order);
       ASSERT_FALSE(result.passed);
-      ASSERT_TRUE(result.summary.find("insufficient calls") !=
-                  std::string::npos);
+      EXPECT_NE(std::string::npos, result.summary.find("insufficient calls"));
     }
   });
 
@@ -442,16 +439,14 @@ int main() {
       auto result =
           verifier.verify_parameters("login", {"user3", "wrong"});
       ASSERT_FALSE(result.passed);
-      ASSERT_TRUE(result.errors[0].find("expected parameters") !=
-                  std::string::npos);
+      EXPECT_NE(std::string::npos, result.errors[0].find("expected parameters"));
     }
 
     // Test 4.3: No calls to method
     {
       auto result = verifier.verify_parameters("logout", {"user1"});
       ASSERT_FALSE(result.passed);
-      ASSERT_TRUE(result.errors[0].find("No calls found") !=
-                  std::string::npos);
+      EXPECT_NE(std::string::npos, result.errors[0].find("No calls found"));
     }
 
     // Test 4.4: Empty parameters
@@ -475,36 +470,36 @@ int main() {
 
       std::string report = verifier.generate_report();
 
-      ASSERT_TRUE(report.find("Total calls: 4") != std::string::npos);
-      ASSERT_TRUE(report.find("Unique methods: 3") != std::string::npos);
-      ASSERT_TRUE(report.find("connect: 1") != std::string::npos);
-      ASSERT_TRUE(report.find("query: 2") != std::string::npos);
-      ASSERT_TRUE(report.find("disconnect: 1") != std::string::npos);
+      EXPECT_NE(std::string::npos, report.find("Total calls: 4"));
+      EXPECT_NE(std::string::npos, report.find("Unique methods: 3"));
+      EXPECT_NE(std::string::npos, report.find("connect: 1"));
+      EXPECT_NE(std::string::npos, report.find("query: 2"));
+      EXPECT_NE(std::string::npos, report.find("disconnect: 1"));
     }
 
     // Test 5.2: Report includes call sequence
     {
       std::string report = verifier.generate_report();
-      ASSERT_TRUE(report.find("Call sequence:") != std::string::npos);
-      ASSERT_TRUE(report.find("[0] connect") != std::string::npos);
-      ASSERT_TRUE(report.find("[1] query") != std::string::npos);
-      ASSERT_TRUE(report.find("[3] disconnect") != std::string::npos);
+      EXPECT_NE(std::string::npos, report.find("Call sequence:"));
+      EXPECT_NE(std::string::npos, report.find("[0] connect"));
+      EXPECT_NE(std::string::npos, report.find("[1] query"));
+      EXPECT_NE(std::string::npos, report.find("[3] disconnect"));
     }
 
     // Test 5.3: Report includes parameters and return values
     {
       std::string report = verifier.generate_report();
-      ASSERT_TRUE(report.find("server1") != std::string::npos);
-      ASSERT_TRUE(report.find("-> ok") != std::string::npos);
-      ASSERT_TRUE(report.find("SELECT *") != std::string::npos);
+      EXPECT_NE(std::string::npos, report.find("server1"));
+      EXPECT_NE(std::string::npos, report.find("-> ok"));
+      EXPECT_NE(std::string::npos, report.find("SELECT *"));
     }
 
     // Test 5.4: Empty report
     {
       verifier.clear();
       std::string report = verifier.generate_report();
-      ASSERT_TRUE(report.find("Total calls: 0") != std::string::npos);
-      ASSERT_TRUE(report.find("Unique methods: 0") != std::string::npos);
+      EXPECT_NE(std::string::npos, report.find("Total calls: 0"));
+      EXPECT_NE(std::string::npos, report.find("Unique methods: 0"));
     }
   });
 
@@ -571,13 +566,11 @@ int main() {
     // Test 6.4: Comprehensive report generation
     {
       std::string report = verifier.generate_report();
-      ASSERT_TRUE(report.find("Total calls: 3") != std::string::npos);
-      ASSERT_TRUE(report.find("transition: 3") != std::string::npos);
-      ASSERT_TRUE(report.find("idle") != std::string::npos);
-      ASSERT_TRUE(report.find("complete") != std::string::npos);
+      EXPECT_NE(std::string::npos, report.find("Total calls: 3"));
+      EXPECT_NE(std::string::npos, report.find("transition: 3"));
+      EXPECT_NE(std::string::npos, report.find("idle"));
+      EXPECT_NE(std::string::npos, report.find("complete"));
     }
   });
 
   return current_suite->all_passed() ? 0 : 1;
-}
-

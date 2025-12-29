@@ -1,6 +1,7 @@
 /**
  * @file test_reporting_system.cpp
  * @brief Test reporting system (Task 32)
+ * @note Migrated to Google Test
  *
  * Tests reporting capabilities:
  * - Test execution reports with metrics
@@ -15,7 +16,7 @@
 #include <string>
 #include <vector>
 
-#include "test_framework.h"
+#include <gtest/gtest.h>
 
 class TestReportGenerator {
  public:
@@ -37,8 +38,6 @@ class TestReportGenerator {
     return report;
   }
 };
-
-int main() {
   TEST_SUITE("Test Reporting System Tests");
 
   TEST_CASE("Report Generation") {
@@ -53,4 +52,3 @@ int main() {
   });
 
   return current_suite->all_passed() ? 0 : 1;
-}

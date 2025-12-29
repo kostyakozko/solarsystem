@@ -1,6 +1,7 @@
 /**
  * @file test_end_to_end.cpp
  * @brief End-to-end integration tests for complete workflows (Task 5)
+ * @note Migrated to Google Test
  *
  * Tests complete user workflows including:
  * - Complete JPL data fetch to simulation workflow
@@ -29,7 +30,7 @@
 #include "solar_core/bodies/body_factory.hpp"
 #include "solar_core/simulation/simulation_engine.hpp"
 #include "test_data_manager.hpp"
-#include "test_framework.h"
+#include <gtest/gtest.h>
 
 using namespace SolarSystem;
 using namespace TestData;
@@ -103,8 +104,6 @@ class TestApplicationRunner {
     return buffer.str();
   }
 };
-
-int main() {
   TEST_SUITE("End-to-End Integration Tests");
 
   // Test 1: Complete solar system launcher workflow
@@ -276,7 +275,7 @@ TEST_CASE("Web Interface Integration Workflow") {
     std::string test_command = "curl -s -f http://localhost:" + std::to_string(test_port) + "/";
     auto web_result = TestApplicationRunner::run_command(test_command, 5);
     ASSERT_TRUE(web_result.success);
-    ASSERT_TRUE(web_result.stdout_output.find("Solar System") != std::string::npos);
+    EXPECT_NE(std::string::npos, web_result.stdout_output.find("Solar System"));
   }
 
   // Test API endpoints
@@ -617,7 +616,7 @@ TEST_CASE("Web Integration with Backend Services") {
     std::string cmd = "curl -s -f http://localhost:" + std::to_string(test_port) + "/";
     auto result = TestApplicationRunner::run_command(cmd, 5);
     ASSERT_TRUE(result.success);
-    ASSERT_TRUE(result.stdout_output.find("Solar System") != std::string::npos);
+    EXPECT_NE(std::string::npos, result.stdout_output.find("Solar System"));
   }
 
   // Test 3: API endpoint for bodies data
@@ -785,7 +784,7 @@ TEST_CASE("Complete Workflow: JPL Fetch to Web Visualization") {
     std::string cmd = "curl -s -f http://localhost:" + std::to_string(test_port) + "/";
     auto result = TestApplicationRunner::run_command(cmd, 5);
     ASSERT_TRUE(result.success);
-    ASSERT_TRUE(result.stdout_output.find("Solar System") != std::string::npos);
+    EXPECT_NE(std::string::npos, result.stdout_output.find("Solar System"));
   }
 
   // Step 5: Test API integration
@@ -938,4 +937,3 @@ TEST_CASE("Workflow Resilience and Error Recovery") {
 });
 
 return current_suite->all_passed() ? 0 : 1;
-}

@@ -1,9 +1,10 @@
 /**
  * @file test_connection_management.cpp
  * @brief Unit tests for connection management system (Task 12)
+ * @note Migrated to Google Test
  */
 
-#include "../utils/test_framework.h"
+#include <gtest/gtest.h>
 
 #include "solar_core/connection/connection_manager.hpp"
 #include "solar_core/streaming/realtime_stream.hpp"
@@ -42,25 +43,21 @@ class MockConnection : public IConnection {
   bool should_fail_;
   bool connected_;
 };
-
-int main() {
-  TestSuite suite("Connection Management Tests");
-
-  suite.run_test("Connection State Conversion", []() {
+TEST(ConnectionManagementTests, Connection_State_Conversion) {
     auto state_str = to_string(ConnectionState::CONNECTED);
     if (state_str.empty()) throw std::runtime_error("State string should not be empty");
-  });
+}
 
-  suite.run_test("Connection Manager Initialization", []() {
+TEST(ConnectionManagementTests, Connection_Manager_Initialization) {
     ConnectionConfig config;
     config.connection_timeout = std::chrono::seconds(5);
     config.max_reconnection_attempts = 3;
 
     ConnectionManager manager(config);
     if (manager.is_running()) throw std::runtime_error("Manager should not be running initially");
-  });
+}
 
-  suite.run_test("Add and Remove Connections", []() {
+TEST(ConnectionManagementTests, Add_and_Remove_Connections) {
     ConnectionManager manager;
     auto conn = std::make_shared<MockConnection>("test_conn");
 
@@ -71,9 +68,9 @@ int main() {
     manager.remove_connection("test_conn");
     health = manager.get_connection_health("test_conn");
     if (health.has_value()) throw std::runtime_error("Connection should be removed");
-  });
+}
 
-  suite.run_test("Exponential Backoff", []() {
+TEST(ConnectionManagementTests, Exponential_Backoff) {
     ExponentialBackoff backoff(std::chrono::milliseconds(100), std::chrono::milliseconds(1000),
                                2.0);
 
@@ -92,9 +89,9 @@ int main() {
     auto delay_reset = backoff.next_delay();
     if (delay_reset.count() > delay3.count())
       throw std::runtime_error("Reset delay should be less than previous");
-  });
+}
 
-  suite.run_test("Connection Pool", []() {
+TEST(ConnectionManagementTests, Connection_Pool) {
     ConnectionPool pool(5);
 
     auto conn1 = std::make_shared<MockConnection>("conn1");
@@ -108,9 +105,9 @@ int main() {
     auto retrieved = pool.get_connection("conn1");
     if (!retrieved) throw std::runtime_error("Should retrieve connection by ID");
     if (retrieved->get_id() != "conn1") throw std::runtime_error("Wrong connection retrieved");
-  });
+}
 
-  suite.run_test("Connection Health Monitoring", []() {
+TEST(ConnectionManagementTests, Connection_Health_Monitoring) {
     auto conn = std::make_shared<MockConnection>("healthy_conn");
     conn->connect();
 
@@ -123,8 +120,5 @@ int main() {
     health = conn->get_health();
     if (health.state != ConnectionState::DISCONNECTED)
       throw std::runtime_error("Connection should be disconnected");
-  });
-
-  suite.print_summary();
-  return suite.all_passed() ? 0 : 1;
 }
+

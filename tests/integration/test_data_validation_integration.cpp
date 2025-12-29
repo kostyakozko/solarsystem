@@ -1,6 +1,7 @@
 /**
  * @file test_data_validation_integration.cpp
  * @brief Data validation and recovery integration tests (Task 11)
+ * @note Migrated to Google Test
  *
  * This test suite validates:
  * - Data validation procedures
@@ -9,7 +10,7 @@
  * - Recovery suggestion generation
  */
 
-#include "../utils/test_framework.h"
+#include <gtest/gtest.h>
 
 #include <chrono>
 #include <filesystem>
@@ -17,8 +18,6 @@
 #include <vector>
 
 namespace fs = std::filesystem;
-
-int main() {
   TEST_SUITE("Data Validation Integration Tests");
 
   // Test 1: Physical Constraints Validation
@@ -29,11 +28,11 @@ int main() {
     double velocity = 29780.0;     // Orbital velocity (m/s)
 
     // Validate physical constraints
-    ASSERT_TRUE(mass > 0.0);
-    ASSERT_TRUE(distance > 0.0);
-    ASSERT_TRUE(velocity > 0.0);
-    ASSERT_TRUE(mass < 1e30);  // Less than solar mass
-    ASSERT_TRUE(velocity < 3e8);  // Less than speed of light
+    EXPECT_GT(mass , 0.0);
+    EXPECT_GT(distance , 0.0);
+    EXPECT_GT(velocity , 0.0);
+    EXPECT_LT(mass , 1e30);  // Less than solar mass
+    EXPECT_LT(velocity , 3e8);  // Less than speed of light
   });
 
   // Test 2: Orbital Elements Validation
@@ -43,11 +42,11 @@ int main() {
     double inclination = 0.0;           // Relative to ecliptic
     double period = 365.25 * 24 * 3600; // 1 year in seconds
 
-    ASSERT_TRUE(semi_major_axis > 0.0);
-    ASSERT_TRUE(eccentricity >= 0.0);
-    ASSERT_TRUE(eccentricity < 1.0);  // Elliptical orbit
-    ASSERT_TRUE(inclination >= 0.0);
-    ASSERT_TRUE(period > 0.0);
+    EXPECT_GT(semi_major_axis , 0.0);
+    EXPECT_GT(eccentricity , = 0.0);
+    EXPECT_LT(eccentricity , 1.0);  // Elliptical orbit
+    EXPECT_GT(inclination , = 0.0);
+    EXPECT_GT(period , 0.0);
   });
 
   // Test 3: Data Consistency Validation
@@ -66,13 +65,13 @@ int main() {
 
     // Check monotonic timestamps
     for (size_t i = 1; i < timestamps.size(); ++i) {
-      ASSERT_TRUE(timestamps[i] > timestamps[i-1]);
+      EXPECT_GT(timestamps[i] , timestamps[i-1]);
     }
 
     // Check reasonable position changes
     for (size_t i = 1; i < positions.size(); ++i) {
       double delta = std::abs(positions[i] - positions[i-1]);
-      ASSERT_TRUE(delta < 1e9);
+      EXPECT_LT(delta , 1e9);
     }
   });
 
@@ -94,7 +93,7 @@ int main() {
     in.close();
 
     size_t checksum = std::hash<std::string>{}(content);
-    ASSERT_TRUE(checksum > 0);
+    EXPECT_GT(checksum , 0);
 
     // Verify file integrity
     std::ifstream verify(cache_file, std::ios::binary);
@@ -251,8 +250,8 @@ int main() {
 
     ASSERT_TRUE(valid_flags[1]);
     ASSERT_TRUE(valid_flags[3]);
-    ASSERT_TRUE(positions[1] > 105.0 && positions[1] < 115.0);
-    ASSERT_TRUE(positions[3] > 125.0 && positions[3] < 135.0);
+    EXPECT_GT(positions[1] , 105.0 && positions[1] < 115.0);
+    EXPECT_GT(positions[3] , 125.0 && positions[3] < 135.0);
   });
 
   // Test 9: Recovery Suggestion Generation
@@ -299,4 +298,3 @@ int main() {
 
   current_suite->print_summary();
   return current_suite->all_passed() ? 0 : 1;
-}

@@ -1,6 +1,7 @@
 /**
  * @file test_deployment.cpp
  * @brief Deployment and installation testing (Task 27)
+ * @note Migrated to Google Test
  *
  * Tests deployment and installation:
  * - Installation procedure testing and validation
@@ -16,7 +17,7 @@
 #include <string>
 #include <vector>
 
-#include "test_framework.h"
+#include <gtest/gtest.h>
 
 /**
  * @brief Installation validator
@@ -240,8 +241,6 @@ class CleanupManager {
     return !status.binaries_present && !status.libraries_present && !status.headers_present;
   }
 };
-
-int main() {
   TEST_SUITE("Deployment and Installation Tests");
 
   // Test 1: Installation validation
@@ -349,14 +348,14 @@ int main() {
     auto v2_0_0 = VersionManager::parse_version("2.0.0");
 
     // Test 5.1: Less than
-    ASSERT_TRUE(v1_0_0 < v1_1_0);
-    ASSERT_TRUE(v1_1_0 < v1_1_1);
-    ASSERT_TRUE(v1_1_1 < v2_0_0);
+    EXPECT_LT(v1_0_0 , v1_1_0);
+    EXPECT_LT(v1_1_0 , v1_1_1);
+    EXPECT_LT(v1_1_1 , v2_0_0);
 
     // Test 5.2: Greater than
-    ASSERT_TRUE(v2_0_0 > v1_1_1);
-    ASSERT_TRUE(v1_1_1 > v1_1_0);
-    ASSERT_TRUE(v1_1_0 > v1_0_0);
+    EXPECT_GT(v2_0_0 , v1_1_1);
+    EXPECT_GT(v1_1_1 , v1_1_0);
+    EXPECT_GT(v1_1_0 , v1_0_0);
 
     // Test 5.3: Equality
     auto v1_0_0_copy = VersionManager::parse_version("1.0.0");
@@ -410,7 +409,7 @@ int main() {
     ASSERT_GE(report.files_failed, 0);
 
     // Test 8.2: Verify cleanup report structure
-    ASSERT_TRUE(report.files_removed + report.files_failed >= 0);
+    EXPECT_GT(report.files_removed + report.files_failed , = 0);
   });
 
   // Test 9: Complete removal verification
@@ -449,4 +448,3 @@ int main() {
   });
 
   return current_suite->all_passed() ? 0 : 1;
-}

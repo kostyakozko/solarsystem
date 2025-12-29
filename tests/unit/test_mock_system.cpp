@@ -1,6 +1,7 @@
 /**
  * @file test_mock_system.cpp
  * @brief Comprehensive mock system tests (Task 11)
+ * @note Migrated to Google Test
  *
  * Tests mock system for external dependencies:
  * - JPL HORIZONS API mocks with various scenarios
@@ -20,7 +21,7 @@
 #include <vector>
 
 #include "test_data_manager.hpp"
-#include "test_framework.h"
+#include <gtest/gtest.h>
 
 using namespace TestData;
 
@@ -121,8 +122,6 @@ class MockSystem {
     size_t size() const { return cache_data.size(); }
   };
 };
-
-int main() {
   TEST_SUITE("Mock System Tests");
 
   // Test 1: JPL HORIZONS API mocks
@@ -369,4 +368,3 @@ int main() {
   });
 
   return current_suite->all_passed() ? 0 : 1;
-}

@@ -1,6 +1,7 @@
 /**
  * @file test_optimization_guidance_system.cpp
  * @brief Performance optimization guidance system tests (Task 10)
+ * @note Migrated to Google Test
  *
  * Tests optimization guidance capabilities including:
  * - Performance analysis and recommendation engine
@@ -19,7 +20,7 @@
 #include "benchmark_utils.h"
 #include "solar_core/bodies/body_factory.hpp"
 #include "solar_core/simulation/simulation_engine.hpp"
-#include "test_framework.h"
+#include <gtest/gtest.h>
 
 using namespace Benchmark;
 using namespace SolarSystem;
@@ -254,8 +255,6 @@ class OptimizationGuidance {
     return alerts;
   }
 };
-
-int main() {
   TEST_SUITE("Optimization Guidance System Tests");
 
   // ============================================================================
@@ -383,7 +382,7 @@ int main() {
       ASSERT_TRUE(impact.is_improvement);
       ASSERT_TRUE(impact.is_significant);
       ASSERT_GT(impact.improvement_percent, 10.0);
-      ASSERT_TRUE(impact.verdict.find("improvement") != std::string::npos);
+      EXPECT_NE(std::string::npos, impact.verdict.find("improvement"));
     }
 
     // Test 3.2: Minor improvement
@@ -404,7 +403,7 @@ int main() {
       ASSERT_FALSE(impact.is_improvement);
       ASSERT_TRUE(impact.is_significant);
       ASSERT_LT(impact.improvement_percent, 0.0);
-      ASSERT_TRUE(impact.verdict.find("regression") != std::string::npos);
+      EXPECT_NE(std::string::npos, impact.verdict.find("regression"));
     }
 
     // Test 3.4: No significant change
@@ -414,7 +413,7 @@ int main() {
 
       ASSERT_FALSE(impact.is_improvement);
       ASSERT_FALSE(impact.is_significant);
-      ASSERT_TRUE(impact.verdict.find("No significant") != std::string::npos);
+      EXPECT_NE(std::string::npos, impact.verdict.find("No significant"));
     }
   });
 
@@ -565,4 +564,3 @@ int main() {
   });
 
   return current_suite->all_passed() ? 0 : 1;
-}

@@ -1,6 +1,7 @@
 /**
  * @file test_workflow_validation.cpp
  * @brief Workflow validation tests for Solar System Suite (Task 11.2)
+ * @note Migrated to Google Test
  *
  * This test suite validates end-to-end workflows including:
  * - JPL data fetching workflows
@@ -8,7 +9,7 @@
  * - Error recovery workflows
  */
 
-#include "../utils/test_framework.h"
+#include <gtest/gtest.h>
 #include "solar_core/simulation/simulation_engine.hpp"
 #include "solar_jpl/jpl_client.hpp"
 
@@ -20,8 +21,6 @@
 using namespace SolarSystem;
 
 namespace fs = std::filesystem;
-
-int main() {
   TEST_SUITE("Workflow Validation Tests");
 
   // Test 1: JPL Client Initialization
@@ -215,4 +214,3 @@ int main() {
 
   current_suite->print_summary();
   return current_suite->all_passed() ? 0 : 1;
-}

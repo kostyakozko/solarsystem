@@ -1,6 +1,7 @@
 /**
  * @file test_baseline_management_system.cpp
  * @brief Performance baseline management system tests (Task 9)
+ * @note Migrated to Google Test
  *
  * Tests comprehensive baseline management capabilities including:
  * - Baseline storage and versioning system
@@ -25,7 +26,7 @@
 #include "solar_core/bodies/body_factory.hpp"
 #include "solar_core/simulation/simulation_engine.hpp"
 #include "test_data_manager.hpp"
-#include "test_framework.h"
+#include <gtest/gtest.h>
 
 using namespace Benchmark;
 using namespace SolarSystem;
@@ -302,8 +303,6 @@ class BaselineManager {
     return analysis;
   }
 };
-
-int main() {
   TEST_SUITE("Baseline Management System Tests");
 
   // ============================================================================
@@ -529,7 +528,7 @@ int main() {
 
       ASSERT_TRUE(test.is_significant);
       ASSERT_LT(test.t_statistic, -2.0);  // Negative = improvement
-      ASSERT_TRUE(test.interpretation.find("improvement") != std::string::npos);
+      EXPECT_NE(std::string::npos, test.interpretation.find("improvement"));
     }
 
     // Test 3.4: Edge cases
@@ -540,7 +539,7 @@ int main() {
       auto test = BaselineManager::perform_t_test(empty_samples, valid_samples);
 
       ASSERT_FALSE(test.is_significant);
-      ASSERT_TRUE(test.interpretation.find("Insufficient") != std::string::npos);
+      EXPECT_NE(std::string::npos, test.interpretation.find("Insufficient"));
     }
   });
 
@@ -679,5 +678,3 @@ int main() {
   });
 
   return current_suite->all_passed() ? 0 : 1;
-}
-

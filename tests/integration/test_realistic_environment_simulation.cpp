@@ -1,6 +1,7 @@
 /**
  * @file test_realistic_environment_simulation.cpp
  * @brief Realistic test environment simulation integration tests (Task 7)
+ * @note Migrated to Google Test
  *
  * Tests realistic environment simulation including:
  * - Test environments that match production characteristics
@@ -25,7 +26,7 @@
 #include "solar_core/bodies/body_factory.hpp"
 #include "solar_core/simulation/simulation_engine.hpp"
 #include "test_data_manager.hpp"
-#include "test_framework.h"
+#include <gtest/gtest.h>
 
 using namespace SolarSystem;
 using namespace TestData;
@@ -135,8 +136,6 @@ class ConcurrentAccessCoordinator {
  private:
   int num_threads_;
 };
-
-int main() {
   TEST_SUITE("Realistic Environment Simulation Integration Tests");
 
   // ============================================================================
@@ -706,5 +705,3 @@ int main() {
   });
 
   return current_suite->all_passed() ? 0 : 1;
-}
-

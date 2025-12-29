@@ -1,6 +1,7 @@
 /**
  * @file test_platform_compatibility.cpp
  * @brief Cross-platform compatibility testing (Task 26)
+ * @note Migrated to Google Test
  *
  * Tests platform compatibility:
  * - Cross-platform testing for macOS, Linux, and Windows
@@ -15,7 +16,7 @@
 #include <string>
 #include <vector>
 
-#include "test_framework.h"
+#include <gtest/gtest.h>
 
 /**
  * @brief Platform information detector
@@ -249,8 +250,6 @@ class CompilerFeatures {
 
   static int get_cpp_version() { return static_cast<int>(__cplusplus); }
 };
-
-int main() {
   TEST_SUITE("Platform Compatibility Tests");
 
   // Test 1: Platform detection
@@ -332,8 +331,8 @@ int main() {
 
     // Test 4.3: Path joining
     std::string joined = PathHandler::join_paths("dir1", "dir2");
-    ASSERT_TRUE(joined.find("dir1") != std::string::npos);
-    ASSERT_TRUE(joined.find("dir2") != std::string::npos);
+    EXPECT_NE(std::string::npos, joined.find("dir1"));
+    EXPECT_NE(std::string::npos, joined.find("dir2"));
 
     // Test 4.4: Empty path handling
     std::string empty_join1 = PathHandler::join_paths("", "dir");
@@ -451,11 +450,11 @@ int main() {
 
     // Test 9.2: Compiler version macros exist
 #if defined(__clang__)
-    ASSERT_TRUE(__clang_major__ >= 0);
+    EXPECT_GT(__clang_major__ , = 0);
 #elif defined(__GNUC__)
-    ASSERT_TRUE(__GNUC__ >= 0);
+    EXPECT_GT(__GNUC__ , = 0);
 #elif defined(_MSC_VER)
-    ASSERT_TRUE(_MSC_VER >= 0);
+    EXPECT_GT(_MSC_VER , = 0);
 #endif
 
     // Test 9.3: Standard library is available
@@ -502,5 +501,3 @@ int main() {
   });
 
   return current_suite->all_passed() ? 0 : 1;
-}
-

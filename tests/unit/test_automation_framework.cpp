@@ -1,6 +1,7 @@
 /**
  * @file test_automation_framework.cpp
  * @brief Test automation framework (Task 29)
+ * @note Migrated to Google Test
  *
  * Tests automation framework capabilities:
  * - Automated test execution and scheduling
@@ -18,7 +19,7 @@
 #include <string>
 #include <vector>
 
-#include "test_framework.h"
+#include <gtest/gtest.h>
 
 /**
  * @brief Test execution scheduler
@@ -245,8 +246,6 @@ class TestMaintenanceManager {
  private:
   std::map<std::string, MaintenanceTask> tasks_;
 };
-
-int main() {
   TEST_SUITE("Test Automation Framework Tests");
 
   // Test 1: Test scheduling
@@ -325,8 +324,8 @@ int main() {
     // Test 3.3: Get notifications
     auto notifications = notifier.get_notifications();
     ASSERT_EQ(notifications.size(), 2);
-    ASSERT_TRUE(notifications[0].message.find("failed") != std::string::npos);
-    ASSERT_TRUE(notifications[1].message.find("passed") != std::string::npos);
+    EXPECT_NE(std::string::npos, notifications[0].message.find("failed"));
+    EXPECT_NE(std::string::npos, notifications[1].message.find("passed"));
 
     // Test 3.4: Clear notifications
     notifier.clear();
@@ -393,4 +392,3 @@ int main() {
   });
 
   return current_suite->all_passed() ? 0 : 1;
-}

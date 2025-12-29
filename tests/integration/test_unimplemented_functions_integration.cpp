@@ -1,12 +1,13 @@
 /**
  * @file test_unimplemented_functions_integration.cpp
  * @brief Integration tests for previously unimplemented functions (Task 11.1)
+ * @note Migrated to Google Test
  *
  * This test suite validates the integration of functions implemented
  * as part of the unimplemented-functions-completion specification.
  */
 
-#include "../utils/test_framework.h"
+#include <gtest/gtest.h>
 #include "solar_core/communication/message.hpp"
 
 #include <chrono>
@@ -16,8 +17,6 @@
 
 using namespace SolarSystem;
 using namespace SolarSystem::Communication;
-
-int main() {
   TEST_SUITE("Unimplemented Functions Integration Tests");
 
   // Test 1: JSON Serialization Round Trip
@@ -86,4 +85,3 @@ int main() {
 
   current_suite->print_summary();
   return current_suite->all_passed() ? 0 : 1;
-}

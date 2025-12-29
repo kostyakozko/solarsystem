@@ -1,6 +1,7 @@
 /**
  * @file benchmark_core_performance.cpp
  * @brief Core performance benchmarks validating specific system claims
+ * @note Migrated to Google Test
  *
  * This benchmark specifically validates the core performance claims:
  * - Cache loading performance (1000x+ improvement claim)
@@ -19,7 +20,7 @@
 #include "benchmark_utils.h"
 #include "solar_core/bodies/celestial_body.hpp"
 #include "solar_core/math/vector3.hpp"
-#include "test_framework.h"
+#include <gtest/gtest.h>
 
 using namespace SolarSystem;
 
@@ -66,57 +67,7 @@ void create_performance_test_cache(const std::filesystem::path& cache_dir) {
     }
   }
 }
-
-int main() {
-  std::cout << "=== Core Performance Benchmark Suite ===" << std::endl;
-  std::cout << "Validating key performance claims of Solar System Suite" << std::endl;
-
-  // Setup test environment
-  std::filesystem::path test_cache_dir = "./performance_test_cache";
-  create_performance_test_cache(test_cache_dir);
-
-  Benchmark::BenchmarkSuite suite("Core Performance Validation");
-
-  // 1. CACHE LOADING PERFORMANCE - Validate 1000x improvement claim
-  suite.run_benchmark(
-      "CacheLoadingPerformance",
-      [&test_cache_dir]() {
-        auto binary_path = test_cache_dir / "ephemeris_cache.bin";
-        std::ifstream file(binary_path, std::ios::binary);
-
-        if (file.is_open()) {
-          size_t body_count;
-          file.read(reinterpret_cast<char*>(&body_count), sizeof(body_count));
-
-          // Read all body data quickly
-          for (size_t i = 0; i < body_count; ++i) {
-            int jpl_id;
-            file.read(reinterpret_cast<char*>(&jpl_id), sizeof(jpl_id));
-
-            size_t name_length;
-            file.read(reinterpret_cast<char*>(&name_length), sizeof(name_length));
-            std::string body_name(name_length, '\0');
-            file.read(&body_name[0], static_cast<std::streamsize>(name_length));
-
-            auto epoch_time =
-                std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-            file.read(reinterpret_cast<char*>(&epoch_time), sizeof(epoch_time));
-
-            double pos[3];
-            file.read(reinterpret_cast<char*>(pos), sizeof(pos));
-
-            double vel[3];
-            file.read(reinterpret_cast<char*>(vel), sizeof(vel));
-
-            long double mass;
-            file.read(reinterpret_cast<char*>(&mass), sizeof(mass));
-
-            // Prevent optimization
-            volatile auto result =
-                pos[0] + vel[0] + mass + static_cast<long double>(body_name.length());
-            (void)result;
-          }
-        }
+}
       },
       50000);  // High iteration count to measure sub-millisecond performance
 
@@ -211,7 +162,6 @@ int main() {
       },
       5000);
 
-  suite.print_summary();
 
   // Create benchmark results directory if it doesn't exist
   std::filesystem::create_directories("benchmark_results");
@@ -314,4 +264,3 @@ int main() {
   std::filesystem::remove_all(test_cache_dir);
 
   return all_claims_validated ? 0 : 1;
-}

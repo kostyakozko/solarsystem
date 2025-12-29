@@ -126,7 +126,6 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../lib/solar_utils)
 
 # Test utilities library
 add_library(test_utils STATIC
-    utils/test_framework.cpp
     utils/test_data_manager.cpp
     utils/benchmark_utils.cpp
     utils/test_port_manager.cpp

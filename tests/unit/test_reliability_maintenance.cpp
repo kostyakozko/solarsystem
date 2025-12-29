@@ -1,6 +1,7 @@
 /**
  * @file test_reliability_maintenance.cpp
  * @brief Test reliability and maintenance system (Task 31)
+ * @note Migrated to Google Test
  *
  * Tests reliability and maintenance capabilities:
  * - Flaky test detection and resolution
@@ -17,7 +18,7 @@
 #include <string>
 #include <vector>
 
-#include "test_framework.h"
+#include <gtest/gtest.h>
 
 /**
  * @brief Flaky test detector
@@ -243,8 +244,6 @@ class TestSuiteMaintenanceManager {
   std::set<std::string> duplicate_tests_;
   std::set<std::string> outdated_tests_;
 };
-
-int main() {
   TEST_SUITE("Test Reliability and Maintenance Tests");
 
   // Test 1: Flaky test detection
@@ -427,4 +426,3 @@ int main() {
   });
 
   return current_suite->all_passed() ? 0 : 1;
-}

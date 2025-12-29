@@ -1,9 +1,10 @@
 /**
  * @file test_performance_monitor.cpp
  * @brief Unit tests for performance monitoring system
+ * @note Migrated to Google Test
  */
 
-#include "../utils/test_framework.h"
+#include <gtest/gtest.h>
 
 #include "solar_core/performance/performance_monitor.hpp"
 
@@ -11,12 +12,8 @@
 #include <thread>
 
 using namespace SolarSystem::Performance;
-
-int main() {
-  TestSuite suite("Performance Monitor Tests");
-
   // Counter tests
-  suite.run_test("Counter Basic Operations", []() {
+TEST(PerformanceMonitorTests, Counter_Basic_Operations) {
     auto& monitor = PerformanceMonitor::instance();
     monitor.reset_all();
 
@@ -32,9 +29,9 @@ int main() {
 
     counter->reset();
     if (counter->get() != 0) throw std::runtime_error("Counter should be 0 after reset");
-  });
+}
 
-  suite.run_test("Counter Registration", []() {
+TEST(PerformanceMonitorTests, Counter_Registration) {
     auto& monitor = PerformanceMonitor::instance();
     monitor.reset_all();
 
@@ -50,10 +47,10 @@ int main() {
     if (counter2->get() != 1) {
       throw std::runtime_error("Both references should see same value");
     }
-  });
+}
 
   // Gauge tests
-  suite.run_test("Gauge Basic Operations", []() {
+TEST(PerformanceMonitorTests, Gauge_Basic_Operations) {
     auto& monitor = PerformanceMonitor::instance();
     monitor.reset_all();
 
@@ -69,10 +66,10 @@ int main() {
 
     gauge->decrement(2.5);
     if (gauge->get() != 50.0) throw std::runtime_error("Gauge should be 50.0");
-  });
+}
 
   // Histogram tests
-  suite.run_test("Histogram Basic Operations", []() {
+TEST(PerformanceMonitorTests, Histogram_Basic_Operations) {
     auto& monitor = PerformanceMonitor::instance();
     monitor.reset_all();
 
@@ -91,9 +88,9 @@ int main() {
     if (stats.max != 5.0) throw std::runtime_error("Max should be 5.0");
     if (stats.mean != 3.0) throw std::runtime_error("Mean should be 3.0");
     if (stats.median != 3.0) throw std::runtime_error("Median should be 3.0");
-  });
+}
 
-  suite.run_test("Histogram Empty Statistics", []() {
+TEST(PerformanceMonitorTests, Histogram_Empty_Statistics) {
     auto& monitor = PerformanceMonitor::instance();
     monitor.reset_all();
 
@@ -103,10 +100,10 @@ int main() {
     if (stats.count != 0) throw std::runtime_error("Empty histogram should have count 0");
     if (stats.min != 0) throw std::runtime_error("Empty histogram min should be 0");
     if (stats.max != 0) throw std::runtime_error("Empty histogram max should be 0");
-  });
+}
 
   // Timer tests
-  suite.run_test("Timer Basic Operations", []() {
+TEST(PerformanceMonitorTests, Timer_Basic_Operations) {
     auto& monitor = PerformanceMonitor::instance();
     monitor.reset_all();
 
@@ -121,9 +118,9 @@ int main() {
     if (stats.count != 3) throw std::runtime_error("Should have 3 recordings");
     if (stats.min != 0.001) throw std::runtime_error("Min should be 0.001");
     if (stats.max != 0.003) throw std::runtime_error("Max should be 0.003");
-  });
+}
 
-  suite.run_test("Timer Scoped Timing", []() {
+TEST(PerformanceMonitorTests, Timer_Scoped_Timing) {
     auto& monitor = PerformanceMonitor::instance();
     monitor.reset_all();
 
@@ -140,10 +137,10 @@ int main() {
     if (stats.min < 0.008) {  // At least 8ms (allowing for timing variance)
       throw std::runtime_error("Should have recorded at least 8ms");
     }
-  });
+}
 
   // Threshold tests
-  suite.run_test("Threshold Management", []() {
+TEST(PerformanceMonitorTests, Threshold_Management) {
     auto& monitor = PerformanceMonitor::instance();
     monitor.reset_all();
 
@@ -164,10 +161,10 @@ int main() {
     monitor.remove_threshold("test_metric");
     thresholds = monitor.get_thresholds();
     if (!thresholds.empty()) throw std::runtime_error("Should have no thresholds");
-  });
+}
 
   // Alert tests
-  suite.run_test("Alert Management", []() {
+TEST(PerformanceMonitorTests, Alert_Management) {
     auto& monitor = PerformanceMonitor::instance();
     monitor.reset_all();
     monitor.clear_alerts();
@@ -178,10 +175,10 @@ int main() {
     monitor.clear_alerts();
     alerts = monitor.get_alerts();
     if (!alerts.empty()) throw std::runtime_error("Should have no alerts after clear");
-  });
+}
 
   // Report generation tests
-  suite.run_test("Report Generation", []() {
+TEST(PerformanceMonitorTests, Report_Generation) {
     auto& monitor = PerformanceMonitor::instance();
     monitor.reset_all();
 
@@ -200,10 +197,10 @@ int main() {
     if (report.find("report_gauge") == std::string::npos) {
       throw std::runtime_error("Report should contain gauge name");
     }
-  });
+}
 
   // Metrics retrieval tests
-  suite.run_test("Get All Metrics", []() {
+TEST(PerformanceMonitorTests, Get_All_Metrics) {
     auto& monitor = PerformanceMonitor::instance();
     monitor.reset_all();
 
@@ -230,10 +227,10 @@ int main() {
 
     if (!found_counter) throw std::runtime_error("Should find counter metric");
     if (!found_gauge) throw std::runtime_error("Should find gauge metric");
-  });
+}
 
   // Monitoring control tests
-  suite.run_test("Monitoring Enable/Disable", []() {
+TEST(PerformanceMonitorTests, Monitoring_EnableDisable) {
     auto& monitor = PerformanceMonitor::instance();
 
     if (!monitor.is_monitoring_enabled()) {
@@ -249,10 +246,10 @@ int main() {
     if (!monitor.is_monitoring_enabled()) {
       throw std::runtime_error("Monitoring should be enabled");
     }
-  });
+}
 
   // Scoped timer helper tests
-  suite.run_test("Scoped Performance Timer", []() {
+TEST(PerformanceMonitorTests, Scoped_Performance_Timer) {
     auto& monitor = PerformanceMonitor::instance();
     monitor.reset_all();
 
@@ -269,10 +266,10 @@ int main() {
     if (stats.min < 0.003) {  // At least 3ms
       throw std::runtime_error("Should have recorded at least 3ms");
     }
-  });
+}
 
   // Macro tests
-  suite.run_test("Performance Macros", []() {
+TEST(PerformanceMonitorTests, Performance_Macros) {
     auto& monitor = PerformanceMonitor::instance();
     monitor.reset_all();
 
@@ -288,10 +285,10 @@ int main() {
 
     if (counter->get() != 2) throw std::runtime_error("Counter should be 2");
     if (gauge->get() != 99.9) throw std::runtime_error("Gauge should be 99.9");
-  });
+}
 
   // Concurrent access tests
-  suite.run_test("Concurrent Counter Access", []() {
+TEST(PerformanceMonitorTests, Concurrent_Counter_Access) {
     auto& monitor = PerformanceMonitor::instance();
     monitor.reset_all();
 
@@ -313,10 +310,10 @@ int main() {
     if (counter->get() != 1000) {
       throw std::runtime_error("Counter should be 1000 after concurrent increments");
     }
-  });
+}
 
   // Reset tests
-  suite.run_test("Reset All Metrics", []() {
+TEST(PerformanceMonitorTests, Reset_All_Metrics) {
     auto& monitor = PerformanceMonitor::instance();
 
     auto counter = monitor.register_counter("reset_counter");
@@ -329,8 +326,5 @@ int main() {
 
     if (counter->get() != 0) throw std::runtime_error("Counter should be 0 after reset");
     // Note: Gauges are not reset by reset_all, only counters and alerts
-  });
-
-  suite.print_summary();
-  return suite.all_passed() ? 0 : 1;
 }
+

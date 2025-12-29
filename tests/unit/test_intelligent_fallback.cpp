@@ -1,21 +1,17 @@
 /**
  * @file test_intelligent_fallback.cpp
  * @brief Unit tests for intelligent fallback strategies (Task 6)
+ * @note Migrated to Google Test
  */
 
 #include <chrono>
 
-#include "../utils/test_framework.h"
+#include <gtest/gtest.h>
 #include "solar_core/bodies/body_factory.hpp"
 
 using namespace SolarSystem::Bodies;
 using namespace SolarSystem::Math;
-
-int main() {
-  TestSuite suite("Intelligent Fallback Strategies Tests (Task 6)");
-
-  // Test data source assessment
-  suite.run_test("Data Source Assessment", []() {
+TEST(IntelligentFallbackStrategiesTestsTask6, Data_Source_Assessment) {
     BodyFactory factory;
     BodyFactory::CreationOptions options;
 
@@ -33,10 +29,8 @@ int main() {
       }
     }
     ASSERT_TRUE(has_fallback);
-  });
-
-  // Test graceful fallback strategy
-  suite.run_test("Graceful Fallback Strategy", []() {
+}
+TEST(IntelligentFallbackStrategiesTestsTask6, Graceful_Fallback_Strategy) {
     BodyFactory factory;
     BodyFactory::CreationOptions options;
     options.fallback_strategy = BodyFactory::FallbackStrategy::GRACEFUL;
@@ -47,10 +41,8 @@ int main() {
     ASSERT_TRUE(result.has_value());
     ASSERT_EQ("Earth", result.value().name());
     ASSERT_TRUE(result.value().mass() > 0.0);
-  });
-
-  // Test intelligent fallback strategy
-  suite.run_test("Intelligent Fallback Strategy", []() {
+}
+TEST(IntelligentFallbackStrategiesTestsTask6, Intelligent_Fallback_Strategy) {
     BodyFactory factory;
     BodyFactory::CreationOptions options;
     options.fallback_strategy = BodyFactory::FallbackStrategy::INTELLIGENT;
@@ -61,10 +53,8 @@ int main() {
     ASSERT_TRUE(result.has_value());
     ASSERT_EQ("Mars", result.value().name());
     ASSERT_TRUE(result.value().mass() > 0.0);
-  });
-
-  // Test strict fallback strategy
-  suite.run_test("Strict Fallback Strategy", []() {
+}
+TEST(IntelligentFallbackStrategiesTestsTask6, Strict_Fallback_Strategy) {
     BodyFactory factory;
     BodyFactory::CreationOptions options;
     options.fallback_strategy = BodyFactory::FallbackStrategy::STRICT;
@@ -74,10 +64,8 @@ int main() {
     auto result = factory.create_body("Venus", options);
     ASSERT_TRUE(result.has_value());
     ASSERT_EQ("Venus", result.value().name());
-  });
-
-  // Test partial data allowed strategy
-  suite.run_test("Partial Data Allowed Strategy", []() {
+}
+TEST(IntelligentFallbackStrategiesTestsTask6, Partial_Data_Allowed_Strategy) {
     BodyFactory factory;
     BodyFactory::CreationOptions options;
     options.fallback_strategy = BodyFactory::FallbackStrategy::PARTIAL_ALLOWED;
@@ -87,10 +75,8 @@ int main() {
     auto result = factory.create_body("Mercury", options);
     ASSERT_TRUE(result.has_value());
     ASSERT_EQ("Mercury", result.value().name());
-  });
-
-  // Test hybrid approach strategy
-  suite.run_test("Hybrid Approach Strategy", []() {
+}
+TEST(IntelligentFallbackStrategiesTestsTask6, Hybrid_Approach_Strategy) {
     BodyFactory factory;
     BodyFactory::CreationOptions options;
     options.fallback_strategy = BodyFactory::FallbackStrategy::HYBRID;
@@ -99,10 +85,8 @@ int main() {
     auto result = factory.create_body("Jupiter", options);
     ASSERT_TRUE(result.has_value());
     ASSERT_EQ("Jupiter", result.value().name());
-  });
-
-  // Test data quality assessment
-  suite.run_test("Data Quality Assessment", []() {
+}
+TEST(IntelligentFallbackStrategiesTestsTask6, Data_Quality_Assessment) {
     BodyFactory factory;
 
     // Create a body from fallback data
@@ -115,11 +99,9 @@ int main() {
         std::chrono::system_clock::now());
 
     // Fallback data should be at least acceptable quality
-    ASSERT_TRUE(quality >= BodyFactory::DataQuality::ACCEPTABLE);
-  });
-
-  // Test data source prioritization
-  suite.run_test("Data Source Prioritization", []() {
+    EXPECT_GE(static_cast<int>(quality), static_cast<int>(BodyFactory::DataQuality::ACCEPTABLE));
+}
+TEST(IntelligentFallbackStrategiesTestsTask6, Data_Source_Prioritization) {
     BodyFactory factory;
     BodyFactory::CreationOptions options;
     options.prefer_recent_data = true;
@@ -131,10 +113,8 @@ int main() {
     if (sources.size() > 1) {
       ASSERT_EQ(static_cast<int>(BodyFactory::DataSource::JPL_HORIZONS), static_cast<int>(sources[0]));
     }
-  });
-
-  // Test data source availability
-  suite.run_test("Data Source Availability", []() {
+}
+TEST(IntelligentFallbackStrategiesTestsTask6, Data_Source_Availability) {
     BodyFactory factory;
 
     // Fallback data should always be available for known bodies
@@ -144,10 +124,8 @@ int main() {
     // Unknown body should not be available in fallback
     ASSERT_FALSE(factory.is_data_source_available(
         BodyFactory::DataSource::FALLBACK_DATA, "UnknownBody"));
-  });
-
-  // Test fallback result execution
-  suite.run_test("Fallback Result Execution", []() {
+}
+TEST(IntelligentFallbackStrategiesTestsTask6, Fallback_Result_Execution) {
     BodyFactory factory;
     BodyFactory::CreationOptions options;
     options.fallback_strategy = BodyFactory::FallbackStrategy::GRACEFUL;
@@ -156,10 +134,8 @@ int main() {
     ASSERT_TRUE(result.success);
     ASSERT_FALSE(result.fallback_chain.empty());
     ASSERT_TRUE(result.total_time.count() >= 0);
-  });
-
-  // Test minimum quality filtering
-  suite.run_test("Minimum Quality Filtering", []() {
+}
+TEST(IntelligentFallbackStrategiesTestsTask6, Minimum_Quality_Filtering) {
     BodyFactory factory;
     BodyFactory::CreationOptions options;
     options.fallback_strategy = BodyFactory::FallbackStrategy::INTELLIGENT;
@@ -171,10 +147,8 @@ int main() {
     auto result = factory.create_body("Ceres", options);
     // Don't assert success since it depends on data availability
     // Just ensure it doesn't crash
-  });
-
-  // Test data age considerations
-  suite.run_test("Data Age Considerations", []() {
+}
+TEST(IntelligentFallbackStrategiesTestsTask6, Data_Age_Considerations) {
     BodyFactory factory;
     BodyFactory::CreationOptions options;
     options.max_data_age = std::chrono::hours(1); // Very strict age requirement
@@ -183,10 +157,8 @@ int main() {
     auto sources = factory.assess_data_sources("Vesta", options);
     // Should still have some sources available (at least fallback)
     ASSERT_FALSE(sources.empty());
-  });
-
-  // Test error handling with no available sources
-  suite.run_test("Error Handling - No Available Sources", []() {
+}
+TEST(IntelligentFallbackStrategiesTestsTask6, Error_Handling___No_Available_Sources) {
     BodyFactory factory;
     BodyFactory::CreationOptions options;
     options.fallback_strategy = BodyFactory::FallbackStrategy::STRICT;
@@ -197,10 +169,8 @@ int main() {
     auto result = factory.create_body("NonExistentBody", options);
     ASSERT_FALSE(result.has_value());
     ASSERT_FALSE(result.error().empty());
-  });
-
-  // Test backward compatibility
-  suite.run_test("Backward Compatibility", []() {
+}
+TEST(IntelligentFallbackStrategiesTestsTask6, Backward_Compatibility) {
     BodyFactory factory;
     BodyFactory::CreationOptions options; // Default options
 
@@ -208,7 +178,4 @@ int main() {
     auto result = factory.create_body("Pluto", options);
     ASSERT_TRUE(result.has_value());
     ASSERT_EQ("Pluto", result.value().name());
-  });
-
-  return suite.all_passed() ? 0 : suite.get_failed_count();
 }

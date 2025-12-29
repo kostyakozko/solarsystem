@@ -1,9 +1,10 @@
 /**
  * @file test_advanced_config.cpp
  * @brief Unit tests for advanced configuration management system
+ * @note Migrated to Google Test
  */
 
-#include "../utils/test_framework.h"
+#include <gtest/gtest.h>
 #include <filesystem>
 #include <fstream>
 #include <sstream>
@@ -29,11 +30,7 @@ void cleanup_test_directory(const std::filesystem::path& test_dir) {
     std::filesystem::remove_all(test_dir);
   }
 }
-
-int main() {
-  TestSuite suite("Advanced Configuration Management Tests");
-
-  suite.run_test("Parameter Validation", []() {
+TEST(AdvancedConfigurationManagementTests, Parameter_Validation) {
     auto manager = create_manager();
 
     // Test valid integer parameter
@@ -63,9 +60,9 @@ int main() {
     // Test invalid string parameter
     result = manager->validate_parameter("simulation.output_format", "invalid_format");
     ASSERT_FALSE(result.is_valid);
-  });
+}
 
-  suite.run_test("Configuration Validation", []() {
+TEST(AdvancedConfigurationManagementTests, Configuration_Validation) {
     auto manager = create_manager();
     Config::AppConfig config = Config::get_default();
 
@@ -85,18 +82,18 @@ int main() {
     result = manager->validate_configuration(config);
     ASSERT_TRUE(result.is_valid);  // Still valid but should have warnings
     ASSERT_FALSE(result.warnings.empty());
-  });
+}
 
-  suite.run_test("Conflict Detection", []() {
+TEST(AdvancedConfigurationManagementTests, Conflict_Detection) {
     auto manager = create_manager();
     Config::AppConfig config = Config::get_default();
 
     // Test configuration without conflicts
     auto conflicts = manager->detect_conflicts(config);
     ASSERT_TRUE(conflicts.empty());
-  });
+}
 
-  suite.run_test("Template Application", []() {
+TEST(AdvancedConfigurationManagementTests, Template_Application) {
     auto manager = create_manager();
 
     // Test applying development template
@@ -124,13 +121,13 @@ int main() {
     // Test applying non-existent template
     result = manager->apply_template("non_existent");
     ASSERT_FALSE(result.has_value());
-  });
+}
 
-  suite.run_test("Basic Functionality", []() {
+TEST(AdvancedConfigurationManagementTests, Basic_Functionality) {
     auto manager = create_manager();
 
     // Test that manager can be created
-    ASSERT_TRUE(manager != nullptr);
+    ASSERT_NE(nullptr, manager );
 
     // Test getting available templates
     auto templates = manager->get_available_templates();
@@ -143,8 +140,5 @@ int main() {
     // Test parameter definitions
     auto definitions = manager->get_parameter_definitions();
     // Should have parameter definitions
-  });
-
-  suite.print_summary();
-  return suite.all_passed() ? 0 : 1;
 }
+

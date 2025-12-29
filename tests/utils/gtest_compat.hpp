@@ -22,6 +22,7 @@
 #define GTEST_COMPAT_HPP
 
 #include <gtest/gtest.h>
+#include <gmock/gmock.h>
 #include <sys/stat.h>
 
 #include <chrono>
@@ -194,7 +195,7 @@ class GTestCompatSuite {
 // These macros provide backward compatibility with the old test framework.
 // New tests should use native Google Test macros instead.
 
-// TEST_SUITE macro - creates a GTestCompatSuite for legacy tests
+// TEST_SUITE_COMPAT macro - creates a GTestCompatSuite for legacy tests
 #define TEST_SUITE_COMPAT(name) GTestCompatSuite gtest_compat_suite(name)
 
 // For tests that use the old pattern with current_suite
@@ -223,6 +224,19 @@ class GTestCompatSuite {
 // Usage: MIGRATED_TEST_CASE(OldSuiteName, "Old Test Name") { ... }
 // Note: Test names with spaces need to be converted to CamelCase or underscores
 #define MIGRATED_TEST_CASE(suite_name, test_name) TEST(suite_name, test_name)
+
+// NOTE: The old TEST_SUITE and TEST_CASE macros are NOT defined here because
+// they conflict with the legacy test pattern that uses lambdas:
+//   TEST_SUITE("name");
+//   TEST_CASE("test") { ... });
+// Tests using this pattern should include their original test framework header
+// and will be migrated to native Google Test in Phase 4 (tasks 8-10).
+
+// TEST_CASE macro - creates a Google Test that uses the current suite name
+// Note: This uses a unique test name based on line number since the old
+// pattern used string names which aren't valid C++ identifiers
+#define TEST_CASE(name) \
+  TEST(LegacyTests, GTEST_CONCAT_TOKEN_(TestCase_, __LINE__))
 
 // ============================================================================
 // Test Utilities Namespace

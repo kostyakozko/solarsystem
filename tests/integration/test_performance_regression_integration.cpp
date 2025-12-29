@@ -1,6 +1,7 @@
 /**
  * @file test_performance_regression_integration.cpp
  * @brief Performance regression integration tests (Task 21)
+ * @note Migrated to Google Test
  *
  * Tests performance characteristics of enhanced components:
  * - Performance baselines for all enhanced components
@@ -27,7 +28,7 @@
 
 // Test utilities
 #include "test_data_manager.hpp"
-#include "test_framework.h"
+#include <gtest/gtest.h>
 
 using namespace SolarSystem;
 using namespace SolarSystem::Utils;
@@ -102,12 +103,7 @@ public:
 };
 
 std::map<std::string, PerformanceMeasurement::Metrics> PerformanceBaseline::baselines_;
-
-int main() {
-    TestSuite suite("Performance Regression Integration Tests");
-
-    // Test 1: Body Factory Performance Baseline
-    suite.run_test("Body Factory Performance Baseline", []() {
+TEST(PerformanceRegressionIntegrationTests, Body_Factory_Performance_Baseline) {
         auto metrics = PerformanceMeasurement::measure([]() {
             auto factory = std::make_unique<Bodies::BodyFactory>();
 
@@ -139,10 +135,8 @@ int main() {
 
         // Performance should complete within reasonable time (10 seconds)
         ASSERT_TRUE(metrics.execution_time.count() < 10000);
-    });
-
-    // Test 2: Simulation Engine Performance Baseline
-    suite.run_test("Simulation Engine Performance Baseline", []() {
+}
+TEST(PerformanceRegressionIntegrationTests, Simulation_Engine_Performance_Baseline) {
         auto metrics = PerformanceMeasurement::measure([]() {
             auto factory = std::make_unique<Bodies::BodyFactory>();
             auto engine = std::make_unique<Simulation::SimulationEngine>();
@@ -183,10 +177,8 @@ int main() {
 
         // Performance should complete within reasonable time (10 seconds)
         ASSERT_TRUE(metrics.execution_time.count() < 10000);
-    });
-
-    // Test 3: Resource Manager Performance (simplified to avoid hanging)
-    suite.run_test("Resource Manager Performance Baseline", []() {
+}
+TEST(PerformanceRegressionIntegrationTests, Resource_Manager_Performance_Baseline) {
         auto metrics = PerformanceMeasurement::measure([]() {
             // Simple performance test without ResourceManager cleanup
             std::vector<std::vector<int>> test_data;
@@ -209,10 +201,8 @@ int main() {
 
         // Performance should complete within reasonable time (1 second)
         ASSERT_TRUE(metrics.execution_time.count() < 1000);
-    });
-
-    // Test 4: Error Handling Performance (simplified to avoid singleton issues)
-    suite.run_test("Error Handling Performance Baseline", []() {
+}
+TEST(PerformanceRegressionIntegrationTests, Error_Handling_Performance_Baseline) {
         auto metrics = PerformanceMeasurement::measure([]() {
             // Simple error handling test without singletons
             try {
@@ -231,10 +221,8 @@ int main() {
 
         // Performance should complete within reasonable time (2 seconds)
         ASSERT_TRUE(metrics.execution_time.count() < 2000);
-    });
-
-    // Test 5: Memory Leak Detection (simplified to avoid hanging)
-    suite.run_test("Memory Leak Detection", []() {
+}
+TEST(PerformanceRegressionIntegrationTests, Memory_Leak_Detection) {
         try {
             // Simple memory allocation test without ResourceManager interaction
             std::vector<int> test_vector(1000);
@@ -243,7 +231,7 @@ int main() {
         } catch (const std::exception& e) {
             std::cout << "Memory leak detection test completed with exception: " << e.what() << std::endl;
         }
-    });
+}
 
     // Print summary and exit immediately to avoid singleton cleanup issues
     std::cout << "Performance regression tests completed" << std::endl;
@@ -251,4 +239,3 @@ int main() {
 
     // Force immediate exit to avoid singleton cleanup hanging
     std::exit(exit_code);
-}

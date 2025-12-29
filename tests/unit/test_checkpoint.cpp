@@ -1,9 +1,10 @@
 /**
  * @file test_checkpoint.cpp
  * @brief Unit tests for simulation checkpointing and resume functionality
+ * @note Migrated to Google Test
  */
 
-#include "../utils/test_framework.h"
+#include <gtest/gtest.h>
 
 #include <chrono>
 #include <filesystem>
@@ -44,11 +45,7 @@ BodyCollection create_test_bodies() {
 
   return bodies;
 }
-
-int main() {
-  TestSuite suite("Checkpoint Tests");
-
-  suite.run_test("Checkpoint Manager Creation", []() {
+TEST(CheckpointTests, Checkpoint_Manager_Creation) {
     std::filesystem::path test_dir = std::filesystem::temp_directory_path() / "test_checkpoints_1";
     std::filesystem::create_directories(test_dir);
 
@@ -63,9 +60,9 @@ int main() {
     ASSERT_TRUE(manager.get_config().enable_validation);
 
     std::filesystem::remove_all(test_dir);
-  });
+}
 
-  suite.run_test("Checkpoint ID Generation", []() {
+TEST(CheckpointTests, Checkpoint_ID_Generation) {
     std::filesystem::path test_dir = std::filesystem::temp_directory_path() / "test_checkpoints_2";
     std::filesystem::create_directories(test_dir);
 
@@ -82,13 +79,13 @@ int main() {
     ASSERT_FALSE(id1.empty());
     ASSERT_FALSE(id2.empty());
     ASSERT_NE(id1, id2);
-    ASSERT_TRUE(id1.find("test") != std::string::npos);
-    ASSERT_TRUE(id2.find("test") != std::string::npos);
+    EXPECT_NE(std::string::npos, id1.find("test"));
+    EXPECT_NE(std::string::npos, id2.find("test"));
 
     std::filesystem::remove_all(test_dir);
-  });
+}
 
-  suite.run_test("Basic Checkpoint Save", []() {
+TEST(CheckpointTests, Basic_Checkpoint_Save) {
     std::filesystem::path test_dir = std::filesystem::temp_directory_path() / "test_checkpoints_3";
     std::filesystem::create_directories(test_dir);
 
@@ -117,9 +114,9 @@ int main() {
     ASSERT_TRUE(manager.checkpoint_exists("test_checkpoint_1"));
 
     std::filesystem::remove_all(test_dir);
-  });
+}
 
-  suite.run_test("Checkpoint Load", []() {
+TEST(CheckpointTests, Checkpoint_Load) {
     std::filesystem::path test_dir = std::filesystem::temp_directory_path() / "test_checkpoints_4";
     std::filesystem::create_directories(test_dir);
 
@@ -156,9 +153,9 @@ int main() {
     ASSERT_EQ(checkpoint_data.bodies.size(), 2);
 
     std::filesystem::remove_all(test_dir);
-  });
+}
 
-  suite.run_test("Checkpoint Resume", []() {
+TEST(CheckpointTests, Checkpoint_Resume) {
     std::filesystem::path test_dir = std::filesystem::temp_directory_path() / "test_checkpoints_5";
     std::filesystem::create_directories(test_dir);
 
@@ -201,9 +198,9 @@ int main() {
     ASSERT_GT(engine2.get_current_time(), saved_time);
 
     std::filesystem::remove_all(test_dir);
-  });
+}
 
-  suite.run_test("Checkpoint Compression", []() {
+TEST(CheckpointTests, Checkpoint_Compression) {
     std::filesystem::path test_dir = std::filesystem::temp_directory_path() / "test_checkpoints_6";
     std::filesystem::create_directories(test_dir);
 
@@ -253,9 +250,9 @@ int main() {
     ASSERT_LE(compressed_stats.bytes_written, uncompressed_stats.bytes_written);
 
     std::filesystem::remove_all(test_dir);
-  });
+}
 
-  suite.run_test("Checkpoint Validation", []() {
+TEST(CheckpointTests, Checkpoint_Validation) {
     std::filesystem::path test_dir = std::filesystem::temp_directory_path() / "test_checkpoints_7";
     std::filesystem::create_directories(test_dir);
 
@@ -287,9 +284,9 @@ int main() {
     ASSERT_FALSE(invalid_result.has_value());
 
     std::filesystem::remove_all(test_dir);
-  });
+}
 
-  suite.run_test("Checkpoint Listing", []() {
+TEST(CheckpointTests, Checkpoint_Listing) {
     std::filesystem::path test_dir = std::filesystem::temp_directory_path() / "test_checkpoints_8";
     std::filesystem::create_directories(test_dir);
 
@@ -332,9 +329,9 @@ int main() {
     }
 
     std::filesystem::remove_all(test_dir);
-  });
+}
 
-  suite.run_test("Checkpoint Deletion", []() {
+TEST(CheckpointTests, Checkpoint_Deletion) {
     std::filesystem::path test_dir = std::filesystem::temp_directory_path() / "test_checkpoints_9";
     std::filesystem::create_directories(test_dir);
 
@@ -362,9 +359,9 @@ int main() {
     ASSERT_FALSE(invalid_delete.has_value());
 
     std::filesystem::remove_all(test_dir);
-  });
+}
 
-  suite.run_test("Checkpoint Scheduler", []() {
+TEST(CheckpointTests, Checkpoint_Scheduler) {
     std::filesystem::path test_dir = std::filesystem::temp_directory_path() / "test_checkpoints_10";
     std::filesystem::create_directories(test_dir);
 
@@ -401,9 +398,9 @@ int main() {
     ASSERT_FALSE(scheduler.is_scheduling());
 
     std::filesystem::remove_all(test_dir);
-  });
+}
 
-  suite.run_test("Error Handling - Uninitialized Engine", []() {
+TEST(CheckpointTests, Error_Handling___Uninitialized_Engine) {
     std::filesystem::path test_dir = std::filesystem::temp_directory_path() / "test_checkpoints_11";
     std::filesystem::create_directories(test_dir);
 
@@ -419,9 +416,9 @@ int main() {
     ASSERT_TRUE(save_result.error() == CheckpointResult::ValidationError);
 
     std::filesystem::remove_all(test_dir);
-  });
+}
 
-  suite.run_test("Error Handling - Invalid Checkpoint ID", []() {
+TEST(CheckpointTests, Error_Handling___Invalid_Checkpoint_ID) {
     std::filesystem::path test_dir = std::filesystem::temp_directory_path() / "test_checkpoints_12";
     std::filesystem::create_directories(test_dir);
 
@@ -435,8 +432,4 @@ int main() {
     ASSERT_TRUE(load_result.error() == CheckpointResult::FileError);
 
     std::filesystem::remove_all(test_dir);
-  });
-
-  return suite.all_passed() ? 0 : 1;
 }
-

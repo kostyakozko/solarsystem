@@ -1,26 +1,23 @@
 /**
  * @file test_modern_body_factory.cpp
  * @brief Unit tests for modern BodyFactory class
+ * @note Migrated to Google Test
  */
 
 #include <chrono>
 
-#include "../utils/test_framework.h"
+#include <gtest/gtest.h>
 #include "solar_core/bodies/body_factory.hpp"
 
 using namespace SolarSystem::Bodies;
-
-int main() {
-  TestSuite suite("Modern BodyFactory Tests");
-
-  suite.run_test("Default Constructor", []() {
+TEST(ModernBodyFactoryTests, Default_Constructor) {
     BodyFactory factory;
 
     auto available_bodies = factory.get_available_bodies();
     ASSERT_TRUE(available_bodies.size() > 0);
-  });
+}
 
-  suite.run_test("Create Body from Fallback Data", []() {
+TEST(ModernBodyFactoryTests, Create_Body_from_Fallback_Data) {
     BodyFactory factory;
     BodyFactory::CreationOptions options{.preferred_source = BodyFactory::DataSource::FALLBACK_DATA,
                                          .allow_fallback = false};
@@ -33,9 +30,9 @@ int main() {
     ASSERT_TRUE(earth.mass() > 0.0);
     ASSERT_EQ(to_string(BodyType::Planet), to_string(earth.type()));
     ASSERT_EQ(to_string(BodyPriority::Essential), to_string(earth.priority()));
-  });
+}
 
-  suite.run_test("Create Multiple Bodies", []() {
+TEST(ModernBodyFactoryTests, Create_Multiple_Bodies) {
     BodyFactory factory;
     BodyFactory::CreationOptions options{.preferred_source =
                                              BodyFactory::DataSource::FALLBACK_DATA};
@@ -50,9 +47,9 @@ int main() {
     ASSERT_TRUE(collection.contains("Sun"));
     ASSERT_TRUE(collection.contains("Earth"));
     ASSERT_TRUE(collection.contains("Mars"));
-  });
+}
 
-  suite.run_test("Create Inner Planets", []() {
+TEST(ModernBodyFactoryTests, Create_Inner_Planets) {
     BodyFactory factory;
     BodyFactory::CreationOptions options{.preferred_source =
                                              BodyFactory::DataSource::FALLBACK_DATA};
@@ -67,9 +64,9 @@ int main() {
     ASSERT_TRUE(collection.contains("Venus"));
     ASSERT_TRUE(collection.contains("Earth"));
     ASSERT_TRUE(collection.contains("Mars"));
-  });
+}
 
-  suite.run_test("Create Solar System", []() {
+TEST(ModernBodyFactoryTests, Create_Solar_System) {
     BodyFactory factory;
     BodyFactory::CreationOptions options{.preferred_source =
                                              BodyFactory::DataSource::FALLBACK_DATA};
@@ -83,9 +80,9 @@ int main() {
     // Check for essential bodies
     auto essential_bodies = collection.filter_essential();
     ASSERT_TRUE(essential_bodies.size() > 0);
-  });
+}
 
-  suite.run_test("Body Availability Check", []() {
+TEST(ModernBodyFactoryTests, Body_Availability_Check) {
     BodyFactory factory;
 
     auto now = std::chrono::system_clock::now();
@@ -98,9 +95,9 @@ int main() {
     // New Horizons might not be available in the distant past
     // (depends on creation date in our definitions)
     ASSERT_TRUE(factory.is_body_available("New Horizons", now));
-  });
+}
 
-  suite.run_test("Invalid Body Name", []() {
+TEST(ModernBodyFactoryTests, Invalid_Body_Name) {
     BodyFactory factory;
     BodyFactory::CreationOptions options{.preferred_source = BodyFactory::DataSource::FALLBACK_DATA,
                                          .allow_fallback = false};
@@ -109,10 +106,10 @@ int main() {
     ASSERT_FALSE(result.has_value());
 
     std::string error = result.error();
-    ASSERT_TRUE(error.find("NonExistentPlanet") != std::string::npos);
-  });
+    EXPECT_NE(std::string::npos, error.find("NonExistentPlanet"));
+}
 
-  suite.run_test("Fallback Disabled", []() {
+TEST(ModernBodyFactoryTests, Fallback_Disabled) {
     BodyFactory factory;
     BodyFactory::CreationOptions options{.preferred_source = BodyFactory::DataSource::JPL_HORIZONS,
                                          .allow_fallback = false};
@@ -124,9 +121,9 @@ int main() {
     if (!result.has_value()) {
       ASSERT_TRUE(!result.error().empty());
     }
-  });
+}
 
-  suite.run_test("Available Bodies List", []() {
+TEST(ModernBodyFactoryTests, Available_Bodies_List) {
     BodyFactory factory;
 
     auto available = factory.get_available_bodies();
@@ -135,9 +132,9 @@ int main() {
     // Should contain major planets
     bool has_earth = std::find(available.begin(), available.end(), "Earth") != available.end();
     ASSERT_TRUE(has_earth);
-  });
+}
 
-  suite.run_test("Legacy Data Integration", []() {
+TEST(ModernBodyFactoryTests, Legacy_Data_Integration) {
     BodyFactory factory;
 
     // Test creating from legacy data (this tests the bridge to old system)
@@ -149,9 +146,9 @@ int main() {
       ASSERT_TRUE(earth.mass() > 0.0);
     }
     // If it fails, that's also acceptable since it depends on the legacy system state
-  });
+}
 
-  suite.run_test("Data Source Preferences", []() {
+TEST(ModernBodyFactoryTests, Data_Source_Preferences) {
     BodyFactory factory;
 
     // Test different data source preferences
@@ -168,9 +165,9 @@ int main() {
     // With fallback enabled, should also work (might use JPL or fallback)
     auto flexible_result = factory.create_body("Earth", with_fallback);
     ASSERT_TRUE(flexible_result.has_value());
-  });
+}
 
-  suite.run_test("Collection Error Handling", []() {
+TEST(ModernBodyFactoryTests, Collection_Error_Handling) {
     BodyFactory factory;
     BodyFactory::CreationOptions strict_options{
         .preferred_source = BodyFactory::DataSource::FALLBACK_DATA, .allow_fallback = false};
@@ -189,7 +186,4 @@ int main() {
       ASSERT_TRUE(lenient_result.value().contains("Earth"));
       ASSERT_TRUE(lenient_result.value().contains("Mars"));
     }
-  });
-
-  return suite.all_passed() ? 0 : suite.get_failed_count();
 }

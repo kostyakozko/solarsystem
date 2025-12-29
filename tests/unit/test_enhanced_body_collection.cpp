@@ -1,21 +1,17 @@
 /**
  * @file test_enhanced_body_collection.cpp
  * @brief Unit tests for enhanced BodyCollection functionality (Task 5)
+ * @note Migrated to Google Test
  */
 
 #include <chrono>
 
-#include "../utils/test_framework.h"
+#include <gtest/gtest.h>
 #include "solar_core/bodies/body_collection.hpp"
 
 using namespace SolarSystem::Bodies;
 using namespace SolarSystem::Math;
-
-int main() {
-  TestSuite suite("Enhanced BodyCollection Tests (Task 5)");
-
-  // Test comprehensive validation
-  suite.run_test("Comprehensive Validation", []() {
+TEST(EnhancedBodyCollectionTestsTask5, Comprehensive_Validation) {
     BodyCollection collection;
 
     // Add a valid body
@@ -31,10 +27,8 @@ int main() {
 
     ASSERT_TRUE(collection.validate_comprehensive());
     ASSERT_TRUE(collection.get_comprehensive_validation_errors().empty());
-  });
-
-  // Test consistency checking
-  suite.run_test("Consistency Checking", []() {
+}
+TEST(EnhancedBodyCollectionTestsTask5, Consistency_Checking) {
     BodyCollection collection;
 
     collection.add_body(
@@ -51,10 +45,8 @@ int main() {
     ASSERT_TRUE(report.is_consistent);
     ASSERT_TRUE(report.issues.empty());
     ASSERT_EQ(1, report.bodies_checked);
-  });
-
-  // Test validated add operation
-  suite.run_test("Validated Add Operation", []() {
+}
+TEST(EnhancedBodyCollectionTestsTask5, Validated_Add_Operation) {
     BodyCollection collection;
 
     CelestialBody valid_body{
@@ -77,10 +69,8 @@ int main() {
     ASSERT_FALSE(duplicate_result.success);
     ASSERT_EQ(0, duplicate_result.affected_bodies);
     ASSERT_FALSE(duplicate_result.error_message.empty());
-  });
-
-  // Test safe remove operation
-  suite.run_test("Safe Remove Operation", []() {
+}
+TEST(EnhancedBodyCollectionTestsTask5, Safe_Remove_Operation) {
     BodyCollection collection;
 
     collection.add_body(
@@ -105,10 +95,8 @@ int main() {
     ASSERT_FALSE(not_found_result.success);
     ASSERT_EQ(0, not_found_result.affected_bodies);
     ASSERT_FALSE(not_found_result.error_message.empty());
-  });
-
-  // Test update body operation
-  suite.run_test("Update Body Operation", []() {
+}
+TEST(EnhancedBodyCollectionTestsTask5, Update_Body_Operation) {
     BodyCollection collection;
 
     collection.add_body(
@@ -139,10 +127,8 @@ int main() {
     ASSERT_TRUE(found.has_value());
     ASSERT_EQ(2000.0, found->get().mass());
     ASSERT_EQ(2.0, found->get().position().x());
-  });
-
-  // Test name pattern search
-  suite.run_test("Name Pattern Search", []() {
+}
+TEST(EnhancedBodyCollectionTestsTask5, Name_Pattern_Search) {
     BodyCollection collection;
 
     collection.add_body(
@@ -183,10 +169,8 @@ int main() {
     auto exact_results = collection.search_by_name_pattern("^Earth$");
     ASSERT_EQ(1, exact_results.size());
     ASSERT_EQ("Earth", exact_results[0].get().name());
-  });
-
-  // Test mass range filtering
-  suite.run_test("Mass Range Filtering", []() {
+}
+TEST(EnhancedBodyCollectionTestsTask5, Mass_Range_Filtering) {
     BodyCollection collection;
 
     collection.add_body(
@@ -226,10 +210,8 @@ int main() {
     auto heavy_bodies = collection.filter_by_mass_range(1.0e23, 1.0e25);
     ASSERT_EQ(1, heavy_bodies.size());
     ASSERT_EQ("HeavyBody", heavy_bodies[0].get().name());
-  });
-
-  // Test distance filtering
-  suite.run_test("Distance Filtering", []() {
+}
+TEST(EnhancedBodyCollectionTestsTask5, Distance_Filtering) {
     BodyCollection collection;
 
     collection.add_body(
@@ -259,10 +241,8 @@ int main() {
 
     auto all_bodies = collection.filter_by_distance_from_point(origin, 200.0);
     ASSERT_EQ(2, all_bodies.size());
-  });
-
-  // Test bulk add operation
-  suite.run_test("Bulk Add Operation", []() {
+}
+TEST(EnhancedBodyCollectionTestsTask5, Bulk_Add_Operation) {
     BodyCollection collection;
 
     std::vector<CelestialBody> bodies_to_add;
@@ -285,10 +265,8 @@ int main() {
     ASSERT_EQ(0, result.failed_operations);
     ASSERT_TRUE(result.errors.empty());
     ASSERT_EQ(5, collection.size());
-  });
-
-  // Test bulk remove operation
-  suite.run_test("Bulk Remove Operation", []() {
+}
+TEST(EnhancedBodyCollectionTestsTask5, Bulk_Remove_Operation) {
     BodyCollection collection;
 
     // Add some bodies first
@@ -314,10 +292,8 @@ int main() {
     ASSERT_EQ(1, result.failed_operations);
     ASSERT_EQ(1, result.errors.size());
     ASSERT_EQ(1, collection.size());  // Only RemoveMe2 should remain
-  });
-
-  // Test bulk position update
-  suite.run_test("Bulk Position Update", []() {
+}
+TEST(EnhancedBodyCollectionTestsTask5, Bulk_Position_Update) {
     BodyCollection collection;
 
     // Add some bodies
@@ -348,10 +324,8 @@ int main() {
       ASSERT_TRUE(body.has_value());
       ASSERT_EQ(static_cast<long double>(i + 10), body->get().position().x());
     }
-  });
-
-  // Test error handling with invalid data
-  suite.run_test("Error Handling with Invalid Data", []() {
+}
+TEST(EnhancedBodyCollectionTestsTask5, Error_Handling_with_Invalid_Data) {
     BodyCollection collection;
 
     // Try to add body with negative mass - this should throw during construction
@@ -388,7 +362,4 @@ int main() {
     ASSERT_TRUE(result.success);
     ASSERT_EQ(1, result.affected_bodies);
     ASSERT_EQ(1, collection.size());
-  });
-
-  return suite.all_passed() ? 0 : suite.get_failed_count();
 }

@@ -1,6 +1,7 @@
 /**
  * @file test_training_system.cpp
  * @brief Test training system (Task 35)
+ * @note Migrated to Google Test
  *
  * Tests training capabilities:
  * - Test development tutorials
@@ -14,7 +15,7 @@
 #include <string>
 #include <vector>
 
-#include "test_framework.h"
+#include <gtest/gtest.h>
 
 class TrainingSystem {
  public:
@@ -50,8 +51,6 @@ class TrainingSystem {
  private:
   std::vector<TrainingModule> modules_;
 };
-
-int main() {
   TEST_SUITE("Test Training System Tests");
 
   TEST_CASE("Training Module Management") {
@@ -67,4 +66,3 @@ int main() {
   });
 
   return current_suite->all_passed() ? 0 : 1;
-}

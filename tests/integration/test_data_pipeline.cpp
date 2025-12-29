@@ -1,6 +1,7 @@
 /**
  * @file test_data_pipeline.cpp
  * @brief Integration tests for complete data pipelines
+ * @note Migrated to Google Test
  *
  * Tests the complete JPL → BodyFactory → Simulation flow with:
  * - End-to-end data pipeline validation
@@ -19,7 +20,7 @@
 #include "solar_core/simulation/simulation_engine.hpp"
 #include "solar_jpl/jpl_client.hpp"
 #include "test_data_manager.hpp"
-#include "test_framework.h"
+#include <gtest/gtest.h>
 
 using namespace SolarSystem;
 using namespace TestData;
@@ -40,8 +41,6 @@ class MockJPLClient {
 };
 
 MockJPLClient::FailureMode MockJPLClient::failure_mode_ = MockJPLClient::FailureMode::None;
-
-int main() {
   TEST_SUITE("Data Pipeline Integration Tests");
 
   // Test 1: Complete JPL → BodyFactory → Simulation pipeline
@@ -100,7 +99,7 @@ int main() {
       // Test with valid cache
       {auto test_cache = TestDataManager::create_test_cache("ephemeris");
   test_cache->populate_with_valid_data();
-  ASSERT_TRUE(test_cache->cache_exists());
+  EXPECT_GT(test_cache-, cache_exists());
 
   Bodies::BodyFactory::CreationOptions options;
   options.preferred_source = Bodies::BodyFactory::DataSource::CACHED_DATA;
@@ -119,7 +118,7 @@ int main() {
 {
   auto test_cache = TestDataManager::create_test_cache("ephemeris");
   test_cache->populate_with_corrupted_data();
-  ASSERT_TRUE(test_cache->cache_exists());
+  EXPECT_GT(test_cache-, cache_exists());
 
   Bodies::BodyFactory::CreationOptions options;
   options.preferred_source = Bodies::BodyFactory::DataSource::CACHED_DATA;
@@ -217,7 +216,7 @@ TEST_CASE("Real Data Integration and Validation") {
   // Test with real ephemeris data
   auto ephemeris_data = TestDataManager::load_ephemeris_data("2024");
   if (ephemeris_data.has_value()) {
-    ASSERT_TRUE(TestDataManager::validate_ephemeris_data(ephemeris_data->files.begin()->second));
+    EXPECT_GT(TestDataManager::validate_ephemeris_data(ephemeris_data-, files.begin()->second));
   }
 
   // Create bodies using real data and validate physical properties
@@ -330,4 +329,3 @@ TEST_CASE("Data Pipeline Performance") {
 });
 
 return current_suite->all_passed() ? 0 : 1;
-}

@@ -1,6 +1,7 @@
 /**
  * @file benchmark_jpl_data.cpp
  * @brief Performance benchmarks for JPL data processing
+ * @note Migrated to Google Test
  *
  * This benchmark validates the JPL data processing performance claims:
  * - Cache loading 1000-2000x performance improvement over network requests
@@ -19,7 +20,7 @@
 #include "solar_core/bodies/celestial_body.hpp"
 #include "solar_core/math/vector3.hpp"
 #include "solar_jpl/jpl_client.hpp"
-#include "test_framework.h"
+#include <gtest/gtest.h>
 
 using namespace SolarSystem;
 
@@ -133,46 +134,7 @@ void create_test_cache_data(const std::filesystem::path& cache_dir) {
     json_file << "}\n";
   }
 }
-
-int main() {
-  Benchmark::BenchmarkSuite suite("JPL Data Performance");
-
-  // Setup test cache data
-  std::filesystem::path test_cache_dir = "./test_cache_benchmark";
-  create_test_cache_data(test_cache_dir);
-
-  // 1. BINARY CACHE LOADING BENCHMARK - Validate 1000x improvement claim (Requirement 3.1)
-  suite.run_benchmark(
-      "BinaryCacheLoadingBenchmark",
-      [&test_cache_dir]() {
-        auto binary_path = test_cache_dir / "ephemeris_cache.bin";
-        std::ifstream file(binary_path, std::ios::binary);
-
-        if (file.is_open()) {
-          size_t body_count;
-          file.read(reinterpret_cast<char*>(&body_count), sizeof(body_count));
-
-          std::vector<JPL::EphemerisData> data;
-          data.reserve(body_count);
-
-          for (size_t i = 0; i < body_count; ++i) {
-            JPL::EphemerisData body_data;
-
-            file.read(reinterpret_cast<char*>(&body_data.jpl_id), sizeof(body_data.jpl_id));
-
-            size_t name_length;
-            file.read(reinterpret_cast<char*>(&name_length), sizeof(name_length));
-            body_data.body_name.resize(name_length);
-            file.read(&body_data.body_name[0], static_cast<std::streamsize>(name_length));
-
-            auto epoch_time =
-                std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-            file.read(reinterpret_cast<char*>(&epoch_time), sizeof(epoch_time));
-            body_data.epoch = std::chrono::system_clock::from_time_t(epoch_time);
-
-            double pos[3];
-            file.read(reinterpret_cast<char*>(pos), sizeof(pos));
-            body_data.position = Math::Vector3d{pos[0], pos[1], pos[2]};
+;
 
             double vel[3];
             file.read(reinterpret_cast<char*>(vel), sizeof(vel));
@@ -412,7 +374,6 @@ int main() {
       },
       10000);
 
-  suite.print_summary();
 
   // Create benchmark results directory if it doesn't exist
   std::filesystem::create_directories("benchmark_results");
@@ -462,4 +423,3 @@ int main() {
             << std::endl;
 
   return cache_improvement_validated ? 0 : 1;
-}

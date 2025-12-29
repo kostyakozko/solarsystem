@@ -1,6 +1,7 @@
 /**
  * @file test_enhanced_components_integration.cpp
  * @brief Comprehensive integration tests for enhanced components (Task 21)
+ * @note Migrated to Google Test
  *
  * Tests all enhanced components working together:
  * - Error handling across component boundaries
@@ -32,17 +33,12 @@
 
 // Test utilities
 #include "test_data_manager.hpp"
-#include "test_framework.h"
+#include <gtest/gtest.h>
 
 using namespace SolarSystem;
 using namespace SolarSystem::Utils;
 using namespace TestData;
-
-int main() {
-    TestSuite suite("Enhanced Components Integration Tests");
-
-    // Test 1: Error handling across component boundaries
-    suite.run_test("Error Handling Across Component Boundaries", []() {
+TEST(EnhancedComponentsIntegrationTests, Error_Handling_Across_Component_Boundaries) {
         // Initialize error handling system
         ErrorHandlingSystem::instance().configure();
         ErrorRecoveryOrchestrator::instance().initialize();
@@ -96,10 +92,8 @@ int main() {
         }
 
         // Simplified test - skip resource cleanup to avoid hanging
-    });
-
-    // Test 2: Resource management in integrated scenarios
-    suite.run_test("Resource Management Integration", []() {
+}
+TEST(EnhancedComponentsIntegrationTests, Resource_Management_Integration) {
         try {
             // Simple resource test - just create and destroy a factory
             {
@@ -112,10 +106,8 @@ int main() {
         } catch (const std::exception& e) {
             std::cout << "Resource management test completed with exception: " << e.what() << std::endl;
         }
-    });
-
-    // Test 3: Performance characteristics of enhanced system
-    suite.run_test("Enhanced System Performance", []() {
+}
+TEST(EnhancedComponentsIntegrationTests, Enhanced_System_Performance) {
         auto start_time = std::chrono::high_resolution_clock::now();
 
         try {
@@ -172,10 +164,8 @@ int main() {
         ASSERT_TRUE(duration.count() < 15000);
 
         // Simplified test - skip resource cleanup to avoid hanging
-    });
-
-    // Test 4: Error recovery mechanisms in real scenarios
-    suite.run_test("Real Scenario Error Recovery", []() {
+}
+TEST(EnhancedComponentsIntegrationTests, Real_Scenario_Error_Recovery) {
         try {
             // Test basic error recovery functionality
             DetailedError test_error(
@@ -199,9 +189,8 @@ int main() {
         } catch (const std::exception& e) {
             std::cout << "Error recovery test completed with exception: " << e.what() << std::endl;
         }
-    });
+}
 
     // Force immediate exit to avoid hanging on singleton cleanup
     // Note: TestSuite destructor will print summary automatically
     _exit(0);
-}

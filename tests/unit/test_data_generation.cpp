@@ -1,6 +1,7 @@
 /**
  * @file test_data_generation.cpp
  * @brief Realistic test data generation system tests (Task 14)
+ * @note Migrated to Google Test
  *
  * Tests data generation capabilities:
  * - Astronomical data generators with realistic characteristics
@@ -18,7 +19,7 @@
 #include <string>
 #include <vector>
 
-#include "test_framework.h"
+#include <gtest/gtest.h>
 
 /**
  * @brief Test data generation system
@@ -289,8 +290,6 @@ class TestDataGenerator {
     return series;
   }
 };
-
-int main() {
   TEST_SUITE("Test Data Generation System Tests");
 
   // Test 1: Astronomical data generators
@@ -301,10 +300,10 @@ int main() {
     {
       auto planet = generator.generate_astronomical_body("planet");
       ASSERT_FALSE(planet.name.empty());
-      ASSERT_TRUE(planet.mass_kg >= 1e24 && planet.mass_kg <= 1e27 + 1e24);
-      ASSERT_TRUE(planet.radius_m >= 6e6 && planet.radius_m <= 6e7 + 6e6);
-      ASSERT_TRUE(planet.eccentricity >= 0.0 && planet.eccentricity <= 0.2);
-      ASSERT_TRUE(planet.inclination_deg >= 0.0 &&
+      EXPECT_GT(planet.mass_kg , = 1e24 && planet.mass_kg <= 1e27 + 1e24);
+      EXPECT_GT(planet.radius_m , = 6e6 && planet.radius_m <= 6e7 + 6e6);
+      EXPECT_GT(planet.eccentricity , = 0.0 && planet.eccentricity <= 0.2);
+      EXPECT_GT(planet.inclination_deg , = 0.0 &&
                   planet.inclination_deg <= 10.0);
     }
 
@@ -312,18 +311,18 @@ int main() {
     {
       auto moon = generator.generate_astronomical_body("moon");
       ASSERT_FALSE(moon.name.empty());
-      ASSERT_TRUE(moon.mass_kg >= 1e20 && moon.mass_kg <= 1e23 + 1e20);
-      ASSERT_TRUE(moon.radius_m >= 1e5 && moon.radius_m <= 2e6 + 1e5);
-      ASSERT_TRUE(moon.eccentricity >= 0.0 && moon.eccentricity <= 0.1);
+      EXPECT_GT(moon.mass_kg , = 1e20 && moon.mass_kg <= 1e23 + 1e20);
+      EXPECT_GT(moon.radius_m , = 1e5 && moon.radius_m <= 2e6 + 1e5);
+      EXPECT_GT(moon.eccentricity , = 0.0 && moon.eccentricity <= 0.1);
     }
 
     // Test 1.3: Generate asteroid data
     {
       auto asteroid = generator.generate_astronomical_body("asteroid");
       ASSERT_FALSE(asteroid.name.empty());
-      ASSERT_TRUE(asteroid.mass_kg >= 1e15 && asteroid.mass_kg <= 1e20 + 1e15);
-      ASSERT_TRUE(asteroid.eccentricity >= 0.0 && asteroid.eccentricity <= 0.5);
-      ASSERT_TRUE(asteroid.inclination_deg >= 0.0 &&
+      EXPECT_GT(asteroid.mass_kg , = 1e15 && asteroid.mass_kg <= 1e20 + 1e15);
+      EXPECT_GT(asteroid.eccentricity , = 0.0 && asteroid.eccentricity <= 0.5);
+      EXPECT_GT(asteroid.inclination_deg , = 0.0 &&
                   asteroid.inclination_deg <= 30.0);
     }
 
@@ -331,7 +330,7 @@ int main() {
     {
       auto star = generator.generate_astronomical_body("star");
       ASSERT_FALSE(star.name.empty());
-      ASSERT_TRUE(star.mass_kg >= 1e30);
+      EXPECT_GT(star.mass_kg , = 1e30);
       ASSERT_EQ(star.orbital_period_s, 0.0); // Stars don't orbit
       ASSERT_EQ(star.eccentricity, 0.0);
     }
@@ -411,11 +410,11 @@ int main() {
     {
       auto config = generator.generate_valid_configuration();
 
-      ASSERT_TRUE(config.timestep_s > 0.0);
-      ASSERT_TRUE(config.duration_s > 0.0);
+      EXPECT_GT(config.timestep_s , 0.0);
+      EXPECT_GT(config.duration_s , 0.0);
       ASSERT_FALSE(config.integrator.empty());
-      ASSERT_TRUE(config.tolerance > 0.0 && config.tolerance < 1.0);
-      ASSERT_TRUE(config.output_frequency > 0);
+      EXPECT_GT(config.tolerance , 0.0 && config.tolerance < 1.0);
+      EXPECT_GT(config.output_frequency , 0);
     }
 
     // Test 3.2: Generate multiple configurations
@@ -481,7 +480,7 @@ int main() {
 
       auto invalid = generator.generate_invalid_user_input("invalid_value");
       ASSERT_FALSE(invalid.is_valid);
-      ASSERT_TRUE(invalid.error_message.find("Invalid") != std::string::npos);
+      EXPECT_NE(std::string::npos, invalid.error_message.find("Invalid"));
 
       auto negative = generator.generate_invalid_user_input("negative_value");
       ASSERT_FALSE(negative.is_valid);
@@ -551,4 +550,3 @@ int main() {
   });
 
   return current_suite->all_passed() ? 0 : 1;
-}

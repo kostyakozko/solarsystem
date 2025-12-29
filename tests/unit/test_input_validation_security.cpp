@@ -1,6 +1,7 @@
 /**
  * @file test_input_validation_security.cpp
  * @brief Input validation and sanitization security testing (Task 20)
+ * @note Migrated to Google Test
  *
  * Tests security validation capabilities:
  * - Comprehensive input fuzzing and boundary testing
@@ -16,7 +17,7 @@
 #include <string>
 #include <vector>
 
-#include "test_framework.h"
+#include <gtest/gtest.h>
 
 /**
  * @brief Input validation and sanitization security tester
@@ -253,8 +254,6 @@ class InputSecurityValidator {
     return result;
   }
 };
-
-int main() {
   TEST_SUITE("Input Validation and Sanitization Security Tests");
 
   // Test 1: SQL injection testing
@@ -324,7 +323,7 @@ int main() {
     // Test 3.4: Event handler injection
     auto result4 = validator.validate_xss_input("<img onerror='alert(1)'>");
     ASSERT_FALSE(result4.is_safe);
-    ASSERT_TRUE(result4.sanitized_input.find("&lt;") != std::string::npos);
+    EXPECT_NE(std::string::npos, result4.sanitized_input.find("&lt;"));
   });
 
   // Test 4: Buffer overflow testing
@@ -477,5 +476,3 @@ int main() {
   });
 
   return current_suite->all_passed() ? 0 : 1;
-}
-

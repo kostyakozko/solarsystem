@@ -1,39 +1,36 @@
 /**
  * @file test_config_manager.cpp
  * @brief Unit tests for unified configuration system (Tasks 16 & 17)
+ * @note Migrated to Google Test
  */
 
-#include "../utils/test_framework.h"
+#include <gtest/gtest.h>
 
 #include "solar_core/config/config_manager.hpp"
 
 using namespace SolarSystem::Core::Config;
-
-int main() {
-  TestSuite suite("Configuration Manager Tests");
-
-  suite.run_test("Configuration Manager Initialization", []() {
+TEST(ConfigurationManagerTests, Configuration_Manager_Initialization) {
     ConfigurationManager manager;
     auto config = manager.get_config();
     if (config.version.empty()) throw std::runtime_error("Config should have version");
-  });
+}
 
-  suite.run_test("Configuration Validation", []() {
+TEST(ConfigurationManagerTests, Configuration_Validation) {
     ConfigurationManager manager;
     auto validation = manager.validate();
     if (!validation.is_valid) {
       throw std::runtime_error("Default config should be valid");
     }
-  });
+}
 
-  suite.run_test("Configuration Source Tracking", []() {
+TEST(ConfigurationManagerTests, Configuration_Source_Tracking) {
     ConfigurationManager manager;
     auto source = manager.get_parameter_source("simulation.timestep");
     if (source != ConfigSource::Default)
       throw std::runtime_error("Initial source should be Default");
-  });
+}
 
-  suite.run_test("Configuration Backup and Restore", []() {
+TEST(ConfigurationManagerTests, Configuration_Backup_and_Restore) {
     ConfigurationManager manager;
 
     auto backup = manager.create_backup("test backup");
@@ -42,9 +39,9 @@ int main() {
 
     auto restore_result = manager.restore_from_backup(backup);
     if (!restore_result.has_value()) throw std::runtime_error("Restore should succeed");
-  });
+}
 
-  suite.run_test("Configuration Change History", []() {
+TEST(ConfigurationManagerTests, Configuration_Change_History) {
     ConfigurationManager manager;
 
     auto history = manager.get_change_history();
@@ -52,16 +49,16 @@ int main() {
     if (history.size() > 0) {
       // Some changes might have been tracked
     }
-  });
+}
 
-  suite.run_test("Precedence Documentation", []() {
+TEST(ConfigurationManagerTests, Precedence_Documentation) {
     auto docs = ConfigurationManager::get_precedence_documentation();
     if (docs.empty()) throw std::runtime_error("Documentation should not be empty");
     if (docs.find("CLI") == std::string::npos)
       throw std::runtime_error("Should mention CLI precedence");
-  });
+}
 
-  suite.run_test("Cross-Application Conflict Detection", []() {
+TEST(ConfigurationManagerTests, Cross_Application_Conflict_Detection) {
     ConfigurationManager manager;
 
     std::map<std::string, SolarSystem::Utils::Config::AppConfig> app_configs;
@@ -70,9 +67,9 @@ int main() {
 
     auto conflicts = manager.detect_cross_app_conflicts(app_configs);
     // May or may not have conflicts depending on config
-  });
+}
 
-  suite.run_test("Configuration Dependencies", []() {
+TEST(ConfigurationManagerTests, Configuration_Dependencies) {
     ConfigurationManager manager;
 
     auto deps = manager.get_dependencies();
@@ -83,9 +80,9 @@ int main() {
     if (!validation.is_valid) {
       throw std::runtime_error("Default dependencies should be valid");
     }
-  });
+}
 
-  suite.run_test("Impact Analysis", []() {
+TEST(ConfigurationManagerTests, Impact_Analysis) {
     ConfigurationManager manager;
 
     auto impact = manager.analyze_impact("simulation.timestep", "7200");
@@ -94,9 +91,9 @@ int main() {
     if (impact.affected_applications.empty()) {
       // May or may not have affected apps
     }
-  });
+}
 
-  suite.run_test("Conflict Prediction", []() {
+TEST(ConfigurationManagerTests, Conflict_Prediction) {
     ConfigurationManager manager;
 
     // Test if a change would cause conflict
@@ -104,16 +101,13 @@ int main() {
     if (!would_conflict) {
       // Negative timestep should cause conflict, but depends on validation
     }
-  });
+}
 
-  suite.run_test("Reset to Defaults", []() {
+TEST(ConfigurationManagerTests, Reset_to_Defaults) {
     ConfigurationManager manager;
 
     manager.reset_to_defaults();
     auto config = manager.get_config();
     if (config.version.empty()) throw std::runtime_error("Config should have version after reset");
-  });
-
-  suite.print_summary();
-  return suite.all_passed() ? 0 : 1;
 }
+

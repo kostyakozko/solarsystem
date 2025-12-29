@@ -1,9 +1,10 @@
 /**
  * @file test_file_network_security.cpp
  * @brief Unit tests for file system and network security
+ * @note Migrated to Google Test
  */
 
-#include "../utils/test_framework.h"
+#include <gtest/gtest.h>
 
 #include "solar_core/security/file_security.hpp"
 #include "solar_core/security/network_security.hpp"
@@ -12,36 +13,32 @@
 #include <fstream>
 
 using namespace SolarSystem::Security;
-
-int main() {
-  TestSuite suite("File and Network Security Tests");
-
   // File Security Tests
-  suite.run_test("Whitelist Policy Add Directory", []() {
+TEST(FileandNetworkSecurityTests, Whitelist_Policy_Add_Directory) {
     WhitelistPolicy policy;
     policy.add_allowed_directory("/tmp");
 
     auto result = policy.check_access("/tmp/test.txt", FileAccessMode::READ);
     if (!result.allowed) throw std::runtime_error("Should allow access to whitelisted directory");
-  });
+}
 
-  suite.run_test("Whitelist Policy Add File", []() {
+TEST(FileandNetworkSecurityTests, Whitelist_Policy_Add_File) {
     WhitelistPolicy policy;
     policy.add_allowed_file("/etc/hosts");
 
     auto result = policy.check_access("/etc/hosts", FileAccessMode::READ);
     if (!result.allowed) throw std::runtime_error("Should allow access to whitelisted file");
-  });
+}
 
-  suite.run_test("Whitelist Policy Deny Unlisted", []() {
+TEST(FileandNetworkSecurityTests, Whitelist_Policy_Deny_Unlisted) {
     WhitelistPolicy policy;
     policy.add_allowed_directory("/tmp");
 
     auto result = policy.check_access("/etc/passwd", FileAccessMode::READ);
     if (result.allowed) throw std::runtime_error("Should deny access to non-whitelisted file");
-  });
+}
 
-  suite.run_test("FileSystemSecurity Policy Management", []() {
+TEST(FileandNetworkSecurityTests, FileSystemSecurity_Policy_Management) {
     auto& fs_security = FileSystemSecurity::instance();
 
     auto policy = std::make_shared<WhitelistPolicy>();
@@ -51,9 +48,9 @@ int main() {
 
     auto retrieved = fs_security.get_policy();
     if (!retrieved) throw std::runtime_error("Should retrieve policy");
-  });
+}
 
-  suite.run_test("FileSystemSecurity Access Checks", []() {
+TEST(FileandNetworkSecurityTests, FileSystemSecurity_Access_Checks) {
     auto& fs_security = FileSystemSecurity::instance();
 
     auto policy = std::make_shared<WhitelistPolicy>();
@@ -67,9 +64,9 @@ int main() {
     if (fs_security.can_read("/etc/passwd")) {
       throw std::runtime_error("Should deny read access");
     }
-  });
+}
 
-  suite.run_test("FileSystemSecurity Path Validation", []() {
+TEST(FileandNetworkSecurityTests, FileSystemSecurity_Path_Validation) {
     auto& fs_security = FileSystemSecurity::instance();
 
     if (!fs_security.is_safe_path("/tmp/test.txt")) {
@@ -79,9 +76,9 @@ int main() {
     if (fs_security.is_safe_path("/tmp/../etc/passwd")) {
       throw std::runtime_error("Should consider path traversal unsafe");
     }
-  });
+}
 
-  suite.run_test("SecureFileOperations Read", []() {
+TEST(FileandNetworkSecurityTests, SecureFileOperations_Read) {
     // Create a test file
     std::filesystem::path test_file = "/tmp/secure_test.txt";
     {
@@ -100,10 +97,10 @@ int main() {
 
     // Clean up
     std::filesystem::remove(test_file);
-  });
+}
 
   // Network Security Tests
-  suite.run_test("IPFilter Whitelist", []() {
+TEST(FileandNetworkSecurityTests, IPFilter_Whitelist) {
     IPFilter filter;
     filter.add_whitelist("192.168.1.*");
     filter.add_whitelist("10.0.0.1");
@@ -119,9 +116,9 @@ int main() {
     if (filter.is_allowed("172.16.0.1")) {
       throw std::runtime_error("Should deny non-whitelisted IP");
     }
-  });
+}
 
-  suite.run_test("IPFilter Blacklist", []() {
+TEST(FileandNetworkSecurityTests, IPFilter_Blacklist) {
     IPFilter filter;
     filter.add_blacklist("192.168.1.100");
 
@@ -132,17 +129,17 @@ int main() {
     if (!filter.is_allowed("192.168.1.101")) {
       throw std::runtime_error("Should allow non-blacklisted IP");
     }
-  });
+}
 
-  suite.run_test("EncryptionManager Key Generation", []() {
+TEST(FileandNetworkSecurityTests, EncryptionManager_Key_Generation) {
     auto& enc = EncryptionManager::instance();
 
     auto key = enc.generate_key(32);
     if (key.size() != 32) throw std::runtime_error("Wrong key size");
     if (!enc.validate_key(key)) throw std::runtime_error("Generated key should be valid");
-  });
+}
 
-  suite.run_test("EncryptionManager Encryption", []() {
+TEST(FileandNetworkSecurityTests, EncryptionManager_Encryption) {
     auto& enc = EncryptionManager::instance();
 
     std::string data = "secret message";
@@ -155,9 +152,9 @@ int main() {
     auto decrypted = enc.decrypt(*encrypted, key);
     if (!decrypted) throw std::runtime_error("Decryption should succeed");
     if (*decrypted != data) throw std::runtime_error("Decrypted data should match original");
-  });
+}
 
-  suite.run_test("EncryptionManager Hashing", []() {
+TEST(FileandNetworkSecurityTests, EncryptionManager_Hashing) {
     auto& enc = EncryptionManager::instance();
 
     std::string data = "test data";
@@ -166,9 +163,9 @@ int main() {
 
     if (hash1 != hash2) throw std::runtime_error("Same data should produce same hash");
     if (!enc.verify_hash(data, hash1)) throw std::runtime_error("Hash verification should succeed");
-  });
+}
 
-  suite.run_test("NetworkSecurity Protocol Validation", []() {
+TEST(FileandNetworkSecurityTests, NetworkSecurity_Protocol_Validation) {
     auto& net_security = NetworkSecurity::instance();
 
     if (!net_security.is_secure_protocol(NetworkProtocol::HTTPS)) {
@@ -178,9 +175,9 @@ int main() {
     if (net_security.is_secure_protocol(NetworkProtocol::HTTP)) {
       throw std::runtime_error("HTTP should not be secure");
     }
-  });
+}
 
-  suite.run_test("NetworkSecurity Connection Validation", []() {
+TEST(FileandNetworkSecurityTests, NetworkSecurity_Connection_Validation) {
     auto& net_security = NetworkSecurity::instance();
 
     ConnectionInfo conn;
@@ -190,9 +187,9 @@ int main() {
 
     auto result = net_security.validate_connection(conn);
     if (!result.allowed) throw std::runtime_error("Should allow valid connection");
-  });
+}
 
-  suite.run_test("NetworkSecurity IP Filtering", []() {
+TEST(FileandNetworkSecurityTests, NetworkSecurity_IP_Filtering) {
     auto& net_security = NetworkSecurity::instance();
 
     auto filter = std::make_shared<IPFilter>();
@@ -206,9 +203,9 @@ int main() {
     if (net_security.is_ip_allowed("10.0.0.1")) {
       throw std::runtime_error("Should block non-whitelisted IP");
     }
-  });
+}
 
-  suite.run_test("NetworkSecurity Security Level", []() {
+TEST(FileandNetworkSecurityTests, NetworkSecurity_Security_Level) {
     auto& net_security = NetworkSecurity::instance();
 
     net_security.set_minimum_security_level(SecurityLevel::HIGH);
@@ -216,9 +213,9 @@ int main() {
     if (net_security.get_minimum_security_level() != SecurityLevel::HIGH) {
       throw std::runtime_error("Should set security level");
     }
-  });
+}
 
-  suite.run_test("NetworkSecurity Connection Tracking", []() {
+TEST(FileandNetworkSecurityTests, NetworkSecurity_Connection_Tracking) {
     auto& net_security = NetworkSecurity::instance();
 
     ConnectionInfo conn;
@@ -231,9 +228,9 @@ int main() {
     if (net_security.get_connection_count() != initial_count + 1) {
       throw std::runtime_error("Should track connection");
     }
-  });
+}
 
-  suite.run_test("SecureNetworkOperations URL Validation", []() {
+TEST(FileandNetworkSecurityTests, SecureNetworkOperations_URL_Validation) {
     if (!SecureNetworkOperations::validate_url("http://example.com")) {
       throw std::runtime_error("Should validate HTTP URL");
     }
@@ -245,9 +242,9 @@ int main() {
     if (SecureNetworkOperations::validate_url("ftp://example.com")) {
       throw std::runtime_error("Should reject non-HTTP URL");
     }
-  });
+}
 
-  suite.run_test("SecureNetworkOperations Secure URL Check", []() {
+TEST(FileandNetworkSecurityTests, SecureNetworkOperations_Secure_URL_Check) {
     if (!SecureNetworkOperations::is_secure_url("https://example.com")) {
       throw std::runtime_error("HTTPS should be secure");
     }
@@ -255,8 +252,5 @@ int main() {
     if (SecureNetworkOperations::is_secure_url("http://example.com")) {
       throw std::runtime_error("HTTP should not be secure");
     }
-  });
-
-  suite.print_summary();
-  return suite.all_passed() ? 0 : 1;
 }
+

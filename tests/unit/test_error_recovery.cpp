@@ -1,6 +1,7 @@
 /**
  * @file test_error_recovery.cpp
  * @brief Error message and recovery validation tests (Task 19)
+ * @note Migrated to Google Test
  *
  * Tests error message and recovery capabilities:
  * - Error message quality and usefulness testing
@@ -17,7 +18,7 @@
 #include <string>
 #include <vector>
 
-#include "test_framework.h"
+#include <gtest/gtest.h>
 
 /**
  * @brief Error message and recovery validation system
@@ -241,8 +242,6 @@ class ErrorRecoveryValidator {
     return has_system_info || has_error_details || has_timestamp;
   }
 };
-
-int main() {
   TEST_SUITE("Error Message and Recovery Validation Tests");
 
   // Test 1: Error message quality testing
@@ -254,15 +253,15 @@ int main() {
         "ERR_001: File not found at line 42 in function load_data(). "
         "Please check the file path and try again.";
     auto quality1 = validator.validate_error_message(error_msg1);
-    ASSERT_TRUE(quality1.has_error_code && quality1.has_description &&
+    EXPECT_GT(quality1.has_error_code && quality1.has_description &&
                 quality1.has_context && quality1.has_suggestion &&
-                quality1.is_clear && quality1.quality_score > 0.7);
+                quality1.is_clear && quality1.quality_score , 0.7);
 
     // Test 1.2: Poor-quality error message
     std::string error_msg2 = "Error";
     auto quality2 = validator.validate_error_message(error_msg2);
-    ASSERT_TRUE(!quality2.has_error_code && !quality2.has_description &&
-                !quality2.has_context && quality2.quality_score < 0.5);
+    EXPECT_LT(!quality2.has_error_code && !quality2.has_description &&
+                !quality2.has_context && quality2.quality_score , 0.5);
 
     // Test 1.3: Message with actionable guidance
     std::string error_msg3 = "Connection failed. Please retry or contact support.";
@@ -366,7 +365,7 @@ int main() {
     {
       auto guidance = validator.generate_user_guidance("file_not_found");
       ASSERT_FALSE(guidance.empty());
-      ASSERT_TRUE(guidance.find("file") != std::string::npos);
+      EXPECT_NE(std::string::npos, guidance.find("file"));
       ASSERT_TRUE(guidance.find("check") != std::string::npos ||
                   guidance.find("verify") != std::string::npos);
     }
@@ -381,8 +380,8 @@ int main() {
     // Test 3.6: Invalid input guidance
     {
       auto guidance = validator.generate_user_guidance("invalid_input");
-      ASSERT_TRUE(guidance.find("input") != std::string::npos);
-      ASSERT_TRUE(guidance.find("help") != std::string::npos);
+      EXPECT_NE(std::string::npos, guidance.find("input"));
+      EXPECT_NE(std::string::npos, guidance.find("help"));
     }
   });
 
@@ -529,4 +528,3 @@ int main() {
   });
 
   return current_suite->all_passed() ? 0 : 1;
-}

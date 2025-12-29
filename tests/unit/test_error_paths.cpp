@@ -1,6 +1,7 @@
 /**
  * @file test_error_paths.cpp
  * @brief Comprehensive error path testing (Task 17)
+ * @note Migrated to Google Test
  *
  * Tests error handling capabilities:
  * - Exception handling and error recovery paths
@@ -23,7 +24,7 @@
 #include <thread>
 #include <vector>
 
-#include "test_framework.h"
+#include <gtest/gtest.h>
 
 namespace fs = std::filesystem;
 
@@ -258,8 +259,6 @@ class ErrorPathTester {
     return result;
   }
 };
-
-int main() {
   TEST_SUITE("Error Path Testing");
 
   // Test 1: Exception handling and error recovery
@@ -273,8 +272,7 @@ int main() {
       auto result = tester.test_exception_handling(operation);
       ASSERT_TRUE(result.error_occurred);
       ASSERT_FALSE(result.error_message.empty());
-      ASSERT_TRUE(result.error_message.find("Test error") !=
-                  std::string::npos);
+      EXPECT_NE(std::string::npos, result.error_message.find("Test error"));
     }
 
     // Test 1.2: Exception with recovery
@@ -317,7 +315,7 @@ int main() {
       auto result = tester.simulate_network_timeout(50);
       ASSERT_TRUE(result.error_occurred);
       ASSERT_TRUE(result.error_type == ErrorPathTester::ErrorType::NetworkTimeout);
-      ASSERT_TRUE(result.error_message.find("timeout") != std::string::npos);
+      EXPECT_NE(std::string::npos, result.error_message.find("timeout"));
     }
 
     // Test 2.2: Connection refused
@@ -325,22 +323,21 @@ int main() {
       auto result = tester.simulate_network_failure("connection_refused");
       ASSERT_TRUE(result.error_occurred);
       ASSERT_TRUE(result.error_type == ErrorPathTester::ErrorType::NetworkFailure);
-      ASSERT_TRUE(result.error_message.find("refused") != std::string::npos);
+      EXPECT_NE(std::string::npos, result.error_message.find("refused"));
     }
 
     // Test 2.3: Host unreachable
     {
       auto result = tester.simulate_network_failure("host_unreachable");
       ASSERT_TRUE(result.error_occurred);
-      ASSERT_TRUE(result.error_message.find("unreachable") !=
-                  std::string::npos);
+      EXPECT_NE(std::string::npos, result.error_message.find("unreachable"));
     }
 
     // Test 2.4: Connection reset
     {
       auto result = tester.simulate_network_failure("connection_reset");
       ASSERT_TRUE(result.error_occurred);
-      ASSERT_TRUE(result.error_message.find("reset") != std::string::npos);
+      EXPECT_NE(std::string::npos, result.error_message.find("reset"));
     }
   });
 
@@ -353,8 +350,7 @@ int main() {
       auto result = tester.test_file_not_found("/nonexistent/file.txt");
       ASSERT_TRUE(result.error_occurred);
       ASSERT_TRUE(result.error_type == ErrorPathTester::ErrorType::FileNotFound);
-      ASSERT_TRUE(result.error_message.find("not found") !=
-                  std::string::npos);
+      EXPECT_NE(std::string::npos, result.error_message.find("not found"));
     }
 
     // Test 3.2: Permission denied (try to write to root)
@@ -369,7 +365,7 @@ int main() {
       auto result = tester.simulate_disk_full();
       ASSERT_TRUE(result.error_occurred);
       ASSERT_TRUE(result.error_type == ErrorPathTester::ErrorType::DiskFull);
-      ASSERT_TRUE(result.error_message.find("space") != std::string::npos);
+      EXPECT_NE(std::string::npos, result.error_message.find("space"));
     }
 
     // Test 3.4: Create and access valid file
@@ -492,8 +488,7 @@ int main() {
       auto result = tester.test_graceful_degradation(false, true);
       ASSERT_FALSE(result.error_occurred);
       ASSERT_TRUE(result.recovered);
-      ASSERT_TRUE(result.error_message.find("fallback") !=
-                  std::string::npos);
+      EXPECT_NE(std::string::npos, result.error_message.find("fallback"));
     }
 
     // Test 6.3: All services unavailable
@@ -501,8 +496,7 @@ int main() {
       auto result = tester.test_graceful_degradation(false, false);
       ASSERT_TRUE(result.error_occurred);
       ASSERT_FALSE(result.recovered);
-      ASSERT_TRUE(result.error_message.find("unavailable") !=
-                  std::string::npos);
+      EXPECT_NE(std::string::npos, result.error_message.find("unavailable"));
     }
   });
 
@@ -574,4 +568,3 @@ int main() {
   });
 
   return current_suite->all_passed() ? 0 : 1;
-}

@@ -1,9 +1,10 @@
 /**
  * @file test_logging.cpp
  * @brief Unit tests for comprehensive logging system
+ * @note Migrated to Google Test
  */
 
-#include "../utils/test_framework.h"
+#include <gtest/gtest.h>
 
 #include "solar_utils/logging.hpp"
 
@@ -13,20 +14,16 @@
 #include <thread>
 
 using namespace SolarSystem::Utils;
-
-int main() {
-  TestSuite suite("Logging System Tests");
-
   // Basic logging tests
-  suite.run_test("Logger Singleton", []() {
+TEST(LoggingSystemTests, Logger_Singleton) {
     auto& logger1 = Logger::instance();
     auto& logger2 = Logger::instance();
 
     // Should be same instance
     if (&logger1 != &logger2) throw std::runtime_error("Logger should be singleton");
-  });
+}
 
-  suite.run_test("Basic Log Levels", []() {
+TEST(LoggingSystemTests, Basic_Log_Levels) {
     auto& logger = Logger::instance();
 
     // Should not throw
@@ -34,9 +31,9 @@ int main() {
     logger.info("test", "Info message");
     logger.warn("test", "Warning message");
     logger.error("test", "Error message");
-  });
+}
 
-  suite.run_test("Logger Configuration", []() {
+TEST(LoggingSystemTests, Logger_Configuration) {
     auto& logger = Logger::instance();
 
     Logger::Config config;
@@ -46,16 +43,16 @@ int main() {
 
     // Should not throw
     logger.configure(config);
-  });
+}
 
   // Console appender tests
-  suite.run_test("Console Appender Creation", []() {
+TEST(LoggingSystemTests, Console_Appender_Creation) {
     ConsoleAppender appender(true);
 
     if (!appender.is_open()) throw std::runtime_error("Console appender should be open");
-  });
+}
 
-  suite.run_test("Console Appender Logging", []() {
+TEST(LoggingSystemTests, Console_Appender_Logging) {
     ConsoleAppender appender(false);  // No colors for testing
 
     LogEntry entry;
@@ -68,10 +65,10 @@ int main() {
     // Should not throw
     appender.append(entry);
     appender.flush();
-  });
+}
 
   // File appender tests
-  suite.run_test("File Appender Creation", []() {
+TEST(LoggingSystemTests, File_Appender_Creation) {
     const std::string test_file = "test_log.txt";
 
     // Clean up if exists
@@ -84,9 +81,9 @@ int main() {
     // Clean up
     appender.close();
     std::filesystem::remove(test_file);
-  });
+}
 
-  suite.run_test("File Appender Logging", []() {
+TEST(LoggingSystemTests, File_Appender_Logging) {
     const std::string test_file = "test_log.txt";
     std::filesystem::remove(test_file);
 
@@ -117,17 +114,17 @@ int main() {
 
     // Clean up
     std::filesystem::remove(test_file);
-  });
+}
 
   // Memory appender tests
-  suite.run_test("Memory Appender Creation", []() {
+TEST(LoggingSystemTests, Memory_Appender_Creation) {
     MemoryAppender appender(100);
 
     if (!appender.is_open()) throw std::runtime_error("Memory appender should be open");
     if (appender.size() != 0) throw std::runtime_error("Memory appender should start empty");
-  });
+}
 
-  suite.run_test("Memory Appender Storage", []() {
+TEST(LoggingSystemTests, Memory_Appender_Storage) {
     MemoryAppender appender(10);
 
     LogEntry entry;
@@ -146,9 +143,9 @@ int main() {
 
     auto entries = appender.get_entries();
     if (entries.size() != 5) throw std::runtime_error("Should retrieve 5 entries");
-  });
+}
 
-  suite.run_test("Memory Appender Circular Buffer", []() {
+TEST(LoggingSystemTests, Memory_Appender_Circular_Buffer) {
     MemoryAppender appender(5);  // Small buffer
 
     LogEntry entry;
@@ -164,9 +161,9 @@ int main() {
 
     // Should only keep last 5
     if (appender.size() != 5) throw std::runtime_error("Should have 5 entries (circular buffer)");
-  });
+}
 
-  suite.run_test("Memory Appender Clear", []() {
+TEST(LoggingSystemTests, Memory_Appender_Clear) {
     MemoryAppender appender(10);
 
     LogEntry entry;
@@ -183,10 +180,10 @@ int main() {
     appender.clear();
 
     if (appender.size() != 0) throw std::runtime_error("Should be empty after clear");
-  });
+}
 
   // Log entry formatting tests
-  suite.run_test("LogEntry to_string", []() {
+TEST(LoggingSystemTests, LogEntry_to_string) {
     LogEntry entry;
     entry.timestamp = std::chrono::system_clock::now();
     entry.level = LogLevel::INFO;
@@ -203,9 +200,9 @@ int main() {
     if (str.find("test") == std::string::npos) {
       throw std::runtime_error("Should contain component");
     }
-  });
+}
 
-  suite.run_test("LogEntry to_json", []() {
+TEST(LoggingSystemTests, LogEntry_to_json) {
     LogEntry entry;
     entry.timestamp = std::chrono::system_clock::now();
     entry.level = LogLevel::INFO;
@@ -218,10 +215,10 @@ int main() {
     if (json.find("\"level\"") == std::string::npos) {
       throw std::runtime_error("JSON should contain level field");
     }
-  });
+}
 
   // Appender statistics tests
-  suite.run_test("Appender Statistics", []() {
+TEST(LoggingSystemTests, Appender_Statistics) {
     ConsoleAppender appender(false);
 
     LogEntry entry;
@@ -239,20 +236,20 @@ int main() {
     if (stats.messages_processed < 5) {
       throw std::runtime_error("Should have processed at least 5 messages");
     }
-  });
+}
 
   // Log level filtering tests
-  suite.run_test("Appender Level Filtering", []() {
+TEST(LoggingSystemTests, Appender_Level_Filtering) {
     ConsoleAppender appender(false);
     appender.set_min_level(LogLevel::WARN);
 
     if (appender.get_min_level() != LogLevel::WARN) {
       throw std::runtime_error("Min level should be WARN");
     }
-  });
+}
 
   // Enhanced logging tests
-  suite.run_test("Enhanced Logging Methods", []() {
+TEST(LoggingSystemTests, Enhanced_Logging_Methods) {
     auto& logger = Logger::instance();
 
     // Should not throw
@@ -262,10 +259,10 @@ int main() {
     logger.warn_enhanced("test", "Warning message");
     logger.error_enhanced("test", "Error message");
     logger.fatal_enhanced("test", "Fatal message");
-  });
+}
 
   // Appender management tests
-  suite.run_test("Add and Remove Appenders", []() {
+TEST(LoggingSystemTests, Add_and_Remove_Appenders) {
     auto& logger = Logger::instance();
 
     logger.add_console_appender("test_console");
@@ -282,9 +279,9 @@ int main() {
 
     auto* removed = logger.get_appender("test_console");
     if (removed) throw std::runtime_error("Appender should be removed");
-  });
+}
 
-  suite.run_test("Flush All Appenders", []() {
+TEST(LoggingSystemTests, Flush_All_Appenders) {
     auto& logger = Logger::instance();
 
     logger.add_console_appender("flush_test");
@@ -293,17 +290,12 @@ int main() {
     logger.flush();
 
     logger.remove_appender("flush_test");
-  });
+}
 
-  // Logging macros tests
-  suite.run_test("Logging Macros", []() {
+TEST(LoggingSystemTests, Logging_Macros) {
     // Should not throw
     LOG_DEBUG("test", "Debug via macro");
     LOG_INFO("test", "Info via macro");
     LOG_WARN("test", "Warning via macro");
     LOG_ERROR("test", "Error via macro");
-  });
-
-  suite.print_summary();
-  return suite.all_passed() ? 0 : 1;
 }

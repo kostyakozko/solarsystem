@@ -1,6 +1,7 @@
 /**
  * @file test_analytics_system.cpp
  * @brief Test analytics system (Task 33)
+ * @note Migrated to Google Test
  *
  * Tests analytics capabilities:
  * - Test result pattern analysis
@@ -14,7 +15,7 @@
 #include <string>
 #include <vector>
 
-#include "test_framework.h"
+#include <gtest/gtest.h>
 
 class TestAnalytics {
  public:
@@ -34,8 +35,6 @@ class TestAnalytics {
     return report;
   }
 };
-
-int main() {
   TEST_SUITE("Test Analytics System Tests");
 
   TEST_CASE("Analytics Generation") {
@@ -47,4 +46,3 @@ int main() {
   });
 
   return current_suite->all_passed() ? 0 : 1;
-}

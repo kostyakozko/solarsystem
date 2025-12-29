@@ -1,6 +1,7 @@
 /**
  * @file test_data_validation.cpp
  * @brief Comprehensive test data validation system tests (Task 15)
+ * @note Migrated to Google Test
  *
  * Tests data validation capabilities:
  * - Data consistency and integrity checking
@@ -19,7 +20,7 @@
 #include <string>
 #include <vector>
 
-#include "test_framework.h"
+#include <gtest/gtest.h>
 
 /**
  * @brief Test data validation system
@@ -363,8 +364,6 @@ class TestDataValidator {
     return report;
   }
 };
-
-int main() {
   TEST_SUITE("Test Data Validation System Tests");
 
   // Test 1: Data consistency and integrity checking
@@ -402,7 +401,7 @@ int main() {
       auto result = validator.validate_astronomical_body(body);
       ASSERT_FALSE(result.is_valid);
       ASSERT_FALSE(result.errors.empty());
-      ASSERT_TRUE(result.errors[0].find("positive") != std::string::npos);
+      EXPECT_NE(std::string::npos, result.errors[0].find("positive"));
     }
 
     // Test 1.3: Body with warnings
@@ -435,7 +434,7 @@ int main() {
 
       auto result = validator.validate_astronomical_body(body);
       ASSERT_FALSE(result.is_valid);
-      ASSERT_TRUE(result.errors[0].find("Eccentricity") != std::string::npos);
+      EXPECT_NE(std::string::npos, result.errors[0].find("Eccentricity"));
     }
   });
 
@@ -474,7 +473,7 @@ int main() {
 
       auto result = validator.validate_ephemeris_data(data);
       ASSERT_FALSE(result.is_valid);
-      ASSERT_TRUE(result.errors[0].find("non-finite") != std::string::npos);
+      EXPECT_NE(std::string::npos, result.errors[0].find("non-finite"));
     }
 
     // Test 2.3: Valid configuration
@@ -504,7 +503,7 @@ int main() {
 
       auto result = validator.validate_configuration(config);
       ASSERT_FALSE(result.is_valid);
-      ASSERT_TRUE(result.errors[0].find("positive") != std::string::npos);
+      EXPECT_NE(std::string::npos, result.errors[0].find("positive"));
     }
   });
 
@@ -560,7 +559,7 @@ int main() {
 
       auto result = validator.validate_cross_references(bodies, ephemeris);
       ASSERT_FALSE(result.is_valid);
-      ASSERT_TRUE(result.errors[0].find("unknown body") != std::string::npos);
+      EXPECT_NE(std::string::npos, result.errors[0].find("unknown body"));
     }
 
     // Test 3.3: Warning for body without ephemeris
@@ -630,7 +629,7 @@ int main() {
 
       auto result = validator.validate_time_series(series);
       ASSERT_FALSE(result.is_valid);
-      ASSERT_TRUE(result.errors[0].find("monotonically") != std::string::npos);
+      EXPECT_NE(std::string::npos, result.errors[0].find("monotonically"));
     }
 
     // Test 4.3: Inconsistent body IDs
@@ -653,7 +652,7 @@ int main() {
 
       auto result = validator.validate_time_series(series);
       ASSERT_FALSE(result.is_valid);
-      ASSERT_TRUE(result.errors[0].find("Inconsistent") != std::string::npos);
+      EXPECT_NE(std::string::npos, result.errors[0].find("Inconsistent"));
     }
 
     // Test 4.4: Empty time series
@@ -699,10 +698,10 @@ int main() {
 
       std::string report = validator.generate_quality_report(results);
 
-      ASSERT_TRUE(report.find("Total validations: 10") != std::string::npos);
-      ASSERT_TRUE(report.find("Valid: 9") != std::string::npos);
-      ASSERT_TRUE(report.find("Invalid: 1") != std::string::npos);
-      ASSERT_TRUE(report.find("With warnings: 2") != std::string::npos);
+      EXPECT_NE(std::string::npos, report.find("Total validations: 10"));
+      EXPECT_NE(std::string::npos, report.find("Valid: 9"));
+      EXPECT_NE(std::string::npos, report.find("Invalid: 1"));
+      EXPECT_NE(std::string::npos, report.find("With warnings: 2"));
     }
 
     // Test 5.2: Quality score calculation
@@ -718,16 +717,15 @@ int main() {
       results.push_back(r2);
 
       std::string report = validator.generate_quality_report(results);
-      ASSERT_TRUE(report.find("0.9") != std::string::npos); // Average
+      EXPECT_NE(std::string::npos, report.find("0.9")); // Average
     }
 
     // Test 5.3: Empty report
     {
       std::vector<TestDataValidator::ValidationResult> results;
       std::string report = validator.generate_quality_report(results);
-      ASSERT_TRUE(report.find("Total validations: 0") != std::string::npos);
+      EXPECT_NE(std::string::npos, report.find("Total validations: 0"));
     }
   });
 
   return current_suite->all_passed() ? 0 : 1;
-}

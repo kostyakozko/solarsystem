@@ -1,9 +1,10 @@
 /**
  * @file test_backup_data_protection.cpp
  * @brief Unit tests for backup and data protection systems
+ * @note Migrated to Google Test
  */
 
-#include "../utils/test_framework.h"
+#include <gtest/gtest.h>
 #include "solar_core/backup/backup_manager.hpp"
 #include "solar_core/backup/data_protection.hpp"
 
@@ -51,20 +52,27 @@ void cleanup_test_environment() {
   }
 }
 
-int main() {
-  TestSuite suite("Backup and Data Protection Tests");
+// Test fixture for backup and data protection tests
+class BackupDataProtectionTest : public ::testing::Test {
+protected:
+  void SetUp() override {
+    setup_test_environment();
+  }
 
-  setup_test_environment();
+  void TearDown() override {
+    cleanup_test_environment();
+  }
+};
 
-  suite.run_test("Create Backup", []() {
+TEST_F(BackupDataProtectionTest, Create_Backup) {
     auto& backup_mgr = BackupManager::instance();
     auto result = backup_mgr.create_backup(test_file1);
 
     if (!result.success) throw std::runtime_error("Backup creation failed");
     if (!result.backup_info.has_value()) throw std::runtime_error("No backup info");
-  });
+}
 
-  suite.run_test("Restore Backup", []() {
+TEST_F(BackupDataProtectionTest, Restore_Backup) {
     auto& backup_mgr = BackupManager::instance();
 
     auto backup_result = backup_mgr.create_backup(test_file1);
@@ -76,31 +84,31 @@ int main() {
 
     if (!restore_result.success) throw std::runtime_error("Restore failed");
     if (!fs::exists(restore_path)) throw std::runtime_error("Restored file doesn't exist");
-  });
+}
 
-  suite.run_test("List Backups", []() {
+TEST_F(BackupDataProtectionTest, List_Backups) {
     auto& backup_mgr = BackupManager::instance();
     auto backups = backup_mgr.list_backups();
 
     if (backups.empty()) throw std::runtime_error("No backups found");
-  });
+}
 
-  suite.run_test("Protect File", []() {
+TEST_F(BackupDataProtectionTest, Protect_File) {
     auto& protection = DataProtection::instance();
     protection.protect_file(test_file1);
 
     if (!protection.is_protected(test_file1)) throw std::runtime_error("File not protected");
-  });
+}
 
-  suite.run_test("Verify Integrity", []() {
+TEST_F(BackupDataProtectionTest, Verify_Integrity) {
     auto& protection = DataProtection::instance();
     protection.protect_file(test_file2);
 
     auto result = protection.verify_integrity(test_file2);
     if (result.status != IntegrityStatus::VALID) throw std::runtime_error("Integrity check failed");
-  });
+}
 
-  suite.run_test("Detect Corruption", []() {
+TEST_F(BackupDataProtectionTest, Detect_Corruption) {
     auto& protection = DataProtection::instance();
     std::string test_file3 = test_dir + "/test_file3.txt";
 
@@ -116,9 +124,9 @@ int main() {
 
     auto result = protection.verify_integrity(test_file3);
     if (result.status != IntegrityStatus::CORRUPTED) throw std::runtime_error("Corruption not detected");
-  });
+}
 
-  suite.run_test("Disaster Recovery Plan", []() {
+TEST_F(BackupDataProtectionTest, Disaster_Recovery_Plan) {
     auto& protection = DataProtection::instance();
 
     DisasterRecoveryPlan plan;
@@ -131,10 +139,5 @@ int main() {
     auto retrieved_plan = protection.get_recovery_plan();
     if (retrieved_plan.plan_name != plan.plan_name) throw std::runtime_error("Plan name mismatch");
     if (retrieved_plan.critical_files.size() != 2) throw std::runtime_error("Critical files count mismatch");
-  });
-
-  cleanup_test_environment();
-
-  suite.print_summary();
-  return suite.get_failed_count() > 0 ? 1 : 0;
 }
+

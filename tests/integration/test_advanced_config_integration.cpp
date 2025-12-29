@@ -1,9 +1,10 @@
 /**
  * @file test_advanced_config_integration.cpp
  * @brief Integration tests for advanced configuration management with applications
+ * @note Migrated to Google Test
  */
 
-#include "../utils/test_framework.h"
+#include <gtest/gtest.h>
 #include <filesystem>
 #include <fstream>
 #include <sstream>
@@ -13,15 +14,11 @@
 
 using namespace SolarSystem::Utils::Advanced;
 using namespace SolarSystem::Utils;
-
-int main() {
-  TestSuite suite("Advanced Configuration Integration Tests");
-
-  suite.run_test("Basic Integration", []() {
+TEST(AdvancedConfigurationIntegrationTests, Basic_Integration) {
     auto manager = std::make_unique<AdvancedConfigManager>();
 
     // Test that manager can be created and basic functionality works
-    ASSERT_TRUE(manager != nullptr);
+    ASSERT_NE(nullptr, manager );
 
     // Test loading default configuration
     auto config = Config::get_default();
@@ -29,9 +26,9 @@ int main() {
     // Test that the configuration is valid
     auto validation_result = manager->validate_configuration(config);
     ASSERT_TRUE(validation_result.is_valid);
-  });
+}
 
-  suite.run_test("Template Integration", []() {
+TEST(AdvancedConfigurationIntegrationTests, Template_Integration) {
     auto manager = std::make_unique<AdvancedConfigManager>();
 
     // Test applying a template
@@ -41,8 +38,5 @@ int main() {
       auto validation_result = manager->validate_configuration(result.value());
       ASSERT_TRUE(validation_result.is_valid);
     }
-  });
-
-  suite.print_summary();
-  return suite.all_passed() ? 0 : 1;
 }
+

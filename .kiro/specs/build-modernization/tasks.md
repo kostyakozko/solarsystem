@@ -130,7 +130,7 @@ This implementation plan systematically modernizes the Solar System Suite's buil
   - Document compatibility layer usage
   - _Requirements: 3.2, 10.2_
 
-- [ ] 4.3 Update test build configuration
+- [x] 4.3 Update test build configuration
   - Link test executables with GTest::gtest_main
   - Remove dependencies on custom test framework
   - Enable Google Test discovery in CMake

@@ -1,9 +1,10 @@
 /**
  * @file test_workflow_coordinator.cpp
  * @brief Unit tests for workflow coordination system
+ * @note Migrated to Google Test
  */
 
-#include "../utils/test_framework.h"
+#include <gtest/gtest.h>
 
 #include "solar_core/workflow/workflow_coordinator.hpp"
 
@@ -11,12 +12,8 @@
 #include <thread>
 
 using namespace SolarSystem::Workflow;
-
-int main() {
-  TestSuite suite("Workflow Coordinator Tests");
-
   // Basic transaction tests
-  suite.run_test("Create and Execute Simple Transaction", []() {
+TEST(WorkflowCoordinatorTests, Create_and_Execute_Simple_Transaction) {
     WorkflowCoordinator coordinator;
 
     auto transaction = coordinator.create_transaction("test_tx_1");
@@ -61,9 +58,9 @@ int main() {
     if (steps.size() != 2) throw std::runtime_error("Should have 2 executed steps");
     if (!steps[0].success) throw std::runtime_error("Step 1 should succeed");
     if (!steps[1].success) throw std::runtime_error("Step 2 should succeed");
-  });
+}
 
-  suite.run_test("Transaction with Failing Step", []() {
+TEST(WorkflowCoordinatorTests, Transaction_with_Failing_Step) {
     WorkflowCoordinator coordinator;
 
     auto transaction = coordinator.create_transaction("test_tx_fail");
@@ -97,9 +94,9 @@ int main() {
     if (transaction->get_state() != TransactionState::FAILED) {
       throw std::runtime_error("Transaction should be in FAILED state");
     }
-  });
+}
 
-  suite.run_test("Transaction Rollback", []() {
+TEST(WorkflowCoordinatorTests, Transaction_Rollback) {
     WorkflowCoordinator coordinator;
 
     auto transaction = coordinator.create_transaction("test_tx_rollback");
@@ -135,9 +132,9 @@ int main() {
     if (transaction->get_state() != TransactionState::ROLLED_BACK) {
       throw std::runtime_error("Transaction should be in ROLLED_BACK state");
     }
-  });
+}
 
-  suite.run_test("Get Transaction by ID", []() {
+TEST(WorkflowCoordinatorTests, Get_Transaction_by_ID) {
     WorkflowCoordinator coordinator;
 
     auto tx1 = coordinator.create_transaction("tx1");
@@ -151,9 +148,9 @@ int main() {
     // Get non-existent transaction
     auto not_found = coordinator.get_transaction("nonexistent");
     if (not_found) throw std::runtime_error("Should return nullptr for non-existent transaction");
-  });
+}
 
-  suite.run_test("Get All Transactions", []() {
+TEST(WorkflowCoordinatorTests, Get_All_Transactions) {
     WorkflowCoordinator coordinator;
 
     auto t1 = coordinator.create_transaction("tx1");
@@ -163,9 +160,9 @@ int main() {
 
     auto all_transactions = coordinator.get_all_transactions();
     if (all_transactions.size() != 3) throw std::runtime_error("Should have 3 transactions");
-  });
+}
 
-  suite.run_test("Workflow Statistics", []() {
+TEST(WorkflowCoordinatorTests, Workflow_Statistics) {
     WorkflowCoordinator coordinator;
 
     auto stats = coordinator.get_statistics();
@@ -199,9 +196,9 @@ int main() {
       throw std::runtime_error("Should have 1 successful transaction");
     }
     if (stats.failed_transactions != 1) throw std::runtime_error("Should have 1 failed transaction");
-  });
+}
 
-  suite.run_test("Distributed Workflow - Local Node", []() {
+TEST(WorkflowCoordinatorTests, Distributed_Workflow___Local_Node) {
     DistributedWorkflowExecutor executor;
 
     // Check local node is available
@@ -212,9 +209,9 @@ int main() {
     auto nodes = executor.get_available_nodes();
     if (nodes.empty()) throw std::runtime_error("Should have at least local node");
     if (nodes[0] != "local") throw std::runtime_error("First node should be local");
-  });
+}
 
-  suite.run_test("Distributed Workflow - Execute on Local", []() {
+TEST(WorkflowCoordinatorTests, Distributed_Workflow___Execute_on_Local) {
     DistributedWorkflowExecutor executor;
     WorkflowTransaction transaction("dist_tx");
 
@@ -229,9 +226,9 @@ int main() {
     auto result = executor.execute_distributed(tx_ptr, {"local"});
 
     if (!result) throw std::runtime_error("Distributed execution should succeed");
-  });
+}
 
-  suite.run_test("Step Duration Tracking", []() {
+TEST(WorkflowCoordinatorTests, Step_Duration_Tracking) {
     WorkflowTransaction transaction("test_duration");
 
     transaction.add_step("slow_step", []() {
@@ -252,9 +249,9 @@ int main() {
     if (steps[0].duration.count() < 50) {
       throw std::runtime_error("Duration should be at least 50ms");
     }
-  });
+}
 
-  suite.run_test("Transaction State Transitions", []() {
+TEST(WorkflowCoordinatorTests, Transaction_State_Transitions) {
     WorkflowTransaction transaction("test_states");
 
     // Initial state
@@ -281,8 +278,5 @@ int main() {
     // Try to execute again (should fail)
     result = transaction.execute();
     if (result) throw std::runtime_error("Should not be able to execute twice");
-  });
-
-  suite.print_summary();
-  return suite.all_passed() ? 0 : 1;
 }
+

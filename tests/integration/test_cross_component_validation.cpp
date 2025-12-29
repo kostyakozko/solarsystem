@@ -1,6 +1,7 @@
 /**
  * @file test_cross_component_validation.cpp
  * @brief Cross-component validation integration tests (Task 21)
+ * @note Migrated to Google Test
  *
  * Tests validation and error handling across component boundaries:
  * - Data validation consistency across components
@@ -26,7 +27,7 @@
 
 // Test utilities
 #include "test_data_manager.hpp"
-#include "test_framework.h"
+#include <gtest/gtest.h>
 
 using namespace SolarSystem;
 using namespace SolarSystem::Utils;
@@ -61,12 +62,7 @@ public:
         };
     }
 };
-
-int main() {
-    TestSuite suite("Cross-Component Validation Integration Tests");
-
-    // Test 1: Error handling across component boundaries
-    suite.run_test("Error Handling Across Component Boundaries", []() {
+TEST(CrossComponentValidationIntegrationTests, Error_Handling_Across_Component_Boundaries) {
         // Initialize error handling system
         ErrorHandlingSystem::instance().configure();
         ErrorRecoveryOrchestrator::instance().initialize();
@@ -105,10 +101,8 @@ int main() {
         } catch (const std::exception& e) {
             std::cout << "Expected error in validation test: " << e.what() << std::endl;
         }
-    });
-
-    // Test 2: Resource management in integrated scenarios
-    suite.run_test("Resource Management Integration", []() {
+}
+TEST(CrossComponentValidationIntegrationTests, Resource_Management_Integration) {
         auto& resource_manager = ResourceManager::instance();
         (void)resource_manager; // Suppress unused variable warning
 
@@ -143,10 +137,8 @@ int main() {
         }
 
         // Simplified test - skip resource cleanup to avoid hanging
-    });
-
-    // Test 3: Performance characteristics validation
-    suite.run_test("Performance Characteristics Validation", []() {
+}
+TEST(CrossComponentValidationIntegrationTests, Performance_Characteristics_Validation) {
         auto start_time = std::chrono::high_resolution_clock::now();
 
         try {
@@ -193,10 +185,8 @@ int main() {
         ASSERT_TRUE(duration.count() < 10000);
 
         std::cout << "Performance test completed in " << duration.count() << "ms" << std::endl;
-    });
-
-    // Test 4: Error recovery integration
-    suite.run_test("Error Recovery Integration", []() {
+}
+TEST(CrossComponentValidationIntegrationTests, Error_Recovery_Integration) {
         // Test basic error recovery functionality
         try {
             DetailedError test_error(
@@ -213,9 +203,8 @@ int main() {
         } catch (const std::exception& e) {
             std::cout << "Error recovery test completed with exception: " << e.what() << std::endl;
         }
-    });
+}
 
     // Force immediate exit to avoid hanging on singleton cleanup
     // Note: TestSuite destructor will print summary automatically
     _exit(0);
-}

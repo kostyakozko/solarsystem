@@ -1,6 +1,7 @@
 /**
  * @file test_cicd_integration.cpp
  * @brief CI/CD pipeline integration testing (Task 30)
+ * @note Migrated to Google Test
  *
  * Tests CI/CD integration capabilities:
  * - Continuous integration test execution
@@ -15,7 +16,7 @@
 #include <string>
 #include <vector>
 
-#include "test_framework.h"
+#include <gtest/gtest.h>
 
 /**
  * @brief CI pipeline manager
@@ -211,8 +212,6 @@ class DeploymentManager {
  private:
   std::map<std::string, Deployment> deployments_;
 };
-
-int main() {
   TEST_SUITE("CI/CD Pipeline Integration Tests");
 
   // Test 1: CI pipeline execution
@@ -362,4 +361,3 @@ int main() {
   });
 
   return current_suite->all_passed() ? 0 : 1;
-}

@@ -1,6 +1,7 @@
 /**
  * @file test_performance_measurement_framework.cpp
  * @brief Comprehensive performance measurement framework tests (Task 8)
+ * @note Migrated to Google Test
  *
  * Tests enhanced performance measurement capabilities including:
  * - Detailed timing and resource usage measurement
@@ -22,7 +23,7 @@
 #include "benchmark_utils.h"
 #include "solar_core/bodies/body_factory.hpp"
 #include "solar_core/simulation/simulation_engine.hpp"
-#include "test_framework.h"
+#include <gtest/gtest.h>
 
 using namespace Benchmark;
 using namespace SolarSystem;
@@ -157,8 +158,6 @@ class EnhancedPerformanceMeasurement {
     return bottlenecks;
   }
 };
-
-int main() {
   TEST_SUITE("Performance Measurement Framework Tests");
 
   // ============================================================================
@@ -633,5 +632,3 @@ int main() {
   });
 
   return current_suite->all_passed() ? 0 : 1;
-}
-

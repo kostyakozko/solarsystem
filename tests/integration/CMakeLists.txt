@@ -1,6 +1,10 @@
 # Integration Tests for Solar System Suite Applications
+# Migrated to Google Test framework
 
-# Integration test executables
+# ============================================================================
+# Integration Test Executables with Google Test
+# ============================================================================
+
 add_executable(test_application_workflows
     test_application_workflows.cpp
 )
@@ -70,8 +74,16 @@ add_executable(test_performance_security_validation
     test_performance_security_validation.cpp
 )
 
-# Link libraries
+# ============================================================================
+# Link Libraries - All integration tests use Google Test
+# ============================================================================
+# Note: These tests use GTest::gtest (not gtest_main) because they have
+# custom main() functions using the legacy TEST_SUITE/TEST_CASE pattern.
+# They will be migrated to native Google Test in Phase 4 (tasks 8-10).
+
 target_link_libraries(test_application_workflows
+    GTest::gtest
+    GTest::gmock
     test_utils
     solar_core
     solar_jpl
@@ -80,6 +92,8 @@ target_link_libraries(test_application_workflows
 )
 
 target_link_libraries(test_data_pipeline
+    GTest::gtest
+    GTest::gmock
     test_utils
     solar_core
     solar_jpl
@@ -88,6 +102,8 @@ target_link_libraries(test_data_pipeline
 )
 
 target_link_libraries(test_web_interface
+    GTest::gtest
+    GTest::gmock
     test_utils
     solar_core
     solar_jpl
@@ -96,6 +112,8 @@ target_link_libraries(test_web_interface
 )
 
 target_link_libraries(test_end_to_end
+    GTest::gtest
+    GTest::gmock
     test_utils
     solar_core
     solar_jpl
@@ -105,6 +123,8 @@ target_link_libraries(test_end_to_end
 
 # Link libraries for enhanced integration tests
 target_link_libraries(test_enhanced_components_integration
+    GTest::gtest
+    GTest::gmock
     test_utils
     solar_core
     solar_jpl
@@ -113,6 +133,8 @@ target_link_libraries(test_enhanced_components_integration
 )
 
 target_link_libraries(test_performance_regression_integration
+    GTest::gtest
+    GTest::gmock
     test_utils
     solar_core
     solar_jpl
@@ -121,6 +143,8 @@ target_link_libraries(test_performance_regression_integration
 )
 
 target_link_libraries(test_cross_component_validation
+    GTest::gtest
+    GTest::gmock
     test_utils
     solar_core
     solar_jpl
@@ -130,6 +154,8 @@ target_link_libraries(test_cross_component_validation
 
 # Link libraries for advanced config integration tests
 target_link_libraries(test_advanced_config_integration
+    GTest::gtest
+    GTest::gmock
     test_utils
     solar_core
     solar_jpl
@@ -139,6 +165,8 @@ target_link_libraries(test_advanced_config_integration
 
 # Link libraries for comprehensive integration test
 target_link_libraries(test_comprehensive_integration
+    GTest::gtest
+    GTest::gmock
     test_utils
     solar_core
     solar_jpl
@@ -148,6 +176,8 @@ target_link_libraries(test_comprehensive_integration
 
 # Link libraries for component interface communication tests
 target_link_libraries(test_component_interface_communication
+    GTest::gtest
+    GTest::gmock
     test_utils
     solar_core
     solar_jpl
@@ -157,6 +187,8 @@ target_link_libraries(test_component_interface_communication
 
 # Link libraries for realistic environment simulation tests
 target_link_libraries(test_realistic_environment_simulation
+    GTest::gtest
+    GTest::gmock
     test_utils
     solar_core
     solar_jpl
@@ -166,6 +198,8 @@ target_link_libraries(test_realistic_environment_simulation
 
 # Link libraries for unimplemented functions integration tests
 target_link_libraries(test_unimplemented_functions_integration
+    GTest::gtest
+    GTest::gmock
     test_utils
     solar_core
     solar_jpl
@@ -175,6 +209,8 @@ target_link_libraries(test_unimplemented_functions_integration
 
 # Link libraries for workflow validation tests
 target_link_libraries(test_workflow_validation
+    GTest::gtest
+    GTest::gmock
     test_utils
     solar_core
     solar_jpl
@@ -184,6 +220,8 @@ target_link_libraries(test_workflow_validation
 
 # Link libraries for data validation integration tests
 target_link_libraries(test_data_validation_integration
+    GTest::gtest
+    GTest::gmock
     test_utils
     solar_core
     solar_jpl
@@ -193,6 +231,8 @@ target_link_libraries(test_data_validation_integration
 
 # Link libraries for performance and security validation tests
 target_link_libraries(test_performance_security_validation
+    GTest::gtest
+    GTest::gmock
     test_utils
     solar_core
     solar_jpl
@@ -200,147 +240,118 @@ target_link_libraries(test_performance_security_validation
     Threads::Threads
 )
 
-# Add integration tests to CTest
-add_test(NAME IntegrationTest_ApplicationWorkflows
-         COMMAND tests/integration/test_application_workflows
-         WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
-add_test(NAME IntegrationTest_DataPipeline COMMAND test_data_pipeline)
-add_test(NAME IntegrationTest_WebInterface COMMAND test_web_interface)
-add_test(NAME IntegrationTest_EndToEnd COMMAND test_end_to_end)
+# ============================================================================
+# Register Integration Tests with CTest
+# ============================================================================
+# Note: These tests use add_test instead of gtest_discover_tests because they
+# have custom main() functions using the legacy TEST_SUITE/TEST_CASE pattern.
+# They will be migrated to native Google Test in Phase 4 (tasks 8-10).
 
-# Add enhanced integration tests to CTest
-add_test(NAME IntegrationTest_EnhancedComponents COMMAND test_enhanced_components_integration)
-add_test(NAME IntegrationTest_PerformanceRegression COMMAND test_performance_regression_integration)
-add_test(NAME IntegrationTest_CrossComponentValidation COMMAND test_cross_component_validation)
-
-# Add advanced config integration tests to CTest
-add_test(NAME IntegrationTest_AdvancedConfigIntegration COMMAND test_advanced_config_integration)
-
-# Add comprehensive integration test to CTest (Task 30)
-add_test(NAME IntegrationTest_Comprehensive COMMAND test_comprehensive_integration)
-
-# Add component interface communication tests to CTest (Task 6)
-add_test(NAME IntegrationTest_ComponentInterfaceCommunication
-         COMMAND test_component_interface_communication
-         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
-
-# Add realistic environment simulation tests to CTest (Task 7)
-add_test(NAME IntegrationTest_RealisticEnvironmentSimulation
-         COMMAND test_realistic_environment_simulation
-         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
-
-# Add unimplemented functions integration tests to CTest (Task 11.1)
-add_test(NAME IntegrationTest_UnimplementedFunctions
-         COMMAND test_unimplemented_functions_integration
-         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
-
-# Add workflow validation tests to CTest (Task 11.2)
-add_test(NAME IntegrationTest_WorkflowValidation
-         COMMAND test_workflow_validation
-         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
-
-# Add data validation integration tests to CTest (Task 11)
-add_test(NAME IntegrationTest_DataValidation
-         COMMAND test_data_validation_integration
-         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
-
-# Add performance and security validation tests to CTest (Task 12)
-add_test(NAME IntegrationTest_PerformanceSecurityValidation
-         COMMAND test_performance_security_validation
-         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
-
-# Set working directory for all integration tests
-set_tests_properties(IntegrationTest_DataPipeline PROPERTIES WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
-set_tests_properties(IntegrationTest_WebInterface PROPERTIES WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
-set_tests_properties(IntegrationTest_EndToEnd PROPERTIES WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
-
-# Set test properties
+add_test(NAME IntegrationTest_ApplicationWorkflows COMMAND test_application_workflows)
 set_tests_properties(IntegrationTest_ApplicationWorkflows PROPERTIES
     LABELS "integration;workflows"
     TIMEOUT 30
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
 
+add_test(NAME IntegrationTest_DataPipeline COMMAND test_data_pipeline)
 set_tests_properties(IntegrationTest_DataPipeline PROPERTIES
     LABELS "integration;data"
     TIMEOUT 180
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
 
+add_test(NAME IntegrationTest_WebInterface COMMAND test_web_interface)
 set_tests_properties(IntegrationTest_WebInterface PROPERTIES
     LABELS "integration;web"
     TIMEOUT 60
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
 
+add_test(NAME IntegrationTest_EndToEnd COMMAND test_end_to_end)
 set_tests_properties(IntegrationTest_EndToEnd PROPERTIES
     LABELS "integration;e2e"
     TIMEOUT 300
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
 
-# Set properties for enhanced integration tests
+# Enhanced integration tests
+add_test(NAME IntegrationTest_EnhancedComponents COMMAND test_enhanced_components_integration)
 set_tests_properties(IntegrationTest_EnhancedComponents PROPERTIES
     LABELS "integration;enhanced;task21"
     TIMEOUT 300
 )
 
+add_test(NAME IntegrationTest_PerformanceRegression COMMAND test_performance_regression_integration)
 set_tests_properties(IntegrationTest_PerformanceRegression PROPERTIES
     LABELS "integration;performance;task21"
     TIMEOUT 300
 )
 
+add_test(NAME IntegrationTest_CrossComponentValidation COMMAND test_cross_component_validation)
 set_tests_properties(IntegrationTest_CrossComponentValidation PROPERTIES
     LABELS "integration;validation;task21"
     TIMEOUT 300
 )
 
-# Set properties for advanced config integration tests
+# Advanced config integration tests
+add_test(NAME IntegrationTest_AdvancedConfigIntegration COMMAND test_advanced_config_integration)
 set_tests_properties(IntegrationTest_AdvancedConfigIntegration PROPERTIES
     LABELS "integration;advanced;config;task7"
     TIMEOUT 300
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
 
-# Set properties for comprehensive integration test (Task 30)
+# Comprehensive integration test (Task 30)
+add_test(NAME IntegrationTest_Comprehensive COMMAND test_comprehensive_integration)
 set_tests_properties(IntegrationTest_Comprehensive PROPERTIES
     LABELS "integration;comprehensive;task30;phase11"
     TIMEOUT 300
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
 
-# Set properties for component interface communication tests (Task 6)
+# Component interface communication tests (Task 6)
+add_test(NAME IntegrationTest_ComponentInterfaceCommunication COMMAND test_component_interface_communication)
 set_tests_properties(IntegrationTest_ComponentInterfaceCommunication PROPERTIES
     LABELS "integration;component;interface;communication;task6;phase2"
     TIMEOUT 300
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
 
-# Set properties for realistic environment simulation tests (Task 7)
+# Realistic environment simulation tests (Task 7)
+add_test(NAME IntegrationTest_RealisticEnvironmentSimulation COMMAND test_realistic_environment_simulation)
 set_tests_properties(IntegrationTest_RealisticEnvironmentSimulation PROPERTIES
     LABELS "integration;environment;simulation;realistic;task7;phase2"
     TIMEOUT 300
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
 
-# Set properties for unimplemented functions integration tests (Task 11.1)
+# Unimplemented functions integration tests (Task 11.1)
+add_test(NAME IntegrationTest_UnimplementedFunctions COMMAND test_unimplemented_functions_integration)
 set_tests_properties(IntegrationTest_UnimplementedFunctions PROPERTIES
     LABELS "integration;unimplemented;functions;task11.1;phase4"
     TIMEOUT 300
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
 
-# Set properties for workflow validation tests (Task 11.2)
+# Workflow validation tests (Task 11.2)
+add_test(NAME IntegrationTest_WorkflowValidation COMMAND test_workflow_validation)
 set_tests_properties(IntegrationTest_WorkflowValidation PROPERTIES
     LABELS "integration;workflow;validation;task11.2;phase4"
     TIMEOUT 300
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
 
-# Set properties for data validation integration tests (Task 11)
+# Data validation integration tests (Task 11)
+add_test(NAME IntegrationTest_DataValidation COMMAND test_data_validation_integration)
 set_tests_properties(IntegrationTest_DataValidation PROPERTIES
     LABELS "integration;data;validation;task11;phase4"
     TIMEOUT 300
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
 
-# Set properties for performance and security validation tests (Task 12)
+# Performance and security validation tests (Task 12)
+add_test(NAME IntegrationTest_PerformanceSecurityValidation COMMAND test_performance_security_validation)
 set_tests_properties(IntegrationTest_PerformanceSecurityValidation PROPERTIES
     LABELS "integration;performance;security;validation;task12;phase4"
     TIMEOUT 300

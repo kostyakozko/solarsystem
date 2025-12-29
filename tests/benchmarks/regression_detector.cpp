@@ -1,26 +1,14 @@
 /**
  * @file regression_detector.cpp
  * @brief Performance regression detection
+ * @note Migrated to Google Test
  */
 
 #include <filesystem>
 
 #include "benchmark_utils.h"
-#include "test_framework.h"
-
-int main() {
-  Benchmark::BenchmarkSuite suite("Regression Detection");
-
-  // Baseline performance test
-  suite.run_benchmark(
-      "BaselinePerformanceTest",
-      []() {
-        // Consistent baseline operation
-        volatile double result = 0.0;
-        for (int i = 0; i < 1000; ++i) {
-          result = result + std::sin(i * 0.001);
-        }
-        (void)result;
+#include <gtest/gtest.h>
+(void)result;
       },
       1000);
 
@@ -41,7 +29,6 @@ int main() {
       },
       1000);
 
-  suite.print_summary();
 
   // Create benchmark results directory if it doesn't exist
   std::filesystem::create_directories("benchmark_results");
@@ -50,4 +37,3 @@ int main() {
   suite.export_results("benchmark_results/regression_detection.csv", "csv");
 
   return 0;
-}

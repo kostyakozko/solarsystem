@@ -1,6 +1,7 @@
 /**
  * @file test_performance_security_validation.cpp
  * @brief Comprehensive Performance and Security Validation Suite (Task 12)
+ * @note Migrated to Google Test
  *
  * This test suite validates that all implementations meet or exceed performance
  * baselines and security requirements. It includes:
@@ -31,7 +32,7 @@
 #include "solar_utils/error_handling.hpp"
 
 // Test utilities
-#include "test_framework.h"
+#include <gtest/gtest.h>
 #include "test_data_manager.hpp"
 
 using namespace SolarSystem;
@@ -146,16 +147,10 @@ public:
         return result;
     }
 };
-
-int main() {
-    TestSuite suite("Performance and Security Validation Suite");
-
     // ========================================================================
     // PERFORMANCE VALIDATION TESTS
     // ========================================================================
-
-    // Test 1: Body Factory Performance Validation
-    suite.run_test("Body Factory Performance Meets Baseline", []() {
+TEST(PerformanceandSecurityValidationSuite, Body_Factory_Performance_Meets_Baseline) {
         auto execution_time = PerformanceValidator::measure_execution_time([]() {
             auto factory = std::make_unique<Bodies::BodyFactory>();
 
@@ -171,10 +166,8 @@ int main() {
 
         // Baseline: Should complete within 5 seconds
         ASSERT_TRUE(PerformanceValidator::meets_baseline(execution_time, std::chrono::seconds(5)));
-    });
-
-    // Test 2: Simulation Engine Performance Validation
-    suite.run_test("Simulation Engine Performance Meets Baseline", []() {
+}
+TEST(PerformanceandSecurityValidationSuite, Simulation_Engine_Performance_Meets_Baseline) {
         auto execution_time = PerformanceValidator::measure_execution_time([]() {
             auto factory = std::make_unique<Bodies::BodyFactory>();
             auto engine = std::make_unique<Simulation::SimulationEngine>();
@@ -205,10 +198,8 @@ int main() {
 
         // Baseline: Should complete within 10 seconds
         ASSERT_TRUE(PerformanceValidator::meets_baseline(execution_time, std::chrono::seconds(10)));
-    });
-
-    // Test 3: Memory Usage Validation
-    suite.run_test("Memory Usage Within Acceptable Limits", []() {
+}
+TEST(PerformanceandSecurityValidationSuite, Memory_Usage_Within_Acceptable_Limits) {
         size_t initial_memory = PerformanceValidator::estimate_memory_usage();
 
         // Perform memory-intensive operations
@@ -227,10 +218,8 @@ int main() {
 
         // This is a simplified check - in production would verify actual memory cleanup
         ASSERT_TRUE(true);
-    });
-
-    // Test 4: CPU Utilization Validation
-    suite.run_test("CPU Utilization Remains Reasonable", []() {
+}
+TEST(PerformanceandSecurityValidationSuite, CPU_Utilization_Remains_Reasonable) {
         std::atomic<bool> running{true};
         std::atomic<size_t> operations{0};
 
@@ -259,11 +248,9 @@ int main() {
         std::cout << "Operations per second: " << ops_per_second << std::endl;
 
         // Should be able to perform reasonable number of operations
-        ASSERT_TRUE(ops_per_second > 0);
-    });
-
-    // Test 5: Network Performance Validation (Simulated)
-    suite.run_test("Network Operations Performance", []() {
+        EXPECT_GT(ops_per_second , 0);
+}
+TEST(PerformanceandSecurityValidationSuite, Network_Operations_Performance) {
         auto execution_time = PerformanceValidator::measure_execution_time([]() {
             // Simulate network operations
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
@@ -273,14 +260,12 @@ int main() {
 
         // Network operations should complete quickly
         ASSERT_TRUE(execution_time.count() < 1000);
-    });
+}
 
     // ========================================================================
     // SECURITY VALIDATION TESTS
     // ========================================================================
-
-    // Test 6: Input Validation Security
-    suite.run_test("Input Validation Prevents Injection Attacks", []() {
+TEST(PerformanceandSecurityValidationSuite, Input_Validation_Prevents_Injection_Attacks) {
         std::vector<std::string> malicious_inputs = {
             "../etc/passwd",
             "..\\windows\\system32",
@@ -295,22 +280,16 @@ int main() {
                       << (is_safe ? "SAFE" : "BLOCKED") << std::endl;
             ASSERT_FALSE(is_safe); // Should detect as unsafe
         }
-    });
-
-    // Test 7: Authentication Validation
-    suite.run_test("Authentication Mechanism Validation", []() {
+}
+TEST(PerformanceandSecurityValidationSuite, Authentication_Mechanism_Validation) {
         bool auth_valid = SecurityValidator::validate_authentication();
         ASSERT_TRUE(auth_valid);
-    });
-
-    // Test 8: Authorization Validation
-    suite.run_test("Authorization Mechanism Validation", []() {
+}
+TEST(PerformanceandSecurityValidationSuite, Authorization_Mechanism_Validation) {
         bool authz_valid = SecurityValidator::validate_authorization();
         ASSERT_TRUE(authz_valid);
-    });
-
-    // Test 9: Vulnerability Scanning
-    suite.run_test("No Known Vulnerabilities Detected", []() {
+}
+TEST(PerformanceandSecurityValidationSuite, No_Known_Vulnerabilities_Detected) {
         auto scan_result = SecurityValidator::scan_vulnerabilities();
 
         std::cout << "Security Scan Results:" << std::endl;
@@ -323,10 +302,8 @@ int main() {
         ASSERT_TRUE(scan_result.authentication_passed);
         ASSERT_TRUE(scan_result.authorization_passed);
         ASSERT_TRUE(scan_result.no_vulnerabilities);
-    });
-
-    // Test 10: Security Audit Logging
-    suite.run_test("Security Audit Logging Validation", []() {
+}
+TEST(PerformanceandSecurityValidationSuite, Security_Audit_Logging_Validation) {
         // Simulate security events
         std::vector<std::string> security_events = {
             "Failed login attempt",
@@ -340,14 +317,12 @@ int main() {
         }
 
         ASSERT_TRUE(true); // Simplified validation
-    });
+}
 
     // ========================================================================
     // PERFORMANCE REGRESSION TESTS
     // ========================================================================
-
-    // Test 11: No Performance Regression in Core Operations
-    suite.run_test("No Performance Regression Detected", []() {
+TEST(PerformanceandSecurityValidationSuite, No_Performance_Regression_Detected) {
         // Baseline measurements
         std::map<std::string, std::chrono::milliseconds> baselines = {
             {"body_creation", std::chrono::milliseconds(1000)},
@@ -368,10 +343,8 @@ int main() {
         // Check for regression (allow 50% tolerance)
         ASSERT_TRUE(PerformanceValidator::meets_baseline(
             body_creation_time, baselines["body_creation"], 1.5));
-    });
-
-    // Test 12: Memory Leak Detection
-    suite.run_test("No Memory Leaks Detected", []() {
+}
+TEST(PerformanceandSecurityValidationSuite, No_Memory_Leaks_Detected) {
         // Perform operations that could leak memory
         for (int i = 0; i < 10; ++i) {
             auto factory = std::make_unique<Bodies::BodyFactory>();
@@ -382,10 +355,8 @@ int main() {
 
         std::cout << "Memory leak detection completed" << std::endl;
         ASSERT_TRUE(true); // Simplified - in production would check actual memory
-    });
-
-    // Test 13: Thread Safety Validation
-    suite.run_test("Thread Safety Validation", []() {
+}
+TEST(PerformanceandSecurityValidationSuite, Thread_Safety_Validation) {
         std::atomic<int> counter{0};
         std::vector<std::thread> threads;
 
@@ -405,10 +376,8 @@ int main() {
 
         std::cout << "Final counter value: " << counter << std::endl;
         ASSERT_EQ(counter.load(), 1000); // Should be exactly 1000
-    });
-
-    // Test 14: Concurrent Load Testing
-    suite.run_test("System Handles Concurrent Load", []() {
+}
+TEST(PerformanceandSecurityValidationSuite, System_Handles_Concurrent_Load) {
         std::atomic<int> successful_operations{0};
         std::vector<std::thread> threads;
 
@@ -433,11 +402,9 @@ int main() {
         }
 
         std::cout << "Successful operations under load: " << successful_operations << std::endl;
-        ASSERT_TRUE(successful_operations > 0);
-    });
-
-    // Test 15: Cross-Platform Compatibility Validation
-    suite.run_test("Cross-Platform Compatibility", []() {
+        EXPECT_GT(successful_operations , 0);
+}
+TEST(PerformanceandSecurityValidationSuite, Cross_Platform_Compatibility) {
         // Test platform-specific functionality
         #ifdef __APPLE__
             std::cout << "Running on macOS" << std::endl;
@@ -453,8 +420,4 @@ int main() {
         auto factory = std::make_unique<Bodies::BodyFactory>();
         auto body = factory->create_body("Earth");
         ASSERT_TRUE(body.has_value());
-    });
-
-    return suite.get_failed_count() == 0 ? 0 : 1;
 }
-

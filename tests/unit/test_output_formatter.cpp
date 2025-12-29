@@ -1,9 +1,10 @@
 /**
  * @file test_output_formatter.cpp
  * @brief Unit tests for comprehensive output formatting system
+ * @note Migrated to Google Test
  */
 
-#include "../utils/test_framework.h"
+#include <gtest/gtest.h>
 
 #include "solar_core/bodies/body_collection.hpp"
 #include "solar_core/bodies/celestial_body.hpp"
@@ -39,8 +40,6 @@ Bodies::BodyCollection create_test_bodies() {
 
   return bodies;
 }
-
-int main() {
   TEST_SUITE("OutputFormatter");
 
   // Test format parsing
@@ -92,7 +91,7 @@ int main() {
 
     const auto& output = result.value();
     ASSERT_FALSE(output.content.empty());
-    ASSERT_TRUE(output.content.find("Earth") != std::string::npos);
+    EXPECT_NE(std::string::npos, output.content.find("Earth"));
   });
 
   // Test JSON format
@@ -108,7 +107,7 @@ int main() {
     ASSERT_TRUE(result.has_value());
 
     const auto& output = result.value();
-    ASSERT_TRUE(output.content.find("\"bodies\"") != std::string::npos);
+    EXPECT_NE(std::string::npos, output.content.find("\"bodies\""));
   });
 
   // Test utility functions
@@ -118,6 +117,3 @@ int main() {
     ASSERT_TRUE(to_string(OutputFormat::CSV) == "csv");
   });
 
-  suite.print_summary();
-  return suite.all_passed() ? 0 : 1;
-}

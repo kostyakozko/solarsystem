@@ -1,18 +1,14 @@
 /**
  * @file test_error_messaging.cpp
  * @brief Unit tests for comprehensive error messaging system
+ * @note Migrated to Google Test
  */
 
-#include "../utils/test_framework.h"
+#include <gtest/gtest.h>
 #include "solar_core/error/error_messaging.hpp"
 
 using namespace SolarSystem::Error;
-
-int main() {
-  TestSuite suite("Error Messaging Tests");
-
-  // Test 1: Error message builder
-  suite.run_test("Error Message Builder", []() {
+TEST(ErrorMessagingTests, Error_Message_Builder) {
     ErrorMessage error = ErrorMessageBuilder()
       .code("TEST001")
       .title("Test Error")
@@ -30,10 +26,8 @@ int main() {
     if (error.title != "Test Error") throw std::runtime_error("Title mismatch");
     if (error.severity != ErrorSeverity::ERROR) throw std::runtime_error("Severity mismatch");
     if (error.causes.size() != 2) throw std::runtime_error("Causes count mismatch");
-  });
-
-  // Test 2: Register and retrieve error template
-  suite.run_test("Register Error Template", []() {
+}
+TEST(ErrorMessagingTests, Register_Error_Template) {
     auto& messaging = ErrorMessaging::instance();
 
     ErrorMessage template_error = ErrorMessageBuilder()
@@ -49,10 +43,8 @@ int main() {
     auto retrieved = messaging.get_error_template("TEMPLATE001");
     if (!retrieved) throw std::runtime_error("Template not found");
     if (retrieved->title != "Template Error") throw std::runtime_error("Template title mismatch");
-  });
-
-  // Test 3: Format error simple
-  suite.run_test("Format Error Simple", []() {
+}
+TEST(ErrorMessagingTests, Format_Error_Simple) {
     auto& messaging = ErrorMessaging::instance();
 
     ErrorMessage error = ErrorMessageBuilder()
@@ -66,10 +58,8 @@ int main() {
     std::string formatted = messaging.format_error_simple(error);
     if (formatted.empty()) throw std::runtime_error("Formatted output is empty");
     if (formatted.find("Format Test") == std::string::npos) throw std::runtime_error("Title not in output");
-  });
-
-  // Test 4: Format error detailed
-  suite.run_test("Format Error Detailed", []() {
+}
+TEST(ErrorMessagingTests, Format_Error_Detailed) {
     auto& messaging = ErrorMessaging::instance();
 
     RecoveryAction action;
@@ -92,10 +82,8 @@ int main() {
     if (formatted.empty()) throw std::runtime_error("Detailed output is empty");
     if (formatted.find("Detailed Error") == std::string::npos) throw std::runtime_error("Title not in output");
     if (formatted.find("Try this fix") == std::string::npos) throw std::runtime_error("Recovery action not in output");
-  });
-
-  // Test 5: Format error JSON
-  suite.run_test("Format Error JSON", []() {
+}
+TEST(ErrorMessagingTests, Format_Error_JSON) {
     auto& messaging = ErrorMessaging::instance();
 
     ErrorMessage error = ErrorMessageBuilder()
@@ -109,10 +97,8 @@ int main() {
     std::string json = messaging.format_error_json(error);
     if (json.empty()) throw std::runtime_error("JSON output is empty");
     if (json.find("\"error_code\"") == std::string::npos) throw std::runtime_error("JSON format invalid");
-  });
-
-  // Test 6: Error reporting
-  suite.run_test("Error Reporting", []() {
+}
+TEST(ErrorMessagingTests, Error_Reporting) {
     auto& messaging = ErrorMessaging::instance();
 
     messaging.clear_error_history();
@@ -129,10 +115,8 @@ int main() {
     auto history = messaging.get_error_history();
     if (history.empty()) throw std::runtime_error("Error history is empty");
     if (history[0].error_code != "REPORT001") throw std::runtime_error("Error code mismatch in history");
-  });
-
-  // Test 7: Error statistics
-  suite.run_test("Error Statistics", []() {
+}
+TEST(ErrorMessagingTests, Error_Statistics) {
     auto& messaging = ErrorMessaging::instance();
 
     messaging.clear_error_history();
@@ -162,10 +146,8 @@ int main() {
     if (messaging.get_error_count() != 3) throw std::runtime_error("Total error count mismatch");
     if (messaging.get_error_count_by_severity(ErrorSeverity::ERROR) != 2) throw std::runtime_error("Error severity count mismatch");
     if (messaging.get_error_count_by_category(ErrorCategory::CONFIGURATION) != 2) throw std::runtime_error("Error category count mismatch");
-  });
-
-  // Test 8: Recovery actions
-  suite.run_test("Recovery Actions", []() {
+}
+TEST(ErrorMessagingTests, Recovery_Actions) {
     auto& messaging = ErrorMessaging::instance();
 
     RecoveryAction action1;
@@ -189,10 +171,8 @@ int main() {
     auto actions = messaging.suggest_recovery_actions("RECOVERY001");
     if (actions.size() != 2) throw std::runtime_error("Recovery actions count mismatch");
     if (actions[0].description != "Action 1") throw std::runtime_error("Recovery action description mismatch");
-  });
-
-  // Test 9: Error feedback
-  suite.run_test("Error Feedback", []() {
+}
+TEST(ErrorMessagingTests, Error_Feedback) {
     auto& feedback = ErrorFeedback::instance();
 
     feedback.submit_feedback("FEEDBACK001", "This error is confusing");
@@ -200,10 +180,8 @@ int main() {
 
     auto feedback_list = feedback.get_feedback("FEEDBACK001");
     if (feedback_list.size() != 2) throw std::runtime_error("Feedback count mismatch");
-  });
-
-  // Test 10: Error report generation
-  suite.run_test("Error Report Generation", []() {
+}
+TEST(ErrorMessagingTests, Error_Report_Generation) {
     auto& feedback = ErrorFeedback::instance();
 
     ErrorMessage error = ErrorMessageBuilder()
@@ -219,8 +197,5 @@ int main() {
     std::string report = feedback.generate_error_report(error);
     if (report.empty()) throw std::runtime_error("Report is empty");
     if (report.find("Report Generation Test") == std::string::npos) throw std::runtime_error("Title not in report");
-  });
-
-  suite.print_summary();
-  return suite.get_failed_count() > 0 ? 1 : 0;
 }
+

@@ -1,6 +1,7 @@
 /**
  * @file test_performance_regression_system.cpp
  * @brief Unit tests for performance regression testing system (Task 22)
+ * @note Migrated to Google Test
  *
  * Tests the comprehensive performance regression detection, baseline management,
  * performance monitoring, alerting, and optimization recommendation system.
@@ -18,7 +19,7 @@
 #include "performance_monitor.hpp"
 
 // Test framework
-#include "test_framework.h"
+#include <gtest/gtest.h>
 
 using namespace SolarSystem::Testing::Regression;
 using namespace SolarSystem::Testing;
@@ -95,12 +96,7 @@ public:
         return metrics;
     }
 };
-
-int main() {
-    TestSuite suite("Performance Regression System Tests");
-
-    // Test 1: Component Baseline Manager
-    suite.run_test("Component Baseline Manager", []() {
+TEST(PerformanceRegressionSystemTests, Component_Baseline_Manager) {
         ComponentBaselineManager manager;
 
         // Test setting baseline
@@ -142,10 +138,8 @@ int main() {
 
         // Cleanup
         std::remove("test_baselines.txt");
-    });
-
-    // Test 2: Automated Regression Detector
-    suite.run_test("Automated Regression Detector", []() {
+}
+TEST(PerformanceRegressionSystemTests, Automated_Regression_Detector) {
         auto baseline_manager = std::make_shared<ComponentBaselineManager>();
         AutomatedRegressionDetector detector;
         detector.set_baseline_manager(baseline_manager);
@@ -184,10 +178,8 @@ int main() {
 
         ASSERT_TRUE(found_time_regression);
         ASSERT_TRUE(found_memory_regression);
-    });
-
-    // Test 3: Performance Optimization Analyzer
-    suite.run_test("Performance Optimization Analyzer", []() {
+}
+TEST(PerformanceRegressionSystemTests, Performance_Optimization_Analyzer) {
         PerformanceOptimizationAnalyzer analyzer;
 
         // Test analysis of slow performance
@@ -218,10 +210,8 @@ int main() {
                 ASSERT_GE(recommendations[i-1].priority_score, recommendations[i].priority_score);
             }
         }
-    });
-
-    // Test 4: Performance Regression Testing System Integration
-    suite.run_test("Performance Regression Testing System", []() {
+}
+TEST(PerformanceRegressionSystemTests, Performance_Regression_Testing_System) {
         PerformanceRegressionTestingSystem system;
         system.initialize("test_system_baselines.txt");
 
@@ -276,10 +266,8 @@ int main() {
         // Cleanup
         std::remove("test_system_baselines.txt");
         std::remove("test_performance_report.md");
-    });
-
-    // Test 5: Baseline Persistence and Loading
-    suite.run_test("Baseline Persistence and Loading", []() {
+}
+TEST(PerformanceRegressionSystemTests, Baseline_Persistence_and_Loading) {
         const std::string baseline_file = "test_persistence_baselines.txt";
 
         // Create system and baselines
@@ -308,10 +296,8 @@ int main() {
 
         // Cleanup
         std::remove(baseline_file.c_str());
-    });
-
-    // Test 6: Regression Alert Severity Classification
-    suite.run_test("Regression Alert Severity Classification", []() {
+}
+TEST(PerformanceRegressionSystemTests, Regression_Alert_Severity_Classification) {
         auto baseline_manager = std::make_shared<ComponentBaselineManager>();
         AutomatedRegressionDetector detector;
         detector.set_baseline_manager(baseline_manager);
@@ -344,10 +330,8 @@ int main() {
             }
         }
         ASSERT_TRUE(found_critical);
-    });
-
-    // Test 7: Custom Optimization Analyzers
-    suite.run_test("Custom Optimization Analyzers", []() {
+}
+TEST(PerformanceRegressionSystemTests, Custom_Optimization_Analyzers) {
         PerformanceOptimizationAnalyzer analyzer;
 
         // Add custom analyzer
@@ -384,10 +368,8 @@ int main() {
             }
         }
         ASSERT_TRUE(found_custom);
-    });
-
-    // Test 8: Batch Regression Detection
-    suite.run_test("Batch Regression Detection", []() {
+}
+TEST(PerformanceRegressionSystemTests, Batch_Regression_Detection) {
         auto baseline_manager = std::make_shared<ComponentBaselineManager>();
         AutomatedRegressionDetector detector;
         detector.set_baseline_manager(baseline_manager);
@@ -418,8 +400,7 @@ int main() {
 
         ASSERT_TRUE(alerted_components.find("Component1") != alerted_components.end());
         ASSERT_TRUE(alerted_components.find("Component2") != alerted_components.end());
-    });
+}
 
     // Force immediate exit to avoid hanging on cleanup
     _exit(0);
-}

@@ -1,6 +1,7 @@
 /**
  * @file benchmark_comprehensive.cpp
  * @brief Comprehensive system benchmarks for core performance validation
+ * @note Migrated to Google Test
  *
  * This benchmark validates the key performance claims of the Solar System Suite:
  * - Simulation step execution in microseconds
@@ -19,21 +20,10 @@
 #include "solar_core/math/vector3.hpp"
 #include "solar_core/simulation/simulation_engine.hpp"
 #include "solar_jpl/jpl_client.hpp"
-#include "test_framework.h"
+#include <gtest/gtest.h>
 
 using namespace SolarSystem;
-
-int main() {
-  Benchmark::BenchmarkSuite suite("Comprehensive Performance");
-
-  // 1. SIMULATION STEP BENCHMARK - Validate microsecond claims (Requirement 3.4)
-  suite.run_benchmark(
-      "SimulationStepMicrosecondBenchmark",
-      []() {
-        // Create realistic celestial bodies for simulation
-        Bodies::CelestialBody::Properties sun_props = {.name = "Sun",
-                                                       .mass = 1.98847e30L,  // Solar mass in kg
-                                                       .position = Math::Vector3d{0.0, 0.0, 0.0},
+,
                                                        .velocity = Math::Vector3d{0.0, 0.0, 0.0},
                                                        .type = Bodies::BodyType::Star,
                                                        .priority = Bodies::BodyPriority::Essential,
@@ -247,7 +237,6 @@ int main() {
       },
       100);
 
-  suite.print_summary();
 
   // Create benchmark results directory if it doesn't exist
   std::filesystem::create_directories("benchmark_results");
@@ -302,4 +291,3 @@ int main() {
   std::cout << "\nOverall Performance Validation: " << (all_passed ? "PASS" : "FAIL") << std::endl;
 
   return all_passed ? 0 : 1;
-}

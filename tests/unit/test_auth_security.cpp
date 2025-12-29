@@ -1,6 +1,7 @@
 /**
  * @file test_auth_security.cpp
  * @brief Authentication and authorization security testing (Task 21)
+ * @note Migrated to Google Test
  *
  * Tests authentication and authorization capabilities:
  * - Authentication mechanism testing with various scenarios
@@ -18,7 +19,7 @@
 #include <string>
 #include <vector>
 
-#include "test_framework.h"
+#include <gtest/gtest.h>
 
 /**
  * @brief Authentication and authorization security tester
@@ -318,8 +319,6 @@ class AuthSecurityTester {
     return result;
   }
 };
-
-int main() {
   TEST_SUITE("Authentication and Authorization Security Tests");
 
   // Test 1: Authentication mechanism testing
@@ -340,7 +339,7 @@ int main() {
     // Test 1.3: Non-existent user
     auto result3 = tester.authenticate("nonexistent", "password");
     ASSERT_FALSE(result3.authenticated);
-    ASSERT_TRUE(result3.error_message.find("not found") != std::string::npos);
+    EXPECT_NE(std::string::npos, result3.error_message.find("not found"));
 
     // Test 1.4: Multiple users
     auto admin_auth = tester.authenticate("admin", "admin_pass_123");
@@ -551,4 +550,3 @@ int main() {
   });
 
   return current_suite->all_passed() ? 0 : 1;
-}

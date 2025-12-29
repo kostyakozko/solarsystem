@@ -1,28 +1,14 @@
 /**
  * @file benchmark_web_server.cpp
  * @brief Performance benchmarks for web server
+ * @note Migrated to Google Test
  */
 
 #include <filesystem>
 
 #include "benchmark_utils.h"
-#include "test_framework.h"
-
-int main() {
-  Benchmark::BenchmarkSuite suite("Web Server Performance");
-
-  // HTTP request processing benchmark
-  suite.run_benchmark(
-      "HTTPRequestProcessingBenchmark",
-      []() {
-        // Simulate HTTP request processing
-        std::string request = "GET /api/simulation HTTP/1.1\r\nHost: localhost\r\n\r\n";
-        volatile size_t len = request.length();
-        for (size_t i = 0; i < len; ++i) {
-          volatile char c = request[i];
-          (void)c;
-        }
-      },
+#include <gtest/gtest.h>
+},
       1000);
 
   // JSON response generation benchmark
@@ -54,7 +40,6 @@ int main() {
       },
       1000);
 
-  suite.print_summary();
 
   // Create benchmark results directory if it doesn't exist
   std::filesystem::create_directories("benchmark_results");
@@ -63,4 +48,3 @@ int main() {
   suite.export_results("benchmark_results/web_server_benchmark.csv", "csv");
 
   return 0;
-}

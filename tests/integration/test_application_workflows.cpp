@@ -1,6 +1,7 @@
 /**
  * @file test_application_workflows.cpp
  * @brief Integration tests for system integration scenarios
+ * @note Migrated to Google Test
  *
  * Tests comprehensive system integration including:
  * - Application startup and initialization
@@ -20,7 +21,7 @@
 #include <vector>
 
 #include "test_data_manager.hpp"
-#include "test_framework.h"
+#include <gtest/gtest.h>
 
 using namespace TestData;
 
@@ -63,8 +64,6 @@ std::string get_executable_path(const std::string& exe_name) {
   static std::string build_dir = std::filesystem::current_path().string();
   return build_dir + "/" + exe_name;
 }
-
-int main() {
   TEST_SUITE("Application Workflow Integration Tests");
 
   // Test launcher application workflow
@@ -74,8 +73,8 @@ int main() {
     std::string output = execute_command(command);
 
     // Should contain status information
-    ASSERT_TRUE(output.find("Solar System Suite") != std::string::npos);
-    ASSERT_TRUE(output.find("Status") != std::string::npos);
+    EXPECT_NE(std::string::npos, output.find("Solar System Suite"));
+    EXPECT_NE(std::string::npos, output.find("Status"));
   });
 
   // Test data fetching workflow
@@ -116,7 +115,7 @@ int main() {
     // We verify that the simulation workflow executes successfully instead.
     ASSERT_TRUE(output.find("simulation") != std::string::npos ||
                 output.find("Simulation") != std::string::npos);
-    ASSERT_TRUE(output.find("completed") != std::string::npos);
+    EXPECT_NE(std::string::npos, output.find("completed"));
   });
 
   // Test real-time application
@@ -273,7 +272,7 @@ int main() {
 
     for (const auto& [command, expected_output] : applications) {
       std::string output = execute_command(command + " 2>&1");
-      ASSERT_TRUE(output.find(expected_output) != std::string::npos);
+      EXPECT_NE(std::string::npos, output.find(expected_output));
     }
 
     // Test initialization with different working directories
@@ -383,7 +382,7 @@ int main() {
 
       std::string output =
           execute_command(get_executable_path("solar_system_launcher") + " --status 2>&1");
-      ASSERT_TRUE(output.find("Status") != std::string::npos);
+      EXPECT_NE(std::string::npos, output.find("Status"));
 
       unsetenv("SOLAR_SYSTEM_CACHE_DIR");
       unsetenv("SOLAR_SYSTEM_LOG_LEVEL");
@@ -673,4 +672,3 @@ TEST_CASE("Error Propagation and Logging") {
 });
 
 return current_suite->all_passed() ? 0 : 1;
-}

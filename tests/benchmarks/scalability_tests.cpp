@@ -1,6 +1,7 @@
 /**
  * @file scalability_tests.cpp
  * @brief Scalability and stress tests for Solar System Suite
+ * @note Migrated to Google Test
  *
  * This benchmark validates system scalability and performance under stress:
  * - Performance with large numbers of celestial bodies
@@ -23,7 +24,7 @@
 #include "solar_core/math/vector3.hpp"
 #include "solar_core/simulation/simulation_engine.hpp"
 #include "solar_jpl/jpl_client.hpp"
-#include "test_framework.h"
+#include <gtest/gtest.h>
 
 using namespace SolarSystem;
 
@@ -53,13 +54,7 @@ std::vector<Bodies::CelestialBody> create_test_bodies(size_t count) {
 
   return bodies;
 }
-
-int main() {
-  Benchmark::BenchmarkSuite suite("Scalability Analysis");
-
-  // 1. CELESTIAL BODY COUNT SCALABILITY - Test performance with increasing body counts
-  // (Requirement 3.1)
-  std::vector<size_t> body_counts = {10, 50, 100, 500, 1000};
+;
 
   suite.run_scalability_benchmark(
       "CelestialBodyScalability",
@@ -324,7 +319,6 @@ int main() {
       },
       50);
 
-  suite.print_summary();
 
   // Create benchmark results directory if it doesn't exist
   std::filesystem::create_directories("benchmark_results");
@@ -393,4 +387,3 @@ int main() {
             << std::endl;
 
   return scalability_validated ? 0 : 1;
-}

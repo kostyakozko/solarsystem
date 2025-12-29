@@ -1,6 +1,7 @@
 /**
  * @file test_concurrent_execution.cpp
  * @brief Tests for concurrent test execution and race condition prevention
+ * @note Using Google Test compatibility layer
  *
  * Verifies that the enhanced test environment can handle multiple
  * concurrent tests without resource conflicts or race conditions.
@@ -10,12 +11,9 @@
 #include <thread>
 #include <vector>
 
-#include "test_framework.h"
-#include "test_port_manager.hpp"
+#include "../utils/gtest_compat.hpp"
 
 using namespace TestUtils;
-
-int main() {
   TEST_SUITE("Concurrent Execution Tests");
 
   // Test 1: Concurrent port allocation
@@ -299,4 +297,3 @@ int main() {
   });
 
   return current_suite->all_passed() ? 0 : 1;
-}

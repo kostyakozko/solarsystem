@@ -1,6 +1,7 @@
 /**
  * @file test_failure_simulation.cpp
  * @brief Realistic failure simulation testing (Task 18)
+ * @note Migrated to Google Test
  *
  * Tests failure simulation capabilities:
  * - Hardware failure simulation (disk, network, memory)
@@ -20,7 +21,7 @@
 #include <thread>
 #include <vector>
 
-#include "test_framework.h"
+#include <gtest/gtest.h>
 
 /**
  * @brief Failure simulation system
@@ -260,8 +261,6 @@ class FailureSimulator {
     return failure;
   }
 };
-
-int main() {
   TEST_SUITE("Failure Simulation Testing");
 
   // Test 1: Hardware failure simulation
@@ -273,29 +272,28 @@ int main() {
       auto result = simulator.simulate_disk_failure("read_error");
       ASSERT_TRUE(result.failed);
       ASSERT_TRUE(result.type == FailureSimulator::FailureType::DiskFailure);
-      ASSERT_TRUE(result.description.find("read error") != std::string::npos);
+      EXPECT_NE(std::string::npos, result.description.find("read error"));
     }
 
     // Test 1.2: Disk write error
     {
       auto result = simulator.simulate_disk_failure("write_error");
       ASSERT_TRUE(result.failed);
-      ASSERT_TRUE(result.description.find("write error") !=
-                  std::string::npos);
+      EXPECT_NE(std::string::npos, result.description.find("write error"));
     }
 
     // Test 1.3: Disk full
     {
       auto result = simulator.simulate_disk_failure("disk_full");
       ASSERT_TRUE(result.failed);
-      ASSERT_TRUE(result.description.find("full") != std::string::npos);
+      EXPECT_NE(std::string::npos, result.description.find("full"));
     }
 
     // Test 1.4: Bad sector
     {
       auto result = simulator.simulate_disk_failure("bad_sector");
       ASSERT_TRUE(result.failed);
-      ASSERT_TRUE(result.description.find("Bad sector") != std::string::npos);
+      EXPECT_NE(std::string::npos, result.description.find("Bad sector"));
     }
   });
 
@@ -309,15 +307,14 @@ int main() {
       ASSERT_TRUE(result.failed);
       ASSERT_TRUE(result.type ==
                   FailureSimulator::FailureType::NetworkFailure);
-      ASSERT_TRUE(result.description.find("packet loss") !=
-                  std::string::npos);
+      EXPECT_NE(std::string::npos, result.description.find("packet loss"));
     }
 
     // Test 2.2: High latency
     {
       auto result = simulator.simulate_network_failure("high_latency");
       ASSERT_TRUE(result.failed);
-      ASSERT_TRUE(result.description.find("latency") != std::string::npos);
+      EXPECT_NE(std::string::npos, result.description.find("latency"));
       ASSERT_GT(result.duration.count(), 0);
     }
 
@@ -325,14 +322,14 @@ int main() {
     {
       auto result = simulator.simulate_network_failure("connection_drop");
       ASSERT_TRUE(result.failed);
-      ASSERT_TRUE(result.description.find("dropped") != std::string::npos);
+      EXPECT_NE(std::string::npos, result.description.find("dropped"));
     }
 
     // Test 2.4: DNS failure
     {
       auto result = simulator.simulate_network_failure("dns_failure");
       ASSERT_TRUE(result.failed);
-      ASSERT_TRUE(result.description.find("DNS") != std::string::npos);
+      EXPECT_NE(std::string::npos, result.description.find("DNS"));
     }
   });
 
@@ -345,22 +342,21 @@ int main() {
       auto result = simulator.simulate_memory_failure("allocation_failure");
       ASSERT_TRUE(result.failed);
       ASSERT_TRUE(result.type == FailureSimulator::FailureType::MemoryFailure);
-      ASSERT_TRUE(result.description.find("allocation") !=
-                  std::string::npos);
+      EXPECT_NE(std::string::npos, result.description.find("allocation"));
     }
 
     // Test 3.2: Memory leak
     {
       auto result = simulator.simulate_memory_failure("memory_leak");
       ASSERT_TRUE(result.failed);
-      ASSERT_TRUE(result.description.find("leak") != std::string::npos);
+      EXPECT_NE(std::string::npos, result.description.find("leak"));
     }
 
     // Test 3.3: Memory corruption
     {
       auto result = simulator.simulate_memory_failure("corruption");
       ASSERT_TRUE(result.failed);
-      ASSERT_TRUE(result.description.find("corruption") != std::string::npos);
+      EXPECT_NE(std::string::npos, result.description.find("corruption"));
     }
   });
 
@@ -373,22 +369,21 @@ int main() {
       auto result = simulator.simulate_crash("segfault");
       ASSERT_TRUE(result.failed);
       ASSERT_TRUE(result.type == FailureSimulator::FailureType::CrashFailure);
-      ASSERT_TRUE(result.description.find("Segmentation") !=
-                  std::string::npos);
+      EXPECT_NE(std::string::npos, result.description.find("Segmentation"));
     }
 
     // Test 4.2: Assertion failure
     {
       auto result = simulator.simulate_crash("assertion");
       ASSERT_TRUE(result.failed);
-      ASSERT_TRUE(result.description.find("Assertion") != std::string::npos);
+      EXPECT_NE(std::string::npos, result.description.find("Assertion"));
     }
 
     // Test 4.3: Uncaught exception
     {
       auto result = simulator.simulate_crash("uncaught_exception");
       ASSERT_TRUE(result.failed);
-      ASSERT_TRUE(result.description.find("exception") != std::string::npos);
+      EXPECT_NE(std::string::npos, result.description.find("exception"));
     }
   });
 
@@ -404,7 +399,7 @@ int main() {
 
       ASSERT_TRUE(result.failed);
       ASSERT_TRUE(result.type == FailureSimulator::FailureType::HangFailure);
-      ASSERT_TRUE(result.description.find("hang") != std::string::npos);
+      EXPECT_NE(std::string::npos, result.description.find("hang"));
       ASSERT_GT(elapsed.count(), 0);
     }
 
@@ -426,21 +421,21 @@ int main() {
       ASSERT_TRUE(result.failed);
       ASSERT_TRUE(result.type ==
                   FailureSimulator::FailureType::CorruptionFailure);
-      ASSERT_TRUE(result.description.find("Bit flip") != std::string::npos);
+      EXPECT_NE(std::string::npos, result.description.find("Bit flip"));
     }
 
     // Test 6.2: Partial write
     {
       auto result = simulator.simulate_corruption("partial_write");
       ASSERT_TRUE(result.failed);
-      ASSERT_TRUE(result.description.find("Partial") != std::string::npos);
+      EXPECT_NE(std::string::npos, result.description.find("Partial"));
     }
 
     // Test 6.3: Checksum mismatch
     {
       auto result = simulator.simulate_corruption("checksum_mismatch");
       ASSERT_TRUE(result.failed);
-      ASSERT_TRUE(result.description.find("Checksum") != std::string::npos);
+      EXPECT_NE(std::string::npos, result.description.find("Checksum"));
     }
   });
 
@@ -455,8 +450,7 @@ int main() {
       ASSERT_TRUE(result.failed);
       ASSERT_TRUE(result.type ==
                   FailureSimulator::FailureType::ServiceUnavailable);
-      ASSERT_TRUE(result.description.find("unavailable") !=
-                  std::string::npos);
+      EXPECT_NE(std::string::npos, result.description.find("unavailable"));
     }
 
     // Test 7.2: Service degraded
@@ -464,7 +458,7 @@ int main() {
       auto result = simulator.simulate_service_failure(
           "Database", FailureSimulator::ServiceState::Degraded);
       ASSERT_FALSE(result.failed);
-      ASSERT_TRUE(result.description.find("degraded") != std::string::npos);
+      EXPECT_NE(std::string::npos, result.description.find("degraded"));
       ASSERT_GT(result.duration.count(), 0);
     }
 
@@ -473,7 +467,7 @@ int main() {
       auto result = simulator.simulate_service_failure(
           "Cache", FailureSimulator::ServiceState::Available);
       ASSERT_FALSE(result.failed);
-      ASSERT_TRUE(result.description.find("available") != std::string::npos);
+      EXPECT_NE(std::string::npos, result.description.find("available"));
     }
   });
 
@@ -566,7 +560,7 @@ int main() {
       auto result = simulator.test_recovery(failure, recovery_func);
 
       ASSERT_TRUE(result.recovered);
-      ASSERT_TRUE(result.description.find("RECOVERED") != std::string::npos);
+      EXPECT_NE(std::string::npos, result.description.find("RECOVERED"));
     }
 
     // Test 10.2: Failed recovery
@@ -593,4 +587,3 @@ int main() {
   });
 
   return current_suite->all_passed() ? 0 : 1;
-}

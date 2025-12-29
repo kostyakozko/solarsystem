@@ -1,6 +1,7 @@
 /**
  * @file test_performance_regression_system_simple.cpp
  * @brief Unit tests for simplified performance regression testing system (Task 22)
+ * @note Migrated to Google Test
  *
  * Tests the basic performance regression detection, baseline management,
  * and optimization recommendation system.
@@ -17,7 +18,7 @@
 #include "performance_regression_system_simple.hpp"
 
 // Test framework
-#include "test_framework.h"
+#include <gtest/gtest.h>
 
 using namespace SolarSystem::Testing::Regression;
 
@@ -49,12 +50,7 @@ public:
         return create_simple_metrics("regression_test", std::chrono::milliseconds(200), 32768, 95.0);
     }
 };
-
-int main() {
-    TestSuite suite("Simple Performance Regression System Tests");
-
-    // Test 1: Simple Baseline Manager
-    suite.run_test("Simple Baseline Manager", []() {
+TEST(SimplePerformanceRegressionSystemTests, Simple_Baseline_Manager) {
         SimpleBaselineManager manager;
 
         // Test setting baseline
@@ -93,10 +89,8 @@ int main() {
 
         // Cleanup
         std::remove("test_simple_baselines.txt");
-    });
-
-    // Test 2: Simple Regression Detector
-    suite.run_test("Simple Regression Detector", []() {
+}
+TEST(SimplePerformanceRegressionSystemTests, Simple_Regression_Detector) {
         auto baseline_manager = std::make_shared<SimpleBaselineManager>();
         SimpleRegressionDetector detector(1.2); // 20% threshold
         detector.set_baseline_manager(baseline_manager);
@@ -123,10 +117,8 @@ int main() {
         ASSERT_GT(alert.regression_factor, 1.0);
         ASSERT_FALSE(alert.description.empty());
         ASSERT_FALSE(alert.recommendation.empty());
-    });
-
-    // Test 3: Simple Optimization Analyzer
-    suite.run_test("Simple Optimization Analyzer", []() {
+}
+TEST(SimplePerformanceRegressionSystemTests, Simple_Optimization_Analyzer) {
         SimpleOptimizationAnalyzer analyzer;
 
         // Test analysis of slow performance
@@ -159,10 +151,8 @@ int main() {
             }
         }
         ASSERT_TRUE(found_memory_optimization);
-    });
-
-    // Test 4: Simple Performance Regression Testing System Integration
-    suite.run_test("Simple Performance Regression Testing System", []() {
+}
+TEST(SimplePerformanceRegressionSystemTests, Simple_Performance_Regression_Testing_System) {
         SimplePerformanceRegressionSystem system;
         system.initialize("test_simple_system_baselines.txt");
 
@@ -210,10 +200,8 @@ int main() {
         // Cleanup
         std::remove("test_simple_system_baselines.txt");
         std::remove("test_simple_performance_report.md");
-    });
-
-    // Test 5: Baseline Persistence and Loading
-    suite.run_test("Baseline Persistence and Loading", []() {
+}
+TEST(SimplePerformanceRegressionSystemTests, Baseline_Persistence_and_Loading) {
         const std::string baseline_file = "test_simple_persistence_baselines.txt";
 
         // Create system and baselines
@@ -242,10 +230,8 @@ int main() {
 
         // Cleanup
         std::remove(baseline_file.c_str());
-    });
-
-    // Test 6: Utility Functions
-    suite.run_test("Utility Functions", []() {
+}
+TEST(SimplePerformanceRegressionSystemTests, Utility_Functions) {
         // Test global system initialization
         initialize_simple_performance_regression_testing("test_global_baselines.txt");
 
@@ -278,10 +264,8 @@ int main() {
         // Cleanup
         std::remove("test_global_baselines.txt");
         std::remove("simple_performance_regression_report.md");
-    });
-
-    // Test 7: Create Simple Metrics Utility
-    suite.run_test("Create Simple Metrics Utility", []() {
+}
+TEST(SimplePerformanceRegressionSystemTests, Create_Simple_Metrics_Utility) {
         auto metrics = create_simple_metrics("test_metrics",
                                            std::chrono::milliseconds(100),
                                            2048,
@@ -292,8 +276,7 @@ int main() {
         ASSERT_EQ(metrics.memory_usage_kb, static_cast<size_t>(2048));
         ASSERT_EQ(metrics.cpu_usage_percent, 50.0);
         ASSERT_EQ(metrics.execution_time_ms(), 100.0);
-    });
+}
 
     // Force immediate exit to avoid hanging on cleanup
     _exit(0);
-}

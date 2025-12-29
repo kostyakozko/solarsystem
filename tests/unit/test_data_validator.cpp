@@ -1,9 +1,10 @@
 /**
  * @file test_data_validator.cpp
  * @brief Unit tests for comprehensive data validation system
+ * @note Migrated to Google Test
  */
 
-#include "../utils/test_framework.h"
+#include <gtest/gtest.h>
 #include <chrono>
 #include <filesystem>
 #include <fstream>
@@ -14,12 +15,7 @@
 
 using namespace SolarSystem::JPL;
 using namespace SolarSystem::Math;
-
-int main() {
-  TestSuite suite("Data Validator Tests");
-
-  // Test data validator configuration validation
-  suite.run_test("Configuration Validation", []() {
+TEST(DataValidatorTests, Configuration_Validation) {
     DataValidatorConfig config;
 
     // Valid configuration
@@ -42,10 +38,8 @@ int main() {
     // Reset to valid
     config.velocity_max_km_s = 1e6;
     ASSERT_TRUE(config.is_valid(&error));
-  });
-
-  // Test individual ephemeris data validation
-  suite.run_test("Individual Data Validation", []() {
+}
+TEST(DataValidatorTests, Individual_Data_Validation) {
     auto validator = DataValidatorFactory::create_default();
 
     // Create sample ephemeris data
@@ -77,10 +71,8 @@ int main() {
     const auto& invalid_report = get_value(result);
     ASSERT_FALSE(invalid_report.validation_passed);
     ASSERT_GT(invalid_report.error_issues, 0);
-  });
-
-  // Test data quality assessment
-  suite.run_test("Data Quality Assessment", []() {
+}
+TEST(DataValidatorTests, Data_Quality_Assessment) {
     auto validator = DataValidatorFactory::create_default();
 
     std::vector<EphemerisData> collection;
@@ -105,10 +97,8 @@ int main() {
     ASSERT_GT(metrics.completeness_ratio, 0.0);
     ASSERT_GT(metrics.accuracy_score, 0.0);
     ASSERT_LE(metrics.overall_quality_score, 1.0);
-  });
-
-  // Test binary format validation
-  suite.run_test("Binary Format Validation", []() {
+}
+TEST(DataValidatorTests, Binary_Format_Validation) {
     auto validator = DataValidatorFactory::create_default();
 
     // Create test directory
@@ -140,10 +130,8 @@ int main() {
     if (std::filesystem::exists(test_dir)) {
       std::filesystem::remove_all(test_dir);
     }
-  });
-
-  // Test validation report functionality
-  suite.run_test("Validation Report Functionality", []() {
+}
+TEST(DataValidatorTests, Validation_Report_Functionality) {
     ValidationReport report;
     report.validation_timestamp = std::chrono::system_clock::now();
     report.validation_level = ValidationLevel::Standard;
@@ -176,10 +164,8 @@ int main() {
     report.error_issues = 0;
     report.validation_passed = true;
     ASSERT_TRUE(report.is_valid());
-  });
-
-  // Test validation utility functions
-  suite.run_test("Validation Utilities", []() {
+}
+TEST(DataValidatorTests, Validation_Utilities) {
     // Test error type to string conversion
     ASSERT_EQ(ValidationUtils::to_string(ValidationErrorType::InvalidJPLId), "InvalidJPLId");
     ASSERT_EQ(ValidationUtils::to_string(ValidationErrorType::InvalidPosition), "InvalidPosition");
@@ -201,10 +187,8 @@ int main() {
 
     ASSERT_TRUE(ValidationUtils::is_reasonable_astronomical_value(5.972e24, "mass_kg"));     // Earth mass
     ASSERT_FALSE(ValidationUtils::is_reasonable_astronomical_value(1e5, "mass_kg"));         // Too small
-  });
-
-  // Test factory methods
-  suite.run_test("Factory Methods", []() {
+}
+TEST(DataValidatorTests, Factory_Methods) {
     // Test default factory
     auto default_validator = DataValidatorFactory::create_default();
     ASSERT_NE(default_validator, nullptr);
@@ -222,7 +206,4 @@ int main() {
     auto test_validator = DataValidatorFactory::create_for_testing();
     ASSERT_NE(test_validator, nullptr);
     ASSERT_EQ(test_validator->config().validation_timeout, std::chrono::seconds(10));
-  });
-
-  return suite.all_passed() ? 0 : suite.get_failed_count();
 }
