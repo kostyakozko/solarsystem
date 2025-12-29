@@ -122,7 +122,7 @@ This implementation plan systematically modernizes the Solar System Suite's buil
   - Set up gtest_discover_tests for automatic test discovery
   - _Requirements: 3.1, 3.5_
 
-- [ ] 4.2 Create test compatibility layer
+- [x] 4.2 Create test compatibility layer
   - Create tests/utils/gtest_compat.hpp
   - Map TEST_CASE to TEST macro
   - Map ASSERT_* macros to EXPECT_*/ASSERT_* macros

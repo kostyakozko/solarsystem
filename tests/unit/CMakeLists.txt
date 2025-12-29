@@ -555,3 +555,28 @@ add_executable(test_training_system test_training_system.cpp)
 target_link_libraries(test_training_system test_utils solar_core solar_utils Threads::Threads)
 add_test(NAME UnitTest_TrainingSystem COMMAND test_training_system)
 set_tests_properties(UnitTest_TrainingSystem PROPERTIES LABELS "unit;training;task35;phase12" TIMEOUT ${TEST_TIMEOUT})
+
+# ============================================================================
+# Google Test Native Tests
+# ============================================================================
+# These tests use Google Test directly (not the compatibility layer)
+# They serve as examples for migrating existing tests to Google Test
+
+if(GTEST_AVAILABLE)
+  # Google Test Example - demonstrates native Google Test usage
+  add_executable(test_gtest_example test_gtest_example.cpp)
+  target_link_libraries(test_gtest_example
+    GTest::gtest_main
+    GTest::gmock
+    solar_core
+    solar_utils
+    Threads::Threads
+  )
+  # Use gtest_discover_tests for automatic test discovery
+  gtest_discover_tests(test_gtest_example
+    PROPERTIES LABELS "unit;gtest;example;migration"
+    DISCOVERY_TIMEOUT 30
+  )
+
+  message(STATUS "  - NEW: Google Test Native Example Tests")
+endif()
