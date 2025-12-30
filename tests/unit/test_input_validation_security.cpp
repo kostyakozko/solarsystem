@@ -254,10 +254,8 @@ class InputSecurityValidator {
     return result;
   }
 };
-  TEST_SUITE("Input Validation and Sanitization Security Tests");
-
   // Test 1: SQL injection testing
-  TEST_CASE("SQL Injection Testing") {
+  TEST(InputValidationAndSanitizationSecurityTestsTest, SQL_Injection_Testing) {
     InputSecurityValidator validator;
 
     // Test 1.1: Detect SQL injection
@@ -278,10 +276,10 @@ class InputSecurityValidator {
     // Test 1.4: UNION SELECT injection
     auto result4 = validator.validate_sql_input("1 UNION SELECT * FROM users");
     ASSERT_FALSE(result4.is_safe);
-  });
+  }
 
   // Test 2: Command injection testing
-  TEST_CASE("Command Injection Testing") {
+  TEST(InputValidationAndSanitizationSecurityTestsTest, Command_Injection_Testing) {
     InputSecurityValidator validator;
 
     // Test 2.1: Detect command injection with semicolon
@@ -301,10 +299,10 @@ class InputSecurityValidator {
     auto result4 = validator.validate_command_input("$(whoami)");
     ASSERT_FALSE(result4.is_safe);
     ASSERT_FALSE(result4.sanitized_input.empty());
-  });
+  }
 
   // Test 3: XSS testing
-  TEST_CASE("Cross-Site Scripting (XSS) Testing") {
+  TEST(InputValidationAndSanitizationSecurityTestsTest, Cross_Site_Scripting_XSS_Testing) {
     InputSecurityValidator validator;
 
     // Test 3.1: Detect script tag
@@ -324,10 +322,10 @@ class InputSecurityValidator {
     auto result4 = validator.validate_xss_input("<img onerror='alert(1)'>");
     ASSERT_FALSE(result4.is_safe);
     EXPECT_NE(std::string::npos, result4.sanitized_input.find("&lt;"));
-  });
+  }
 
   // Test 4: Buffer overflow testing
-  TEST_CASE("Buffer Overflow Testing") {
+  TEST(InputValidationAndSanitizationSecurityTestsTest, Buffer_Overflow_Testing) {
     InputSecurityValidator validator;
 
     // Test 4.1: Input within bounds
@@ -350,10 +348,10 @@ class InputSecurityValidator {
     // Test 4.4: Empty input
     auto result4 = validator.validate_buffer_input("", 100);
     ASSERT_TRUE(result4.is_safe);
-  });
+  }
 
   // Test 5: Input fuzzing
-  TEST_CASE("Input Fuzzing") {
+  TEST(InputValidationAndSanitizationSecurityTestsTest, Input_Fuzzing) {
     InputSecurityValidator validator;
 
     // Test 5.1: Fuzz SQL validator
@@ -390,10 +388,10 @@ class InputSecurityValidator {
         10);
 
     ASSERT_FALSE(xss_results.empty());
-  });
+  }
 
   // Test 6: CSRF token validation
-  TEST_CASE("CSRF Token Validation") {
+  TEST(InputValidationAndSanitizationSecurityTestsTest, CSRF_Token_Validation) {
     InputSecurityValidator validator;
 
     // Test 6.1: Valid token
@@ -411,10 +409,10 @@ class InputSecurityValidator {
 
     // Test 6.5: Case sensitivity
     ASSERT_FALSE(validator.validate_csrf_token("ABC123XYZ789", token));
-  });
+  }
 
   // Test 7: Path traversal testing
-  TEST_CASE("Path Traversal Testing") {
+  TEST(InputValidationAndSanitizationSecurityTestsTest, Path_Traversal_Testing) {
     InputSecurityValidator validator;
 
     // Test 7.1: Detect path traversal
@@ -434,10 +432,10 @@ class InputSecurityValidator {
     auto result4 = validator.validate_path_input("files//secret//data.txt");
     ASSERT_FALSE(result4.is_safe);
     ASSERT_FALSE(result4.sanitization_applied.empty());
-  });
+  }
 
   // Test 8: Combined security validation
-  TEST_CASE("Combined Security Validation") {
+  TEST(InputValidationAndSanitizationSecurityTestsTest, Combined_Security_Validation) {
     InputSecurityValidator validator;
 
     // Test 8.1: Multiple threat types
@@ -473,6 +471,4 @@ class InputSecurityValidator {
 
     ASSERT_TRUE(sql_safe.is_safe && cmd_safe.is_safe && xss_safe.is_safe &&
                 path_safe.is_safe);
-  });
-
-  return current_suite->all_passed() ? 0 : 1;
+  }

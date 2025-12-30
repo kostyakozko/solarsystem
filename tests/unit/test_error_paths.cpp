@@ -259,10 +259,8 @@ class ErrorPathTester {
     return result;
   }
 };
-  TEST_SUITE("Error Path Testing");
-
   // Test 1: Exception handling and error recovery
-  TEST_CASE("Exception Handling and Recovery") {
+  TEST(ErrorPathTestingTest, Exception_Handling_and_Recovery) {
     ErrorPathTester tester;
 
     // Test 1.1: Catch and handle runtime error
@@ -304,10 +302,10 @@ class ErrorPathTester {
       ASSERT_TRUE(result.error_occurred);
       ASSERT_FALSE(result.recovered);
     }
-  });
+  }
 
   // Test 2: Network failure and timeout scenarios
-  TEST_CASE("Network Failure and Timeout Scenarios") {
+  TEST(ErrorPathTestingTest, Network_Failure_and_Timeout_Scenarios) {
     ErrorPathTester tester;
 
     // Test 2.1: Network timeout
@@ -339,10 +337,10 @@ class ErrorPathTester {
       ASSERT_TRUE(result.error_occurred);
       EXPECT_NE(std::string::npos, result.error_message.find("reset"));
     }
-  });
+  }
 
   // Test 3: File system errors and permissions
-  TEST_CASE("File System Errors and Permissions") {
+  TEST(ErrorPathTestingTest, File_System_Errors_and_Permissions) {
     ErrorPathTester tester;
 
     // Test 3.1: File not found
@@ -381,10 +379,10 @@ class ErrorPathTester {
       // Cleanup
       fs::remove(test_file);
     }
-  });
+  }
 
   // Test 4: Memory exhaustion and resource limits
-  TEST_CASE("Memory Exhaustion and Resource Limits") {
+  TEST(ErrorPathTestingTest, Memory_Exhaustion_and_Resource_Limits) {
     ErrorPathTester tester;
 
     // Test 4.1: Small allocation (should succeed)
@@ -418,10 +416,10 @@ class ErrorPathTester {
       }
       ASSERT_TRUE(all_succeeded);
     }
-  });
+  }
 
   // Test 5: Retry mechanisms
-  TEST_CASE("Retry Mechanisms") {
+  TEST(ErrorPathTestingTest, Retry_Mechanisms) {
     ErrorPathTester tester;
 
     // Test 5.1: Successful retry
@@ -470,10 +468,10 @@ class ErrorPathTester {
       ASSERT_TRUE(result.error_occurred);
       ASSERT_FALSE(result.recovered);
     }
-  });
+  }
 
   // Test 6: Graceful degradation
-  TEST_CASE("Graceful Degradation") {
+  TEST(ErrorPathTestingTest, Graceful_Degradation) {
     ErrorPathTester tester;
 
     // Test 6.1: Primary service available
@@ -498,10 +496,10 @@ class ErrorPathTester {
       ASSERT_FALSE(result.recovered);
       EXPECT_NE(std::string::npos, result.error_message.find("unavailable"));
     }
-  });
+  }
 
   // Test 7: Complex error scenarios
-  TEST_CASE("Complex Error Scenarios") {
+  TEST(ErrorPathTestingTest, Complex_Error_Scenarios) {
     ErrorPathTester tester;
 
     // Test 7.1: Cascading failures
@@ -565,6 +563,4 @@ class ErrorPathTester {
       ASSERT_FALSE(results[1]); // Second failed
       ASSERT_TRUE(results[2]);  // Third succeeded
     }
-  });
-
-  return current_suite->all_passed() ? 0 : 1;
+  }

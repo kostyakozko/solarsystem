@@ -347,259 +347,255 @@ class ConcurrencyProfiler {
     operation_stats_.clear();
   }
 };
-  TEST_SUITE("Concurrency Debugging and Analysis Tests");
 
-  // Test 1: Thread execution tracing
-  TEST_CASE("Thread Execution Tracing") {
-    ThreadTracer tracer;
-    const int num_threads = 5;
-    const int events_per_thread = 10;
+// Test 1: Thread execution tracing
+TEST(ConcurrencyAnalysisTest, ThreadExecutionTracing) {
+  ThreadTracer tracer;
+  const int num_threads = 5;
+  const int events_per_thread = 10;
 
-    std::vector<std::thread> threads;
+  std::vector<std::thread> threads;
 
-    // Test 1.1: Basic event logging
-    for (int i = 0; i < num_threads; ++i) {
-      threads.emplace_back([&tracer, i, events_per_thread]() {
-        for (int j = 0; j < events_per_thread; ++j) {
-          tracer.log_event("OPERATION", "Thread " + std::to_string(i) + " event " +
-                                           std::to_string(j));
-        }
-      });
-    }
-
-    for (auto& t : threads) {
-      t.join();
-    }
-
-    ASSERT_EQ(tracer.event_count(), static_cast<size_t>(num_threads * events_per_thread));
-
-    // Test 1.2: Events per thread analysis
-    auto events_per_thread_map = tracer.get_events_per_thread();
-    ASSERT_EQ(events_per_thread_map.size(), static_cast<size_t>(num_threads));
-
-    for (const auto& [tid, count] : events_per_thread_map) {
-      ASSERT_EQ(count, events_per_thread);
-    }
-
-    // Test 1.3: Filter events by type
-    auto operation_events = tracer.get_events_by_type("OPERATION");
-    ASSERT_EQ(operation_events.size(), static_cast<size_t>(num_threads * events_per_thread));
-  });
-
-  // Test 2: Lock contention analysis
-  TEST_CASE("Lock Contention Analysis") {
-    LockContentionAnalyzer analyzer;
-
-    // Test 2.1: Record lock acquisitions
-    analyzer.record_lock_acquire("lock1", false, 0);
-    analyzer.record_lock_acquire("lock1", true, 100);
-    analyzer.record_lock_acquire("lock1", true, 200);
-    analyzer.record_lock_acquire("lock1", false, 0);
-
-    double contention_rate = analyzer.get_contention_rate("lock1");
-    ASSERT_EQ(contention_rate, 0.5);  // 2 out of 4 were contended
-
-    long long avg_wait = analyzer.get_average_wait_time("lock1");
-    ASSERT_EQ(avg_wait, 150);  // (100 + 200) / 2
-
-    // Test 2.2: High contention detection
-    analyzer.record_lock_acquire("lock2", true, 50);
-    analyzer.record_lock_acquire("lock2", true, 50);
-    analyzer.record_lock_acquire("lock2", false, 0);
-
-    auto high_contention = analyzer.get_high_contention_locks(0.5);
-    ASSERT_GE(high_contention.size(), 1);
-  });
-
-  // Test 3: Deadlock detection
-  TEST_CASE("Deadlock Detection") {
-    DeadlockDetector detector;
-
-    // Test 3.1: No deadlock scenario
-    std::thread t1([&detector]() {
-      detector.thread_acquired_lock("lock1");
-      std::this_thread::sleep_for(std::chrono::milliseconds(10));
-      detector.thread_released_lock("lock1");
+  // Test 1.1: Basic event logging
+  for (int i = 0; i < num_threads; ++i) {
+    threads.emplace_back([&tracer, i, events_per_thread]() {
+      for (int j = 0; j < events_per_thread; ++j) {
+        tracer.log_event("OPERATION", "Thread " + std::to_string(i) + " event " +
+                                         std::to_string(j));
+      }
     });
+  }
 
-    std::thread t2([&detector]() {
-      detector.thread_acquired_lock("lock2");
-      std::this_thread::sleep_for(std::chrono::milliseconds(10));
-      detector.thread_released_lock("lock2");
+  for (auto& t : threads) {
+    t.join();
+  }
+
+  ASSERT_EQ(tracer.event_count(), static_cast<size_t>(num_threads * events_per_thread));
+
+  // Test 1.2: Events per thread analysis
+  auto events_per_thread_map = tracer.get_events_per_thread();
+  ASSERT_EQ(events_per_thread_map.size(), static_cast<size_t>(num_threads));
+
+  for (const auto& [tid, count] : events_per_thread_map) {
+    ASSERT_EQ(count, events_per_thread);
+  }
+
+  // Test 1.3: Filter events by type
+  auto operation_events = tracer.get_events_by_type("OPERATION");
+  ASSERT_EQ(operation_events.size(), static_cast<size_t>(num_threads * events_per_thread));
+}
+
+// Test 2: Lock contention analysis
+TEST(ConcurrencyAnalysisTest, LockContentionAnalysis) {
+  LockContentionAnalyzer analyzer;
+
+  // Test 2.1: Record lock acquisitions
+  analyzer.record_lock_acquire("lock1", false, 0);
+  analyzer.record_lock_acquire("lock1", true, 100);
+  analyzer.record_lock_acquire("lock1", true, 200);
+  analyzer.record_lock_acquire("lock1", false, 0);
+
+  double contention_rate = analyzer.get_contention_rate("lock1");
+  ASSERT_EQ(contention_rate, 0.5);  // 2 out of 4 were contended
+
+  long long avg_wait = analyzer.get_average_wait_time("lock1");
+  ASSERT_EQ(avg_wait, 150);  // (100 + 200) / 2
+
+  // Test 2.2: High contention detection
+  analyzer.record_lock_acquire("lock2", true, 50);
+  analyzer.record_lock_acquire("lock2", true, 50);
+  analyzer.record_lock_acquire("lock2", false, 0);
+
+  auto high_contention = analyzer.get_high_contention_locks(0.5);
+  ASSERT_GE(high_contention.size(), 1);
+}
+
+// Test 3: Deadlock detection
+TEST(ConcurrencyAnalysisTest, DeadlockDetection) {
+  DeadlockDetector detector;
+
+  // Test 3.1: No deadlock scenario
+  std::thread t1([&detector]() {
+    detector.thread_acquired_lock("lock1");
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    detector.thread_released_lock("lock1");
+  });
+
+  std::thread t2([&detector]() {
+    detector.thread_acquired_lock("lock2");
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    detector.thread_released_lock("lock2");
+  });
+
+  t1.join();
+  t2.join();
+
+  ASSERT_FALSE(detector.detect_potential_deadlock());
+
+  // Test 3.2: Simulated deadlock scenario (without actual deadlock)
+  detector.clear();
+
+  // Simulate thread 1 holding lockA and waiting for lockB
+  detector.thread_acquired_lock("lockA");
+  detector.thread_waiting_for_lock("lockB");
+
+  // Simulate thread 2 (in a separate scope) holding lockB and waiting for lockA
+  std::thread t3([&detector]() {
+    detector.thread_acquired_lock("lockB");
+    detector.thread_waiting_for_lock("lockA");
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    detector.thread_released_lock("lockB");
+  });
+
+  std::this_thread::sleep_for(std::chrono::milliseconds(5));
+
+  bool deadlock_detected = detector.detect_potential_deadlock();
+  ASSERT_TRUE(deadlock_detected);
+
+  // Clean up
+  detector.thread_released_lock("lockA");
+  t3.join();
+}
+
+// Test 4: Performance profiling
+TEST(ConcurrencyAnalysisTest, PerformanceProfiling) {
+  ConcurrencyProfiler profiler;
+
+  // Test 4.1: Record operations
+  profiler.record_operation("fast_op", 10);
+  profiler.record_operation("fast_op", 20);
+  profiler.record_operation("fast_op", 15);
+
+  profiler.record_operation("slow_op", 100);
+  profiler.record_operation("slow_op", 200);
+
+  ASSERT_EQ(profiler.get_call_count("fast_op"), 3);
+  ASSERT_EQ(profiler.get_call_count("slow_op"), 2);
+
+  ASSERT_EQ(profiler.get_average_duration("fast_op"), 15);  // (10+20+15)/3
+  ASSERT_EQ(profiler.get_average_duration("slow_op"), 150);  // (100+200)/2
+
+  ASSERT_EQ(profiler.get_min_duration("fast_op"), 10);
+  ASSERT_EQ(profiler.get_max_duration("fast_op"), 20);
+
+  // Test 4.2: Concurrent profiling
+  const int num_threads = 10;
+  const int operations_per_thread = 100;
+
+  std::vector<std::thread> threads;
+  for (int i = 0; i < num_threads; ++i) {
+    threads.emplace_back([&profiler, operations_per_thread]() {
+      for (int j = 0; j < operations_per_thread; ++j) {
+        auto start = std::chrono::steady_clock::now();
+        std::this_thread::sleep_for(std::chrono::microseconds(10));
+        auto end = std::chrono::steady_clock::now();
+        auto duration =
+            std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+        profiler.record_operation("concurrent_op", duration);
+      }
     });
+  }
 
-    t1.join();
-    t2.join();
+  for (auto& t : threads) {
+    t.join();
+  }
 
-    ASSERT_FALSE(detector.detect_potential_deadlock());
+  ASSERT_EQ(profiler.get_call_count("concurrent_op"),
+            num_threads * operations_per_thread);
+  ASSERT_GT(profiler.get_average_duration("concurrent_op"), 0);
+}
 
-    // Test 3.2: Simulated deadlock scenario (without actual deadlock)
-    detector.clear();
+// Test 5: Integrated analysis
+TEST(ConcurrencyAnalysisTest, IntegratedConcurrencyAnalysis) {
+  ThreadTracer tracer;
+  LockContentionAnalyzer lock_analyzer;
+  ConcurrencyProfiler profiler;
 
-    // Simulate thread 1 holding lockA and waiting for lockB
-    detector.thread_acquired_lock("lockA");
-    detector.thread_waiting_for_lock("lockB");
+  const int num_threads = 5;
+  std::mutex shared_mutex;
 
-    // Simulate thread 2 (in a separate scope) holding lockB and waiting for lockA
-    std::thread t3([&detector]() {
-      detector.thread_acquired_lock("lockB");
-      detector.thread_waiting_for_lock("lockA");
-      std::this_thread::sleep_for(std::chrono::milliseconds(10));
-      detector.thread_released_lock("lockB");
+  std::vector<std::thread> threads;
+
+  // Test 5.1: Comprehensive analysis
+  for (int i = 0; i < num_threads; ++i) {
+    threads.emplace_back([&tracer, &lock_analyzer, &profiler, &shared_mutex, i]() {
+      tracer.log_event("START", "Thread " + std::to_string(i) + " started");
+
+      for (int j = 0; j < 10; ++j) {
+        auto start = std::chrono::steady_clock::now();
+
+        bool contended = !shared_mutex.try_lock();
+        if (contended) {
+          shared_mutex.lock();
+        }
+
+        auto lock_acquired = std::chrono::steady_clock::now();
+        auto wait_time = std::chrono::duration_cast<std::chrono::microseconds>(
+                            lock_acquired - start)
+                            .count();
+
+        lock_analyzer.record_lock_acquire("shared_mutex", contended, wait_time);
+
+        // Simulate work
+        std::this_thread::sleep_for(std::chrono::microseconds(100));
+
+        shared_mutex.unlock();
+
+        auto end = std::chrono::steady_clock::now();
+        auto total_duration =
+            std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+
+        profiler.record_operation("critical_section", total_duration);
+        tracer.log_event("OPERATION", "Completed operation " + std::to_string(j));
+      }
+
+      tracer.log_event("END", "Thread " + std::to_string(i) + " finished");
     });
+  }
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(5));
+  for (auto& t : threads) {
+    t.join();
+  }
 
-    bool deadlock_detected = detector.detect_potential_deadlock();
-    ASSERT_TRUE(deadlock_detected);
+  // Verify all analysis tools captured data
+  ASSERT_GT(tracer.event_count(), 0);
+  ASSERT_GT(lock_analyzer.get_contention_rate("shared_mutex"), 0.0);
+  ASSERT_GT(profiler.get_call_count("critical_section"), 0);
+}
 
-    // Clean up
-    detector.thread_released_lock("lockA");
-    t3.join();
-  });
+// Test 6: Race condition reproduction
+TEST(ConcurrencyAnalysisTest, RaceConditionReproduction) {
+  ThreadTracer tracer;
+  int unsafe_counter = 0;
 
-  // Test 4: Performance profiling
-  TEST_CASE("Performance Profiling") {
-    ConcurrencyProfiler profiler;
+  const int num_threads = 10;
+  const int increments = 100;
 
-    // Test 4.1: Record operations
-    profiler.record_operation("fast_op", 10);
-    profiler.record_operation("fast_op", 20);
-    profiler.record_operation("fast_op", 15);
+  // Test 6.1: Trace race condition
+  std::vector<std::thread> threads;
+  for (int i = 0; i < num_threads; ++i) {
+    threads.emplace_back([&tracer, &unsafe_counter, increments, i]() {
+      for (int j = 0; j < increments; ++j) {
+        tracer.log_event("BEFORE_INCREMENT",
+                        "Thread " + std::to_string(i) + " value: " +
+                            std::to_string(unsafe_counter));
+        unsafe_counter++;
+        tracer.log_event("AFTER_INCREMENT",
+                        "Thread " + std::to_string(i) + " value: " +
+                            std::to_string(unsafe_counter));
+      }
+    });
+  }
 
-    profiler.record_operation("slow_op", 100);
-    profiler.record_operation("slow_op", 200);
+  for (auto& t : threads) {
+    t.join();
+  }
 
-    ASSERT_EQ(profiler.get_call_count("fast_op"), 3);
-    ASSERT_EQ(profiler.get_call_count("slow_op"), 2);
+  // The tracer should have captured all events
+  ASSERT_EQ(tracer.event_count(), static_cast<size_t>(num_threads * increments * 2));
 
-    ASSERT_EQ(profiler.get_average_duration("fast_op"), 15);  // (10+20+15)/3
-    ASSERT_EQ(profiler.get_average_duration("slow_op"), 150);  // (100+200)/2
-
-    ASSERT_EQ(profiler.get_min_duration("fast_op"), 10);
-    ASSERT_EQ(profiler.get_max_duration("fast_op"), 20);
-
-    // Test 4.2: Concurrent profiling
-    const int num_threads = 10;
-    const int operations_per_thread = 100;
-
-    std::vector<std::thread> threads;
-    for (int i = 0; i < num_threads; ++i) {
-      threads.emplace_back([&profiler, operations_per_thread]() {
-        for (int j = 0; j < operations_per_thread; ++j) {
-          auto start = std::chrono::steady_clock::now();
-          std::this_thread::sleep_for(std::chrono::microseconds(10));
-          auto end = std::chrono::steady_clock::now();
-          auto duration =
-              std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
-          profiler.record_operation("concurrent_op", duration);
-        }
-      });
-    }
-
-    for (auto& t : threads) {
-      t.join();
-    }
-
-    ASSERT_EQ(profiler.get_call_count("concurrent_op"),
-              num_threads * operations_per_thread);
-    ASSERT_GT(profiler.get_average_duration("concurrent_op"), 0);
-  });
-
-  // Test 5: Integrated analysis
-  TEST_CASE("Integrated Concurrency Analysis") {
-    ThreadTracer tracer;
-    LockContentionAnalyzer lock_analyzer;
-    ConcurrencyProfiler profiler;
-
-    const int num_threads = 5;
-    std::mutex shared_mutex;
-
-    std::vector<std::thread> threads;
-
-    // Test 5.1: Comprehensive analysis
-    for (int i = 0; i < num_threads; ++i) {
-      threads.emplace_back([&tracer, &lock_analyzer, &profiler, &shared_mutex, i]() {
-        tracer.log_event("START", "Thread " + std::to_string(i) + " started");
-
-        for (int j = 0; j < 10; ++j) {
-          auto start = std::chrono::steady_clock::now();
-
-          bool contended = !shared_mutex.try_lock();
-          if (contended) {
-            shared_mutex.lock();
-          }
-
-          auto lock_acquired = std::chrono::steady_clock::now();
-          auto wait_time = std::chrono::duration_cast<std::chrono::microseconds>(
-                              lock_acquired - start)
-                              .count();
-
-          lock_analyzer.record_lock_acquire("shared_mutex", contended, wait_time);
-
-          // Simulate work
-          std::this_thread::sleep_for(std::chrono::microseconds(100));
-
-          shared_mutex.unlock();
-
-          auto end = std::chrono::steady_clock::now();
-          auto total_duration =
-              std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
-
-          profiler.record_operation("critical_section", total_duration);
-          tracer.log_event("OPERATION", "Completed operation " + std::to_string(j));
-        }
-
-        tracer.log_event("END", "Thread " + std::to_string(i) + " finished");
-      });
-    }
-
-    for (auto& t : threads) {
-      t.join();
-    }
-
-    // Verify all analysis tools captured data
-    ASSERT_GT(tracer.event_count(), 0);
-    ASSERT_GT(lock_analyzer.get_contention_rate("shared_mutex"), 0.0);
-    ASSERT_GT(profiler.get_call_count("critical_section"), 0);
-  });
-
-  // Test 6: Race condition reproduction
-  TEST_CASE("Race Condition Reproduction") {
-    ThreadTracer tracer;
-    int unsafe_counter = 0;
-
-    const int num_threads = 10;
-    const int increments = 100;
-
-    // Test 6.1: Trace race condition
-    std::vector<std::thread> threads;
-    for (int i = 0; i < num_threads; ++i) {
-      threads.emplace_back([&tracer, &unsafe_counter, increments, i]() {
-        for (int j = 0; j < increments; ++j) {
-          tracer.log_event("BEFORE_INCREMENT",
-                          "Thread " + std::to_string(i) + " value: " +
-                              std::to_string(unsafe_counter));
-          unsafe_counter++;
-          tracer.log_event("AFTER_INCREMENT",
-                          "Thread " + std::to_string(i) + " value: " +
-                              std::to_string(unsafe_counter));
-        }
-      });
-    }
-
-    for (auto& t : threads) {
-      t.join();
-    }
-
-    // The tracer should have captured all events
-    ASSERT_EQ(tracer.event_count(), static_cast<size_t>(num_threads * increments * 2));
-
-    // The unsafe counter likely has lost updates
-    ASSERT_LE(unsafe_counter, num_threads * increments);
-  });
-
-  return current_suite->all_passed() ? 0 : 1;
+  // The unsafe counter likely has lost updates
+  ASSERT_LE(unsafe_counter, num_threads * increments);
 }
 
 #pragma clang diagnostic pop

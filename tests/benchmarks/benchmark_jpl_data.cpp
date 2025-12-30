@@ -13,6 +13,7 @@
 #include <chrono>
 #include <filesystem>
 #include <fstream>
+#include <iostream>
 #include <sstream>
 #include <thread>
 
@@ -134,7 +135,46 @@ void create_test_cache_data(const std::filesystem::path& cache_dir) {
     json_file << "}\n";
   }
 }
-;
+
+// JPL Data Performance Benchmark Test
+TEST(JPLDataBenchmark, CachePerformanceValidation) {
+  // Create test cache directory
+  auto test_cache_dir = std::filesystem::temp_directory_path() / "jpl_benchmark_test";
+  create_test_cache_data(test_cache_dir);
+
+  Benchmark::BenchmarkSuite suite("JPL Data Processing Benchmarks");
+
+  // 1. BINARY CACHE LOADING BENCHMARK
+  suite.run_benchmark(
+      "BinaryCacheLoadingBenchmark",
+      [&test_cache_dir]() {
+        auto binary_path = test_cache_dir / "ephemeris_cache.bin";
+        std::ifstream file(binary_path, std::ios::binary);
+
+        if (file.is_open()) {
+          size_t body_count;
+          file.read(reinterpret_cast<char*>(&body_count), sizeof(body_count));
+
+          std::vector<JPL::EphemerisData> data;
+          data.reserve(body_count);
+
+          for (size_t i = 0; i < body_count; ++i) {
+            JPL::EphemerisData body_data;
+
+            file.read(reinterpret_cast<char*>(&body_data.jpl_id), sizeof(body_data.jpl_id));
+
+            size_t name_length;
+            file.read(reinterpret_cast<char*>(&name_length), sizeof(name_length));
+            body_data.body_name.resize(name_length);
+            file.read(body_data.body_name.data(), static_cast<std::streamsize>(name_length));
+
+            std::time_t epoch_time;
+            file.read(reinterpret_cast<char*>(&epoch_time), sizeof(epoch_time));
+            body_data.epoch = std::chrono::system_clock::from_time_t(epoch_time);
+
+            double pos[3];
+            file.read(reinterpret_cast<char*>(pos), sizeof(pos));
+            body_data.position = Math::Vector3d{pos[0], pos[1], pos[2]};
 
             double vel[3];
             file.read(reinterpret_cast<char*>(vel), sizeof(vel));
@@ -150,7 +190,7 @@ void create_test_cache_data(const std::filesystem::path& cache_dir) {
           (void)count;
         }
       },
-      10000);  // High iteration count to measure sub-millisecond performance
+      10000);
 
   // 2. JSON CACHE LOADING BENCHMARK - Compare with binary performance
   suite.run_benchmark(
@@ -422,4 +462,5 @@ void create_test_cache_data(const std::filesystem::path& cache_dir) {
   std::cout << "\nOverall JPL Data Performance: " << (cache_improvement_validated ? "PASS" : "FAIL")
             << std::endl;
 
-  return cache_improvement_validated ? 0 : 1;
+  EXPECT_TRUE(cache_improvement_validated);
+}

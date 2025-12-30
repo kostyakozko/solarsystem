@@ -104,38 +104,38 @@ class TestApplicationRunner {
     return buffer.str();
   }
 };
-  TEST_SUITE("End-to-End Integration Tests");
 
-  // Test 1: Complete solar system launcher workflow
-  TEST_CASE("Solar System Launcher Complete Workflow"){
-      // Test launcher help functionality
-      {auto result = TestApplicationRunner::run_command("./solar_system_launcher --help");
-  ASSERT_TRUE(result.success);
-  ASSERT_TRUE(result.stdout_output.find("Solar System") != std::string::npos ||
-              result.stdout_output.find("Usage") != std::string::npos);
-}
+// Test 1: Complete solar system launcher workflow
+TEST(EndToEndIntegrationTest, Solar_System_Launcher_Complete_Workflow) {
+  // Test launcher help functionality
+  {
+    auto result = TestApplicationRunner::run_command("./solar_system_launcher --help");
+    ASSERT_TRUE(result.success);
+    ASSERT_TRUE(result.stdout_output.find("Solar System") != std::string::npos ||
+result.stdout_output.find("Usage") != std::string::npos);
+  }
 
-// Test launcher status check
-{
-  auto result = TestApplicationRunner::run_command("./solar_system_launcher --status");
-  ASSERT_TRUE(result.success);
-  // Should provide system status information
-  ASSERT_TRUE(result.stdout_output.find("Status") != std::string::npos ||
-              result.stdout_output.find("System") != std::string::npos ||
-              result.stdout_output.find("OK") != std::string::npos);
-}
+  // Test launcher status check
+  {
+    auto result = TestApplicationRunner::run_command("./solar_system_launcher --status");
+    ASSERT_TRUE(result.success);
+    // Should provide system status information
+    ASSERT_TRUE(result.stdout_output.find("Status") != std::string::npos ||
+                result.stdout_output.find("System") != std::string::npos ||
+                result.stdout_output.find("OK") != std::string::npos);
+  }
 
-// Test launcher with basic simulation
-{
-  auto result =
-      TestApplicationRunner::run_command("./solar_system_launcher --simulate --date 2025-01-01");
-  ASSERT_TRUE(result.success);
-  ASSERT_LT(result.execution_time.count(), 10000);  // Should complete within 10 seconds
+  // Test launcher with basic simulation
+  {
+    auto result =
+        TestApplicationRunner::run_command("./solar_system_launcher --simulate --date 2025-01-01");
+    ASSERT_TRUE(result.success);
+    ASSERT_LT(result.execution_time.count(), 10000);  // Should complete within 10 seconds
+  }
 }
-});
 
 // Test 2: Data fetch and cache workflow
-TEST_CASE("Data Fetch and Cache Workflow") {
+TEST(EndToEndIntegrationTest, Data_Fetch_and_Cache_Workflow) {
   // Create temporary cache directory
   auto test_env = TestDataManager::create_test_environment();
   std::string cache_dir = test_env->path_string() + "/cache";
@@ -146,7 +146,6 @@ TEST_CASE("Data Fetch and Cache Workflow") {
     auto result = TestApplicationRunner::run_command("./solar_system_fetch --test-storage");
     // Storage test may fail if cache is in inconsistent state, but should produce output
     ASSERT_TRUE(!result.stdout_output.empty() || !result.stderr_output.empty());
-    // Should attempt to validate cache system
   }
 
   // Test data fetching with cache
@@ -156,7 +155,6 @@ TEST_CASE("Data Fetch and Cache Workflow") {
     ASSERT_TRUE(result.success);
 
     // The status command should succeed and show cache status
-    ASSERT_TRUE(result.success);
     ASSERT_TRUE(result.stdout_output.find("Cache Status") != std::string::npos ||
                 result.stdout_output.find("Data Source") != std::string::npos);
   }
@@ -169,71 +167,73 @@ TEST_CASE("Data Fetch and Cache Workflow") {
     // Should be faster when using cache
     ASSERT_LT(result.execution_time.count(), 5000);  // Should complete within 5 seconds
   }
-});
-
-// Test 3: Batch simulation workflow
-TEST_CASE("Batch Simulation Workflow"){
-    // Test basic simulation
-    {auto result = TestApplicationRunner::run_command("./solar_system --date 2025-01-01");
-ASSERT_TRUE(result.success);
-
-// Should produce simulation output
-ASSERT_TRUE(result.stdout_output.find("Solar System") != std::string::npos ||
-            result.stdout_output.find("simulation") != std::string::npos ||
-            result.stdout_output.find("completed") != std::string::npos);
 }
 
-// Test simulation with different dates (using current application capabilities)
-{
-  std::vector<std::string> dates = {"2025-01-01", "2024-12-31", "2025-06-15"};
-
-  for (const auto& date : dates) {
-    std::string command = "./solar_system --date " + date;
-    auto result = TestApplicationRunner::run_command(command);
+// Test 3: Batch simulation workflow
+TEST(EndToEndIntegrationTest, Batch_Simulation_Workflow) {
+  // Test basic simulation
+  {
+    auto result = TestApplicationRunner::run_command("./solar_system --date 2025-01-01");
     ASSERT_TRUE(result.success);
-    // Verify simulation output contains expected elements
-    ASSERT_TRUE(result.stdout_output.find("Solar System Simulation") != std::string::npos ||
-                result.stdout_output.find("Created") != std::string::npos);
+
+    // Should produce simulation output
+    ASSERT_TRUE(result.stdout_output.find("Solar System") != std::string::npos ||
+                result.stdout_output.find("simulation") != std::string::npos ||
+                result.stdout_output.find("completed") != std::string::npos);
+  }
+
+  // Test simulation with different dates
+  {
+    std::vector<std::string> dates = {"2025-01-01", "2024-12-31", "2025-06-15"};
+
+    for (const auto& date : dates) {
+      std::string command = "./solar_system --date " + date;
+      auto result = TestApplicationRunner::run_command(command);
+      ASSERT_TRUE(result.success);
+      // Verify simulation output contains expected elements
+      ASSERT_TRUE(result.stdout_output.find("Solar System Simulation") != std::string::npos ||
+                  result.stdout_output.find("Created") != std::string::npos);
+    }
+  }
+
+  // Test performance simulation
+  {
+    auto result = TestApplicationRunner::run_command("./solar_system --date 2025-01-01");
+    ASSERT_TRUE(result.success);
+
+    // Should complete within reasonable time (< 30 seconds for 1 day simulation)
+    ASSERT_LT(result.execution_time.count(), 30000);
   }
 }
 
-// Test performance simulation
-{
-  auto result = TestApplicationRunner::run_command("./solar_system --date 2025-01-01");
-  ASSERT_TRUE(result.success);
-
-  // Should complete within reasonable time (< 30 seconds for 1 day simulation)
-  ASSERT_LT(result.execution_time.count(), 30000);
-}
-});
-
 // Test 4: Real-time monitoring workflow
-TEST_CASE("Real-time Monitoring Workflow"){
-    // Test real-time system startup
-    {auto result = TestApplicationRunner::run_command("./solar_system_realtime --help");
-ASSERT_TRUE(result.success);
-ASSERT_TRUE(result.stdout_output.find("real-time") != std::string::npos ||
-            result.stdout_output.find("monitoring") != std::string::npos ||
-            result.stdout_output.find("Usage") != std::string::npos);
-}
+TEST(EndToEndIntegrationTest, Real_time_Monitoring_Workflow) {
+  // Test real-time system startup
+  {
+    auto result = TestApplicationRunner::run_command("./solar_system_realtime --help");
+    ASSERT_TRUE(result.success);
+    ASSERT_TRUE(result.stdout_output.find("real-time") != std::string::npos ||
+                result.stdout_output.find("monitoring") != std::string::npos ||
+                result.stdout_output.find("Usage") != std::string::npos);
+  }
 
-// Test short real-time simulation
-{
-  auto result = TestApplicationRunner::run_command(
-      "./solar_system_realtime --bodies Sun,Earth,Moon --duration 5 --update-interval 1 "
-      "--no-continuous",
-      10);
-  ASSERT_TRUE(result.success);
+  // Test short real-time simulation
+  {
+    auto result = TestApplicationRunner::run_command(
+        "./solar_system_realtime --bodies Sun,Earth,Moon --duration 5 --update-interval 1 "
+        "--no-continuous",
+        10);
+    ASSERT_TRUE(result.success);
 
-  // Should provide real-time updates
-  ASSERT_TRUE(result.stdout_output.find("time") != std::string::npos ||
-              result.stdout_output.find("position") != std::string::npos ||
-              result.stdout_output.find("update") != std::string::npos);
+    // Should provide real-time updates
+    ASSERT_TRUE(result.stdout_output.find("time") != std::string::npos ||
+                result.stdout_output.find("position") != std::string::npos ||
+                result.stdout_output.find("update") != std::string::npos);
+  }
 }
-});
 
 // Test 5: Web interface integration workflow
-TEST_CASE("Web Interface Integration Workflow") {
+TEST(EndToEndIntegrationTest, Web_Interface_Integration_Workflow) {
   // Find available port
   int test_port = 8087;
   std::string port_check = "lsof -i:" + std::to_string(test_port) + " >/dev/null 2>&1";
@@ -254,7 +254,6 @@ TEST_CASE("Web Interface Integration Workflow") {
   index_file.close();
 
   // Start web server in background
-  // Get the absolute path to the web server
   std::string cwd = std::filesystem::current_path().string();
   std::string web_server_path;
   if (cwd.ends_with("solarsystem")) {
@@ -293,55 +292,56 @@ TEST_CASE("Web Interface Integration Workflow") {
       "pkill -f 'solar_system_web.*--port " + std::to_string(test_port) + "'";
   [[maybe_unused]] int result2 = system(cleanup_command.c_str());
   std::this_thread::sleep_for(std::chrono::seconds(1));
-});
+}
 
 // Test 6: Error recovery and resilience
-TEST_CASE("Error Recovery and System Resilience"){
-    // Test handling of invalid arguments
-    {auto result = TestApplicationRunner::run_command("./solar_system --invalid-argument");
-ASSERT_FALSE(result.success);  // Should fail gracefully
-ASSERT_TRUE(result.stderr_output.find("invalid") != std::string::npos ||
-            result.stderr_output.find("unknown") != std::string::npos ||
-            result.stdout_output.find("Usage") != std::string::npos);
-}
-
-// Test handling of invalid body names
-{
-  auto result = TestApplicationRunner::run_command("./solar_system --invalid-option");
-  // Should either succeed with fallback or fail gracefully
-  if (!result.success) {
-    ASSERT_TRUE(result.stderr_output.find("body") != std::string::npos ||
+TEST(EndToEndIntegrationTest, Error_Recovery_and_System_Resilience) {
+  // Test handling of invalid arguments
+  {
+    auto result = TestApplicationRunner::run_command("./solar_system --invalid-argument");
+    ASSERT_FALSE(result.success);  // Should fail gracefully
+    ASSERT_TRUE(result.stderr_output.find("invalid") != std::string::npos ||
                 result.stderr_output.find("unknown") != std::string::npos ||
-                result.stderr_output.find("Unknown") != std::string::npos ||
-                result.stdout_output.find("Unknown") != std::string::npos ||
                 result.stdout_output.find("Usage") != std::string::npos);
   }
-}
 
-// Test handling of extreme parameters
-{
-  auto result = TestApplicationRunner::run_command("./solar_system --date invalid-date");
-  // Should handle invalid date gracefully
-  ASSERT_TRUE(result.success || result.stderr_output.find("date") != std::string::npos ||
-              result.stderr_output.find("invalid") != std::string::npos ||
-              result.stderr_output.find("Invalid") != std::string::npos ||
-              result.stdout_output.find("Invalid") != std::string::npos);
-}
+  // Test handling of invalid body names
+  {
+    auto result = TestApplicationRunner::run_command("./solar_system --invalid-option");
+    // Should either succeed with fallback or fail gracefully
+    if (!result.success) {
+      ASSERT_TRUE(result.stderr_output.find("body") != std::string::npos ||
+                  result.stderr_output.find("unknown") != std::string::npos ||
+                  result.stderr_output.find("Unknown") != std::string::npos ||
+                  result.stdout_output.find("Unknown") != std::string::npos ||
+                  result.stdout_output.find("Usage") != std::string::npos);
+    }
+  }
 
-// Test memory constraints
-{
-  auto result = TestApplicationRunner::run_command("./solar_system --date 2025-01-01");
-  // Should complete or fail gracefully with memory constraints
-  if (!result.success) {
-    ASSERT_TRUE(result.stderr_output.find("memory") != std::string::npos ||
-                result.stderr_output.find("resource") != std::string::npos ||
-                result.execution_time.count() > 25000);  // Timeout is acceptable
+  // Test handling of extreme parameters
+  {
+    auto result = TestApplicationRunner::run_command("./solar_system --date invalid-date");
+    // Should handle invalid date gracefully
+    ASSERT_TRUE(result.success || result.stderr_output.find("date") != std::string::npos ||
+                result.stderr_output.find("invalid") != std::string::npos ||
+                result.stderr_output.find("Invalid") != std::string::npos ||
+                result.stdout_output.find("Invalid") != std::string::npos);
+  }
+
+  // Test memory constraints
+  {
+    auto result = TestApplicationRunner::run_command("./solar_system --date 2025-01-01");
+    // Should complete or fail gracefully with memory constraints
+    if (!result.success) {
+      ASSERT_TRUE(result.stderr_output.find("memory") != std::string::npos ||
+                  result.stderr_output.find("resource") != std::string::npos ||
+                  result.execution_time.count() > 25000);  // Timeout is acceptable
+    }
   }
 }
-});
 
 // Test 7: Multi-component integration
-TEST_CASE("Multi-Component Integration") {
+TEST(EndToEndIntegrationTest, Multi_Component_Integration) {
   // Create shared cache directory
   auto test_env = TestDataManager::create_test_environment();
   std::string shared_cache = test_env->path_string() + "/shared_cache";
@@ -363,75 +363,77 @@ TEST_CASE("Multi-Component Integration") {
     ASSERT_LT(result.execution_time.count(), 8000);
   }
 
-  // Step 3: Test storage system (since we don't have actual cache)
+  // Step 3: Test storage system
   {
     std::string command = "./solar_system_fetch --test-storage";
     auto result = TestApplicationRunner::run_command(command);
     // Storage test may fail if cache is in inconsistent state, but should produce output
     ASSERT_TRUE(!result.stdout_output.empty() || !result.stderr_output.empty());
   }
-});
+}
 
 // Test 8: Performance and scalability validation
-TEST_CASE("Performance and Scalability Validation"){
-    // Test small system performance
-    {auto start_time = std::chrono::high_resolution_clock::now();
+TEST(EndToEndIntegrationTest, Performance_and_Scalability_Validation) {
+  // Test small system performance
+  {
+    auto start_time = std::chrono::high_resolution_clock::now();
 
-auto result = TestApplicationRunner::run_command("./solar_system --date 2025-01-01");
-ASSERT_TRUE(result.success);
+    auto result = TestApplicationRunner::run_command("./solar_system --date 2025-01-01");
+    ASSERT_TRUE(result.success);
 
-auto end_time = std::chrono::high_resolution_clock::now();
-auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
+    auto end_time = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
 
-// Small system should complete quickly (< 5 seconds)
-ASSERT_LT(duration.count(), 5000);
-}
-
-// Test medium system performance
-{
-  auto start_time = std::chrono::high_resolution_clock::now();
-
-  auto result = TestApplicationRunner::run_command("./solar_system --date 2025-01-01");
-  ASSERT_TRUE(result.success);
-
-  auto end_time = std::chrono::high_resolution_clock::now();
-  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
-
-  // Medium system should complete reasonably quickly (< 15 seconds)
-  ASSERT_LT(duration.count(), 15000);
-}
-
-// Test cache performance claims
-{
-  auto test_cache = TestDataManager::create_test_cache();
-  test_cache->populate_with_valid_data();
-
-  auto start_time = std::chrono::high_resolution_clock::now();
-
-  // Load from cache multiple times
-  for (int i = 0; i < 10; ++i) {
-    Bodies::BodyFactory::CreationOptions options;
-    options.preferred_source = Bodies::BodyFactory::DataSource::CACHED_DATA;
-
-    Bodies::BodyFactory factory(options);
-    auto result = factory.create_body("Earth", options);
-    ASSERT_TRUE(result.has_value());
+    // Small system should complete quickly (< 5 seconds)
+    ASSERT_LT(duration.count(), 5000);
   }
 
-  auto end_time = std::chrono::high_resolution_clock::now();
-  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
+  // Test medium system performance
+  {
+    auto start_time = std::chrono::high_resolution_clock::now();
 
-  // Cache loading should be very fast (< 100ms for 10 loads)
-  ASSERT_LT(duration.count(), 100);
+    auto result = TestApplicationRunner::run_command("./solar_system --date 2025-01-01");
+    ASSERT_TRUE(result.success);
+
+    auto end_time = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
+
+    // Medium system should complete reasonably quickly (< 15 seconds)
+    ASSERT_LT(duration.count(), 15000);
+  }
+
+  // Test cache performance claims
+  {
+    auto test_cache = TestDataManager::create_test_cache();
+    test_cache->populate_with_valid_data();
+
+    auto start_time = std::chrono::high_resolution_clock::now();
+
+    // Load from cache multiple times
+    for (int i = 0; i < 10; ++i) {
+      Bodies::BodyFactory::CreationOptions options;
+      options.preferred_source = Bodies::BodyFactory::DataSource::CACHED_DATA;
+
+      Bodies::BodyFactory factory(options);
+      auto result = factory.create_body("Earth", options);
+      ASSERT_TRUE(result.has_value());
+    }
+
+    auto end_time = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
+
+    // Cache loading should be very fast (< 100ms for 10 loads)
+    ASSERT_LT(duration.count(), 100);
+  }
 }
-});
+
 
 // ============================================================================
 // TASK 5: END-TO-END WORKFLOW INTEGRATION TESTS
 // ============================================================================
 
 // Test 9: Complete JPL data fetch to simulation workflow
-TEST_CASE("Complete JPL Fetch to Simulation Workflow") {
+TEST(EndToEndIntegrationTest, Complete_JPL_Fetch_to_Simulation_Workflow) {
   auto test_env = TestDataManager::create_test_environment();
   std::string workflow_cache = test_env->path_string() + "/workflow_cache";
   std::filesystem::create_directories(workflow_cache);
@@ -475,8 +477,7 @@ TEST_CASE("Complete JPL Fetch to Simulation Workflow") {
 
   // Step 4: Test workflow with different date ranges
   {
-    std::vector<std::string> test_dates = {
-        "2025-02-01", "2025-03-15", "2025-06-30"};
+    std::vector<std::string> test_dates = {"2025-02-01", "2025-03-15", "2025-06-30"};
 
     for (const auto& date : test_dates) {
       std::string cmd = "./solar_system --date " + date;
@@ -487,10 +488,10 @@ TEST_CASE("Complete JPL Fetch to Simulation Workflow") {
       ASSERT_TRUE(result.stdout_output.length() > 0);
     }
   }
-});
+}
 
 // Test 10: Launcher coordination and component interaction
-TEST_CASE("Launcher Coordination and Component Orchestration") {
+TEST(EndToEndIntegrationTest, Launcher_Coordination_and_Component_Orchestration) {
   auto test_env = TestDataManager::create_test_environment();
 
   // Test 1: Launcher status coordination
@@ -548,8 +549,7 @@ TEST_CASE("Launcher Coordination and Component Orchestration") {
   // Test 5: Launcher with multiple sequential operations
   {
     // First operation
-    auto result1 = TestApplicationRunner::run_command(
-        "./solar_system_launcher --status");
+    auto result1 = TestApplicationRunner::run_command("./solar_system_launcher --status");
     ASSERT_TRUE(result1.success);
 
     // Second operation
@@ -561,10 +561,10 @@ TEST_CASE("Launcher Coordination and Component Orchestration") {
     ASSERT_FALSE(result1.stdout_output.empty());
     ASSERT_FALSE(result2.stdout_output.empty());
   }
-});
+}
 
 // Test 11: Web integration with backend services
-TEST_CASE("Web Integration with Backend Services") {
+TEST(EndToEndIntegrationTest, Web_Integration_with_Backend_Services) {
   // Find available port
   int test_port = 8090;
   std::string port_check = "lsof -i:" + std::to_string(test_port) + " >/dev/null 2>&1";
@@ -644,8 +644,7 @@ TEST_CASE("Web Integration with Backend Services") {
 
   // Test 5: Multiple concurrent API requests
   {
-    std::vector<std::string> endpoints = {
-        "/api/status", "/api/status", "/api/status"};
+    std::vector<std::string> endpoints = {"/api/status", "/api/status", "/api/status"};
 
     for (const auto& endpoint : endpoints) {
       std::string cmd = "curl -s -f http://localhost:" + std::to_string(test_port) + endpoint;
@@ -658,24 +657,23 @@ TEST_CASE("Web Integration with Backend Services") {
 
   // Test 6: Web server handles invalid requests gracefully
   {
-    std::string cmd = "curl -s -w '%{http_code}' http://localhost:" +
-                      std::to_string(test_port) + "/nonexistent";
+    std::string cmd = "curl -s -w '%{http_code}' http://localhost:" + std::to_string(test_port) +
+                      "/nonexistent";
     auto result = TestApplicationRunner::run_command(cmd, 5);
 
     // Should return 404 or similar error code
     ASSERT_TRUE(result.stdout_output.find("404") != std::string::npos ||
-                result.stdout_output.find("400") != std::string::npos ||
-                !result.success);
+                result.stdout_output.find("400") != std::string::npos || !result.success);
   }
 
   // Cleanup
   std::string cleanup = "pkill -f 'solar_system_web.*--port " + std::to_string(test_port) + "'";
   [[maybe_unused]] int cleanup_result = system(cleanup.c_str());
   std::this_thread::sleep_for(std::chrono::seconds(1));
-});
+}
 
 // Test 12: Real-time monitoring integration
-TEST_CASE("Real-time Monitoring Integration") {
+TEST(EndToEndIntegrationTest, Real_time_Monitoring_Integration) {
   // Test 1: Real-time system initialization
   {
     auto result = TestApplicationRunner::run_command("./solar_system_realtime --help");
@@ -687,8 +685,8 @@ TEST_CASE("Real-time Monitoring Integration") {
 
   // Test 2: Short real-time monitoring session
   {
-    auto result = TestApplicationRunner::run_command(
-        "./solar_system_realtime --no-continuous --duration 3", 10);
+    auto result =
+        TestApplicationRunner::run_command("./solar_system_realtime --no-continuous --duration 3", 10);
     ASSERT_TRUE(result.success);
 
     // Should provide monitoring output
@@ -700,8 +698,8 @@ TEST_CASE("Real-time Monitoring Integration") {
 
   // Test 3: Real-time monitoring with specific bodies
   {
-    auto result = TestApplicationRunner::run_command(
-        "./solar_system_realtime --no-continuous --duration 2", 10);
+    auto result =
+        TestApplicationRunner::run_command("./solar_system_realtime --no-continuous --duration 2", 10);
     ASSERT_TRUE(result.success);
 
     // Should complete quickly
@@ -720,8 +718,7 @@ TEST_CASE("Real-time Monitoring Integration") {
 
   // Test 5: Real-time monitoring error handling
   {
-    auto result = TestApplicationRunner::run_command(
-        "./solar_system_realtime --invalid-option");
+    auto result = TestApplicationRunner::run_command("./solar_system_realtime --invalid-option");
 
     // Should handle invalid options gracefully
     if (!result.success) {
@@ -730,10 +727,10 @@ TEST_CASE("Real-time Monitoring Integration") {
                   result.stdout_output.find("Usage") != std::string::npos);
     }
   }
-});
+}
 
 // Test 13: Complete workflow integration - JPL to visualization
-TEST_CASE("Complete Workflow: JPL Fetch to Web Visualization") {
+TEST(EndToEndIntegrationTest, Complete_Workflow_JPL_Fetch_to_Web_Visualization) {
   auto test_env = TestDataManager::create_test_environment();
   std::string workflow_dir = test_env->path_string() + "/complete_workflow";
   std::filesystem::create_directories(workflow_dir);
@@ -798,10 +795,10 @@ TEST_CASE("Complete Workflow: JPL Fetch to Web Visualization") {
   std::string cleanup = "pkill -f 'solar_system_web.*--port " + std::to_string(test_port) + "'";
   [[maybe_unused]] int cleanup_result = system(cleanup.c_str());
   std::this_thread::sleep_for(std::chrono::seconds(1));
-});
+}
 
 // Test 14: Component interaction and data flow validation
-TEST_CASE("Component Interaction and Data Flow Validation") {
+TEST(EndToEndIntegrationTest, Component_Interaction_and_Data_Flow_Validation) {
   auto test_env = TestDataManager::create_test_environment();
 
   // Test 1: Data flow from fetch to simulation
@@ -821,8 +818,8 @@ TEST_CASE("Component Interaction and Data Flow Validation") {
 
   // Test 2: Data flow through launcher
   {
-    auto result = TestApplicationRunner::run_command(
-        "./solar_system_launcher --simulate --date 2025-05-15");
+    auto result =
+        TestApplicationRunner::run_command("./solar_system_launcher --simulate --date 2025-05-15");
     ASSERT_TRUE(result.success);
 
     // Launcher should coordinate data flow
@@ -833,8 +830,8 @@ TEST_CASE("Component Interaction and Data Flow Validation") {
 
   // Test 3: Real-time monitoring data flow
   {
-    auto result = TestApplicationRunner::run_command(
-        "./solar_system_realtime --no-continuous --duration 2", 10);
+    auto result =
+        TestApplicationRunner::run_command("./solar_system_realtime --no-continuous --duration 2", 10);
     ASSERT_TRUE(result.success);
 
     // Should provide real-time data
@@ -852,8 +849,8 @@ TEST_CASE("Component Interaction and Data Flow Validation") {
     ASSERT_TRUE(sim.success);
 
     // Run real-time
-    auto rt = TestApplicationRunner::run_command(
-        "./solar_system_realtime --no-continuous --duration 1", 5);
+    auto rt =
+        TestApplicationRunner::run_command("./solar_system_realtime --no-continuous --duration 1", 5);
     ASSERT_TRUE(rt.success);
 
     // All components should work together
@@ -861,10 +858,10 @@ TEST_CASE("Component Interaction and Data Flow Validation") {
     ASSERT_FALSE(sim.stdout_output.empty());
     ASSERT_FALSE(rt.stdout_output.empty());
   }
-});
+}
 
 // Test 15: Workflow resilience and error recovery
-TEST_CASE("Workflow Resilience and Error Recovery") {
+TEST(EndToEndIntegrationTest, Workflow_Resilience_and_Error_Recovery) {
   // Test 1: Simulation continues with fallback data when fetch unavailable
   {
     auto result = TestApplicationRunner::run_command("./solar_system --date 2025-07-01");
@@ -876,8 +873,8 @@ TEST_CASE("Workflow Resilience and Error Recovery") {
 
   // Test 2: Launcher handles component failures gracefully
   {
-    auto result = TestApplicationRunner::run_command(
-        "./solar_system_launcher --simulate --date 2025-07-15");
+    auto result =
+        TestApplicationRunner::run_command("./solar_system_launcher --simulate --date 2025-07-15");
     ASSERT_TRUE(result.success);
 
     // Should complete workflow
@@ -927,13 +924,12 @@ TEST_CASE("Workflow Resilience and Error Recovery") {
 
   // Test 4: Real-time monitoring recovers from interruptions
   {
-    auto result = TestApplicationRunner::run_command(
-        "./solar_system_realtime --no-continuous --duration 2", 10);
+    auto result =
+        TestApplicationRunner::run_command("./solar_system_realtime --no-continuous --duration 2", 10);
     ASSERT_TRUE(result.success);
 
     // Should complete successfully
     ASSERT_FALSE(result.stdout_output.empty());
   }
-});
+}
 
-return current_suite->all_passed() ? 0 : 1;

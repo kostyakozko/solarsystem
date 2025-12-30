@@ -64,10 +64,8 @@ std::string get_executable_path(const std::string& exe_name) {
   static std::string build_dir = std::filesystem::current_path().string();
   return build_dir + "/" + exe_name;
 }
-  TEST_SUITE("Application Workflow Integration Tests");
-
   // Test launcher application workflow
-  TEST_CASE("Launcher Status Check") {
+  TEST(ApplicationWorkflowIntegrationTestsTest, Launcher_Status_Check) {
     // Test that launcher can check system status
     std::string command = "./solar_system_launcher --status";
     std::string output = execute_command(command);
@@ -75,10 +73,10 @@ std::string get_executable_path(const std::string& exe_name) {
     // Should contain status information
     EXPECT_NE(std::string::npos, output.find("Solar System Suite"));
     EXPECT_NE(std::string::npos, output.find("Status"));
-  });
+  }
 
   // Test data fetching workflow
-  TEST_CASE("Data Fetch Workflow") {
+  TEST(ApplicationWorkflowIntegrationTestsTest, Data_Fetch_Workflow) {
     // Test that fetch application can validate storage
     std::string command = "./solar_system_fetch --test-storage";
     std::string output = execute_command(command);
@@ -88,10 +86,10 @@ std::string get_executable_path(const std::string& exe_name) {
     ASSERT_TRUE(output.find("Testing storage") != std::string::npos ||
                 output.find("Storage test") != std::string::npos ||
                 output.find("storage") != std::string::npos);
-  });
+  }
 
   // Test simulation workflow
-  TEST_CASE("Basic Simulation Workflow") {
+  TEST(ApplicationWorkflowIntegrationTestsTest, Basic_Simulation_Workflow) {
     // Test that simulation can run with a future date
     std::string command = "./solar_system --date 2025-07-01";
     std::string output = execute_command(command);
@@ -100,10 +98,10 @@ std::string get_executable_path(const std::string& exe_name) {
     ASSERT_TRUE(output.find("Simulation") != std::string::npos ||
                 output.find("completed") != std::string::npos ||
                 output.find("2025-07-01") != std::string::npos);
-  });
+  }
 
   // Test launcher coordinated workflow
-  TEST_CASE("Launcher Coordinated Simulation") {
+  TEST(ApplicationWorkflowIntegrationTestsTest, Launcher_Coordinated_Simulation) {
     // Test launcher's ability to coordinate fetch and simulate
     std::string command =
         "./solar_system_launcher --simulate --date 2025-08-01";
@@ -116,10 +114,10 @@ std::string get_executable_path(const std::string& exe_name) {
     ASSERT_TRUE(output.find("simulation") != std::string::npos ||
                 output.find("Simulation") != std::string::npos);
     EXPECT_NE(std::string::npos, output.find("completed"));
-  });
+  }
 
   // Test real-time application
-  TEST_CASE("Real-time Application") {
+  TEST(ApplicationWorkflowIntegrationTestsTest, Real_time_Application) {
     // Test real-time application with no-continuous mode
     std::string timeout_cmd = get_timeout_command();
     std::string command;
@@ -135,10 +133,10 @@ std::string get_executable_path(const std::string& exe_name) {
     ASSERT_TRUE(output.find("Solar System") != std::string::npos ||
                 output.find("Position") != std::string::npos ||
                 output.find("Real-time") != std::string::npos);
-  });
+  }
 
   // Test web server startup
-  TEST_CASE("Web Server Startup") {
+  TEST(ApplicationWorkflowIntegrationTestsTest, Web_Server_Startup) {
     // Clean up any existing web servers first
     [[maybe_unused]] int cleanup_result = system("pkill -f solar_system_web 2>/dev/null || true");
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
@@ -180,10 +178,10 @@ std::string get_executable_path(const std::string& exe_name) {
 
     // Clean up - kill the web server
     [[maybe_unused]] int cleanup_result2 = system("pkill -f solar_system_web 2>/dev/null || true");
-  });
+  }
 
   // Test data consistency across applications
-  TEST_CASE("Data Consistency") {
+  TEST(ApplicationWorkflowIntegrationTestsTest, Data_Consistency) {
     // Run simulation and capture output
     std::string sim_command = "./apps/solar_system/solar_system --date 2025-06-01";
     std::string sim_output = execute_command(sim_command);
@@ -196,10 +194,10 @@ std::string get_executable_path(const std::string& exe_name) {
     // This is a basic consistency check
     ASSERT_TRUE(!sim_output.empty());
     ASSERT_TRUE(!rt_output.empty());
-  });
+  }
 
   // Test error handling across applications
-  TEST_CASE("Error Handling") {
+  TEST(ApplicationWorkflowIntegrationTestsTest, Error_Handling) {
     // Test invalid argument handling
     std::string invalid_arg_command = "./apps/solar_system/solar_system --invalid-flag 2>&1";
     std::string output = execute_command(invalid_arg_command);
@@ -208,10 +206,10 @@ std::string get_executable_path(const std::string& exe_name) {
     ASSERT_TRUE(output.find("Error") != std::string::npos ||
                 output.find("Invalid") != std::string::npos ||
                 output.find("Usage") != std::string::npos);
-  });
+  }
 
   // Test cache file interactions
-  TEST_CASE("Cache File Workflow") {
+  TEST(ApplicationWorkflowIntegrationTestsTest, Cache_File_Workflow) {
     // Check if cache files are created/used properly
     std::string cache_command = "./solar_system_fetch --validate";
     std::string output = execute_command(cache_command);
@@ -220,10 +218,10 @@ std::string get_executable_path(const std::string& exe_name) {
     ASSERT_TRUE(output.find("cache") != std::string::npos ||
                 output.find("Cache") != std::string::npos ||
                 output.find("validation") != std::string::npos);
-  });
+  }
 
   // Test application help systems
-  TEST_CASE("Help System Consistency") {
+  TEST(ApplicationWorkflowIntegrationTestsTest, Help_System_Consistency) {
     std::vector<std::string> applications = {
         "./solar_system_launcher --help",
         "./solar_system --help",
@@ -239,10 +237,10 @@ std::string get_executable_path(const std::string& exe_name) {
                   output.find("Options") != std::string::npos ||
                   output.find("help") != std::string::npos);
     }
-  });
+  }
 
   // Test installation verification
-  TEST_CASE("Installation Verification") {
+  TEST(ApplicationWorkflowIntegrationTestsTest, Installation_Verification) {
     // Check that all expected files are present
     std::vector<std::string> expected_files = {"./solar_system_launcher",
                                                "./solar_system",
@@ -258,10 +256,10 @@ std::string get_executable_path(const std::string& exe_name) {
     ASSERT_TRUE(file_exists("./README.md") || file_exists("../README.md"));
     ASSERT_TRUE(file_exists("./share/solar_system/web/index.html") ||
                 file_exists("./docs/README.md") || file_exists("../docs/README.md"));
-  });
+  }
 
   // Test 1: Application startup and initialization
-  TEST_CASE("Application Startup and Initialization") {
+  TEST(ApplicationWorkflowIntegrationTestsTest, Application_Startup_and_Initialization) {
     // Test each application can start and initialize properly
     std::vector<std::pair<std::string, std::string>> applications = {
         {"./solar_system_launcher --version", "version"},
@@ -312,10 +310,10 @@ std::string get_executable_path(const std::string& exe_name) {
         std::filesystem::rename(backup_path, lib_path);
       }
     }
-  });
+  }
 
   // Test 2: Configuration loading and validation
-  TEST_CASE("Configuration Loading and Validation") {
+  TEST(ApplicationWorkflowIntegrationTestsTest, Configuration_Loading_and_Validation) {
     auto test_env = TestDataManager::create_test_environment();
 
     // Test with valid configuration file
@@ -387,10 +385,10 @@ std::string get_executable_path(const std::string& exe_name) {
       unsetenv("SOLAR_SYSTEM_CACHE_DIR");
       unsetenv("SOLAR_SYSTEM_LOG_LEVEL");
     }
-  });
+  }
 
   // Test 3: Inter-application communication
-  TEST_CASE("Inter-Application Communication") {
+  TEST(ApplicationWorkflowIntegrationTestsTest, Inter_Application_Communication) {
     auto test_env = TestDataManager::create_test_environment();
     std::string shared_cache = test_env->path_string() + "/shared_cache";
     std::filesystem::create_directories(shared_cache);
@@ -449,10 +447,10 @@ std::string get_executable_path(const std::string& exe_name) {
       // API may or may not work depending on implementation, just verify no crashes
       ASSERT_TRUE(api_output.find("FAILED") == std::string::npos || api_output.length() > 0);
     }
-  });
+  }
 
   // Test 4: Deployment and installation processes
-  TEST_CASE("Deployment and Installation Validation"){
+  TEST(ApplicationWorkflowIntegrationTestsTest, Deployment_and_Installation_Validation) {
       // Test installation directory structure
       {std::vector<std::string> expected_dirs = {"./bin", "./lib", "./include", "./share"};
 
@@ -544,10 +542,10 @@ std::string get_executable_path(const std::string& exe_name) {
               output.find("test") != std::string::npos ||
               output.find("storage") != std::string::npos);
 }
-});
+}
 
 // Test 5: System resource management
-TEST_CASE("System Resource Management"){
+TEST(ApplicationWorkflowIntegrationTestsTest, System_Resource_Management) {
     // Test memory usage patterns
     {std::string command =
          "./build/solar_system --bodies Sun,Earth,Moon --duration 3600 --timestep 60";
@@ -624,10 +622,10 @@ ASSERT_TRUE(output.find("segmentation fault") == std::string::npos);
   // Port should be released after stopping server
   ASSERT_TRUE(port_output2.empty() || port_output2.length() < port_output.length());
 }
-});
+}
 
 // Test 6: Error propagation and logging
-TEST_CASE("Error Propagation and Logging") {
+TEST(ApplicationWorkflowIntegrationTestsTest, Error_Propagation_and_Logging) {
   auto test_env = TestDataManager::create_test_environment();
 
   // Test error logging to file
@@ -669,6 +667,4 @@ TEST_CASE("Error Propagation and Logging") {
                 output.find("fallback") != std::string::npos ||
                 output.find("completed") != std::string::npos);  // May use fallback data
   }
-});
-
-return current_suite->all_passed() ? 0 : 1;
+}

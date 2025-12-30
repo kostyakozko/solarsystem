@@ -261,10 +261,8 @@ class FailureSimulator {
     return failure;
   }
 };
-  TEST_SUITE("Failure Simulation Testing");
-
   // Test 1: Hardware failure simulation
-  TEST_CASE("Hardware Failure Simulation") {
+  TEST(FailureSimulationTestingTest, Hardware_Failure_Simulation) {
     FailureSimulator simulator(42);
 
     // Test 1.1: Disk read error
@@ -295,10 +293,10 @@ class FailureSimulator {
       ASSERT_TRUE(result.failed);
       EXPECT_NE(std::string::npos, result.description.find("Bad sector"));
     }
-  });
+  }
 
   // Test 2: Network failure simulation
-  TEST_CASE("Network Failure Simulation") {
+  TEST(FailureSimulationTestingTest, Network_Failure_Simulation) {
     FailureSimulator simulator(123);
 
     // Test 2.1: Packet loss
@@ -331,10 +329,10 @@ class FailureSimulator {
       ASSERT_TRUE(result.failed);
       EXPECT_NE(std::string::npos, result.description.find("DNS"));
     }
-  });
+  }
 
   // Test 3: Memory failure simulation
-  TEST_CASE("Memory Failure Simulation") {
+  TEST(FailureSimulationTestingTest, Memory_Failure_Simulation) {
     FailureSimulator simulator(456);
 
     // Test 3.1: Allocation failure
@@ -358,10 +356,10 @@ class FailureSimulator {
       ASSERT_TRUE(result.failed);
       EXPECT_NE(std::string::npos, result.description.find("corruption"));
     }
-  });
+  }
 
   // Test 4: Software crash simulation
-  TEST_CASE("Software Crash Simulation") {
+  TEST(FailureSimulationTestingTest, Software_Crash_Simulation) {
     FailureSimulator simulator(789);
 
     // Test 4.1: Segmentation fault
@@ -385,10 +383,10 @@ class FailureSimulator {
       ASSERT_TRUE(result.failed);
       EXPECT_NE(std::string::npos, result.description.find("exception"));
     }
-  });
+  }
 
   // Test 5: Software hang simulation
-  TEST_CASE("Software Hang Simulation") {
+  TEST(FailureSimulationTestingTest, Software_Hang_Simulation) {
     FailureSimulator simulator(321);
 
     // Test 5.1: Short hang
@@ -409,10 +407,10 @@ class FailureSimulator {
       ASSERT_TRUE(result.failed);
       ASSERT_EQ(result.duration.count(), 5000);
     }
-  });
+  }
 
   // Test 6: Data corruption simulation
-  TEST_CASE("Data Corruption Simulation") {
+  TEST(FailureSimulationTestingTest, Data_Corruption_Simulation) {
     FailureSimulator simulator(654);
 
     // Test 6.1: Bit flip
@@ -437,10 +435,10 @@ class FailureSimulator {
       ASSERT_TRUE(result.failed);
       EXPECT_NE(std::string::npos, result.description.find("Checksum"));
     }
-  });
+  }
 
   // Test 7: External service failure simulation
-  TEST_CASE("External Service Failure Simulation") {
+  TEST(FailureSimulationTestingTest, External_Service_Failure_Simulation) {
     FailureSimulator simulator(987);
 
     // Test 7.1: Service unavailable
@@ -469,10 +467,10 @@ class FailureSimulator {
       ASSERT_FALSE(result.failed);
       EXPECT_NE(std::string::npos, result.description.find("available"));
     }
-  });
+  }
 
   // Test 8: Partial failure simulation
-  TEST_CASE("Partial Failure Simulation") {
+  TEST(FailureSimulationTestingTest, Partial_Failure_Simulation) {
     FailureSimulator simulator(111);
 
     // Test 8.1: High failure rate
@@ -509,10 +507,10 @@ class FailureSimulator {
       auto result = simulator.simulate_partial_failure(0.0);
       ASSERT_FALSE(result.failed);
     }
-  });
+  }
 
   // Test 9: Cascading failures
-  TEST_CASE("Cascading Failures") {
+  TEST(FailureSimulationTestingTest, Cascading_Failures) {
     FailureSimulator simulator(222);
 
     // Test 9.1: Multiple service failures
@@ -545,10 +543,10 @@ class FailureSimulator {
       }
       ASSERT_TRUE(has_failures);
     }
-  });
+  }
 
   // Test 10: Recovery from failures
-  TEST_CASE("Recovery from Failures") {
+  TEST(FailureSimulationTestingTest, Recovery_from_Failures) {
     FailureSimulator simulator(333);
 
     // Test 10.1: Successful recovery
@@ -584,6 +582,4 @@ class FailureSimulator {
       ASSERT_FALSE(result.failed);
       ASSERT_FALSE(result.recovered);
     }
-  });
-
-  return current_suite->all_passed() ? 0 : 1;
+  }

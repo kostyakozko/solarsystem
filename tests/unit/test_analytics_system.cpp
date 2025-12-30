@@ -35,14 +35,11 @@ class TestAnalytics {
     return report;
   }
 };
-  TEST_SUITE("Test Analytics System Tests");
 
-  TEST_CASE("Analytics Generation") {
-    TestAnalytics analytics;
-    auto report = analytics.analyze(100, 85);
+TEST(AnalyticsSystemTest, AnalyticsGeneration) {
+  TestAnalytics analytics;
+  auto report = analytics.analyze(100, 85);
 
-    ASSERT_EQ(report.health_score, 85.0);
-    ASSERT_FALSE(report.recommendations.empty());
-  });
-
-  return current_suite->all_passed() ? 0 : 1;
+  ASSERT_EQ(report.health_score, 85.0);
+  ASSERT_FALSE(report.recommendations.empty());
+}

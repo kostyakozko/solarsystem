@@ -11,6 +11,7 @@
  */
 
 #include <filesystem>
+#include <iostream>
 #include <memory>
 #include <random>
 #include <vector>
@@ -23,7 +24,18 @@
 #include <gtest/gtest.h>
 
 using namespace SolarSystem;
-,
+
+// Comprehensive Performance Benchmark Test
+TEST(ComprehensiveBenchmark, CorePerformanceValidation) {
+  Benchmark::BenchmarkSuite suite("Comprehensive System Benchmarks");
+
+  // 1. SIMULATION STEP BENCHMARK - Validate microsecond execution claims
+  suite.run_benchmark(
+      "SimulationStepMicrosecondBenchmark",
+      []() {
+        Bodies::CelestialBody::Properties sun_props = {.name = "Sun",
+                                                       .mass = 1.98847e30L,
+                                                       .position = Math::Vector3d{0.0, 0.0, 0.0},
                                                        .velocity = Math::Vector3d{0.0, 0.0, 0.0},
                                                        .type = Bodies::BodyType::Star,
                                                        .priority = Bodies::BodyPriority::Essential,
@@ -32,9 +44,9 @@ using namespace SolarSystem;
 
         Bodies::CelestialBody::Properties earth_props = {
             .name = "Earth",
-            .mass = 5.97219e24L,                             // Earth mass in kg
-            .position = Math::Vector3d{1.496e11, 0.0, 0.0},  // 1 AU in meters
-            .velocity = Math::Vector3d{0.0, 29780.0, 0.0},   // Earth orbital velocity m/s
+            .mass = 5.97219e24L,
+            .position = Math::Vector3d{1.496e11, 0.0, 0.0},
+            .velocity = Math::Vector3d{0.0, 29780.0, 0.0},
             .type = Bodies::BodyType::Planet,
             .priority = Bodies::BodyPriority::Essential,
             .jpl_id = "399",
@@ -43,16 +55,14 @@ using namespace SolarSystem;
         Bodies::CelestialBody sun(sun_props);
         Bodies::CelestialBody earth(earth_props);
 
-        // Simulate gravitational force calculation and position update
         auto force = earth.gravitational_force_to(sun);
-        earth.apply_force(force, 1.0);  // 1 second timestep
+        earth.apply_force(force, 1.0);
         earth.update_position(1.0);
 
-        // Prevent optimization
         volatile auto pos = earth.position().magnitude();
         (void)pos;
       },
-      50000);  // High iteration count to measure microsecond performance
+      50000);
 
   // 2. VECTOR OPERATIONS BENCHMARK - Core math performance
   suite.run_benchmark(
@@ -61,7 +71,6 @@ using namespace SolarSystem;
         Math::Vector3d v1{1.23456789e11, 9.87654321e10, 5.55555555e9};
         Math::Vector3d v2{2.34567890e11, 8.76543210e10, 4.44444444e9};
 
-        // Perform typical vector operations used in simulation
         auto sum = v1 + v2;
         auto diff = v1 - v2;
         auto cross = v1.cross(v2);
@@ -69,7 +78,6 @@ using namespace SolarSystem;
         auto magnitude = v1.magnitude();
         auto normalized = v1.normalized();
 
-        // Prevent optimization
         volatile auto result = sum.magnitude() + diff.magnitude() + cross.magnitude() + dot +
                                magnitude + normalized.magnitude();
         (void)result;
@@ -80,10 +88,9 @@ using namespace SolarSystem;
   suite.run_benchmark(
       "GravitationalForceBenchmark",
       []() {
-        // Create two bodies at realistic distances
         Bodies::CelestialBody::Properties body1_props = {
             .name = "Body1",
-            .mass = 1.98847e30L,  // Solar mass
+            .mass = 1.98847e30L,
             .position = Math::Vector3d{0.0, 0.0, 0.0},
             .velocity = Math::Vector3d{0.0, 0.0, 0.0},
             .type = Bodies::BodyType::Star,
@@ -93,8 +100,8 @@ using namespace SolarSystem;
 
         Bodies::CelestialBody::Properties body2_props = {
             .name = "Body2",
-            .mass = 5.97219e24L,                             // Earth mass
-            .position = Math::Vector3d{1.496e11, 0.0, 0.0},  // 1 AU
+            .mass = 5.97219e24L,
+            .position = Math::Vector3d{1.496e11, 0.0, 0.0},
             .velocity = Math::Vector3d{0.0, 29780.0, 0.0},
             .type = Bodies::BodyType::Planet,
             .priority = Bodies::BodyPriority::Essential,
@@ -104,25 +111,21 @@ using namespace SolarSystem;
         Bodies::CelestialBody body1(body1_props);
         Bodies::CelestialBody body2(body2_props);
 
-        // Calculate gravitational force
         auto force = body1.gravitational_force_to(body2);
         auto distance = body1.distance_to(body2);
 
-        // Prevent optimization
         volatile auto result = force.magnitude() + distance;
         (void)result;
       },
       25000);
 
-  // 4. MEMORY ALLOCATION PATTERN BENCHMARK - Test memory usage patterns
+  // 4. MEMORY ALLOCATION PATTERN BENCHMARK
   suite.run_memory_benchmark(
       "MemoryAllocationPatternBenchmark",
       []() {
-        // Simulate typical memory allocation patterns in simulation
         std::vector<Bodies::CelestialBody> bodies;
-        bodies.reserve(27);  // Typical number of bodies in solar system
+        bodies.reserve(27);
 
-        // Create bodies with realistic properties
         for (int i = 0; i < 27; ++i) {
           Bodies::CelestialBody::Properties props = {
               .name = "Body_" + std::to_string(i),
@@ -140,7 +143,6 @@ using namespace SolarSystem;
           bodies.emplace_back(props);
         }
 
-        // Simulate force calculations between all bodies
         std::vector<Math::Vector3d> forces(bodies.size());
         for (size_t i = 0; i < bodies.size(); ++i) {
           Math::Vector3d total_force{0.0, 0.0, 0.0};
@@ -152,7 +154,6 @@ using namespace SolarSystem;
           forces[i] = total_force;
         }
 
-        // Prevent optimization
         volatile size_t count = bodies.size() + forces.size();
         (void)count;
       },
@@ -162,37 +163,31 @@ using namespace SolarSystem;
   suite.run_benchmark(
       "ComplexMathematicalOperationsBenchmark",
       []() {
-        // Simulate complex orbital mechanics calculations
-        long double semi_major_axis = 1.496e11L;  // 1 AU
-        long double eccentricity = 0.0167L;       // Earth's eccentricity
-        long double mean_anomaly = 0.5L;          // Radians
+        long double semi_major_axis = 1.496e11L;
+        long double eccentricity = 0.0167L;
+        long double mean_anomaly = 0.5L;
 
-        // Solve Kepler's equation iteratively (common in orbital mechanics)
         long double eccentric_anomaly = mean_anomaly;
         for (int iter = 0; iter < 10; ++iter) {
           eccentric_anomaly = mean_anomaly + eccentricity * std::sin(eccentric_anomaly);
         }
 
-        // Calculate true anomaly
         long double true_anomaly =
             2.0L * std::atan2(std::sqrt((1.0L + eccentricity) / (1.0L - eccentricity)) *
                                   std::sin(eccentric_anomaly / 2.0L),
                               std::cos(eccentric_anomaly / 2.0L));
 
-        // Calculate orbital radius
         long double radius = semi_major_axis * (1.0L - eccentricity * std::cos(eccentric_anomaly));
 
-        // Prevent optimization
         volatile long double result = true_anomaly + radius + eccentric_anomaly;
         (void)result;
       },
       10000);
 
-  // 6. LARGE DATASET PROCESSING BENCHMARK - Scalability test
+  // 6. LARGE DATASET PROCESSING BENCHMARK
   suite.run_benchmark(
       "LargeDatasetProcessingBenchmark",
       []() {
-        // Create large dataset similar to ephemeris data
         constexpr size_t data_size = 10000;
         std::vector<Math::Vector3d> positions;
         std::vector<Math::Vector3d> velocities;
@@ -202,7 +197,6 @@ using namespace SolarSystem;
         velocities.reserve(data_size);
         masses.reserve(data_size);
 
-        // Generate realistic astronomical data
         std::random_device rd;
         std::mt19937 gen(rd());
         std::uniform_real_distribution<long double> pos_dist(-1e12L, 1e12L);
@@ -215,7 +209,6 @@ using namespace SolarSystem;
           masses.push_back(mass_dist(gen));
         }
 
-        // Process the data (simulate typical operations)
         long double total_kinetic_energy = 0.0L;
         Math::Vector3d center_of_mass{0.0, 0.0, 0.0};
         long double total_mass = 0.0L;
@@ -230,13 +223,11 @@ using namespace SolarSystem;
           center_of_mass /= total_mass;
         }
 
-        // Prevent optimization
         volatile long double result =
             total_kinetic_energy + center_of_mass.magnitude() + total_mass;
         (void)result;
       },
       100);
-
 
   // Create benchmark results directory if it doesn't exist
   std::filesystem::create_directories("benchmark_results");
@@ -254,27 +245,21 @@ using namespace SolarSystem;
     bool passed = true;
     std::string status = "PASS";
 
-    // Validate microsecond claims for simulation steps
     if (result.name == "SimulationStepMicrosecondBenchmark") {
-      // Should complete in under 10 microseconds on modern hardware
-      if (result.avg_duration_ms > 0.01) {  // 10 microseconds = 0.01 ms
+      if (result.avg_duration_ms > 0.01) {
         passed = false;
         status = "FAIL - Exceeds 10μs threshold";
       }
     }
 
-    // Validate vector operations performance
     if (result.name == "Vector3DMathBenchmark") {
-      // Should complete in under 1 microsecond
-      if (result.avg_duration_ms > 0.001) {  // 1 microsecond = 0.001 ms
+      if (result.avg_duration_ms > 0.001) {
         passed = false;
         status = "FAIL - Exceeds 1μs threshold";
       }
     }
 
-    // Validate memory usage
     if (result.name == "MemoryAllocationPatternBenchmark") {
-      // Should use reasonable memory (less than 10MB for 27 bodies)
       if (result.memory_usage_bytes > 100 * 1024 * 1024) {
         passed = false;
         status = "FAIL - Exceeds 100MB memory threshold";
@@ -290,4 +275,5 @@ using namespace SolarSystem;
 
   std::cout << "\nOverall Performance Validation: " << (all_passed ? "PASS" : "FAIL") << std::endl;
 
-  return all_passed ? 0 : 1;
+  EXPECT_TRUE(all_passed);
+}

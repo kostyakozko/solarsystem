@@ -212,10 +212,8 @@ class DeploymentManager {
  private:
   std::map<std::string, Deployment> deployments_;
 };
-  TEST_SUITE("CI/CD Pipeline Integration Tests");
-
   // Test 1: CI pipeline execution
-  TEST_CASE("CI Pipeline Execution") {
+  TEST(CICDPipelineIntegrationTest, CI_Pipeline_Execution) {
     CIPipelineManager pipeline;
 
     // Test 1.1: Start pipeline
@@ -234,10 +232,10 @@ class DeploymentManager {
     // Test 1.4: Complete pipeline
     pipeline.complete_pipeline(run_id, CIPipelineManager::PipelineStatus::Success);
     ASSERT_TRUE(pipeline.get_pipeline_status(run_id) == CIPipelineManager::PipelineStatus::Success);
-  });
+  }
 
   // Test 2: Pull request validation
-  TEST_CASE("Pull Request Validation") {
+  TEST(CICDPipelineIntegrationTest, Pull_Request_Validation) {
     PRValidator validator;
 
     // Test 2.1: Validate passing PR
@@ -262,10 +260,10 @@ class DeploymentManager {
 
     issues = validator.get_blocking_issues(validation);
     ASSERT_EQ(issues.size(), 2);
-  });
+  }
 
   // Test 3: Release candidate validation
-  TEST_CASE("Release Candidate Validation") {
+  TEST(CICDPipelineIntegrationTest, Release_Candidate_Validation) {
     ReleaseValidator validator;
 
     // Test 3.1: Validate release candidate
@@ -290,10 +288,10 @@ class DeploymentManager {
 
     blockers = validator.get_release_blockers(rc);
     ASSERT_EQ(blockers.size(), 2);
-  });
+  }
 
   // Test 4: Deployment management
-  TEST_CASE("Deployment Management") {
+  TEST(CICDPipelineIntegrationTest, Deployment_Management) {
     DeploymentManager manager;
 
     // Test 4.1: Deploy to staging
@@ -316,10 +314,10 @@ class DeploymentManager {
     ASSERT_TRUE(rolled_back);
     ASSERT_TRUE(manager.get_deployment_status(prod_deployment) ==
                DeploymentManager::DeploymentStatus::RolledBack);
-  });
+  }
 
   // Test 5: End-to-end CI/CD workflow
-  TEST_CASE("End-to-End CI/CD Workflow") {
+  TEST(CICDPipelineIntegrationTest, End_to_End_CICD_Workflow) {
     CIPipelineManager pipeline;
     PRValidator pr_validator;
     ReleaseValidator release_validator;
@@ -358,6 +356,4 @@ class DeploymentManager {
     deployment.complete_deployment(prod_deploy, DeploymentManager::DeploymentStatus::Success);
     ASSERT_TRUE(deployment.get_deployment_status(prod_deploy) ==
                DeploymentManager::DeploymentStatus::Success);
-  });
-
-  return current_suite->all_passed() ? 0 : 1;
+  }

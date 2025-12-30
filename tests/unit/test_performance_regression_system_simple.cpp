@@ -15,10 +15,11 @@
 #include <unistd.h>
 
 // Performance regression system
-#include "performance_regression_system_simple.hpp"
+#include "../utils/performance_regression_system_simple.hpp"
 
 // Test framework
 #include <gtest/gtest.h>
+#include "../utils/gtest_compat.hpp"
 
 using namespace SolarSystem::Testing::Regression;
 
@@ -277,6 +278,3 @@ TEST(SimplePerformanceRegressionSystemTests, Create_Simple_Metrics_Utility) {
         ASSERT_EQ(metrics.cpu_usage_percent, 50.0);
         ASSERT_EQ(metrics.execution_time_ms(), 100.0);
 }
-
-    // Force immediate exit to avoid hanging on cleanup
-    _exit(0);

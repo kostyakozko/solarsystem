@@ -24,12 +24,9 @@ class DocumentationManager {
     return "Documentation content";
   }
 };
-  TEST_SUITE("Test Documentation Tests");
 
-  TEST_CASE("Documentation Availability") {
-    DocumentationManager manager;
-    ASSERT_TRUE(manager.has_documentation("testing"));
-    ASSERT_FALSE(manager.get_documentation("testing").empty());
-  });
-
-  return current_suite->all_passed() ? 0 : 1;
+TEST(DocumentationTest, DocumentationAvailability) {
+  DocumentationManager manager;
+  ASSERT_TRUE(manager.has_documentation("testing"));
+  ASSERT_FALSE(manager.get_documentation("testing").empty());
+}

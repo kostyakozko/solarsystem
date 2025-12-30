@@ -364,10 +364,8 @@ class TestDataValidator {
     return report;
   }
 };
-  TEST_SUITE("Test Data Validation System Tests");
-
   // Test 1: Data consistency and integrity checking
-  TEST_CASE("Data Consistency and Integrity Checking") {
+  TEST(TestDataValidationSystemTestsTest, Data_Consistency_and_Integrity_Checking) {
     TestDataValidator validator;
 
     // Test 1.1: Valid astronomical body
@@ -436,10 +434,10 @@ class TestDataValidator {
       ASSERT_FALSE(result.is_valid);
       EXPECT_NE(std::string::npos, result.errors[0].find("Eccentricity"));
     }
-  });
+  }
 
   // Test 2: Format validation for all data types
-  TEST_CASE("Format Validation") {
+  TEST(TestDataValidationSystemTestsTest, Format_Validation) {
     TestDataValidator validator;
 
     // Test 2.1: Valid ephemeris data
@@ -505,10 +503,10 @@ class TestDataValidator {
       ASSERT_FALSE(result.is_valid);
       EXPECT_NE(std::string::npos, result.errors[0].find("positive"));
     }
-  });
+  }
 
   // Test 3: Cross-reference validation
-  TEST_CASE("Cross-Reference Validation") {
+  TEST(TestDataValidationSystemTestsTest, Cross_Reference_Validation) {
     TestDataValidator validator;
 
     // Test 3.1: Valid cross-references
@@ -582,10 +580,10 @@ class TestDataValidator {
       ASSERT_FALSE(result.warnings.empty());
       ASSERT_LT(result.quality_score, 1.0);
     }
-  });
+  }
 
   // Test 4: Time series validation
-  TEST_CASE("Time Series Validation") {
+  TEST(TestDataValidationSystemTestsTest, Time_Series_Validation) {
     TestDataValidator validator;
 
     // Test 4.1: Valid time series
@@ -662,10 +660,10 @@ class TestDataValidator {
       ASSERT_FALSE(result.warnings.empty());
       ASSERT_EQ(result.quality_score, 0.5);
     }
-  });
+  }
 
   // Test 5: Data quality assessment and reporting
-  TEST_CASE("Data Quality Assessment and Reporting") {
+  TEST(TestDataValidationSystemTestsTest, Data_Quality_Assessment_and_Reporting) {
     TestDataValidator validator;
 
     // Test 5.1: Generate quality report
@@ -726,6 +724,4 @@ class TestDataValidator {
       std::string report = validator.generate_quality_report(results);
       EXPECT_NE(std::string::npos, report.find("Total validations: 0"));
     }
-  });
-
-  return current_suite->all_passed() ? 0 : 1;
+  }

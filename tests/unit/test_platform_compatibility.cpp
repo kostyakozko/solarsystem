@@ -250,10 +250,8 @@ class CompilerFeatures {
 
   static int get_cpp_version() { return static_cast<int>(__cplusplus); }
 };
-  TEST_SUITE("Platform Compatibility Tests");
-
   // Test 1: Platform detection
-  TEST_CASE("Platform Detection") {
+  TEST(PlatformCompatibilityTestsTest, Platform_Detection) {
     auto os = PlatformDetector::detect_os();
     auto compiler = PlatformDetector::detect_compiler();
     auto arch = PlatformDetector::detect_architecture();
@@ -275,10 +273,10 @@ class CompilerFeatures {
     std::string arch_name = PlatformDetector::architecture_to_string(arch);
     ASSERT_FALSE(arch_name.empty());
     ASSERT_TRUE(arch_name != "Unknown");
-  });
+  }
 
   // Test 2: Endianness detection
-  TEST_CASE("Endianness Detection") {
+  TEST(PlatformCompatibilityTestsTest, Endianness_Detection) {
     bool is_little = PlatformDetector::is_little_endian();
 
     // Test 2.1: Endianness is deterministic
@@ -287,10 +285,10 @@ class CompilerFeatures {
     // Test 2.2: Most modern systems are little-endian
     // (This is informational, not a strict requirement)
     ASSERT_TRUE(is_little || !is_little);  // Always passes, just documents the check
-  });
+  }
 
   // Test 3: Pointer size and 64-bit support
-  TEST_CASE("Pointer Size and 64-bit Support") {
+  TEST(PlatformCompatibilityTestsTest, Pointer_Size_and_64_bit_Support) {
     size_t ptr_size = PlatformDetector::get_pointer_size();
     bool supports_64 = PlatformDetector::supports_64bit();
 
@@ -310,10 +308,10 @@ class CompilerFeatures {
         arch == PlatformDetector::Architecture::ARM64) {
       ASSERT_TRUE(supports_64);
     }
-  });
+  }
 
   // Test 4: Path handling
-  TEST_CASE("Path Handling") {
+  TEST(PlatformCompatibilityTestsTest, Path_Handling) {
     char sep = PathHandler::get_path_separator();
 
     // Test 4.1: Path separator is valid
@@ -340,10 +338,10 @@ class CompilerFeatures {
 
     std::string empty_join2 = PathHandler::join_paths("dir", "");
     ASSERT_EQ(empty_join2, "dir");
-  });
+  }
 
   // Test 5: Type sizes
-  TEST_CASE("Type Sizes") {
+  TEST(PlatformCompatibilityTestsTest, Type_Sizes) {
     auto sizes = TypeSizeValidator::get_type_sizes();
 
     // Test 5.1: Standard type sizes
@@ -363,10 +361,10 @@ class CompilerFeatures {
 
     // Test 5.3: Validate against standard
     ASSERT_TRUE(TypeSizeValidator::validate_standard_sizes(sizes));
-  });
+  }
 
   // Test 6: Compiler features
-  TEST_CASE("Compiler Features") {
+  TEST(PlatformCompatibilityTestsTest, Compiler_Features) {
     // Test 6.1: C++ version detection
     int cpp_version = CompilerFeatures::get_cpp_version();
     ASSERT_GT(cpp_version, 0);
@@ -388,10 +386,10 @@ class CompilerFeatures {
 
     // Test 6.5: C++20 support (project requirement)
     ASSERT_TRUE(CompilerFeatures::has_cpp20());
-  });
+  }
 
   // Test 7: Integer types
-  TEST_CASE("Integer Types") {
+  TEST(PlatformCompatibilityTestsTest, Integer_Types) {
     // Test 7.1: Fixed-width integer types
     ASSERT_EQ(sizeof(int8_t), 1);
     ASSERT_EQ(sizeof(int16_t), 2);
@@ -409,10 +407,10 @@ class CompilerFeatures {
     // Test 7.3: Intptr_t can hold a pointer
     ASSERT_EQ(sizeof(intptr_t), sizeof(void*));
     ASSERT_EQ(sizeof(uintptr_t), sizeof(void*));
-  });
+  }
 
   // Test 8: Platform-specific behavior
-  TEST_CASE("Platform-Specific Behavior") {
+  TEST(PlatformCompatibilityTestsTest, Platform_Specific_Behavior) {
     auto os = PlatformDetector::detect_os();
 
     // Test 8.1: Path separator matches OS
@@ -437,10 +435,10 @@ class CompilerFeatures {
                         os == PlatformDetector::OS::BSD);
     bool is_windows = (os == PlatformDetector::OS::Windows);
     ASSERT_TRUE(is_unix_like || is_windows);
-  });
+  }
 
   // Test 9: Compiler-specific features
-  TEST_CASE("Compiler-Specific Features") {
+  TEST(PlatformCompatibilityTestsTest, Compiler_Specific_Features) {
     auto compiler = PlatformDetector::detect_compiler();
 
     // Test 9.1: Compiler is recognized
@@ -450,20 +448,20 @@ class CompilerFeatures {
 
     // Test 9.2: Compiler version macros exist
 #if defined(__clang__)
-    EXPECT_GT(__clang_major__ , = 0);
+    EXPECT_GE(__clang_major__ , 0);
 #elif defined(__GNUC__)
-    EXPECT_GT(__GNUC__ , = 0);
+    EXPECT_GE(__GNUC__ , 0);
 #elif defined(_MSC_VER)
-    EXPECT_GT(_MSC_VER , = 0);
+    EXPECT_GE(_MSC_VER , 0);
 #endif
 
     // Test 9.3: Standard library is available
     std::vector<int> test_vector = {1, 2, 3};
     ASSERT_EQ(test_vector.size(), 3);
-  });
+  }
 
   // Test 10: Cross-platform compatibility summary
-  TEST_CASE("Cross-Platform Compatibility Summary") {
+  TEST(PlatformCompatibilityTestsTest, Cross_Platform_Compatibility_Summary) {
     auto os = PlatformDetector::detect_os();
     auto compiler = PlatformDetector::detect_compiler();
     auto arch = PlatformDetector::detect_architecture();
@@ -498,6 +496,4 @@ class CompilerFeatures {
 
     // Test 10.3: C++20 support is available
     ASSERT_TRUE(CompilerFeatures::has_cpp20());
-  });
-
-  return current_suite->all_passed() ? 0 : 1;
+  }

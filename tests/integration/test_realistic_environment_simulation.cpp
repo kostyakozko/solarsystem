@@ -136,14 +136,12 @@ class ConcurrentAccessCoordinator {
  private:
   int num_threads_;
 };
-  TEST_SUITE("Realistic Environment Simulation Integration Tests");
-
   // ============================================================================
   // TASK 7: REALISTIC TEST ENVIRONMENT SIMULATION
   // ============================================================================
 
   // Test 1: Production-like environment characteristics
-  TEST_CASE("Production-Like Environment Characteristics") {
+  TEST(RealisticEnvironmentSimulationIntegrationTestsTest, Production_Like_Environment_Characteristics) {
     auto test_env = TestDataManager::create_test_environment();
 
     // Test 1.1: Simulate production network conditions
@@ -229,10 +227,10 @@ class ConcurrentAccessCoordinator {
       // Should complete despite production-like conditions
       ASSERT_GT(duration.count(), 50);  // Should take time due to simulated load
     }
-  });
+  }
 
   // Test 2: Network latency and failure simulation
-  TEST_CASE("Network Latency and Failure Simulation") {
+  TEST(RealisticEnvironmentSimulationIntegrationTestsTest, Network_Latency_and_Failure_Simulation) {
     // Test 2.1: High latency network
     {
       auto start = std::chrono::high_resolution_clock::now();
@@ -310,10 +308,10 @@ class ConcurrentAccessCoordinator {
       auto result = factory.create_body("Saturn");
       ASSERT_TRUE(result.has_value());
     }
-  });
+  }
 
   // Test 3: File system and resource constraint simulation
-  TEST_CASE("File System and Resource Constraint Simulation") {
+  TEST(RealisticEnvironmentSimulationIntegrationTestsTest, File_System_and_Resource_Constraint_Simulation) {
     auto test_env = TestDataManager::create_test_environment();
 
     // Test 3.1: Disk space constraints
@@ -409,10 +407,10 @@ class ConcurrentAccessCoordinator {
       ASSERT_EQ(write_count.load(), 5);
       ASSERT_TRUE(std::filesystem::exists(shared_file));
     }
-  });
+  }
 
   // Test 4: Multi-user and concurrent access scenarios
-  TEST_CASE("Multi-User and Concurrent Access Scenarios") {
+  TEST(RealisticEnvironmentSimulationIntegrationTestsTest, Multi_User_and_Concurrent_Access_Scenarios) {
     // Test 4.1: Concurrent body creation
     {
       std::atomic<int> success_count{0};
@@ -594,10 +592,10 @@ class ConcurrentAccessCoordinator {
       // Most workflows should complete successfully
       ASSERT_GE(workflow_completions.load(), 3);
     }
-  });
+  }
 
   // Test 5: Combined realistic scenarios
-  TEST_CASE("Combined Realistic Environment Scenarios") {
+  TEST(RealisticEnvironmentSimulationIntegrationTestsTest, Combined_Realistic_Environment_Scenarios) {
     auto test_env = TestDataManager::create_test_environment();
 
     // Test 5.1: Production-like load with concurrent users
@@ -702,6 +700,4 @@ class ConcurrentAccessCoordinator {
       // Most operations should complete despite stress
       ASSERT_GE(stress_test_completions.load(), 7);
     }
-  });
-
-  return current_suite->all_passed() ? 0 : 1;
+  }

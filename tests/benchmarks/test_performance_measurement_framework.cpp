@@ -158,21 +158,20 @@ class EnhancedPerformanceMeasurement {
     return bottlenecks;
   }
 };
-  TEST_SUITE("Performance Measurement Framework Tests");
 
-  // ============================================================================
-  // TASK 8: COMPREHENSIVE PERFORMANCE MEASUREMENT FRAMEWORK
-  // ============================================================================
+// ============================================================================
+// TASK 8: COMPREHENSIVE PERFORMANCE MEASUREMENT FRAMEWORK
+// ============================================================================
 
-  // Test 1: Detailed timing and resource usage measurement
-  TEST_CASE("Detailed Timing and Resource Usage Measurement") {
-    // Test 1.1: High-precision timing
-    {
-      Timer timer;
-      timer.start();
+// Test 1: Detailed timing and resource usage measurement
+TEST(PerformanceMeasurementFrameworkTestsTest, Detailed_Timing_and_Resource_Usage_Measurement) {
+  // Test 1.1: High-precision timing
+  {
+    Timer timer;
+    timer.start();
 
-      // Simulate work
-      std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    // Simulate work
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
       timer.stop();
 
@@ -248,10 +247,10 @@ class EnhancedPerformanceMeasurement {
       ASSERT_GT(result2.duration_ms, 25.0);
       ASSERT_LT(result2.duration_ms, 80.0);
     }
-  });
+  }
 
   // Test 2: Statistical analysis and variance calculation
-  TEST_CASE("Statistical Analysis and Variance Calculation") {
+  TEST(PerformanceMeasurementFrameworkTestsTest, Statistical_Analysis_and_Variance_Calculation) {
     // Test 2.1: Basic statistics
     {
       std::vector<double> measurements = {10.0, 20.0, 30.0, 40.0, 50.0};
@@ -329,10 +328,10 @@ class EnhancedPerformanceMeasurement {
       ASSERT_NEAR(stats.percentile_99, 99.0, 2.0);
       ASSERT_GT(stats.percentile_99, stats.percentile_95);
     }
-  });
+  }
 
   // Test 3: Performance profiling and bottleneck identification
-  TEST_CASE("Performance Profiling and Bottleneck Identification") {
+  TEST(PerformanceMeasurementFrameworkTestsTest, Performance_Profiling_and_Bottleneck_Identification) {
     // Test 3.1: Operation profiling
     {
       Profiler profiler;
@@ -459,10 +458,10 @@ class EnhancedPerformanceMeasurement {
         ASSERT_LE(bottleneck.percentage_of_total, 100.0);
       }
     }
-  });
+  }
 
   // Test 4: Memory usage and leak detection
-  TEST_CASE("Memory Usage and Leak Detection") {
+  TEST(PerformanceMeasurementFrameworkTestsTest, Memory_Usage_and_Leak_Detection) {
     // Test 4.1: Memory monitoring
     {
       MemoryMonitor monitor;
@@ -579,10 +578,10 @@ class EnhancedPerformanceMeasurement {
       // Memory should decrease after cleanup (or at least not increase significantly)
       ASSERT_LE(after_cleanup, after_allocation * 1.1);  // Allow 10% tolerance
     }
-  });
+  }
 
   // Test 5: Integrated performance measurement
-  TEST_CASE("Integrated Performance Measurement") {
+  TEST(PerformanceMeasurementFrameworkTestsTest, Integrated_Performance_Measurement) {
     BenchmarkSuite suite("Integrated Performance Test");
 
     // Test 5.1: Complete benchmark workflow
@@ -629,6 +628,4 @@ class EnhancedPerformanceMeasurement {
       auto results = suite.get_results();
       ASSERT_GE(results.size(), 2);  // Should have both benchmarks
     }
-  });
-
-  return current_suite->all_passed() ? 0 : 1;
+  }

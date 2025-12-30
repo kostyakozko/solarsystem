@@ -15,6 +15,7 @@
 #include <chrono>
 #include <filesystem>
 #include <future>
+#include <iostream>
 #include <mutex>
 #include <random>
 #include <thread>
@@ -54,14 +55,19 @@ std::vector<Bodies::CelestialBody> create_test_bodies(size_t count) {
 
   return bodies;
 }
-;
+
+// Scalability Benchmark Test
+TEST(ScalabilityBenchmark, SystemScalabilityValidation) {
+  Benchmark::BenchmarkSuite suite("Scalability Benchmarks");
+
+  // 1. CELESTIAL BODY SCALABILITY - Test N-body performance scaling
+  std::vector<size_t> body_counts = {10, 50, 100, 200};
 
   suite.run_scalability_benchmark(
       "CelestialBodyScalability",
       [](size_t body_count) {
         auto bodies = create_test_bodies(body_count);
 
-        // Simulate N-body force calculations (O(N²) complexity)
         std::vector<Math::Vector3d> forces(bodies.size());
 
         for (size_t i = 0; i < bodies.size(); ++i) {
@@ -76,13 +82,11 @@ std::vector<Bodies::CelestialBody> create_test_bodies(size_t count) {
           forces[i] = total_force;
         }
 
-        // Apply forces and update positions
         for (size_t i = 0; i < bodies.size(); ++i) {
-          bodies[i].apply_force(forces[i], 1.0);  // 1 second timestep
+          bodies[i].apply_force(forces[i], 1.0);
           bodies[i].update_position(1.0);
         }
 
-        // Prevent optimization
         volatile size_t count = bodies.size() + forces.size();
         (void)count;
       },
@@ -94,7 +98,6 @@ std::vector<Bodies::CelestialBody> create_test_bodies(size_t count) {
   suite.run_scalability_benchmark(
       "MemoryScalabilityTest",
       [](size_t data_size) {
-        // Simulate large ephemeris data processing
         std::vector<Math::Vector3d> positions;
         std::vector<Math::Vector3d> velocities;
         std::vector<long double> masses;
@@ -103,7 +106,6 @@ std::vector<Bodies::CelestialBody> create_test_bodies(size_t count) {
         velocities.reserve(data_size);
         masses.reserve(data_size);
 
-        // Generate data
         for (size_t i = 0; i < data_size; ++i) {
           positions.emplace_back(static_cast<long double>(i) * 1e9L,
                                  static_cast<long double>(i) * 2e9L,
@@ -114,13 +116,11 @@ std::vector<Bodies::CelestialBody> create_test_bodies(size_t count) {
           masses.push_back(static_cast<long double>(i) * 1e24L);
         }
 
-        // Process data (simulate typical operations)
         long double total_energy = 0.0L;
         for (size_t i = 0; i < data_size; ++i) {
           total_energy += 0.5L * masses[i] * velocities[i].magnitude_squared();
         }
 
-        // Prevent optimization
         volatile long double result = total_energy;
         (void)result;
       },
@@ -133,12 +133,9 @@ std::vector<Bodies::CelestialBody> create_test_bodies(size_t count) {
         constexpr size_t num_threads = 8;
         constexpr size_t operations_per_thread = 1000;
 
-        // Shared data structure
         std::vector<Bodies::CelestialBody> shared_bodies = create_test_bodies(100);
-        std::mutex bodies_mutex;
         std::atomic<size_t> completed_operations{0};
 
-        // Launch concurrent threads
         std::vector<std::future<void>> futures;
         futures.reserve(num_threads);
 
@@ -149,12 +146,10 @@ std::vector<Bodies::CelestialBody> create_test_bodies(size_t count) {
             std::uniform_int_distribution<size_t> body_dist(0, shared_bodies.size() - 1);
 
             for (size_t op = 0; op < operations_per_thread; ++op) {
-              // Simulate concurrent read operations
               size_t body1_idx = body_dist(gen);
               size_t body2_idx = body_dist(gen);
 
               if (body1_idx != body2_idx) {
-                // Read-only operations (should be thread-safe)
                 volatile auto distance =
                     shared_bodies[body1_idx].distance_to(shared_bodies[body2_idx]);
                 volatile auto force =
@@ -169,29 +164,23 @@ std::vector<Bodies::CelestialBody> create_test_bodies(size_t count) {
           }));
         }
 
-        // Wait for all threads to complete
         for (auto& future : futures) {
           future.wait();
         }
 
-        // Verify all operations completed
         volatile size_t total_ops = completed_operations.load();
         (void)total_ops;
       },
       10);
 
-  // 4. LONG-RUNNING SIMULATION STABILITY - Test memory stability over time (Requirement 3.2)
+  // 4. LONG-RUNNING SIMULATION STABILITY
   suite.run_benchmark(
       "LongRunningSimulationStability",
       []() {
-        auto bodies = create_test_bodies(50);       // Moderate number of bodies
-        constexpr size_t simulation_steps = 10000;  // Simulate long-running operation
-
-        // Track memory usage over time (simplified for benchmark)
-        // In a real implementation, we would track actual memory usage
+        auto bodies = create_test_bodies(50);
+        constexpr size_t simulation_steps = 10000;
 
         for (size_t step = 0; step < simulation_steps; ++step) {
-          // Calculate forces
           std::vector<Math::Vector3d> forces(bodies.size());
 
           for (size_t i = 0; i < bodies.size(); ++i) {
@@ -206,28 +195,24 @@ std::vector<Bodies::CelestialBody> create_test_bodies(size_t count) {
             forces[i] = total_force;
           }
 
-          // Update positions
           for (size_t i = 0; i < bodies.size(); ++i) {
-            bodies[i].apply_force(forces[i], 0.1);  // Small timestep
+            bodies[i].apply_force(forces[i], 0.1);
             bodies[i].update_position(0.1);
             bodies[i].reset_acceleration();
           }
 
-          // Periodically check for memory leaks (simplified)
           if (step % 1000 == 0) {
-            // In a real implementation, we would check actual memory usage here
             volatile size_t memory_check = bodies.size() * sizeof(Bodies::CelestialBody);
             (void)memory_check;
           }
         }
 
-        // Prevent optimization
         volatile size_t final_body_count = bodies.size();
         (void)final_body_count;
       },
-      3);  // Low iteration count due to long-running nature
+      3);
 
-  // 5. PARALLEL COMPUTATION SCALABILITY - Test parallel processing efficiency
+  // 5. PARALLEL COMPUTATION SCALABILITY
   std::vector<size_t> thread_counts = {1, 2, 4, 8, 16};
 
   suite.run_scalability_benchmark(
@@ -239,12 +224,10 @@ std::vector<Bodies::CelestialBody> create_test_bodies(size_t count) {
         std::vector<std::future<long double>> futures;
         futures.reserve(num_threads);
 
-        // Launch parallel computations
         for (size_t t = 0; t < num_threads; ++t) {
           futures.push_back(std::async(std::launch::async, [work_per_thread, t]() {
             long double result = 0.0L;
 
-            // Simulate CPU-intensive work (orbital calculations)
             for (size_t i = 0; i < work_per_thread; ++i) {
               long double angle = static_cast<long double>(i + t * work_per_thread) * 0.001L;
               result += std::sin(angle) * std::cos(angle) + std::sqrt(angle + 1.0L);
@@ -254,19 +237,17 @@ std::vector<Bodies::CelestialBody> create_test_bodies(size_t count) {
           }));
         }
 
-        // Collect results
         long double total_result = 0.0L;
         for (auto& future : futures) {
           total_result += future.get();
         }
 
-        // Prevent optimization
         volatile long double final_result = total_result;
         (void)final_result;
       },
       thread_counts, 5);
 
-  // 6. CACHE PERFORMANCE UNDER LOAD - Test cache system scalability
+  // 6. CACHE PERFORMANCE UNDER LOAD
   suite.run_benchmark(
       "CachePerformanceUnderLoad",
       []() {
@@ -274,18 +255,11 @@ std::vector<Bodies::CelestialBody> create_test_bodies(size_t count) {
         std::vector<std::future<void>> futures;
         futures.reserve(num_concurrent_requests);
 
-        // Simulate concurrent cache access
         for (size_t i = 0; i < num_concurrent_requests; ++i) {
           futures.push_back(std::async(std::launch::async, [i]() {
-            // Simulate cache lookup operations
-            std::string cache_key =
-                "body_" + std::to_string(i % 27);  // Typical solar system bodies
-
-            // Simulate cache hit/miss processing
-            bool cache_hit = (i % 3) == 0;  // 33% hit rate
+            bool cache_hit = (i % 3) == 0;
 
             if (cache_hit) {
-              // Simulate fast cache retrieval
               Math::Vector3d position{static_cast<long double>(i) * 1e11L,
                                       static_cast<long double>(i) * 2e11L,
                                       static_cast<long double>(i) * 3e11L};
@@ -296,10 +270,8 @@ std::vector<Bodies::CelestialBody> create_test_bodies(size_t count) {
               volatile auto result = position.magnitude() + velocity.magnitude();
               (void)result;
             } else {
-              // Simulate cache miss (slower processing)
               std::this_thread::sleep_for(std::chrono::microseconds(10));
 
-              // Simulate data computation
               long double computed_value = 0.0L;
               for (int j = 0; j < 100; ++j) {
                 computed_value +=
@@ -312,13 +284,11 @@ std::vector<Bodies::CelestialBody> create_test_bodies(size_t count) {
           }));
         }
 
-        // Wait for all requests to complete
         for (auto& future : futures) {
           future.wait();
         }
       },
       50);
-
 
   // Create benchmark results directory if it doesn't exist
   std::filesystem::create_directories("benchmark_results");
@@ -332,7 +302,6 @@ std::vector<Bodies::CelestialBody> create_test_bodies(size_t count) {
 
   std::cout << "\n=== Scalability Analysis ===" << std::endl;
 
-  // Check for reasonable scaling behavior
   for (const auto& result : results) {
     if (result.name.find("Scalability") != std::string::npos) {
       auto input_size_it = result.custom_metrics.find("input_size");
@@ -344,8 +313,6 @@ std::vector<Bodies::CelestialBody> create_test_bodies(size_t count) {
                   << "): " << result.avg_duration_ms << " ms total, " << time_per_element
                   << " ms/element" << std::endl;
 
-        // Validate that time per element doesn't grow excessively
-        // Allow higher threshold for parallel computation tests since they include thread overhead
         double threshold =
             (result.name.find("ParallelComputation") != std::string::npos) ? 2.0 : 1.0;
         if (time_per_element > threshold) {
@@ -357,26 +324,22 @@ std::vector<Bodies::CelestialBody> create_test_bodies(size_t count) {
     }
   }
 
-  // Check concurrent access performance
   for (const auto& result : results) {
     if (result.name == "ConcurrentAccessBenchmark") {
       std::cout << "Concurrent Access: " << result.avg_duration_ms << " ms avg" << std::endl;
 
-      // Should complete concurrent operations reasonably quickly
-      if (result.avg_duration_ms > 1000.0) {  // More than 1 second is concerning
+      if (result.avg_duration_ms > 1000.0) {
         scalability_validated = false;
         std::cout << "WARNING: Concurrent access performance degraded" << std::endl;
       }
     }
   }
 
-  // Check long-running stability
   for (const auto& result : results) {
     if (result.name == "LongRunningSimulationStability") {
       std::cout << "Long-running Stability: " << result.avg_duration_ms << " ms avg" << std::endl;
 
-      // Memory usage should be reasonable
-      if (result.memory_usage_bytes > 100 * 1024 * 1024) {  // More than 100MB is concerning
+      if (result.memory_usage_bytes > 100 * 1024 * 1024) {
         scalability_validated = false;
         std::cout << "WARNING: Excessive memory usage detected" << std::endl;
       }
@@ -386,4 +349,5 @@ std::vector<Bodies::CelestialBody> create_test_bodies(size_t count) {
   std::cout << "\nOverall Scalability Validation: " << (scalability_validated ? "PASS" : "FAIL")
             << std::endl;
 
-  return scalability_validated ? 0 : 1;
+  EXPECT_TRUE(scalability_validated);
+}

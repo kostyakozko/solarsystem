@@ -232,10 +232,3 @@ TEST(PerformanceRegressionIntegrationTests, Memory_Leak_Detection) {
             std::cout << "Memory leak detection test completed with exception: " << e.what() << std::endl;
         }
 }
-
-    // Print summary and exit immediately to avoid singleton cleanup issues
-    std::cout << "Performance regression tests completed" << std::endl;
-    int exit_code = suite.get_failed_count() == 0 ? 0 : 1;
-
-    // Force immediate exit to avoid singleton cleanup hanging
-    std::exit(exit_code);

@@ -51,18 +51,15 @@ class TrainingSystem {
  private:
   std::vector<TrainingModule> modules_;
 };
-  TEST_SUITE("Test Training System Tests");
 
-  TEST_CASE("Training Module Management") {
-    TrainingSystem training;
+TEST(TrainingSystemTest, TrainingModuleManagement) {
+  TrainingSystem training;
 
-    training.add_module("Test Development");
-    training.add_module("Test Debugging");
+  training.add_module("Test Development");
+  training.add_module("Test Debugging");
 
-    ASSERT_EQ(training.get_module_count(), 2);
+  ASSERT_EQ(training.get_module_count(), 2);
 
-    training.complete_module(0);
-    ASSERT_EQ(training.get_completed_count(), 1);
-  });
-
-  return current_suite->all_passed() ? 0 : 1;
+  training.complete_module(0);
+  ASSERT_EQ(training.get_completed_count(), 1);
+}

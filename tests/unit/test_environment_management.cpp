@@ -271,10 +271,8 @@ class TestEnvironmentManager {
     }
   }
 };
-  TEST_SUITE("Test Environment Management Tests");
-
   // Test 1: Temporary test environment creation and cleanup
-  TEST_CASE("Environment Creation and Cleanup") {
+  TEST(TestEnvironmentManagementTestsTest, Environment_Creation_and_Cleanup) {
     TestEnvironmentManager manager;
 
     // Test 1.1: Create environment
@@ -315,10 +313,10 @@ class TestEnvironmentManager {
       bool cleaned = manager.cleanup_environment("nonexistent");
       ASSERT_FALSE(cleaned);
     }
-  });
+  }
 
   // Test 2: Test data isolation and sandboxing
-  TEST_CASE("Data Isolation and Sandboxing") {
+  TEST(TestEnvironmentManagementTestsTest, Data_Isolation_and_Sandboxing) {
     TestEnvironmentManager manager;
 
     // Test 2.1: Create isolated environments
@@ -366,10 +364,10 @@ class TestEnvironmentManager {
     // Cleanup
     manager.cleanup_environment("isolated_1");
     manager.cleanup_environment("isolated_2");
-  });
+  }
 
   // Test 3: Test environment state management and reset
-  TEST_CASE("State Management and Reset") {
+  TEST(TestEnvironmentManagementTestsTest, State_Management_and_Reset) {
     TestEnvironmentManager manager;
 
     // Test 3.1: Create and populate environment
@@ -421,10 +419,10 @@ class TestEnvironmentManager {
 
     // Cleanup
     manager.cleanup_environment("stateful_env");
-  });
+  }
 
   // Test 4: Resource monitoring and limits
-  TEST_CASE("Resource Monitoring and Limits") {
+  TEST(TestEnvironmentManagementTestsTest, Resource_Monitoring_and_Limits) {
     TestEnvironmentManager manager;
 
     // Test 4.1: Create environment with limits
@@ -471,10 +469,10 @@ class TestEnvironmentManager {
 
     // Cleanup
     manager.cleanup_environment("limited_env");
-  });
+  }
 
   // Test 5: Multiple environment management
-  TEST_CASE("Multiple Environment Management") {
+  TEST(TestEnvironmentManagementTestsTest, Multiple_Environment_Management) {
     TestEnvironmentManager manager;
 
     // Test 5.1: Create multiple environments
@@ -523,10 +521,10 @@ class TestEnvironmentManager {
       auto envs = manager.list_environments();
       ASSERT_EQ(envs.size(), 0);
     }
-  });
+  }
 
   // Test 6: Environment lifecycle
-  TEST_CASE("Environment Lifecycle") {
+  TEST(TestEnvironmentManagementTestsTest, Environment_Lifecycle) {
     TestEnvironmentManager manager;
 
     // Test 6.1: Full lifecycle
@@ -560,6 +558,4 @@ class TestEnvironmentManager {
       ASSERT_TRUE(manager.cleanup_environment("lifecycle_env"));
       ASSERT_FALSE(manager.exists("lifecycle_env"));
     }
-  });
-
-  return current_suite->all_passed() ? 0 : 1;
+  }

@@ -190,7 +190,3 @@ TEST(EnhancedComponentsIntegrationTests, Real_Scenario_Error_Recovery) {
             std::cout << "Error recovery test completed with exception: " << e.what() << std::endl;
         }
 }
-
-    // Force immediate exit to avoid hanging on singleton cleanup
-    // Note: TestSuite destructor will print summary automatically
-    _exit(0);

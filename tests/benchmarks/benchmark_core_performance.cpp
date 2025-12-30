@@ -13,6 +13,7 @@
 #include <chrono>
 #include <filesystem>
 #include <fstream>
+#include <iostream>
 #include <memory>
 #include <random>
 #include <thread>
@@ -28,15 +29,13 @@ using namespace SolarSystem;
 void create_performance_test_cache(const std::filesystem::path& cache_dir) {
   std::filesystem::create_directories(cache_dir);
 
-  // Create a realistic binary cache file
   auto binary_path = cache_dir / "ephemeris_cache.bin";
   std::ofstream binary_file(binary_path, std::ios::binary);
 
   if (binary_file.is_open()) {
-    size_t body_count = 27;  // Full solar system
+    size_t body_count = 27;
     binary_file.write(reinterpret_cast<const char*>(&body_count), sizeof(body_count));
 
-    // Write realistic ephemeris data for all 27 bodies
     for (size_t i = 0; i < body_count; ++i) {
       int jpl_id = static_cast<int>(i + 1);
       binary_file.write(reinterpret_cast<const char*>(&jpl_id), sizeof(jpl_id));
@@ -49,33 +48,72 @@ void create_performance_test_cache(const std::filesystem::path& cache_dir) {
       auto epoch_time = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
       binary_file.write(reinterpret_cast<const char*>(&epoch_time), sizeof(epoch_time));
 
-      // Realistic astronomical positions (in km)
       double i_double = static_cast<double>(i);
       double pos[3] = {1.0e8 * (i_double + 1.0) * std::cos(i_double * 0.5),
                        1.0e8 * (i_double + 1.0) * std::sin(i_double * 0.5),
                        1.0e7 * (i_double + 1.0) * std::sin(i_double * 0.3)};
       binary_file.write(reinterpret_cast<const char*>(pos), sizeof(pos));
 
-      // Realistic orbital velocities (in km/s)
       double vel[3] = {30.0 * std::sin(i_double * 0.7), 30.0 * std::cos(i_double * 0.7),
                        5.0 * std::sin(i_double * 0.2)};
       binary_file.write(reinterpret_cast<const char*>(vel), sizeof(vel));
 
-      // Realistic masses (in kg)
       long double mass = 1.0e24L * std::pow(10.0L, static_cast<long double>(i % 6));
       binary_file.write(reinterpret_cast<const char*>(&mass), sizeof(mass));
     }
   }
 }
-}
-      },
-      50000);  // High iteration count to measure sub-millisecond performance
 
-  // 2. SIMULATION STEP PERFORMANCE - Validate microsecond execution claims
+// Core Performance Benchmark Test
+TEST(CorePerformanceBenchmark, PerformanceClaimsValidation) {
+  auto test_cache_dir = std::filesystem::temp_directory_path() / "core_perf_benchmark_test";
+  create_performance_test_cache(test_cache_dir);
+
+  Benchmark::BenchmarkSuite suite("Core Performance Benchmarks");
+
+  // 1. CACHE LOADING PERFORMANCE
+  suite.run_benchmark(
+      "CacheLoadingPerformance",
+      [&test_cache_dir]() {
+        auto binary_path = test_cache_dir / "ephemeris_cache.bin";
+        std::ifstream file(binary_path, std::ios::binary);
+
+        if (file.is_open()) {
+          size_t body_count;
+          file.read(reinterpret_cast<char*>(&body_count), sizeof(body_count));
+
+          for (size_t i = 0; i < body_count; ++i) {
+            int jpl_id;
+            file.read(reinterpret_cast<char*>(&jpl_id), sizeof(jpl_id));
+
+            size_t name_length;
+            file.read(reinterpret_cast<char*>(&name_length), sizeof(name_length));
+            std::string name(name_length, '\0');
+            file.read(name.data(), static_cast<std::streamsize>(name_length));
+
+            std::time_t epoch_time;
+            file.read(reinterpret_cast<char*>(&epoch_time), sizeof(epoch_time));
+
+            double pos[3];
+            file.read(reinterpret_cast<char*>(pos), sizeof(pos));
+
+            double vel[3];
+            file.read(reinterpret_cast<char*>(vel), sizeof(vel));
+
+            long double mass;
+            file.read(reinterpret_cast<char*>(&mass), sizeof(mass));
+          }
+
+          volatile size_t count = body_count;
+          (void)count;
+        }
+      },
+      50000);
+
+  // 2. SIMULATION STEP PERFORMANCE
   suite.run_benchmark(
       "SimulationStepPerformance",
       []() {
-        // Create realistic celestial bodies for simulation
         Bodies::CelestialBody::Properties sun_props = {.name = "Sun",
                                                        .mass = 1.98847e30L,
                                                        .position = Math::Vector3d{0.0, 0.0, 0.0},
@@ -88,8 +126,8 @@ void create_performance_test_cache(const std::filesystem::path& cache_dir) {
         Bodies::CelestialBody::Properties earth_props = {
             .name = "Earth",
             .mass = 5.97219e24L,
-            .position = Math::Vector3d{1.496e11, 0.0, 0.0},  // 1 AU
-            .velocity = Math::Vector3d{0.0, 29780.0, 0.0},   // Earth orbital velocity
+            .position = Math::Vector3d{1.496e11, 0.0, 0.0},
+            .velocity = Math::Vector3d{0.0, 29780.0, 0.0},
             .type = Bodies::BodyType::Planet,
             .priority = Bodies::BodyPriority::Essential,
             .jpl_id = std::nullopt,
@@ -98,25 +136,22 @@ void create_performance_test_cache(const std::filesystem::path& cache_dir) {
         Bodies::CelestialBody sun(sun_props);
         Bodies::CelestialBody earth(earth_props);
 
-        // Simulate single simulation step
         auto force = earth.gravitational_force_to(sun);
         earth.apply_force(force, 1.0);
         earth.update_position(1.0);
 
-        // Prevent optimization
         volatile auto pos = earth.position().magnitude();
         (void)pos;
       },
-      100000);  // Very high iteration count for microsecond measurement
+      100000);
 
-  // 3. MATHEMATICAL OPERATIONS PERFORMANCE - Vector and physics calculations
+  // 3. MATHEMATICAL OPERATIONS PERFORMANCE
   suite.run_benchmark(
       "MathematicalOperationsPerformance",
       []() {
         Math::Vector3d v1{1.23456789e11, 9.87654321e10, 5.55555555e9};
         Math::Vector3d v2{2.34567890e11, 8.76543210e10, 4.44444444e9};
 
-        // Perform typical vector operations
         auto sum = v1 + v2;
         auto diff = v1 - v2;
         auto cross = v1.cross(v2);
@@ -124,18 +159,16 @@ void create_performance_test_cache(const std::filesystem::path& cache_dir) {
         auto magnitude = v1.magnitude();
         auto normalized = v1.normalized();
 
-        // Prevent optimization
         volatile auto result = sum.magnitude() + diff.magnitude() + cross.magnitude() + dot +
                                magnitude + normalized.magnitude();
         (void)result;
       },
       200000);
 
-  // 4. MEMORY ALLOCATION PERFORMANCE - Test allocation patterns
+  // 4. MEMORY ALLOCATION PERFORMANCE
   suite.run_memory_benchmark(
       "MemoryAllocationPerformance",
       []() {
-        // Simulate typical memory allocation patterns
         std::vector<Bodies::CelestialBody> bodies;
         bodies.reserve(27);
 
@@ -156,12 +189,10 @@ void create_performance_test_cache(const std::filesystem::path& cache_dir) {
           bodies.emplace_back(props);
         }
 
-        // Prevent optimization
         volatile size_t count = bodies.size();
         (void)count;
       },
       5000);
-
 
   // Create benchmark results directory if it doesn't exist
   std::filesystem::create_directories("benchmark_results");
@@ -179,33 +210,29 @@ void create_performance_test_cache(const std::filesystem::path& cache_dir) {
     bool passed = true;
     std::string status = "PASS";
 
-    // Validate cache loading performance (should be very fast)
     if (result.name == "CacheLoadingPerformance") {
-      if (result.avg_duration_ms > 0.1) {  // Should load in under 0.1ms
+      if (result.avg_duration_ms > 0.1) {
         passed = false;
         status = "FAIL - Exceeds 0.1ms threshold";
       }
     }
 
-    // Validate simulation step performance (microsecond claims)
     if (result.name == "SimulationStepPerformance") {
-      if (result.avg_duration_ms > 0.01) {  // Should complete in under 10μs
+      if (result.avg_duration_ms > 0.01) {
         passed = false;
         status = "FAIL - Exceeds 10μs threshold";
       }
     }
 
-    // Validate mathematical operations performance
     if (result.name == "MathematicalOperationsPerformance") {
-      if (result.avg_duration_ms > 0.001) {  // Should complete in under 1μs
+      if (result.avg_duration_ms > 0.001) {
         passed = false;
         status = "FAIL - Exceeds 1μs threshold";
       }
     }
 
-    // Validate memory allocation performance
     if (result.name == "MemoryAllocationPerformance") {
-      if (result.memory_usage_bytes > 100 * 1024 * 1024) {  // Under 100MB
+      if (result.memory_usage_bytes > 100 * 1024 * 1024) {
         passed = false;
         status = "FAIL - Exceeds 100MB memory threshold";
       }
@@ -221,11 +248,10 @@ void create_performance_test_cache(const std::filesystem::path& cache_dir) {
   // Specific claim analysis
   std::cout << "\n=== Specific Claim Analysis ===" << std::endl;
 
-  // Cache performance analysis
   for (const auto& result : results) {
     if (result.name == "CacheLoadingPerformance") {
       double cache_time_ms = result.avg_duration_ms;
-      double simulated_network_time_ms = 100.0;  // Typical network request
+      double simulated_network_time_ms = 100.0;
       double improvement_factor = simulated_network_time_ms / cache_time_ms;
 
       std::cout << "Cache Performance:" << std::endl;
@@ -235,23 +261,23 @@ void create_performance_test_cache(const std::filesystem::path& cache_dir) {
                 << std::endl;
 
       if (improvement_factor >= 1000.0) {
-        std::cout << "  1000x Improvement Claim: VALIDATED ✓" << std::endl;
+        std::cout << "  1000x Improvement Claim: VALIDATED" << std::endl;
       } else {
-        std::cout << "  1000x Improvement Claim: NOT VALIDATED ✗" << std::endl;
+        std::cout << "  1000x Improvement Claim: NOT VALIDATED" << std::endl;
         all_claims_validated = false;
       }
     }
 
     if (result.name == "SimulationStepPerformance") {
-      double sim_time_us = result.avg_duration_ms * 1000.0;  // Convert to microseconds
+      double sim_time_us = result.avg_duration_ms * 1000.0;
 
       std::cout << "Simulation Performance:" << std::endl;
       std::cout << "  Simulation Step Time: " << sim_time_us << " μs" << std::endl;
 
       if (sim_time_us <= 10.0) {
-        std::cout << "  Microsecond Execution Claim: VALIDATED ✓" << std::endl;
+        std::cout << "  Microsecond Execution Claim: VALIDATED" << std::endl;
       } else {
-        std::cout << "  Microsecond Execution Claim: NOT VALIDATED ✗" << std::endl;
+        std::cout << "  Microsecond Execution Claim: NOT VALIDATED" << std::endl;
         all_claims_validated = false;
       }
     }
@@ -263,4 +289,5 @@ void create_performance_test_cache(const std::filesystem::path& cache_dir) {
   // Cleanup
   std::filesystem::remove_all(test_cache_dir);
 
-  return all_claims_validated ? 0 : 1;
+  EXPECT_TRUE(all_claims_validated);
+}

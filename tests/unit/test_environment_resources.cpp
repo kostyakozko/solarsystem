@@ -227,10 +227,8 @@ class ResourceLimitTester {
     return true;
   }
 };
-  TEST_SUITE("Environment and Resource Tests");
-
   // Test 1: Environment variable access
-  TEST_CASE("Environment Variable Access") {
+  TEST(EnvironmentAndResourceTestsTest, Environment_Variable_Access) {
     // Test 1.1: Get common environment variables
     auto env_vars = EnvironmentManager::get_common_env_vars();
     ASSERT_FALSE(env_vars.empty());
@@ -249,10 +247,10 @@ class ResourceLimitTester {
       std::string home = EnvironmentManager::get_env("HOME");
       ASSERT_FALSE(home.empty());
     }
-  });
+  }
 
   // Test 2: Resource usage monitoring
-  TEST_CASE("Resource Usage Monitoring") {
+  TEST(EnvironmentAndResourceTestsTest, Resource_Usage_Monitoring) {
     auto usage = ResourceMonitor::get_current_usage();
 
     // Test 2.1: Memory usage
@@ -266,10 +264,10 @@ class ResourceLimitTester {
     // Test 2.3: Disk space
     ASSERT_GT(usage.disk_space_available, 0);
     ASSERT_GE(usage.disk_space_available, usage.disk_space_used);
-  });
+  }
 
   // Test 3: Memory availability checks
-  TEST_CASE("Memory Availability Checks") {
+  TEST(EnvironmentAndResourceTestsTest, Memory_Availability_Checks) {
     // Test 3.1: Small allocation should be available
     ASSERT_TRUE(ResourceMonitor::check_memory_available(1024 * 1024));  // 1 MB
 
@@ -279,10 +277,10 @@ class ResourceLimitTester {
     // Test 3.3: CPU count
     int cpu_count = ResourceMonitor::get_cpu_count();
     ASSERT_GT(cpu_count, 0);
-  });
+  }
 
   // Test 4: Disk space checks
-  TEST_CASE("Disk Space Checks") {
+  TEST(EnvironmentAndResourceTestsTest, Disk_Space_Checks) {
     // Test 4.1: Small file should fit
     ASSERT_TRUE(ResourceMonitor::check_disk_space_available(1024 * 1024));  // 1 MB
 
@@ -292,10 +290,10 @@ class ResourceLimitTester {
     // Test 4.3: Get available disk space
     size_t available = FileSystemTester::get_available_disk_space("/tmp");
     ASSERT_GT(available, 0);
-  });
+  }
 
   // Test 5: File system access
-  TEST_CASE("File System Access") {
+  TEST(EnvironmentAndResourceTestsTest, File_System_Access) {
     // Test 5.1: Read access to /dev/null (Unix systems)
     bool can_read = FileSystemTester::test_file_access("/dev/null", FileSystemTester::Permission::Read);
     ASSERT_TRUE(can_read);
@@ -307,10 +305,10 @@ class ResourceLimitTester {
     // Test 5.3: Directory access
     bool dir_access = FileSystemTester::test_directory_access("/tmp");
     ASSERT_TRUE(dir_access);
-  });
+  }
 
   // Test 6: Network configuration
-  TEST_CASE("Network Configuration") {
+  TEST(EnvironmentAndResourceTestsTest, Network_Configuration) {
     auto config = NetworkTester::get_network_config();
 
     // Test 6.1: Hostname
@@ -324,10 +322,10 @@ class ResourceLimitTester {
 
     // Test 6.4: Validate configuration
     ASSERT_TRUE(NetworkTester::validate_network_config(config));
-  });
+  }
 
   // Test 7: Network connectivity
-  TEST_CASE("Network Connectivity") {
+  TEST(EnvironmentAndResourceTestsTest, Network_Connectivity) {
     // Test 7.1: Localhost connectivity
     bool localhost_ok = NetworkTester::test_localhost_connectivity();
     ASSERT_TRUE(localhost_ok);
@@ -335,10 +333,10 @@ class ResourceLimitTester {
     // Test 7.2: DNS resolution
     bool dns_ok = NetworkTester::test_dns_resolution("localhost");
     ASSERT_TRUE(dns_ok);
-  });
+  }
 
   // Test 8: Resource limits
-  TEST_CASE("Resource Limits") {
+  TEST(EnvironmentAndResourceTestsTest, Resource_Limits) {
     auto limits = ResourceLimitTester::get_system_limits();
 
     // Test 8.1: Memory limits
@@ -355,10 +353,10 @@ class ResourceLimitTester {
 
     // Test 8.5: Validate limits
     ASSERT_TRUE(ResourceLimitTester::validate_limits(limits));
-  });
+  }
 
   // Test 9: Memory allocation testing
-  TEST_CASE("Memory Allocation Testing") {
+  TEST(EnvironmentAndResourceTestsTest, Memory_Allocation_Testing) {
     // Test 9.1: Small allocation
     ASSERT_TRUE(ResourceLimitTester::test_memory_allocation(1024));  // 1 KB
 
@@ -367,10 +365,10 @@ class ResourceLimitTester {
 
     // Test 9.3: Large allocation
     ASSERT_TRUE(ResourceLimitTester::test_memory_allocation(10 * 1024 * 1024));  // 10 MB
-  });
+  }
 
   // Test 10: Comprehensive environment validation
-  TEST_CASE("Comprehensive Environment Validation") {
+  TEST(EnvironmentAndResourceTestsTest, Comprehensive_Environment_Validation) {
     // Test 10.1: Environment variables
     auto env_vars = EnvironmentManager::get_common_env_vars();
     ASSERT_FALSE(env_vars.empty());
@@ -391,6 +389,4 @@ class ResourceLimitTester {
     // Test 10.5: Resource limits
     auto limits = ResourceLimitTester::get_system_limits();
     ASSERT_TRUE(ResourceLimitTester::validate_limits(limits));
-  });
-
-  return current_suite->all_passed() ? 0 : 1;
+  }

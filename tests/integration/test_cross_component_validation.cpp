@@ -204,7 +204,3 @@ TEST(CrossComponentValidationIntegrationTests, Error_Recovery_Integration) {
             std::cout << "Error recovery test completed with exception: " << e.what() << std::endl;
         }
 }
-
-    // Force immediate exit to avoid hanging on singleton cleanup
-    // Note: TestSuite destructor will print summary automatically
-    _exit(0);

@@ -244,10 +244,8 @@ class TestSuiteMaintenanceManager {
   std::set<std::string> duplicate_tests_;
   std::set<std::string> outdated_tests_;
 };
-  TEST_SUITE("Test Reliability and Maintenance Tests");
-
   // Test 1: Flaky test detection
-  TEST_CASE("Flaky Test Detection") {
+  TEST(TestReliabilityAndMaintenanceTestsTest, Flaky_Test_Detection) {
     FlakyTestDetector detector;
 
     // Test 1.1: Record stable test executions
@@ -278,10 +276,10 @@ class TestSuiteMaintenanceManager {
     auto flaky_tests = detector.get_flaky_tests();
     ASSERT_EQ(flaky_tests.size(), 1);
     ASSERT_EQ(flaky_tests[0], "flaky_test");
-  });
+  }
 
   // Test 2: Test execution monitoring
-  TEST_CASE("Test Execution Monitoring") {
+  TEST(TestReliabilityAndMaintenanceTestsTest, Test_Execution_Monitoring) {
     TestExecutionMonitor monitor;
 
     // Test 2.1: Record test runs
@@ -302,10 +300,10 @@ class TestSuiteMaintenanceManager {
     auto slow_tests = monitor.get_slow_tests(std::chrono::milliseconds(100));
     ASSERT_EQ(slow_tests.size(), 1);
     ASSERT_EQ(slow_tests[0], "slow_test");
-  });
+  }
 
   // Test 3: Performance optimization
-  TEST_CASE("Performance Optimization") {
+  TEST(TestReliabilityAndMaintenanceTestsTest, Performance_Optimization) {
     TestPerformanceOptimizer optimizer;
 
     // Test 3.1: Analyze slow test
@@ -331,10 +329,10 @@ class TestSuiteMaintenanceManager {
     auto all_suggestions = optimizer.get_all_suggestions(test_durations);
     ASSERT_EQ(all_suggestions.size(), 2);  // test1 and test2
     ASSERT_EQ(all_suggestions[0].priority, 5);  // test1 (highest priority)
-  });
+  }
 
   // Test 4: Test suite maintenance
-  TEST_CASE("Test Suite Maintenance") {
+  TEST(TestReliabilityAndMaintenanceTestsTest, Test_Suite_Maintenance) {
     TestSuiteMaintenanceManager manager;
 
     // Test 4.1: Mark tests for maintenance
@@ -358,10 +356,10 @@ class TestSuiteMaintenanceManager {
     manager.cleanup_test("old_test");
     report = manager.generate_report(all_tests);
     ASSERT_EQ(report.deprecated_tests, 0);
-  });
+  }
 
   // Test 5: Comprehensive reliability workflow
-  TEST_CASE("Comprehensive Reliability Workflow") {
+  TEST(TestReliabilityAndMaintenanceTestsTest, Comprehensive_Reliability_Workflow) {
     FlakyTestDetector flaky_detector;
     TestExecutionMonitor monitor;
     TestPerformanceOptimizer optimizer;
@@ -423,6 +421,4 @@ class TestSuiteMaintenanceManager {
 
     auto report = maintenance.generate_report(test_suite);
     ASSERT_EQ(report.tests_to_update.size(), 1);
-  });
-
-  return current_suite->all_passed() ? 0 : 1;
+  }

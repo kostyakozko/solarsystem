@@ -255,14 +255,12 @@ class OptimizationGuidance {
     return alerts;
   }
 };
-  TEST_SUITE("Optimization Guidance System Tests");
-
   // ============================================================================
   // TASK 10: PERFORMANCE OPTIMIZATION GUIDANCE SYSTEM
   // ============================================================================
 
   // Test 1: Performance analysis and recommendation engine
-  TEST_CASE("Performance Analysis and Recommendation Engine") {
+  TEST(OptimizationGuidanceSystemTestsTest, Performance_Analysis_and_Recommendation_Engine) {
     // Test 1.1: Optimal performance
     {
       auto result = OptimizationGuidance::analyze_performance(
@@ -315,10 +313,10 @@ class OptimizationGuidance {
       ASSERT_GE(result.recommendations.size(), 2);
       ASSERT_EQ(result.overall_assessment, "Multiple optimization opportunities");
     }
-  });
+  }
 
   // Test 2: Bottleneck identification and optimization suggestions
-  TEST_CASE("Bottleneck Identification and Optimization Suggestions") {
+  TEST(OptimizationGuidanceSystemTestsTest, Bottleneck_Identification_and_Optimization_Suggestions) {
     // Test 2.1: Single critical bottleneck
     {
       std::map<std::string, double> times = {
@@ -370,10 +368,10 @@ class OptimizationGuidance {
         }
       }
     }
-  });
+  }
 
   // Test 3: Performance impact analysis for code changes
-  TEST_CASE("Performance Impact Analysis for Code Changes") {
+  TEST(OptimizationGuidanceSystemTestsTest, Performance_Impact_Analysis_for_Code_Changes) {
     // Test 3.1: Significant improvement
     {
       auto impact = OptimizationGuidance::analyze_impact(
@@ -415,10 +413,10 @@ class OptimizationGuidance {
       ASSERT_FALSE(impact.is_significant);
       EXPECT_NE(std::string::npos, impact.verdict.find("No significant"));
     }
-  });
+  }
 
   // Test 4: Performance monitoring and alerting
-  TEST_CASE("Performance Monitoring and Alerting") {
+  TEST(OptimizationGuidanceSystemTestsTest, Performance_Monitoring_and_Alerting) {
     // Test 4.1: No alerts (within thresholds)
     {
       std::map<std::string, double> metrics = {
@@ -487,10 +485,10 @@ class OptimizationGuidance {
         ASSERT_FALSE(alert.action_items.empty());
       }
     }
-  });
+  }
 
   // Test 5: Integrated optimization workflow
-  TEST_CASE("Integrated Optimization Workflow") {
+  TEST(OptimizationGuidanceSystemTestsTest, Integrated_Optimization_Workflow) {
     // Test 5.1: Complete analysis workflow
     {
       // Step 1: Run benchmark
@@ -561,6 +559,4 @@ class OptimizationGuidance {
       ASSERT_FALSE(impact.change_description.empty());
       ASSERT_FALSE(impact.verdict.empty());
     }
-  });
-
-  return current_suite->all_passed() ? 0 : 1;
+  }

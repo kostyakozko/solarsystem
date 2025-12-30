@@ -21,24 +21,22 @@
 using namespace SolarSystem;
 
 namespace fs = std::filesystem;
-  TEST_SUITE("Workflow Validation Tests");
-
   // Test 1: JPL Client Initialization
-  TEST_CASE("JPL Client Initialization") {
+  TEST(WorkflowValidationTestsTest, JPL_Client_Initialization) {
     SolarSystem::JPL::JPLClient client;
     // Basic initialization test - client should be created successfully
     ASSERT_TRUE(true);  // If we get here, initialization succeeded
-  });
+  }
 
   // Test 2: Simulation Engine Initialization
-  TEST_CASE("Simulation Engine Initialization") {
+  TEST(WorkflowValidationTestsTest, Simulation_Engine_Initialization) {
     SolarSystem::Simulation::SimulationEngine engine;
     // Basic initialization test - engine should be created successfully
     ASSERT_TRUE(true);  // If we get here, initialization succeeded
-  });
+  }
 
   // Test 3: File System Operations for Workflow
-  TEST_CASE("File System Operations for Workflow") {
+  TEST(WorkflowValidationTestsTest, File_System_Operations_for_Workflow) {
     // Create temporary directory for workflow testing
     fs::path temp_dir = fs::temp_directory_path() / "test_workflow";
     fs::create_directories(temp_dir);
@@ -65,10 +63,10 @@ namespace fs = std::filesystem;
     // Cleanup
     fs::remove_all(temp_dir);
     ASSERT_FALSE(fs::exists(temp_dir));
-  });
+  }
 
   // Test 4: Workflow Timing and Performance
-  TEST_CASE("Workflow Timing and Performance") {
+  TEST(WorkflowValidationTestsTest, Workflow_Timing_and_Performance) {
     auto start = std::chrono::high_resolution_clock::now();
 
     // Simulate some workflow operations
@@ -80,10 +78,10 @@ namespace fs = std::filesystem;
     // Verify timing works correctly
     ASSERT_TRUE(duration.count() >= 10);
     ASSERT_TRUE(duration.count() < 1000);  // Should complete quickly
-  });
+  }
 
   // Test 5: Error Recovery Workflow Simulation
-  TEST_CASE("Error Recovery Workflow Simulation") {
+  TEST(WorkflowValidationTestsTest, Error_Recovery_Workflow_Simulation) {
     // Simulate error detection
     bool error_detected = true;
     ASSERT_TRUE(error_detected);
@@ -95,10 +93,10 @@ namespace fs = std::filesystem;
     // Simulate successful recovery
     bool recovery_successful = true;
     ASSERT_TRUE(recovery_successful);
-  });
+  }
 
   // Test 6: Data Pipeline Workflow
-  TEST_CASE("Data Pipeline Workflow") {
+  TEST(WorkflowValidationTestsTest, Data_Pipeline_Workflow) {
     // Step 1: Data generation
     std::vector<double> data = {1.0, 2.0, 3.0, 4.0, 5.0};
     ASSERT_EQ(data.size(), 5u);
@@ -119,10 +117,10 @@ namespace fs = std::filesystem;
     }
 
     ASSERT_EQ(sum, 30.0);  // 2+4+6+8+10 = 30
-  });
+  }
 
   // Test 7: Multi-Step Workflow with Checkpoints
-  TEST_CASE("Multi-Step Workflow with Checkpoints") {
+  TEST(WorkflowValidationTestsTest, Multi_Step_Workflow_with_Checkpoints) {
     int workflow_step = 0;
 
     // Step 1: Initialize
@@ -143,10 +141,10 @@ namespace fs = std::filesystem;
 
     // Verify all steps completed
     ASSERT_TRUE(workflow_step == 4);
-  });
+  }
 
   // Test 8: Concurrent Workflow Operations
-  TEST_CASE("Concurrent Workflow Operations") {
+  TEST(WorkflowValidationTestsTest, Concurrent_Workflow_Operations) {
     std::atomic<int> counter{0};
 
     // Simulate concurrent operations
@@ -164,10 +162,10 @@ namespace fs = std::filesystem;
 
     // Verify atomic operations worked correctly
     ASSERT_EQ(counter.load(), 200);
-  });
+  }
 
   // Test 9: Workflow State Management
-  TEST_CASE("Workflow State Management") {
+  TEST(WorkflowValidationTestsTest, Workflow_State_Management) {
     enum class WorkflowState {
       IDLE,
       RUNNING,
@@ -186,10 +184,10 @@ namespace fs = std::filesystem;
     // Transition to completed
     state = WorkflowState::COMPLETED;
     ASSERT_TRUE(state == WorkflowState::COMPLETED);
-  });
+  }
 
   // Test 10: Workflow Resource Cleanup
-  TEST_CASE("Workflow Resource Cleanup") {
+  TEST(WorkflowValidationTestsTest, Workflow_Resource_Cleanup) {
     // Create temporary resources
     fs::path temp_dir = fs::temp_directory_path() / "test_cleanup";
     fs::create_directories(temp_dir);
@@ -210,7 +208,4 @@ namespace fs = std::filesystem;
     ASSERT_FALSE(fs::exists(temp_dir));
     ASSERT_FALSE(fs::exists(file1));
     ASSERT_FALSE(fs::exists(file2));
-  });
-
-  current_suite->print_summary();
-  return current_suite->all_passed() ? 0 : 1;
+  }

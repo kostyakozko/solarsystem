@@ -41,112 +41,112 @@ class MockJPLClient {
 };
 
 MockJPLClient::FailureMode MockJPLClient::failure_mode_ = MockJPLClient::FailureMode::None;
-  TEST_SUITE("Data Pipeline Integration Tests");
 
-  // Test 1: Complete JPL → BodyFactory → Simulation pipeline
-  TEST_CASE("Complete Data Pipeline - JPL to Simulation") {
-    // Create temporary test environment
-    auto test_env = TestDataManager::create_test_environment();
-    ASSERT_NOT_NULL(test_env.get());
+// Test 1: Complete JPL → BodyFactory → Simulation pipeline
+TEST(DataPipelineIntegrationTest, Complete_Data_Pipeline_JPL_to_Simulation) {
+  // Create temporary test environment
+  auto test_env = TestDataManager::create_test_environment();
+  ASSERT_NE(test_env.get(), nullptr);
 
-    // Initialize body factory with test configuration
+  // Initialize body factory with test configuration
+  Bodies::BodyFactory::CreationOptions options;
+  options.preferred_source = Bodies::BodyFactory::DataSource::CACHED_DATA;
+  options.allow_fallback = true;
+  options.validate_data = true;
+
+  Bodies::BodyFactory factory(options);
+  ASSERT_TRUE(factory.is_initialized());
+
+  // Create a small collection of bodies for testing
+  std::vector<std::string> test_bodies = {"Sun", "Earth", "Moon"};
+  auto collection_result = factory.create_collection(test_bodies, options);
+  ASSERT_TRUE(collection_result.has_value());
+
+  auto& collection = collection_result.value();
+  ASSERT_EQ(collection.size(), 3);
+
+  // Initialize simulation engine
+  Simulation::SimulationConfig sim_config;
+  sim_config.time_step = 3600.0;  // 1 hour steps for testing
+  sim_config.use_adaptive_timestep = false;
+
+  Simulation::SimulationEngine engine(sim_config);
+
+  // Initialize simulation with the body collection
+  auto init_result = engine.initialize(std::move(collection));
+  ASSERT_TRUE(init_result.has_value());
+  ASSERT_TRUE(engine.is_initialized());
+
+  // Run a few simulation steps to verify the pipeline works
+  for (int i = 0; i < 5; ++i) {
+    auto step_result = engine.step();
+    ASSERT_TRUE(step_result.has_value());
+  }
+
+  // Verify simulation state is reasonable
+  const auto& state = engine.get_state();
+  ASSERT_GT(state.current_time, 0.0);
+  ASSERT_EQ(state.iteration_count, 5);
+  // Total energy should be finite and reasonable for a gravitational system
+  // (typically negative for bound systems)
+  ASSERT_TRUE(std::isfinite(state.total_energy));
+  ASSERT_TRUE(std::abs(state.total_energy) < 1e50);  // Reasonable magnitude check
+}
+
+// Test 2: Cache loading and fallback mechanisms
+TEST(DataPipelineIntegrationTest, Cache_Loading_and_Fallback_Mechanisms) {
+  // Test with valid cache
+  {
+    auto test_cache = TestDataManager::create_test_cache("ephemeris");
+    test_cache->populate_with_valid_data();
+    EXPECT_TRUE(test_cache->cache_exists());
+
     Bodies::BodyFactory::CreationOptions options;
     options.preferred_source = Bodies::BodyFactory::DataSource::CACHED_DATA;
     options.allow_fallback = true;
-    options.validate_data = true;
 
     Bodies::BodyFactory factory(options);
-    ASSERT_TRUE(factory.is_initialized());
+    auto result = factory.create_body("Earth", options);
+    ASSERT_TRUE(result.has_value());
 
-    // Create a small collection of bodies for testing
-    std::vector<std::string> test_bodies = {"Sun", "Earth", "Moon"};
-    auto collection_result = factory.create_collection(test_bodies, options);
-    ASSERT_TRUE(collection_result.has_value());
+    const auto& earth = result.value();
+    ASSERT_EQ(earth.name(), "Earth");
+    ASSERT_GT(earth.mass(), 0.0);
+  }
 
-    auto& collection = collection_result.value();
-    ASSERT_EQ(collection.size(), 3);
+  // Test with corrupted cache - should fallback
+  {
+    auto test_cache = TestDataManager::create_test_cache("ephemeris");
+    test_cache->populate_with_corrupted_data();
+    EXPECT_TRUE(test_cache->cache_exists());
 
-    // Initialize simulation engine
-    Simulation::SimulationConfig sim_config;
-    sim_config.time_step = 3600.0;  // 1 hour steps for testing
-    sim_config.use_adaptive_timestep = false;
+    Bodies::BodyFactory::CreationOptions options;
+    options.preferred_source = Bodies::BodyFactory::DataSource::CACHED_DATA;
+    options.allow_fallback = true;
 
-    Simulation::SimulationEngine engine(sim_config);
+    Bodies::BodyFactory factory(options);
+    auto result = factory.create_body("Earth", options);
+    ASSERT_TRUE(result.has_value());  // Should succeed via fallback
 
-    // Initialize simulation with the body collection
-    auto init_result = engine.initialize(std::move(collection));
-    ASSERT_TRUE(init_result.has_value());
-    ASSERT_TRUE(engine.is_initialized());
+    const auto& earth = result.value();
+    ASSERT_EQ(earth.name(), "Earth");
+    ASSERT_GT(earth.mass(), 0.0);
+  }
 
-    // Run a few simulation steps to verify the pipeline works
-    for (int i = 0; i < 5; ++i) {
-      auto step_result = engine.step();
-      ASSERT_TRUE(step_result.has_value());
-    }
+  // Test with no cache and no fallback - should fail gracefully
+  {
+    Bodies::BodyFactory::CreationOptions options;
+    options.preferred_source = Bodies::BodyFactory::DataSource::CACHED_DATA;
+    options.allow_fallback = false;
 
-    // Verify simulation state is reasonable
-    const auto& state = engine.get_state();
-    ASSERT_GT(state.current_time, 0.0);
-    ASSERT_EQ(state.iteration_count, 5);
-    // Total energy should be finite and reasonable for a gravitational system
-    // (typically negative for bound systems)
-    ASSERT_TRUE(std::isfinite(state.total_energy));
-    ASSERT_TRUE(std::abs(state.total_energy) < 1e50);  // Reasonable magnitude check
-  });
-
-  // Test 2: Cache loading and fallback mechanisms
-  TEST_CASE("Cache Loading and Fallback Mechanisms"){
-      // Test with valid cache
-      {auto test_cache = TestDataManager::create_test_cache("ephemeris");
-  test_cache->populate_with_valid_data();
-  EXPECT_GT(test_cache-, cache_exists());
-
-  Bodies::BodyFactory::CreationOptions options;
-  options.preferred_source = Bodies::BodyFactory::DataSource::CACHED_DATA;
-  options.allow_fallback = true;
-
-  Bodies::BodyFactory factory(options);
-  auto result = factory.create_body("Earth", options);
-  ASSERT_TRUE(result.has_value());
-
-  const auto& earth = result.value();
-  ASSERT_EQ(earth.name(), "Earth");
-  ASSERT_GT(earth.mass(), 0.0);
+    Bodies::BodyFactory factory(options);
+    auto result = factory.create_body("NonexistentBody", options);
+    ASSERT_FALSE(result.has_value());  // Should fail without fallback
+  }
 }
-
-// Test with corrupted cache - should fallback
-{
-  auto test_cache = TestDataManager::create_test_cache("ephemeris");
-  test_cache->populate_with_corrupted_data();
-  EXPECT_GT(test_cache-, cache_exists());
-
-  Bodies::BodyFactory::CreationOptions options;
-  options.preferred_source = Bodies::BodyFactory::DataSource::CACHED_DATA;
-  options.allow_fallback = true;
-
-  Bodies::BodyFactory factory(options);
-  auto result = factory.create_body("Earth", options);
-  ASSERT_TRUE(result.has_value());  // Should succeed via fallback
-
-  const auto& earth = result.value();
-  ASSERT_EQ(earth.name(), "Earth");
-  ASSERT_GT(earth.mass(), 0.0);
-}
-
-// Test with no cache and no fallback - should fail gracefully
-{
-  Bodies::BodyFactory::CreationOptions options;
-  options.preferred_source = Bodies::BodyFactory::DataSource::CACHED_DATA;
-  options.allow_fallback = false;
-
-  Bodies::BodyFactory factory(options);
-  auto result = factory.create_body("NonexistentBody", options);
-  ASSERT_FALSE(result.has_value());  // Should fail without fallback
-}
-});
 
 // Test 3: Network error handling and retry mechanisms
-TEST_CASE("Network Error Handling and Retry") {
+TEST(DataPipelineIntegrationTest, Network_Error_Handling_and_Retry) {
   // Test network timeout handling
   {
     MockJPLClient::set_failure_mode(MockJPLClient::FailureMode::NetworkTimeout);
@@ -200,10 +200,10 @@ TEST_CASE("Network Error Handling and Retry") {
 
   // Reset failure mode
   MockJPLClient::set_failure_mode(MockJPLClient::FailureMode::None);
-});
+}
 
 // Test 4: Real data integration with validation
-TEST_CASE("Real Data Integration and Validation") {
+TEST(DataPipelineIntegrationTest, Real_Data_Integration_and_Validation) {
   // Load real test data
   auto jpl_data = TestDataManager::load_jpl_responses("current_year");
   if (jpl_data.has_value()) {
@@ -216,7 +216,7 @@ TEST_CASE("Real Data Integration and Validation") {
   // Test with real ephemeris data
   auto ephemeris_data = TestDataManager::load_ephemeris_data("2024");
   if (ephemeris_data.has_value()) {
-    EXPECT_GT(TestDataManager::validate_ephemeris_data(ephemeris_data-, files.begin()->second));
+    EXPECT_TRUE(TestDataManager::validate_ephemeris_data(ephemeris_data->files.begin()->second));
   }
 
   // Create bodies using real data and validate physical properties
@@ -250,10 +250,10 @@ TEST_CASE("Real Data Integration and Validation") {
     double speed_kms = static_cast<double>(vel.magnitude()) / 1000.0;  // Convert to km/s
     ASSERT_LT(speed_kms, 100.0);
   }
-});
+}
 
 // Test 5: Data consistency across pipeline stages
-TEST_CASE("Data Consistency Across Pipeline Stages") {
+TEST(DataPipelineIntegrationTest, Data_Consistency_Across_Pipeline_Stages) {
   // Create the same body using different data sources
   Bodies::BodyFactory::CreationOptions cached_options;
   cached_options.preferred_source = Bodies::BodyFactory::DataSource::CACHED_DATA;
@@ -289,10 +289,10 @@ TEST_CASE("Data Consistency Across Pipeline Stages") {
     ASSERT_GT(pos2_au, 0.8);
     ASSERT_LT(pos2_au, 1.2);
   }
-});
+}
 
 // Test 6: Performance characteristics of data pipeline
-TEST_CASE("Data Pipeline Performance") {
+TEST(DataPipelineIntegrationTest, Data_Pipeline_Performance) {
   auto start_time = std::chrono::high_resolution_clock::now();
 
   // Create a collection of bodies and measure time
@@ -326,6 +326,4 @@ TEST_CASE("Data Pipeline Performance") {
 
   // Simulation initialization should be fast (< 100ms)
   ASSERT_LT(duration.count(), 100);
-});
-
-return current_suite->all_passed() ? 0 : 1;
+}

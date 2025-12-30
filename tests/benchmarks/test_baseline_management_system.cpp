@@ -303,14 +303,12 @@ class BaselineManager {
     return analysis;
   }
 };
-  TEST_SUITE("Baseline Management System Tests");
-
   // ============================================================================
   // TASK 9: PERFORMANCE BASELINE MANAGEMENT SYSTEM
   // ============================================================================
 
   // Test 1: Baseline storage and versioning system
-  TEST_CASE("Baseline Storage and Versioning System") {
+  TEST(BaselineManagementSystemTestsTest, Baseline_Storage_and_Versioning_System) {
     auto test_env = TestDataManager::create_test_environment();
     std::string baseline_dir = test_env->path_string() + "/baselines";
     std::filesystem::create_directories(baseline_dir);
@@ -382,10 +380,10 @@ class BaselineManager {
         ASSERT_TRUE(std::filesystem::exists(filepath));
       }
     }
-  });
+  }
 
   // Test 2: Baseline comparison and regression detection
-  TEST_CASE("Baseline Comparison and Regression Detection") {
+  TEST(BaselineManagementSystemTestsTest, Baseline_Comparison_and_Regression_Detection) {
     // Test 2.1: Detect regression
     {
       BaselineManager::BaselineVersion baseline;
@@ -491,10 +489,10 @@ class BaselineManager {
       ASSERT_GT(improvements, 0);
       ASSERT_GT(stable, 0);
     }
-  });
+  }
 
   // Test 3: Statistical significance testing
-  TEST_CASE("Statistical Significance Testing") {
+  TEST(BaselineManagementSystemTestsTest, Statistical_Significance_Testing) {
     // Test 3.1: Significant difference
     {
       std::vector<double> baseline_samples = {100.0, 101.0, 99.0, 100.5, 100.2};
@@ -541,10 +539,10 @@ class BaselineManager {
       ASSERT_FALSE(test.is_significant);
       EXPECT_NE(std::string::npos, test.interpretation.find("Insufficient"));
     }
-  });
+  }
 
   // Test 4: Performance trend analysis and reporting
-  TEST_CASE("Performance Trend Analysis and Reporting") {
+  TEST(BaselineManagementSystemTestsTest, Performance_Trend_Analysis_and_Reporting) {
     // Test 4.1: Improving trend
     {
       std::vector<double> improving_values = {100.0, 95.0, 90.0, 85.0, 80.0};
@@ -603,10 +601,10 @@ class BaselineManager {
       ASSERT_EQ(trend.trend_direction, "insufficient_data");
       ASSERT_EQ(trend.trend_slope, 0.0);
     }
-  });
+  }
 
   // Test 5: Integrated baseline management workflow
-  TEST_CASE("Integrated Baseline Management Workflow") {
+  TEST(BaselineManagementSystemTestsTest, Integrated_Baseline_Management_Workflow) {
     auto test_env = TestDataManager::create_test_environment();
     std::string baseline_dir = test_env->path_string() + "/baselines";
     std::filesystem::create_directories(baseline_dir);
@@ -675,6 +673,4 @@ class BaselineManager {
         ASSERT_FALSE(report.status.empty());
       }
     }
-  });
-
-  return current_suite->all_passed() ? 0 : 1;
+  }

@@ -38,17 +38,14 @@ class TestReportGenerator {
     return report;
   }
 };
-  TEST_SUITE("Test Reporting System Tests");
 
-  TEST_CASE("Report Generation") {
-    TestReportGenerator generator;
-    auto report = generator.generate_report(100, 95);
+TEST(ReportingSystemTest, ReportGeneration) {
+  TestReportGenerator generator;
+  auto report = generator.generate_report(100, 95);
 
-    ASSERT_EQ(report.total_tests, 100);
-    ASSERT_EQ(report.passed, 95);
-    ASSERT_EQ(report.failed, 5);
-    ASSERT_EQ(report.pass_rate, 95.0);
-    ASSERT_GT(report.coverage, 0.0);
-  });
-
-  return current_suite->all_passed() ? 0 : 1;
+  ASSERT_EQ(report.total_tests, 100);
+  ASSERT_EQ(report.passed, 95);
+  ASSERT_EQ(report.failed, 5);
+  ASSERT_EQ(report.pass_rate, 95.0);
+  ASSERT_GT(report.coverage, 0.0);
+}

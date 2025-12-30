@@ -18,10 +18,8 @@
 #include <vector>
 
 namespace fs = std::filesystem;
-  TEST_SUITE("Data Validation Integration Tests");
-
   // Test 1: Physical Constraints Validation
-  TEST_CASE("Physical Constraints Validation") {
+  TEST(DataValidationIntegrationTestsTest, Physical_Constraints_Validation) {
     // Test data with valid physical constraints
     double mass = 5.972e24;        // Earth mass (kg)
     double distance = 1.496e11;    // 1 AU (meters)
@@ -33,24 +31,24 @@ namespace fs = std::filesystem;
     EXPECT_GT(velocity , 0.0);
     EXPECT_LT(mass , 1e30);  // Less than solar mass
     EXPECT_LT(velocity , 3e8);  // Less than speed of light
-  });
+  }
 
   // Test 2: Orbital Elements Validation
-  TEST_CASE("Orbital Elements Validation") {
+  TEST(DataValidationIntegrationTestsTest, Orbital_Elements_Validation) {
     double semi_major_axis = 1.496e11;  // 1 AU
     double eccentricity = 0.0167;       // Earth's eccentricity
     double inclination = 0.0;           // Relative to ecliptic
     double period = 365.25 * 24 * 3600; // 1 year in seconds
 
     EXPECT_GT(semi_major_axis , 0.0);
-    EXPECT_GT(eccentricity , = 0.0);
+    EXPECT_GE(eccentricity , 0.0);
     EXPECT_LT(eccentricity , 1.0);  // Elliptical orbit
-    EXPECT_GT(inclination , = 0.0);
+    EXPECT_GE(inclination , 0.0);
     EXPECT_GT(period , 0.0);
-  });
+  }
 
   // Test 3: Data Consistency Validation
-  TEST_CASE("Data Consistency Validation") {
+  TEST(DataValidationIntegrationTestsTest, Data_Consistency_Validation) {
     std::vector<double> timestamps;
     std::vector<double> positions;
 
@@ -73,10 +71,10 @@ namespace fs = std::filesystem;
       double delta = std::abs(positions[i] - positions[i-1]);
       EXPECT_LT(delta , 1e9);
     }
-  });
+  }
 
   // Test 4: Cache File Checksum Validation
-  TEST_CASE("Cache File Checksum Validation") {
+  TEST(DataValidationIntegrationTestsTest, Cache_File_Checksum_Validation) {
     fs::path cache_dir = fs::temp_directory_path() / "test_cache_integrity";
     fs::create_directories(cache_dir);
 
@@ -106,10 +104,10 @@ namespace fs = std::filesystem;
 
     // Cleanup
     fs::remove_all(cache_dir);
-  });
+  }
 
   // Test 5: Cache Corruption Detection
-  TEST_CASE("Cache Corruption Detection") {
+  TEST(DataValidationIntegrationTestsTest, Cache_Corruption_Detection) {
     fs::path cache_dir = fs::temp_directory_path() / "test_corruption";
     fs::create_directories(cache_dir);
 
@@ -142,10 +140,10 @@ namespace fs = std::filesystem;
 
     // Cleanup
     fs::remove_all(cache_dir);
-  });
+  }
 
   // Test 6: Data Recovery from Minor Corruption
-  TEST_CASE("Data Recovery from Minor Corruption") {
+  TEST(DataValidationIntegrationTestsTest, Data_Recovery_from_Minor_Corruption) {
     fs::path recovery_dir = fs::temp_directory_path() / "test_recovery";
     fs::create_directories(recovery_dir);
 
@@ -181,10 +179,10 @@ namespace fs = std::filesystem;
 
     // Cleanup
     fs::remove_all(recovery_dir);
-  });
+  }
 
   // Test 7: Recovery from Backup
-  TEST_CASE("Recovery from Backup") {
+  TEST(DataValidationIntegrationTestsTest, Recovery_from_Backup) {
     fs::path recovery_dir = fs::temp_directory_path() / "test_backup";
     fs::create_directories(recovery_dir);
 
@@ -216,10 +214,10 @@ namespace fs = std::filesystem;
 
     // Cleanup
     fs::remove_all(recovery_dir);
-  });
+  }
 
   // Test 8: Data Reconstruction from Partial Data
-  TEST_CASE("Data Reconstruction from Partial Data") {
+  TEST(DataValidationIntegrationTestsTest, Data_Reconstruction_from_Partial_Data) {
     std::vector<double> timestamps = {0.0, 1.0, 2.0, 3.0, 4.0};
     std::vector<double> positions = {100.0, 0.0, 120.0, 0.0, 140.0};
     std::vector<bool> valid_flags = {true, false, true, false, true};
@@ -250,12 +248,14 @@ namespace fs = std::filesystem;
 
     ASSERT_TRUE(valid_flags[1]);
     ASSERT_TRUE(valid_flags[3]);
-    EXPECT_GT(positions[1] , 105.0 && positions[1] < 115.0);
-    EXPECT_GT(positions[3] , 125.0 && positions[3] < 135.0);
-  });
+    EXPECT_GT(positions[1], 105.0);
+    EXPECT_LT(positions[1], 115.0);
+    EXPECT_GT(positions[3], 125.0);
+    EXPECT_LT(positions[3], 135.0);
+  }
 
   // Test 9: Recovery Suggestion Generation
-  TEST_CASE("Recovery Suggestion Generation") {
+  TEST(DataValidationIntegrationTestsTest, Recovery_Suggestion_Generation) {
     std::string error_type = "NETWORK_TIMEOUT";
     std::vector<std::string> suggestions;
 
@@ -268,10 +268,10 @@ namespace fs = std::filesystem;
 
     ASSERT_FALSE(suggestions.empty());
     ASSERT_TRUE(suggestions.size() >= 3);
-  });
+  }
 
   // Test 10: Context-Aware Recovery Recommendations
-  TEST_CASE("Context-Aware Recovery Recommendations") {
+  TEST(DataValidationIntegrationTestsTest, Context_Aware_Recovery_Recommendations) {
     bool cache_available = true;
     bool network_available = false;
     bool backup_server_available = true;
@@ -294,7 +294,4 @@ namespace fs = std::filesystem;
     ASSERT_FALSE(recommendations.empty());
     ASSERT_TRUE(std::find(recommendations.begin(), recommendations.end(),
                           "Use cached data (recommended)") != recommendations.end());
-  });
-
-  current_suite->print_summary();
-  return current_suite->all_passed() ? 0 : 1;
+  }

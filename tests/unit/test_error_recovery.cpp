@@ -242,10 +242,8 @@ class ErrorRecoveryValidator {
     return has_system_info || has_error_details || has_timestamp;
   }
 };
-  TEST_SUITE("Error Message and Recovery Validation Tests");
-
   // Test 1: Error message quality testing
-  TEST_CASE("Error Message Quality") {
+  TEST(ErrorMessageAndRecoveryValidationTestsTest, Error_Message_Quality) {
     ErrorRecoveryValidator validator;
 
     // Test 1.1: High-quality error message
@@ -253,15 +251,20 @@ class ErrorRecoveryValidator {
         "ERR_001: File not found at line 42 in function load_data(). "
         "Please check the file path and try again.";
     auto quality1 = validator.validate_error_message(error_msg1);
-    EXPECT_GT(quality1.has_error_code && quality1.has_description &&
-                quality1.has_context && quality1.has_suggestion &&
-                quality1.is_clear && quality1.quality_score , 0.7);
+    EXPECT_TRUE(quality1.has_error_code);
+    EXPECT_TRUE(quality1.has_description);
+    EXPECT_TRUE(quality1.has_context);
+    EXPECT_TRUE(quality1.has_suggestion);
+    EXPECT_TRUE(quality1.is_clear);
+    EXPECT_GT(quality1.quality_score, 0.7);
 
     // Test 1.2: Poor-quality error message
     std::string error_msg2 = "Error";
     auto quality2 = validator.validate_error_message(error_msg2);
-    EXPECT_LT(!quality2.has_error_code && !quality2.has_description &&
-                !quality2.has_context && quality2.quality_score , 0.5);
+    EXPECT_FALSE(quality2.has_error_code);
+    EXPECT_FALSE(quality2.has_description);
+    EXPECT_FALSE(quality2.has_context);
+    EXPECT_LT(quality2.quality_score, 0.5);
 
     // Test 1.3: Message with actionable guidance
     std::string error_msg3 = "Connection failed. Please retry or contact support.";
@@ -272,10 +275,10 @@ class ErrorRecoveryValidator {
     std::string error_msg4 = "Invalid parameter at file config.cpp line 156";
     auto quality4 = validator.validate_error_message(error_msg4);
     ASSERT_TRUE(quality4.has_context);
-  });
+  }
 
   // Test 2: Error recovery mechanism validation
-  TEST_CASE("Error Recovery Mechanism") {
+  TEST(ErrorMessageAndRecoveryValidationTestsTest, Error_Recovery_Mechanism) {
     ErrorRecoveryValidator validator;
 
     // Test 2.1: Successful recovery on first attempt
@@ -328,10 +331,10 @@ class ErrorRecoveryValidator {
       ASSERT_FALSE(result.succeeded);
       ASSERT_FALSE(result.recovery_action.empty());
     }
-  });
+  }
 
   // Test 3: User guidance and help messages
-  TEST_CASE("User Guidance and Help Messages") {
+  TEST(ErrorMessageAndRecoveryValidationTestsTest, User_Guidance_and_Help_Messages) {
     ErrorRecoveryValidator validator;
 
     // Test 3.1: Validate comprehensive help message
@@ -383,10 +386,10 @@ class ErrorRecoveryValidator {
       EXPECT_NE(std::string::npos, guidance.find("input"));
       EXPECT_NE(std::string::npos, guidance.find("help"));
     }
-  });
+  }
 
   // Test 4: Error logging validation
-  TEST_CASE("Error Logging Validation") {
+  TEST(ErrorMessageAndRecoveryValidationTestsTest, Error_Logging_Validation) {
     ErrorRecoveryValidator validator;
 
     // Test 4.1: Create and validate error log entry
@@ -433,10 +436,10 @@ class ErrorRecoveryValidator {
 
       ASSERT_FALSE(validator.validate_log_entry(entry));
     }
-  });
+  }
 
   // Test 5: Diagnostic information validation
-  TEST_CASE("Diagnostic Information Validation") {
+  TEST(ErrorMessageAndRecoveryValidationTestsTest, Diagnostic_Information_Validation) {
     ErrorRecoveryValidator validator;
 
     // Test 5.1: Comprehensive diagnostics
@@ -471,10 +474,10 @@ class ErrorRecoveryValidator {
       bool valid = validator.validate_diagnostics(diagnostics);
       ASSERT_FALSE(valid);
     }
-  });
+  }
 
   // Test 6: Integrated error handling scenarios
-  TEST_CASE("Integrated Error Handling Scenarios") {
+  TEST(ErrorMessageAndRecoveryValidationTestsTest, Integrated_Error_Handling_Scenarios) {
     ErrorRecoveryValidator validator;
 
     // Test 6.1: Complete error handling workflow
@@ -525,6 +528,4 @@ class ErrorRecoveryValidator {
       ASSERT_TRUE(test62_passed);
       ASSERT_TRUE(test63_passed);
     }();
-  });
-
-  return current_suite->all_passed() ? 0 : 1;
+  }

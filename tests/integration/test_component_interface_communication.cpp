@@ -78,14 +78,12 @@ class ComponentInterfaceTestUtils {
     return true;
   }
 };
-  TEST_SUITE("Component Interface and Communication Integration Tests");
-
   // ============================================================================
   // TASK 6: COMPONENT INTERFACE AND COMMUNICATION TESTS
   // ============================================================================
 
   // Test 1: Inter-component data flow validation
-  TEST_CASE("Inter-Component Data Flow Validation") {
+  TEST(ComponentInterfaceAndCommunicationIntegrationTestsTest, Inter_Component_Data_Flow_Validation) {
     auto test_env = TestDataManager::create_test_environment();
 
     // Test 1.1: BodyFactory → BodyCollection data flow
@@ -186,10 +184,10 @@ class ComponentInterfaceTestUtils {
         ASSERT_TRUE(std::isfinite(state.total_energy));
       }
     }
-  });
+  }
 
   // Test 2: API contract and compatibility testing
-  TEST_CASE("API Contract and Compatibility Testing") {
+  TEST(ComponentInterfaceAndCommunicationIntegrationTestsTest, API_Contract_and_Compatibility_Testing) {
     // Test 2.1: BodyFactory API contract
     {
       Bodies::BodyFactory factory;
@@ -281,10 +279,10 @@ class ComponentInterfaceTestUtils {
 
       ASSERT_EQ(collection.size(), 2);
     }
-  });
+  }
 
   // Test 3: Configuration sharing and consistency
-  TEST_CASE("Configuration Sharing and Consistency") {
+  TEST(ComponentInterfaceAndCommunicationIntegrationTestsTest, Configuration_Sharing_and_Consistency) {
     auto test_env = TestDataManager::create_test_environment();
     std::string config_dir = test_env->path_string();
 
@@ -365,10 +363,10 @@ class ComponentInterfaceTestUtils {
       // Either succeeds with corrected config or fails gracefully
       (void)init;  // Mark as used
     }
-  });
+  }
 
   // Test 4: Error propagation and handling across components
-  TEST_CASE("Error Propagation and Handling") {
+  TEST(ComponentInterfaceAndCommunicationIntegrationTestsTest, Error_Propagation_and_Handling) {
     // Test 4.1: Error propagation from BodyFactory
     {
       Bodies::BodyFactory factory;
@@ -464,10 +462,10 @@ class ComponentInterfaceTestUtils {
       // Test should complete without crashes
       ASSERT_TRUE(true);
     }
-  });
+  }
 
   // Test 5: Component lifecycle and state management
-  TEST_CASE("Component Lifecycle and State Management") {
+  TEST(ComponentInterfaceAndCommunicationIntegrationTestsTest, Component_Lifecycle_and_State_Management) {
     // Test 5.1: Component initialization order
     {
       // Test that components can be initialized in any order
@@ -558,10 +556,10 @@ class ComponentInterfaceTestUtils {
       // May or may not support reinitialization
       (void)init2;  // Mark as used
     }
-  });
+  }
 
   // Test 6: Performance of component interactions
-  TEST_CASE("Component Interaction Performance") {
+  TEST(ComponentInterfaceAndCommunicationIntegrationTestsTest, Component_Interaction_Performance) {
     // Test 6.1: Factory creation performance
     {
       auto start = std::chrono::high_resolution_clock::now();
@@ -653,6 +651,4 @@ class ComponentInterfaceTestUtils {
       // Complete pipeline should be fast (< 2 seconds)
       ASSERT_LT(duration.count(), 2000);
     }
-  });
-
-  return current_suite->all_passed() ? 0 : 1;
+  }

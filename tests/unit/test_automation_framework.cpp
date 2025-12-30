@@ -246,10 +246,8 @@ class TestMaintenanceManager {
  private:
   std::map<std::string, MaintenanceTask> tasks_;
 };
-  TEST_SUITE("Test Automation Framework Tests");
-
   // Test 1: Test scheduling
-  TEST_CASE("Test Scheduling") {
+  TEST(TestAutomationFrameworkTestsTest, Test_Scheduling) {
     TestScheduler scheduler;
 
     // Test 1.1: Add scheduled tests
@@ -267,10 +265,10 @@ class TestMaintenanceManager {
     scheduler.disable_test("performance_tests");
     scheduler.enable_test("performance_tests");
     ASSERT_EQ(scheduler.get_scheduled_test_count(), 3);
-  });
+  }
 
   // Test 2: Test result collection
-  TEST_CASE("Test Result Collection") {
+  TEST(TestAutomationFrameworkTestsTest, Test_Result_Collection) {
     TestResultCollector collector;
 
     // Test 2.1: Add passing results
@@ -307,10 +305,10 @@ class TestMaintenanceManager {
     // Test 2.4: Calculate pass rate
     double pass_rate = collector.get_pass_rate();
     ASSERT_EQ(pass_rate, 66.66666666666666);  // 2/3 * 100
-  });
+  }
 
   // Test 3: Test notifications
-  TEST_CASE("Test Notifications") {
+  TEST(TestAutomationFrameworkTestsTest, Test_Notifications) {
     TestNotifier notifier;
 
     // Test 3.1: Send failure notification
@@ -330,10 +328,10 @@ class TestMaintenanceManager {
     // Test 3.4: Clear notifications
     notifier.clear();
     ASSERT_EQ(notifier.get_notification_count(), 0);
-  });
+  }
 
   // Test 4: Test maintenance
-  TEST_CASE("Test Maintenance") {
+  TEST(TestAutomationFrameworkTestsTest, Test_Maintenance) {
     TestMaintenanceManager manager;
 
     // Test 4.1: Add maintenance tasks
@@ -353,10 +351,10 @@ class TestMaintenanceManager {
     // Test 4.4: Get overdue tasks
     auto overdue = manager.get_overdue_tasks();
     ASSERT_EQ(overdue.size(), 0);  // None are overdue yet
-  });
+  }
 
   // Test 5: End-to-end automation workflow
-  TEST_CASE("End-to-End Automation Workflow") {
+  TEST(TestAutomationFrameworkTestsTest, End_to_End_Automation_Workflow) {
     TestScheduler scheduler;
     TestResultCollector collector;
     TestNotifier notifier;
@@ -389,6 +387,4 @@ class TestMaintenanceManager {
     ASSERT_EQ(collector.get_passed_count(), 1);
     ASSERT_EQ(collector.get_failed_count(), 1);
     ASSERT_EQ(notifier.get_notification_count(), 2);
-  });
-
-  return current_suite->all_passed() ? 0 : 1;
+  }

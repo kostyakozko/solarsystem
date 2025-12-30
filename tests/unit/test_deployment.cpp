@@ -241,10 +241,8 @@ class CleanupManager {
     return !status.binaries_present && !status.libraries_present && !status.headers_present;
   }
 };
-  TEST_SUITE("Deployment and Installation Tests");
-
   // Test 1: Installation validation
-  TEST_CASE("Installation Validation") {
+  TEST(DeploymentAndInstallationTestsTest, Installation_Validation) {
     std::string install_dir = "/usr/local";
 
     // Test 1.1: Validate installation structure
@@ -262,10 +260,10 @@ class CleanupManager {
     // Test 1.3: File existence check
     bool exists = InstallationValidator::file_exists("/dev/null");
     ASSERT_TRUE(exists);  // /dev/null should always exist on Unix systems
-  });
+  }
 
   // Test 2: Configuration management
-  TEST_CASE("Configuration Management") {
+  TEST(DeploymentAndInstallationTestsTest, Configuration_Management) {
     // Test 2.1: Load default configuration
     auto config = ConfigurationManager::load_default_config();
     ASSERT_FALSE(config.install_dir.empty());
@@ -293,10 +291,10 @@ class CleanupManager {
     ConfigurationManager::Configuration bad_log = config;
     bad_log.log_level = "INVALID";
     ASSERT_FALSE(ConfigurationManager::validate_config(bad_log));
-  });
+  }
 
   // Test 3: Configuration merging
-  TEST_CASE("Configuration Merging") {
+  TEST(DeploymentAndInstallationTestsTest, Configuration_Merging) {
     auto base = ConfigurationManager::load_default_config();
 
     ConfigurationManager::Configuration override;
@@ -314,10 +312,10 @@ class CleanupManager {
 
     // Test 3.2: Validate merged configuration
     ASSERT_TRUE(ConfigurationManager::validate_config(merged));
-  });
+  }
 
   // Test 4: Version parsing
-  TEST_CASE("Version Parsing") {
+  TEST(DeploymentAndInstallationTestsTest, Version_Parsing) {
     // Test 4.1: Parse full version
     auto v1 = VersionManager::parse_version("1.2.3");
     ASSERT_EQ(v1.major, 1);
@@ -338,10 +336,10 @@ class CleanupManager {
 
     // Test 4.4: Version to string
     ASSERT_EQ(v1.to_string(), "1.2.3");
-  });
+  }
 
   // Test 5: Version comparison
-  TEST_CASE("Version Comparison") {
+  TEST(DeploymentAndInstallationTestsTest, Version_Comparison) {
     auto v1_0_0 = VersionManager::parse_version("1.0.0");
     auto v1_1_0 = VersionManager::parse_version("1.1.0");
     auto v1_1_1 = VersionManager::parse_version("1.1.1");
@@ -360,10 +358,10 @@ class CleanupManager {
     // Test 5.3: Equality
     auto v1_0_0_copy = VersionManager::parse_version("1.0.0");
     ASSERT_TRUE(v1_0_0 == v1_0_0_copy);
-  });
+  }
 
   // Test 6: Upgrade compatibility
-  TEST_CASE("Upgrade Compatibility") {
+  TEST(DeploymentAndInstallationTestsTest, Upgrade_Compatibility) {
     auto v1_0_0 = VersionManager::parse_version("1.0.0");
     auto v1_1_0 = VersionManager::parse_version("1.1.0");
     auto v1_2_0 = VersionManager::parse_version("1.2.0");
@@ -378,10 +376,10 @@ class CleanupManager {
 
     // Test 6.3: Downgrade not compatible
     ASSERT_FALSE(VersionManager::is_upgrade_compatible(v1_2_0, v1_1_0));
-  });
+  }
 
   // Test 7: Migration requirements
-  TEST_CASE("Migration Requirements") {
+  TEST(DeploymentAndInstallationTestsTest, Migration_Requirements) {
     auto v1_0_0 = VersionManager::parse_version("1.0.0");
     auto v1_1_0 = VersionManager::parse_version("1.1.0");
     auto v1_1_1 = VersionManager::parse_version("1.1.1");
@@ -395,10 +393,10 @@ class CleanupManager {
 
     // Test 7.3: Patch version change doesn't require migration
     ASSERT_FALSE(VersionManager::requires_migration(v1_1_0, v1_1_1));
-  });
+  }
 
   // Test 8: Cleanup simulation
-  TEST_CASE("Cleanup Simulation") {
+  TEST(DeploymentAndInstallationTestsTest, Cleanup_Simulation) {
     std::string install_dir = "/tmp/test_install";
 
     // Test 8.1: Simulate cleanup
@@ -409,11 +407,11 @@ class CleanupManager {
     ASSERT_GE(report.files_failed, 0);
 
     // Test 8.2: Verify cleanup report structure
-    EXPECT_GT(report.files_removed + report.files_failed , = 0);
-  });
+    EXPECT_GE(report.files_removed + report.files_failed , 0);
+  }
 
   // Test 9: Complete removal verification
-  TEST_CASE("Complete Removal Verification") {
+  TEST(DeploymentAndInstallationTestsTest, Complete_Removal_Verification) {
     std::string install_dir = "/tmp/test_install";
 
     // Test 9.1: Verify removal check works
@@ -423,10 +421,10 @@ class CleanupManager {
     // Test 9.2: Cleanup report consistency
     auto report = CleanupManager::simulate_cleanup(install_dir);
     ASSERT_GE(report.files_removed + report.files_failed, 0);
-  });
+  }
 
   // Test 10: End-to-end deployment workflow
-  TEST_CASE("End-to-End Deployment Workflow") {
+  TEST(DeploymentAndInstallationTestsTest, End_to_End_Deployment_Workflow) {
     // Test 10.1: Configuration
     auto config = ConfigurationManager::load_default_config();
     ASSERT_TRUE(ConfigurationManager::validate_config(config));
@@ -445,6 +443,4 @@ class CleanupManager {
     // Test 10.4: Cleanup
     auto cleanup_report = CleanupManager::simulate_cleanup(config.install_dir);
     ASSERT_GE(cleanup_report.files_removed + cleanup_report.directories_removed, 0);
-  });
-
-  return current_suite->all_passed() ? 0 : 1;
+  }

@@ -263,314 +263,306 @@ class MockVerifier {
     return report;
   }
 };
-  TEST_SUITE("Mock Verification System Tests");
 
-  // Test 1: Detailed mock interacrification
-  TEST_CASE("Detailed Mock Interaction Verification") {
-    MockVerifier verifier;
+// Test 1: Detailed mock interaction verification
+TEST(MockVerificationTest, DetailedMockInteractionVerification) {
+  MockVerifier verifier;
 
-    // Test 1.1: Record and verify basic interactions
-    {
-      verifier.record_call("connect", {"localhost", "8080"}, "success");
-      verifier.record_call("send", {"data"}, "ok");
-      verifier.record_call("disconnect", {}, "closed");
+  // Test 1.1: Record and verify basic interactions
+  {
+    verifier.record_call("connect", {"localhost", "8080"}, "success");
+    verifier.record_call("send", {"data"}, "ok");
+    verifier.record_call("disconnect", {}, "closed");
 
-      ASSERT_EQ(verifier.get_call_history().size(), 3);
-      ASSERT_EQ(verifier.get_call_count("connect"), 1);
-      ASSERT_EQ(verifier.get_call_count("send"), 1);
-      ASSERT_EQ(verifier.get_call_count("disconnect"), 1);
-    }
+    ASSERT_EQ(verifier.get_call_history().size(), 3);
+    ASSERT_EQ(verifier.get_call_count("connect"), 1);
+    ASSERT_EQ(verifier.get_call_count("send"), 1);
+    ASSERT_EQ(verifier.get_call_count("disconnect"), 1);
+  }
 
-    // Test 1.2: Verify call history details
-    {
-      const auto& history = verifier.get_call_history();
-      ASSERT_EQ(history[0].method_name, "connect");
-      ASSERT_EQ(history[0].parameters.size(), 2);
-      ASSERT_EQ(history[0].parameters[0], "localhost");
-      ASSERT_EQ(history[0].return_value, "success");
+  // Test 1.2: Verify call history details
+  {
+    const auto& history = verifier.get_call_history();
+    ASSERT_EQ(history[0].method_name, "connect");
+    ASSERT_EQ(history[0].parameters.size(), 2);
+    ASSERT_EQ(history[0].parameters[0], "localhost");
+    ASSERT_EQ(history[0].return_value, "success");
 
-      ASSERT_EQ(history[1].method_name, "send");
-      ASSERT_EQ(history[2].method_name, "disconnect");
-    }
+    ASSERT_EQ(history[1].method_name, "send");
+    ASSERT_EQ(history[2].method_name, "disconnect");
+  }
 
-    // Test 1.3: Verify timestamps
-    {
-      const auto& history = verifier.get_call_history();
-      EXPECT_LT(history[0].timestamp , = history[1].timestamp);
-      EXPECT_LT(history[1].timestamp , = history[2].timestamp);
-    }
+  // Test 1.3: Verify timestamps
+  {
+    const auto& history = verifier.get_call_history();
+    EXPECT_LE(history[0].timestamp, history[1].timestamp);
+    EXPECT_LE(history[1].timestamp, history[2].timestamp);
+  }
 
-    // Test 1.4: Verify call indices
-    {
-      const auto& history = verifier.get_call_history();
-      ASSERT_EQ(history[0].call_index, 0);
-      ASSERT_EQ(history[1].call_index, 1);
-      ASSERT_EQ(history[2].call_index, 2);
-    }
-  });
+  // Test 1.4: Verify call indices
+  {
+    const auto& history = verifier.get_call_history();
+    ASSERT_EQ(history[0].call_index, 0);
+    ASSERT_EQ(history[1].call_index, 1);
+    ASSERT_EQ(history[2].call_index, 2);
+  }
+}
 
-  // Test 2: Call count verification
-  TEST_CASE("Call Count Verification") {
-    MockVerifier verifier;
+// Test 2: Call count verification
+TEST(MockVerificationTest, CallCountVerification) {
+  MockVerifier verifier;
 
-    // Test 2.1: Exact call count verification
-    {
-      verifier.record_call("fetch", {"data1"});
-      verifier.record_call("fetch", {"data2"});
-      verifier.record_call("fetch", {"data3"});
+  // Test 2.1: Exact call count verification
+  {
+    verifier.record_call("fetch", {"data1"});
+    verifier.record_call("fetch", {"data2"});
+    verifier.record_call("fetch", {"data3"});
 
-      auto result = verifier.verify_call_count("fetch", 3);
-      ASSERT_TRUE(result.passed);
-      ASSERT_TRUE(result.errors.empty());
-    }
+    auto result = verifier.verify_call_count("fetch", 3);
+    ASSERT_TRUE(result.passed);
+    ASSERT_TRUE(result.errors.empty());
+  }
 
-    // Test 2.2: Failed call count verification
-    {
-      auto result = verifier.verify_call_count("fetch", 5);
-      ASSERT_FALSE(result.passed);
-      ASSERT_FALSE(result.errors.empty());
-      EXPECT_NE(std::string::npos, result.errors[0].find("expected 5 calls, got 3"));
-    }
+  // Test 2.2: Failed call count verification
+  {
+    auto result = verifier.verify_call_count("fetch", 5);
+    ASSERT_FALSE(result.passed);
+    ASSERT_FALSE(result.errors.empty());
+    EXPECT_NE(std::string::npos, result.errors[0].find("expected 5 calls, got 3"));
+  }
 
-    // Test 2.3: Call count range verification
-    {
-      auto result = verifier.verify_call_count_range("fetch", 2, 5);
-      ASSERT_TRUE(result.passed);
+  // Test 2.3: Call count range verification
+  {
+    auto result = verifier.verify_call_count_range("fetch", 2, 5);
+    ASSERT_TRUE(result.passed);
 
-      result = verifier.verify_call_count_range("fetch", 5, 10);
-      ASSERT_FALSE(result.passed);
-    }
+    result = verifier.verify_call_count_range("fetch", 5, 10);
+    ASSERT_FALSE(result.passed);
+  }
 
-    // Test 2.4: Verify method was called
-    {
-      auto result = verifier.verify_called("fetch");
-      ASSERT_TRUE(result.passed);
+  // Test 2.4: Verify method was called
+  {
+    auto result = verifier.verify_called("fetch");
+    ASSERT_TRUE(result.passed);
 
-      result = verifier.verify_called("nonexistent");
-      ASSERT_FALSE(result.passed);
-    }
+    result = verifier.verify_called("nonexistent");
+    ASSERT_FALSE(result.passed);
+  }
 
-    // Test 2.5: Verify method was not called
-    {
-      auto result = verifier.verify_not_called("delete");
-      ASSERT_TRUE(result.passed);
+  // Test 2.5: Verify method was not called
+  {
+    auto result = verifier.verify_not_called("delete");
+    ASSERT_TRUE(result.passed);
 
-      result = verifier.verify_not_called("fetch");
-      ASSERT_FALSE(result.passed);
-    }
-  });
+    result = verifier.verify_not_called("fetch");
+    ASSERT_FALSE(result.passed);
+  }
+}
 
-  // Test 3: Call order verification
-  TEST_CASE("Call Order Verification") {
-    MockVerifier verifier;
+// Test 3: Call order verification
+TEST(MockVerificationTest, CallOrderVerification) {
+  MockVerifier verifier;
 
-    // Test 3.1: Correct order verification
-    {
-      verifier.record_call("init", {});
-      verifier.record_call("start", {});
-      verifier.record_call("process", {});
-      verifier.record_call("stop", {});
+  // Test 3.1: Correct order verification
+  {
+    verifier.record_call("init", {});
+    verifier.record_call("start", {});
+    verifier.record_call("process", {});
+    verifier.record_call("stop", {});
 
-      std::vector<std::string> expected_order = {"init", "start", "process",
-                                                  "stop"};
-      auto result = verifier.verify_call_order(expected_order);
-      ASSERT_TRUE(result.passed);
-      ASSERT_TRUE(result.errors.empty());
-    }
+    std::vector<std::string> expected_order = {"init", "start", "process", "stop"};
+    auto result = verifier.verify_call_order(expected_order);
+    ASSERT_TRUE(result.passed);
+    ASSERT_TRUE(result.errors.empty());
+  }
 
-    // Test 3.2: Incorrect order verification
-    {
-      verifier.clear();
-      verifier.record_call("start", {});
-      verifier.record_call("init", {});  // Wrong order
+  // Test 3.2: Incorrect order verification
+  {
+    verifier.clear();
+    verifier.record_call("start", {});
+    verifier.record_call("init", {});  // Wrong order
 
-      std::vector<std::string> expected_order = {"init", "start"};
-      auto result = verifier.verify_call_order(expected_order);
-      ASSERT_FALSE(result.passed);
-      ASSERT_FALSE(result.errors.empty());
-      EXPECT_NE(std::string::npos, result.errors[0].find("position 0"));
-    }
+    std::vector<std::string> expected_order = {"init", "start"};
+    auto result = verifier.verify_call_order(expected_order);
+    ASSERT_FALSE(result.passed);
+    ASSERT_FALSE(result.errors.empty());
+    EXPECT_NE(std::string::npos, result.errors[0].find("position 0"));
+  }
 
-    // Test 3.3: Partial order verification
-    {
-      verifier.clear();
-      verifier.record_call("a", {});
-      verifier.record_call("b", {});
-      verifier.record_call("c", {});
-      verifier.record_call("d", {});
+  // Test 3.3: Partial order verification
+  {
+    verifier.clear();
+    verifier.record_call("a", {});
+    verifier.record_call("b", {});
+    verifier.record_call("c", {});
+    verifier.record_call("d", {});
 
-      // Verify first 3 calls
-      std::vector<std::string> expected_order = {"a", "b", "c"};
-      auto result = verifier.verify_call_order(expected_order);
-      ASSERT_TRUE(result.passed);
-    }
+    // Verify first 3 calls
+    std::vector<std::string> expected_order = {"a", "b", "c"};
+    auto result = verifier.verify_call_order(expected_order);
+    ASSERT_TRUE(result.passed);
+  }
 
-    // Test 3.4: Insufficient calls
-    {
-      verifier.clear();
-      verifier.record_call("a", {});
+  // Test 3.4: Insufficient calls
+  {
+    verifier.clear();
+    verifier.record_call("a", {});
 
-      std::vector<std::string> expected_order = {"a", "b", "c"};
-      auto result = verifier.verify_call_order(expected_order);
-      ASSERT_FALSE(result.passed);
-      EXPECT_NE(std::string::npos, result.summary.find("insufficient calls"));
-    }
-  });
+    std::vector<std::string> expected_order = {"a", "b", "c"};
+    auto result = verifier.verify_call_order(expected_order);
+    ASSERT_FALSE(result.passed);
+    EXPECT_NE(std::string::npos, result.summary.find("insufficient calls"));
+  }
+}
 
-  // Test 4: Parameter verification
-  TEST_CASE("Parameter Verification") {
-    MockVerifier verifier;
+// Test 4: Parameter verification
+TEST(MockVerificationTest, ParameterVerification) {
+  MockVerifier verifier;
 
-    // Test 4.1: Exact parameter match
-    {
-      verifier.record_call("login", {"user1", "pass123"}, "success");
-      verifier.record_call("login", {"user2", "pass456"}, "success");
+  // Test 4.1: Exact parameter match
+  {
+    verifier.record_call("login", {"user1", "pass123"}, "success");
+    verifier.record_call("login", {"user2", "pass456"}, "success");
 
-      auto result =
-          verifier.verify_parameters("login", {"user1", "pass123"});
-      ASSERT_TRUE(result.passed);
+    auto result = verifier.verify_parameters("login", {"user1", "pass123"});
+    ASSERT_TRUE(result.passed);
 
-      result = verifier.verify_parameters("login", {"user2", "pass456"});
-      ASSERT_TRUE(result.passed);
-    }
+    result = verifier.verify_parameters("login", {"user2", "pass456"});
+    ASSERT_TRUE(result.passed);
+  }
 
-    // Test 4.2: Parameter mismatch
-    {
-      auto result =
-          verifier.verify_parameters("login", {"user3", "wrong"});
-      ASSERT_FALSE(result.passed);
-      EXPECT_NE(std::string::npos, result.errors[0].find("expected parameters"));
-    }
+  // Test 4.2: Parameter mismatch
+  {
+    auto result = verifier.verify_parameters("login", {"user3", "wrong"});
+    ASSERT_FALSE(result.passed);
+    EXPECT_NE(std::string::npos, result.errors[0].find("expected parameters"));
+  }
 
-    // Test 4.3: No calls to method
-    {
-      auto result = verifier.verify_parameters("logout", {"user1"});
-      ASSERT_FALSE(result.passed);
-      EXPECT_NE(std::string::npos, result.errors[0].find("No calls found"));
-    }
+  // Test 4.3: No calls to method
+  {
+    auto result = verifier.verify_parameters("logout", {"user1"});
+    ASSERT_FALSE(result.passed);
+    EXPECT_NE(std::string::npos, result.errors[0].find("No calls found"));
+  }
 
-    // Test 4.4: Empty parameters
-    {
-      verifier.record_call("ping", {}, "pong");
-      auto result = verifier.verify_parameters("ping", {});
-      ASSERT_TRUE(result.passed);
-    }
-  });
+  // Test 4.4: Empty parameters
+  {
+    verifier.record_call("ping", {}, "pong");
+    auto result = verifier.verify_parameters("ping", {});
+    ASSERT_TRUE(result.passed);
+  }
+}
 
-  // Test 5: Mock behavior analysis and reporting
-  TEST_CASE("Mock Behavior Analysis and Reporting") {
-    MockVerifier verifier;
+// Test 5: Mock behavior analysis and reporting
+TEST(MockVerificationTest, MockBehaviorAnalysisAndReporting) {
+  MockVerifier verifier;
 
-    // Test 5.1: Generate comprehensive report
-    {
-      verifier.record_call("connect", {"server1"}, "ok");
-      verifier.record_call("query", {"SELECT *"}, "results");
-      verifier.record_call("query", {"UPDATE"}, "done");
-      verifier.record_call("disconnect", {}, "closed");
+  // Test 5.1: Generate comprehensive report
+  {
+    verifier.record_call("connect", {"server1"}, "ok");
+    verifier.record_call("query", {"SELECT *"}, "results");
+    verifier.record_call("query", {"UPDATE"}, "done");
+    verifier.record_call("disconnect", {}, "closed");
 
-      std::string report = verifier.generate_report();
+    std::string report = verifier.generate_report();
 
-      EXPECT_NE(std::string::npos, report.find("Total calls: 4"));
-      EXPECT_NE(std::string::npos, report.find("Unique methods: 3"));
-      EXPECT_NE(std::string::npos, report.find("connect: 1"));
-      EXPECT_NE(std::string::npos, report.find("query: 2"));
-      EXPECT_NE(std::string::npos, report.find("disconnect: 1"));
-    }
+    EXPECT_NE(std::string::npos, report.find("Total calls: 4"));
+    EXPECT_NE(std::string::npos, report.find("Unique methods: 3"));
+    EXPECT_NE(std::string::npos, report.find("connect: 1"));
+    EXPECT_NE(std::string::npos, report.find("query: 2"));
+    EXPECT_NE(std::string::npos, report.find("disconnect: 1"));
+  }
 
-    // Test 5.2: Report includes call sequence
-    {
-      std::string report = verifier.generate_report();
-      EXPECT_NE(std::string::npos, report.find("Call sequence:"));
-      EXPECT_NE(std::string::npos, report.find("[0] connect"));
-      EXPECT_NE(std::string::npos, report.find("[1] query"));
-      EXPECT_NE(std::string::npos, report.find("[3] disconnect"));
-    }
+  // Test 5.2: Report includes call sequence
+  {
+    std::string report = verifier.generate_report();
+    EXPECT_NE(std::string::npos, report.find("Call sequence:"));
+    EXPECT_NE(std::string::npos, report.find("[0] connect"));
+    EXPECT_NE(std::string::npos, report.find("[1] query"));
+    EXPECT_NE(std::string::npos, report.find("[3] disconnect"));
+  }
 
-    // Test 5.3: Report includes parameters and return values
-    {
-      std::string report = verifier.generate_report();
-      EXPECT_NE(std::string::npos, report.find("server1"));
-      EXPECT_NE(std::string::npos, report.find("-> ok"));
-      EXPECT_NE(std::string::npos, report.find("SELECT *"));
-    }
+  // Test 5.3: Report includes parameters and return values
+  {
+    std::string report = verifier.generate_report();
+    EXPECT_NE(std::string::npos, report.find("server1"));
+    EXPECT_NE(std::string::npos, report.find("-> ok"));
+    EXPECT_NE(std::string::npos, report.find("SELECT *"));
+  }
 
-    // Test 5.4: Empty report
-    {
-      verifier.clear();
-      std::string report = verifier.generate_report();
-      EXPECT_NE(std::string::npos, report.find("Total calls: 0"));
-      EXPECT_NE(std::string::npos, report.find("Unique methods: 0"));
-    }
-  });
+  // Test 5.4: Empty report
+  {
+    verifier.clear();
+    std::string report = verifier.generate_report();
+    EXPECT_NE(std::string::npos, report.find("Total calls: 0"));
+    EXPECT_NE(std::string::npos, report.find("Unique methods: 0"));
+  }
+}
 
-  // Test 6: Complex verification scenarios
-  TEST_CASE("Complex Verification Scenarios") {
-    MockVerifier verifier;
+// Test 6: Complex verification scenarios
+TEST(MockVerificationTest, ComplexVerificationScenarios) {
+  MockVerifier verifier;
 
-    // Test 6.1: Authentication workflow verification
-    {
-      verifier.record_call("authenticate", {"user", "pass"}, "token_abc");
-      verifier.record_call("authorize", {"token_abc", "read"}, "granted");
-      verifier.record_call("access_resource", {"token_abc", "file.txt"},
-                           "data");
-      verifier.record_call("logout", {"token_abc"}, "success");
+  // Test 6.1: Authentication workflow verification
+  {
+    verifier.record_call("authenticate", {"user", "pass"}, "token_abc");
+    verifier.record_call("authorize", {"token_abc", "read"}, "granted");
+    verifier.record_call("access_resource", {"token_abc", "file.txt"}, "data");
+    verifier.record_call("logout", {"token_abc"}, "success");
 
-      // Verify call counts
-      ASSERT_TRUE(verifier.verify_call_count("authenticate", 1).passed);
-      ASSERT_TRUE(verifier.verify_call_count("authorize", 1).passed);
-      ASSERT_TRUE(verifier.verify_call_count("access_resource", 1).passed);
-      ASSERT_TRUE(verifier.verify_call_count("logout", 1).passed);
+    // Verify call counts
+    ASSERT_TRUE(verifier.verify_call_count("authenticate", 1).passed);
+    ASSERT_TRUE(verifier.verify_call_count("authorize", 1).passed);
+    ASSERT_TRUE(verifier.verify_call_count("access_resource", 1).passed);
+    ASSERT_TRUE(verifier.verify_call_count("logout", 1).passed);
 
-      // Verify order
-      std::vector<std::string> expected_order = {
-          "authenticate", "authorize", "access_resource", "logout"};
-      ASSERT_TRUE(verifier.verify_call_order(expected_order).passed);
+    // Verify order
+    std::vector<std::string> expected_order = {
+        "authenticate", "authorize", "access_resource", "logout"};
+    ASSERT_TRUE(verifier.verify_call_order(expected_order).passed);
 
-      // Verify parameters
-      ASSERT_TRUE(
-          verifier.verify_parameters("authenticate", {"user", "pass"})
-              .passed);
-    }
+    // Verify parameters
+    ASSERT_TRUE(
+        verifier.verify_parameters("authenticate", {"user", "pass"}).passed);
+  }
 
-    // Test 6.2: Retry mechanism verification
-    {
-      verifier.clear();
-      verifier.record_call("request", {"data"}, "timeout");
-      verifier.record_call("request", {"data"}, "timeout");
-      verifier.record_call("request", {"data"}, "success");
+  // Test 6.2: Retry mechanism verification
+  {
+    verifier.clear();
+    verifier.record_call("request", {"data"}, "timeout");
+    verifier.record_call("request", {"data"}, "timeout");
+    verifier.record_call("request", {"data"}, "success");
 
-      // Verify retry count
-      ASSERT_TRUE(verifier.verify_call_count("request", 3).passed);
+    // Verify retry count
+    ASSERT_TRUE(verifier.verify_call_count("request", 3).passed);
 
-      // Verify all calls had same parameters
-      const auto& history = verifier.get_call_history();
-      ASSERT_TRUE(history[0].parameters == history[1].parameters);
-      ASSERT_TRUE(history[1].parameters == history[2].parameters);
-    }
+    // Verify all calls had same parameters
+    const auto& history = verifier.get_call_history();
+    ASSERT_TRUE(history[0].parameters == history[1].parameters);
+    ASSERT_TRUE(history[1].parameters == history[2].parameters);
+  }
 
-    // Test 6.3: State machine verification
-    {
-      verifier.clear();
-      verifier.record_call("transition", {"idle", "active"}, "ok");
-      verifier.record_call("transition", {"active", "processing"}, "ok");
-      verifier.record_call("transition", {"processing", "complete"}, "ok");
+  // Test 6.3: State machine verification
+  {
+    verifier.clear();
+    verifier.record_call("transition", {"idle", "active"}, "ok");
+    verifier.record_call("transition", {"active", "processing"}, "ok");
+    verifier.record_call("transition", {"processing", "complete"}, "ok");
 
-      // Verify state transitions
-      ASSERT_EQ(verifier.get_call_count("transition"), 3);
+    // Verify state transitions
+    ASSERT_EQ(verifier.get_call_count("transition"), 3);
 
-      std::vector<std::string> expected_order = {"transition", "transition",
-                                                  "transition"};
-      ASSERT_TRUE(verifier.verify_call_order(expected_order).passed);
-    }
+    std::vector<std::string> expected_order = {"transition", "transition",
+                                                "transition"};
+    ASSERT_TRUE(verifier.verify_call_order(expected_order).passed);
+  }
 
-    // Test 6.4: Comprehensive report generation
-    {
-      std::string report = verifier.generate_report();
-      EXPECT_NE(std::string::npos, report.find("Total calls: 3"));
-      EXPECT_NE(std::string::npos, report.find("transition: 3"));
-      EXPECT_NE(std::string::npos, report.find("idle"));
-      EXPECT_NE(std::string::npos, report.find("complete"));
-    }
-  });
-
-  return current_suite->all_passed() ? 0 : 1;
+  // Test 6.4: Comprehensive report generation
+  {
+    std::string report = verifier.generate_report();
+    EXPECT_NE(std::string::npos, report.find("Total calls: 3"));
+    EXPECT_NE(std::string::npos, report.find("transition: 3"));
+    EXPECT_NE(std::string::npos, report.find("idle"));
+    EXPECT_NE(std::string::npos, report.find("complete"));
+  }
+}

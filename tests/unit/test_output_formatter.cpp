@@ -40,80 +40,78 @@ Bodies::BodyCollection create_test_bodies() {
 
   return bodies;
 }
-  TEST_SUITE("OutputFormatter");
 
-  // Test format parsing
-  TEST_CASE("ParseFormatText") {
-    auto result = OutputFormatter::parse_format("text");
-    ASSERT_TRUE(result.has_value());
-    ASSERT_TRUE(result.value() == OutputFormat::TEXT);
-  });
+// Test format parsing
+TEST(OutputFormatter, ParseFormatText) {
+  auto result = OutputFormatter::parse_format("text");
+  ASSERT_TRUE(result.has_value());
+  ASSERT_TRUE(result.value() == OutputFormat::TEXT);
+}
 
-  TEST_CASE("ParseFormatJSON") {
-    auto result = OutputFormatter::parse_format("json");
-    ASSERT_TRUE(result.has_value());
-    ASSERT_TRUE(result.value() == OutputFormat::JSON);
-  });
+TEST(OutputFormatter, ParseFormatJSON) {
+  auto result = OutputFormatter::parse_format("json");
+  ASSERT_TRUE(result.has_value());
+  ASSERT_TRUE(result.value() == OutputFormat::JSON);
+}
 
-  TEST_CASE("ParseFormatInvalid") {
-    auto result = OutputFormatter::parse_format("invalid");
-    ASSERT_FALSE(result.has_value());
-  });
+TEST(OutputFormatter, ParseFormatInvalid) {
+  auto result = OutputFormatter::parse_format("invalid");
+  ASSERT_FALSE(result.has_value());
+}
 
-  // Test output filter
-  TEST_CASE("FilterIncludeBodies") {
-    OutputFilter filter;
-    filter.include_bodies = {"Earth"};
-    ASSERT_TRUE(filter.should_include_body("Earth"));
-    ASSERT_FALSE(filter.should_include_body("Moon"));
-  });
+// Test output filter
+TEST(OutputFormatter, FilterIncludeBodies) {
+  OutputFilter filter;
+  filter.include_bodies = {"Earth"};
+  ASSERT_TRUE(filter.should_include_body("Earth"));
+  ASSERT_FALSE(filter.should_include_body("Moon"));
+}
 
-  // Test output options validation
-  TEST_CASE("ValidateOptionsValid") {
-    OutputOptions options;
-    options.format = OutputFormat::JSON;
-    options.quality = QualityLevel::STANDARD;
-    auto result = options.validate();
-    ASSERT_TRUE(result.has_value());
-  });
+// Test output options validation
+TEST(OutputFormatter, ValidateOptionsValid) {
+  OutputOptions options;
+  options.format = OutputFormat::JSON;
+  options.quality = QualityLevel::STANDARD;
+  auto result = options.validate();
+  ASSERT_TRUE(result.has_value());
+}
 
-  // Test text format
-  TEST_CASE("FormatAsText") {
-    auto bodies = create_test_bodies();
-    auto time_point = std::chrono::system_clock::now();
+// Test text format
+TEST(OutputFormatter, FormatAsText) {
+  auto bodies = create_test_bodies();
+  auto time_point = std::chrono::system_clock::now();
 
-    OutputOptions options;
-    options.format = OutputFormat::TEXT;
-    options.include_header = true;
+  OutputOptions options;
+  options.format = OutputFormat::TEXT;
+  options.include_header = true;
 
-    auto result = OutputFormatter::format_bodies(bodies, time_point, options);
-    ASSERT_TRUE(result.has_value());
+  auto result = OutputFormatter::format_bodies(bodies, time_point, options);
+  ASSERT_TRUE(result.has_value());
 
-    const auto& output = result.value();
-    ASSERT_FALSE(output.content.empty());
-    EXPECT_NE(std::string::npos, output.content.find("Earth"));
-  });
+  const auto& output = result.value();
+  ASSERT_FALSE(output.content.empty());
+  EXPECT_NE(std::string::npos, output.content.find("Earth"));
+}
 
-  // Test JSON format
-  TEST_CASE("FormatAsJSON") {
-    auto bodies = create_test_bodies();
-    auto time_point = std::chrono::system_clock::now();
+// Test JSON format
+TEST(OutputFormatter, FormatAsJSON) {
+  auto bodies = create_test_bodies();
+  auto time_point = std::chrono::system_clock::now();
 
-    OutputOptions options;
-    options.format = OutputFormat::JSON;
-    options.include_metadata = true;
+  OutputOptions options;
+  options.format = OutputFormat::JSON;
+  options.include_metadata = true;
 
-    auto result = OutputFormatter::format_bodies(bodies, time_point, options);
-    ASSERT_TRUE(result.has_value());
+  auto result = OutputFormatter::format_bodies(bodies, time_point, options);
+  ASSERT_TRUE(result.has_value());
 
-    const auto& output = result.value();
-    EXPECT_NE(std::string::npos, output.content.find("\"bodies\""));
-  });
+  const auto& output = result.value();
+  EXPECT_NE(std::string::npos, output.content.find("\"bodies\""));
+}
 
-  // Test utility functions
-  TEST_CASE("ToStringOutputFormat") {
-    ASSERT_TRUE(to_string(OutputFormat::TEXT) == "text");
-    ASSERT_TRUE(to_string(OutputFormat::JSON) == "json");
-    ASSERT_TRUE(to_string(OutputFormat::CSV) == "csv");
-  });
-
+// Test utility functions
+TEST(OutputFormatter, ToStringOutputFormat) {
+  ASSERT_TRUE(to_string(OutputFormat::TEXT) == "text");
+  ASSERT_TRUE(to_string(OutputFormat::JSON) == "json");
+  ASSERT_TRUE(to_string(OutputFormat::CSV) == "csv");
+}

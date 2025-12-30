@@ -290,263 +290,269 @@ class TestDataGenerator {
     return series;
   }
 };
-  TEST_SUITE("Test Data Generation System Tests");
 
-  // Test 1: Astronomical data generators
-  TEST_CASE("Astronomical Data Generators") {
-    TestDataGenerator generator(12345); // Fixed seed for reproducibility
+// Test 1: Astronomical data generators
+TEST(DataGenerationTest, AstronomicalDataGenerators) {
+  TestDataGenerator generator(12345); // Fixed seed for reproducibility
 
-    // Test 1.1: Generate planet data
-    {
-      auto planet = generator.generate_astronomical_body("planet");
-      ASSERT_FALSE(planet.name.empty());
-      EXPECT_GT(planet.mass_kg , = 1e24 && planet.mass_kg <= 1e27 + 1e24);
-      EXPECT_GT(planet.radius_m , = 6e6 && planet.radius_m <= 6e7 + 6e6);
-      EXPECT_GT(planet.eccentricity , = 0.0 && planet.eccentricity <= 0.2);
-      EXPECT_GT(planet.inclination_deg , = 0.0 &&
-                  planet.inclination_deg <= 10.0);
+  // Test 1.1: Generate planet data
+  {
+    auto planet = generator.generate_astronomical_body("planet");
+    ASSERT_FALSE(planet.name.empty());
+    EXPECT_GE(planet.mass_kg, 1e24);
+    EXPECT_LE(planet.mass_kg, 1e27 + 1e24);
+    EXPECT_GE(planet.radius_m, 6e6);
+    EXPECT_LE(planet.radius_m, 6e7 + 6e6);
+    EXPECT_GE(planet.eccentricity, 0.0);
+    EXPECT_LE(planet.eccentricity, 0.2);
+    EXPECT_GE(planet.inclination_deg, 0.0);
+    EXPECT_LE(planet.inclination_deg, 10.0);
+  }
+
+  // Test 1.2: Generate moon data
+  {
+    auto moon = generator.generate_astronomical_body("moon");
+    ASSERT_FALSE(moon.name.empty());
+    EXPECT_GE(moon.mass_kg, 1e20);
+    EXPECT_LE(moon.mass_kg, 1e23 + 1e20);
+    EXPECT_GE(moon.radius_m, 1e5);
+    EXPECT_LE(moon.radius_m, 2e6 + 1e5);
+    EXPECT_GE(moon.eccentricity, 0.0);
+    EXPECT_LE(moon.eccentricity, 0.1);
+  }
+
+  // Test 1.3: Generate asteroid data
+  {
+    auto asteroid = generator.generate_astronomical_body("asteroid");
+    ASSERT_FALSE(asteroid.name.empty());
+    EXPECT_GE(asteroid.mass_kg, 1e15);
+    EXPECT_LE(asteroid.mass_kg, 1e20 + 1e15);
+    EXPECT_GE(asteroid.eccentricity, 0.0);
+    EXPECT_LE(asteroid.eccentricity, 0.5);
+    EXPECT_GE(asteroid.inclination_deg, 0.0);
+    EXPECT_LE(asteroid.inclination_deg, 30.0);
+  }
+
+  // Test 1.4: Generate star data
+  {
+    auto star = generator.generate_astronomical_body("star");
+    ASSERT_FALSE(star.name.empty());
+    EXPECT_GE(star.mass_kg, 1e30);
+    ASSERT_EQ(star.orbital_period_s, 0.0); // Stars don't orbit
+    ASSERT_EQ(star.eccentricity, 0.0);
+  }
+}
+
+// Test 2: Ephemeris data generation with orbital mechanics
+TEST(DataGenerationTest, EphemerisDataGeneration) {
+  TestDataGenerator generator(54321);
+
+  // Test 2.1: Generate ephemeris for planet
+  {
+    auto planet = generator.generate_astronomical_body("planet");
+    auto ephemeris = generator.generate_ephemeris_data(planet, 2451545.0);
+
+    ASSERT_EQ(ephemeris.jd, 2451545.0);
+    ASSERT_EQ(ephemeris.body_id, planet.name);
+    ASSERT_TRUE(std::isfinite(ephemeris.x));
+    ASSERT_TRUE(std::isfinite(ephemeris.y));
+    ASSERT_TRUE(std::isfinite(ephemeris.z));
+    ASSERT_TRUE(std::isfinite(ephemeris.vx));
+    ASSERT_TRUE(std::isfinite(ephemeris.vy));
+    ASSERT_TRUE(std::isfinite(ephemeris.vz));
+  }
+
+  // Test 2.2: Generate ephemeris for stationary body
+  {
+    auto star = generator.generate_astronomical_body("star");
+    auto ephemeris = generator.generate_ephemeris_data(star, 2451545.0);
+
+    ASSERT_EQ(ephemeris.x, 0.0);
+    ASSERT_EQ(ephemeris.y, 0.0);
+    ASSERT_EQ(ephemeris.z, 0.0);
+    ASSERT_EQ(ephemeris.vx, 0.0);
+    ASSERT_EQ(ephemeris.vy, 0.0);
+    ASSERT_EQ(ephemeris.vz, 0.0);
+  }
+
+  // Test 2.3: Generate time series
+  {
+    auto planet = generator.generate_astronomical_body("planet");
+    auto series = generator.generate_ephemeris_time_series(
+        planet, 2451545.0, 2451555.0, 1.0);
+
+    ASSERT_EQ(series.size(), 11); // 10 days + start
+    ASSERT_EQ(series[0].jd, 2451545.0);
+    ASSERT_EQ(series[10].jd, 2451555.0);
+
+    // Verify continuity
+    for (size_t i = 1; i < series.size(); ++i) {
+      ASSERT_EQ(series[i].jd, series[i - 1].jd + 1.0);
     }
+  }
 
-    // Test 1.2: Generate moon data
-    {
-      auto moon = generator.generate_astronomical_body("moon");
-      ASSERT_FALSE(moon.name.empty());
-      EXPECT_GT(moon.mass_kg , = 1e20 && moon.mass_kg <= 1e23 + 1e20);
-      EXPECT_GT(moon.radius_m , = 1e5 && moon.radius_m <= 2e6 + 1e5);
-      EXPECT_GT(moon.eccentricity , = 0.0 && moon.eccentricity <= 0.1);
-    }
+  // Test 2.4: Verify orbital mechanics
+  {
+    auto planet = generator.generate_astronomical_body("planet");
+    auto eph1 = generator.generate_ephemeris_data(planet, 2451545.0);
+    auto eph2 = generator.generate_ephemeris_data(
+        planet, 2451545.0 + planet.orbital_period_s / 86400.0);
 
-    // Test 1.3: Generate asteroid data
-    {
-      auto asteroid = generator.generate_astronomical_body("asteroid");
-      ASSERT_FALSE(asteroid.name.empty());
-      EXPECT_GT(asteroid.mass_kg , = 1e15 && asteroid.mass_kg <= 1e20 + 1e15);
-      EXPECT_GT(asteroid.eccentricity , = 0.0 && asteroid.eccentricity <= 0.5);
-      EXPECT_GT(asteroid.inclination_deg , = 0.0 &&
-                  asteroid.inclination_deg <= 30.0);
-    }
+    // After one orbital period, position should be similar
+    double dx = eph1.x - eph2.x;
+    double dy = eph1.y - eph2.y;
+    double distance_diff = std::sqrt(dx * dx + dy * dy);
+    double orbital_radius = planet.semi_major_axis_m;
 
-    // Test 1.4: Generate star data
-    {
-      auto star = generator.generate_astronomical_body("star");
-      ASSERT_FALSE(star.name.empty());
-      EXPECT_GT(star.mass_kg , = 1e30);
-      ASSERT_EQ(star.orbital_period_s, 0.0); // Stars don't orbit
-      ASSERT_EQ(star.eccentricity, 0.0);
-    }
-  });
+    // Allow 10% difference due to simplified calculations
+    ASSERT_LT(distance_diff, orbital_radius * 0.1);
+  }
+}
 
-  // Test 2: Ephemeris data generation with orbital mechanics
-  TEST_CASE("Ephemeris Data Generation") {
-    TestDataGenerator generator(54321);
+// Test 3: Configuration data generation
+TEST(DataGenerationTest, ConfigurationDataGeneration) {
+  TestDataGenerator generator(99999);
 
-    // Test 2.1: Generate ephemeris for planet
-    {
-      auto planet = generator.generate_astronomical_body("planet");
-      auto ephemeris = generator.generate_ephemeris_data(planet, 2451545.0);
+  // Test 3.1: Generate valid configuration
+  {
+    auto config = generator.generate_valid_configuration();
 
-      ASSERT_EQ(ephemeris.jd, 2451545.0);
-      ASSERT_EQ(ephemeris.body_id, planet.name);
-      ASSERT_TRUE(std::isfinite(ephemeris.x));
-      ASSERT_TRUE(std::isfinite(ephemeris.y));
-      ASSERT_TRUE(std::isfinite(ephemeris.z));
-      ASSERT_TRUE(std::isfinite(ephemeris.vx));
-      ASSERT_TRUE(std::isfinite(ephemeris.vy));
-      ASSERT_TRUE(std::isfinite(ephemeris.vz));
-    }
+    EXPECT_GT(config.timestep_s, 0.0);
+    EXPECT_GT(config.duration_s, 0.0);
+    ASSERT_FALSE(config.integrator.empty());
+    EXPECT_GT(config.tolerance, 0.0);
+    EXPECT_LT(config.tolerance, 1.0);
+    EXPECT_GT(config.output_frequency, 0);
+  }
 
-    // Test 2.2: Generate ephemeris for stationary body
-    {
-      auto star = generator.generate_astronomical_body("star");
-      auto ephemeris = generator.generate_ephemeris_data(star, 2451545.0);
-
-      ASSERT_EQ(ephemeris.x, 0.0);
-      ASSERT_EQ(ephemeris.y, 0.0);
-      ASSERT_EQ(ephemeris.z, 0.0);
-      ASSERT_EQ(ephemeris.vx, 0.0);
-      ASSERT_EQ(ephemeris.vy, 0.0);
-      ASSERT_EQ(ephemeris.vz, 0.0);
-    }
-
-    // Test 2.3: Generate time series
-    {
-      auto planet = generator.generate_astronomical_body("planet");
-      auto series = generator.generate_ephemeris_time_series(
-          planet, 2451545.0, 2451555.0, 1.0);
-
-      ASSERT_EQ(series.size(), 11); // 10 days + start
-      ASSERT_EQ(series[0].jd, 2451545.0);
-      ASSERT_EQ(series[10].jd, 2451555.0);
-
-      // Verify continuity
-      for (size_t i = 1; i < series.size(); ++i) {
-        ASSERT_EQ(series[i].jd, series[i - 1].jd + 1.0);
-      }
-    }
-
-    // Test 2.4: Verify orbital mechanics
-    {
-      auto planet = generator.generate_astronomical_body("planet");
-      auto eph1 = generator.generate_ephemeris_data(planet, 2451545.0);
-      auto eph2 = generator.generate_ephemeris_data(
-          planet, 2451545.0 + planet.orbital_period_s / 86400.0);
-
-      // After one orbital period, position should be similar
-      double dx = eph1.x - eph2.x;
-      double dy = eph1.y - eph2.y;
-      double distance_diff = std::sqrt(dx * dx + dy * dy);
-      double orbital_radius = planet.semi_major_axis_m;
-
-      // Allow 10% difference due to simplified calculations
-      ASSERT_LT(distance_diff, orbital_radius * 0.1);
-    }
-  });
-
-  // Test 3: Configuration data generation
-  TEST_CASE("Configuration Data Generation") {
-    TestDataGenerator generator(99999);
-
-    // Test 3.1: Generate valid configuration
-    {
+  // Test 3.2: Generate multiple configurations
+  {
+    std::vector<std::string> integrators;
+    for (int i = 0; i < 20; ++i) {
       auto config = generator.generate_valid_configuration();
-
-      EXPECT_GT(config.timestep_s , 0.0);
-      EXPECT_GT(config.duration_s , 0.0);
-      ASSERT_FALSE(config.integrator.empty());
-      EXPECT_GT(config.tolerance , 0.0 && config.tolerance < 1.0);
-      EXPECT_GT(config.output_frequency , 0);
+      integrators.push_back(config.integrator);
     }
 
-    // Test 3.2: Generate multiple configurations
-    {
-      std::vector<std::string> integrators;
-      for (int i = 0; i < 20; ++i) {
-        auto config = generator.generate_valid_configuration();
-        integrators.push_back(config.integrator);
-      }
+    // Should have variety in integrators
+    std::sort(integrators.begin(), integrators.end());
+    auto last = std::unique(integrators.begin(), integrators.end());
+    integrators.erase(last, integrators.end());
+    ASSERT_GT(integrators.size(), 1); // At least 2 different integrators
+  }
 
-      // Should have variety in integrators
-      std::sort(integrators.begin(), integrators.end());
-      auto last = std::unique(integrators.begin(), integrators.end());
-      integrators.erase(last, integrators.end());
-      ASSERT_GT(integrators.size(), 1); // At least 2 different integrators
+  // Test 3.3: Edge case configurations
+  {
+    auto min_timestep =
+        generator.generate_edge_case_configuration("min_timestep");
+    ASSERT_EQ(min_timestep.timestep_s, 0.001);
+
+    auto max_timestep =
+        generator.generate_edge_case_configuration("max_timestep");
+    ASSERT_EQ(max_timestep.timestep_s, 86400.0);
+
+    auto low_tolerance =
+        generator.generate_edge_case_configuration("low_tolerance");
+    ASSERT_EQ(low_tolerance.tolerance, 1e-15);
+  }
+}
+
+// Test 4: User input data generation
+TEST(DataGenerationTest, UserInputDataGeneration) {
+  TestDataGenerator generator(11111);
+
+  // Test 4.1: Valid user inputs
+  {
+    auto simulate = generator.generate_valid_user_input("simulate");
+    ASSERT_TRUE(simulate.is_valid);
+    ASSERT_EQ(simulate.command, "simulate");
+    ASSERT_FALSE(simulate.arguments.empty());
+
+    auto fetch = generator.generate_valid_user_input("fetch");
+    ASSERT_TRUE(fetch.is_valid);
+    ASSERT_EQ(fetch.command, "fetch");
+
+    auto visualize = generator.generate_valid_user_input("visualize");
+    ASSERT_TRUE(visualize.is_valid);
+    ASSERT_EQ(visualize.command, "visualize");
+  }
+
+  // Test 4.2: Invalid user inputs
+  {
+    auto unknown = generator.generate_invalid_user_input("unknown_command");
+    ASSERT_FALSE(unknown.is_valid);
+    ASSERT_FALSE(unknown.error_message.empty());
+
+    auto missing = generator.generate_invalid_user_input("missing_argument");
+    ASSERT_FALSE(missing.is_valid);
+    ASSERT_EQ(missing.command, "simulate");
+
+    auto invalid = generator.generate_invalid_user_input("invalid_value");
+    ASSERT_FALSE(invalid.is_valid);
+    EXPECT_NE(std::string::npos, invalid.error_message.find("Invalid"));
+
+    auto negative = generator.generate_invalid_user_input("negative_value");
+    ASSERT_FALSE(negative.is_valid);
+
+    auto empty = generator.generate_invalid_user_input("empty_command");
+    ASSERT_FALSE(empty.is_valid);
+    ASSERT_TRUE(empty.command.empty());
+  }
+}
+
+// Test 5: Batch data generation
+TEST(DataGenerationTest, BatchDataGeneration) {
+  TestDataGenerator generator(77777);
+
+  // Test 5.1: Generate solar system
+  {
+    auto system = generator.generate_solar_system(5, 10);
+    ASSERT_EQ(system.size(), 16); // 1 star + 5 planets + 10 moons
+
+    // First should be star
+    ASSERT_EQ(system[0].orbital_period_s, 0.0);
+
+    // Count body types
+    int stars = 0, planets = 0, moons = 0;
+    for (const auto& body : system) {
+      if (body.orbital_period_s == 0.0)
+        stars++;
+      else if (body.mass_kg > 1e23)
+        planets++;
+      else
+        moons++;
+    }
+    ASSERT_EQ(stars, 1);
+    ASSERT_GE(planets, 1); // At least some planets
+    ASSERT_GE(moons, 1);   // At least some moons
+  }
+
+  // Test 5.2: Generate large dataset
+  {
+    auto large_system = generator.generate_solar_system(20, 50);
+    ASSERT_EQ(large_system.size(), 71); // 1 + 20 + 50
+
+    // All should have valid data
+    for (const auto& body : large_system) {
+      ASSERT_FALSE(body.name.empty());
+      ASSERT_GT(body.mass_kg, 0.0);
+      ASSERT_GT(body.radius_m, 0.0);
+    }
+  }
+
+  // Test 5.3: Generate ephemeris for multiple bodies
+  {
+    auto system = generator.generate_solar_system(3, 0);
+    std::vector<std::vector<TestDataGenerator::EphemerisData>> all_ephemeris;
+
+    for (const auto& body : system) {
+      auto series = generator.generate_ephemeris_time_series(
+          body, 2451545.0, 2451550.0, 1.0);
+      all_ephemeris.push_back(series);
     }
 
-    // Test 3.3: Edge case configurations
-    {
-      auto min_timestep =
-          generator.generate_edge_case_configuration("min_timestep");
-      ASSERT_EQ(min_timestep.timestep_s, 0.001);
-
-      auto max_timestep =
-          generator.generate_edge_case_configuration("max_timestep");
-      ASSERT_EQ(max_timestep.timestep_s, 86400.0);
-
-      auto low_tolerance =
-          generator.generate_edge_case_configuration("low_tolerance");
-      ASSERT_EQ(low_tolerance.tolerance, 1e-15);
+    ASSERT_EQ(all_ephemeris.size(), 4); // 1 star + 3 planets
+    for (const auto& series : all_ephemeris) {
+      ASSERT_EQ(series.size(), 6); // 5 days + start
     }
-  });
-
-  // Test 4: User input data generation
-  TEST_CASE("User Input Data Generation") {
-    TestDataGenerator generator(11111);
-
-    // Test 4.1: Valid user inputs
-    {
-      auto simulate = generator.generate_valid_user_input("simulate");
-      ASSERT_TRUE(simulate.is_valid);
-      ASSERT_EQ(simulate.command, "simulate");
-      ASSERT_FALSE(simulate.arguments.empty());
-
-      auto fetch = generator.generate_valid_user_input("fetch");
-      ASSERT_TRUE(fetch.is_valid);
-      ASSERT_EQ(fetch.command, "fetch");
-
-      auto visualize = generator.generate_valid_user_input("visualize");
-      ASSERT_TRUE(visualize.is_valid);
-      ASSERT_EQ(visualize.command, "visualize");
-    }
-
-    // Test 4.2: Invalid user inputs
-    {
-      auto unknown = generator.generate_invalid_user_input("unknown_command");
-      ASSERT_FALSE(unknown.is_valid);
-      ASSERT_FALSE(unknown.error_message.empty());
-
-      auto missing = generator.generate_invalid_user_input("missing_argument");
-      ASSERT_FALSE(missing.is_valid);
-      ASSERT_EQ(missing.command, "simulate");
-
-      auto invalid = generator.generate_invalid_user_input("invalid_value");
-      ASSERT_FALSE(invalid.is_valid);
-      EXPECT_NE(std::string::npos, invalid.error_message.find("Invalid"));
-
-      auto negative = generator.generate_invalid_user_input("negative_value");
-      ASSERT_FALSE(negative.is_valid);
-
-      auto empty = generator.generate_invalid_user_input("empty_command");
-      ASSERT_FALSE(empty.is_valid);
-      ASSERT_TRUE(empty.command.empty());
-    }
-  });
-
-  // Test 5: Batch data generation
-  TEST_CASE("Batch Data Generation") {
-    TestDataGenerator generator(77777);
-
-    // Test 5.1: Generate solar system
-    {
-      auto system = generator.generate_solar_system(5, 10);
-      ASSERT_EQ(system.size(), 16); // 1 star + 5 planets + 10 moons
-
-      // First should be star
-      ASSERT_EQ(system[0].orbital_period_s, 0.0);
-
-      // Count body types
-      int stars = 0, planets = 0, moons = 0;
-      for (const auto& body : system) {
-        if (body.orbital_period_s == 0.0)
-          stars++;
-        else if (body.mass_kg > 1e23)
-          planets++;
-        else
-          moons++;
-      }
-      ASSERT_EQ(stars, 1);
-      ASSERT_GE(planets, 1); // At least some planets
-      ASSERT_GE(moons, 1);   // At least some moons
-    }
-
-    // Test 5.2: Generate large dataset
-    {
-      auto large_system = generator.generate_solar_system(20, 50);
-      ASSERT_EQ(large_system.size(), 71); // 1 + 20 + 50
-
-      // All should have valid data
-      for (const auto& body : large_system) {
-        ASSERT_FALSE(body.name.empty());
-        ASSERT_GT(body.mass_kg, 0.0);
-        ASSERT_GT(body.radius_m, 0.0);
-      }
-    }
-
-    // Test 5.3: Generate ephemeris for multiple bodies
-    {
-      auto system = generator.generate_solar_system(3, 0);
-      std::vector<std::vector<TestDataGenerator::EphemerisData>> all_ephemeris;
-
-      for (const auto& body : system) {
-        auto series = generator.generate_ephemeris_time_series(
-            body, 2451545.0, 2451550.0, 1.0);
-        all_ephemeris.push_back(series);
-      }
-
-      ASSERT_EQ(all_ephemeris.size(), 4); // 1 star + 3 planets
-      for (const auto& series : all_ephemeris) {
-        ASSERT_EQ(series.size(), 6); // 5 days + start
-      }
-    }
-  });
-
-  return current_suite->all_passed() ? 0 : 1;
+  }
+}

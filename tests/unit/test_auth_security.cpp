@@ -319,10 +319,8 @@ class AuthSecurityTester {
     return result;
   }
 };
-  TEST_SUITE("Authentication and Authorization Security Tests");
-
   // Test 1: Authentication mechanism testing
-  TEST_CASE("Authentication Mechanism Testing") {
+  TEST(AuthenticationAndAuthorizationSecurityTestsTest, Authentication_Mechanism_Testing) {
     AuthSecurityTester tester;
 
     // Test 1.1: Valid authentication
@@ -346,10 +344,10 @@ class AuthSecurityTester {
     auto user_auth = tester.authenticate("user1", "user_pass_456");
     ASSERT_TRUE(admin_auth.authenticated && user_auth.authenticated);
     ASSERT_TRUE(admin_auth.session_token != user_auth.session_token);
-  });
+  }
 
   // Test 2: Session management and token validation
-  TEST_CASE("Session Management and Token Validation") {
+  TEST(AuthenticationAndAuthorizationSecurityTestsTest, Session_Management_and_Token_Validation) {
     AuthSecurityTester tester;
 
     // Test 2.1: Valid session
@@ -368,10 +366,10 @@ class AuthSecurityTester {
     auto session = tester.get_session(auth2.session_token);
     ASSERT_EQ(session.user_id, "admin");
     ASSERT_TRUE(session.role == AuthSecurityTester::Role::Admin);
-  });
+  }
 
   // Test 3: Authorization and access control
-  TEST_CASE("Authorization and Access Control") {
+  TEST(AuthenticationAndAuthorizationSecurityTestsTest, Authorization_and_Access_Control) {
     AuthSecurityTester tester;
 
     // Test 3.1: Admin permissions
@@ -407,10 +405,10 @@ class AuthSecurityTester {
     auto invalid_authz = tester.authorize("invalid_token",
                                           AuthSecurityTester::Permission::Read);
     ASSERT_FALSE(invalid_authz.authorized);
-  });
+  }
 
   // Test 4: Privilege escalation testing
-  TEST_CASE("Privilege Escalation Testing") {
+  TEST(AuthenticationAndAuthorizationSecurityTestsTest, Privilege_Escalation_Testing) {
     AuthSecurityTester tester;
 
     // Test 4.1: Attempt to escalate from User to Admin
@@ -434,10 +432,10 @@ class AuthSecurityTester {
     bool invalid_escalation = tester.test_privilege_escalation(
         "invalid_token", AuthSecurityTester::Role::Admin);
     ASSERT_FALSE(invalid_escalation);
-  });
+  }
 
   // Test 5: Session hijacking prevention
-  TEST_CASE("Session Hijacking Prevention") {
+  TEST(AuthenticationAndAuthorizationSecurityTestsTest, Session_Hijacking_Prevention) {
     AuthSecurityTester tester;
 
     // Test 5.1: Valid session can be used
@@ -455,10 +453,10 @@ class AuthSecurityTester {
     auto user1 = tester.authenticate("user1", "user_pass_456");
     auto user2 = tester.authenticate("guest", "guest_pass_789");
     ASSERT_TRUE(user1.session_token != user2.session_token);
-  });
+  }
 
   // Test 6: Password strength testing
-  TEST_CASE("Password Strength Testing") {
+  TEST(AuthenticationAndAuthorizationSecurityTestsTest, Password_Strength_Testing) {
     AuthSecurityTester tester;
 
     // Test 6.1: Strong password
@@ -485,10 +483,10 @@ class AuthSecurityTester {
     auto weak4 = tester.test_password_strength("pass");
     ASSERT_FALSE(weak4.is_strong);
     ASSERT_GT(weak4.weaknesses.size(), 2);
-  });
+  }
 
   // Test 7: Multi-factor authentication simulation
-  TEST_CASE("Multi-Factor Authentication Simulation") {
+  TEST(AuthenticationAndAuthorizationSecurityTestsTest, Multi_Factor_Authentication_Simulation) {
     AuthSecurityTester tester;
 
     // Test 7.1: First factor (password) succeeds
@@ -512,10 +510,10 @@ class AuthSecurityTester {
     auto failed = tester.authenticate("user1", "wrong_password");
     ASSERT_FALSE(failed.authenticated);
     ASSERT_TRUE(failed.session_token.empty());
-  });
+  }
 
   // Test 8: Role-based access control (RBAC)
-  TEST_CASE("Role-Based Access Control") {
+  TEST(AuthenticationAndAuthorizationSecurityTestsTest, Role_Based_Access_Control) {
     AuthSecurityTester tester;
 
     // Test 8.1: Different roles have different permissions
@@ -547,6 +545,4 @@ class AuthSecurityTester {
                                        AuthSecurityTester::Permission::Read);
     ASSERT_TRUE(admin_read.authorized && user_read.authorized &&
                 guest_read.authorized);
-  });
-
-  return current_suite->all_passed() ? 0 : 1;
+  }
