@@ -5,6 +5,7 @@
 #include <iomanip>
 #include <regex>
 #include <thread>
+#include <nlohmann/json.hpp>
 
 namespace SolarSystem::Utils {
 
@@ -35,33 +36,30 @@ std::string LogEntry::to_string() const {
 }
 
 std::string LogEntry::to_json() const {
-  std::ostringstream oss;
   auto time_t = std::chrono::system_clock::to_time_t(timestamp);
   auto ms =
       std::chrono::duration_cast<std::chrono::milliseconds>(timestamp.time_since_epoch()) % 1000;
 
-  oss << "{"
-      << "\"timestamp\":\"" << std::put_time(std::gmtime(&time_t), "%Y-%m-%dT%H:%M:%S") << '.'
-      << std::setfill('0') << std::setw(3) << ms.count() << "Z\","
-      << "\"level\":" << static_cast<int>(level) << ","
-      << "\"component\":\"" << component << "\","
-      << "\"message\":\"" << message << "\","
-      << "\"thread_id\":\"" << thread_id << "\","
-      << "\"sequence_number\":" << sequence_number;
+  std::ostringstream timestamp_oss;
+  timestamp_oss << std::put_time(std::gmtime(&time_t), "%Y-%m-%dT%H:%M:%S") << '.'
+                << std::setfill('0') << std::setw(3) << ms.count() << "Z";
+
+  std::ostringstream thread_oss;
+  thread_oss << thread_id;
+
+  nlohmann::json j;
+  j["timestamp"] = timestamp_oss.str();
+  j["level"] = static_cast<int>(level);
+  j["component"] = component;
+  j["message"] = message;
+  j["thread_id"] = thread_oss.str();
+  j["sequence_number"] = sequence_number;
 
   if (!metadata.empty()) {
-    oss << ",\"metadata\":{";
-    bool first = true;
-    for (const auto& [key, value] : metadata) {
-      if (!first) oss << ",";
-      oss << "\"" << key << "\":\"" << value << "\"";
-      first = false;
-    }
-    oss << "}";
+    j["metadata"] = metadata;
   }
 
-  oss << "}";
-  return oss.str();
+  return j.dump();
 }
 
 std::string LogEntry::to_xml() const {

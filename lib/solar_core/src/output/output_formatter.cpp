@@ -581,63 +581,59 @@ std::string OutputFormatter::format_as_text(
 std::string OutputFormatter::format_as_json(
     const Bodies::BodyCollection& bodies, const Simulation::SimulationState& state,
     const OutputOptions& options) {
-  std::ostringstream oss;
-
-  oss << "{\n";
+  nlohmann::json doc;
 
   // Metadata
   if (options.include_metadata) {
-    oss << "  \"metadata\": {\n";
-    oss << "    \"generated_at\": \"" << format_timestamp(std::chrono::system_clock::now())
-        << "\",\n";
-    oss << "    \"simulation_time\": \"" << format_timestamp(state.reference_time) << "\",\n";
-    oss << "    \"iteration_count\": " << state.iteration_count << ",\n";
-    oss << "    \"total_energy\": " << state.total_energy << "\n";
-    oss << "  },\n";
+    doc["metadata"] = {
+      {"generated_at", format_timestamp(std::chrono::system_clock::now())},
+      {"simulation_time", format_timestamp(state.reference_time)},
+      {"iteration_count", state.iteration_count},
+      {"total_energy", state.total_energy}
+    };
   }
 
   // Barycenter
-  oss << "  \"barycenter\": {\n";
-  oss << "    \"x\": " << state.center_of_mass.x() << ",\n";
-  oss << "    \"y\": " << state.center_of_mass.y() << ",\n";
-  oss << "    \"z\": " << state.center_of_mass.z() << "\n";
-  oss << "  },\n";
+  doc["barycenter"] = {
+    {"x", static_cast<double>(state.center_of_mass.x())},
+    {"y", static_cast<double>(state.center_of_mass.y())},
+    {"z", static_cast<double>(state.center_of_mass.z())}
+  };
 
   // Bodies
-  oss << "  \"bodies\": [\n";
+  nlohmann::json bodies_array = nlohmann::json::array();
 
   auto filtered_bodies = apply_filter(bodies, options.filter);
-  for (size_t i = 0; i < filtered_bodies.size(); ++i) {
-    const auto& body = filtered_bodies[i];
+  for (const auto& body : filtered_bodies) {
     auto pos = body.position();
     if (options.filter.relative_to_barycenter) {
       pos = pos - state.center_of_mass;
     }
 
-    oss << "    {\n";
-    oss << "      \"name\": \"" << body.name() << "\",\n";
-    oss << "      \"mass\": " << body.mass() << ",\n";
-    oss << "      \"position\": {\"x\": " << pos.x() << ", \"y\": " << pos.y()
-        << ", \"z\": " << pos.z() << "}";
+    nlohmann::json body_obj;
+    body_obj["name"] = std::string(body.name());
+    body_obj["mass"] = static_cast<double>(body.mass());
+    body_obj["position"] = {
+      {"x", static_cast<double>(pos.x())},
+      {"y", static_cast<double>(pos.y())},
+      {"z", static_cast<double>(pos.z())}
+    };
 
     if (options.filter.include_velocities) {
       const auto& vel = body.velocity();
-      oss << ",\n";
-      oss << "      \"velocity\": {\"x\": " << vel.x() << ", \"y\": " << vel.y()
-          << ", \"z\": " << vel.z() << "}";
+      body_obj["velocity"] = {
+        {"x", static_cast<double>(vel.x())},
+        {"y", static_cast<double>(vel.y())},
+        {"z", static_cast<double>(vel.z())}
+      };
     }
 
-    oss << "\n    }";
-    if (i < filtered_bodies.size() - 1) {
-      oss << ",";
-    }
-    oss << "\n";
+    bodies_array.push_back(body_obj);
   }
 
-  oss << "  ]\n";
-  oss << "}\n";
+  doc["bodies"] = bodies_array;
 
-  return oss.str();
+  return doc.dump(2) + "\n";
 }
 
 std::string OutputFormatter::format_as_csv(

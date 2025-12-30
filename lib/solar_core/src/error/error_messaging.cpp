@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <iomanip>
 #include <chrono>
+#include <nlohmann/json.hpp>
 
 // Platform-specific includes for command execution
 #ifdef _WIN32
@@ -244,45 +245,31 @@ std::string ErrorMessaging::format_error_detailed(const ErrorMessage& error) con
 }
 
 std::string ErrorMessaging::format_error_json(const ErrorMessage& error) const {
-  std::ostringstream oss;
+  nlohmann::json j;
 
-  oss << "{\n";
-  oss << "  \"error_code\": \"" << error.error_code << "\",\n";
-  oss << "  \"title\": \"" << error.title << "\",\n";
-  oss << "  \"description\": \"" << error.description << "\",\n";
-  oss << "  \"severity\": \"" << severity_to_string(error.severity) << "\",\n";
-  oss << "  \"category\": \"" << category_to_string(error.category) << "\",\n";
-  oss << "  \"context\": \"" << error.context << "\",\n";
+  j["error_code"] = error.error_code;
+  j["title"] = error.title;
+  j["description"] = error.description;
+  j["severity"] = severity_to_string(error.severity);
+  j["category"] = category_to_string(error.category);
+  j["context"] = error.context;
+  j["causes"] = error.causes;
 
-  oss << "  \"causes\": [";
-  for (size_t i = 0; i < error.causes.size(); ++i) {
-    oss << "\"" << error.causes[i] << "\"";
-    if (i < error.causes.size() - 1) oss << ", ";
+  nlohmann::json recovery_actions = nlohmann::json::array();
+  for (const auto& action : error.recovery_actions) {
+    recovery_actions.push_back({
+      {"description", action.description},
+      {"command", action.command},
+      {"automatic", action.automatic}
+    });
   }
-  oss << "],\n";
+  j["recovery_actions"] = recovery_actions;
 
-  oss << "  \"recovery_actions\": [";
-  for (size_t i = 0; i < error.recovery_actions.size(); ++i) {
-    const auto& action = error.recovery_actions[i];
-    oss << "{\"description\": \"" << action.description << "\", ";
-    oss << "\"command\": \"" << action.command << "\", ";
-    oss << "\"automatic\": " << (action.automatic ? "true" : "false") << "}";
-    if (i < error.recovery_actions.size() - 1) oss << ", ";
-  }
-  oss << "],\n";
+  j["related_docs"] = error.related_docs;
+  j["technical_details"] = error.technical_details;
+  j["user_reportable"] = error.user_reportable;
 
-  oss << "  \"related_docs\": [";
-  for (size_t i = 0; i < error.related_docs.size(); ++i) {
-    oss << "\"" << error.related_docs[i] << "\"";
-    if (i < error.related_docs.size() - 1) oss << ", ";
-  }
-  oss << "],\n";
-
-  oss << "  \"technical_details\": \"" << error.technical_details << "\",\n";
-  oss << "  \"user_reportable\": " << (error.user_reportable ? "true" : "false") << "\n";
-  oss << "}\n";
-
-  return oss.str();
+  return j.dump(2) + "\n";
 }
 
 void ErrorMessaging::report_error(const ErrorMessage& error) {

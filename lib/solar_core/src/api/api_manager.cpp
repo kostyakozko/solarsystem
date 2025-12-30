@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <mutex>
 #include <sstream>
+#include <nlohmann/json.hpp>
 
 namespace SolarSystem::API {
 
@@ -237,44 +238,30 @@ std::string APIDocumentationGenerator::generate_openapi(
     const std::vector<APIEndpoint>& endpoints,
     const std::string& title,
     const APIVersion& version) {
-  std::ostringstream oss;
+  nlohmann::json doc;
 
-  oss << "{\n";
-  oss << "  \"openapi\": \"3.0.0\",\n";
-  oss << "  \"info\": {\n";
-  oss << "    \"title\": \"" << title << "\",\n";
-  oss << "    \"version\": \"" << version.to_string() << "\"\n";
-  oss << "  },\n";
-  oss << "  \"paths\": {\n";
+  doc["openapi"] = "3.0.0";
+  doc["info"] = {
+    {"title", title},
+    {"version", version.to_string()}
+  };
 
-  for (size_t i = 0; i < endpoints.size(); ++i) {
-    const auto& endpoint = endpoints[i];
+  nlohmann::json paths = nlohmann::json::object();
 
-    oss << "    \"" << endpoint.path << "\": {\n";
-    oss << "      \"" << Performance::to_string(endpoint.method) << "\": {\n";
-    oss << "        \"summary\": \"" << endpoint.description << "\",\n";
-    oss << "        \"parameters\": [";
+  for (const auto& endpoint : endpoints) {
+    nlohmann::json method_obj;
+    method_obj["summary"] = endpoint.description;
+    method_obj["parameters"] = endpoint.parameters;
+    method_obj["responses"] = {
+      {"200", {{"description", "Success"}}}
+    };
 
-    for (size_t j = 0; j < endpoint.parameters.size(); ++j) {
-      if (j > 0) oss << ", ";
-      oss << "\"" << endpoint.parameters[j] << "\"";
-    }
-
-    oss << "],\n";
-    oss << "        \"responses\": {\n";
-    oss << "          \"200\": { \"description\": \"Success\" }\n";
-    oss << "        }\n";
-    oss << "      }\n";
-    oss << "    }";
-
-    if (i < endpoints.size() - 1) oss << ",";
-    oss << "\n";
+    paths[endpoint.path][Performance::to_string(endpoint.method)] = method_obj;
   }
 
-  oss << "  }\n";
-  oss << "}\n";
+  doc["paths"] = paths;
 
-  return oss.str();
+  return doc.dump(2) + "\n";
 }
 
 std::string APIDocumentationGenerator::generate_markdown(
