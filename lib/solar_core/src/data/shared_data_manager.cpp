@@ -4,7 +4,7 @@
  */
 
 #include "solar_core/data/shared_data_manager.hpp"
-#include "solar_utils/json.hpp"
+#include <nlohmann/json.hpp>
 
 #include <algorithm>
 #include <map>

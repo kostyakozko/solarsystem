@@ -9,7 +9,7 @@
 #include <random>
 #include <sstream>
 
-#include "solar_utils/json.hpp"
+#include <nlohmann/json.hpp>
 #include "msgpack.hpp"
 
 // OpenSSL for cryptographic signature validation
