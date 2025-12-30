@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <fstream>
 #include <iostream>
+#include <nlohmann/json.hpp>
 #include <sstream>
 
 namespace SolarSystem::JPL {
@@ -267,15 +268,16 @@ JPLResult<CacheMetadata> CacheRecoveryManager::regenerate_metadata() {
     return JPLError::CacheError;
   }
 
-  metadata_file << "{\n";
-  metadata_file << "  \"created_at\": " << std::chrono::duration_cast<std::chrono::seconds>(
-      metadata.created_at.time_since_epoch()).count() << ",\n";
-  metadata_file << "  \"epoch\": " << std::chrono::duration_cast<std::chrono::seconds>(
-      metadata.epoch.time_since_epoch()).count() << ",\n";
-  metadata_file << "  \"source\": \"" << metadata.source << "\",\n";
-  metadata_file << "  \"body_count\": " << metadata.body_count << ",\n";
-  metadata_file << "  \"checksum\": " << metadata.checksum << "\n";
-  metadata_file << "}\n";
+  nlohmann::json j;
+  j["created_at"] = std::chrono::duration_cast<std::chrono::seconds>(
+      metadata.created_at.time_since_epoch()).count();
+  j["epoch"] = std::chrono::duration_cast<std::chrono::seconds>(
+      metadata.epoch.time_since_epoch()).count();
+  j["source"] = metadata.source;
+  j["body_count"] = metadata.body_count;
+  j["checksum"] = metadata.checksum;
+
+  metadata_file << j.dump(2);
 
   return metadata;
 }

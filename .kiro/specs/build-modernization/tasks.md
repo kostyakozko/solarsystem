@@ -282,7 +282,7 @@ This implementation plan systematically modernizes the Solar System Suite's buil
   - Test all JSON operations
   - _Requirements: 4.2, 4.3, 10.4_
 
-- [ ] 11.2 Migrate JSON in solar_jpl
+- [x] 11.2 Migrate JSON in solar_jpl
   - Replace JSON cache format handling
   - Use nlohmann::json for JPL response parsing
   - Update cache serialization/deserialization

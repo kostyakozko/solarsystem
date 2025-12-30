@@ -10,6 +10,7 @@
 #include <cmath>
 #include <fstream>
 #include <iomanip>
+#include <nlohmann/json.hpp>
 #include <numeric>
 #include <regex>
 #include <sstream>
@@ -111,31 +112,29 @@ std::string ValidationReport::generate_summary() const {
  * @brief Export report to JSON
  */
 std::string ValidationReport::to_json() const {
-  std::ostringstream json;
+  nlohmann::json j;
 
-  json << "{\n";
-  json << "  \"validation_timestamp\": " << std::chrono::duration_cast<std::chrono::seconds>(
-    validation_timestamp.time_since_epoch()).count() << ",\n";
-  json << "  \"validation_level\": " << static_cast<int>(validation_level) << ",\n";
-  json << "  \"validation_duration_ms\": " << validation_duration.count() << ",\n";
-  json << "  \"bodies_validated\": " << bodies_validated << ",\n";
-  json << "  \"files_validated\": " << files_validated << ",\n";
-  json << "  \"total_issues\": " << total_issues << ",\n";
-  json << "  \"critical_issues\": " << critical_issues << ",\n";
-  json << "  \"error_issues\": " << error_issues << ",\n";
-  json << "  \"warning_issues\": " << warning_issues << ",\n";
-  json << "  \"info_issues\": " << info_issues << ",\n";
-  json << "  \"validation_passed\": " << (validation_passed ? "true" : "false") << ",\n";
-  json << "  \"confidence_score\": " << confidence_score << ",\n";
-  json << "  \"quality_metrics\": {\n";
-  json << "    \"overall_quality_score\": " << quality_metrics.overall_quality_score << ",\n";
-  json << "    \"completeness_ratio\": " << quality_metrics.completeness_ratio << ",\n";
-  json << "    \"accuracy_score\": " << quality_metrics.accuracy_score << ",\n";
-  json << "    \"consistency_score\": " << quality_metrics.consistency_score << "\n";
-  json << "  }\n";
-  json << "}";
+  j["validation_timestamp"] = std::chrono::duration_cast<std::chrono::seconds>(
+      validation_timestamp.time_since_epoch()).count();
+  j["validation_level"] = static_cast<int>(validation_level);
+  j["validation_duration_ms"] = validation_duration.count();
+  j["bodies_validated"] = bodies_validated;
+  j["files_validated"] = files_validated;
+  j["total_issues"] = total_issues;
+  j["critical_issues"] = critical_issues;
+  j["error_issues"] = error_issues;
+  j["warning_issues"] = warning_issues;
+  j["info_issues"] = info_issues;
+  j["validation_passed"] = validation_passed;
+  j["confidence_score"] = confidence_score;
 
-  return json.str();
+  j["quality_metrics"] = {
+      {"overall_quality_score", quality_metrics.overall_quality_score},
+      {"completeness_ratio", quality_metrics.completeness_ratio},
+      {"accuracy_score", quality_metrics.accuracy_score},
+      {"consistency_score", quality_metrics.consistency_score}};
+
+  return j.dump(2);
 }
 
 /**
