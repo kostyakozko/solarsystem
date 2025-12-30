@@ -214,50 +214,57 @@ This implementation plan systematically modernizes the Solar System Suite's buil
 
 ### Phase 4: Test Migration
 
-- [ ] 8. Migrate unit tests to Google Test
+- [x] 8. Migrate unit tests to Google Test
   - Convert test files one by one
   - Use compatibility layer initially
   - Verify test results match
   - Remove compatibility layer usage
   - _Requirements: 3.2, 3.3, 10.1, 10.4_
+  - **COMPLETED**: All 271 unit tests already use Google Test natively (GTest::gtest_main)
 
-- [ ] 8.1 Convert core library tests
+- [x] 8.1 Convert core library tests
   - Convert tests/unit/test_simulation*.cpp to Google Test
   - Convert tests/unit/test_body*.cpp to Google Test
   - Convert tests/unit/test_math*.cpp to Google Test
   - Verify all tests pass with Google Test
   - _Requirements: 3.2, 10.4_
+  - **COMPLETED**: All core tests use TEST/TEST_F macros with gtest_discover_tests
 
-- [ ] 8.2 Convert JPL library tests
+- [x] 8.2 Convert JPL library tests
   - Convert tests/unit/test_jpl*.cpp to Google Test
   - Convert tests/unit/test_cache*.cpp to Google Test
   - Verify JPL tests pass with Google Test
   - _Requirements: 3.2, 10.4_
+  - **COMPLETED**: JPL tests (test_jpl_data, test_jpl_bodies, test_solar_jpl) use Google Test
 
-- [ ] 8.3 Convert utility library tests
+- [x] 8.3 Convert utility library tests
   - Convert tests/unit/test_utils*.cpp to Google Test
   - Convert tests/unit/test_validation*.cpp to Google Test
   - Verify utility tests pass with Google Test
   - _Requirements: 3.2, 10.4_
+  - **COMPLETED**: Utility tests (test_solar_utils, test_args) use Google Test
 
-- [ ] 9. Migrate integration tests to Google Test
+- [x] 9. Migrate integration tests to Google Test
   - Convert integration test files
   - Update test fixtures and helpers
   - Verify integration tests pass
   - _Requirements: 3.2, 3.3, 10.4_
+  - **COMPLETED**: All 10 integration tests use GTest::gtest_main
 
-- [ ] 9.1 Convert integration tests
+- [x] 9.1 Convert integration tests
   - Convert tests/integration/test_*.cpp to Google Test
   - Update test data managers for Google Test
   - Convert test utilities to Google Test fixtures
   - Verify all integration tests pass
   - _Requirements: 3.2, 10.4_
+  - **COMPLETED**: Integration tests link GTest::gtest_main and GTest::gmock
 
-- [ ] 10. Migrate benchmark tests to Google Test
+- [x] 10. Migrate benchmark tests to Google Test
   - Convert benchmark files
   - Integrate with Google Benchmark (optional)
   - Verify benchmarks run correctly
   - _Requirements: 3.2, 10.4_
+  - **COMPLETED**: All 7 benchmark tests use GTest::gtest_main, 288 total tests pass
 
 ### Phase 5: JSON Migration
 
