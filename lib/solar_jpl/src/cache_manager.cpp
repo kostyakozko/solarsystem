@@ -11,6 +11,7 @@
 #include <fstream>
 #include <iomanip>
 #include <mutex>
+#include <nlohmann/json.hpp>
 #include <sstream>
 #include <thread>
 
@@ -222,9 +223,37 @@ JPLResult<std::vector<EphemerisData>> CacheManager::load_cache(ValidationLevel v
       }
     }
     // Fallback to JSON cache if binary failed or not available
-    else if (has_json && data.empty()) {
-      // For now, return empty data - JSON parsing would require more complex implementation
-      // This is acceptable as binary cache is the primary mechanism
+    if (has_json && data.empty()) {
+      std::ifstream json_file(json_path);
+      if (json_file.is_open()) {
+        try {
+          nlohmann::json json_data = nlohmann::json::parse(json_file);
+          if (json_data.is_array()) {
+            data.reserve(json_data.size());
+            for (const auto& item : json_data) {
+              EphemerisData body_data;
+              body_data.jpl_id = item.at("jpl_id").get<int>();
+              body_data.body_name = item.at("body_name").get<std::string>();
+              body_data.epoch = std::chrono::system_clock::from_time_t(
+                  item.at("epoch").get<std::time_t>());
+
+              const auto& pos = item.at("position");
+              body_data.position = SolarSystem::Math::Vector3d(
+                  pos[0].get<double>(), pos[1].get<double>(), pos[2].get<double>());
+
+              const auto& vel = item.at("velocity");
+              body_data.velocity = SolarSystem::Math::Vector3d(
+                  vel[0].get<double>(), vel[1].get<double>(), vel[2].get<double>());
+
+              body_data.mass = item.at("mass").get<long double>();
+              data.push_back(std::move(body_data));
+            }
+          }
+        } catch (const nlohmann::json::exception&) {
+          // JSON parsing failed, data remains empty
+        }
+        json_file.close();
+      }
     }
 
     statistics_.cache_hits++;
@@ -278,26 +307,20 @@ JPLVoidResult CacheManager::save_cache(const std::vector<EphemerisData>& data, b
       auto json_path = config_.cache_directory / "ephemeris_data.json";
       std::ofstream json_file(json_path);
       if (json_file.is_open()) {
-        json_file << "[\n";
-        for (size_t i = 0; i < data.size(); ++i) {
-          const auto& body_data = data[i];
-          json_file << "  {\n";
-          json_file << "    \"jpl_id\": " << body_data.jpl_id << ",\n";
-          json_file << "    \"body_name\": \"" << body_data.body_name << "\",\n";
-          json_file << "    \"epoch\": " << std::chrono::system_clock::to_time_t(body_data.epoch) << ",\n";
-          json_file << "    \"position\": [" << std::scientific << std::setprecision(15)
-                    << body_data.position.x() << ", " << body_data.position.y() << ", "
-                    << body_data.position.z() << "],\n";
-          json_file << "    \"velocity\": [" << std::scientific << std::setprecision(15)
-                    << body_data.velocity.x() << ", " << body_data.velocity.y() << ", "
-                    << body_data.velocity.z() << "],\n";
-          json_file << "    \"mass\": " << std::scientific << std::setprecision(15)
-                    << body_data.mass << "\n";
-          json_file << "  }";
-          if (i < data.size() - 1) json_file << ",";
-          json_file << "\n";
+        nlohmann::json json_array = nlohmann::json::array();
+        for (const auto& body_data : data) {
+          nlohmann::json item;
+          item["jpl_id"] = body_data.jpl_id;
+          item["body_name"] = body_data.body_name;
+          item["epoch"] = std::chrono::system_clock::to_time_t(body_data.epoch);
+          item["position"] = {body_data.position.x(), body_data.position.y(),
+                              body_data.position.z()};
+          item["velocity"] = {body_data.velocity.x(), body_data.velocity.y(),
+                              body_data.velocity.z()};
+          item["mass"] = body_data.mass;
+          json_array.push_back(std::move(item));
         }
-        json_file << "]\n";
+        json_file << json_array.dump(2);
         json_file.close();
       }
     }
@@ -395,17 +418,7 @@ JPLResult<bool> CacheManager::validate_cache(ValidationLevel level) {
           return false;
         }
 
-        // Check magic number (first 4 bytes should be "EPHE" = 0x45504845)
-        uint32_t magic;
-        binary_file.read(reinterpret_cast<char*>(&magic), sizeof(magic));
-        const uint32_t expected_magic = 0x45504845;
-
-        if (!binary_file.good() || magic != expected_magic) {
-          statistics_.validation_failures++;
-          return false;
-        }
-
-        // Check version (next 4 bytes)
+        // Read version (first 4 bytes)
         uint32_t version;
         binary_file.read(reinterpret_cast<char*>(&version), sizeof(version));
 
@@ -414,15 +427,29 @@ JPLResult<bool> CacheManager::validate_cache(ValidationLevel level) {
           return false;
         }
 
-        // Version compatibility check (major version should be 1)
-        uint16_t major_version = (version >> 16) & 0xFFFF;
-        if (major_version != 1) {
+        // Version compatibility check (should be 1)
+        if (version != 1) {
           statistics_.validation_failures++;
           return false;  // Incompatible version
         }
+
+        // Read count (next 4 bytes)
+        uint32_t count;
+        binary_file.read(reinterpret_cast<char*>(&count), sizeof(count));
+
+        if (!binary_file.good()) {
+          statistics_.validation_failures++;
+          return false;
+        }
+
+        // Sanity check on count (reasonable upper bound)
+        if (count > 10000) {
+          statistics_.validation_failures++;
+          return false;  // Unreasonable number of bodies
+        }
       }
 
-      // Validate JSON format if present
+      // Validate JSON format if present using nlohmann/json
       if (has_json) {
         std::ifstream json_file(json_path);
         if (!json_file.is_open()) {
@@ -430,28 +457,51 @@ JPLResult<bool> CacheManager::validate_cache(ValidationLevel level) {
           return false;
         }
 
-        // Read first and last characters to check basic JSON structure
-        json_file.seekg(0, std::ios::end);
-        auto file_size = json_file.tellg();
+        try {
+          nlohmann::json json_data = nlohmann::json::parse(json_file);
 
-        if (file_size < 2) {
-          statistics_.validation_failures++;
-          return false;
-        }
+          // Must be an array
+          if (!json_data.is_array()) {
+            statistics_.validation_failures++;
+            return false;
+          }
 
-        json_file.seekg(0, std::ios::beg);
-        char first_char;
-        json_file.get(first_char);
+          // Validate structure of each entry
+          for (const auto& item : json_data) {
+            if (!item.is_object()) {
+              statistics_.validation_failures++;
+              return false;
+            }
 
-        json_file.seekg(-1, std::ios::end);
-        char last_char;
-        json_file.get(last_char);
-
-        // JSON should start with '[' or '{' and end with ']' or '}'
-        bool valid_json = (first_char == '[' || first_char == '{') &&
-                         (last_char == ']' || last_char == '}');
-
-        if (!valid_json) {
+            // Check required fields exist and have correct types
+            if (!item.contains("jpl_id") || !item["jpl_id"].is_number_integer()) {
+              statistics_.validation_failures++;
+              return false;
+            }
+            if (!item.contains("body_name") || !item["body_name"].is_string()) {
+              statistics_.validation_failures++;
+              return false;
+            }
+            if (!item.contains("epoch") || !item["epoch"].is_number()) {
+              statistics_.validation_failures++;
+              return false;
+            }
+            if (!item.contains("position") || !item["position"].is_array() ||
+                item["position"].size() != 3) {
+              statistics_.validation_failures++;
+              return false;
+            }
+            if (!item.contains("velocity") || !item["velocity"].is_array() ||
+                item["velocity"].size() != 3) {
+              statistics_.validation_failures++;
+              return false;
+            }
+            if (!item.contains("mass") || !item["mass"].is_number()) {
+              statistics_.validation_failures++;
+              return false;
+            }
+          }
+        } catch (const nlohmann::json::exception&) {
           statistics_.validation_failures++;
           return false;
         }
@@ -459,14 +509,50 @@ JPLResult<bool> CacheManager::validate_cache(ValidationLevel level) {
 
       // Checksum validation if metadata exists
       if (entry_metadata_) {
-        // Load cache data and recalculate checksum
-        auto load_result = load_cache();
-        if (is_success(load_result)) {
-          const auto& data = get_value(load_result);
+        // Load cache data and recalculate checksum (without lock - we already hold it)
+        // Use internal load to avoid deadlock
+        std::vector<EphemerisData> loaded_data;
 
+        // Try binary first
+        if (has_binary) {
+          std::ifstream binary_file(binary_path, std::ios::binary);
+          if (binary_file.is_open()) {
+            uint32_t version, count;
+            binary_file.read(reinterpret_cast<char*>(&version), sizeof(version));
+            binary_file.read(reinterpret_cast<char*>(&count), sizeof(count));
+
+            if (version == 1) {
+              loaded_data.reserve(count);
+              for (uint32_t i = 0; i < count; ++i) {
+                EphemerisData body_data;
+                binary_file.read(reinterpret_cast<char*>(&body_data.jpl_id),
+                                 sizeof(body_data.jpl_id));
+
+                uint32_t name_length;
+                binary_file.read(reinterpret_cast<char*>(&name_length), sizeof(name_length));
+                body_data.body_name.resize(name_length);
+                binary_file.read(&body_data.body_name[0], name_length);
+
+                std::time_t epoch_time;
+                binary_file.read(reinterpret_cast<char*>(&epoch_time), sizeof(epoch_time));
+                body_data.epoch = std::chrono::system_clock::from_time_t(epoch_time);
+
+                binary_file.read(reinterpret_cast<char*>(&body_data.position),
+                                 sizeof(body_data.position));
+                binary_file.read(reinterpret_cast<char*>(&body_data.velocity),
+                                 sizeof(body_data.velocity));
+                binary_file.read(reinterpret_cast<char*>(&body_data.mass), sizeof(body_data.mass));
+
+                loaded_data.push_back(std::move(body_data));
+              }
+            }
+          }
+        }
+
+        if (!loaded_data.empty()) {
           // Recalculate checksum
           uint64_t calculated_checksum = 0;
-          for (const auto& body_data : data) {
+          for (const auto& body_data : loaded_data) {
             calculated_checksum += static_cast<uint64_t>(body_data.jpl_id);
             std::hash<std::string> hasher;
             calculated_checksum += hasher(body_data.body_name);
@@ -562,16 +648,114 @@ bool CacheManager::needs_refresh() const {
 }
 
 /**
- * @brief Rebuild cache from source
+ * @brief Rebuild cache from source (regenerate binary from JSON)
  */
 JPLVoidResult CacheManager::rebuild_cache() {
+  std::lock_guard<std::mutex> lock(impl_->cache_mutex);
+
   try {
-    auto clear_result = clear_cache(true);
-    if (!is_success(clear_result)) {
-      return clear_result;
+    statistics_.refresh_attempts++;
+
+    auto json_path = config_.cache_directory / "ephemeris_data.json";
+    auto binary_path = config_.cache_directory / "ephemeris_cache.bin";
+
+    // Check if JSON cache exists
+    if (!std::filesystem::exists(json_path)) {
+      statistics_.refresh_failures++;
+      return error(JPLError::CacheError);  // No JSON source to rebuild from
     }
 
-    statistics_.refresh_attempts++;
+    // Load data from JSON
+    std::vector<EphemerisData> data;
+    std::ifstream json_file(json_path);
+    if (!json_file.is_open()) {
+      statistics_.refresh_failures++;
+      return error(JPLError::CacheError);
+    }
+
+    try {
+      nlohmann::json json_data = nlohmann::json::parse(json_file);
+      if (!json_data.is_array()) {
+        statistics_.refresh_failures++;
+        return error(JPLError::CacheError);
+      }
+
+      data.reserve(json_data.size());
+      for (const auto& item : json_data) {
+        EphemerisData body_data;
+        body_data.jpl_id = item.at("jpl_id").get<int>();
+        body_data.body_name = item.at("body_name").get<std::string>();
+        body_data.epoch =
+            std::chrono::system_clock::from_time_t(item.at("epoch").get<std::time_t>());
+
+        const auto& pos = item.at("position");
+        body_data.position =
+            SolarSystem::Math::Vector3d(pos[0].get<double>(), pos[1].get<double>(), pos[2].get<double>());
+
+        const auto& vel = item.at("velocity");
+        body_data.velocity =
+            SolarSystem::Math::Vector3d(vel[0].get<double>(), vel[1].get<double>(), vel[2].get<double>());
+
+        body_data.mass = item.at("mass").get<long double>();
+        data.push_back(std::move(body_data));
+      }
+    } catch (const nlohmann::json::exception&) {
+      statistics_.refresh_failures++;
+      return error(JPLError::CacheError);
+    }
+    json_file.close();
+
+    if (data.empty()) {
+      statistics_.refresh_failures++;
+      return error(JPLError::CacheError);
+    }
+
+    // Write binary cache
+    std::ofstream binary_file(binary_path, std::ios::binary);
+    if (!binary_file.is_open()) {
+      statistics_.refresh_failures++;
+      return error(JPLError::CacheError);
+    }
+
+    // Write header
+    uint32_t version = 1;
+    uint32_t count = static_cast<uint32_t>(data.size());
+    binary_file.write(reinterpret_cast<const char*>(&version), sizeof(version));
+    binary_file.write(reinterpret_cast<const char*>(&count), sizeof(count));
+
+    // Write data
+    for (const auto& body_data : data) {
+      binary_file.write(reinterpret_cast<const char*>(&body_data.jpl_id), sizeof(body_data.jpl_id));
+
+      uint32_t name_length = static_cast<uint32_t>(body_data.body_name.length());
+      binary_file.write(reinterpret_cast<const char*>(&name_length), sizeof(name_length));
+      binary_file.write(body_data.body_name.c_str(), name_length);
+
+      auto epoch_time = std::chrono::system_clock::to_time_t(body_data.epoch);
+      binary_file.write(reinterpret_cast<const char*>(&epoch_time), sizeof(epoch_time));
+
+      binary_file.write(reinterpret_cast<const char*>(&body_data.position), sizeof(body_data.position));
+      binary_file.write(reinterpret_cast<const char*>(&body_data.velocity), sizeof(body_data.velocity));
+      binary_file.write(reinterpret_cast<const char*>(&body_data.mass), sizeof(body_data.mass));
+    }
+    binary_file.close();
+
+    // Update metadata
+    if (!entry_metadata_) {
+      entry_metadata_ = CacheEntryMetadata{};
+    }
+    entry_metadata_->created_at = std::chrono::system_clock::now();
+    entry_metadata_->last_accessed = entry_metadata_->created_at;
+
+    // Calculate checksum
+    uint64_t checksum = 0;
+    for (const auto& body_data : data) {
+      checksum += static_cast<uint64_t>(body_data.jpl_id);
+      std::hash<std::string> hasher;
+      checksum += hasher(body_data.body_name);
+    }
+    entry_metadata_->checksum = checksum;
+
     statistics_.refresh_successes++;
     statistics_.last_refresh_time = std::chrono::system_clock::now();
 
