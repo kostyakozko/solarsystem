@@ -268,7 +268,7 @@ This implementation plan systematically modernizes the Solar System Suite's buil
 
 ### Phase 5: JSON Migration
 
-- [ ] 11. Replace custom JSON with nlohmann/json
+- [x] 11. Replace custom JSON with nlohmann/json
   - Identify all custom JSON code
   - Replace with nlohmann/json
   - Test JSON operations
@@ -294,7 +294,7 @@ This implementation plan systematically modernizes the Solar System Suite's buil
   - Update error response formatting
   - _Requirements: 4.2, 4.3, 10.4_
 
-- [ ] 11.4 Migrate JSON in test framework
+- [x] 11.4 Migrate JSON in test framework
   - Replace JSON in test reporters
   - Use nlohmann::json for test result serialization
   - Update CI artifact generation

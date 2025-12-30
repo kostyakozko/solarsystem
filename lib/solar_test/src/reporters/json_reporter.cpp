@@ -1,6 +1,7 @@
 #include "solar_test/reporters/json_reporter.hpp"
 
 #include <iomanip>
+#include <nlohmann/json.hpp>
 #include <sstream>
 
 namespace SolarSystem::Testing {
@@ -55,40 +56,12 @@ void JsonReporter::on_error(const std::string& error_message) {
 }
 
 void JsonReporter::write_json_header() {
-  write_indented("{\n");
-  write_key_value("format", std::string("solar_test_json"), false, 1);
-  write_key_value("version", std::string("1.0"), false, 1);
-
-  auto now = std::chrono::system_clock::now();
-  auto time_t = std::chrono::system_clock::to_time_t(now);
-  std::ostringstream timestamp;
-  timestamp << std::put_time(std::gmtime(&time_t), "%Y-%m-%dT%H:%M:%SZ");
-  write_key_value("timestamp", timestamp.str(), false, 1);
-
-  write_indented("\"test_suites\": [\n", 1);
+  // Header will be written as part of the complete JSON object
+  // We'll build the JSON incrementally and write at the end
 }
 
 void JsonReporter::write_json_footer() {
-  write_indented("\n", 1);
-  write_indented("],\n", 1);
-
-  // Write progress messages if any
-  if (!progress_messages_.empty()) {
-    write_progress_array();
-    write_indented(",\n");
-  }
-
-  // Write error messages if any
-  if (!error_messages_.empty()) {
-    write_errors_array();
-    write_indented(",\n");
-  }
-
-  // Remove trailing comma if present
-  output_file_.seekp(-2, std::ios_base::cur);
-  write_indented("\n");
-
-  write_indented("}\n");
+  // Footer is handled by write_test_suite which writes the complete JSON
 }
 
 void JsonReporter::write_test_suite(const TestSuiteResult& result) {
@@ -96,163 +69,118 @@ void JsonReporter::write_test_suite(const TestSuiteResult& result) {
   auto suite_duration =
       std::chrono::duration_cast<std::chrono::milliseconds>(suite_end_time - suite_start_time_);
 
-  write_indented("{\n", 2);
-  write_key_value("name", result.suite_name, false, 3);
-  write_key_value("total_tests", static_cast<int64_t>(result.test_results.size()), false, 3);
-  write_key_value("passed", static_cast<int64_t>(result.passed_count), false, 3);
-  write_key_value("failed", static_cast<int64_t>(result.failed_count), false, 3);
-  write_key_value("skipped", static_cast<int64_t>(result.skipped_count), false, 3);
+  nlohmann::json j;
+  j["format"] = "solar_test_json";
+  j["version"] = "1.0";
+
+  auto now = std::chrono::system_clock::now();
+  auto time_t = std::chrono::system_clock::to_time_t(now);
+  std::ostringstream timestamp;
+  timestamp << std::put_time(std::gmtime(&time_t), "%Y-%m-%dT%H:%M:%SZ");
+  j["timestamp"] = timestamp.str();
+
+  // Build test suite JSON
+  nlohmann::json suite_json;
+  suite_json["name"] = result.suite_name;
+  suite_json["total_tests"] = result.test_results.size();
+  suite_json["passed"] = result.passed_count;
+  suite_json["failed"] = result.failed_count;
+  suite_json["skipped"] = result.skipped_count;
 
   if (config_.include_timing) {
-    write_key_value("duration_ms", static_cast<int64_t>(suite_duration.count()), false, 3);
-    write_key_value("success_rate", result.success_rate(), false, 3);
+    suite_json["duration_ms"] = suite_duration.count();
+    suite_json["success_rate"] = result.success_rate();
   }
 
   if (result.code_coverage_percentage > 0.0) {
-    write_key_value("code_coverage", result.code_coverage_percentage, false, 3);
+    suite_json["code_coverage"] = result.code_coverage_percentage;
   }
 
-  // Write individual test results
-  write_indented("\"tests\": [\n", 3);
-  for (size_t i = 0; i < result.test_results.size(); ++i) {
-    write_test_result(result.test_results[i], i == result.test_results.size() - 1);
-  }
-  write_indented("]\n", 3);
+  // Build test results array
+  nlohmann::json tests_array = nlohmann::json::array();
+  for (const auto& test_result : result.test_results) {
+    nlohmann::json test_json;
+    test_json["name"] = test_result.test_name;
+    test_json["status"] = status_to_string(test_result.status);
 
-  write_indented("}", 2);
+    if (!test_result.error_message.empty()) {
+      test_json["error_message"] = test_result.error_message;
+    }
+
+    if (config_.include_timing) {
+      test_json["execution_time_ms"] = test_result.execution_time.count();
+    }
+
+    if (config_.include_memory_usage && test_result.memory_usage_bytes > 0) {
+      test_json["memory_usage_bytes"] = test_result.memory_usage_bytes;
+    }
+
+    if (!test_result.assertion_failures.empty()) {
+      test_json["assertion_failures"] = test_result.assertion_failures;
+    }
+
+    if (test_result.was_expected_to_fail) {
+      test_json["expected_to_fail"] = true;
+      if (!test_result.expected_failure_reason.empty()) {
+        test_json["expected_failure_reason"] = test_result.expected_failure_reason;
+      }
+    }
+
+    if (config_.include_metadata && !test_result.metadata.empty()) {
+      test_json["metadata"] = test_result.metadata;
+    }
+
+    tests_array.push_back(test_json);
+  }
+  suite_json["tests"] = tests_array;
+
+  j["test_suites"] = nlohmann::json::array({suite_json});
+
+  // Add progress messages if any
+  if (!progress_messages_.empty()) {
+    j["progress"] = progress_messages_;
+  }
+
+  // Add error messages if any
+  if (!error_messages_.empty()) {
+    j["errors"] = error_messages_;
+  }
+
+  // Write the complete JSON
+  if (config_.pretty_print) {
+    output_file_ << j.dump(2);
+  } else {
+    output_file_ << j.dump();
+  }
 }
 
 void JsonReporter::write_test_result(const TestResult& result, bool is_last) {
-  write_indented("{\n", 4);
-  write_key_value("name", result.test_name, false, 5);
-  write_key_value("status", status_to_string(result.status), false, 5);
-
-  if (!result.error_message.empty()) {
-    write_key_value("error_message", result.error_message, false, 5);
-  }
-
-  if (config_.include_timing) {
-    write_key_value("execution_time_ms", static_cast<int64_t>(result.execution_time.count()), false,
-                    5);
-  }
-
-  if (config_.include_memory_usage && result.memory_usage_bytes > 0) {
-    write_key_value("memory_usage_bytes", static_cast<int64_t>(result.memory_usage_bytes), false,
-                    5);
-  }
-
-  if (!result.assertion_failures.empty()) {
-    write_indented("\"assertion_failures\": [\n", 5);
-    for (size_t i = 0; i < result.assertion_failures.size(); ++i) {
-      write_indented("\"" + json_escape(result.assertion_failures[i]) + "\"", 6);
-      if (i < result.assertion_failures.size() - 1) {
-        output_file_ << ",";
-      }
-      output_file_ << "\n";
-    }
-    write_indented("],\n", 5);
-  }
-
-  if (result.was_expected_to_fail) {
-    write_key_value("expected_to_fail", true, false, 5);
-    if (!result.expected_failure_reason.empty()) {
-      write_key_value("expected_failure_reason", result.expected_failure_reason, false, 5);
-    }
-  }
-
-  if (config_.include_metadata && !result.metadata.empty()) {
-    write_indented("\"metadata\": ", 5);
-    write_metadata_object(result.metadata);
-    write_indented(",\n");
-  }
-
-  // Remove trailing comma
-  output_file_.seekp(-2, std::ios_base::cur);
-  write_indented("\n");
-
-  write_indented("}", 4);
-  if (!is_last) {
-    output_file_ << ",";
-  }
-  output_file_ << "\n";
+  // This method is no longer needed with nlohmann/json
+  // Kept for interface compatibility
+  (void)result;
+  (void)is_last;
 }
 
 void JsonReporter::write_metadata_object(const std::map<std::string, std::string>& metadata) {
-  output_file_ << "{\n";
-  size_t count = 0;
-  for (const auto& [key, value] : metadata) {
-    write_key_value(key, value, count == metadata.size() - 1, 6);
-    count++;
-  }
-  write_indented("}", 5);
+  // This method is no longer needed with nlohmann/json
+  // Kept for interface compatibility
+  (void)metadata;
 }
 
 void JsonReporter::write_progress_array() {
-  write_indented("\"progress\": [\n", 1);
-  for (size_t i = 0; i < progress_messages_.size(); ++i) {
-    write_indented("\"" + json_escape(progress_messages_[i]) + "\"", 2);
-    if (i < progress_messages_.size() - 1) {
-      output_file_ << ",";
-    }
-    output_file_ << "\n";
-  }
-  write_indented("]", 1);
+  // This method is no longer needed with nlohmann/json
+  // Kept for interface compatibility
 }
 
 void JsonReporter::write_errors_array() {
-  write_indented("\"errors\": [\n", 1);
-  for (size_t i = 0; i < error_messages_.size(); ++i) {
-    write_indented("\"" + json_escape(error_messages_[i]) + "\"", 2);
-    if (i < error_messages_.size() - 1) {
-      output_file_ << ",";
-    }
-    output_file_ << "\n";
-  }
-  write_indented("]", 1);
+  // This method is no longer needed with nlohmann/json
+  // Kept for interface compatibility
 }
 
 std::string JsonReporter::json_escape(const std::string& text) const {
-  std::string escaped;
-  escaped.reserve(static_cast<size_t>(text.length() * 1.2));  // Reserve some extra space
-
-  for (char c : text) {
-    switch (c) {
-      case '"':
-        escaped += "\\\"";
-        break;
-      case '\\':
-        escaped += "\\\\";
-        break;
-      case '\b':
-        escaped += "\\b";
-        break;
-      case '\f':
-        escaped += "\\f";
-        break;
-      case '\n':
-        escaped += "\\n";
-        break;
-      case '\r':
-        escaped += "\\r";
-        break;
-      case '\t':
-        escaped += "\\t";
-        break;
-      default:
-        if (static_cast<unsigned char>(c) < 0x20) {
-          // Control characters
-          std::ostringstream oss;
-          oss << "\\u" << std::hex << std::setw(4) << std::setfill('0')
-              << static_cast<unsigned int>(static_cast<unsigned char>(c));
-          escaped += oss.str();
-        } else {
-          escaped += c;
-        }
-        break;
-    }
-  }
-
-  return escaped;
+  // nlohmann/json handles escaping automatically
+  // This method is kept for interface compatibility
+  return text;
 }
 
 std::string JsonReporter::status_to_string(TestResult::Status status) const {
@@ -275,48 +203,50 @@ std::string JsonReporter::status_to_string(TestResult::Status status) const {
 }
 
 void JsonReporter::write_indented(const std::string& content, size_t indent_level) {
-  if (config_.pretty_print && indent_level > 0) {
-    output_file_ << std::string(indent_level * 2, ' ');
-  }
-  output_file_ << content;
+  // This method is no longer needed with nlohmann/json
+  // Kept for interface compatibility
+  (void)content;
+  (void)indent_level;
 }
 
 void JsonReporter::write_key_value(const std::string& key, const std::string& value, bool is_last,
                                    size_t indent_level) {
-  write_indented("\"" + key + "\": \"" + json_escape(value) + "\"", indent_level);
-  if (!is_last) {
-    output_file_ << ",";
-  }
-  output_file_ << "\n";
+  // This method is no longer needed with nlohmann/json
+  // Kept for interface compatibility
+  (void)key;
+  (void)value;
+  (void)is_last;
+  (void)indent_level;
 }
 
 void JsonReporter::write_key_value(const std::string& key, int64_t value, bool is_last,
                                    size_t indent_level) {
-  write_indented("\"" + key + "\": " + std::to_string(value), indent_level);
-  if (!is_last) {
-    output_file_ << ",";
-  }
-  output_file_ << "\n";
+  // This method is no longer needed with nlohmann/json
+  // Kept for interface compatibility
+  (void)key;
+  (void)value;
+  (void)is_last;
+  (void)indent_level;
 }
 
 void JsonReporter::write_key_value(const std::string& key, double value, bool is_last,
                                    size_t indent_level) {
-  std::ostringstream oss;
-  oss << std::fixed << std::setprecision(2) << value;
-  write_indented("\"" + key + "\": " + oss.str(), indent_level);
-  if (!is_last) {
-    output_file_ << ",";
-  }
-  output_file_ << "\n";
+  // This method is no longer needed with nlohmann/json
+  // Kept for interface compatibility
+  (void)key;
+  (void)value;
+  (void)is_last;
+  (void)indent_level;
 }
 
 void JsonReporter::write_key_value(const std::string& key, bool value, bool is_last,
                                    size_t indent_level) {
-  write_indented("\"" + key + "\": " + (value ? "true" : "false"), indent_level);
-  if (!is_last) {
-    output_file_ << ",";
-  }
-  output_file_ << "\n";
+  // This method is no longer needed with nlohmann/json
+  // Kept for interface compatibility
+  (void)key;
+  (void)value;
+  (void)is_last;
+  (void)indent_level;
 }
 
 }  // namespace SolarSystem::Testing

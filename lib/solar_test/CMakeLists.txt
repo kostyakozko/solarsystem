@@ -56,6 +56,14 @@ target_link_libraries(solar_test
         Threads::Threads
 )
 
+# Link nlohmann/json (required for JSON operations)
+if(NLOHMANN_JSON_AVAILABLE)
+    target_link_libraries(solar_test PRIVATE nlohmann_json::nlohmann_json)
+    message(STATUS "solar_test: nlohmann/json linked for JSON operations")
+else()
+    message(FATAL_ERROR "solar_test: nlohmann/json is required but not available")
+endif()
+
 # Installation
 install(TARGETS solar_test
     EXPORT SolarSystemTargets

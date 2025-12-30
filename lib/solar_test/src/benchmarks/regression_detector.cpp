@@ -4,6 +4,7 @@
 #include <cmath>
 #include <fstream>
 #include <iomanip>
+#include <nlohmann/json.hpp>
 #include <numeric>
 #include <sstream>
 
@@ -11,70 +12,55 @@ namespace SolarSystem::Testing {
 
 // PerformanceBaseline implementation
 std::string PerformanceBaseline::to_json() const {
-  std::ostringstream oss;
-  oss << "{\n";
-  oss << "  \"benchmark_name\": \"" << benchmark_name << "\",\n";
-  oss << "  \"mean_time_ns\": " << mean_time.count() << ",\n";
-  oss << "  \"std_dev_ns\": " << std_dev.count() << ",\n";
-  oss << "  \ry_usage_bytes\": " << memory_usage_bytes << ",\n";
-  oss << "  \"operations_per_second\": " << operations_per_second << ",\n";
+  nlohmann::json j;
+  j["benchmark_name"] = benchmark_name;
+  j["mean_time_ns"] = mean_time.count();
+  j["std_dev_ns"] = std_dev.count();
+  j["memory_usage_bytes"] = memory_usage_bytes;
+  j["operations_per_second"] = operations_per_second;
 
   // Convert timestamp to seconds since epoch
   auto time_t = std::chrono::system_clock::to_time_t(timestamp);
-  oss << "  \"timestamp\": " << time_t << ",\n";
-  oss << "  \"version\": \"" << version << "\",\n";
+  j["timestamp"] = time_t;
+  j["version"] = version;
+  j["metadata"] = metadata;
 
-  oss << "  \"metadata\": {\n";
-  bool first = true;
-  for (const auto& [key, value] : metadata) {
-    if (!first) oss << ",\n";
-    oss << "    \"" << key << "\": \"" << value << "\"";
-    first = false;
-  }
-  oss << "\n  }\n";
-  oss << "}";
-
-  return oss.str();
+  return j.dump(2);
 }
 
-PerformanceBaseline PerformanceBaseline::from_json(const std::string& json) {
-  // Simplified JSON parsing - in production, use a proper JSON library
+PerformanceBaseline PerformanceBaseline::from_json(const std::string& json_str) {
   PerformanceBaseline baseline;
 
-  // Extract benchmark name
-  size_t name_start = json.find("\"benchmark_name\": \"") + 19;
-  size_t name_end = json.find("\"", name_start);
-  baseline.benchmark_name = json.substr(name_start, name_end - name_start);
+  try {
+    auto j = nlohmann::json::parse(json_str);
 
-  // Extract mean time
-  size_t time_start = json.find("\"mean_time_ns\": ") + 16;
-  size_t time_end = json.find(",", time_start);
-  baseline.mean_time =
-      std::chrono::nanoseconds(std::stoll(json.substr(time_start, time_end - time_start)));
+    if (j.contains("benchmark_name")) {
+      baseline.benchmark_name = j["benchmark_name"].get<std::string>();
+    }
+    if (j.contains("mean_time_ns")) {
+      baseline.mean_time = std::chrono::nanoseconds(j["mean_time_ns"].get<int64_t>());
+    }
+    if (j.contains("std_dev_ns")) {
+      baseline.std_dev = std::chrono::nanoseconds(j["std_dev_ns"].get<int64_t>());
+    }
+    if (j.contains("memory_usage_bytes")) {
+      baseline.memory_usage_bytes = j["memory_usage_bytes"].get<size_t>();
+    }
+    if (j.contains("operations_per_second")) {
+      baseline.operations_per_second = j["operations_per_second"].get<double>();
+    }
+    if (j.contains("version")) {
+      baseline.version = j["version"].get<std::string>();
+    }
+    if (j.contains("metadata")) {
+      baseline.metadata = j["metadata"].get<std::map<std::string, std::string>>();
+    }
 
-  // Extract std dev
-  size_t std_start = json.find("\"std_dev_ns\": ") + 14;
-  size_t std_end = json.find(",", std_start);
-  baseline.std_dev =
-      std::chrono::nanoseconds(std::stoll(json.substr(std_start, std_end - std_start)));
-
-  // Extract memory usage
-  size_t mem_start = json.find("\"memory_usage_bytes\": ") + 22;
-  size_t mem_end = json.find(",", mem_start);
-  baseline.memory_usage_bytes = std::stoull(json.substr(mem_start, mem_end - mem_start));
-
-  // Extract operations per second
-  size_t ops_start = json.find("\"operations_per_second\": ") + 25;
-  size_t ops_end = json.find(",", ops_start);
-  baseline.operations_per_second = std::stod(json.substr(ops_start, ops_end - ops_start));
-
-  // Extract version
-  size_t ver_start = json.find("\"version\": \"") + 12;
-  size_t ver_end = json.find("\"", ver_start);
-  baseline.version = json.substr(ver_start, ver_end - ver_start);
-
-  // Set timestamp to current time (simplified)
-  baseline.timestamp = std::chrono::system_clock::now();
+    // Set timestamp to current time (simplified)
+    baseline.timestamp = std::chrono::system_clock::now();
+  } catch (const nlohmann::json::exception&) {
+    // Return default baseline on parse error
+  }
 
   return baseline;
 }
@@ -136,28 +122,16 @@ std::string RegressionAnalysis::generate_report() const {
 }
 
 std::string RegressionAnalysis::to_json() const {
-  std::ostringstream oss;
-  oss << std::fixed << std::setprecision(6);
+  nlohmann::json j;
+  j["benchmark_name"] = benchmark_name;
+  j["has_regression"] = has_regression;
+  j["time_regression_percentage"] = time_regression_percentage;
+  j["memory_regression_percentage"] = memory_regression_percentage;
+  j["ops_regression_percentage"] = ops_regression_percentage;
+  j["severity"] = severity;
+  j["alerts"] = alerts;
 
-  oss << "{\n";
-  oss << "  \"benchmark_name\": \"" << benchmark_name << "\",\n";
-  oss << "  \"has_regression\": " << (has_regression ? "true" : "false") << ",\n";
-  oss << "  \"time_regression_percentage\": " << time_regression_percentage << ",\n";
-  oss << "  \"memory_regression_percentage\": " << memory_regression_percentage << ",\n";
-  oss << "  \"ops_regression_percentage\": " << ops_regression_percentage << ",\n";
-  oss << "  \"severity\": \"" << severity << "\",\n";
-  oss << "  \"alerts\": [\n";
-
-  for (size_t i = 0; i < alerts.size(); ++i) {
-    oss << "    \"" << alerts[i] << "\"";
-    if (i < alerts.size() - 1) oss << ",";
-    oss << "\n";
-  }
-
-  oss << "  ]\n";
-  oss << "}";
-
-  return oss.str();
+  return j.dump(2);
 }
 
 // TrendAnalysis implementation
