@@ -1,0 +1,14 @@
+prefix=@CMAKE_INSTALL_PREFIX@
+exec_prefix=${prefix}
+libdir=${exec_prefix}/@CMAKE_INSTALL_LIBDIR@
+includedir=${prefix}/include
+
+Name: solar_utils
+Description: Solar System Suite - Common Utilities Library
+Version: @PROJECT_VERSION@
+URL: https://github.com/solarsystem/solarsystem
+
+Requires: libcurl openssl
+Cflags: -I${includedir}
+Libs: -L${libdir} -lsolar_utils
+Libs.private: -lpthread

@@ -122,3 +122,15 @@ install(TARGETS solar_jpl
     ARCHIVE DESTINATION lib
     RUNTIME DESTINATION bin
 )
+
+
+# Generate and install pkg-config file
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/solar_jpl.pc.in
+    ${CMAKE_CURRENT_BINARY_DIR}/solar_jpl.pc
+    @ONLY
+)
+
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/solar_jpl.pc
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
+)

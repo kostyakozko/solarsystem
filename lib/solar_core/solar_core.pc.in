@@ -1,0 +1,14 @@
+prefix=@CMAKE_INSTALL_PREFIX@
+exec_prefix=${prefix}
+libdir=${exec_prefix}/@CMAKE_INSTALL_LIBDIR@
+includedir=${prefix}/include
+
+Name: solar_core
+Description: Solar System Suite - High-Performance Physics Engine
+Version: @PROJECT_VERSION@
+URL: https://github.com/solarsystem/solarsystem
+
+Requires: solar_utils zlib openssl libcurl
+Cflags: -I${includedir}
+Libs: -L${libdir} -lsolar_core
+Libs.private: -lpthread

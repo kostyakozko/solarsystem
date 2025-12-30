@@ -112,3 +112,15 @@ install(DIRECTORY include/solar_utils
     DESTINATION include
     FILES_MATCHING PATTERN "*.hpp"
 )
+
+
+# Generate and install pkg-config file
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/solar_utils.pc.in
+    ${CMAKE_CURRENT_BINARY_DIR}/solar_utils.pc
+    @ONLY
+)
+
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/solar_utils.pc
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
+)

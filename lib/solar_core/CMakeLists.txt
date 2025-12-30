@@ -240,3 +240,15 @@ install(DIRECTORY include/solar_core
     DESTINATION include
     FILES_MATCHING PATTERN "*.hpp"
 )
+
+
+# Generate and install pkg-config file
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/solar_core.pc.in
+    ${CMAKE_CURRENT_BINARY_DIR}/solar_core.pc
+    @ONLY
+)
+
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/solar_core.pc
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
+)
