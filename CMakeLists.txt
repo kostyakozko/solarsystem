@@ -171,6 +171,52 @@ if(NOT CURL_EXECUTABLE)
     message(FATAL_ERROR "curl executable is required for JPL HORIZONS data fetching")
 endif()
 
+# ============================================================================
+# nlohmann/json Integration
+# ============================================================================
+# Supports both system-installed nlohmann/json and FetchContent download
+# Use -DUSE_SYSTEM_JSON=ON to use system installation
+
+if(USE_SYSTEM_JSON)
+  # Try to find system-installed nlohmann/json
+  find_package(nlohmann_json QUIET)
+  if(nlohmann_json_FOUND)
+    message(STATUS "Using system-installed nlohmann/json")
+    set(NLOHMANN_JSON_AVAILABLE TRUE)
+  else()
+    message(WARNING "System nlohmann/json not found, falling back to FetchContent")
+    set(USE_SYSTEM_JSON OFF)
+  endif()
+endif()
+
+if(NOT USE_SYSTEM_JSON)
+  # Download nlohmann/json via FetchContent
+  include(FetchContent)
+
+  FetchContent_Declare(
+    nlohmann_json
+    GIT_REPOSITORY https://github.com/nlohmann/json.git
+    GIT_TAG        v3.11.3
+    GIT_SHALLOW    TRUE
+  )
+
+  # Configure nlohmann/json options
+  set(JSON_BuildTests OFF CACHE BOOL "" FORCE)
+  set(JSON_Install OFF CACHE BOOL "" FORCE)
+  set(JSON_MultipleHeaders OFF CACHE BOOL "" FORCE)
+
+  FetchContent_MakeAvailable(nlohmann_json)
+
+  message(STATUS "Using FetchContent nlohmann/json v3.11.3")
+  set(NLOHMANN_JSON_AVAILABLE TRUE)
+endif()
+
+if(NLOHMANN_JSON_AVAILABLE)
+  message(STATUS "nlohmann/json: Available for JSON operations")
+else()
+  message(WARNING "nlohmann/json: Not available - JSON operations may be limited")
+endif()
+
 # Add subdirectories for modular build
 add_subdirectory(lib)
 

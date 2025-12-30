@@ -144,7 +144,7 @@ This implementation plan systematically modernizes the Solar System Suite's buil
   - Document JSON usage patterns
   - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5_
 
-- [ ] 5.1 Add nlohmann/json to build system
+- [x] 5.1 Add nlohmann/json to build system
   - Add FetchContent configuration for nlohmann/json
   - Add USE_SYSTEM_JSON option for system installations
   - Configure find_package fallback

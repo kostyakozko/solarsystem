@@ -24,6 +24,13 @@ target_link_libraries(solar_utils PUBLIC
     OpenSSL::Crypto # For cryptographic operations
 )
 
+# Link nlohmann/json if available
+if(NLOHMANN_JSON_AVAILABLE)
+    target_link_libraries(solar_utils PUBLIC nlohmann_json::nlohmann_json)
+    target_compile_definitions(solar_utils PUBLIC SOLAR_UTILS_HAS_NLOHMANN_JSON=1)
+    message(STATUS "solar_utils: nlohmann/json linked for JSON operations")
+endif()
+
 # Public headers for other libraries and applications
 target_include_directories(solar_utils PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}

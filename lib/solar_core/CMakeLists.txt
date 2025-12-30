@@ -127,6 +127,13 @@ target_link_libraries(solar_core PUBLIC
     CURL::libcurl   # For HTTP operations in network security
 )
 
+# Link nlohmann/json if available
+if(NLOHMANN_JSON_AVAILABLE)
+    target_link_libraries(solar_core PUBLIC nlohmann_json::nlohmann_json)
+    target_compile_definitions(solar_core PUBLIC SOLAR_CORE_HAS_NLOHMANN_JSON=1)
+    message(STATUS "solar_core: nlohmann/json linked for JSON operations")
+endif()
+
 # solar_jpl dependency handled differently for static vs shared
 if(NOT BUILD_SHARED_LIBS)
     # Static: normal linking
