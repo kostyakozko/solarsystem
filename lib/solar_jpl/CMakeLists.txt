@@ -30,11 +30,12 @@ target_link_libraries(solar_jpl PUBLIC
     Threads::Threads  # For async operations
 )
 
-# Link nlohmann/json if available
+# Link nlohmann/json (required for JSON operations)
 if(NLOHMANN_JSON_AVAILABLE)
     target_link_libraries(solar_jpl PRIVATE nlohmann_json::nlohmann_json)
-    target_compile_definitions(solar_jpl PRIVATE SOLAR_JPL_HAS_NLOHMANN_JSON=1)
     message(STATUS "solar_jpl: nlohmann/json linked for JSON operations")
+else()
+    message(FATAL_ERROR "solar_jpl: nlohmann/json is required but not available")
 endif()
 
 # Modern C++20 optimization flags

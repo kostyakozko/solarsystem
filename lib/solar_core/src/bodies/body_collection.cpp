@@ -9,6 +9,8 @@
 #include <regex>
 #include <sstream>
 
+#include <nlohmann/json.hpp>
+
 namespace SolarSystem::Bodies {
 
 BodyCollection::BodyCollection(std::vector<CelestialBody> bodies) : bodies_(std::move(bodies)) {
@@ -198,31 +200,24 @@ std::vector<std::string> BodyCollection::get_validation_errors() const {
 }
 
 std::string BodyCollection::to_json() const {
-  std::ostringstream oss;
-  oss << "{\n";
-  oss << "  \"body_count\": " << bodies_.size() << ",\n";
-  oss << "  \"total_mass\": " << std::scientific << total_mass() << ",\n";
-  oss << "  \"bodies\": [\n";
+  nlohmann::json j;
+  j["body_count"] = bodies_.size();
+  j["total_mass"] = total_mass();
 
-  for (size_t i = 0; i < bodies_.size(); ++i) {
-    const auto& body = bodies_[i];
-    oss << "    {\n";
-    oss << "      \"name\": \"" << body.name() << "\",\n";
-    oss << "      \"type\": \"" << to_string(body.type()) << "\",\n";
-    oss << "      \"priority\": \"" << to_string(body.priority()) << "\",\n";
-    oss << "      \"mass\": " << std::scientific << body.mass() << ",\n";
-    oss << "      \"position\": [" << body.position().x() << ", " << body.position().y() << ", "
-        << body.position().z() << "],\n";
-    oss << "      \"velocity\": [" << body.velocity().x() << ", " << body.velocity().y() << ", "
-        << body.velocity().z() << "]\n";
-    oss << "    }";
-    if (i < bodies_.size() - 1) oss << ",";
-    oss << "\n";
+  nlohmann::json bodies_array = nlohmann::json::array();
+  for (const auto& body : bodies_) {
+    nlohmann::json body_json;
+    body_json["name"] = std::string(body.name());
+    body_json["type"] = to_string(body.type());
+    body_json["priority"] = to_string(body.priority());
+    body_json["mass"] = body.mass();
+    body_json["position"] = {body.position().x(), body.position().y(), body.position().z()};
+    body_json["velocity"] = {body.velocity().x(), body.velocity().y(), body.velocity().z()};
+    bodies_array.push_back(body_json);
   }
+  j["bodies"] = bodies_array;
 
-  oss << "  ]\n";
-  oss << "}";
-  return oss.str();
+  return j.dump(2);
 }
 
 std::string BodyCollection::summary() const {

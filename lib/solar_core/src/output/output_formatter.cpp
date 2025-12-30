@@ -7,6 +7,8 @@
 #include <sstream>
 #include <zlib.h>
 
+#include <nlohmann/json.hpp>
+
 namespace SolarSystem::Output {
 
 // ============================================================================
@@ -14,36 +16,71 @@ namespace SolarSystem::Output {
 // ============================================================================
 
 std::string OutputMetadata::to_json() const {
-  std::ostringstream oss;
-  oss << "{\n";
-  oss << "  \"format_version\": \"" << format_version << "\",\n";
-  oss << "  \"generated_at\": \"" << OutputFormatter::format_timestamp(generated_at) << "\",\n";
-  oss << "  \"generator\": \"" << generator << "\",\n";
-  oss << "  \"generator_version\": \"" << generator_version << "\",\n";
-  oss << "  \"simulation\": {\n";
-  oss << "    \"start_time\": \"" << OutputFormatter::format_timestamp(simulation_start_time)
-      << "\",\n";
-  oss << "    \"end_time\": \"" << OutputFormatter::format_timestamp(simulation_end_time)
-      << "\",\n";
-  oss << "    \"duration_seconds\": " << simulation_duration_seconds << ",\n";
-  oss << "    \"iteration_count\": " << iteration_count << ",\n";
-  oss << "    \"integration_method\": \"" << integration_method << "\",\n";
-  oss << "    \"time_step\": " << time_step << "\n";
-  oss << "  },\n";
-  oss << "  \"data\": {\n";
-  oss << "    \"body_count\": " << body_count << ",\n";
-  oss << "    \"quality_level\": \"" << to_string(quality_level) << "\",\n";
-  oss << "    \"validated\": " << (validated ? "true" : "false") << "\n";
-  oss << "  }\n";
-  oss << "}";
-  return oss.str();
+  nlohmann::json j;
+  j["format_version"] = format_version;
+  j["generated_at"] = OutputFormatter::format_timestamp(generated_at);
+  j["generator"] = generator;
+  j["generator_version"] = generator_version;
+
+  j["simulation"] = {{"start_time", OutputFormatter::format_timestamp(simulation_start_time)},
+                     {"end_time", OutputFormatter::format_timestamp(simulation_end_time)},
+                     {"duration_seconds", simulation_duration_seconds},
+                     {"iteration_count", iteration_count},
+                     {"integration_method", integration_method},
+                     {"time_step", time_step}};
+
+  j["data"] = {{"body_count", body_count},
+               {"quality_level", to_string(quality_level)},
+               {"validated", validated}};
+
+  return j.dump(2);
 }
 
-Utils::Expected<OutputMetadata, std::string> OutputMetadata::from_json(const std::string& ) {
-  // Simple JSON parsing (in production, use a proper JSON library)
-  OutputMetadata metadata;
-  // For now, return a basic implementation
-  return metadata;
+Utils::Expected<OutputMetadata, std::string> OutputMetadata::from_json(const std::string& json_str) {
+  try {
+    auto j = nlohmann::json::parse(json_str);
+    OutputMetadata metadata;
+
+    if (j.contains("format_version")) {
+      metadata.format_version = j["format_version"].get<std::string>();
+    }
+    if (j.contains("generator")) {
+      metadata.generator = j["generator"].get<std::string>();
+    }
+    if (j.contains("generator_version")) {
+      metadata.generator_version = j["generator_version"].get<std::string>();
+    }
+
+    if (j.contains("simulation")) {
+      auto& sim = j["simulation"];
+      if (sim.contains("duration_seconds")) {
+        metadata.simulation_duration_seconds = sim["duration_seconds"].get<double>();
+      }
+      if (sim.contains("iteration_count")) {
+        metadata.iteration_count = sim["iteration_count"].get<size_t>();
+      }
+      if (sim.contains("integration_method")) {
+        metadata.integration_method = sim["integration_method"].get<std::string>();
+      }
+      if (sim.contains("time_step")) {
+        metadata.time_step = sim["time_step"].get<double>();
+      }
+    }
+
+    if (j.contains("data")) {
+      auto& data = j["data"];
+      if (data.contains("body_count")) {
+        metadata.body_count = data["body_count"].get<size_t>();
+      }
+      if (data.contains("validated")) {
+        metadata.validated = data["validated"].get<bool>();
+      }
+    }
+
+    return metadata;
+  } catch (const nlohmann::json::exception& e) {
+    return Utils::Expected<OutputMetadata, std::string>(std::string("JSON parsing error: ") + e.what());
+  }
 }
 
 // ============================================================================

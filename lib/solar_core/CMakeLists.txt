@@ -141,11 +141,12 @@ if(MSGPACK_AVAILABLE)
     message(STATUS "solar_core: msgpack-cxx linked for binary serialization")
 endif()
 
-# Link nlohmann/json if available
+# Link nlohmann/json (required for JSON operations)
 if(NLOHMANN_JSON_AVAILABLE)
     target_link_libraries(solar_core PRIVATE nlohmann_json::nlohmann_json)
-    target_compile_definitions(solar_core PRIVATE SOLAR_CORE_HAS_NLOHMANN_JSON=1)
     message(STATUS "solar_core: nlohmann/json linked for JSON operations")
+else()
+    message(FATAL_ERROR "solar_core: nlohmann/json is required but not available")
 endif()
 
 # solar_jpl dependency handled differently for static vs shared

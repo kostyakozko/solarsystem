@@ -24,11 +24,12 @@ target_link_libraries(solar_utils PUBLIC
     OpenSSL::Crypto # For cryptographic operations
 )
 
-# Link nlohmann/json if available
+# Link nlohmann/json (required for JSON operations)
 if(NLOHMANN_JSON_AVAILABLE)
     target_link_libraries(solar_utils PRIVATE nlohmann_json::nlohmann_json)
-    target_compile_definitions(solar_utils PRIVATE SOLAR_UTILS_HAS_NLOHMANN_JSON=1)
     message(STATUS "solar_utils: nlohmann/json linked for JSON operations")
+else()
+    message(FATAL_ERROR "solar_utils: nlohmann/json is required but not available")
 endif()
 
 # Public headers for other libraries and applications - use generator expressions for proper export

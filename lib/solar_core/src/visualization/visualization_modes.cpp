@@ -6,10 +6,12 @@
 #include "solar_core/visualization/visualization_modes.hpp"
 
 #include <algorithm>
-#include <iomanip>
-#include <sstream>
 #include <cmath>
 #include <fstream>
+#include <iomanip>
+#include <sstream>
+
+#include <nlohmann/json.hpp>
 
 // Cairo library for PNG and PDF rendering
 #ifdef HAVE_CAIRO
@@ -266,26 +268,20 @@ Utils::Expected<std::string, VisualizationFrame::ExportError> VisualizationFrame
     }
 
     case ExportFormat::JSON: {
-      std::ostringstream json;
-      json << "{\n";
-      json << "  \"timestamp\": " << std::chrono::duration_cast<std::chrono::seconds>(
-                timestamp.time_since_epoch()).count() << ",\n";
-      json << "  \"mode\": \"" << to_string(mode) << "\",\n";
-      json << "  \"body_count\": " << body_count << ",\n";
-      json << "  \"content\": " << std::quoted(content) << ",\n";
-      json << "  \"metadata\": {\n";
+      nlohmann::json j;
+      j["timestamp"] =
+          std::chrono::duration_cast<std::chrono::seconds>(timestamp.time_since_epoch()).count();
+      j["mode"] = to_string(mode);
+      j["body_count"] = body_count;
+      j["content"] = content;
 
-      bool first = true;
+      nlohmann::json meta_json;
       for (const auto& [key, value] : metadata) {
-        if (!first) json << ",\n";
-        json << "    " << std::quoted(key) << ": " << std::quoted(value);
-        first = false;
+        meta_json[key] = value;
       }
+      j["metadata"] = meta_json;
 
-      json << "\n  }\n";
-      json << "}\n";
-
-      return Utils::Expected<std::string, ExportError>(json.str());
+      return Utils::Expected<std::string, ExportError>(j.dump(2));
     }
 
     case ExportFormat::HTML: {

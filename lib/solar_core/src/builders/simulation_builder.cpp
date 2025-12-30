@@ -10,6 +10,8 @@
 #include <regex>
 #include <sstream>
 
+#include <nlohmann/json.hpp>
+
 #include "solar_core/bodies/body_factory.hpp"
 #include "solar_core/data/body_definitions.hpp"
 
@@ -840,51 +842,53 @@ bool ConfigurationBuilder::needs_migration() const {
 int ConfigurationBuilder::get_version() const { return config_version_; }
 
 std::string ConfigurationBuilder::to_json() const {
-  // Simple JSON serialization (in a real implementation, use a JSON library)
-  std::ostringstream json;
-  json << "{\n";
-  json << "  \"version\": " << config_version_ << ",\n";
-  json << "  \"time_step\": " << config_.time_step << ",\n";
-  json << "  \"gravitational_constant\": " << config_.gravitational_constant << ",\n";
-  json << "  \"tolerance\": " << config_.tolerance << ",\n";
-  json << "  \"use_adaptive_timestep\": " << (config_.use_adaptive_timestep ? "true" : "false")
-       << ",\n";
-  json << "  \"min_timestep\": " << config_.min_timestep << ",\n";
-  json << "  \"max_timestep\": " << config_.max_timestep << ",\n";
-  json << "  \"enable_collision_detection\": "
-       << (config_.enable_collision_detection ? "true" : "false") << ",\n";
-  json << "  \"collision_threshold\": " << config_.collision_threshold << "\n";
-  json << "}";
-  return json.str();
+  nlohmann::json j;
+  j["version"] = config_version_;
+  j["time_step"] = config_.time_step;
+  j["gravitational_constant"] = config_.gravitational_constant;
+  j["tolerance"] = config_.tolerance;
+  j["use_adaptive_timestep"] = config_.use_adaptive_timestep;
+  j["min_timestep"] = config_.min_timestep;
+  j["max_timestep"] = config_.max_timestep;
+  j["enable_collision_detection"] = config_.enable_collision_detection;
+  j["collision_threshold"] = config_.collision_threshold;
+
+  return j.dump(2);
 }
 
 ConfigurationBuilder& ConfigurationBuilder::from_json(const std::string& json_str) {
-  // Simple JSON parsing (in a real implementation, use a JSON library)
-  // This is a basic implementation for demonstration
+  try {
+    auto j = nlohmann::json::parse(json_str);
 
-  // Extract version
-  std::regex version_regex(R"("version":\s*(\d+))");
-  std::smatch match;
-  if (std::regex_search(json_str, match, version_regex)) {
-    config_version_ = std::stoi(match[1]);
-  }
-
-  // Extract time_step
-  std::regex timestep_regex(R"("time_step":\s*([\d.e+-]+))");
-  if (std::regex_search(json_str, match, timestep_regex)) {
-    config_.time_step = std::stod(match[1]);
-  }
-
-  // Extract tolerance
-  std::regex tolerance_regex(R"("tolerance":\s*([\d.e+-]+))");
-  if (std::regex_search(json_str, match, tolerance_regex)) {
-    config_.tolerance = std::stod(match[1]);
-  }
-
-  // Extract adaptive timestep
-  std::regex adaptive_regex(R"("use_adaptive_timestep":\s*(true|false))");
-  if (std::regex_search(json_str, match, adaptive_regex)) {
-    config_.use_adaptive_timestep = (match[1] == "true");
+    if (j.contains("version")) {
+      config_version_ = j["version"].get<int>();
+    }
+    if (j.contains("time_step")) {
+      config_.time_step = j["time_step"].get<double>();
+    }
+    if (j.contains("gravitational_constant")) {
+      config_.gravitational_constant = j["gravitational_constant"].get<double>();
+    }
+    if (j.contains("tolerance")) {
+      config_.tolerance = j["tolerance"].get<double>();
+    }
+    if (j.contains("use_adaptive_timestep")) {
+      config_.use_adaptive_timestep = j["use_adaptive_timestep"].get<bool>();
+    }
+    if (j.contains("min_timestep")) {
+      config_.min_timestep = j["min_timestep"].get<double>();
+    }
+    if (j.contains("max_timestep")) {
+      config_.max_timestep = j["max_timestep"].get<double>();
+    }
+    if (j.contains("enable_collision_detection")) {
+      config_.enable_collision_detection = j["enable_collision_detection"].get<bool>();
+    }
+    if (j.contains("collision_threshold")) {
+      config_.collision_threshold = j["collision_threshold"].get<double>();
+    }
+  } catch (const nlohmann::json::exception&) {
+    // Parsing failed, keep current values
   }
 
   return *this;

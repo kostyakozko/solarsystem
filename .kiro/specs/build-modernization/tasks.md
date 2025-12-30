@@ -275,7 +275,7 @@ This implementation plan systematically modernizes the Solar System Suite's buil
   - Remove custom JSON utilities
   - _Requirements: 4.2, 4.3, 4.4, 10.1, 10.4_
 
-- [ ] 11.1 Migrate JSON in solar_core
+- [x] 11.1 Migrate JSON in solar_core
   - Replace manual JSON building in output formatters
   - Replace JSON parsing in configuration loaders
   - Use nlohmann::json for serialization

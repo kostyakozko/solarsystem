@@ -6,8 +6,10 @@
 #include "solar_core/diagnostics/diagnostic_system.hpp"
 
 #include <algorithm>
-#include <sstream>
 #include <iomanip>
+#include <sstream>
+
+#include <nlohmann/json.hpp>
 
 namespace SolarSystem::Diagnostics {
 
@@ -90,26 +92,34 @@ std::string DiagnosticReport::to_string() const {
 }
 
 std::string DiagnosticReport::to_json() const {
-  std::ostringstream oss;
-  oss << "{\n";
-  oss << "  \"report_id\": \"" << report_id << "\",\n";
-  oss << "  \"generated_at\": " << std::chrono::system_clock::to_time_t(generated_at) << ",\n";
-  oss << "  \"health\": {\n";
-  oss << "    \"status\": \"";
+  nlohmann::json j;
+  j["report_id"] = report_id;
+  j["generated_at"] = std::chrono::system_clock::to_time_t(generated_at);
+
+  std::string status_str;
   switch (health.status) {
-    case SystemHealth::Status::HEALTHY: oss << "HEALTHY"; break;
-    case SystemHealth::Status::DEGRADED: oss << "DEGRADED"; break;
-    case SystemHealth::Status::UNHEALTHY: oss << "UNHEALTHY"; break;
-    case SystemHealth::Status::CRITICAL: oss << "CRITICAL"; break;
+    case SystemHealth::Status::HEALTHY:
+      status_str = "HEALTHY";
+      break;
+    case SystemHealth::Status::DEGRADED:
+      status_str = "DEGRADED";
+      break;
+    case SystemHealth::Status::UNHEALTHY:
+      status_str = "UNHEALTHY";
+      break;
+    case SystemHealth::Status::CRITICAL:
+      status_str = "CRITICAL";
+      break;
   }
-  oss << "\",\n";
-  oss << "    \"total_checks\": " << health.total_checks << ",\n";
-  oss << "    \"passed_checks\": " << health.passed_checks << ",\n";
-  oss << "    \"failed_checks\": " << health.failed_checks << "\n";
-  oss << "  },\n";
-  oss << "  \"issues_count\": " << health.issues.size() << "\n";
-  oss << "}";
-  return oss.str();
+
+  j["health"] = {{"status", status_str},
+                 {"total_checks", health.total_checks},
+                 {"passed_checks", health.passed_checks},
+                 {"failed_checks", health.failed_checks}};
+
+  j["issues_count"] = health.issues.size();
+
+  return j.dump(2);
 }
 
 // DiagnosticSystem implementation
