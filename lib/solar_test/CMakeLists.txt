@@ -34,10 +34,11 @@ add_library(solar_test STATIC
     src/solar_test_main.cpp
 )
 
-# Include directories
+# Include directories - use generator expressions for proper export
 target_include_directories(solar_test
     PUBLIC
-        include
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include>
     PRIVATE
         src
 )
@@ -57,6 +58,7 @@ target_link_libraries(solar_test
 
 # Installation
 install(TARGETS solar_test
+    EXPORT SolarSystemTargets
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib
     RUNTIME DESTINATION bin

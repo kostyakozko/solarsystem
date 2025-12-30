@@ -91,10 +91,11 @@ add_library(solar_core
     src/ui/cli_interface.cpp
 )
 
-# Public headers for other libraries and applications
+# Public headers for other libraries and applications - use generator expressions for proper export
 target_include_directories(solar_core PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
 )
 
 # Find zlib for checkpoint compression
@@ -127,10 +128,16 @@ target_link_libraries(solar_core PUBLIC
     CURL::libcurl   # For HTTP operations in network security
 )
 
+# Add Boost include directories for msgpack (header-only, needed for endian detection)
+if(Boost_FOUND)
+    target_include_directories(solar_core PRIVATE ${Boost_INCLUDE_DIRS})
+    message(STATUS "solar_core: Boost headers linked for msgpack")
+endif()
+
 # Link nlohmann/json if available
 if(NLOHMANN_JSON_AVAILABLE)
-    target_link_libraries(solar_core PUBLIC nlohmann_json::nlohmann_json)
-    target_compile_definitions(solar_core PUBLIC SOLAR_CORE_HAS_NLOHMANN_JSON=1)
+    target_link_libraries(solar_core PRIVATE nlohmann_json::nlohmann_json)
+    target_compile_definitions(solar_core PRIVATE SOLAR_CORE_HAS_NLOHMANN_JSON=1)
     message(STATUS "solar_core: nlohmann/json linked for JSON operations")
 endif()
 
@@ -142,7 +149,7 @@ else()
     # Shared: only headers, actual linking deferred to applications
     # This breaks the circular dependency
     target_include_directories(solar_core PUBLIC
-        ${CMAKE_SOURCE_DIR}/lib/solar_jpl/include
+        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/lib/solar_jpl/include>
     )
     # Allow undefined symbols - they'll be resolved when applications link both libraries
     if(APPLE)
@@ -156,7 +163,8 @@ endif()
 
 # Link Cairo if available
 if(CAIRO_FOUND)
-    target_link_libraries(solar_core PRIVATE ${CAIRO_LIBRARIES})
+    target_link_directories(solar_core PUBLIC ${CAIRO_LIBRARY_DIRS})
+    target_link_libraries(solar_core PUBLIC ${CAIRO_LIBRARIES})
 endif()
 
 # Aggressive optimization for core physics calculations
@@ -169,6 +177,16 @@ target_compile_options(solar_core PRIVATE
 # Disable old-style-cast and double-promotion warnings for message.cpp due to MessagePack library
 set_source_files_properties(src/communication/message.cpp PROPERTIES
     COMPILE_FLAGS "-Wno-old-style-cast -Wno-double-promotion"
+)
+
+# Disable old-style-cast warnings for security files due to OpenSSL headers
+set_source_files_properties(
+    src/security/security_manager.cpp
+    src/security/session_manager.cpp
+    src/security/network_security.cpp
+    src/backup/data_protection.cpp
+    src/backup/backup_manager.cpp
+    PROPERTIES COMPILE_FLAGS "-Wno-old-style-cast"
 )
 
 # Enable profiling if requested

@@ -13,8 +13,8 @@
 
 // Cairo library for PNG and PDF rendering
 #ifdef HAVE_CAIRO
-#include <cairo/cairo.h>
-#include <cairo/cairo-pdf.h>
+#include <cairo.h>
+#include <cairo-pdf.h>
 #endif
 
 namespace SolarSystem::Visualization {

@@ -18,10 +18,10 @@ set_target_properties(solar_jpl PROPERTIES
     INTERPROCEDURAL_OPTIMIZATION_RELEASE TRUE
 )
 
-# Include directories
+# Include directories - use generator expressions for proper export
 target_include_directories(solar_jpl PUBLIC
-    include
-
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
 )
 
 # Link dependencies
@@ -32,8 +32,8 @@ target_link_libraries(solar_jpl PUBLIC
 
 # Link nlohmann/json if available
 if(NLOHMANN_JSON_AVAILABLE)
-    target_link_libraries(solar_jpl PUBLIC nlohmann_json::nlohmann_json)
-    target_compile_definitions(solar_jpl PUBLIC SOLAR_JPL_HAS_NLOHMANN_JSON=1)
+    target_link_libraries(solar_jpl PRIVATE nlohmann_json::nlohmann_json)
+    target_compile_definitions(solar_jpl PRIVATE SOLAR_JPL_HAS_NLOHMANN_JSON=1)
     message(STATUS "solar_jpl: nlohmann/json linked for JSON operations")
 endif()
 

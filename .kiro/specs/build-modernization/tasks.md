@@ -159,27 +159,27 @@ This implementation plan systematically modernizes the Solar System Suite's buil
 
 ### Phase 3: Package Configuration
 
-- [ ] 6. Generate pkg-config files
+- [x] 6. Generate pkg-config files
   - Create .pc.in templates for each library
   - Configure pkg-config file generation
   - Install pkg-config files
   - Test pkg-config integration
   - _Requirements: 6.1, 6.2_
 
-- [ ] 6.1 Create pkg-config templates
+- [x] 6.1 Create pkg-config templates
   - Create lib/solar_core/solar_core.pc.in
   - Create lib/solar_jpl/solar_jpl.pc.in
   - Create lib/solar_utils/solar_utils.pc.in
   - Add version, dependencies, and flags to templates
   - _Requirements: 6.1_
 
-- [ ] 6.2 Configure pkg-config installation
+- [x] 6.2 Configure pkg-config installation
   - Add configure_file() for each .pc template
   - Install .pc files to ${CMAKE_INSTALL_LIBDIR}/pkgconfig
   - Test pkg-config --cflags and --libs output
   - _Requirements: 6.1, 6.2_
 
-- [ ] 7. Generate CMake config files
+- [x] 7. Generate CMake config files
   - Create CMake config templates
   - Generate version files
   - Export targets
@@ -187,14 +187,14 @@ This implementation plan systematically modernizes the Solar System Suite's buil
   - Test find_package integration
   - _Requirements: 6.2, 6.3_
 
-- [ ] 7.1 Create CMake config templates
+- [x] 7.1 Create CMake config templates
   - Create cmake/SolarSystemConfig.cmake.in
   - Add find_dependency() calls for required dependencies
   - Include exported targets file
   - Add version compatibility checking
   - _Requirements: 6.2_
 
-- [ ] 7.2 Configure CMake package installation
+- [x] 7.2 Configure CMake package installation
   - Use configure_package_config_file() for config generation
   - Use write_basic_package_version_file() for version file
   - Export library targets with install(EXPORT)

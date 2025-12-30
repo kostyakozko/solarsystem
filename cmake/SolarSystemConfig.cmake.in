@@ -1,0 +1,45 @@
+@PACKAGE_INIT@
+
+# SolarSystemConfig.cmake - CMake configuration file for Solar System Suite
+#
+# This file is used by find_package(SolarSystem) to locate and configure
+# the Solar System Suite libraries.
+#
+# Usage:
+#   find_package(SolarSystem REQUIRED)
+#   target_link_libraries(myapp SolarSystem::solar_core)
+#
+# Available targets:
+#   SolarSystem::solar_utils - Common utilities library
+#   SolarSystem::solar_core  - High-performance physics engine
+#   SolarSystem::solar_jpl   - JPL HORIZONS API client
+#   SolarSystem::solar_test  - Testing utilities and mocks
+
+include(CMakeFindDependencyMacro)
+
+# Find required dependencies
+find_dependency(Threads REQUIRED)
+find_dependency(ZLIB REQUIRED)
+find_dependency(OpenSSL REQUIRED)
+find_dependency(CURL REQUIRED)
+
+# nlohmann_json may be installed alongside SolarSystem or system-wide
+# First try the bundled location, then fall back to system
+set(_SolarSystem_nlohmann_json_DIR "${CMAKE_CURRENT_LIST_DIR}/../../../share/solar_system/cmake/nlohmann_json")
+if(EXISTS "${_SolarSystem_nlohmann_json_DIR}/nlohmann_jsonConfig.cmake")
+    set(nlohmann_json_DIR "${_SolarSystem_nlohmann_json_DIR}" CACHE PATH "nlohmann_json config directory" FORCE)
+endif()
+find_dependency(nlohmann_json REQUIRED)
+unset(_SolarSystem_nlohmann_json_DIR)
+
+# Include the exported targets
+include("${CMAKE_CURRENT_LIST_DIR}/SolarSystemTargets.cmake")
+
+# Check that all requested components are available
+check_required_components(SolarSystem)
+
+# Provide version information
+set(SolarSystem_VERSION @PROJECT_VERSION@)
+set(SolarSystem_VERSION_MAJOR @PROJECT_VERSION_MAJOR@)
+set(SolarSystem_VERSION_MINOR @PROJECT_VERSION_MINOR@)
+set(SolarSystem_VERSION_PATCH @PROJECT_VERSION_PATCH@)

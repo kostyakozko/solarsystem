@@ -171,6 +171,18 @@ if(NOT CURL_EXECUTABLE)
     message(FATAL_ERROR "curl executable is required for JPL HORIZONS data fetching")
 endif()
 
+# Find Boost (required for msgpack headers - endian detection)
+find_package(Boost REQUIRED)
+if(Boost_FOUND)
+    message(STATUS "Boost found: ${Boost_VERSION}")
+    message(STATUS "Boost include: ${Boost_INCLUDE_DIRS}")
+else()
+    message(FATAL_ERROR "Boost is required for msgpack serialization. Install with:\n"
+                        "  macOS: brew install boost\n"
+                        "  Ubuntu: sudo apt-get install libboost-dev\n"
+                        "  Fedora: sudo dnf install boost-devel")
+endif()
+
 # ============================================================================
 # nlohmann/json Integration
 # ============================================================================
@@ -202,7 +214,7 @@ if(NOT USE_SYSTEM_JSON)
 
   # Configure nlohmann/json options
   set(JSON_BuildTests OFF CACHE BOOL "" FORCE)
-  set(JSON_Install OFF CACHE BOOL "" FORCE)
+  set(JSON_Install ON CACHE BOOL "" FORCE)  # Enable installation
   set(JSON_MultipleHeaders OFF CACHE BOOL "" FORCE)
 
   FetchContent_MakeAvailable(nlohmann_json)
@@ -336,6 +348,42 @@ add_custom_target(install-suite
     COMMAND ${CMAKE_COMMAND} -P "${CMAKE_CURRENT_BINARY_DIR}/post_install.cmake"
     COMMENT "Installing Solar System Suite with post-processing"
     VERBATIM
+)
+
+# =============================================================================
+# CMake Package Configuration
+# =============================================================================
+# This enables other projects to use find_package(SolarSystem) to find and
+# link against the Solar System Suite libraries.
+
+include(CMakePackageConfigHelpers)
+
+# Generate the config file from template
+configure_package_config_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/SolarSystemConfig.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/SolarSystemConfig.cmake"
+    INSTALL_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/SolarSystem"
+)
+
+# Generate the version file
+write_basic_package_version_file(
+    "${CMAKE_CURRENT_BINARY_DIR}/SolarSystemConfigVersion.cmake"
+    VERSION ${PROJECT_VERSION}
+    COMPATIBILITY SameMajorVersion
+)
+
+# Install the config files
+install(FILES
+    "${CMAKE_CURRENT_BINARY_DIR}/SolarSystemConfig.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/SolarSystemConfigVersion.cmake"
+    DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/SolarSystem"
+)
+
+# Export targets for installation
+install(EXPORT SolarSystemTargets
+    FILE SolarSystemTargets.cmake
+    NAMESPACE SolarSystem::
+    DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/SolarSystem"
 )
 
 # Print build information
