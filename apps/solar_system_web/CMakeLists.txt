@@ -13,6 +13,14 @@ target_link_libraries(solar_system_web PRIVATE
     Threads::Threads
 )
 
+# Link nlohmann/json (required for JSON operations)
+if(NLOHMANN_JSON_AVAILABLE)
+    target_link_libraries(solar_system_web PRIVATE nlohmann_json::nlohmann_json)
+    message(STATUS "solar_system_web: nlohmann/json linked for JSON operations")
+else()
+    message(FATAL_ERROR "solar_system_web: nlohmann/json is required but not available")
+endif()
+
 # Modern C++20 optimization flags
 target_compile_options(solar_system_web PRIVATE
     $<$<CONFIG:Release>:-O3 -march=native -mtune=native -flto>

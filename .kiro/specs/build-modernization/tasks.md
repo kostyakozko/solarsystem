@@ -288,7 +288,7 @@ This implementation plan systematically modernizes the Solar System Suite's buil
   - Update cache serialization/deserialization
   - _Requirements: 4.2, 4.3, 10.4_
 
-- [ ] 11.3 Migrate JSON in web server
+- [x] 11.3 Migrate JSON in web server
   - Replace manual JSON building in API endpoints
   - Use nlohmann::json for request/response handling
   - Update error response formatting

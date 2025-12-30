@@ -23,6 +23,7 @@
 #include <map>
 #include <memory>
 #include <mutex>
+#include <nlohmann/json.hpp>
 #include <optional>
 #include <sstream>
 #include <string>
@@ -791,59 +792,58 @@ class SolarSystemAPI {
    */
   static HttpResponse handle_status(const HttpRequest&, SolarSystem::Bodies::BodyFactory& factory) {
     try {
-      std::ostringstream json;
-      json << "{\n";
-      json << "  \"status\": \"active\",\n";
-      json << "  \"server\": \"Solar System Web Server (Modern)\",\n";
-      json << "  \"version\": \"4.0.0\",\n";
+      nlohmann::json j;
+      j["status"] = "active";
+      j["server"] = "Solar System Web Server (Modern)";
+      j["version"] = "4.0.0";
 
       // JPL data status
-      json << "  \"data\": {\n";
+      nlohmann::json data_json;
       if (factory.has_current_ephemeris_data()) {
         auto epoch = factory.current_epoch();
         auto source = factory.current_source();
         std::chrono::year_month_day ymd = std::chrono::floor<std::chrono::days>(epoch);
         int cached_year = static_cast<int>(ymd.year());
 
-        json << "    \"status\": \"active\",\n";
-        json << "    \"source\": \"" << source << "\",\n";
-        json << "    \"year\": " << cached_year << ",\n";
+        data_json["status"] = "active";
+        data_json["source"] = source;
+        data_json["year"] = cached_year;
 
         auto curr_epoch = factory.get_current_year_epoch();
         std::chrono::year_month_day curr_ymd = std::chrono::floor<std::chrono::days>(curr_epoch);
         int current_year = static_cast<int>(curr_ymd.year());
 
-        json << "    \"current\": " << (cached_year == current_year ? "true" : "false") << "\n";
+        data_json["current"] = (cached_year == current_year);
       } else {
-        json << "    \"status\": \"hardcoded\",\n";
-        json << "    \"source\": \"Built-in data\",\n";
-        json << "    \"current\": false\n";
+        data_json["status"] = "hardcoded";
+        data_json["source"] = "Built-in data";
+        data_json["current"] = false;
       }
-      json << "  },\n";
+      j["data"] = data_json;
 
       // Body information using modern BodyFactory
-      json << "  \"bodies\": {\n";
+      nlohmann::json bodies_json;
       try {
         SolarSystem::Bodies::BodyFactory local_factory;
         auto available_bodies = local_factory.get_available_bodies();
-        json << "    \"total\": " << available_bodies.size() << ",\n";
-        json << "    \"essential\": " << available_bodies.size() << ",\n";
-        json << "    \"important\": " << available_bodies.size() << ",\n";
-        json << "    \"optional\": " << available_bodies.size() << "\n";
+        bodies_json["total"] = available_bodies.size();
+        bodies_json["essential"] = available_bodies.size();
+        bodies_json["important"] = available_bodies.size();
+        bodies_json["optional"] = available_bodies.size();
       } catch (const std::exception& e) {
-        json << "    \"error\": \"" << e.what() << "\"\n";
+        bodies_json["error"] = e.what();
       }
-      json << "  },\n";
+      j["bodies"] = bodies_json;
 
       // Timestamp
       auto now = std::chrono::system_clock::now();
       auto current_time_t = std::chrono::system_clock::to_time_t(now);
       auto tm = *std::localtime(&current_time_t);
+      std::ostringstream timestamp_ss;
+      timestamp_ss << std::put_time(&tm, "%Y-%m-%d %H:%M:%S");
+      j["timestamp"] = timestamp_ss.str();
 
-      json << "  \"timestamp\": \"" << std::put_time(&tm, "%Y-%m-%d %H:%M:%S") << "\"\n";
-      json << "}";
-
-      return HttpResponse::json_response(json.str());
+      return HttpResponse::json_response(j.dump(2));
 
     } catch (const std::exception& e) {
       LOG_ERROR("API", "Status handler exception: " + std::string(e.what()));
@@ -856,14 +856,12 @@ class SolarSystemAPI {
    */
   static HttpResponse handle_health(const HttpRequest&, SolarSystem::Bodies::BodyFactory&) {
     try {
-      std::ostringstream json;
-      json << "{\n";
-      json << "  \"status\": \"healthy\",\n";
-      json << "  \"server\": \"Solar System Web Server\",\n";
-      json << "  \"timestamp\": " << std::time(nullptr) << "\n";
-      json << "}";
+      nlohmann::json j;
+      j["status"] = "healthy";
+      j["server"] = "Solar System Web Server";
+      j["timestamp"] = std::time(nullptr);
 
-      return HttpResponse::json_response(json.str());
+      return HttpResponse::json_response(j.dump(2));
 
     } catch (const std::exception& e) {
       LOG_ERROR("API", "Health check exception: " + std::string(e.what()));
@@ -913,15 +911,13 @@ class SolarSystemAPI {
       // Get available bodies from factory
       auto available_bodies = factory.get_available_bodies();
 
-      // Build JSON response with metadata only (fast response)
-      std::ostringstream json;
-      json << "{\n";
-      json << "  \"total\": " << available_bodies.size() << ",\n";
-      json << "  \"limit\": " << limit << ",\n";
-      json << "  \"offset\": " << offset << ",\n";
-      json << "  \"bodies\": [\n";
+      // Build JSON response with nlohmann/json
+      nlohmann::json j;
+      j["total"] = available_bodies.size();
+      j["limit"] = limit;
+      j["offset"] = offset;
+      j["bodies"] = nlohmann::json::array();
 
-      bool first = true;
       size_t count = 0;
       size_t index = 0;
 
@@ -974,22 +970,16 @@ class SolarSystemAPI {
 
         // Return metadata only (name and type) for fast response
         // Full body data with position/velocity available via /api/solar_system
-        if (!first) json << ",\n";
-        first = false;
-
-        json << "    {\n";
-        json << "      \"name\": \"" << body_name << "\",\n";
-        json << "      \"type\": \"" << body_type << "\"\n";
-        json << "    }";
+        nlohmann::json body_json;
+        body_json["name"] = body_name;
+        body_json["type"] = body_type;
+        j["bodies"].push_back(body_json);
 
         count++;
         index++;
       }
 
-      json << "\n  ]\n";
-      json << "}";
-
-      return HttpResponse::json_response(json.str());
+      return HttpResponse::json_response(j.dump(2));
 
     } catch (const std::exception& e) {
       LOG_ERROR("API", "Bodies handler exception: " + std::string(e.what()));
@@ -1017,27 +1007,19 @@ class SolarSystemAPI {
           // No explicit simulation updates needed for current data
         } else {
           LOG_ERROR("API", "Invalid date in solar system request: " + validation_result.error_message);
-          // Return structured validation error
-          std::ostringstream error_json;
-          error_json << "{\n";
-          error_json << "  \"error\": \"Invalid date parameter\",\n";
-          error_json << "  \"message\": \"" << validation_result.error_message << "\",\n";
-          error_json << "  \"expected_formats\": [";
-          for (size_t i = 0; i < validation_result.expected_formats.size(); ++i) {
-            if (i > 0) error_json << ", ";
-            error_json << "\"" << validation_result.expected_formats[i] << "\"";
-          }
-          error_json << "]\n";
-          error_json << "}";
-          return HttpResponse::error(400, error_json.str());
+          // Return structured validation error using nlohmann/json
+          nlohmann::json error_j;
+          error_j["error"] = "Invalid date parameter";
+          error_j["message"] = validation_result.error_message;
+          error_j["expected_formats"] = validation_result.expected_formats;
+          return HttpResponse::error(400, error_j.dump(2));
         }
       }
 
-      // Get current solar system state
-      std::ostringstream json;
-      json << "{\n";
-      json << "  \"timestamp\": \"" << std::time(nullptr) << "\",\n";
-      json << "  \"bodies\": [\n";
+      // Get current solar system state using nlohmann/json
+      nlohmann::json j;
+      j["timestamp"] = std::to_string(std::time(nullptr));
+      j["bodies"] = nlohmann::json::array();
 
       // Get actual body data from the modern BodyFactory
       try {
@@ -1046,24 +1028,20 @@ class SolarSystemAPI {
 
         if (result) {
           const auto& bodies = result.value();
-          bool first = true;
 
           for (const auto& body : bodies) {
-            if (!first) json << ",\n";
-            first = false;
-
-            json << "    {\n";
-            json << "      \"name\": \"" << body.name() << "\",\n";
-            json << "      \"type\": \"celestial_body\",\n";
-            json << "      \"position\": { ";
-            json << "\"x\": " << body.position().x() << ", ";
-            json << "\"y\": " << body.position().y() << ", ";
-            json << "\"z\": " << body.position().z() << " },\n";
-            json << "      \"velocity\": { ";
-            json << "\"x\": " << body.velocity().x() << ", ";
-            json << "\"y\": " << body.velocity().y() << ", ";
-            json << "\"z\": " << body.velocity().z() << " }\n";
-            json << "    }";
+            nlohmann::json body_json;
+            body_json["name"] = body.name();
+            body_json["type"] = "celestial_body";
+            body_json["position"] = {
+                {"x", body.position().x()},
+                {"y", body.position().y()},
+                {"z", body.position().z()}};
+            body_json["velocity"] = {
+                {"x", body.velocity().x()},
+                {"y", body.velocity().y()},
+                {"z", body.velocity().z()}};
+            j["bodies"].push_back(body_json);
           }
         } else {
           LOG_ERROR("API", "Failed to create solar system: " + result.error());
@@ -1071,19 +1049,16 @@ class SolarSystemAPI {
       } catch (const std::exception& e) {
         LOG_ERROR("API", "Failed to get body data: " + std::string(e.what()));
 
-        // Fallback: return empty array
-        json << "    {\n";
-        json << "      \"name\": \"Error\",\n";
-        json << "      \"type\": \"error\",\n";
-        json << "      \"position\": { \"x\": 0, \"y\": 0, \"z\": 0 },\n";
-        json << "      \"velocity\": { \"x\": 0, \"y\": 0, \"z\": 0 }\n";
-        json << "    }";
+        // Fallback: return error body
+        nlohmann::json error_body;
+        error_body["name"] = "Error";
+        error_body["type"] = "error";
+        error_body["position"] = {{"x", 0}, {"y", 0}, {"z", 0}};
+        error_body["velocity"] = {{"x", 0}, {"y", 0}, {"z", 0}};
+        j["bodies"].push_back(error_body);
       }
 
-      json << "\n  ]\n";
-      json << "}";
-
-      return HttpResponse::json_response(json.str());
+      return HttpResponse::json_response(j.dump(2));
 
     } catch (const std::exception& e) {
       LOG_ERROR("API", "Solar system handler exception: " + std::string(e.what()));
@@ -1171,28 +1146,16 @@ class SolarSystemAPI {
           }
         } else {
           LOG_ERROR("API", "Invalid date format: " + validation_result.error_message);
-          // Return error response with validation details
-          std::ostringstream error_json;
-          error_json << "{\n";
-          error_json << "  \"error\": \"Invalid date format\",\n";
-          error_json << "  \"message\": \"" << validation_result.error_message << "\",\n";
-          error_json << "  \"expected_formats\": [";
-          for (size_t i = 0; i < validation_result.expected_formats.size(); ++i) {
-            if (i > 0) error_json << ", ";
-            error_json << "\"" << validation_result.expected_formats[i] << "\"";
-          }
-          error_json << "],\n";
+          // Return error response with validation details using nlohmann/json
+          nlohmann::json error_j;
+          error_j["error"] = "Invalid date format";
+          error_j["message"] = validation_result.error_message;
+          error_j["expected_formats"] = validation_result.expected_formats;
           if (!validation_result.suggestions.empty()) {
-            error_json << "  \"suggestions\": [";
-            for (size_t i = 0; i < validation_result.suggestions.size(); ++i) {
-              if (i > 0) error_json << ", ";
-              error_json << "\"" << validation_result.suggestions[i] << "\"";
-            }
-            error_json << "],\n";
+            error_j["suggestions"] = validation_result.suggestions;
           }
-          error_json << "  \"provided_value\": \"" << *date_param << "\"\n";
-          error_json << "}";
-          return HttpResponse::error(400, error_json.str());
+          error_j["provided_value"] = *date_param;
+          return HttpResponse::error(400, error_j.dump(2));
         }
       }
 
@@ -1224,48 +1187,40 @@ class SolarSystemAPI {
       // Get final state
       const auto& final_bodies = simulation->get_bodies();
 
-      // Build response with simulation results
-      std::ostringstream json;
-      json << "{\n";
-      json << "  \"status\": \"success\",\n";
-      json << "  \"message\": \"Simulation completed\",\n";
-      json << "  \"configuration\": {\n";
-      json << "    \"date\": \"" << (date_param.has_value() ? *date_param : "current") << "\",\n";
-      json << "    \"speed\": " << speed << ",\n";
-      json << "    \"timestep\": " << timestep << ",\n";
-      json << "    \"requested_steps\": " << steps << ",\n";
-      json << "    \"completed_steps\": " << completed_steps << "\n";
-      json << "  },\n";
-      json << "  \"results\": {\n";
-      json << "    \"body_count\": " << final_bodies.size() << ",\n";
-      json << "    \"simulation_time\": " << (completed_steps * timestep * speed) << ",\n";
-      json << "    \"bodies\": [\n";
+      // Build response with simulation results using nlohmann/json
+      nlohmann::json j;
+      j["status"] = "success";
+      j["message"] = "Simulation completed";
 
-      bool first = true;
+      j["configuration"] = {
+          {"date", date_param.has_value() ? *date_param : "current"},
+          {"speed", speed},
+          {"timestep", timestep},
+          {"requested_steps", steps},
+          {"completed_steps", completed_steps}};
+
+      nlohmann::json results;
+      results["body_count"] = final_bodies.size();
+      results["simulation_time"] = completed_steps * timestep * speed;
+      results["bodies"] = nlohmann::json::array();
+
       for (const auto& body : final_bodies) {
-        if (!first) json << ",\n";
-        first = false;
-
-        json << "      {\n";
-        json << "        \"name\": \"" << body.name() << "\",\n";
-        json << "        \"position\": {\n";
-        json << "          \"x\": " << body.position().x() << ",\n";
-        json << "          \"y\": " << body.position().y() << ",\n";
-        json << "          \"z\": " << body.position().z() << "\n";
-        json << "        },\n";
-        json << "        \"velocity\": {\n";
-        json << "          \"x\": " << body.velocity().x() << ",\n";
-        json << "          \"y\": " << body.velocity().y() << ",\n";
-        json << "          \"z\": " << body.velocity().z() << "\n";
-        json << "        }\n";
-        json << "      }";
+        nlohmann::json body_json;
+        body_json["name"] = body.name();
+        body_json["position"] = {
+            {"x", body.position().x()},
+            {"y", body.position().y()},
+            {"z", body.position().z()}};
+        body_json["velocity"] = {
+            {"x", body.velocity().x()},
+            {"y", body.velocity().y()},
+            {"z", body.velocity().z()}};
+        results["bodies"].push_back(body_json);
       }
 
-      json << "\n    ]\n";
-      json << "  }\n";
-      json << "}";
+      j["results"] = results;
 
-      return HttpResponse::json_response(json.str());
+      return HttpResponse::json_response(j.dump(2));
 
     } catch (const std::exception& e) {
       LOG_ERROR("API", "Simulate handler exception: " + std::string(e.what()));
