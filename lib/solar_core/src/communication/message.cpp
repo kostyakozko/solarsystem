@@ -10,7 +10,7 @@
 #include <sstream>
 
 #include <nlohmann/json.hpp>
-#include "msgpack.hpp"
+#include <msgpack.hpp>
 
 // OpenSSL for cryptographic signature validation
 #ifdef OPENSSL_VERSION_NUMBER

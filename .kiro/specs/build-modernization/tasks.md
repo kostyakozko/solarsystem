@@ -201,6 +201,17 @@ This implementation plan systematically modernizes the Solar System Suite's buil
   - Install config files to lib/cmake/SolarSystem
   - _Requirements: 6.2, 6.3_
 
+### Phase 3.5: Additional Dependencies
+
+- [x] 7.3 Migrate msgpack-c to FetchContent
+  - Add FetchContent configuration for msgpack-c (cpp-7.0.0)
+  - Add USE_SYSTEM_MSGPACK option for system installations
+  - Remove vendored msgpack headers from lib/solar_utils/include/msgpack*
+  - Update lib/solar_core/CMakeLists.txt to link msgpack-cxx
+  - Update message.cpp include path if needed
+  - Test binary serialization still works
+  - _Requirements: 4.1, 4.5_
+
 ### Phase 4: Test Migration
 
 - [ ] 8. Migrate unit tests to Google Test

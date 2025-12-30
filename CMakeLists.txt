@@ -229,6 +229,53 @@ else()
   message(WARNING "nlohmann/json: Not available - JSON operations may be limited")
 endif()
 
+# ============================================================================
+# msgpack-c Integration
+# ============================================================================
+# Supports both system-installed msgpack-c and FetchContent download
+# Use -DUSE_SYSTEM_MSGPACK=ON to use system installation
+# msgpack-c is used for binary message serialization in communication protocols
+
+option(USE_SYSTEM_MSGPACK "Use system-installed msgpack-c instead of FetchContent" OFF)
+
+if(USE_SYSTEM_MSGPACK)
+  # Try to find system-installed msgpack-c
+  find_package(msgpack-cxx QUIET)
+  if(msgpack-cxx_FOUND)
+    message(STATUS "Using system-installed msgpack-c")
+    set(MSGPACK_AVAILABLE TRUE)
+  else()
+    message(WARNING "System msgpack-c not found, falling back to FetchContent")
+    set(USE_SYSTEM_MSGPACK OFF)
+  endif()
+endif()
+
+if(NOT USE_SYSTEM_MSGPACK)
+  # Download msgpack-c via FetchContent
+  FetchContent_Declare(
+    msgpack-cxx
+    GIT_REPOSITORY https://github.com/msgpack/msgpack-c.git
+    GIT_TAG        cpp-7.0.0
+    GIT_SHALLOW    TRUE
+  )
+
+  # Configure msgpack-c options
+  set(MSGPACK_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+  set(MSGPACK_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+  set(MSGPACK_CXX20 ON CACHE BOOL "" FORCE)
+
+  FetchContent_MakeAvailable(msgpack-cxx)
+
+  message(STATUS "Using FetchContent msgpack-c cpp-7.0.0")
+  set(MSGPACK_AVAILABLE TRUE)
+endif()
+
+if(MSGPACK_AVAILABLE)
+  message(STATUS "msgpack-c: Available for binary serialization")
+else()
+  message(WARNING "msgpack-c: Not available - binary serialization may be limited")
+endif()
+
 # Add subdirectories for modular build
 add_subdirectory(lib)
 

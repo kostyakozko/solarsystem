@@ -134,6 +134,13 @@ if(Boost_FOUND)
     message(STATUS "solar_core: Boost headers linked for msgpack")
 endif()
 
+# Link msgpack-cxx if available (for binary message serialization)
+if(MSGPACK_AVAILABLE)
+    target_link_libraries(solar_core PRIVATE msgpack-cxx)
+    target_compile_definitions(solar_core PRIVATE SOLAR_CORE_HAS_MSGPACK=1)
+    message(STATUS "solar_core: msgpack-cxx linked for binary serialization")
+endif()
+
 # Link nlohmann/json if available
 if(NLOHMANN_JSON_AVAILABLE)
     target_link_libraries(solar_core PRIVATE nlohmann_json::nlohmann_json)
