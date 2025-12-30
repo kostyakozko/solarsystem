@@ -2,6 +2,7 @@
 # Install with: xargs -a requirements-macos.txt brew install
 
 cmake
+pkg-config
 openssl@3
 curl
 zlib

@@ -3,6 +3,7 @@
 
 cmake
 gcc-c++
+pkgconf-pkg-config
 openssl-devel
 libcurl-devel
 zlib-devel
