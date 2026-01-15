@@ -40,7 +40,7 @@ void demonstrate_vector3() {
 
   // Vector operations
   auto distance_vec = pos2 - pos1;
-  double distance = distance_vec.magnitude();
+  double distance = static_cast<double>(distance_vec.magnitude());
 
   std::cout << "\nDistance vector: " << Math::to_string(distance_vec) << " m\n";
   std::cout << "Distance magnitude: " << std::scientific << distance << " m\n";
@@ -172,25 +172,25 @@ void demonstrate_physics_calculations() {
 
   // Calculate distance
   auto distance_vec = moon.position() - earth.position();
-  double distance = distance_vec.magnitude();
+  double distance = static_cast<double>(distance_vec.magnitude());
 
   std::cout << "Distance: " << std::scientific << distance << " m\n";
   std::cout << "Distance: " << std::fixed << std::setprecision(0) << distance / 1000.0 << " km\n";
 
   // Calculate gravitational force
   auto force_vec = earth.gravitational_force_to(moon);
-  double force_magnitude = force_vec.magnitude();
+  double force_magnitude = static_cast<double>(force_vec.magnitude());
 
   std::cout << "Gravitational force: " << std::scientific << force_magnitude << " N\n";
 
   // Calculate orbital velocity (simplified circular orbit)
-  double orbital_velocity = std::sqrt(6.67430e-11 * earth.mass() / distance);
+  double orbital_velocity = static_cast<double>(std::sqrt(6.67430e-11 * earth.mass() / distance));
   std::cout << "Required orbital velocity: " << std::fixed << std::setprecision(0)
             << orbital_velocity << " m/s\n";
 
   // Moon's actual velocity relative to Earth
   auto relative_velocity = moon.velocity() - earth.velocity();
-  double actual_velocity = relative_velocity.magnitude();
+  double actual_velocity = static_cast<double>(relative_velocity.magnitude());
   std::cout << "Moon's actual velocity: " << std::fixed << std::setprecision(0) << actual_velocity
             << " m/s\n";
 }

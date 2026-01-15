@@ -205,8 +205,9 @@ ValidationResult ConfigurationManager::validate() const {
 ConfigResult<void> ConfigurationManager::save_to_file(const std::filesystem::path& config_path,
                                                       bool include_defaults) const {
   try {
-    const auto& config_to_save = include_defaults ? merged_config_ : merged_config_;
-    Utils::Config::save_to_file(config_to_save, config_path);
+    // Use merged_config_ for both cases - include_defaults parameter reserved for future use
+    (void)include_defaults;  // Suppress unused parameter warning
+    Utils::Config::save_to_file(merged_config_, config_path);
     return ConfigResult<void>();
   } catch (const std::exception& e) {
     ConfigErrorDetail error(ConfigError::InvalidFormat, "Failed to save configuration file",
@@ -544,10 +545,10 @@ ConfigResult<void> ConfigurationManager::apply_config_value(Utils::Config::AppCo
       std::string level_lower = value;
       std::transform(level_lower.begin(), level_lower.end(), level_lower.begin(), ::tolower);
 
-      if (level_lower == "debug") config.logging.min_level = SolarSystem::Utils::Logger::Level::DEBUG;
-      else if (level_lower == "info") config.logging.min_level = SolarSystem::Utils::Logger::Level::INFO;
-      else if (level_lower == "warn" || level_lower == "warning") config.logging.min_level = SolarSystem::Utils::Logger::Level::ERROR; // Use ERROR as fallback since WARN seems to have issues
-      else if (level_lower == "error") config.logging.min_level = SolarSystem::Utils::Logger::Level::ERROR;
+      if (level_lower == "debug") config.logging.min_level = SolarSystem::Utils::ConfigLogLevel::DEBUG;
+      else if (level_lower == "info") config.logging.min_level = SolarSystem::Utils::ConfigLogLevel::INFO;
+      else if (level_lower == "warn" || level_lower == "warning") config.logging.min_level = SolarSystem::Utils::ConfigLogLevel::WARNING;
+      else if (level_lower == "error") config.logging.min_level = SolarSystem::Utils::ConfigLogLevel::ERROR;
       else {
         return ConfigErrorDetail(ConfigError::ValidationFailed,
                                 "Invalid log level: " + value,

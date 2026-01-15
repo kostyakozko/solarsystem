@@ -28,6 +28,8 @@ RUN apt-get update && apt-get install -y \
     libssl-dev \
     libcurl4-openssl-dev \
     zlib1g-dev \
+    libboost-dev \
+    libcairo2-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Verify compiler versions

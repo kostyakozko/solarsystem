@@ -8,6 +8,7 @@
 #include <list>
 #include <mutex>
 #include <unordered_map>
+#include <vector>
 
 namespace SolarSystem::Performance {
 
@@ -68,7 +69,7 @@ std::optional<std::string> ResponseCache::get(const std::string& key) {
   }
 
   impl_->stats.cache_hits++;
-  impl_->stats.hit_rate = static_cast<double>(impl_->stats.cache_hits) / impl_->stats.total_requests;
+  impl_->stats.hit_rate = static_cast<double>(impl_->stats.cache_hits) / static_cast<double>(impl_->stats.total_requests);
 
   it->second.access_count++;
   it->second.last_accessed = now;

@@ -120,7 +120,7 @@ void ProgressIndicator::render_bar(double progress, const std::string& message) 
   std::ostringstream oss;
 
   // Progress bar
-  size_t filled = static_cast<size_t>(progress * config_.bar_width);
+  size_t filled = static_cast<size_t>(progress * static_cast<double>(config_.bar_width));
   size_t empty = config_.bar_width - filled;
 
   if (config_.colored_output) {
@@ -214,8 +214,8 @@ std::string ProgressIndicator::get_time_estimate() const {
     return "";
   }
 
-  auto total_estimated = elapsed.count() / progress_;
-  auto remaining = total_estimated - elapsed.count();
+  auto total_estimated = static_cast<double>(elapsed.count()) / progress_;
+  auto remaining = total_estimated - static_cast<double>(elapsed.count());
 
   if (remaining < 0) remaining = 0;
 

@@ -372,7 +372,7 @@ double RealtimeStream::calculate_quality_score(const Bodies::BodyCollection& bod
     valid_bodies++;
   }
 
-  return valid_bodies > 0 ? total_quality / valid_bodies : 0.0;
+  return valid_bodies > 0 ? total_quality / static_cast<double>(valid_bodies) : 0.0;
 }
 
 std::chrono::milliseconds RealtimeStream::calculate_processing_latency() const {

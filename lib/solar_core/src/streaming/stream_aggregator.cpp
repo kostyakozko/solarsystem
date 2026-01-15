@@ -61,7 +61,7 @@ AggregateSnapshot TimeWindowAggregator::get_aggregate() const {
   }
 
   aggregate.total_bodies = unique_bodies.size();
-  aggregate.overall_avg_quality = total_quality / snapshots_.size();
+  aggregate.overall_avg_quality = total_quality / static_cast<double>(snapshots_.size());
   aggregate.overall_avg_latency = total_latency / snapshots_.size();
 
   return aggregate;
@@ -111,14 +111,14 @@ BodyAggregateData TimeWindowAggregator::calculate_body_aggregate(const std::stri
   for (const auto* point : data_points) {
     pos_sum = pos_sum + point->position;
   }
-  aggregate.avg_position = pos_sum * (1.0 / data_points.size());
+  aggregate.avg_position = pos_sum * (1.0 / static_cast<double>(data_points.size()));
 
   // Calculate quality statistics
   double quality_sum = 0.0;
   for (const auto* point : data_points) {
     quality_sum += point->quality_score;
   }
-  aggregate.avg_quality = quality_sum / data_points.size();
+  aggregate.avg_quality = quality_sum / static_cast<double>(data_points.size());
 
   if (!data_points.empty()) {
     aggregate.first_sample_time = data_points.front()->timestamp;
@@ -183,7 +183,7 @@ AggregateSnapshot SampleCountAggregator::get_aggregate() const {
 
   // Calculate mean
   double quality_sum = std::accumulate(quality_values.begin(), quality_values.end(), 0.0);
-  aggregate.overall_avg_quality = quality_sum / quality_values.size();
+  aggregate.overall_avg_quality = quality_sum / static_cast<double>(quality_values.size());
   aggregate.overall_avg_latency = total_latency / snapshots_.size();
 
   // Note: Variance, std dev, and percentiles calculated but not stored in aggregate
@@ -249,7 +249,7 @@ BodyAggregateData SampleCountAggregator::calculate_body_aggregate(const std::str
         std::max(max_pos.z(), point->position.z())};
   }
 
-  aggregate.avg_position = pos_sum * (1.0 / data_points.size());
+  aggregate.avg_position = pos_sum * (1.0 / static_cast<double>(data_points.size()));
   aggregate.min_position = min_pos;
   aggregate.max_position = max_pos;
 
@@ -258,7 +258,7 @@ BodyAggregateData SampleCountAggregator::calculate_body_aggregate(const std::str
       aggregate.avg_position.x() * aggregate.avg_position.x(),
       aggregate.avg_position.y() * aggregate.avg_position.y(),
       aggregate.avg_position.z() * aggregate.avg_position.z()};
-  Math::Vector3d sq_mean = pos_sq_sum * (1.0 / data_points.size());
+  Math::Vector3d sq_mean = pos_sq_sum * (1.0 / static_cast<double>(data_points.size()));
   aggregate.position_variance = sq_mean - mean_sq;
 
   // Calculate velocity statistics
@@ -266,12 +266,12 @@ BodyAggregateData SampleCountAggregator::calculate_body_aggregate(const std::str
   Math::Vector3d min_vel = data_points[0]->velocity;
   Math::Vector3d max_vel = data_points[0]->velocity;
   double speed_sum = 0.0;
-  double min_speed = data_points[0]->velocity.magnitude();
+  double min_speed = static_cast<double>(data_points[0]->velocity.magnitude());
   double max_speed = min_speed;
 
   for (const auto* point : data_points) {
     vel_sum = vel_sum + point->velocity;
-    double speed = point->velocity.magnitude();
+    double speed = static_cast<double>(point->velocity.magnitude());
     speed_sum += speed;
     min_speed = std::min(min_speed, speed);
     max_speed = std::max(max_speed, speed);
@@ -286,10 +286,10 @@ BodyAggregateData SampleCountAggregator::calculate_body_aggregate(const std::str
         std::max(max_vel.z(), point->velocity.z())};
   }
 
-  aggregate.avg_velocity = vel_sum * (1.0 / data_points.size());
+  aggregate.avg_velocity = vel_sum * (1.0 / static_cast<double>(data_points.size()));
   aggregate.min_velocity = min_vel;
   aggregate.max_velocity = max_vel;
-  aggregate.avg_speed = speed_sum / data_points.size();
+  aggregate.avg_speed = speed_sum / static_cast<double>(data_points.size());
   aggregate.min_speed = min_speed;
   aggregate.max_speed = max_speed;
 
@@ -306,7 +306,7 @@ BodyAggregateData SampleCountAggregator::calculate_body_aggregate(const std::str
     max_latency = std::max(max_latency, point->latency);
   }
 
-  aggregate.avg_quality = quality_sum / data_points.size();
+  aggregate.avg_quality = quality_sum / static_cast<double>(data_points.size());
   aggregate.min_quality = min_quality;
   aggregate.avg_latency = latency_sum / data_points.size();
   aggregate.max_latency = max_latency;
@@ -322,9 +322,9 @@ BodyAggregateData SampleCountAggregator::calculate_body_aggregate(const std::str
   // Calculate average distance from origin
   double distance_sum = 0.0;
   for (const auto* point : data_points) {
-    distance_sum += point->position.magnitude();
+    distance_sum += static_cast<double>(point->position.magnitude());
   }
-  aggregate.avg_distance_from_origin = distance_sum / data_points.size();
+  aggregate.avg_distance_from_origin = distance_sum / static_cast<double>(data_points.size());
 
   return aggregate;
 }
@@ -406,12 +406,12 @@ void RealtimeAggregator::update_cached_aggregate() const {
 
     for (const auto& [name, stats] : body_stats_) {
       if (stats.count > 0) {
-        total_quality += stats.quality_sum / stats.count;
+        total_quality += stats.quality_sum / static_cast<double>(stats.count);
         total_samples += stats.count;
       }
     }
 
-    cached_aggregate_.overall_avg_quality = total_quality / body_stats_.size();
+    cached_aggregate_.overall_avg_quality = total_quality / static_cast<double>(body_stats_.size());
     cached_aggregate_.total_samples = total_samples;
   }
 
@@ -470,9 +470,9 @@ BodyAggregateData RealtimeAggregator::RunningStats::to_aggregate_data(const std:
   aggregate.sample_count = count;
 
   if (count > 0) {
-    aggregate.avg_position = position_sum * (1.0 / count);
-    aggregate.avg_velocity = velocity_sum * (1.0 / count);
-    aggregate.avg_quality = quality_sum / count;
+    aggregate.avg_position = position_sum * (1.0 / static_cast<double>(count));
+    aggregate.avg_velocity = velocity_sum * (1.0 / static_cast<double>(count));
+    aggregate.avg_quality = quality_sum / static_cast<double>(count);
     aggregate.min_quality = min_quality;
     aggregate.avg_latency = latency_sum / count;
     aggregate.max_latency = max_latency;

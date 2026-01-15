@@ -46,7 +46,7 @@ std::optional<std::string> ResponseCompressor::compress(
   stream.next_in = reinterpret_cast<Bytef*>(const_cast<char*>(data.data()));
 
   std::string compressed;
-  compressed.resize(deflateBound(&stream, static_cast<uLong>(data.size())));
+  compressed.resize(deflateBound(&stream, data.size()));
 
   stream.avail_out = static_cast<uInt>(compressed.size());
   stream.next_out = reinterpret_cast<Bytef*>(&compressed[0]);

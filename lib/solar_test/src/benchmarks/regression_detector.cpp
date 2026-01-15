@@ -104,8 +104,8 @@ std::string RegressionAnalysis::generate_report() const {
   oss << "  Operations/Sec: " << ops_regression_percentage << "%\n\n";
 
   oss << "Baseline vs Current:\n";
-  oss << "  Time: " << (baseline.mean_time.count() / 1e6) << "ms -> "
-      << (current_result.mean_time.count() / 1e6) << "ms\n";
+  oss << "  Time: " << (static_cast<double>(baseline.mean_time.count()) / 1e6) << "ms -> "
+      << (static_cast<double>(current_result.mean_time.count()) / 1e6) << "ms\n";
   oss << "  Memory: " << baseline.memory_usage_bytes << " bytes -> "
       << current_result.memory_usage_bytes << " bytes\n";
   oss << "  Ops/Sec: " << baseline.operations_per_second << " -> "
@@ -155,8 +155,8 @@ std::string TrendAnalysis::generate_report() const {
     const auto& last = data_points.back();
 
     oss << "Overall Change (First -> Last):\n";
-    oss << "  Time: " << (first.execution_time.count() / 1e6) << "ms -> "
-        << (last.execution_time.count() / 1e6) << "ms\n";
+    oss << "  Time: " << (static_cast<double>(first.execution_time.count()) / 1e6) << "ms -> "
+        << (static_cast<double>(last.execution_time.count()) / 1e6) << "ms\n";
     oss << "  Memory: " << first.memory_usage_bytes << " bytes -> " << last.memory_usage_bytes
         << " bytes\n";
     oss << "  Ops/Sec: " << first.operations_per_second << " -> " << last.operations_per_second
@@ -407,7 +407,9 @@ std::string RegressionDetector::generate_regression_report(
   oss << "  Total Benchmarks: " << total_benchmarks << "\n";
   oss << "  Regressions Found: " << regressions << "\n";
   oss << "  Success Rate: " << std::fixed << std::setprecision(1)
-      << (100.0 * (total_benchmarks - regressions) / total_benchmarks) << "%\n\n";
+      << (100.0 * static_cast<double>(total_benchmarks - regressions) /
+          static_cast<double>(total_benchmarks))
+      << "%\n\n";
 
   // Group by severity
   std::map<std::string, std::vector<RegressionAnalysis>> by_severity;
@@ -502,10 +504,10 @@ double RegressionDetector::calculate_trend_slope(const std::vector<double>& valu
     sum_x2 += x * x;
   }
 
-  double denominator = n * sum_x2 - sum_x * sum_x;
+  double denominator = static_cast<double>(n) * sum_x2 - sum_x * sum_x;
   if (std::abs(denominator) < 1e-10) return 0.0;
 
-  return (n * sum_xy - sum_x * sum_y) / denominator;
+  return (static_cast<double>(n) * sum_xy - sum_x * sum_y) / denominator;
 }
 
 void RegressionDetector::load_trend_data() {

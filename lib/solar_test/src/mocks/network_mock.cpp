@@ -7,6 +7,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <filesystem>
 #include <fstream>
 #include <regex>
 #include <sstream>
@@ -129,9 +130,10 @@ void NetworkMock::simulate_network_congestion(double congestion_factor) {
   NetworkCondition condition = current_condition_;
   condition.simulate_congestion = true;
   condition.congestion_factor = congestion_factor;
-  condition.bandwidth_bps = static_cast<size_t>(condition.bandwidth_bps / congestion_factor);
+  condition.bandwidth_bps =
+      static_cast<size_t>(static_cast<double>(condition.bandwidth_bps) / congestion_factor);
   condition.base_latency = std::chrono::milliseconds(
-      static_cast<int64_t>(condition.base_latency.count() * congestion_factor));
+      static_cast<int64_t>(static_cast<double>(condition.base_latency.count()) * congestion_factor));
   set_network_condition(condition);
 }
 
@@ -483,7 +485,7 @@ std::chrono::milliseconds NetworkMock::calculate_transfer_time(size_t bytes) con
     return std::chrono::milliseconds(0);
   }
 
-  double seconds = static_cast<double>(bytes) / condition.bandwidth_bps;
+  double seconds = static_cast<double>(bytes) / static_cast<double>(condition.bandwidth_bps);
   return std::chrono::milliseconds(static_cast<int64_t>(seconds * 1000));
 }
 
@@ -721,7 +723,7 @@ void NetworkMock::simulate_network_latency(const NetworkCondition& condition) co
 
   if (condition.simulate_congestion) {
     latency = std::chrono::milliseconds(
-        static_cast<int64_t>(latency.count() * condition.congestion_factor));
+        static_cast<int64_t>(static_cast<double>(latency.count()) * condition.congestion_factor));
   }
 
   if (latency > std::chrono::milliseconds::zero()) {
@@ -919,15 +921,16 @@ std::vector<NetworkCondition> NetworkTestUtils::create_network_condition_sequenc
   sequence.reserve(steps);
 
   for (size_t i = 0; i < steps; ++i) {
-    double factor = static_cast<double>(i) / (steps - 1);
+    double factor = static_cast<double>(i) / static_cast<double>(steps - 1);
 
     NetworkCondition condition;
-    condition.bandwidth_bps =
-        static_cast<size_t>(start_condition.bandwidth_bps +
-                            factor * (end_condition.bandwidth_bps - start_condition.bandwidth_bps));
+    condition.bandwidth_bps = static_cast<size_t>(
+        static_cast<double>(start_condition.bandwidth_bps) +
+        factor * (static_cast<double>(end_condition.bandwidth_bps) -
+                  static_cast<double>(start_condition.bandwidth_bps)));
 
-    auto start_latency_ms = start_condition.base_latency.count();
-    auto end_latency_ms = end_condition.base_latency.count();
+    auto start_latency_ms = static_cast<double>(start_condition.base_latency.count());
+    auto end_latency_ms = static_cast<double>(end_condition.base_latency.count());
     condition.base_latency = std::chrono::milliseconds(
         static_cast<int64_t>(start_latency_ms + factor * (end_latency_ms - start_latency_ms)));
 

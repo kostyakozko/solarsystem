@@ -88,7 +88,7 @@ bool StreamingConnection::health_check() {
   double quality_score = stats.avg_quality_score;
   double delivery_rate = stats.total_snapshots_delivered.load() > 0
                              ? static_cast<double>(stats.total_snapshots_delivered.load()) /
-                                   (stats.total_snapshots_generated.load() + 1)
+                                   static_cast<double>(stats.total_snapshots_generated.load() + 1)
                              : 0.0;
 
   health_.health_score = (quality_score + delivery_rate) / 2.0;

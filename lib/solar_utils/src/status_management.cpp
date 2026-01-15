@@ -196,7 +196,7 @@ SystemHealthSummary RealTimeStatusMonitor::get_system_health_summary() const {
     for (const auto& component : components) {
       total_score += component.get_comprehensive_health_score();
     }
-    summary.overall_health_score = total_score / components.size();
+    summary.overall_health_score = total_score / static_cast<double>(components.size());
   } else {
     summary.overall_health_score = 1.0;
   }
@@ -399,7 +399,7 @@ void RealTimeStatusMonitor::generate_health_alerts(const ComponentMonitorInfo& i
     }
 
     if (!alert_exists) {
-      const_cast<RealTimeStatusMonitor*>(this)->add_alert(alert);
+      add_alert(alert);
     }
   }
 
@@ -425,7 +425,7 @@ void RealTimeStatusMonitor::generate_health_alerts(const ComponentMonitorInfo& i
     }
 
     if (!alert_exists) {
-      const_cast<RealTimeStatusMonitor*>(this)->add_alert(alert);
+      add_alert(alert);
     }
   }
 }
@@ -465,10 +465,10 @@ SystemStatus RealTimeStatusMonitor::calculate_system_status(const std::vector<En
   }
 
   // Determine overall status based on component health distribution
-  double total = components.size();
-  double failed_ratio = failed_count / total;
-  double critical_ratio = critical_count / total;
-  double warning_ratio = warning_count / total;
+  double total = static_cast<double>(components.size());
+  double failed_ratio = static_cast<double>(failed_count) / total;
+  double critical_ratio = static_cast<double>(critical_count) / total;
+  double warning_ratio = static_cast<double>(warning_count) / total;
 
   if (failed_ratio > 0.5) {
     return SystemStatus::Failed;
@@ -1274,7 +1274,7 @@ std::function<PerformanceMetrics()> create_performance_collector(const std::stri
     metrics.response_time = std::chrono::milliseconds(response_dist(gen));
     metrics.success_count = 95 + (gen() % 5);  // 95-99 successes
     metrics.error_count = gen() % 3;  // 0-2 errors
-    metrics.throughput_operations_per_second = 10.0 + (gen() % 90);  // 10-100 ops/sec
+    metrics.throughput_operations_per_second = 10.0 + static_cast<double>(gen() % 90);  // 10-100 ops/sec
 
     return metrics;
   };
@@ -1352,7 +1352,7 @@ double calculate_availability(
     }
   }
 
-  return total_checks > 0 ? (static_cast<double>(healthy_checks) / total_checks * 100.0) : 100.0;
+  return total_checks > 0 ? (static_cast<double>(healthy_checks) / static_cast<double>(total_checks) * 100.0) : 100.0;
 }
 
 }  // namespace Utils

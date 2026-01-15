@@ -91,7 +91,7 @@ struct PerformanceMetrics {
    */
   [[nodiscard]] double get_success_rate() const {
     size_t total = success_count + error_count;
-    return total > 0 ? static_cast<double>(success_count) / total : 1.0;
+    return total > 0 ? static_cast<double>(success_count) / static_cast<double>(total) : 1.0;
   }
 
   /**
@@ -245,7 +245,7 @@ struct SystemHealthSummary {
    */
   [[nodiscard]] double get_availability_percentage() const {
     return total_components > 0 ?
-           static_cast<double>(healthy_components + warning_components) / total_components * 100.0 :
+           static_cast<double>(healthy_components + warning_components) / static_cast<double>(total_components) * 100.0 :
            100.0;
   }
 };
@@ -284,8 +284,8 @@ struct StatusDecisionRule {
 
   StatusDecisionRule() : last_triggered(std::chrono::system_clock::time_point::min()) {}
 
-  StatusDecisionRule(const std::string& id, const std::string& name)
-      : id(id), name(name), last_triggered(std::chrono::system_clock::time_point::min()) {}
+  StatusDecisionRule(const std::string& rule_id, const std::string& rule_name)
+      : id(rule_id), name(rule_name), last_triggered(std::chrono::system_clock::time_point::min()) {}
 
   /**
    * @brief Check if rule can be triggered

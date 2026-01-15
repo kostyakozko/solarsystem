@@ -300,7 +300,7 @@ SolarSystem::Utils::Expected<void, std::string> DistributedWorkflowExecutor::exe
         completed_steps++;
       } else {
         has_error.store(true);
-        std::lock_guard<std::mutex> lock(error_mutex);
+        std::lock_guard<std::mutex> err_lock(error_mutex);
         if (error_message.empty()) {
           error_message = "Node " + node_id + " failed: " + result.error();
         }

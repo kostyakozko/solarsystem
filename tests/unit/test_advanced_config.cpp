@@ -103,7 +103,7 @@ TEST(AdvancedConfigurationManagementTests, Template_Application) {
     if (result.has_value()) {
       const auto& config = result.value();
       ASSERT_TRUE(config.debug_mode);
-      ASSERT_TRUE(config.logging.min_level == Logger::Level::DEBUG);
+      ASSERT_TRUE(config.logging.min_level == ConfigLogLevel::DEBUG);
       ASSERT_TRUE(config.logging.colored_output);
     }
 
@@ -114,7 +114,7 @@ TEST(AdvancedConfigurationManagementTests, Template_Application) {
     if (result.has_value()) {
       const auto& config = result.value();
       ASSERT_FALSE(config.debug_mode);
-      ASSERT_TRUE(config.logging.min_level == Logger::Level::INFO);
+      ASSERT_TRUE(config.logging.min_level == ConfigLogLevel::INFO);
       ASSERT_FALSE(config.logging.colored_output);
     }
 

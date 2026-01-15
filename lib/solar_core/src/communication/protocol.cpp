@@ -328,7 +328,7 @@ SolarSystem::Utils::Expected<void, ProtocolError> RetryProtocol::send(const Mess
     if (attempt < impl_->config.max_retries) {
       std::this_thread::sleep_for(delay);
       delay = std::min(
-          std::chrono::milliseconds(static_cast<int64_t>(delay.count() * impl_->config.backoff_multiplier)),
+          std::chrono::milliseconds(static_cast<int64_t>(static_cast<double>(delay.count()) * impl_->config.backoff_multiplier)),
           impl_->config.max_delay);
     }
   }
@@ -357,7 +357,7 @@ SolarSystem::Utils::Expected<Message, ProtocolError> RetryProtocol::request(
     if (attempt < impl_->config.max_retries) {
       std::this_thread::sleep_for(delay);
       delay = std::min(
-          std::chrono::milliseconds(static_cast<int64_t>(delay.count() * impl_->config.backoff_multiplier)),
+          std::chrono::milliseconds(static_cast<int64_t>(static_cast<double>(delay.count()) * impl_->config.backoff_multiplier)),
           impl_->config.max_delay);
     }
   }

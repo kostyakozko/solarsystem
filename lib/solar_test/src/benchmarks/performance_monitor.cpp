@@ -362,8 +362,9 @@ std::string PerformanceProfiler::generate_report() const {
     auto elapsed =
         std::chrono::duration_cast<std::chrono::microseconds>(point.timestamp - start_time);
 
-    oss << std::setw(20) << point.name << std::setw(15) << (elapsed.count() / 1000.0)
-        << std::setw(15) << point.metrics.cpu_usage_percentage << std::setw(15)
+    oss << std::setw(20) << point.name << std::setw(15)
+        << (static_cast<double>(elapsed.count()) / 1000.0) << std::setw(15)
+        << point.metrics.cpu_usage_percentage << std::setw(15)
         << (point.metrics.peak_memory_usage_bytes / 1024) << "\n";
   }
 

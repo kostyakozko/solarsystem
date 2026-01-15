@@ -7,6 +7,7 @@
 
 #include <algorithm>
 #include <chrono>
+#include <filesystem>
 #include <iomanip>
 #include <random>
 #include <sstream>
@@ -293,7 +294,7 @@ double ComponentCoordinator::get_system_health_score() const {
     total_score += info.last_status.health_score;
   }
 
-  return total_score / components_.size();
+  return total_score / static_cast<double>(components_.size());
 }
 
 void ComponentCoordinator::monitoring_loop() {
@@ -416,7 +417,7 @@ double ProgressTracker::get_overall_progress(const std::string& execution_id) co
     }
   }
 
-  return (static_cast<double>(completed_count) / workflow.steps.size()) * 100.0;
+  return (static_cast<double>(completed_count) / static_cast<double>(workflow.steps.size())) * 100.0;
 }
 
 std::vector<ProgressInfo> ProgressTracker::get_progress_history(const std::string& execution_id) const {

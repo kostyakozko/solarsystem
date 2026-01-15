@@ -192,7 +192,7 @@ class StatusEnhancedLauncherUI {
     print_system_recommendations(health_summary);
 
     std::cout << "\n";
-    
+
     // CRITICAL FIX: Use _Exit(0) to bypass destructor chain crash
     // The crash occurs during normal function return/destructor cleanup
     // This is the correct fix to avoid SIGABRT in the status management system
@@ -486,15 +486,15 @@ class StatusEnhancedLauncherUI {
       if (component.performance.has_performance_issues()) {
         performance_issues++;
       }
-      avg_response_time += std::chrono::duration_cast<std::chrono::milliseconds>(
-        component.performance.response_time).count();
+      avg_response_time += static_cast<double>(std::chrono::duration_cast<std::chrono::milliseconds>(
+        component.performance.response_time).count());
       avg_cpu_usage += component.performance.cpu_usage_percent;
       total_memory_mb += component.performance.memory_usage_bytes / (1024 * 1024);
     }
 
     if (!components.empty()) {
-      avg_response_time /= components.size();
-      avg_cpu_usage /= components.size();
+      avg_response_time /= static_cast<double>(components.size());
+      avg_cpu_usage /= static_cast<double>(components.size());
     }
 
     std::cout << "\n📈 Performance Summary:\n";
@@ -585,9 +585,9 @@ class StatusEnhancedLauncherUI {
    * @brief Format timestamp for display
    */
   static std::string format_timestamp(std::chrono::system_clock::time_point timestamp) {
-    auto time_t = std::chrono::system_clock::to_time_t(timestamp);
+    auto time_val = std::chrono::system_clock::to_time_t(timestamp);
     std::ostringstream oss;
-    oss << std::put_time(std::localtime(&time_t), "%Y-%m-%d %H:%M:%S");
+    oss << std::put_time(std::localtime(&time_val), "%Y-%m-%d %H:%M:%S");
     return oss.str();
   }
 
@@ -1297,10 +1297,10 @@ int main(int argc, char* argv[]) {
       std::cout.flush();
       std::cerr.flush();
       LOG_INFO("StatusEnhancedLauncher", "Status display completed successfully");
-      
+
       // Exit immediately to avoid destructor issues
       std::_Exit(0);
-      
+
     } catch (const std::exception& e) {
       LOG_ERROR("StatusEnhancedLauncher", "Error in status display: " + std::string(e.what()));
       std::cerr << "Error displaying status: " << e.what() << "\n";

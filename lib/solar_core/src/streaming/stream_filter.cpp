@@ -37,7 +37,7 @@ std::optional<DataSnapshot> BodySelectionFilter::apply(const DataSnapshot& snaps
   for (const auto& point : filtered_snapshot.data_points) {
     total_quality += point.quality_score;
   }
-  filtered_snapshot.overall_quality = total_quality / filtered_snapshot.data_points.size();
+  filtered_snapshot.overall_quality = total_quality / static_cast<double>(filtered_snapshot.data_points.size());
 
   return filtered_snapshot;
 }
@@ -90,7 +90,7 @@ std::optional<DataSnapshot> QualityFilter::apply(const DataSnapshot& snapshot) {
   for (const auto& point : filtered_snapshot.data_points) {
     total_quality += point.quality_score;
   }
-  filtered_snapshot.overall_quality = total_quality / filtered_snapshot.data_points.size();
+  filtered_snapshot.overall_quality = total_quality / static_cast<double>(filtered_snapshot.data_points.size());
 
   return filtered_snapshot;
 }
@@ -122,7 +122,7 @@ std::optional<DataSnapshot> LatencyFilter::apply(const DataSnapshot& snapshot) {
   for (const auto& point : filtered_snapshot.data_points) {
     total_quality += point.quality_score;
   }
-  filtered_snapshot.overall_quality = total_quality / filtered_snapshot.data_points.size();
+  filtered_snapshot.overall_quality = total_quality / static_cast<double>(filtered_snapshot.data_points.size());
 
   return filtered_snapshot;
 }
@@ -199,9 +199,9 @@ bool DuplicationFilter::is_significantly_different(const DataSnapshot& current,
 bool DuplicationFilter::is_body_different(const DataPoint& current, const DataPoint& previous) const {
   // Check position difference
   auto pos_diff = current.position - previous.position;
-  double pos_magnitude = std::sqrt(pos_diff.x() * pos_diff.x() +
+  double pos_magnitude = static_cast<double>(std::sqrt(pos_diff.x() * pos_diff.x() +
                                   pos_diff.y() * pos_diff.y() +
-                                  pos_diff.z() * pos_diff.z());
+                                  pos_diff.z() * pos_diff.z()));
 
   if (pos_magnitude > position_tolerance_) {
     return true;
@@ -209,9 +209,9 @@ bool DuplicationFilter::is_body_different(const DataPoint& current, const DataPo
 
   // Check velocity difference
   auto vel_diff = current.velocity - previous.velocity;
-  double vel_magnitude = std::sqrt(vel_diff.x() * vel_diff.x() +
+  double vel_magnitude = static_cast<double>(std::sqrt(vel_diff.x() * vel_diff.x() +
                                   vel_diff.y() * vel_diff.y() +
-                                  vel_diff.z() * vel_diff.z());
+                                  vel_diff.z() * vel_diff.z()));
 
   if (vel_magnitude > velocity_tolerance_) {
     return true;
@@ -257,7 +257,7 @@ std::optional<DataSnapshot> PredicateFilter::apply(const DataSnapshot& snapshot)
     for (const auto& point : filtered_snapshot.data_points) {
       total_quality += point.quality_score;
     }
-    filtered_snapshot.overall_quality = total_quality / filtered_snapshot.data_points.size();
+    filtered_snapshot.overall_quality = total_quality / static_cast<double>(filtered_snapshot.data_points.size());
 
     return filtered_snapshot;
   }

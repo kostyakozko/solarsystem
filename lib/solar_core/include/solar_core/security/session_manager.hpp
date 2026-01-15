@@ -17,6 +17,7 @@
 #include <mutex>
 #include <optional>
 #include <string>
+#include <vector>
 
 #include "solar_core/export.hpp"
 

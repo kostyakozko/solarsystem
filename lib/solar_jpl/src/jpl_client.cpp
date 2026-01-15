@@ -743,7 +743,7 @@ JPLResult<EphemerisData> JPLClient::parse_jpl_response(const std::string& respon
     auto now = std::chrono::system_clock::now();
     auto time_since_epoch = now.time_since_epoch();
     auto seconds = std::chrono::duration_cast<std::chrono::seconds>(time_since_epoch).count();
-    double angle = (seconds % 31536000) * 2.0 * M_PI / 31536000.0;  // Annual orbit
+    double angle = static_cast<double>(seconds % 31536000) * 2.0 * M_PI / 31536000.0;  // Annual orbit
 
     data.position = SolarSystem::Math::Vector3d{orbital_radius * std::cos(angle),
                                                 orbital_radius * std::sin(angle), 0.0};
@@ -755,8 +755,8 @@ JPLResult<EphemerisData> JPLClient::parse_jpl_response(const std::string& respon
   }
 
   // Comprehensive ephemeris data quality validation
-  double pos_magnitude = data.position.magnitude();
-  double vel_magnitude = data.velocity.magnitude();
+  double pos_magnitude = static_cast<double>(data.position.magnitude());
+  double vel_magnitude = static_cast<double>(data.velocity.magnitude());
 
   // Validate position values are within reasonable astronomical bounds
   if (pos_magnitude < 1e3 || pos_magnitude > 1e12) {
@@ -2081,13 +2081,13 @@ JPLResult<bool> JPLClient::validate_body_data_integrity(const EphemerisData& bod
   }
 
   // Validate position values
-  double pos_magnitude = body_data.position.magnitude();
+  double pos_magnitude = static_cast<double>(body_data.position.magnitude());
   if (pos_magnitude < 1e3 || pos_magnitude > 1e12) {
     return JPLError::ValidationError;
   }
 
   // Validate velocity values
-  double vel_magnitude = body_data.velocity.magnitude();
+  double vel_magnitude = static_cast<double>(body_data.velocity.magnitude());
   if (vel_magnitude > 1e6) {
     return JPLError::ValidationError;
   }
@@ -2849,18 +2849,18 @@ std::chrono::milliseconds JPLClient::calculate_backoff_delay(size_t attempt) con
   }
 
   // Exponential backoff: base_delay * (multiplier ^ attempt)
-  auto delay_ms = static_cast<long long>(config_.retry_delay.count() *
+  auto delay_ms = static_cast<long long>(static_cast<double>(config_.retry_delay.count()) *
                                          std::pow(config_.backoff_multiplier, attempt));
 
   // Cap at maximum backoff delay
-  delay_ms = std::min(delay_ms, config_.max_backoff_delay.count());
+  delay_ms = std::min(delay_ms, static_cast<long long>(config_.max_backoff_delay.count()));
 
   // Add jitter (±25% randomization to avoid thundering herd)
   std::random_device rd;
   std::mt19937 gen(rd());
   std::uniform_real_distribution<> jitter(0.75, 1.25);
 
-  delay_ms = static_cast<long long>(delay_ms * jitter(gen));
+  delay_ms = static_cast<long long>(static_cast<double>(delay_ms) * jitter(gen));
 
   return std::chrono::milliseconds(delay_ms);
 }
@@ -3169,7 +3169,7 @@ double JPLClient::get_network_health_score() const {
   // Response time component (20% weight)
   if (network_diagnostics_.average_response_time.count() > 0) {
     // Good response time is under 2 seconds
-    auto response_score = std::max(0.0, 1.0 - (network_diagnostics_.average_response_time.count() / 2000.0));
+    auto response_score = std::max(0.0, 1.0 - (static_cast<double>(network_diagnostics_.average_response_time.count()) / 2000.0));
     score += response_score * 0.2;
   }
 
@@ -3259,7 +3259,7 @@ JPLVoidResult JPLClient::update_network_diagnostics(
   auto total_requests = network_diagnostics_.successful_requests + network_diagnostics_.failed_requests;
   if (total_requests > 0) {
     network_diagnostics_.packet_loss_rate =
-        static_cast<double>(network_diagnostics_.failed_requests) / total_requests;
+        static_cast<double>(network_diagnostics_.failed_requests) / static_cast<double>(total_requests);
   }
 
   return std::nullopt;

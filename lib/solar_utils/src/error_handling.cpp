@@ -226,14 +226,14 @@ double ErrorStatistics::get_error_rate() const {
 
   if (duration.count() == 0) return 0.0;
 
-  return static_cast<double>(total_errors) / duration.count();
+  return static_cast<double>(total_errors) / static_cast<double>(duration.count());
 }
 
 double ErrorStatistics::get_recovery_success_rate() const {
   size_t total_recoveries = successful_recoveries + failed_recoveries;
   if (total_recoveries == 0) return 0.0;
 
-  return static_cast<double>(successful_recoveries) / total_recoveries;
+  return static_cast<double>(successful_recoveries) / static_cast<double>(total_recoveries);
 }
 
 std::string ErrorStatistics::generate_report() const {
@@ -297,7 +297,7 @@ void ErrorPattern::update_occurrence() {
       std::chrono::duration_cast<std::chrono::hours>(std::chrono::system_clock::now() - first_seen);
 
   if (age.count() > 0) {
-    confidence_score = static_cast<double>(occurrence_count) / age.count();
+    confidence_score = static_cast<double>(occurrence_count) / static_cast<double>(age.count());
   } else {
     confidence_score = static_cast<double>(occurrence_count);
   }
@@ -422,7 +422,7 @@ void ErrorLogger::set_network_endpoint(const std::string& endpoint) {
 }
 
 void ErrorLogger::log_error(const DetailedError& error) {
-  LogLevel level;
+  LogLevel level = LogLevel::Info;  // Default initialization to avoid uninitialized warning
   switch (error.severity) {
     case ErrorSeverity::Info:
       level = LogLevel::Info;
@@ -881,12 +881,15 @@ std::vector<std::pair<ErrorCode, double>> ErrorPatternAnalyzer::predict_next_err
 
   // Convert to vector and sort by confidence
   std::vector<std::pair<ErrorCode, double>> result;
+  result.reserve(predictions.size());
   for (const auto& [code, confidence] : predictions) {
     result.emplace_back(code, confidence);
   }
 
-  std::sort(result.begin(), result.end(),
-            [](const auto& a, const auto& b) { return a.second > b.second; });
+  if (result.size() > 1) {
+    std::sort(result.begin(), result.end(),
+              [](const auto& a, const auto& b) { return a.second > b.second; });
+  }
 
   return result;
 }
@@ -1045,7 +1048,7 @@ void ErrorHandlingSystem::configure(const std::string& config_file) {
         logger_->set_network_endpoint(value);
       } else if (key == "max_recent_errors") {
         try {
-          max_recent_errors_ = static_cast<size_t>(std::stoul(value));
+          max_recent_errors_ = std::stoul(value);
         } catch (...) {
           // Invalid value, keep default
         }
@@ -1327,7 +1330,7 @@ double ErrorHandlingSystem::calculate_health_score() const {
   }
 
   // Normalize penalty based on number of errors
-  severity_penalty /= recent_errors_.size();
+  severity_penalty /= static_cast<double>(recent_errors_.size());
 
   return std::max(0.0, 1.0 - severity_penalty);
 }

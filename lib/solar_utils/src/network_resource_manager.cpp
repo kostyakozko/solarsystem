@@ -7,6 +7,7 @@
 
 #include <algorithm>
 #include <cstdio>
+#include <cstring>
 #include <random>
 #include <sstream>
 #include <curl/curl.h>
@@ -113,7 +114,7 @@ double NetworkCircuitBreaker::get_failure_rate() const {
   if (total_requests_ == 0) {
     return 0.0;
   }
-  return static_cast<double>(failure_count_) / total_requests_;
+  return static_cast<double>(failure_count_) / static_cast<double>(total_requests_);
 }
 
 bool NetworkCircuitBreaker::should_attempt_reset() const {
@@ -207,8 +208,8 @@ bool ManagedNetworkConnection::connect(std::chrono::seconds timeout) {
 
         // Set basic options
         curl_easy_setopt(curl, CURLOPT_URL, endpoint_.c_str());
-        curl_easy_setopt(curl, CURLOPT_TIMEOUT, static_cast<long>(timeout.count()));
-        curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, static_cast<long>(timeout.count()));
+        curl_easy_setopt(curl, CURLOPT_TIMEOUT, timeout.count());
+        curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, timeout.count());
         curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
         curl_easy_setopt(curl, CURLOPT_MAXREDIRS, 5L);
         curl_easy_setopt(curl, CURLOPT_USERAGENT, "SolarSystem-Suite/4.0.0");
@@ -304,8 +305,7 @@ void ManagedNetworkConnection::disconnect() {
         case ConnectionType::HTTP:
         case ConnectionType::HTTPS: {
           // Clean up libcurl handle
-          CURL* curl = static_cast<CURL*>(connection_handle_);
-          curl_easy_cleanup(curl);
+          curl_easy_cleanup(connection_handle_);
           break;
         }
         case ConnectionType::TCP:
@@ -349,46 +349,45 @@ std::string ManagedNetworkConnection::send_request(const std::string& request,
       case ConnectionType::HTTP:
       case ConnectionType::HTTPS: {
         // Use real libcurl for HTTP/HTTPS requests
-        CURL* curl = static_cast<CURL*>(connection_handle_);
-        if (!curl) {
+        if (!connection_handle_) {
           info_.error_count++;
           return "";
         }
 
         // Set timeout
-        curl_easy_setopt(curl, CURLOPT_TIMEOUT, static_cast<long>(timeout.count()));
+        curl_easy_setopt(connection_handle_, CURLOPT_TIMEOUT, timeout.count());
 
         // Set write callback
-        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, solar_curl_write_callback);
-        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
+        curl_easy_setopt(connection_handle_, CURLOPT_WRITEFUNCTION, solar_curl_write_callback);
+        curl_easy_setopt(connection_handle_, CURLOPT_WRITEDATA, &response);
 
         // Parse request to determine HTTP method and data
         std::string method = "GET";
         std::string data;
         if (request.find("POST") == 0) {
           method = "POST";
-          curl_easy_setopt(curl, CURLOPT_POST, 1L);
+          curl_easy_setopt(connection_handle_, CURLOPT_POST, 1L);
           // Extract data from request if present
           size_t body_start = request.find("\r\n\r\n");
           if (body_start != std::string::npos) {
             data = request.substr(body_start + 4);
-            curl_easy_setopt(curl, CURLOPT_POSTFIELDS, data.c_str());
+            curl_easy_setopt(connection_handle_, CURLOPT_POSTFIELDS, data.c_str());
           }
         } else if (request.find("PUT") == 0) {
           method = "PUT";
-          curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "PUT");
+          curl_easy_setopt(connection_handle_, CURLOPT_CUSTOMREQUEST, "PUT");
           size_t body_start = request.find("\r\n\r\n");
           if (body_start != std::string::npos) {
             data = request.substr(body_start + 4);
-            curl_easy_setopt(curl, CURLOPT_POSTFIELDS, data.c_str());
+            curl_easy_setopt(connection_handle_, CURLOPT_POSTFIELDS, data.c_str());
           }
         } else if (request.find("DELETE") == 0) {
           method = "DELETE";
-          curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "DELETE");
+          curl_easy_setopt(connection_handle_, CURLOPT_CUSTOMREQUEST, "DELETE");
         }
 
         // Perform the request
-        CURLcode res = curl_easy_perform(curl);
+        CURLcode res = curl_easy_perform(connection_handle_);
 
         if (res != CURLE_OK) {
           info_.error_count++;
@@ -468,13 +467,12 @@ bool ManagedNetworkConnection::send_data(const std::vector<char>& data) {
       case ConnectionType::HTTP:
       case ConnectionType::HTTPS: {
         // For HTTP, data would be sent as request body using libcurl
-        CURL* curl = static_cast<CURL*>(connection_handle_);
-        if (!curl) {
+        if (!connection_handle_) {
           info_.error_count++;
           return false;
         }
-        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, data.data());
-        curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, data.size());
+        curl_easy_setopt(connection_handle_, CURLOPT_POSTFIELDS, data.data());
+        curl_easy_setopt(connection_handle_, CURLOPT_POSTFIELDSIZE, data.size());
         break;
       }
       case ConnectionType::TCP: {
@@ -525,17 +523,16 @@ std::vector<char> ManagedNetworkConnection::receive_data(size_t max_bytes) {
       case ConnectionType::HTTP:
       case ConnectionType::HTTPS: {
         // For HTTP, receive response data using libcurl
-        CURL* curl = static_cast<CURL*>(connection_handle_);
-        if (!curl) {
+        if (!connection_handle_) {
           info_.error_count++;
           return {};
         }
 
         std::string response;
-        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, solar_curl_write_callback);
-        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
+        curl_easy_setopt(connection_handle_, CURLOPT_WRITEFUNCTION, solar_curl_write_callback);
+        curl_easy_setopt(connection_handle_, CURLOPT_WRITEDATA, &response);
 
-        CURLcode res = curl_easy_perform(curl);
+        CURLcode res = curl_easy_perform(connection_handle_);
         if (res != CURLE_OK) {
           info_.error_count++;
           return {};

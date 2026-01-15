@@ -138,6 +138,11 @@ endif()
 if(MSGPACK_AVAILABLE)
     target_link_libraries(solar_core PRIVATE msgpack-cxx)
     target_compile_definitions(solar_core PRIVATE SOLAR_CORE_HAS_MSGPACK=1)
+    # Mark msgpack headers as SYSTEM to suppress warnings from third-party code
+    get_target_property(MSGPACK_INCLUDE_DIRS msgpack-cxx INTERFACE_INCLUDE_DIRECTORIES)
+    if(MSGPACK_INCLUDE_DIRS)
+        target_include_directories(solar_core SYSTEM PRIVATE ${MSGPACK_INCLUDE_DIRS})
+    endif()
     message(STATUS "solar_core: msgpack-cxx linked for binary serialization")
 endif()
 

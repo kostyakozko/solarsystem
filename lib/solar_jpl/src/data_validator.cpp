@@ -31,7 +31,7 @@ void DataQualityMetrics::calculate_overall_score() {
   // Calculate freshness score (1.0 for current data, decreasing with age)
   double freshness_score = 1.0;
   if (data_age > std::chrono::hours(24 * 30)) {  // Older than 30 days
-    freshness_score = std::max(0.0, 1.0 - (data_age.count() / (24.0 * 30.0 * 6.0))); // Decay over 6 months
+    freshness_score = std::max(0.0, 1.0 - (static_cast<double>(data_age.count()) / (24.0 * 30.0 * 6.0))); // Decay over 6 months
   }
 
   overall_quality_score =
@@ -256,7 +256,7 @@ JPLResult<ValidationReport> DataValidator::validate_ephemeris_data(const Ephemer
   // Determine validation result
   report.validation_passed = (report.critical_issues == 0 && report.error_issues == 0);
   report.confidence_score = report.validation_passed ?
-    std::max(0.0, 1.0 - (report.warning_issues * 0.1)) : 0.0;
+    std::max(0.0, 1.0 - (static_cast<double>(report.warning_issues) * 0.1)) : 0.0;
 
   auto end_time = std::chrono::steady_clock::now();
   report.validation_duration = std::chrono::duration_cast<std::chrono::milliseconds>(
@@ -353,7 +353,7 @@ JPLResult<ValidationReport> DataValidator::validate_ephemeris_collection(
                             report.quality_metrics.meets_quality_threshold(config_.overall_quality_threshold);
 
   report.confidence_score = report.validation_passed ?
-    std::max(0.0, report.quality_metrics.overall_quality_score - (report.warning_issues * 0.05)) : 0.0;
+    std::max(0.0, report.quality_metrics.overall_quality_score - (static_cast<double>(report.warning_issues) * 0.05)) : 0.0;
 
   auto end_time = std::chrono::steady_clock::now();
   report.validation_duration = std::chrono::duration_cast<std::chrono::milliseconds>(
@@ -380,13 +380,13 @@ JPLResult<DataQualityMetrics> DataValidator::assess_data_quality(
   // Accuracy assessment
   for (const auto& data : data_collection) {
     // Check position validity
-    double pos_magnitude = data.position.magnitude();
+    double pos_magnitude = static_cast<double>(data.position.magnitude());
     if (pos_magnitude >= config_.position_min_km && pos_magnitude <= config_.position_max_km) {
       metrics.bodies_with_valid_positions++;
     }
 
     // Check velocity validity
-    double vel_magnitude = data.velocity.magnitude();
+    double vel_magnitude = static_cast<double>(data.velocity.magnitude());
     if (vel_magnitude <= config_.velocity_max_km_s) {
       metrics.bodies_with_valid_velocities++;
     }
@@ -515,7 +515,7 @@ JPLResult<ValidationReport> DataValidator::validate_binary_format(
 
   report.validation_passed = (report.critical_issues == 0 && report.error_issues == 0);
   report.confidence_score = report.validation_passed ?
-    std::max(0.0, 1.0 - (report.warning_issues * 0.1)) : 0.0;
+    std::max(0.0, 1.0 - (static_cast<double>(report.warning_issues) * 0.1)) : 0.0;
 
   auto end_time = std::chrono::steady_clock::now();
   report.validation_duration = std::chrono::duration_cast<std::chrono::milliseconds>(
@@ -667,7 +667,7 @@ JPLResult<ValidationReport> DataValidator::validate_cache_integrity(
 
   report.validation_passed = (report.critical_issues == 0 && report.error_issues == 0);
   report.confidence_score = report.validation_passed ?
-    std::max(0.0, 1.0 - (report.warning_issues * 0.1)) : 0.0;
+    std::max(0.0, 1.0 - (static_cast<double>(report.warning_issues) * 0.1)) : 0.0;
 
   auto end_time = std::chrono::steady_clock::now();
   report.validation_duration = std::chrono::duration_cast<std::chrono::milliseconds>(
@@ -790,7 +790,7 @@ JPLResult<ValidationReport> DataValidator::validate_statistical_properties(
 
   report.validation_passed = (report.critical_issues == 0 && report.error_issues == 0);
   report.confidence_score = report.validation_passed ?
-    std::max(0.0, 1.0 - (report.warning_issues * 0.1)) : 0.0;
+    std::max(0.0, 1.0 - (static_cast<double>(report.warning_issues) * 0.1)) : 0.0;
 
   auto end_time = std::chrono::steady_clock::now();
   report.validation_duration = std::chrono::duration_cast<std::chrono::milliseconds>(
@@ -873,7 +873,7 @@ JPLResult<ValidationReport> DataValidator::validate_json_format(
 
   report.validation_passed = (report.critical_issues == 0 && report.error_issues == 0);
   report.confidence_score = report.validation_passed ?
-    std::max(0.0, 1.0 - (report.warning_issues * 0.1)) : 0.0;
+    std::max(0.0, 1.0 - (static_cast<double>(report.warning_issues) * 0.1)) : 0.0;
 
   auto end_time = std::chrono::steady_clock::now();
   report.validation_duration = std::chrono::duration_cast<std::chrono::milliseconds>(
@@ -947,7 +947,7 @@ JPLResult<ValidationReport> DataValidator::validate_format_conversion(
 
   report.validation_passed = (report.critical_issues == 0 && report.error_issues == 0);
   report.confidence_score = report.validation_passed ?
-    std::max(0.0, 1.0 - (report.warning_issues * 0.1)) : 0.0;
+    std::max(0.0, 1.0 - (static_cast<double>(report.warning_issues) * 0.1)) : 0.0;
 
   auto end_time = std::chrono::steady_clock::now();
   report.validation_duration = std::chrono::duration_cast<std::chrono::milliseconds>(
@@ -1049,7 +1049,7 @@ JPLResult<ValidationReport> DataValidator::validate_cross_format_consistency(
 
   report.validation_passed = (report.critical_issues == 0 && report.error_issues == 0);
   report.confidence_score = report.validation_passed ?
-    std::max(0.0, 1.0 - (report.warning_issues * 0.1)) : 0.0;
+    std::max(0.0, 1.0 - (static_cast<double>(report.warning_issues) * 0.1)) : 0.0;
 
   auto end_time = std::chrono::steady_clock::now();
   report.validation_duration = std::chrono::duration_cast<std::chrono::milliseconds>(
@@ -1117,7 +1117,7 @@ JPLResult<ValidationReport> DataValidator::validate_metadata_consistency(
 
   report.validation_passed = (report.critical_issues == 0 && report.error_issues == 0);
   report.confidence_score = report.validation_passed ?
-    std::max(0.0, 1.0 - (report.warning_issues * 0.1)) : 0.0;
+    std::max(0.0, 1.0 - (static_cast<double>(report.warning_issues) * 0.1)) : 0.0;
 
   auto end_time = std::chrono::steady_clock::now();
   report.validation_duration = std::chrono::duration_cast<std::chrono::milliseconds>(
@@ -1203,7 +1203,7 @@ JPLResult<ValidationReport> DataValidator::validate_temporal_consistency(
 
   report.validation_passed = (report.critical_issues == 0 && report.error_issues == 0);
   report.confidence_score = report.validation_passed ?
-    std::max(0.0, 1.0 - (report.warning_issues * 0.1)) : 0.0;
+    std::max(0.0, 1.0 - (static_cast<double>(report.warning_issues) * 0.1)) : 0.0;
 
   auto end_time = std::chrono::steady_clock::now();
   report.validation_duration = std::chrono::duration_cast<std::chrono::milliseconds>(
@@ -1227,7 +1227,7 @@ JPLVoidResult DataValidator::update_config(const DataValidatorConfig& new_config
 
 // Private validation method implementations
 JPLResult<bool> DataValidator::validate_position_vector(const SolarSystem::Math::Vector3d& position, const std::string& body_name, std::vector<ValidationIssue>& issues) const {
-  double magnitude = position.magnitude();
+  double magnitude = static_cast<double>(position.magnitude());
 
   if (magnitude < config_.position_min_km) {
     issues.push_back(create_validation_issue(
@@ -1270,7 +1270,7 @@ JPLResult<bool> DataValidator::validate_position_vector(const SolarSystem::Math:
 }
 
 JPLResult<bool> DataValidator::validate_velocity_vector(const SolarSystem::Math::Vector3d& velocity, const std::string& body_name, std::vector<ValidationIssue>& issues) const {
-  double magnitude = velocity.magnitude();
+  double magnitude = static_cast<double>(velocity.magnitude());
 
   if (magnitude > config_.velocity_max_km_s) {
     issues.push_back(create_validation_issue(
@@ -1440,7 +1440,7 @@ JPLResult<bool> DataValidator::validate_position_distribution(
   position_magnitudes.reserve(data_collection.size());
 
   for (const auto& data : data_collection) {
-    position_magnitudes.push_back(data.position.magnitude());
+    position_magnitudes.push_back(static_cast<double>(data.position.magnitude()));
   }
 
   // Find statistical outliers
@@ -1477,7 +1477,7 @@ JPLResult<bool> DataValidator::validate_velocity_distribution(
   velocity_magnitudes.reserve(data_collection.size());
 
   for (const auto& data : data_collection) {
-    velocity_magnitudes.push_back(data.velocity.magnitude());
+    velocity_magnitudes.push_back(static_cast<double>(data.velocity.magnitude()));
   }
 
   // Find statistical outliers
@@ -1598,7 +1598,7 @@ JPLResult<bool> DataValidator::validate_binary_header(
   }
 
   // Check version compatibility (major version should be 1)
-  uint16_t major_version = (version >> 16) & 0xFFFF;
+  uint16_t major_version = static_cast<uint16_t>((version >> 16) & 0xFFFF);
   if (major_version != 1) {
     issues.push_back(create_validation_issue(
       ValidationErrorType::IncompatibleVersion,
@@ -1747,7 +1747,7 @@ JPLResult<bool> DataValidator::compare_ephemeris_data(
   }
 
   // Compare positions (with tolerance)
-  double pos_diff = (data1.position - data2.position).magnitude();
+  double pos_diff = static_cast<double>((data1.position - data2.position).magnitude());
   if (pos_diff > tolerance) {
     issues.push_back(create_validation_issue(
       ValidationErrorType::CrossFormatMismatch,
@@ -1762,7 +1762,7 @@ JPLResult<bool> DataValidator::compare_ephemeris_data(
   }
 
   // Compare velocities (with tolerance)
-  double vel_diff = (data1.velocity - data2.velocity).magnitude();
+  double vel_diff = static_cast<double>((data1.velocity - data2.velocity).magnitude());
   if (vel_diff > tolerance) {
     issues.push_back(create_validation_issue(
       ValidationErrorType::CrossFormatMismatch,
@@ -1972,10 +1972,10 @@ std::vector<size_t> find_statistical_outliers(const std::vector<double>& values,
 
   // Calculate mean and standard deviation
   double sum = std::accumulate(values.begin(), values.end(), 0.0);
-  double mean = sum / values.size();
+  double mean = sum / static_cast<double>(values.size());
 
   double sq_sum = std::inner_product(values.begin(), values.end(), values.begin(), 0.0);
-  double stdev = std::sqrt(sq_sum / values.size() - mean * mean);
+  double stdev = std::sqrt(sq_sum / static_cast<double>(values.size()) - mean * mean);
 
   // Find outliers
   for (size_t i = 0; i < values.size(); ++i) {

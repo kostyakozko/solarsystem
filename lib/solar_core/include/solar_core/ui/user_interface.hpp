@@ -13,17 +13,11 @@
 #include <optional>
 #include <map>
 
+#include "solar_core/ui/status_display.hpp"
+
 namespace SolarSystem::UI {
 
-/**
- * @brief Status feedback levels
- */
-enum class StatusLevel {
-  INFO,
-  SUCCESS,
-  WARNING,
-  ERROR
-};
+// StatusLevel is defined in status_display.hpp
 
 /**
  * @brief Status feedback message

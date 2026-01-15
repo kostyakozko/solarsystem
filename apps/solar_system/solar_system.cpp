@@ -141,10 +141,8 @@ bool run_optimized_simulation(Bodies::BodyFactory& factory,
     body_set = SolarSystem::Bodies::BodyFactory::DefaultBodySet::ESSENTIAL;
   } else if (config.body_set == "important") {
     body_set = SolarSystem::Bodies::BodyFactory::DefaultBodySet::IMPORTANT;
-  } else if (config.body_set == "complete") {
-    body_set = SolarSystem::Bodies::BodyFactory::DefaultBodySet::COMPLETE;
   } else {
-    // Default to complete set for main simulation
+    // Default to complete set for main simulation (handles "complete" and any other value)
     body_set = SolarSystem::Bodies::BodyFactory::DefaultBodySet::COMPLETE;
   }
 

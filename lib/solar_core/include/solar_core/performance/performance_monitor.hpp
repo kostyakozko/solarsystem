@@ -146,7 +146,7 @@ public:
       auto end = std::chrono::steady_clock::now();
       auto duration = std::chrono::duration_cast<std::chrono::microseconds>(
           end - start_).count();
-      timer_.record(duration / 1000000.0);  // Convert to seconds
+      timer_.record(static_cast<double>(duration) / 1000000.0);  // Convert to seconds
     }
 
   private:
@@ -277,7 +277,7 @@ public:
       auto end = std::chrono::steady_clock::now();
       auto duration = std::chrono::duration_cast<std::chrono::microseconds>(
           end - start_).count();
-      timer_->record(duration / 1000000.0);
+      timer_->record(static_cast<double>(duration) / 1000000.0);
     }
   }
 

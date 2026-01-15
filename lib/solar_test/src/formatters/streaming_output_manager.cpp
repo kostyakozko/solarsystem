@@ -160,8 +160,8 @@ std::string StreamingOutputManager::compress_data(const std::string& data) {
 
   // Update compression ratio
   if (!data.empty()) {
-    stats_.compression_ratio =
-        static_cast<size_t>((static_cast<double>(compressed.size()) / data.size()) * 100);
+    stats_.compression_ratio = static_cast<size_t>(
+        (static_cast<double>(compressed.size()) / static_cast<double>(data.size())) * 100);
   }
 
   return compressed;

@@ -31,7 +31,9 @@ void CIIntegration::generate_github_actions_output(const std::vector<RegressionA
   file << "    \"total_benchmarks\": " << total_benchmarks << ",\n";
   file << "    \"regressions_found\": " << regressions << ",\n";
   file << "    \"success_rate\": " << std::fixed << std::setprecision(1)
-       << (100.0 * (total_benchmarks - regressions) / total_benchmarks) << ",\n";
+       << (100.0 * static_cast<double>(total_benchmarks - regressions) /
+           static_cast<double>(total_benchmarks))
+       << ",\n";
   file << "    \"has_critical_regressions\": " << (has_critical ? "true" : "false") << ",\n";
   file << "    \"status\": \""
        << (regressions == 0 ? "success" : (has_critical ? "failure" : "warning")) << "\"\n";
@@ -140,7 +142,8 @@ std::string CIIntegration::generate_performance_badge(
   size_t regressions = static_cast<size_t>(std::count_if(analyses.begin(), analyses.end(),
                                      [](const auto& a) { return a.has_regression; }));
 
-  double success_rate = 100.0 * (total - regressions) / total;
+  double success_rate =
+      100.0 * static_cast<double>(total - regressions) / static_cast<double>(total);
 
   std::ostringstream oss;
   oss << "performance-" << std::fixed << std::setprecision(0) << success_rate << "%25-";
@@ -247,7 +250,9 @@ void PerformanceAlertSystem::send_batch_alert(const std::vector<RegressionAnalys
   body << "Total Benchmarks: " << analyses.size() << "\n";
   body << "Regressions Found: " << regressions << "\n";
   body << "Success Rate: " << std::fixed << std::setprecision(1)
-       << (100.0 * (analyses.size() - regressions) / analyses.size()) << "%\n\n";
+       << (100.0 * static_cast<double>(analyses.size() - regressions) /
+           static_cast<double>(analyses.size()))
+       << "%\n\n";
 
   body << "Regressions by Severity:\n";
   std::map<std::string, size_t> by_severity;

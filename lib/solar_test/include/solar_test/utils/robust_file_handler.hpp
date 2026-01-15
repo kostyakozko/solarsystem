@@ -56,7 +56,7 @@ struct FileOperationResult {
   std::chrono::milliseconds total_time{0};
 
   FileOperationResult() = default;
-  FileOperationResult(bool success, const std::string& path) : success(success), final_path(path) {}
+  FileOperationResult(bool is_success, const std::string& path) : success(is_success), final_path(path) {}
 
   explicit operator bool() const { return success; }
 };
@@ -229,7 +229,7 @@ struct FileOperationStats {
   std::chrono::milliseconds average_time{0};
 
   double success_rate() const {
-    return total_operations > 0 ? static_cast<double>(successful_operations) / total_operations
+    return total_operations > 0 ? static_cast<double>(successful_operations) / static_cast<double>(total_operations)
                                 : 0.0;
   }
 

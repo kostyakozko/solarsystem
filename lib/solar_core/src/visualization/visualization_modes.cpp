@@ -598,10 +598,10 @@ Utils::Expected<VisualizationFrame, std::string> VisualizationRenderer::render_d
     }
 
     if (config_.data_options.show_distances) {
-      double distance = std::sqrt(
+      double distance = static_cast<double>(std::sqrt(
           point.position.x() * point.position.x() +
           point.position.y() * point.position.y() +
-          point.position.z() * point.position.z());
+          point.position.z() * point.position.z()));
       output << "Distance from origin: " << format_distance(distance) << "\n";
     }
 
@@ -712,7 +712,7 @@ Utils::Expected<VisualizationFrame, std::string> VisualizationRenderer::render_t
 
     for (size_t i = 0; i < bodies.size(); ++i) {
       bool is_last = (i == bodies.size() - 1);
-      output << (is_last ? "+- " : "+- ");
+      output << (is_last ? "   \\- " : "   +- ");
       output << bodies[i].body_name << " - " << format_position(bodies[i].position) << "\n";
     }
   }
@@ -743,10 +743,10 @@ Utils::Expected<VisualizationFrame, std::string> VisualizationRenderer::render_c
   double max_distance = 0.0;
 
   for (const auto& point : filtered_data) {
-    double distance = std::sqrt(
+    double distance = static_cast<double>(std::sqrt(
         point.position.x() * point.position.x() +
         point.position.y() * point.position.y() +
-        point.position.z() * point.position.z());
+        point.position.z() * point.position.z()));
     distances.emplace_back(point.body_name, distance);
     max_distance = std::max(max_distance, distance);
   }
@@ -864,12 +864,12 @@ std::vector<Streaming::DataPoint> VisualizationRenderer::filter_and_sort_data(
   } else if (current_sort_field_ == "distance") {
     std::sort(filtered_data.begin(), filtered_data.end(),
               [this](const auto& a, const auto& b) {
-                double dist_a = std::sqrt(a.position.x() * a.position.x() +
+                double dist_a = static_cast<double>(std::sqrt(a.position.x() * a.position.x() +
                                         a.position.y() * a.position.y() +
-                                        a.position.z() * a.position.z());
-                double dist_b = std::sqrt(b.position.x() * b.position.x() +
+                                        a.position.z() * a.position.z()));
+                double dist_b = static_cast<double>(std::sqrt(b.position.x() * b.position.x() +
                                         b.position.y() * b.position.y() +
-                                        b.position.z() * b.position.z());
+                                        b.position.z() * b.position.z()));
                 return sort_ascending_ ? dist_a < dist_b : dist_a > dist_b;
               });
   }
@@ -911,10 +911,10 @@ std::string VisualizationRenderer::create_table_row(const Streaming::DataPoint& 
   }
 
   if (config_.data_options.show_distances) {
-    double distance = std::sqrt(
+    double distance = static_cast<double>(std::sqrt(
         point.position.x() * point.position.x() +
         point.position.y() * point.position.y() +
-        point.position.z() * point.position.z());
+        point.position.z() * point.position.z()));
     row << std::setw(15) << std::left << format_distance(distance);
   }
 
@@ -1239,7 +1239,7 @@ Utils::Expected<VisualizationMode, std::string> parse_visualization_mode(const s
   if (mode_str == "detailed") return Utils::Expected<VisualizationMode, std::string>(VisualizationMode::DETAILED);
   if (mode_str == "custom") return Utils::Expected<VisualizationMode, std::string>(VisualizationMode::CUSTOM);
 
-  return Utils::Expected<VisualizationMode, std::string>(std::string("Unknown visualization mode: " + mode_str));
+  return Utils::Expected<VisualizationMode, std::string>("Unknown visualization mode: " + mode_str);
 }
 
 Utils::Expected<ExportFormat, std::string> parse_export_format(const std::string& format_str) {
@@ -1253,7 +1253,7 @@ Utils::Expected<ExportFormat, std::string> parse_export_format(const std::string
   if (format_str == "svg") return Utils::Expected<ExportFormat, std::string>(ExportFormat::SVG);
   if (format_str == "pdf") return Utils::Expected<ExportFormat, std::string>(ExportFormat::PDF);
 
-  return Utils::Expected<ExportFormat, std::string>(std::string("Unknown export format: " + format_str));
+  return Utils::Expected<ExportFormat, std::string>("Unknown export format: " + format_str);
 }
 
 }  // namespace SolarSystem::Visualization

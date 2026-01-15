@@ -72,7 +72,7 @@ void ConsoleReporter::on_test_started(const std::string& test_name) {
     }
     *config_.output_stream << "\n";
   } else if (config_.show_progress) {
-    double percentage = static_cast<double>(current_test_index_) / total_tests_ * 100.0;
+    double percentage = static_cast<double>(current_test_index_) / static_cast<double>(total_tests_) * 100.0;
     print_progress_bar(percentage);
   }
 }
@@ -138,7 +138,7 @@ void ConsoleReporter::print_progress_bar(double percentage, size_t width) {
   clear_line();
   *config_.output_stream << "\r" << colorize("Progress: [", Colors::CYAN);
 
-  size_t filled = static_cast<size_t>(percentage / 100.0 * width);
+  size_t filled = static_cast<size_t>(percentage / 100.0 * static_cast<double>(width));
   size_t empty = width - filled;
 
   *config_.output_stream << colorize(std::string(filled, '#'), Colors::GREEN)
@@ -257,10 +257,10 @@ std::string ConsoleReporter::format_duration(std::chrono::milliseconds duration)
   if (ms < 1000) {
     return std::to_string(ms) + "ms";
   } else if (ms < 60000) {
-    return std::to_string(ms / 1000.0) + "s";
+    return std::to_string(static_cast<double>(ms) / 1000.0) + "s";
   } else {
     auto minutes = ms / 60000;
-    auto seconds = (ms % 60000) / 1000.0;
+    auto seconds = static_cast<double>(ms % 60000) / 1000.0;
     return std::to_string(minutes) + "m " + std::to_string(seconds) + "s";
   }
 }

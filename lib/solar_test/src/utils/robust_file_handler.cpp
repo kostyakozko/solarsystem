@@ -58,7 +58,7 @@ RobustFileStream::RobustFileStream(const std::string& filename, Mode mode,
     if (!opened && attempt < config_.max_retries) {
       std::this_thread::sleep_for(delay);
       delay = std::chrono::milliseconds(
-          static_cast<long>(delay.count() * config_.retry_backoff_multiplier));
+          static_cast<long>(static_cast<double>(delay.count()) * config_.retry_backoff_multiplier));
       attempt++;
       result_.retry_count++;
     } else {
@@ -386,7 +386,7 @@ FileOperationResult RobustFileHandler::retry_operation(const std::string& descri
     if (attempt < config_.max_retries) {
       std::this_thread::sleep_for(delay);
       delay = std::chrono::milliseconds(
-          static_cast<long>(delay.count() * config_.retry_backoff_multiplier));
+          static_cast<long>(static_cast<double>(delay.count()) * config_.retry_backoff_multiplier));
       attempt++;
       result.retry_count++;
     } else {

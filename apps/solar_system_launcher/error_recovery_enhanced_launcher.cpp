@@ -795,7 +795,7 @@ class ErrorRecoveryLauncherUI {
 
     if (error_stats.total_errors > 0) {
       double recovery_rate = static_cast<double>(error_stats.successful_recoveries) /
-                            (error_stats.successful_recoveries + error_stats.failed_recoveries) * 100.0;
+                            static_cast<double>(error_stats.successful_recoveries + error_stats.failed_recoveries) * 100.0;
       std::cout << "  Recovery Success Rate: " << std::fixed << std::setprecision(1)
                 << recovery_rate << "%\n";
     }

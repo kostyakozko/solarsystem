@@ -78,7 +78,7 @@ std::vector<ConfigConflict> AdvancedConfigManager::detect_conflicts(
   std::vector<ConfigConflict> conflicts;
 
   // Check for debug mode with production settings
-  if (config.debug_mode && config.logging.min_level == Logger::Level::ERROR) {
+  if (config.debug_mode && config.logging.min_level == ConfigLogLevel::ERROR) {
     ConfigConflict conflict;
     conflict.parameter1 = "debug_mode";
     conflict.parameter2 = "logging.min_level";
@@ -219,6 +219,7 @@ void AdvancedConfigManager::initialize_parameter_definitions() {
       .type = "double",
       .description = "Simulation timestep in seconds",
       .default_value = "3600.0",
+      .allowed_values = {},
       .min_value = 0.1,
       .max_value = 86400.0,
       .required = false};
@@ -228,6 +229,7 @@ void AdvancedConfigManager::initialize_parameter_definitions() {
       .type = "int",
       .description = "Maximum number of simulation iterations",
       .default_value = "1000000",
+      .allowed_values = {},
       .min_value = 1,
       .max_value = 100000000,
       .required = false};
@@ -238,6 +240,8 @@ void AdvancedConfigManager::initialize_parameter_definitions() {
       .description = "Output format for simulation results",
       .default_value = "json",
       .allowed_values = {"json", "csv", "binary"},
+      .min_value = std::nullopt,
+      .max_value = std::nullopt,
       .required = false};
 
   // Add more parameter definitions as needed
@@ -250,7 +254,7 @@ void AdvancedConfigManager::initialize_templates() {
   dev_template.description = "Configuration optimized for development";
   dev_template.config = Config::get_default();
   dev_template.config.debug_mode = true;
-  dev_template.config.logging.min_level = Logger::Level::DEBUG;
+  dev_template.config.logging.min_level = ConfigLogLevel::DEBUG;
   dev_template.config.logging.colored_output = true;
   dev_template.config.logging.console_output = true;
   templates_["development"] = dev_template;
@@ -261,7 +265,7 @@ void AdvancedConfigManager::initialize_templates() {
   prod_template.description = "Configuration optimized for production";
   prod_template.config = Config::get_default();
   prod_template.config.debug_mode = false;
-  prod_template.config.logging.min_level = Logger::Level::INFO;
+  prod_template.config.logging.min_level = ConfigLogLevel::INFO;
   prod_template.config.logging.colored_output = false;
   prod_template.config.logging.console_output = false;
   prod_template.config.logging.log_file = "solar_system.log";
@@ -273,7 +277,7 @@ void AdvancedConfigManager::initialize_templates() {
   perf_template.description = "Configuration optimized for performance";
   perf_template.config = Config::get_default();
   perf_template.config.simulation.timestep = 86400.0;  // 1 day
-  perf_template.config.logging.min_level = Logger::Level::WARNING;
+  perf_template.config.logging.min_level = ConfigLogLevel::WARNING;
   templates_["performance"] = perf_template;
 }
 

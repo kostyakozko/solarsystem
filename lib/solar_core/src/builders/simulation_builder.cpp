@@ -1462,7 +1462,7 @@ ValidationResult SimulationBuilder::validate_parameter_combinations() const {
   }
 
   // Check iterations vs timestep interaction
-  double total_simulation_time = max_iterations_ * timestep_;
+  double total_simulation_time = static_cast<double>(max_iterations_) * timestep_;
   constexpr double MAX_REASONABLE_SIMULATION_TIME = 365.25 * 24 * 3600 * 100;  // 100 years
 
   if (total_simulation_time > MAX_REASONABLE_SIMULATION_TIME) {
@@ -1504,10 +1504,10 @@ double SimulationBuilder::estimate_computational_complexity() const {
 
   if (bodies_.has_value()) {
     size_t n = bodies_->size();
-    complexity *= n * n;  // N-body problem is O(N²)
+    complexity *= static_cast<double>(n * n);  // N-body problem is O(N²)
   }
 
-  complexity *= max_iterations_;
+  complexity *= static_cast<double>(max_iterations_);
   complexity /= timestep_;  // Smaller timesteps = more computation
 
   return complexity;

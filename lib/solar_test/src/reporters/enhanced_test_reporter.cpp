@@ -7,7 +7,6 @@
 
 #include <algorithm>
 #include <cstdarg>
-#include <format>
 #include <iomanip>
 #include <iostream>
 #include <sstream>
@@ -403,7 +402,7 @@ void EnhancedXmlReporter::write_testcase_element(const TestResult& result) {
 
 std::string EnhancedXmlReporter::xml_escape(const std::string& text) const {
   std::string escaped;
-  escaped.reserve(static_cast<size_t>(text.length() * 1.2));
+  escaped.reserve(static_cast<size_t>(static_cast<double>(text.length()) * 1.2));
 
   for (char c : text) {
     switch (c) {

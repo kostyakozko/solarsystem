@@ -65,7 +65,7 @@ Utils::Expected<std::string, CheckpointResult> CheckpointManager::save_checkpoin
     final_data = std::move(compressed_result.value());
     data.metadata.compressed_size = final_data.size();
     last_stats_.compression_ratio =
-        static_cast<double>(data.metadata.uncompressed_size) / data.metadata.compressed_size;
+        static_cast<double>(data.metadata.uncompressed_size) / static_cast<double>(data.metadata.compressed_size);
   } else {
     final_data = std::move(serialized_data);
     data.metadata.compressed_size = final_data.size();

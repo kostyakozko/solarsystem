@@ -331,7 +331,7 @@ SolarSystem::JPL::JPLResult<std::string> JPLMock::mock_request(const std::string
       if (config_.use_realistic_responses) {
         return generate_realistic_response(jpl_id, epoch);
       } else {
-        return std::string("Mock response for JPL ID " + std::to_string(jpl_id));
+        return "Mock response for JPL ID " + std::to_string(jpl_id);
       }
     }
 

@@ -390,10 +390,10 @@ std::optional<int> BodyFactory::get_jpl_id(std::string_view name) const {
   // Find in JPL body map
   for (size_t i = 0; i < SolarSystem::Data::BODY_COUNT; ++i) {
     if (name == Data::FALLBACK_SOLAR_SYSTEM[i].name) {
-      int jpl_id;
+      int jpl_id = 0;
       auto sv = Data::FALLBACK_SOLAR_SYSTEM[i].jpl_id;
       auto result = std::from_chars(sv.data(), sv.data() + sv.size(), jpl_id);
-      if (result.ec == std::errc::invalid_argument) {
+      if (result.ec != std::errc{}) {
         return std::nullopt;
       }
       return jpl_id;

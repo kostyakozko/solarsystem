@@ -70,7 +70,7 @@ void CoverageReporter::set_coverage_data(const std::map<std::string, double>& fi
     double total_coverage =
         std::accumulate(file_coverage_data_.begin(), file_coverage_data_.end(), 0.0,
                         [](double sum, const auto& pair) { return sum + pair.second; });
-    overall_coverage_percentage_ = total_coverage / file_coverage_data_.size();
+    overall_coverage_percentage_ = total_coverage / static_cast<double>(file_coverage_data_.size());
   }
 }
 
@@ -82,7 +82,7 @@ void CoverageReporter::add_file_coverage(const std::string& file_path, double co
     double total_coverage =
         std::accumulate(file_coverage_data_.begin(), file_coverage_data_.end(), 0.0,
                         [](double sum, const auto& pair) { return sum + pair.second; });
-    overall_coverage_percentage_ = total_coverage / file_coverage_data_.size();
+    overall_coverage_percentage_ = total_coverage / static_cast<double>(file_coverage_data_.size());
   }
 }
 

@@ -198,7 +198,7 @@ struct NetworkDiagnostics {
    */
   [[nodiscard]] double success_rate() const {
     auto total = successful_requests + failed_requests;
-    return total > 0 ? static_cast<double>(successful_requests) / total : 0.0;
+    return total > 0 ? static_cast<double>(successful_requests) / static_cast<double>(total) : 0.0;
   }
 
   /**

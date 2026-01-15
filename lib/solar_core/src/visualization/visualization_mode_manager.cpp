@@ -27,7 +27,7 @@ Utils::Expected<void, std::string> VisualizationModeManager::set_active_mode(Vis
   auto it = renderers_.find(mode);
   if (it == renderers_.end()) {
     return Utils::Expected<void, std::string>(
-        std::string("Visualization mode not registered: " + to_string(mode)));
+        "Visualization mode not registered: " + to_string(mode));
   }
 
   active_mode_ = mode;
@@ -40,7 +40,7 @@ Utils::Expected<VisualizationFrame, std::string> VisualizationModeManager::rende
   auto it = renderers_.find(active_mode_);
   if (it == renderers_.end()) {
     return Utils::Expected<VisualizationFrame, std::string>(
-        std::string("No renderer available for active mode: " + to_string(active_mode_)));
+        "No renderer available for active mode: " + to_string(active_mode_));
   }
 
   return it->second->render(snapshot);
@@ -90,7 +90,7 @@ Utils::Expected<void, std::string> VisualizationModeManager::save_preset(
   auto validation_result = config.validate();
   if (!validation_result) {
     return Utils::Expected<void, std::string>(
-        std::string("Invalid configuration: " + validation_result.error()));
+        "Invalid configuration: " + validation_result.error());
   }
 
   presets_[name] = config;
@@ -103,7 +103,7 @@ Utils::Expected<VisualizationConfig, std::string> VisualizationModeManager::load
   auto it = presets_.find(name);
   if (it == presets_.end()) {
     return Utils::Expected<VisualizationConfig, std::string>(
-        std::string("Preset not found: " + name));
+        "Preset not found: " + name);
   }
 
   return Utils::Expected<VisualizationConfig, std::string>(it->second);

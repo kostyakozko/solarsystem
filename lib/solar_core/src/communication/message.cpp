@@ -269,7 +269,7 @@ bool MessageValidator::check_size_limits(const Message& message, size_t max_size
   }
 
   // Add overhead for serialization format (approximately 20% for JSON, 10% for binary)
-  estimated_size = static_cast<size_t>(estimated_size * 1.2);
+  estimated_size = static_cast<size_t>(static_cast<double>(estimated_size) * 1.2);
 
   return estimated_size <= max_size;
 }

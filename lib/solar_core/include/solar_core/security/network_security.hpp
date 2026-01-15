@@ -10,6 +10,7 @@
 #include <optional>
 #include <chrono>
 #include <map>
+#include <memory>
 
 #include "solar_core/export.hpp"
 

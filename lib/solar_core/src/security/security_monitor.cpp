@@ -6,6 +6,7 @@
 #include "solar_core/security/security_monitor.hpp"
 
 #include <algorithm>
+#include <atomic>
 #include <map>
 #include <mutex>
 #include <vector>

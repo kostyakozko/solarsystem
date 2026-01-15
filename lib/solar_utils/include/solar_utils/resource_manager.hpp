@@ -53,14 +53,14 @@ struct ResourceInfo {
   std::function<void()> cleanup_function;
 
   ResourceInfo() = default;
-  ResourceInfo(std::string id, ResourceType type, size_t size = 0, std::string location = "",
-               std::string description = "")
-      : id(std::move(id)),
-        type(type),
+  ResourceInfo(std::string res_id, ResourceType res_type, size_t size = 0, std::string res_location = "",
+               std::string res_description = "")
+      : id(std::move(res_id)),
+        type(res_type),
         size_bytes(size),
         allocated_at(std::chrono::system_clock::now()),
-        location(std::move(location)),
-        description(std::move(description)) {}
+        location(std::move(res_location)),
+        description(std::move(res_description)) {}
 };
 
 /**

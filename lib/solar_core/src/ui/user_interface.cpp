@@ -76,6 +76,9 @@ std::string StatusFeedback::format_message(const StatusMessage& msg) const {
     case StatusLevel::ERROR:
       oss << "[ERROR] ✗ ";
       break;
+    case StatusLevel::DEBUG:
+      oss << "[DEBUG] 🔍 ";
+      break;
   }
 
   oss << msg.message;

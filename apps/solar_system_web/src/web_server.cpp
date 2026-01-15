@@ -437,8 +437,10 @@ class HttpServer {
           accept(server_socket_, reinterpret_cast<sockaddr*>(&client_address), &client_len);
 
       if (client_socket < 0) {
-        if (errno == EAGAIN || errno == EWOULDBLOCK) {
-          // No pending connections, sleep briefly and continue
+        // On Linux, EAGAIN and EWOULDBLOCK are typically the same value
+        // Use a single check that handles both cases
+        if (errno == EAGAIN || errno == EINTR) {
+          // No pending connections or interrupted, sleep briefly and continue
           std::this_thread::sleep_for(std::chrono::milliseconds(100));
           continue;
         } else if (g_server_running.load()) {
@@ -1201,7 +1203,7 @@ class SolarSystemAPI {
 
       nlohmann::json results;
       results["body_count"] = final_bodies.size();
-      results["simulation_time"] = completed_steps * timestep * speed;
+      results["simulation_time"] = static_cast<double>(completed_steps) * timestep * speed;
       results["bodies"] = nlohmann::json::array();
 
       for (const auto& body : final_bodies) {

@@ -100,7 +100,7 @@ BenchmarkResult Benchmark::calculate_statistics(
     double diff = static_cast<double>(timing.count()) - mean_ns;
     variance += diff * diff;
   }
-  variance /= timings.size();
+  variance /= static_cast<double>(timings.size());
   result.std_dev = std::chrono::nanoseconds(static_cast<long long>(std::sqrt(variance)));
 
   // Calculate operations per second

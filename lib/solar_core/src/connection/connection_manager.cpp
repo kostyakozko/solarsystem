@@ -409,14 +409,14 @@ std::chrono::milliseconds ExponentialBackoff::next_delay() {
 
   // Calculate next delay with jitter
   auto next = std::chrono::milliseconds(
-      static_cast<long long>(current_delay_.count() * multiplier_));
+      static_cast<long long>(static_cast<double>(current_delay_.count()) * multiplier_));
 
   // Add random jitter (±10%)
   std::random_device rd;
   std::mt19937 gen(rd());
   std::uniform_real_distribution<> dis(0.9, 1.1);
   next = std::chrono::milliseconds(
-      static_cast<long long>(next.count() * dis(gen)));
+      static_cast<long long>(static_cast<double>(next.count()) * dis(gen)));
 
   // Cap at max delay
   current_delay_ = std::min(next, max_delay_);

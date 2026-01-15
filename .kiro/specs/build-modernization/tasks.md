@@ -302,7 +302,7 @@ This implementation plan systematically modernizes the Solar System Suite's buil
 
 ### Phase 6: Validation and Documentation
 
-- [ ] 12. Cross-platform validation
+- [-] 12. Cross-platform validation
   - Test shared libraries on macOS
   - Test shared libraries on Linux
   - Test shared libraries on Windows
@@ -310,7 +310,7 @@ This implementation plan systematically modernizes the Solar System Suite's buil
   - Test installation on all platforms
   - _Requirements: 9.1, 9.2, 9.3, 9.4_
 
-- [ ] 12.1 macOS validation
+- [x] 12.1 macOS validation
   - Build shared libraries (.dylib)
   - Verify install_name with otool -L
   - Test RPATH resolution
@@ -318,7 +318,7 @@ This implementation plan systematically modernizes the Solar System Suite's buil
   - Test installation and pkg-config
   - _Requirements: 9.1, 9.4_
 
-- [ ] 12.2 Linux validation
+- [x] 12.2 Linux validation
   - Build shared libraries (.so)
   - Verify SONAME with readelf
   - Test RPATH resolution with ldd

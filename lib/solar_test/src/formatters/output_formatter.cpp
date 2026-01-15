@@ -259,7 +259,7 @@ std::string EnhancedXmlFormatter::xml_escape(const std::string& text) {
   }
 
   std::string escaped;
-  escaped.reserve(static_cast<size_t>(text.length() * 1.2));  // Reserve extra space for escaping
+  escaped.reserve(static_cast<size_t>(static_cast<double>(text.length()) * 1.2));  // Reserve extra space for escaping
 
   for (char c : text) {
     switch (c) {

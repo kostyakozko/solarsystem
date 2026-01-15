@@ -435,7 +435,7 @@ std::string AsyncLogger::get_performance_report() const {
 
   if (m.messages_logged > 0) {
     double avg_processing_time =
-        static_cast<double>(m.total_processing_time_us) / m.messages_logged;
+        static_cast<double>(m.total_processing_time_us) / static_cast<double>(m.messages_logged);
     oss << "Average processing time: " << avg_processing_time << " microseconds\n";
   }
 

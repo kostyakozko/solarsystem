@@ -226,7 +226,7 @@ DistributedCache::CacheStats DistributedCache::get_stats() const {
   impl_->stats.total_entries = impl_->cache_store.size();
   if (impl_->stats.hits + impl_->stats.misses > 0) {
     impl_->stats.hit_rate =
-        static_cast<double>(impl_->stats.hits) / (impl_->stats.hits + impl_->stats.misses);
+        static_cast<double>(impl_->stats.hits) / static_cast<double>(impl_->stats.hits + impl_->stats.misses);
   }
   return impl_->stats;
 }

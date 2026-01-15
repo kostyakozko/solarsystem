@@ -541,10 +541,13 @@ ValidationResult StringValidator::validate_file_path(const std::string& str, boo
 ValidationResult StringValidator::sanitize_input(const std::string& str) {
   std::string result = str;
 
-  // Remove control characters
+  // Remove control characters (ASCII 0-31 except tab, newline, carriage return)
   result.erase(std::remove_if(
                    result.begin(), result.end(),
-                   [](char c) { return c >= 0 && c < 32 && c != '\t' && c != '\n' && c != '\r'; }),
+                   [](char c) {
+                     auto uc = static_cast<unsigned char>(c);
+                     return uc < 32 && c != '\t' && c != '\n' && c != '\r';
+                   }),
                result.end());
 
   // Trim whitespace

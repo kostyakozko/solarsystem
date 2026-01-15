@@ -9,6 +9,7 @@
 #include <map>
 #include <mutex>
 #include <thread>
+#include <vector>
 
 namespace SolarSystem::Security {
 

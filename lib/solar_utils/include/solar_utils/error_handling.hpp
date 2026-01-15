@@ -158,13 +158,13 @@ struct DetailedError {
 
   DetailedError() : timestamp(std::chrono::system_clock::now()) {}
 
-  DetailedError(ErrorCode code, const std::string& message,
-                ErrorSeverity severity = ErrorSeverity::Error, const std::string& context = "")
-      : code(code),
-        category(get_category_for_code(code)),
-        severity(severity),
-        message(message),
-        context(context),
+  DetailedError(ErrorCode err_code, const std::string& err_message,
+                ErrorSeverity err_severity = ErrorSeverity::Error, const std::string& err_context = "")
+      : code(err_code),
+        category(get_category_for_code(err_code)),
+        severity(err_severity),
+        message(err_message),
+        context(err_context),
         timestamp(std::chrono::system_clock::now()) {}
 
   // Get category based on error code
@@ -227,9 +227,9 @@ struct RecoveryAction {
   std::unordered_map<std::string, std::string> parameters;
 
   RecoveryAction() = default;
-  RecoveryAction(RecoveryStrategy strategy, const std::string& description,
-                 std::function<bool()> action = nullptr)
-      : strategy(strategy), description(description), action(action) {}
+  RecoveryAction(RecoveryStrategy rec_strategy, const std::string& rec_description,
+                 std::function<bool()> rec_action = nullptr)
+      : strategy(rec_strategy), description(rec_description), action(rec_action) {}
 };
 
 /**

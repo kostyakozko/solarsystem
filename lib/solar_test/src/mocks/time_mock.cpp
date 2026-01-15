@@ -87,7 +87,7 @@ void TimeMock::advance_time(std::chrono::duration<double> duration) {
 }
 
 void TimeMock::advance_time_ms(int64_t milliseconds) {
-  advance_time(std::chrono::duration<double>(milliseconds / 1000.0));
+  advance_time(std::chrono::duration<double>(static_cast<double>(milliseconds) / 1000.0));
 }
 
 void TimeMock::advance_time_s(double seconds) {
@@ -188,7 +188,7 @@ std::chrono::steady_clock::time_point TimeMock::steady_now() const {
 
   auto elapsed = std::chrono::steady_clock::now() - mock_start_time_;
   auto scaled_elapsed = std::chrono::duration_cast<std::chrono::steady_clock::duration>(
-      std::chrono::duration<double>(elapsed.count() * time_scale_.load()));
+      std::chrono::duration<double>(static_cast<double>(elapsed.count()) * time_scale_.load()));
 
   return steady_start_time_.load() + scaled_elapsed;
 }
@@ -235,7 +235,7 @@ void TimeMock::usleep(std::chrono::microseconds duration) {
 }
 
 void TimeMock::sleep_ms(int64_t milliseconds) {
-  sleep_for(std::chrono::duration<double>(milliseconds / 1000.0));
+  sleep_for(std::chrono::duration<double>(static_cast<double>(milliseconds) / 1000.0));
 }
 
 void TimeMock::sleep_s(double seconds) { sleep_for(std::chrono::duration<double>(seconds)); }
@@ -505,7 +505,8 @@ std::chrono::system_clock::time_point TimeMock::calculate_current_time() const {
   auto elapsed = current_steady - mock_start_time_;
 
   // Apply time scale
-  auto scaled_elapsed = std::chrono::duration<double>(elapsed.count() * time_scale_.load());
+  auto scaled_elapsed =
+      std::chrono::duration<double>(static_cast<double>(elapsed.count()) * time_scale_.load());
 
   // Apply clock drift if enabled
   if (config_.simulate_clock_drift) {

@@ -39,7 +39,7 @@ void demonstrate_vector3() {
 
   // Vector operations
   auto distance_vec = pos2 - pos1;
-  double distance = distance_vec.magnitude();
+  double distance = static_cast<double>(distance_vec.magnitude());
 
   std::cout << "\nDistance vector: " << Math::to_string(distance_vec) << " m\n";
   std::cout << "Distance magnitude: " << std::scientific << distance << " m\n";
@@ -69,7 +69,8 @@ void demonstrate_celestial_body() {
                                                 .velocity = Math::Vector3d{0.0, 29780.0, 0.0},
                                                 .type = Bodies::BodyType::Planet,
                                                 .priority = Bodies::BodyPriority::Essential,
-                                                .jpl_id = "399"};
+                                                .jpl_id = "399",
+                                                .creation_date = std::nullopt};
 
   Bodies::CelestialBody earth{earth_props};
 
@@ -80,7 +81,7 @@ void demonstrate_celestial_body() {
   std::cout << "  Priority: " << Bodies::to_string(earth.priority()) << "\n";
   std::cout << "  Position: " << Math::to_string(earth.position()) << " m\n";
   std::cout << "  Velocity: " << Math::to_string(earth.velocity()) << " m/s\n";
-  std::cout << "  Speed: " << std::fixed << std::setprecision(0) << earth.velocity().magnitude()
+  std::cout << "  Speed: " << std::fixed << std::setprecision(0) << static_cast<double>(earth.velocity().magnitude())
             << " m/s\n";
 
   // Create Moon
@@ -91,7 +92,8 @@ void demonstrate_celestial_body() {
       .velocity = Math::Vector3d{0.0, 29780.0 + 1022.0, 0.0},
       .type = Bodies::BodyType::Moon,
       .priority = Bodies::BodyPriority::Important,
-      .jpl_id = "301"};
+      .jpl_id = "301",
+      .creation_date = std::nullopt};
 
   Bodies::CelestialBody moon{moon_props};
 
@@ -102,13 +104,13 @@ void demonstrate_celestial_body() {
 
   // Calculate distance
   auto distance_vec = moon.position() - earth.position();
-  double distance = distance_vec.magnitude();
+  double distance = static_cast<double>(distance_vec.magnitude());
   std::cout << "\nEarth-Moon distance: " << std::fixed << std::setprecision(0) << distance / 1000.0
             << " km\n";
 
   // Calculate gravitational force
   auto force_vec = earth.gravitational_force_to(moon);
-  double force_magnitude = force_vec.magnitude();
+  double force_magnitude = static_cast<double>(force_vec.magnitude());
   std::cout << "Gravitational force: " << std::scientific << force_magnitude << " N\n";
 }
 
@@ -158,7 +160,8 @@ void demonstrate_body_collection() {
                                                         .velocity = Math::Vector3d{0.0, 0.0, 0.0},
                                                         .type = Bodies::BodyType::Star,
                                                         .priority = Bodies::BodyPriority::Essential,
-                                                        .jpl_id = "10"});
+                                                        .jpl_id = "10",
+                                                        .creation_date = std::nullopt});
 
   // Add Earth
   collection.add_body(
@@ -168,7 +171,8 @@ void demonstrate_body_collection() {
                                         .velocity = Math::Vector3d{0.0, 29780.0, 0.0},
                                         .type = Bodies::BodyType::Planet,
                                         .priority = Bodies::BodyPriority::Essential,
-                                        .jpl_id = "399"});
+                                        .jpl_id = "399",
+                                        .creation_date = std::nullopt});
 
   // Add Mars
   collection.add_body(
@@ -178,7 +182,8 @@ void demonstrate_body_collection() {
                                         .velocity = Math::Vector3d{0.0, 24077.0, 0.0},
                                         .type = Bodies::BodyType::Planet,
                                         .priority = Bodies::BodyPriority::Essential,
-                                        .jpl_id = "499"});
+                                        .jpl_id = "499",
+                                        .creation_date = std::nullopt});
 
   std::cout << "Created collection with " << collection.size() << " bodies\n";
   std::cout << "Total mass: " << std::scientific << collection.total_mass() << " kg\n";
@@ -199,7 +204,7 @@ void demonstrate_body_collection() {
     const auto& earth = earth_ref->get();
     std::cout << "\nFound Earth:\n";
     std::cout << "  Position: " << Math::to_string(earth.position()) << " m\n";
-    std::cout << "  Speed: " << std::fixed << std::setprecision(0) << earth.velocity().magnitude()
+    std::cout << "  Speed: " << std::fixed << std::setprecision(0) << static_cast<double>(earth.velocity().magnitude())
               << " m/s\n";
   }
 
@@ -257,7 +262,7 @@ void demonstrate_bulk_operations() {
   for (const auto& planet_ref : planets) {
     const auto& planet = planet_ref.get();
     std::cout << "  " << planet.name() << ": " << std::fixed << std::setprecision(0)
-              << planet.velocity().magnitude() << " m/s\n";
+              << static_cast<double>(planet.velocity().magnitude()) << " m/s\n";
   }
 }
 

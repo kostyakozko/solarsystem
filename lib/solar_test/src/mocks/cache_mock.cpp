@@ -225,7 +225,7 @@ void CacheMock::populate_with_ephemeris_data(
   metadata.epoch = std::chrono::system_clock::now();
   metadata.source = "TEST_EPHEMERIS";
   metadata.body_count = data.size();
-  metadata.checksum = static_cast<uint64_t>(data.size() * 1000);  // Simple checksum
+  metadata.checksum = data.size() * 1000;  // Simple checksum
 
   set_cache_metadata(metadata);
   set_cache_exists(true);
@@ -838,7 +838,8 @@ std::string CacheMock::generate_corrupted_data(const std::string& original_data,
   std::uniform_int_distribution<size_t> pos_dist(0, corrupted.size() - 1);
   std::uniform_int_distribution<int> byte_dist(0, 255);
 
-  size_t corruption_count = static_cast<size_t>(corrupted.size() * corruption_rate);
+  size_t corruption_count =
+      static_cast<size_t>(static_cast<double>(corrupted.size()) * corruption_rate);
 
   for (size_t i = 0; i < corruption_count; ++i) {
     size_t pos = pos_dist(gen_);
@@ -1205,7 +1206,7 @@ void TemporaryCache::write_metadata(const std::vector<SolarSystem::JPL::Ephemeri
   metadata.epoch = std::chrono::system_clock::now();
   metadata.source = "TEMPORARY_TEST";
   metadata.body_count = data.size();
-  metadata.checksum = static_cast<uint64_t>(data.size() * 12345);
+  metadata.checksum = data.size() * 12345;
 
   CacheMock mock;
   auto metadata_json = mock.generate_metadata_json(metadata);

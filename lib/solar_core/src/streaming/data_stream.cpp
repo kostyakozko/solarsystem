@@ -65,7 +65,7 @@ DataSnapshot::DataSnapshot(const Bodies::BodyCollection& bodies, std::chrono::sy
     for (const auto& point : data_points) {
       total_quality += point.quality_score;
     }
-    overall_quality = total_quality / data_points.size();
+    overall_quality = total_quality / static_cast<double>(data_points.size());
   }
 }
 

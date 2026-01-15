@@ -9,11 +9,9 @@
 namespace SolarSystem::Utils {
 
 /**
- * @brief Logger levels
+ * @brief Configuration log levels (separate from Logger::Level to avoid ODR violations)
  */
-namespace Logger {
-enum class Level { DEBUG, INFO, WARNING, ERROR };
-}
+enum class ConfigLogLevel { DEBUG, INFO, WARNING, ERROR };
 
 /**
  * @brief Configuration structures
@@ -35,7 +33,7 @@ struct SimulationConfig {
  * @brief Logging configuration
  */
 struct LoggingConfig {
-  Logger::Level min_level = Logger::Level::INFO;
+  ConfigLogLevel min_level = ConfigLogLevel::INFO;
   bool console_output = true;
   bool colored_output = true;
   std::string log_file;
@@ -103,7 +101,7 @@ SOLAR_UTILS_API AppConfig load_from_file(const std::filesystem::path& config_fil
 /**
  * @brief Save configuration to file
  */
-void save_to_file(const AppConfig& config, const std::filesystem::path& config_file);
+SOLAR_UTILS_API void save_to_file(const AppConfig& config, const std::filesystem::path& config_file);
 
 }  // namespace Config
 }  // namespace SolarSystem::Utils

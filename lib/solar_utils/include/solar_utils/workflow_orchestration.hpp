@@ -111,8 +111,8 @@ struct ComponentStatus {
   std::vector<DetailedError> recent_errors;
   double health_score = 0.0;
 
-  ComponentStatus(ComponentType type, const std::string& name)
-      : type(type), name(name), last_check(std::chrono::system_clock::now()) {}
+  ComponentStatus(ComponentType comp_type, const std::string& comp_name)
+      : type(comp_type), name(comp_name), last_check(std::chrono::system_clock::now()) {}
 };
 
 /**
@@ -143,8 +143,8 @@ struct WorkflowStep {
   // Recovery function (optional)
   std::function<bool(const DetailedError&)> recover;
 
-  WorkflowStep(const std::string& id, const std::string& name)
-      : id(id), name(name) {}
+  WorkflowStep(const std::string& step_id, const std::string& step_name)
+      : id(step_id), name(step_name) {}
 };
 
 /**
@@ -167,8 +167,8 @@ struct WorkflowDefinition {
 
   WorkflowDefinition() = default;
 
-  WorkflowDefinition(const std::string& id, const std::string& name)
-      : id(id), name(name) {}
+  WorkflowDefinition(const std::string& def_id, const std::string& def_name)
+      : id(def_id), name(def_name) {}
 };
 
 /**
@@ -188,8 +188,8 @@ struct WorkflowContext {
   double overall_progress = 0.0;
   std::optional<std::string> failure_reason;
 
-  WorkflowContext(const std::string& execution_id, const std::string& workflow_id)
-      : execution_id(execution_id), workflow_id(workflow_id),
+  WorkflowContext(const std::string& exec_id, const std::string& wf_id)
+      : execution_id(exec_id), workflow_id(wf_id),
         start_time(std::chrono::system_clock::now()) {}
 };
 

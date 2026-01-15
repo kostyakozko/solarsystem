@@ -69,7 +69,7 @@ function(configure_solar_system_warnings)
     # Apply globally via CMAKE_CXX_FLAGS (most reliable method)
     string(JOIN " " WARNING_FLAGS_STRING ${PROJECT_WARNINGS_CXX})
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${WARNING_FLAGS_STRING}" PARENT_SCOPE)
-    
+
     # Also apply via add_compile_options for any targets that might override CMAKE_CXX_FLAGS
     add_compile_options(${PROJECT_WARNINGS_CXX})
 

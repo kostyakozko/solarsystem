@@ -58,7 +58,7 @@ Histogram::Statistics Histogram::get_statistics() const {
   stats.min = *std::min_element(values_.begin(), values_.end());
   stats.max = *std::max_element(values_.begin(), values_.end());
   stats.sum = std::accumulate(values_.begin(), values_.end(), 0.0);
-  stats.mean = stats.sum / values_.size();
+  stats.mean = stats.sum / static_cast<double>(values_.size());
 
   // Calculate percentiles
   std::vector<double> sorted_values = values_;
@@ -67,10 +67,10 @@ Histogram::Statistics Histogram::get_statistics() const {
   size_t median_idx = sorted_values.size() / 2;
   stats.median = sorted_values[median_idx];
 
-  size_t p95_idx = static_cast<size_t>(sorted_values.size() * 0.95);
+  size_t p95_idx = static_cast<size_t>(static_cast<double>(sorted_values.size()) * 0.95);
   stats.p95 = sorted_values[std::min(p95_idx, sorted_values.size() - 1)];
 
-  size_t p99_idx = static_cast<size_t>(sorted_values.size() * 0.99);
+  size_t p99_idx = static_cast<size_t>(static_cast<double>(sorted_values.size()) * 0.99);
   stats.p99 = sorted_values[std::min(p99_idx, sorted_values.size() - 1)];
 
   return stats;

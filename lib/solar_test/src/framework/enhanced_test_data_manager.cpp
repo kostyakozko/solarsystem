@@ -253,7 +253,9 @@ void IsolatedTestEnvironment::restore_environment_variables() {
 
 void IsolatedTestEnvironment::restore_working_directory() {
   try {
-    chdir(original_working_dir_.c_str());
+    if (chdir(original_working_dir_.c_str()) != 0) {
+      std::cerr << "Warning: Failed to restore working directory" << std::endl;
+    }
   } catch (const std::exception& e) {
     std::cerr << "Warning: Failed to restore working directory: " << e.what() << std::endl;
   }
@@ -410,7 +412,7 @@ std::string TestDataGenerator::mutate_data(const std::string& original_data,
       break;
 
     case MutationStrategy::TRUNCATE_DATA:
-      mutated = mutated.substr(0, static_cast<size_t>(mutated.length() * 0.7));
+      mutated = mutated.substr(0, static_cast<size_t>(static_cast<double>(mutated.length()) * 0.7));
       break;
 
     case MutationStrategy::ADD_INVALID_FIELDS:
@@ -722,7 +724,7 @@ EnhancedTestDataSet EnhancedTestDataManager::load_validated_jpl_responses(
   if (performance_monitoring_enabled_) {
     auto end_time = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
-    update_performance_metric("jpl_response_load_time_ms", duration.count());
+    update_performance_metric("jpl_response_load_time_ms", static_cast<double>(duration.count()));
   }
 
   return dataset;

@@ -482,8 +482,8 @@ class RealtimeMonitor {
 
       // Save to file with timestamp
       auto now = std::chrono::system_clock::now();
-      auto time_t = std::chrono::system_clock::to_time_t(now);
-      auto tm = *std::localtime(&time_t);
+      auto time_val = std::chrono::system_clock::to_time_t(now);
+      auto tm = *std::localtime(&time_val);
 
       std::ostringstream filename;
       filename << "solar_system_export_" << std::put_time(&tm, "%Y%m%d_%H%M%S");

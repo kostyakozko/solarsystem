@@ -403,12 +403,12 @@ ValidationResult OutputFormatter::validate_output(const Bodies::BodyCollection& 
   size_t total_data_points = bodies.size() * 6;  // 3 position + 3 velocity per body
   if (total_data_points > 0) {
     result.data_completeness =
-        1.0 - (static_cast<double>(result.missing_data_points) / total_data_points);
+        1.0 - (static_cast<double>(result.missing_data_points) / static_cast<double>(total_data_points));
   }
 
   // Calculate data consistency
   result.data_consistency = 1.0 - (static_cast<double>(result.inconsistent_data_points) /
-                                   std::max(size_t(1), total_data_points));
+                                   static_cast<double>(std::max(size_t(1), total_data_points)));
 
   return result;
 }
@@ -421,7 +421,7 @@ std::string OutputFormatter::compress(const std::string& data,
   }
 
   // Use zlib for compression
-  uLongf compressed_size = compressBound(static_cast<uLong>(data.size()));
+  uLongf compressed_size = compressBound(data.size());
   std::vector<uint8_t> compressed_data(compressed_size);
 
   // Map compression level (0-9 for zlib)
@@ -432,7 +432,7 @@ std::string OutputFormatter::compress(const std::string& data,
 
   int result = compress2(compressed_data.data(), &compressed_size,
                         reinterpret_cast<const uint8_t*>(data.data()),
-                        static_cast<uLong>(data.size()),
+                        data.size(),
                         zlib_level);
 
   if (result != Z_OK) {
@@ -460,7 +460,7 @@ std::string OutputFormatter::decompress(
 
   int result = uncompress(uncompressed_data.data(), &uncompressed_size,
                          reinterpret_cast<const uint8_t*>(compressed_data.data()),
-                         static_cast<uLong>(compressed_data.size()));
+                         compressed_data.size());
 
   // If buffer was too small, try with larger buffer
   if (result == Z_BUF_ERROR) {
@@ -468,7 +468,7 @@ std::string OutputFormatter::decompress(
     uncompressed_data.resize(uncompressed_size);
     result = uncompress(uncompressed_data.data(), &uncompressed_size,
                        reinterpret_cast<const uint8_t*>(compressed_data.data()),
-                       static_cast<uLong>(compressed_data.size()));
+                       compressed_data.size());
   }
 
   if (result != Z_OK) {
