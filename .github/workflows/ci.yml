@@ -38,9 +38,39 @@ jobs:
           echo "✅ cppcheck passed - no errors or warnings found"
         fi
 
+  # Security scanning
+  security-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Run security scan
+      uses: github/super-linter@v5
+      env:
+        DEFAULT_BRANCH: modern-cpp-architecture
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        FILTER_REGEX_EXCLUDE: docs/.*
+        VALIDATE_MARKDOWN: false
+        VALIDATE_YAML: false
+        VALIDATE_JSCPD: false
+        VALIDATE_NATURAL_LANGUAGE: false
+        VALIDATE_CLANG_FORMAT: false
+        VALIDATE_CHECKOV: false
+        VALIDATE_DOCKERFILE: false
+        VALIDATE_GITLEAKS: false
+        VALIDATE_CPP: false
+        VALIDATE_JAVASCRIPT_ES: false
+        VALIDATE_JAVASCRIPT_STANDARD: false
+        VALIDATE_PYTHON_BLACK: false
+        VALIDATE_PYTHON_FLAKE8: false
+        VALIDATE_PYTHON_ISORT: false
+        VALIDATE_PYTHON_MYPY: false
+        VALIDATE_PYTHON_PYLINT: false
+
   # TEMPORARILY DISABLED JOBS:
   # - build-and-test (Ubuntu/macOS, Release/Debug)
-  # - security-scan
   # - performance-regression
   # - prepare-release
   # - update-baseline
