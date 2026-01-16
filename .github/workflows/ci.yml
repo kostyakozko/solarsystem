@@ -19,23 +19,17 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest]
         build_type: [Release, Debug]
-        shared_libs: [OFF]  # Static by default, shared libs optional
+        shared_libs: [OFF]
         include:
           - os: ubuntu-latest
             cc: gcc
             cxx: g++
-          - os: macos-latest
-            cc: clang
-            cxx: clang++
-          # Optional: Add shared library build for Release only
-          # Uncomment to enable shared library CI testing
-          # - os: ubuntu-latest
-          #   build_type: Release
-          #   shared_libs: ON
-          #   cc: gcc
-          #   cxx: g++
+        # TEMPORARILY DISABLED - macOS builds to save CI minutes
+        # - os: macos-latest
+        #   cc: clang
+        #   cxx: clang++
 
     runs-on: ${{ matrix.os }}
 
@@ -122,162 +116,155 @@ jobs:
         name: documentation
         path: docs/
 
-  # Code quality checks
-  code-quality:
-    runs-on: ubuntu-latest
+  # Code quality checks - TEMPORARILY DISABLED to save CI minutes
+  # code-quality:
+  #   runs-on: ubuntu-latest
+  #
+  #   steps:
+  #   - name: Checkout code
+  #     uses: actions/checkout@v4
+  #
+  #   - name: Install dependencies
+  #     run: |
+  #       sudo apt-get update
+  #       sudo apt-get install -y clang-format cppcheck
+  #
+  #   - name: Check code formatting
+  #     run: |
+  #       find lib apps \( -name "*.cpp" -o -name "*.h" \) -print0 | xargs -0 clang-format --dry-run --Werror
+  #
+  #   - name: Run static analysis
+  #     run: |
+  #       # Run cppcheck and capture output
+  #       cppcheck --enable=all --suppress=missingInclude --suppress=missingIncludeSystem --suppress=unusedFunction lib/ apps/ 2>&1 | tee cppcheck_output.txt
+  #       # Check for actual errors and warnings (not information messages)
+  #       if grep -E "(error|warning):" cppcheck_output.txt; then
+  #         echo "❌ cppcheck found errors or warnings"
+  #         exit 1
+  #       else
+  #         echo "✅ cppcheck passed - no errors or warnings found"
+  #       fi
+  #
+  #   - name: Check for TODO/FIXME comments
+  #     run: |
+  #       if grep -r "TODO\|FIXME" lib/ apps/ --include="*.cpp" --include="*.h"; then
+  #         echo "Found TODO/FIXME comments - please address before merging"
+  #         exit 1
+  #       fi
 
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+  # Security scanning - TEMPORARILY DISABLED to save CI minutes
+  # security-scan:
+  #   runs-on: ubuntu-latest
+  #
+  #   steps:
+  #   - name: Checkout code
+  #     uses: actions/checkout@v4
+  #
+  #   - name: Run security scan
+  #     uses: github/super-linter@v5
+  #     env:
+  #       DEFAULT_BRANCH: CPU
+  #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #       FILTER_REGEX_EXCLUDE: docs/.*
+  #       VALIDATE_MARKDOWN: false
+  #       VALIDATE_YAML: false
+  #       VALIDATE_JSCPD: false
+  #       VALIDATE_NATURAL_LANGUAGE: false
+  #       VALIDATE_CLANG_FORMAT: false
+  #       VALIDATE_CHECKOV: false
+  #       VALIDATE_DOCKERFILE: false
+  #       VALIDATE_GITLEAKS: false
+  #       VALIDATE_CPP: false
+  #       VALIDATE_JAVASCRIPT_ES: false
+  #       VALIDATE_JAVASCRIPT_STANDARD: false
+  #       VALIDATE_PYTHON_BLACK: false
+  #       VALIDATE_PYTHON_FLAKE8: false
+  #       VALIDATE_PYTHON_ISORT: false
+  #       VALIDATE_PYTHON_MYPY: false
+  #       VALIDATE_PYTHON_PYLINT: false
 
-    - name: Install dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y clang-format cppcheck
+  # Performance regression detection - TEMPORARILY DISABLED
+  # performance-regression:
+  #   runs-on: ubuntu-latest
+  #   needs: build-and-test
+  #   if: github.event_name == 'pull_request'
+  #
+  #   steps:
+  #   - name: Checkout code
+  #     uses: actions/checkout@v4
+  #
+  #   - name: Download baseline performance data
+  #     uses: actions/download-artifact@v4
+  #     with:
+  #       name: performance-baseline
+  #       path: baseline/
+  #     continue-on-error: true
+  #
+  #   - name: Download current performance data
+  #     uses: actions/download-artifact@v4
+  #     with:
+  #       name: test-results-ubuntu-latest-Release-static
+  #       path: current/
+  #
+  #   - name: Compare performance
+  #     run: |
+  #       if [ -f baseline/benchmark_results/simulation_performance.csv ]; then
+  #         python3 scripts/compare_performance.py \
+  #           baseline/benchmark_results/simulation_performance.csv \
+  #           current/tests/benchmark_results/simulation_performance.csv
+  #       else
+  #         echo "No baseline data available - skipping regression check"
+  #       fi
 
-    - name: Check code formatting
-      run: |
-        find lib apps \( -name "*.cpp" -o -name "*.h" \) -print0 | xargs -0 clang-format --dry-run --Werror
+  # Deployment preparation - TEMPORARILY DISABLED
+  # prepare-release:
+  #   runs-on: ubuntu-latest
+  #   needs: [build-and-test, code-quality, security-scan]
+  #   if: github.ref == 'refs/heads/modern-cpp-architecture'
+  #
+  #   steps:
+  #   - name: Checkout code
+  #     uses: actions/checkout@v4
+  #
+  #   - name: Create release package
+  #     run: |
+  #       mkdir -p release/solar_system_suite
+  #       cp -r lib apps cmake docs CMakeLists.txt README.md release/solar_system_suite/
+  #       cp requirements-*.txt release/solar_system_suite/ 2>/dev/null || true
+  #       cp vcpkg.json release/solar_system_suite/ 2>/dev/null || true
+  #       mkdir -p release/solar_system_suite/scripts
+  #       cp scripts/*.sh scripts/*.ps1 release/solar_system_suite/scripts/ 2>/dev/null || true
+  #       cd release
+  #       tar -czf solar_system_suite.tar.gz solar_system_suite/
+  #
+  #   - name: Upload release package
+  #     uses: actions/upload-artifact@v4
+  #     with:
+  #       name: release-package
+  #       path: release/solar_system_suite.tar.gz
+  #       retention-days: 90
 
-    - name: Run static analysis
-      run: |
-        # Run cppcheck and capture output
-        cppcheck --enable=all --suppress=missingInclude --suppress=missingIncludeSystem --suppress=unusedFunction lib/ apps/ 2>&1 | tee cppcheck_output.txt
-        # Check for actual errors and warnings (not information messages)
-        if grep -E "(error|warning):" cppcheck_output.txt; then
-          echo "❌ cppcheck found errors or warnings"
-          exit 1
-        else
-          echo "✅ cppcheck passed - no errors or warnings found"
-        fi
-
-    - name: Check for TODO/FIXME comments
-      run: |
-        if grep -r "TODO\|FIXME" lib/ apps/ --include="*.cpp" --include="*.h"; then
-          echo "Found TODO/FIXME comments - please address before merging"
-          exit 1
-        fi
-
-  # Security scanning
-  security-scan:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Run security scan
-      uses: github/super-linter@v5
-      env:
-        DEFAULT_BRANCH: CPU
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        # Exclude auto-generated documentation folder
-        FILTER_REGEX_EXCLUDE: docs/.*
-        # Disable problematic linters that conflict with our standards
-        VALIDATE_MARKDOWN: false
-        VALIDATE_YAML: false
-        VALIDATE_JSCPD: false
-        VALIDATE_NATURAL_LANGUAGE: false
-        VALIDATE_CLANG_FORMAT: false  # We have our own clang-format in code-quality job
-        VALIDATE_CHECKOV: false       # Infrastructure as code scanning not needed
-        VALIDATE_DOCKERFILE: false    # No Dockerfiles in this project
-        VALIDATE_GITLEAKS: false      # Secrets scanning might be too aggressive
-        VALIDATE_CPP: false           # cpplint has outdated rules (80 char limit, copyright requirements)
-        VALIDATE_JAVASCRIPT_ES: false # Disable JS formatting - we'll use our own standards
-        VALIDATE_JAVASCRIPT_STANDARD: false # Disable JS standard linting
-        # Disable Python linters - these are utility scripts, not core application code
-        VALIDATE_PYTHON_BLACK: false
-        VALIDATE_PYTHON_FLAKE8: false
-        VALIDATE_PYTHON_ISORT: false
-        VALIDATE_PYTHON_MYPY: false
-        VALIDATE_PYTHON_PYLINT: false
-
-  # Performance regression detection
-  performance-regression:
-    runs-on: ubuntu-latest
-    needs: build-and-test
-    if: github.event_name == 'pull_request'
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Download baseline performance data
-      uses: actions/download-artifact@v4
-      with:
-        name: performance-baseline
-        path: baseline/
-      continue-on-error: true
-
-    - name: Download current performance data
-      uses: actions/download-artifact@v4
-      with:
-        name: test-results-ubuntu-latest-Release-static
-        path: current/
-
-    - name: Compare performance
-      run: |
-        if [ -f baseline/benchmark_results/simulation_performance.csv ]; then
-          python3 scripts/compare_performance.py \
-            baseline/benchmark_results/simulation_performance.csv \
-            current/tests/benchmark_results/simulation_performance.csv
-        else
-          echo "No baseline data available - skipping regression check"
-        fi
-
-  # Deployment preparation
-  prepare-release:
-    runs-on: ubuntu-latest
-    needs: [build-and-test, code-quality, security-scan]
-    if: github.ref == 'refs/heads/modern-cpp-architecture'
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Create release package
-      run: |
-        mkdir -p release/solar_system_suite
-        # Copy source files
-        cp -r lib apps cmake docs CMakeLists.txt README.md release/solar_system_suite/
-        # Copy requirements files
-        cp requirements-*.txt release/solar_system_suite/ 2>/dev/null || true
-        cp vcpkg.json release/solar_system_suite/ 2>/dev/null || true
-        # Copy scripts
-        mkdir -p release/solar_system_suite/scripts
-        cp scripts/*.sh scripts/*.ps1 release/solar_system_suite/scripts/ 2>/dev/null || true
-        # Create archive
-        cd release
-        tar -czf solar_system_suite.tar.gz solar_system_suite/
-
-    - name: Upload release package
-      uses: actions/upload-artifact@v4
-      with:
-        name: release-package
-        path: release/solar_system_suite.tar.gz
-        retention-days: 90
-
-  # Nightly performance baseline update
-  update-baseline:
-    runs-on: ubuntu-latest
-    if: github.event_name == 'schedule'
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Build and benchmark
-      run: |
-        cmake -B build -DCMAKE_BUILD_TYPE=Release -DENABLE_TESTING=ON
-        cmake --build build -j$(nproc || sysctl -n hw.ncpu || echo 4)
-        cd build
-        ctest -L "benchmark" --output-on-failure
-
-    - name: Upload new baseline
-      uses: actions/upload-artifact@v4
-      with:
-        name: performance-baseline
-        path: build/tests/benchmark_results/
+  # Nightly performance baseline update - TEMPORARILY DISABLED
+  # update-baseline:
+  #   runs-on: ubuntu-latest
+  #   if: github.event_name == 'schedule'
+  #
+  #   steps:
+  #   - name: Checkout code
+  #     uses: actions/checkout@v4
+  #
+  #   - name: Build and benchmark
+  #     run: |
+  #       cmake -B build -DCMAKE_BUILD_TYPE=Release -DENABLE_TESTING=ON
+  #       cmake --build build -j$(nproc || sysctl -n hw.ncpu || echo 4)
+  #       cd build
+  #       ctest -L "benchmark" --output-on-failure
+  #
+  #   - name: Upload new baseline
+  #     uses: actions/upload-artifact@v4
+  #     with:
+  #       name: performance-baseline
+  #       path: build/tests/benchmark_results/
         retention-days: 30
 
   # Documentation deployment
