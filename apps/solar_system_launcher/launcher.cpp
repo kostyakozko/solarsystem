@@ -35,6 +35,8 @@ using namespace SolarSystem::Core::Builders;
 using namespace SolarSystem::Utils;
 using namespace std::chrono_literals;
 
+namespace {
+
 /**
  * @brief Configuration for launcher operations
  */
@@ -1198,6 +1200,9 @@ class ArgumentParser {
     std::cout << "  • Professional terminal interface with Unicode\n";
   }
 };
+
+}  // namespace
+
 /**
  * @brief Modern main function with structured workflow execution
  */

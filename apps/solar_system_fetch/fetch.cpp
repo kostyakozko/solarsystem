@@ -28,6 +28,8 @@
 using namespace SolarSystem::Utils;
 using namespace SolarSystem::Core::Builders;
 
+namespace {
+
 /**
  * @brief Modern command-line argument parser using structured approach
  */
@@ -440,6 +442,8 @@ class ArgumentParser {
     std::cout << "  • Integration with Solar System Suite APIs\n";
   }
 };
+
+}  // namespace
 
 /**
  * @brief Modern main function using RAII and structured error handling

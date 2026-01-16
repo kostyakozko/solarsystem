@@ -130,6 +130,7 @@ class ExceptionHandlingTest : public TestCase {
     assert_throws(
         []() {
           std::vector<int> vec;
+          // cppcheck-suppress containerOutOfBounds
           vec.at(10);  // Should throw std::out_of_range
         },
         "Vector at() should throw for invalid index");

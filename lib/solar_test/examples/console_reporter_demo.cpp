@@ -11,6 +11,8 @@
 
 using namespace SolarSystem::Testing;
 
+namespace {
+
 class SamplePassingTest : public TestCase {
  public:
   SamplePassingTest()
@@ -61,6 +63,8 @@ class SampleSkippedTest : public TestCase {
     assert_true(true, "This won't run");
   }
 };
+
+}  // namespace
 
 int main() {
   std::cout << "=== Console Reporter Demo ===\n\n";

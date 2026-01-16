@@ -7,6 +7,8 @@
 
 using namespace SolarSystem::Testing;
 
+namespace {
+
 // Normal tests that should pass
 class BasicMathTest : public TestCase {
  public:
@@ -122,6 +124,8 @@ class PerformanceTest : public TestCase {
     assert_true(true, "Performance test completed");
   }
 };
+
+}  // namespace
 
 int main() {
   std::cout << "=== Comprehensive Testing Framework Demo ===" << std::endl;

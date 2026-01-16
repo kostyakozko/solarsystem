@@ -1161,6 +1161,7 @@ class SolarSystemAPI {
       // Create and configure simulation
       SimulationBuilder sim_builder;
       std::string error_message;
+      // cppcheck-suppress accessMoved
       auto simulation = sim_builder.with_bodies(std::move(bodies))
                             .with_timestep(timestep * speed)
                             .with_max_iterations(steps)

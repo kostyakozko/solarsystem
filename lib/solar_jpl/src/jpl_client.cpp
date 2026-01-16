@@ -1969,7 +1969,7 @@ JPLResult<bool> JPLClient::validate_json_cache_format(
     }
 
     // Check for basic JSON structure
-    if (content.front() != '{' || content.back() != '}') {
+    if (content.empty() || (content.front() != '{' || content.back() != '}')) {
       return JPLError::ValidationError;
     }
 

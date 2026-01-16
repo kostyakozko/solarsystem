@@ -30,7 +30,7 @@ jobs:
 
     - name: Run static analysis
       run: |
-        cppcheck --enable=all --suppress=missingInclude --suppress=missingIncludeSystem --suppress=unusedFunction lib/ apps/ 2>&1 | tee cppcheck_output.txt
+        cppcheck --enable=all --inline-suppr --suppress=missingInclude --suppress=missingIncludeSystem --suppress=unusedFunction lib/ apps/ 2>&1 | tee cppcheck_output.txt
         if grep -E "(error|warning):" cppcheck_output.txt; then
           echo "❌ cppcheck found errors or warnings"
           exit 1

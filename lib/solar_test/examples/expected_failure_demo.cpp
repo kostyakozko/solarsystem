@@ -7,6 +7,8 @@
 
 using namespace SolarSystem::Testing;
 
+namespace {
+
 // Test case that passes normally
 class QuickPassingTest : public TestCase {
  public:
@@ -113,6 +115,8 @@ class UnexpectedPassTest : public TestCase {
     assert_true(true, "This passes but was expected to fail");
   }
 };
+
+}  // namespace
 
 int main() {
   std::cout << "=== Expected Failure Test Demo ===" << std::endl;
