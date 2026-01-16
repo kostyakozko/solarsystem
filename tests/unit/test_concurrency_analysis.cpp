@@ -588,4 +588,3 @@ TEST(ConcurrencyAnalysisTest, RaceConditionReproduction) {
   // The unsafe counter likely has lost updates
   ASSERT_LE(unsafe_counter, num_threads * increments);
 }
-

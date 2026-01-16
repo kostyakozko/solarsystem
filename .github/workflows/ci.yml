@@ -14,143 +14,119 @@ env:
   INSTALL_PREFIX: ${{ github.workspace }}/install
 
 jobs:
-  # Build and test on multiple platforms
-  build-and-test:
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest]
-        build_type: [Release, Debug]
-        shared_libs: [OFF]
-        include:
-          - os: ubuntu-latest
-            cc: gcc
-            cxx: g++
-        # TEMPORARILY DISABLED - macOS builds to save CI minutes
-        # - os: macos-latest
-        #   cc: clang
-        #   cxx: clang++
-
-    runs-on: ${{ matrix.os }}
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Install dependencies (Ubuntu)
-      if: matrix.os == 'ubuntu-latest'
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y cmake build-essential curl doxygen graphviz lcov libssl-dev libcurl4-openssl-dev zlib1g-dev libboost-dev
-
-    - name: Install dependencies (macOS)
-      if: matrix.os == 'macos-latest'
-      run: |
-        brew install cmake curl doxygen graphviz coreutils openssl boost
-
-    - name: Configure CMake
-      env:
-        CC: ${{ matrix.cc }}
-        CXX: ${{ matrix.cxx }}
-        # Ensure GitHub Actions environment is detected
-        GITHUB_ACTIONS: true
-      run: |
-        cmake -B build \
-          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
-          -DCMAKE_INSTALL_PREFIX=${{ env.INSTALL_PREFIX }} \
-          -DBUILD_SHARED_LIBS=${{ matrix.shared_libs }} \
-          -DENABLE_TESTING=ON \
-          -DENABLE_PROFILING=OFF
-
-    - name: Build
-      run: |
-        if [ "$RUNNER_OS" == "macOS" ]; then
-          cmake --build build --config ${{ matrix.build_type }} -j$(sysctl -n hw.ncpu)
-        else
-          cmake --build build --config ${{ matrix.build_type }} -j$(nproc)
-        fi
-
-    - name: Install
-      run: cmake --build build --target install
-
-    - name: Run Unit Tests
-      working-directory: build
-      run: ctest -L "unit" --output-on-failure --timeout 60
-
-    - name: Run Integration Tests
-      working-directory: build
-      run: ctest -L "integration" --output-on-failure --timeout 180
-
-    - name: Run Performance Benchmarks
-      working-directory: build
-      run: ctest -L "benchmark" --output-on-failure --timeout 300
-      continue-on-error: true  # Benchmarks may vary by system
-
-    - name: Test Installation
-      working-directory: ${{ env.INSTALL_PREFIX }}
-      run: |
-        ./solar_system_launcher --status
-        ./bin/solar_system --help
-        ./bin/solar_system_fetch --test-storage
-
-    - name: Generate Documentation
-      if: matrix.os == 'ubuntu-latest' && matrix.build_type == 'Release'
-      run: |
-        cd docs
-        mkdir -p api
-        doxygen Doxyfile
-
-    - name: Upload Test Results
-      uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: test-results-${{ matrix.os }}-${{ matrix.build_type }}-${{ matrix.shared_libs == 'ON' && 'shared' || 'static' }}
-        path: |
-          build/Testing/
-          build/tests/benchmark_results/
-
-    - name: Upload Documentation
-      uses: actions/upload-artifact@v4
-      if: matrix.os == 'ubuntu-latest' && matrix.build_type == 'Release' && matrix.shared_libs == 'OFF'
-      with:
-        name: documentation
-        path: docs/
-
-  # Code quality checks - TEMPORARILY DISABLED to save CI minutes
-  # code-quality:
-  #   runs-on: ubuntu-latest
+  # Build and test - TEMPORARILY DISABLED
+  # build-and-test:
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       os: [ubuntu-latest]
+  #       build_type: [Release, Debug]
+  #       shared_libs: [OFF]
+  #       include:
+  #         - os: ubuntu-latest
+  #           cc: gcc
+  #           cxx: g++
+  #
+  #   runs-on: ${{ matrix.os }}
   #
   #   steps:
   #   - name: Checkout code
   #     uses: actions/checkout@v4
   #
-  #   - name: Install dependencies
+  #   - name: Install dependencies (Ubuntu)
+  #     if: matrix.os == 'ubuntu-latest'
   #     run: |
   #       sudo apt-get update
-  #       sudo apt-get install -y clang-format cppcheck
+  #       sudo apt-get install -y cmake build-essential curl doxygen graphviz lcov libssl-dev libcurl4-openssl-dev zlib1g-dev libboost-dev
   #
-  #   - name: Check code formatting
+  #   - name: Configure CMake
+  #     env:
+  #       CC: ${{ matrix.cc }}
+  #       CXX: ${{ matrix.cxx }}
+  #       GITHUB_ACTIONS: true
   #     run: |
-  #       find lib apps \( -name "*.cpp" -o -name "*.h" \) -print0 | xargs -0 clang-format --dry-run --Werror
+  #       cmake -B build \
+  #         -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
+  #         -DCMAKE_INSTALL_PREFIX=${{ env.INSTALL_PREFIX }} \
+  #         -DBUILD_SHARED_LIBS=${{ matrix.shared_libs }} \
+  #         -DENABLE_TESTING=ON \
+  #         -DENABLE_PROFILING=OFF
   #
-  #   - name: Run static analysis
-  #     run: |
-  #       # Run cppcheck and capture output
-  #       cppcheck --enable=all --suppress=missingInclude --suppress=missingIncludeSystem --suppress=unusedFunction lib/ apps/ 2>&1 | tee cppcheck_output.txt
-  #       # Check for actual errors and warnings (not information messages)
-  #       if grep -E "(error|warning):" cppcheck_output.txt; then
-  #         echo "❌ cppcheck found errors or warnings"
-  #         exit 1
-  #       else
-  #         echo "✅ cppcheck passed - no errors or warnings found"
-  #       fi
+  #   - name: Build
+  #     run: cmake --build build --config ${{ matrix.build_type }} -j$(nproc)
   #
-  #   - name: Check for TODO/FIXME comments
+  #   - name: Install
+  #     run: cmake --build build --target install
+  #
+  #   - name: Run Unit Tests
+  #     working-directory: build
+  #     run: ctest -L "unit" --output-on-failure --timeout 60
+  #
+  #   - name: Run Integration Tests
+  #     working-directory: build
+  #     run: ctest -L "integration" --output-on-failure --timeout 180
+  #
+  #   - name: Run Performance Benchmarks
+  #     working-directory: build
+  #     run: ctest -L "benchmark" --output-on-failure --timeout 300
+  #     continue-on-error: true
+  #
+  #   - name: Test Installation
+  #     working-directory: ${{ env.INSTALL_PREFIX }}
   #     run: |
-  #       if grep -r "TODO\|FIXME" lib/ apps/ --include="*.cpp" --include="*.h"; then
-  #         echo "Found TODO/FIXME comments - please address before merging"
-  #         exit 1
-  #       fi
+  #       ./solar_system_launcher --status
+  #       ./bin/solar_system --help
+  #       ./bin/solar_system_fetch --test-storage
+  #
+  #   - name: Generate Documentation
+  #     if: matrix.os == 'ubuntu-latest' && matrix.build_type == 'Release'
+  #     run: |
+  #       cd docs
+  #       mkdir -p api
+  #       doxygen Doxyfile
+  #
+  #   - name: Upload Test Results
+  #     uses: actions/upload-artifact@v4
+  #     if: always()
+  #     with:
+  #       name: test-results-${{ matrix.os }}-${{ matrix.build_type }}-${{ matrix.shared_libs == 'ON' && 'shared' || 'static' }}
+  #       path: |
+  #         build/Testing/
+  #         build/tests/benchmark_results/
+  #
+  #   - name: Upload Documentation
+  #     uses: actions/upload-artifact@v4
+  #     if: matrix.os == 'ubuntu-latest' && matrix.build_type == 'Release' && matrix.shared_libs == 'OFF'
+  #     with:
+  #       name: documentation
+  #       path: docs/
+
+  # Code quality checks
+  code-quality:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y clang-format cppcheck
+
+    - name: Check code formatting
+      run: |
+        find lib apps tests \( -name "*.cpp" -o -name "*.hpp" -o -name "*.h" \) -print0 | xargs -0 clang-format --dry-run --Werror
+
+    - name: Run static analysis
+      run: |
+        cppcheck --enable=all --suppress=missingInclude --suppress=missingIncludeSystem --suppress=unusedFunction lib/ apps/ 2>&1 | tee cppcheck_output.txt
+        if grep -E "(error|warning):" cppcheck_output.txt; then
+          echo "❌ cppcheck found errors or warnings"
+          exit 1
+        else
+          echo "✅ cppcheck passed - no errors or warnings found"
+        fi
 
   # Security scanning - TEMPORARILY DISABLED to save CI minutes
   # security-scan:

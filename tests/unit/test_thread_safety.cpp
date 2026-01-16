@@ -590,4 +590,3 @@ TEST(ThreadSafetyTest, ConditionVariableSynchronization) {
 
   waiter.join();
 }
-

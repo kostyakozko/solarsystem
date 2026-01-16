@@ -486,4 +486,3 @@ TEST(ConcurrentLoadTest, ContentionTest) {
   ASSERT_LE(store.size(), static_cast<size_t>(hot_keys));
   ASSERT_GT(store.get_write_count(), 0);
 }
-
