@@ -11,13 +11,10 @@ TASK_FILES_CHANGED=$(git diff --cached --name-only | grep "tasks\.md$" || true)
 if [ -n "$TASK_FILES_CHANGED" ]; then
     echo "📋 Task files modified, updating roadmap..."
     echo "Changed files:"
-    echo "$TASK_FILES_CHANGED" | sed 's/^/  - /'
+    echo "${TASK_FILES_CHANGED//^/  - }"
 
     # Update the roadmap
-    python3 .kiro/scripts/update-roadmap.py
-
-    # Check if roadmap was actually updated
-    if [ $? -eq 0 ]; then
+    if python3 .kiro/scripts/update-roadmap.py; then
         echo "✅ Roadmap updated successfully"
 
         # Add the updated roadmap to the commit

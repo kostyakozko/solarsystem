@@ -16,7 +16,8 @@ ENV CI=true
 
 # Install exact dependencies matching GitHub Actions CI
 # See: .github/workflows/ci.yml - Install dependencies (Ubuntu)
-RUN apt-get update && apt-get install -y \
+# hadolint ignore=DL3008
+RUN apt-get update && apt-get install -y --no-install-recommends \
     cmake \
     build-essential \
     curl \

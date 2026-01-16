@@ -30,13 +30,11 @@ echo ""
 
 # Step 1: Configure CMake (matching CI)
 echo -e "${BLUE}[1/6]${NC} Configuring CMake..."
-cmake -B "$BUILD_DIR" \
+if cmake -B "$BUILD_DIR" \
   -DCMAKE_BUILD_TYPE="$BUILD_TYPE" \
   -DCMAKE_INSTALL_PREFIX="$INSTALL_PREFIX" \
   -DENABLE_TESTING=ON \
-  -DENABLE_PROFILING=OFF
-
-if [ $? -eq 0 ]; then
+  -DENABLE_PROFILING=OFF; then
     echo -e "${GREEN}✓${NC} CMake configuration successful"
 else
     echo -e "${RED}✗${NC} CMake configuration failed"
@@ -46,9 +44,7 @@ echo ""
 
 # Step 2: Build (matching CI)
 echo -e "${BLUE}[2/6]${NC} Building project..."
-cmake --build "$BUILD_DIR" --config "$BUILD_TYPE" -j"$(nproc)"
-
-if [ $? -eq 0 ]; then
+if cmake --build "$BUILD_DIR" --config "$BUILD_TYPE" -j"$(nproc)"; then
     echo -e "${GREEN}✓${NC} Build successful"
 else
     echo -e "${RED}✗${NC} Build failed"
@@ -58,9 +54,7 @@ echo ""
 
 # Step 3: Install (matching CI)
 echo -e "${BLUE}[3/6]${NC} Installing..."
-cmake --build "$BUILD_DIR" --target install
-
-if [ $? -eq 0 ]; then
+if cmake --build "$BUILD_DIR" --target install; then
     echo -e "${GREEN}✓${NC} Installation successful"
 else
     echo -e "${RED}✗${NC} Installation failed"
