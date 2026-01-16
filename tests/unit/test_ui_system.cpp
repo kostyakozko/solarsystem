@@ -3,14 +3,14 @@
  * @brief Unit tests for UI system components
  */
 
+#include <chrono>
+#include <iostream>
+#include <thread>
+
 #include "solar_core/ui/accessibility.hpp"
 #include "solar_core/ui/cli_interface.hpp"
 #include "solar_core/ui/progress_indicator.hpp"
 #include "solar_core/ui/status_display.hpp"
-
-#include <chrono>
-#include <iostream>
-#include <thread>
 
 using namespace SolarSystem::UI;
 
@@ -140,9 +140,8 @@ void test_status_display() {
   std::cout << "\n";
 
   // Test box display
-  BoxDisplay::success("Operation Complete",
-                      {"All tasks finished successfully", "Total time: 2.5 seconds",
-                       "No errors encountered"});
+  BoxDisplay::success("Operation Complete", {"All tasks finished successfully",
+                                             "Total time: 2.5 seconds", "No errors encountered"});
 
   std::cout << "\n";
 
@@ -183,13 +182,16 @@ void test_accessibility() {
   std::cout << "Testing color schemes:\n";
 
   ColorScheme::set_scheme(ColorScheme::Scheme::DEFAULT);
-  std::cout << "  Default scheme: " << ColorScheme::get_color("success") << "Success" << ColorScheme::get_color("reset") << "\n";
+  std::cout << "  Default scheme: " << ColorScheme::get_color("success") << "Success"
+            << ColorScheme::get_color("reset") << "\n";
 
   ColorScheme::set_scheme(ColorScheme::Scheme::HIGH_CONTRAST);
-  std::cout << "  High contrast: " << ColorScheme::get_color("success") << "Success" << ColorScheme::get_color("reset") << "\n";
+  std::cout << "  High contrast: " << ColorScheme::get_color("success") << "Success"
+            << ColorScheme::get_color("reset") << "\n";
 
   ColorScheme::set_scheme(ColorScheme::Scheme::MONOCHROME);
-  std::cout << "  Monochrome: " << ColorScheme::get_color("success") << "Success" << ColorScheme::get_color("reset") << "\n";
+  std::cout << "  Monochrome: " << ColorScheme::get_color("success") << "Success"
+            << ColorScheme::get_color("reset") << "\n";
 
   std::cout << "\n";
 
@@ -238,10 +240,9 @@ void test_cli_interface() {
   // Show results
   cli.section("Results");
   std::vector<std::string> headers = {"Body", "X (AU)", "Y (AU)", "Z (AU)"};
-  std::vector<std::vector<std::string>> rows = {
-      {"Earth", "1.000", "0.000", "0.000"},
-      {"Mars", "1.524", "0.000", "0.000"},
-      {"Jupiter", "5.203", "0.000", "0.000"}};
+  std::vector<std::vector<std::string>> rows = {{"Earth", "1.000", "0.000", "0.000"},
+                                                {"Mars", "1.524", "0.000", "0.000"},
+                                                {"Jupiter", "5.203", "0.000", "0.000"}};
 
   cli.table(headers, rows);
 

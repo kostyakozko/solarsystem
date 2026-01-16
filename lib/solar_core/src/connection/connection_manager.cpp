@@ -50,8 +50,7 @@ struct ManagedConnection {
   size_t reconnection_attempts = 0;
   bool enabled = true;
 
-  explicit ManagedConnection(std::shared_ptr<IConnection> conn)
-      : connection(std::move(conn)) {}
+  explicit ManagedConnection(std::shared_ptr<IConnection> conn) : connection(std::move(conn)) {}
 };
 
 /**
@@ -191,8 +190,7 @@ struct ConnectionManager::Impl {
       notify_health_alert(id, health);
 
       // Schedule reconnection
-      managed.next_reconnect_time = std::chrono::system_clock::now() +
-                                     managed.backoff.next_delay();
+      managed.next_reconnect_time = std::chrono::system_clock::now() + managed.backoff.next_delay();
     } else if (managed.state == ConnectionState::DEGRADED) {
       // Recovered from degraded state
       auto old_state = managed.state;
@@ -204,8 +202,7 @@ struct ConnectionManager::Impl {
 
   void attempt_reconnection(const std::string& id, ManagedConnection& managed) {
     if (managed.reconnection_attempts >= config.max_reconnection_attempts) {
-      LOG_ERROR("ConnectionManager", "Connection " + id +
-                " exceeded max reconnection attempts");
+      LOG_ERROR("ConnectionManager", "Connection " + id + " exceeded max reconnection attempts");
       auto old_state = managed.state;
       managed.state = ConnectionState::FAILED;
       notify_state_change(id, old_state, managed.state);
@@ -213,8 +210,8 @@ struct ConnectionManager::Impl {
       return;
     }
 
-    LOG_INFO("ConnectionManager", "Attempting to reconnect " + id +
-             " (attempt " + std::to_string(managed.reconnection_attempts + 1) + ")");
+    LOG_INFO("ConnectionManager", "Attempting to reconnect " + id + " (attempt " +
+                                      std::to_string(managed.reconnection_attempts + 1) + ")");
 
     auto old_state = managed.state;
     managed.state = ConnectionState::RECONNECTING;
@@ -243,8 +240,8 @@ struct ConnectionManager::Impl {
       auto delay = managed.backoff.next_delay();
       managed.next_reconnect_time = std::chrono::system_clock::now() + delay;
 
-      LOG_INFO("ConnectionManager", "Next reconnection attempt for " + id +
-               " in " + std::to_string(delay.count()) + "ms");
+      LOG_INFO("ConnectionManager", "Next reconnection attempt for " + id + " in " +
+                                        std::to_string(delay.count()) + "ms");
 
       notify_state_change(id, ConnectionState::RECONNECTING, managed.state);
     }
@@ -301,13 +298,9 @@ bool ConnectionManager::start() {
   return true;
 }
 
-void ConnectionManager::stop() {
-  impl_->stop();
-}
+void ConnectionManager::stop() { impl_->stop(); }
 
-bool ConnectionManager::is_running() const {
-  return impl_->running.load();
-}
+bool ConnectionManager::is_running() const { return impl_->running.load(); }
 
 ConnectionHealth ConnectionManager::get_overall_health() const {
   std::lock_guard<std::mutex> lock(impl_->connections_mutex);
@@ -396,8 +389,7 @@ void ConnectionManager::set_health_alert_callback(HealthAlertCallback callback) 
  * @brief ExponentialBackoff implementation
  */
 ExponentialBackoff::ExponentialBackoff(std::chrono::milliseconds initial_delay,
-                                       std::chrono::milliseconds max_delay,
-                                       double multiplier)
+                                       std::chrono::milliseconds max_delay, double multiplier)
     : initial_delay_(initial_delay),
       max_delay_(max_delay),
       current_delay_(initial_delay),
@@ -429,9 +421,7 @@ void ExponentialBackoff::reset() {
   attempt_count_ = 0;
 }
 
-size_t ExponentialBackoff::get_attempt_count() const {
-  return attempt_count_;
-}
+size_t ExponentialBackoff::get_attempt_count() const { return attempt_count_; }
 
 /**
  * @brief ConnectionPool implementation
@@ -494,12 +484,11 @@ std::vector<std::shared_ptr<IConnection>> ConnectionPool::get_all_connections() 
 
 size_t ConnectionPool::get_healthy_count() const {
   std::lock_guard<std::mutex> lock(impl_->mutex);
-  auto count = std::count_if(impl_->connections.begin(), impl_->connections.end(),
-                              [](const auto& conn) {
-                                auto health = conn->get_health();
-                                return health.state == ConnectionState::CONNECTED &&
-                                       health.health_score > 0.7;
-                              });
+  auto count =
+      std::count_if(impl_->connections.begin(), impl_->connections.end(), [](const auto& conn) {
+        auto health = conn->get_health();
+        return health.state == ConnectionState::CONNECTED && health.health_score > 0.7;
+      });
   return static_cast<size_t>(count);
 }
 

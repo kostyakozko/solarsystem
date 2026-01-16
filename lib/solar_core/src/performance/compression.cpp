@@ -5,26 +5,29 @@
 
 #include "solar_core/performance/compression.hpp"
 
-#include <algorithm>
 #include <zlib.h>
+
+#include <algorithm>
 
 namespace SolarSystem::Performance {
 
 std::string to_string(CompressionAlgorithm algorithm) {
   switch (algorithm) {
-    case CompressionAlgorithm::NONE: return "none";
-    case CompressionAlgorithm::GZIP: return "gzip";
-    case CompressionAlgorithm::DEFLATE: return "deflate";
-    default: return "unknown";
+    case CompressionAlgorithm::NONE:
+      return "none";
+    case CompressionAlgorithm::GZIP:
+      return "gzip";
+    case CompressionAlgorithm::DEFLATE:
+      return "deflate";
+    default:
+      return "unknown";
   }
 }
 
-ResponseCompressor::ResponseCompressor(CompressionConfig config)
-    : config_(std::move(config)) {}
+ResponseCompressor::ResponseCompressor(CompressionConfig config) : config_(std::move(config)) {}
 
-std::optional<std::string> ResponseCompressor::compress(
-    const std::string& data,
-    CompressionAlgorithm algorithm) const {
+std::optional<std::string> ResponseCompressor::compress(const std::string& data,
+                                                        CompressionAlgorithm algorithm) const {
   if (!config_.enabled || algorithm == CompressionAlgorithm::NONE) {
     return data;
   }
@@ -37,8 +40,8 @@ std::optional<std::string> ResponseCompressor::compress(
 
   int window_bits = (algorithm == CompressionAlgorithm::GZIP) ? 15 + 16 : 15;
 
-  if (deflateInit2(&stream, config_.compression_level, Z_DEFLATED,
-                   window_bits, 8, Z_DEFAULT_STRATEGY) != Z_OK) {
+  if (deflateInit2(&stream, config_.compression_level, Z_DEFLATED, window_bits, 8,
+                   Z_DEFAULT_STRATEGY) != Z_OK) {
     return std::nullopt;
   }
 
@@ -62,9 +65,8 @@ std::optional<std::string> ResponseCompressor::compress(
   return compressed;
 }
 
-std::optional<std::string> ResponseCompressor::decompress(
-    const std::string& data,
-    CompressionAlgorithm algorithm) const {
+std::optional<std::string> ResponseCompressor::decompress(const std::string& data,
+                                                          CompressionAlgorithm algorithm) const {
   if (algorithm == CompressionAlgorithm::NONE) {
     return data;
   }
@@ -100,21 +102,18 @@ std::optional<std::string> ResponseCompressor::decompress(
   return decompressed;
 }
 
-bool ResponseCompressor::should_compress(
-    const std::string& content_type,
-    size_t content_length) const {
+bool ResponseCompressor::should_compress(const std::string& content_type,
+                                         size_t content_length) const {
   if (!config_.enabled || content_length < config_.min_size_bytes) {
     return false;
   }
 
-  return std::find(config_.compressible_types.begin(),
-                   config_.compressible_types.end(),
+  return std::find(config_.compressible_types.begin(), config_.compressible_types.end(),
                    content_type) != config_.compressible_types.end();
 }
 
-double ResponseCompressor::get_compression_ratio(
-    size_t original_size,
-    size_t compressed_size) const {
+double ResponseCompressor::get_compression_ratio(size_t original_size,
+                                                 size_t compressed_size) const {
   if (original_size == 0) return 0.0;
   return static_cast<double>(compressed_size) / static_cast<double>(original_size);
 }

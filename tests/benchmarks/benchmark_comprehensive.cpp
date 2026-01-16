@@ -10,6 +10,8 @@
  * - Mathematical operations performance
  */
 
+#include <gtest/gtest.h>
+
 #include <filesystem>
 #include <iostream>
 #include <memory>
@@ -21,7 +23,6 @@
 #include "solar_core/math/vector3.hpp"
 #include "solar_core/simulation/simulation_engine.hpp"
 #include "solar_jpl/jpl_client.hpp"
-#include <gtest/gtest.h>
 
 using namespace SolarSystem;
 

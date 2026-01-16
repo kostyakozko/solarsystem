@@ -33,11 +33,11 @@
 // Enhanced Solar System Suite APIs with comprehensive status management
 #include "solar_core/bodies/body_factory.hpp"
 #include "solar_core/builders/simulation_builder.hpp"
+#include "solar_utils/error_handling.hpp"
 #include "solar_utils/logging.hpp"
+#include "solar_utils/status_management.hpp"
 #include "solar_utils/validation/input_validator.hpp"
 #include "solar_utils/workflow_orchestration.hpp"
-#include "solar_utils/status_management.hpp"
-#include "solar_utils/error_handling.hpp"
 
 using namespace SolarSystem::Core::Builders;
 using namespace SolarSystem::Utils;
@@ -241,7 +241,8 @@ class StatusEnhancedLauncherUI {
     std::cout << "🚨 Active System Alerts\n\n";
 
     if (alerts.empty()) {
-      std::cout << "✅ No active alerts at " << Status::Utils::to_string(min_severity) << " level or above.\n";
+      std::cout << "✅ No active alerts at " << Status::Utils::to_string(min_severity)
+                << " level or above.\n";
       return;
     }
 
@@ -359,17 +360,32 @@ class StatusEnhancedLauncherUI {
     // Overall status
     std::string status_icon;
     switch (health.overall_status) {
-      case SystemStatus::Optimal: status_icon = "🟢"; break;
-      case SystemStatus::Healthy: status_icon = "🟡"; break;
-      case SystemStatus::Degraded: status_icon = "🟠"; break;
-      case SystemStatus::Critical: status_icon = "🔴"; break;
-      case SystemStatus::Failed: status_icon = "❌"; break;
-      default: status_icon = "❓"; break;
+      case SystemStatus::Optimal:
+        status_icon = "🟢";
+        break;
+      case SystemStatus::Healthy:
+        status_icon = "🟡";
+        break;
+      case SystemStatus::Degraded:
+        status_icon = "🟠";
+        break;
+      case SystemStatus::Critical:
+        status_icon = "🔴";
+        break;
+      case SystemStatus::Failed:
+        status_icon = "❌";
+        break;
+      default:
+        status_icon = "❓";
+        break;
     }
 
-    std::cout << "  " << status_icon << " Overall Status: " << Status::Utils::to_string(health.overall_status) << "\n";
-    std::cout << "  📊 Health Score: " << std::fixed << std::setprecision(2) << health.overall_health_score << "/1.0\n";
-    std::cout << "  📈 Availability: " << std::fixed << std::setprecision(1) << health.get_availability_percentage() << "%\n";
+    std::cout << "  " << status_icon
+              << " Overall Status: " << Status::Utils::to_string(health.overall_status) << "\n";
+    std::cout << "  📊 Health Score: " << std::fixed << std::setprecision(2)
+              << health.overall_health_score << "/1.0\n";
+    std::cout << "  📈 Availability: " << std::fixed << std::setprecision(1)
+              << health.get_availability_percentage() << "%\n";
     std::cout << "  🕒 Last Updated: " << format_timestamp(health.last_updated) << "\n";
 
     // Component summary
@@ -408,15 +424,25 @@ class StatusEnhancedLauncherUI {
     for (const auto& component : components) {
       std::string health_icon;
       switch (component.base_status.health) {
-        case ComponentHealth::Healthy: health_icon = "✅"; break;
-        case ComponentHealth::Warning: health_icon = "⚠️"; break;
-        case ComponentHealth::Critical: health_icon = "🔴"; break;
-        case ComponentHealth::Failed: health_icon = "❌"; break;
-        default: health_icon = "❓"; break;
+        case ComponentHealth::Healthy:
+          health_icon = "✅";
+          break;
+        case ComponentHealth::Warning:
+          health_icon = "⚠️";
+          break;
+        case ComponentHealth::Critical:
+          health_icon = "🔴";
+          break;
+        case ComponentHealth::Failed:
+          health_icon = "❌";
+          break;
+        default:
+          health_icon = "❓";
+          break;
       }
 
-      std::cout << "  " << health_icon << " " << component.base_status.name
-                << " (" << Workflow::Utils::to_string(component.base_status.type) << ")";
+      std::cout << "  " << health_icon << " " << component.base_status.name << " ("
+                << Workflow::Utils::to_string(component.base_status.type) << ")";
 
       if (!component.base_status.status_message.empty()) {
         std::cout << " - " << component.base_status.status_message;
@@ -454,16 +480,25 @@ class StatusEnhancedLauncherUI {
 
       std::string severity_icon;
       switch (alert.severity) {
-        case AlertSeverity::Warning: severity_icon = "⚠️"; break;
-        case AlertSeverity::Error: severity_icon = "🔴"; break;
-        case AlertSeverity::Critical: severity_icon = "🚨"; break;
-        case AlertSeverity::Emergency: severity_icon = "🆘"; break;
-        default: severity_icon = "ℹ️"; break;
+        case AlertSeverity::Warning:
+          severity_icon = "⚠️";
+          break;
+        case AlertSeverity::Error:
+          severity_icon = "🔴";
+          break;
+        case AlertSeverity::Critical:
+          severity_icon = "🚨";
+          break;
+        case AlertSeverity::Emergency:
+          severity_icon = "🆘";
+          break;
+        default:
+          severity_icon = "ℹ️";
+          break;
       }
 
-      std::cout << "  " << severity_icon << " " << alert.title
-                << " (" << alert.component_name << ") - "
-                << format_duration_since(alert.timestamp) << " ago\n";
+      std::cout << "  " << severity_icon << " " << alert.title << " (" << alert.component_name
+                << ") - " << format_duration_since(alert.timestamp) << " ago\n";
 
       displayed++;
     }
@@ -486,8 +521,9 @@ class StatusEnhancedLauncherUI {
       if (component.performance.has_performance_issues()) {
         performance_issues++;
       }
-      avg_response_time += static_cast<double>(std::chrono::duration_cast<std::chrono::milliseconds>(
-        component.performance.response_time).count());
+      avg_response_time += static_cast<double>(
+          std::chrono::duration_cast<std::chrono::milliseconds>(component.performance.response_time)
+              .count());
       avg_cpu_usage += component.performance.cpu_usage_percent;
       total_memory_mb += component.performance.memory_usage_bytes / (1024 * 1024);
     }
@@ -498,8 +534,10 @@ class StatusEnhancedLauncherUI {
     }
 
     std::cout << "\n📈 Performance Summary:\n";
-    std::cout << "  Average Response Time: " << std::fixed << std::setprecision(1) << avg_response_time << "ms\n";
-    std::cout << "  Average CPU Usage: " << std::fixed << std::setprecision(1) << avg_cpu_usage << "%\n";
+    std::cout << "  Average Response Time: " << std::fixed << std::setprecision(1)
+              << avg_response_time << "ms\n";
+    std::cout << "  Average CPU Usage: " << std::fixed << std::setprecision(1) << avg_cpu_usage
+              << "%\n";
     std::cout << "  Total Memory Usage: " << total_memory_mb << " MB\n";
 
     if (performance_issues > 0) {
@@ -529,23 +567,35 @@ class StatusEnhancedLauncherUI {
   static void print_alert_details(const StatusAlert& alert) {
     std::string severity_icon;
     switch (alert.severity) {
-      case AlertSeverity::Info: severity_icon = "ℹ️"; break;
-      case AlertSeverity::Warning: severity_icon = "⚠️"; break;
-      case AlertSeverity::Error: severity_icon = "🔴"; break;
-      case AlertSeverity::Critical: severity_icon = "🚨"; break;
-      case AlertSeverity::Emergency: severity_icon = "🆘"; break;
+      case AlertSeverity::Info:
+        severity_icon = "ℹ️";
+        break;
+      case AlertSeverity::Warning:
+        severity_icon = "⚠️";
+        break;
+      case AlertSeverity::Error:
+        severity_icon = "🔴";
+        break;
+      case AlertSeverity::Critical:
+        severity_icon = "🚨";
+        break;
+      case AlertSeverity::Emergency:
+        severity_icon = "🆘";
+        break;
     }
 
     std::cout << severity_icon << " Alert ID: " << alert.id << "\n";
     std::cout << "  Title: " << alert.title << "\n";
-    std::cout << "  Component: " << alert.component_name << " (" << Workflow::Utils::to_string(alert.component_type) << ")\n";
+    std::cout << "  Component: " << alert.component_name << " ("
+              << Workflow::Utils::to_string(alert.component_type) << ")\n";
     std::cout << "  Severity: " << Status::Utils::to_string(alert.severity) << "\n";
     std::cout << "  Description: " << alert.description << "\n";
-    std::cout << "  Created: " << format_timestamp(alert.timestamp) << " (" << format_duration_since(alert.timestamp) << " ago)\n";
+    std::cout << "  Created: " << format_timestamp(alert.timestamp) << " ("
+              << format_duration_since(alert.timestamp) << " ago)\n";
 
     if (alert.acknowledged) {
-      std::cout << "  Status: ✅ Acknowledged by " << alert.acknowledged_by
-                << " at " << format_timestamp(alert.acknowledged_at) << "\n";
+      std::cout << "  Status: ✅ Acknowledged by " << alert.acknowledged_by << " at "
+                << format_timestamp(alert.acknowledged_at) << "\n";
     } else {
       std::cout << "  Status: 🔔 Active\n";
     }
@@ -567,12 +617,19 @@ class StatusEnhancedLauncherUI {
     const auto& metrics = component.performance;
 
     std::cout << "Component: " << component.base_status.name << "\n";
-    std::cout << "  Response Time: " << std::chrono::duration_cast<std::chrono::milliseconds>(metrics.response_time).count() << "ms\n";
-    std::cout << "  CPU Usage: " << std::fixed << std::setprecision(1) << metrics.cpu_usage_percent << "%\n";
+    std::cout
+        << "  Response Time: "
+        << std::chrono::duration_cast<std::chrono::milliseconds>(metrics.response_time).count()
+        << "ms\n";
+    std::cout << "  CPU Usage: " << std::fixed << std::setprecision(1) << metrics.cpu_usage_percent
+              << "%\n";
     std::cout << "  Memory Usage: " << (metrics.memory_usage_bytes / 1024 / 1024) << " MB\n";
-    std::cout << "  Success Rate: " << std::fixed << std::setprecision(1) << (metrics.get_success_rate() * 100) << "%\n";
-    std::cout << "  Throughput: " << std::fixed << std::setprecision(2) << metrics.throughput_operations_per_second << " ops/sec\n";
-    std::cout << "  Health Score: " << std::fixed << std::setprecision(2) << component.get_comprehensive_health_score() << "/1.0\n";
+    std::cout << "  Success Rate: " << std::fixed << std::setprecision(1)
+              << (metrics.get_success_rate() * 100) << "%\n";
+    std::cout << "  Throughput: " << std::fixed << std::setprecision(2)
+              << metrics.throughput_operations_per_second << " ops/sec\n";
+    std::cout << "  Health Score: " << std::fixed << std::setprecision(2)
+              << component.get_comprehensive_health_score() << "/1.0\n";
 
     if (metrics.has_performance_issues()) {
       std::cout << "  ⚠️  Performance Issues Detected\n";
@@ -599,8 +656,10 @@ class StatusEnhancedLauncherUI {
     auto duration = now - timestamp;
 
     auto hours = std::chrono::duration_cast<std::chrono::hours>(duration);
-    auto minutes = std::chrono::duration_cast<std::chrono::minutes>(duration % std::chrono::hours(1));
-    auto seconds = std::chrono::duration_cast<std::chrono::seconds>(duration % std::chrono::minutes(1));
+    auto minutes =
+        std::chrono::duration_cast<std::chrono::minutes>(duration % std::chrono::hours(1));
+    auto seconds =
+        std::chrono::duration_cast<std::chrono::seconds>(duration % std::chrono::minutes(1));
 
     if (hours.count() > 0) {
       return std::to_string(hours.count()) + "h " + std::to_string(minutes.count()) + "m";
@@ -635,7 +694,8 @@ class StatusComponentRegistrar {
     // Register simulation engine component
     register_simulation_component(status_manager);
 
-    LOG_INFO("StatusComponentRegistrar", "All Solar System Suite components registered for monitoring");
+    LOG_INFO("StatusComponentRegistrar",
+             "All Solar System Suite components registered for monitoring");
   }
 
  private:
@@ -644,20 +704,19 @@ class StatusComponentRegistrar {
    */
   static void register_launcher_component(StatusManager& status_manager) {
     status_manager.register_component(
-      ComponentType::Launcher,
-      "SolarSystemLauncher",
-      []() {
-        ComponentStatus status(ComponentType::Launcher, "SolarSystemLauncher");
-        status.health = ComponentHealth::Healthy;
-        status.status_message = "Launcher operational with status management";
-        status.health_score = 1.0;
-        status.metrics["uptime_seconds"] = std::to_string(
-          std::chrono::duration_cast<std::chrono::seconds>(
-            std::chrono::steady_clock::now().time_since_epoch()).count());
-        return status;
-      },
-      Status::Utils::create_performance_collector("SolarSystemLauncher")
-    );
+        ComponentType::Launcher, "SolarSystemLauncher",
+        []() {
+          ComponentStatus status(ComponentType::Launcher, "SolarSystemLauncher");
+          status.health = ComponentHealth::Healthy;
+          status.status_message = "Launcher operational with status management";
+          status.health_score = 1.0;
+          status.metrics["uptime_seconds"] =
+              std::to_string(std::chrono::duration_cast<std::chrono::seconds>(
+                                 std::chrono::steady_clock::now().time_since_epoch())
+                                 .count());
+          return status;
+        },
+        Status::Utils::create_performance_collector("SolarSystemLauncher"));
   }
 
   /**
@@ -665,60 +724,59 @@ class StatusComponentRegistrar {
    */
   static void register_jpl_component(StatusManager& status_manager) {
     status_manager.register_component(
-      ComponentType::JPLClient,
-      "JPL_HORIZONS_Client",
-      []() {
-        ComponentStatus status(ComponentType::JPLClient, "JPL_HORIZONS_Client");
+        ComponentType::JPLClient, "JPL_HORIZONS_Client",
+        []() {
+          ComponentStatus status(ComponentType::JPLClient, "JPL_HORIZONS_Client");
 
-        // Check JPL connectivity using workflow orchestrator
-        auto& orchestrator = WorkflowOrchestrator::instance();
-        auto& jpl_manager = orchestrator.get_jpl_connectivity_manager();
+          // Check JPL connectivity using workflow orchestrator
+          auto& orchestrator = WorkflowOrchestrator::instance();
+          auto& jpl_manager = orchestrator.get_jpl_connectivity_manager();
 
-        if (jpl_manager.is_jpl_service_available()) {
-          status.health = ComponentHealth::Healthy;
-          status.status_message = "JPL HORIZONS API accessible";
-          status.health_score = 1.0;
-        } else if (jpl_manager.is_fallback_mode_active()) {
-          status.health = ComponentHealth::Warning;
-          status.status_message = "JPL HORIZONS API unavailable - using fallback mode";
-          status.health_score = 0.7;
-        } else {
-          status.health = ComponentHealth::Critical;
-          status.status_message = "JPL HORIZONS API unavailable - no fallback";
-          status.health_score = 0.2;
-        }
+          if (jpl_manager.is_jpl_service_available()) {
+            status.health = ComponentHealth::Healthy;
+            status.status_message = "JPL HORIZONS API accessible";
+            status.health_score = 1.0;
+          } else if (jpl_manager.is_fallback_mode_active()) {
+            status.health = ComponentHealth::Warning;
+            status.status_message = "JPL HORIZONS API unavailable - using fallback mode";
+            status.health_score = 0.7;
+          } else {
+            status.health = ComponentHealth::Critical;
+            status.status_message = "JPL HORIZONS API unavailable - no fallback";
+            status.health_score = 0.2;
+          }
 
-        auto jpl_metrics = jpl_manager.get_jpl_health_metrics();
-        for (const auto& [key, value] : jpl_metrics) {
-          status.metrics[key] = value;
-        }
+          auto jpl_metrics = jpl_manager.get_jpl_health_metrics();
+          for (const auto& [key, value] : jpl_metrics) {
+            status.metrics[key] = value;
+          }
 
-        return status;
-      },
-      []() {
-        PerformanceMetrics metrics;
+          return status;
+        },
+        []() {
+          PerformanceMetrics metrics;
 
-        // Simulate JPL API performance metrics
-        auto& orchestrator = WorkflowOrchestrator::instance();
-        auto& jpl_manager = orchestrator.get_jpl_connectivity_manager();
+          // Simulate JPL API performance metrics
+          auto& orchestrator = WorkflowOrchestrator::instance();
+          auto& jpl_manager = orchestrator.get_jpl_connectivity_manager();
 
-        if (jpl_manager.is_jpl_service_available()) {
-          metrics.response_time = std::chrono::milliseconds(200 + (rand() % 300));  // 200-500ms
-          metrics.success_count = 95 + static_cast<size_t>(rand() % 5);  // 95-99%
-          metrics.error_count = static_cast<size_t>(rand() % 2);  // 0-1 errors
-        } else {
-          metrics.response_time = std::chrono::milliseconds(5000);  // Timeout
-          metrics.success_count = 0;
-          metrics.error_count = 10;
-        }
+          if (jpl_manager.is_jpl_service_available()) {
+            metrics.response_time = std::chrono::milliseconds(200 + (rand() % 300));  // 200-500ms
+            metrics.success_count = 95 + static_cast<size_t>(rand() % 5);             // 95-99%
+            metrics.error_count = static_cast<size_t>(rand() % 2);                    // 0-1 errors
+          } else {
+            metrics.response_time = std::chrono::milliseconds(5000);  // Timeout
+            metrics.success_count = 0;
+            metrics.error_count = 10;
+          }
 
-        metrics.cpu_usage_percent = 5.0 + (rand() % 10);  // 5-15%
-        metrics.memory_usage_bytes = 2 * 1024 * 1024;  // 2MB
-        metrics.throughput_operations_per_second = jpl_manager.is_jpl_service_available() ? 5.0 : 0.0;
+          metrics.cpu_usage_percent = 5.0 + (rand() % 10);  // 5-15%
+          metrics.memory_usage_bytes = 2 * 1024 * 1024;     // 2MB
+          metrics.throughput_operations_per_second =
+              jpl_manager.is_jpl_service_available() ? 5.0 : 0.0;
 
-        return metrics;
-      }
-    );
+          return metrics;
+        });
   }
 
   /**
@@ -726,78 +784,76 @@ class StatusComponentRegistrar {
    */
   static void register_cache_component(StatusManager& status_manager) {
     status_manager.register_component(
-      ComponentType::CacheManager,
-      "EphemerisCache",
-      []() {
-        ComponentStatus status(ComponentType::CacheManager, "EphemerisCache");
+        ComponentType::CacheManager, "EphemerisCache",
+        []() {
+          ComponentStatus status(ComponentType::CacheManager, "EphemerisCache");
 
-        // Use the same cache path logic as JPL applications
-        std::filesystem::path cache_dir;
-        try {
-          std::filesystem::path exe_path;
+          // Use the same cache path logic as JPL applications
+          std::filesystem::path cache_dir;
+          try {
+            std::filesystem::path exe_path;
 #ifdef __APPLE__
-          char path[1024];
-          uint32_t size = sizeof(path);
-          if (_NSGetExecutablePath(path, &size) == 0) {
-            exe_path = std::filesystem::canonical(path);
-          } else {
-            throw std::runtime_error("Failed to get executable path");
-          }
+            char path[1024];
+            uint32_t size = sizeof(path);
+            if (_NSGetExecutablePath(path, &size) == 0) {
+              exe_path = std::filesystem::canonical(path);
+            } else {
+              throw std::runtime_error("Failed to get executable path");
+            }
 #elif defined(__linux__)
-          exe_path = std::filesystem::canonical("/proc/self/exe");
+            exe_path = std::filesystem::canonical("/proc/self/exe");
 #else
-          throw std::runtime_error("Unsupported platform");
+            throw std::runtime_error("Unsupported platform");
 #endif
-          std::filesystem::path exe_dir = exe_path.parent_path();
-          cache_dir = exe_dir.parent_path() / "cache";
-        } catch (const std::exception&) {
-          cache_dir = "./cache";
-        }
+            std::filesystem::path exe_dir = exe_path.parent_path();
+            cache_dir = exe_dir.parent_path() / "cache";
+          } catch (const std::exception&) {
+            cache_dir = "./cache";
+          }
 
-        // Check cache file status
-        bool binary_cache_exists = std::filesystem::exists(cache_dir / "ephemeris_cache.bin");
-        bool json_cache_exists = std::filesystem::exists(cache_dir / "ephemeris_data.json");
+          // Check cache file status
+          bool binary_cache_exists = std::filesystem::exists(cache_dir / "ephemeris_cache.bin");
+          bool json_cache_exists = std::filesystem::exists(cache_dir / "ephemeris_data.json");
 
-        if (binary_cache_exists && json_cache_exists) {
-          status.health = ComponentHealth::Healthy;
-          status.status_message = "Both binary and JSON cache files available";
-          status.health_score = 1.0;
-        } else if (binary_cache_exists || json_cache_exists) {
-          status.health = ComponentHealth::Warning;
-          status.status_message = "Partial cache availability";
-          status.health_score = 0.7;
-        } else {
-          status.health = ComponentHealth::Critical;
-          status.status_message = "No cache files available";
-          status.health_score = 0.3;
-        }
+          if (binary_cache_exists && json_cache_exists) {
+            status.health = ComponentHealth::Healthy;
+            status.status_message = "Both binary and JSON cache files available";
+            status.health_score = 1.0;
+          } else if (binary_cache_exists || json_cache_exists) {
+            status.health = ComponentHealth::Warning;
+            status.status_message = "Partial cache availability";
+            status.health_score = 0.7;
+          } else {
+            status.health = ComponentHealth::Critical;
+            status.status_message = "No cache files available";
+            status.health_score = 0.3;
+          }
 
-        status.metrics["binary_cache_exists"] = binary_cache_exists ? "true" : "false";
-        status.metrics["json_cache_exists"] = json_cache_exists ? "true" : "false";
+          status.metrics["binary_cache_exists"] = binary_cache_exists ? "true" : "false";
+          status.metrics["json_cache_exists"] = json_cache_exists ? "true" : "false";
 
-        if (binary_cache_exists) {
-          auto cache_file = cache_dir / "ephemeris_cache.bin";
-          auto cache_size = std::filesystem::file_size(cache_file);
-          status.metrics["binary_cache_size_mb"] = std::to_string(cache_size / (1024 * 1024));
-          status.metrics["cache_location"] = cache_dir.string();
-        }
+          if (binary_cache_exists) {
+            auto cache_file = cache_dir / "ephemeris_cache.bin";
+            auto cache_size = std::filesystem::file_size(cache_file);
+            status.metrics["binary_cache_size_mb"] = std::to_string(cache_size / (1024 * 1024));
+            status.metrics["cache_location"] = cache_dir.string();
+          }
 
-        return status;
-      },
-      []() {
-        PerformanceMetrics metrics;
+          return status;
+        },
+        []() {
+          PerformanceMetrics metrics;
 
-        // Cache performance metrics
-        metrics.response_time = std::chrono::microseconds(100 + (rand() % 900));  // 0.1-1ms
-        metrics.cpu_usage_percent = 1.0 + (rand() % 3);  // 1-4%
-        metrics.memory_usage_bytes = 5 * 1024 * 1024;  // 5MB
-        metrics.success_count = 100;  // Cache always succeeds when available
-        metrics.error_count = 0;
-        metrics.throughput_operations_per_second = 1000.0 + (rand() % 500);  // 1000-1500 ops/sec
+          // Cache performance metrics
+          metrics.response_time = std::chrono::microseconds(100 + (rand() % 900));  // 0.1-1ms
+          metrics.cpu_usage_percent = 1.0 + (rand() % 3);                           // 1-4%
+          metrics.memory_usage_bytes = 5 * 1024 * 1024;                             // 5MB
+          metrics.success_count = 100;  // Cache always succeeds when available
+          metrics.error_count = 0;
+          metrics.throughput_operations_per_second = 1000.0 + (rand() % 500);  // 1000-1500 ops/sec
 
-        return metrics;
-      }
-    );
+          return metrics;
+        });
   }
 
   /**
@@ -805,48 +861,47 @@ class StatusComponentRegistrar {
    */
   static void register_simulation_component(StatusManager& status_manager) {
     status_manager.register_component(
-      ComponentType::Simulation,
-      "SimulationEngine",
-      []() {
-        ComponentStatus status(ComponentType::Simulation, "SimulationEngine");
+        ComponentType::Simulation, "SimulationEngine",
+        []() {
+          ComponentStatus status(ComponentType::Simulation, "SimulationEngine");
 
-        try {
-          // Test simulation engine availability by creating a simple body collection
-          BodySelector selector;
-          auto body_result = selector.essential().build();
+          try {
+            // Test simulation engine availability by creating a simple body collection
+            BodySelector selector;
+            auto body_result = selector.essential().build();
 
-          if (body_result.has_value()) {
-            status.health = ComponentHealth::Healthy;
-            status.status_message = "Simulation engine operational";
-            status.health_score = 1.0;
-            status.metrics["available_bodies"] = std::to_string(body_result->size());
-          } else {
-            status.health = ComponentHealth::Warning;
-            status.status_message = "Simulation engine available but body data limited";
-            status.health_score = 0.8;
+            if (body_result.has_value()) {
+              status.health = ComponentHealth::Healthy;
+              status.status_message = "Simulation engine operational";
+              status.health_score = 1.0;
+              status.metrics["available_bodies"] = std::to_string(body_result->size());
+            } else {
+              status.health = ComponentHealth::Warning;
+              status.status_message = "Simulation engine available but body data limited";
+              status.health_score = 0.8;
+            }
+          } catch (const std::exception& e) {
+            status.health = ComponentHealth::Failed;
+            status.status_message = "Simulation engine error: " + std::string(e.what());
+            status.health_score = 0.0;
           }
-        } catch (const std::exception& e) {
-          status.health = ComponentHealth::Failed;
-          status.status_message = "Simulation engine error: " + std::string(e.what());
-          status.health_score = 0.0;
-        }
 
-        return status;
-      },
-      []() {
-        PerformanceMetrics metrics;
+          return status;
+        },
+        []() {
+          PerformanceMetrics metrics;
 
-        // Simulation performance metrics
-        metrics.response_time = std::chrono::milliseconds(50 + (rand() % 200));  // 50-250ms
-        metrics.cpu_usage_percent = 20.0 + (rand() % 30);  // 20-50%
-        metrics.memory_usage_bytes = 10 * 1024 * 1024 + static_cast<size_t>(rand() % (20 * 1024 * 1024));  // 10-30MB
-        metrics.success_count = 98 + static_cast<size_t>(rand() % 2);  // 98-99%
-        metrics.error_count = static_cast<size_t>(rand() % 2);  // 0-1 errors
-        metrics.throughput_operations_per_second = 10.0 + (rand() % 20);  // 10-30 ops/sec
+          // Simulation performance metrics
+          metrics.response_time = std::chrono::milliseconds(50 + (rand() % 200));  // 50-250ms
+          metrics.cpu_usage_percent = 20.0 + (rand() % 30);                        // 20-50%
+          metrics.memory_usage_bytes =
+              10 * 1024 * 1024 + static_cast<size_t>(rand() % (20 * 1024 * 1024));  // 10-30MB
+          metrics.success_count = 98 + static_cast<size_t>(rand() % 2);             // 98-99%
+          metrics.error_count = static_cast<size_t>(rand() % 2);                    // 0-1 errors
+          metrics.throughput_operations_per_second = 10.0 + (rand() % 20);          // 10-30 ops/sec
 
-        return metrics;
-      }
-    );
+          return metrics;
+        });
   }
 };
 
@@ -873,7 +928,7 @@ class StatusEnhancedArgumentParser {
       } else if (arg == "--version") {
         config.show_version = true;
 
-      // Status operations
+        // Status operations
       } else if (arg == "--status") {
         config.show_status = true;
       } else if (arg == "--detailed-status") {
@@ -888,7 +943,7 @@ class StatusEnhancedArgumentParser {
       } else if (arg == "--performance") {
         config.show_performance = true;
 
-      // Status management operations
+        // Status management operations
       } else if (arg == "--start-monitoring") {
         config.start_monitoring = true;
       } else if (arg == "--stop-monitoring") {
@@ -900,7 +955,7 @@ class StatusEnhancedArgumentParser {
       } else if (arg == "--export-json") {
         config.export_json = true;
 
-      // Data management operations
+        // Data management operations
       } else if (arg == "--fetch") {
         config.fetch_data = true;
       } else if (arg == "--update") {
@@ -916,7 +971,7 @@ class StatusEnhancedArgumentParser {
       } else if (arg == "--test-storage") {
         config.test_storage = true;
 
-      // Simulation operations
+        // Simulation operations
       } else if (arg == "--simulate") {
         config.run_simulation = true;
       } else if (arg == "--auto-fetch") {
@@ -924,7 +979,7 @@ class StatusEnhancedArgumentParser {
       } else if (arg == "--current-date") {
         config.use_current_date = true;
 
-      // Workflow options
+        // Workflow options
       } else if (arg == "--batch") {
         config.batch_mode = true;
       } else if (arg == "--continue-on-error") {
@@ -936,7 +991,7 @@ class StatusEnhancedArgumentParser {
       } else if (arg == "--no-decision-engine") {
         config.enable_decision_engine = false;
 
-      // Output options
+        // Output options
       } else if (arg == "-v" || arg == "--verbose") {
         config.verbose_output = true;
       } else if (arg == "-q" || arg == "--quiet") {
@@ -944,7 +999,7 @@ class StatusEnhancedArgumentParser {
       } else if (arg == "--no-progress") {
         config.show_progress = false;
 
-      // Configuration options with values
+        // Configuration options with values
       } else if (arg == "--config") {
         if (i + 1 < argc) {
           config.config_file = argv[++i];
@@ -1135,11 +1190,16 @@ class StatusEnhancedArgumentParser {
     std::cout << "📋 Examples:\n";
     std::cout << "  " << program_name << "                              # Show system status\n";
     std::cout << "  " << program_name << " --detailed-status            # Show detailed status\n";
-    std::cout << "  " << program_name << " --interactive-dashboard      # Start interactive dashboard\n";
-    std::cout << "  " << program_name << " --alerts --min-alert-severity warning  # Show warnings and above\n";
-    std::cout << "  " << program_name << " --generate-report --report-output status.txt  # Save report\n";
-    std::cout << "  " << program_name << " --acknowledge-alert alert_123456  # Acknowledge specific alert\n";
-    std::cout << "  " << program_name << " --simulate --auto-fetch      # Run simulation with auto-fetch\n\n";
+    std::cout << "  " << program_name
+              << " --interactive-dashboard      # Start interactive dashboard\n";
+    std::cout << "  " << program_name
+              << " --alerts --min-alert-severity warning  # Show warnings and above\n";
+    std::cout << "  " << program_name
+              << " --generate-report --report-output status.txt  # Save report\n";
+    std::cout << "  " << program_name
+              << " --acknowledge-alert alert_123456  # Acknowledge specific alert\n";
+    std::cout << "  " << program_name
+              << " --simulate --auto-fetch      # Run simulation with auto-fetch\n\n";
 
     std::cout << "🔍 Status Management Features:\n";
     std::cout << "  • Real-time component health monitoring\n";
@@ -1161,7 +1221,8 @@ int main(int argc, char* argv[]) {
 
   try {
     // Initialize logging
-    LOG_INFO("StatusEnhancedLauncher", "Starting Solar System Suite Launcher with Status Management");
+    LOG_INFO("StatusEnhancedLauncher",
+             "Starting Solar System Suite Launcher with Status Management");
 
     // Parse command line arguments
     auto config_opt = StatusEnhancedArgumentParser::parse(argc, argv);
@@ -1311,7 +1372,8 @@ int main(int argc, char* argv[]) {
       std::_Exit(1);
     }
 
-    LOG_INFO("StatusEnhancedLauncher", "Solar System Suite Launcher with Status Management completed");
+    LOG_INFO("StatusEnhancedLauncher",
+             "Solar System Suite Launcher with Status Management completed");
 
     // Explicitly flush streams before exit
     std::cout.flush();

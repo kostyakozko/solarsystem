@@ -40,7 +40,7 @@ struct Session {
  * @brief Session configuration
  */
 struct SessionConfig {
-  std::chrono::seconds timeout{1800};  // 30 minutes
+  std::chrono::seconds timeout{1800};        // 30 minutes
   std::chrono::seconds max_lifetime{86400};  // 24 hours
   bool sliding_expiration = true;
   size_t max_sessions_per_user = 5;
@@ -102,17 +102,14 @@ class SOLAR_CORE_API SessionManager {
   /**
    * @brief Set session data
    */
-  void set_session_data(
-      const std::string& session_id,
-      const std::string& key,
-      const std::string& value);
+  void set_session_data(const std::string& session_id, const std::string& key,
+                        const std::string& value);
 
   /**
    * @brief Get session data
    */
-  [[nodiscard]] std::optional<std::string> get_session_data(
-      const std::string& session_id,
-      const std::string& key);
+  [[nodiscard]] std::optional<std::string> get_session_data(const std::string& session_id,
+                                                            const std::string& key);
 
   /**
    * @brief Get all sessions for user

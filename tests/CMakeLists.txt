@@ -67,6 +67,17 @@ if(NOT USE_SYSTEM_GTEST)
     target_compile_options(gmock_main PRIVATE -w)
   endif()
 
+  # Workaround for GCC 13+ false positive null-dereference warnings in Google Test with LTO
+  # These warnings occur during link-time optimization and are false positives in gtest internals
+  if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_BUILD_TYPE STREQUAL "Release")
+    if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 13.0)
+      message(STATUS "Applying GCC 13+ workaround for Google Test LTO warnings")
+      # Disable null-dereference warnings globally for Release builds with LTO
+      # This is safe as these are false positives in Google Test's internal code
+      add_compile_options(-Wno-null-dereference)
+    endif()
+  endif()
+
   message(STATUS "Using FetchContent Google Test v1.14.0")
   set(GTEST_AVAILABLE TRUE)
 endif()

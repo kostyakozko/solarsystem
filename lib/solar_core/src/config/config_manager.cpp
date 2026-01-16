@@ -31,7 +31,7 @@ ConfigResult<void> ConfigurationManager::load_from_file(const std::filesystem::p
   // Check if file exists
   if (!std::filesystem::exists(config_path)) {
     return ConfigErrorDetail(ConfigError::FileNotFound, "Configuration file not found",
-                            "Path: " + config_path.string());
+                             "Path: " + config_path.string());
   }
 
   try {
@@ -42,7 +42,7 @@ ConfigResult<void> ConfigurationManager::load_from_file(const std::filesystem::p
     auto validation = validate();
     if (validation.has_errors()) {
       ConfigErrorDetail error(ConfigError::ValidationFailed,
-                             "Configuration validation failed after loading file");
+                              "Configuration validation failed after loading file");
       error.file_path = config_path;
       error.suggestions = validation.suggestions;
       return error;
@@ -55,13 +55,12 @@ ConfigResult<void> ConfigurationManager::load_from_file(const std::filesystem::p
 
   } catch (const std::exception& e) {
     ConfigErrorDetail error(ConfigError::InvalidFormat, "Failed to parse configuration file",
-                           std::string("Error: ") + e.what());
+                            std::string("Error: ") + e.what());
     error.file_path = config_path;
-    error.suggestions = {
-        "Ensure the file is valid JSON format",
-        "Check for syntax errors (missing commas, brackets, quotes)",
-        "Validate JSON structure using a JSON validator",
-        "Review the configuration documentation for correct schema"};
+    error.suggestions = {"Ensure the file is valid JSON format",
+                         "Check for syntax errors (missing commas, brackets, quotes)",
+                         "Validate JSON structure using a JSON validator",
+                         "Review the configuration documentation for correct schema"};
     return error;
   }
 }
@@ -168,7 +167,8 @@ ValidationResult ConfigurationManager::validate() const {
 
   if (merged_config_.logging.max_file_size == 0) {
     result.warnings.push_back("Log file size limit is 0, logs may grow indefinitely");
-    result.suggestions.push_back("Set max_file_size to a reasonable value (e.g., 10485760 for 10MB)");
+    result.suggestions.push_back(
+        "Set max_file_size to a reasonable value (e.g., 10485760 for 10MB)");
   }
 
   // Validate output configuration
@@ -211,7 +211,7 @@ ConfigResult<void> ConfigurationManager::save_to_file(const std::filesystem::pat
     return ConfigResult<void>();
   } catch (const std::exception& e) {
     ConfigErrorDetail error(ConfigError::InvalidFormat, "Failed to save configuration file",
-                           std::string("Error: ") + e.what());
+                            std::string("Error: ") + e.what());
     error.file_path = config_path;
     return error;
   }
@@ -220,8 +220,9 @@ ConfigResult<void> ConfigurationManager::save_to_file(const std::filesystem::pat
 ConfigResult<void> ConfigurationManager::enable_hot_reload(const std::filesystem::path& config_path,
                                                            const ConfigChangeCallback& callback) {
   if (!std::filesystem::exists(config_path)) {
-    return ConfigErrorDetail(ConfigError::FileNotFound, "Cannot enable hot-reload for non-existent file",
-                            "Path: " + config_path.string());
+    return ConfigErrorDetail(ConfigError::FileNotFound,
+                             "Cannot enable hot-reload for non-existent file",
+                             "Path: " + config_path.string());
   }
 
   hot_reload_enabled_ = true;
@@ -259,13 +260,13 @@ ConfigResult<void> ConfigurationManager::restore_from_backup(const ConfigSnapsho
     auto validation = validate();
     if (validation.has_errors()) {
       return ConfigErrorDetail(ConfigError::ValidationFailed,
-                              "Restored configuration failed validation");
+                               "Restored configuration failed validation");
     }
 
     return ConfigResult<void>();
   } catch (const std::exception& e) {
     return ConfigErrorDetail(ConfigError::RestoreFailed, "Failed to restore from backup",
-                            std::string("Error: ") + e.what());
+                             std::string("Error: ") + e.what());
   }
 }
 
@@ -436,7 +437,7 @@ void ConfigurationManager::merge_configurations() {
 }
 
 void ConfigurationManager::track_change(const std::string& param_name, const std::string& old_val,
-                                       const std::string& new_val, ConfigSource source) {
+                                        const std::string& new_val, ConfigSource source) {
   ConfigChange change;
   change.parameter_name = param_name;
   change.old_value = old_val;
@@ -511,98 +512,87 @@ ConfigResult<void> ConfigurationManager::apply_config_value(Utils::Config::AppCo
     // Simulation parameters
     else if (param_name == "simulation.timestep") {
       config.simulation.timestep = std::stod(value);
-    }
-    else if (param_name == "simulation.max_iterations") {
+    } else if (param_name == "simulation.max_iterations") {
       config.simulation.max_iterations = static_cast<int>(std::stoull(value));
-    }
-    else if (param_name == "simulation.tolerance") {
+    } else if (param_name == "simulation.tolerance") {
       config.simulation.tolerance = std::stod(value);
-    }
-    else if (param_name == "simulation.enable_adaptive_timestep") {
-      config.simulation.enable_adaptive_timestep = (value == "true" || value == "1" || value == "yes");
+    } else if (param_name == "simulation.enable_adaptive_timestep") {
+      config.simulation.enable_adaptive_timestep =
+          (value == "true" || value == "1" || value == "yes");
     }
     // Logging parameters
     else if (param_name == "logging.console_output") {
       config.logging.console_output = (value == "true" || value == "1" || value == "yes");
-    }
-    else if (param_name == "logging.colored_output") {
+    } else if (param_name == "logging.colored_output") {
       config.logging.colored_output = (value == "true" || value == "1" || value == "yes");
-    }
-    else if (param_name == "logging.enable_file_logging") {
+    } else if (param_name == "logging.enable_file_logging") {
       config.logging.enable_file_logging = (value == "true" || value == "1" || value == "yes");
-    }
-    else if (param_name == "logging.log_file") {
+    } else if (param_name == "logging.log_file") {
       config.logging.log_file = value;
-    }
-    else if (param_name == "logging.max_file_size") {
+    } else if (param_name == "logging.max_file_size") {
       config.logging.max_file_size = static_cast<size_t>(std::stoull(value));
-    }
-    else if (param_name == "logging.max_backup_files") {
+    } else if (param_name == "logging.max_backup_files") {
       config.logging.max_backup_files = std::stoi(value);
-    }
-    else if (param_name == "logging.min_level") {
+    } else if (param_name == "logging.min_level") {
       // Parse log level string to enum
       std::string level_lower = value;
       std::transform(level_lower.begin(), level_lower.end(), level_lower.begin(), ::tolower);
 
-      if (level_lower == "debug") config.logging.min_level = SolarSystem::Utils::ConfigLogLevel::DEBUG;
-      else if (level_lower == "info") config.logging.min_level = SolarSystem::Utils::ConfigLogLevel::INFO;
-      else if (level_lower == "warn" || level_lower == "warning") config.logging.min_level = SolarSystem::Utils::ConfigLogLevel::WARNING;
-      else if (level_lower == "error") config.logging.min_level = SolarSystem::Utils::ConfigLogLevel::ERROR;
+      if (level_lower == "debug")
+        config.logging.min_level = SolarSystem::Utils::ConfigLogLevel::DEBUG;
+      else if (level_lower == "info")
+        config.logging.min_level = SolarSystem::Utils::ConfigLogLevel::INFO;
+      else if (level_lower == "warn" || level_lower == "warning")
+        config.logging.min_level = SolarSystem::Utils::ConfigLogLevel::WARNING;
+      else if (level_lower == "error")
+        config.logging.min_level = SolarSystem::Utils::ConfigLogLevel::ERROR;
       else {
-        return ConfigErrorDetail(ConfigError::ValidationFailed,
-                                "Invalid log level: " + value,
-                                "Valid values: DEBUG, INFO, WARN, ERROR");
+        return ConfigErrorDetail(ConfigError::ValidationFailed, "Invalid log level: " + value,
+                                 "Valid values: DEBUG, INFO, WARN, ERROR");
       }
     }
     // Output parameters
     else if (param_name == "output.format") {
       config.output.format = value;
-    }
-    else if (param_name == "output.output_directory") {
+    } else if (param_name == "output.output_directory") {
       config.output.output_directory = value;
-    }
-    else if (param_name == "output.compress_output") {
+    } else if (param_name == "output.compress_output") {
       config.output.compress_output = (value == "true" || value == "1" || value == "yes");
     }
     // Performance parameters
     else if (param_name == "performance.thread_count") {
       config.performance.thread_count = std::stoi(value);
-    }
-    else if (param_name == "performance.enable_gpu_acceleration") {
-      config.performance.enable_gpu_acceleration = (value == "true" || value == "1" || value == "yes");
+    } else if (param_name == "performance.enable_gpu_acceleration") {
+      config.performance.enable_gpu_acceleration =
+          (value == "true" || value == "1" || value == "yes");
     }
     // Network parameters
     else if (param_name == "network.jpl_base_url") {
       config.network.jpl_base_url = value;
-    }
-    else if (param_name == "network.enable_caching") {
+    } else if (param_name == "network.enable_caching") {
       config.network.enable_caching = (value == "true" || value == "1" || value == "yes");
-    }
-    else if (param_name == "network.max_retries") {
+    } else if (param_name == "network.max_retries") {
       config.network.max_retries = std::stoi(value);
-    }
-    else if (param_name == "network.timeout") {
+    } else if (param_name == "network.timeout") {
       config.network.timeout = std::chrono::seconds(std::stoi(value));
-    }
-    else {
+    } else {
       return ConfigErrorDetail(ConfigError::ValidationFailed,
-                              "Unknown configuration parameter: " + param_name,
-                              "Check parameter name spelling and documentation");
+                               "Unknown configuration parameter: " + param_name,
+                               "Check parameter name spelling and documentation");
     }
 
     return ConfigResult<void>();
   } catch (const std::invalid_argument& e) {
-    return ConfigErrorDetail(ConfigError::ValidationFailed,
-                            "Invalid value for parameter: " + param_name,
-                            std::string("Value '") + value + "' cannot be parsed. Error: " + e.what());
+    return ConfigErrorDetail(
+        ConfigError::ValidationFailed, "Invalid value for parameter: " + param_name,
+        std::string("Value '") + value + "' cannot be parsed. Error: " + e.what());
   } catch (const std::out_of_range& e) {
     return ConfigErrorDetail(ConfigError::ValidationFailed,
-                            "Value out of range for parameter: " + param_name,
-                            std::string("Value '") + value + "' is too large. Error: " + e.what());
+                             "Value out of range for parameter: " + param_name,
+                             std::string("Value '") + value + "' is too large. Error: " + e.what());
   } catch (const std::exception& e) {
     return ConfigErrorDetail(ConfigError::ValidationFailed, "Failed to apply configuration value",
-                            std::string("Parameter: ") + param_name + ", Error: " + e.what());
+                             std::string("Parameter: ") + param_name + ", Error: " + e.what());
   }
 }
 
@@ -619,8 +609,9 @@ ConfigResult<void> GlobalConfig::initialize(const std::filesystem::path& config_
   return instance_->load_from_file(config_path);
 }
 
-ConfigResult<void> GlobalConfig::initialize(const std::filesystem::path& config_path,
-                                            const std::map<std::string, std::string>& cli_overrides) {
+ConfigResult<void> GlobalConfig::initialize(
+    const std::filesystem::path& config_path,
+    const std::map<std::string, std::string>& cli_overrides) {
   instance_ = std::make_unique<ConfigurationManager>();
 
   auto file_result = instance_->load_from_file(config_path);
@@ -661,8 +652,7 @@ std::vector<CrossAppConflict> ConfigurationManager::detect_cross_app_conflicts(
           "Both applications writing to the same output directory may cause file conflicts";
       conflict.resolution_suggestions.push_back(
           "Use different output directories for each application");
-      conflict.resolution_suggestions.push_back(
-          "Use application-specific subdirectories");
+      conflict.resolution_suggestions.push_back("Use application-specific subdirectories");
       conflicts.push_back(conflict);
     } else {
       output_dirs[output_dir] = app_name;
@@ -681,10 +671,8 @@ std::vector<CrossAppConflict> ConfigurationManager::detect_cross_app_conflicts(
         conflict.parameter = "logging.log_file";
         conflict.conflict_description =
             "Both applications writing to the same log file may cause log corruption";
-        conflict.resolution_suggestions.push_back(
-            "Use different log files for each application");
-        conflict.resolution_suggestions.push_back(
-            "Use application-specific log file names");
+        conflict.resolution_suggestions.push_back("Use different log files for each application");
+        conflict.resolution_suggestions.push_back("Use application-specific log file names");
         conflicts.push_back(conflict);
       } else {
         log_files[config.logging.log_file] = app_name;
@@ -708,11 +696,10 @@ std::vector<CrossAppConflict> ConfigurationManager::detect_cross_app_conflicts(
     conflict.application1 = "system";
     conflict.application2 = "all_applications";
     conflict.parameter = "performance.thread_count";
-    conflict.conflict_description =
-        "Total thread count (" + std::to_string(total_threads) +
-        ") significantly exceeds hardware threads (" + std::to_string(hardware_threads) + ")";
-    conflict.resolution_suggestions.push_back(
-        "Reduce thread count in individual applications");
+    conflict.conflict_description = "Total thread count (" + std::to_string(total_threads) +
+                                    ") significantly exceeds hardware threads (" +
+                                    std::to_string(hardware_threads) + ")";
+    conflict.resolution_suggestions.push_back("Reduce thread count in individual applications");
     conflict.resolution_suggestions.push_back(
         "Use thread_count=0 for auto-detection in some applications");
     conflicts.push_back(conflict);
@@ -740,8 +727,8 @@ ValidationResult ConfigurationManager::validate_dependencies() const {
     if (dependency.validation_func) {
       if (!dependency.validation_func(merged_config_)) {
         result.is_valid = false;
-        result.errors.push_back("Dependency validation failed for " + dependency.parameter +
-                               ": " + dependency.description);
+        result.errors.push_back("Dependency validation failed for " + dependency.parameter + ": " +
+                                dependency.description);
       }
     }
   }
@@ -759,7 +746,7 @@ ValidationResult ConfigurationManager::validate_dependencies() const {
 }
 
 ImpactAnalysis ConfigurationManager::analyze_impact(const std::string& parameter_name,
-                                                   const std::string& new_value) const {
+                                                    const std::string& new_value) const {
   ImpactAnalysis analysis;
   analysis.changed_parameter = parameter_name;
 
@@ -802,8 +789,7 @@ ImpactAnalysis ConfigurationManager::analyze_impact(const std::string& parameter
       int hardware_threads = static_cast<int>(hardware_threads_unsigned);
       if (threads > hardware_threads) {
         analysis.warnings.push_back("Thread count exceeds hardware threads, may cause contention");
-        analysis.recommendations.push_back(
-            "Consider using thread_count=0 for automatic detection");
+        analysis.recommendations.push_back("Consider using thread_count=0 for automatic detection");
       }
     } catch (...) {
       analysis.warnings.push_back("Invalid thread count value");
@@ -813,7 +799,8 @@ ImpactAnalysis ConfigurationManager::analyze_impact(const std::string& parameter
   if (parameter_name == "logging.min_level") {
     analysis.recommendations.push_back(
         "Changing log level affects all logging output across applications");
-    analysis.recommendations.push_back("Consider restarting applications for change to take effect");
+    analysis.recommendations.push_back(
+        "Consider restarting applications for change to take effect");
   }
 
   return analysis;
@@ -824,7 +811,7 @@ std::vector<ConfigDependency> ConfigurationManager::get_dependencies() const {
 }
 
 bool ConfigurationManager::would_cause_conflict(const std::string& parameter_name,
-                                               const std::string& new_value) const {
+                                                const std::string& new_value) const {
   // Create a temporary config with the proposed change
   Utils::Config::AppConfig temp_config = merged_config_;
 
@@ -948,5 +935,3 @@ std::vector<std::string> ConfigurationManager::get_dependent_parameters(
 }
 
 }  // namespace SolarSystem::Core::Config
-
-

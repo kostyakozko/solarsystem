@@ -7,8 +7,9 @@
  * proper port allocation, conflict prevention, and resource cleanup.
  */
 
-#include <gtest/gtest.h>
 #include <gmock/gmock.h>
+#include <gtest/gtest.h>
+
 #include "../utils/gtest_compat.hpp"
 
 using namespace TestUtils;
@@ -216,8 +217,8 @@ TEST(PortManagement, FailureAnalysis) {
   entry2.timestamp = std::chrono::system_clock::now();
   log_entries.push_back(entry2);
 
-  auto analysis = FailureAnalyzer::analyze_test_failure("test_failure",
-                                                        "Port 8080 already in use", log_entries);
+  auto analysis = FailureAnalyzer::analyze_test_failure("test_failure", "Port 8080 already in use",
+                                                        log_entries);
 
   ASSERT_EQ(analysis.test_name, "test_failure");
   ASSERT_EQ("Network/Port Issue", analysis.failure_category);

@@ -110,10 +110,8 @@ ValidationResult DateTimeValidator::validate_date(const std::string& date_str) {
 }
 
 ValidationResult DateTimeValidator::validate_date_with_range(
-    const std::string& date_str,
-    const std::chrono::system_clock::time_point& min_date,
+    const std::string& date_str, const std::chrono::system_clock::time_point& min_date,
     const std::chrono::system_clock::time_point& max_date) {
-
   auto basic_result = validate_date(date_str);
   if (!basic_result.is_valid) {
     return basic_result;
@@ -185,9 +183,8 @@ ValidationResult DateTimeValidator::validate_date_with_range(
 /**
  * @brief Validate date with timezone information
  */
-ValidationResult DateTimeValidator::validate_date_with_timezone(
-    const std::string& date_str, const std::string& timezone) {
-
+ValidationResult DateTimeValidator::validate_date_with_timezone(const std::string& date_str,
+                                                                const std::string& timezone) {
   auto basic_result = validate_date(date_str);
   if (!basic_result.is_valid) {
     return basic_result;
@@ -258,11 +255,9 @@ bool DateTimeValidator::is_valid_day_of_month(int year, int month, int day) {
 /**
  * @brief Convert between calendar systems
  */
-ValidationResult DateTimeValidator::convert_calendar_system(
-    const std::string& date_str,
-    const std::string& from_calendar,
-    const std::string& to_calendar) {
-
+ValidationResult DateTimeValidator::convert_calendar_system(const std::string& date_str,
+                                                            const std::string& from_calendar,
+                                                            const std::string& to_calendar) {
   // Validate input date
   auto basic_result = validate_date(date_str);
   if (!basic_result.is_valid) {
@@ -299,7 +294,7 @@ ValidationResult DateTimeValidator::convert_calendar_system(
     int jdn = day + (153 * m + 2) / 5 + 365 * y + y / 4 - y / 100 + y / 400 - 32045;
 
     // Convert back to Julian calendar
-    (void)0; // Placeholder
+    (void)0;  // Placeholder
     int c = jdn + 32082;
     int d = (4 * c + 3) / 1461;
     int e = c - (1461 * d) / 4;
@@ -310,9 +305,8 @@ ValidationResult DateTimeValidator::convert_calendar_system(
     int julian_year = d - 4800 + f / 10;
 
     std::ostringstream oss;
-    oss << std::setfill('0') << std::setw(4) << julian_year << "-"
-        << std::setw(2) << julian_month << "-"
-        << std::setw(2) << julian_day;
+    oss << std::setfill('0') << std::setw(4) << julian_year << "-" << std::setw(2) << julian_month
+        << "-" << std::setw(2) << julian_day;
 
     ValidationResult result;
     result.is_valid = true;
@@ -340,9 +334,8 @@ ValidationResult DateTimeValidator::convert_calendar_system(
     int greg_year = 100 * c + e - 4800 + g / 10;
 
     std::ostringstream oss;
-    oss << std::setfill('0') << std::setw(4) << greg_year << "-"
-        << std::setw(2) << greg_month << "-"
-        << std::setw(2) << greg_day;
+    oss << std::setfill('0') << std::setw(4) << greg_year << "-" << std::setw(2) << greg_month
+        << "-" << std::setw(2) << greg_day;
 
     ValidationResult result;
     result.is_valid = true;
@@ -356,7 +349,8 @@ ValidationResult DateTimeValidator::convert_calendar_system(
   } else {
     ValidationResult result;
     result.is_valid = false;
-    result.error_message = "Unsupported calendar conversion: " + from_calendar + " to " + to_calendar;
+    result.error_message =
+        "Unsupported calendar conversion: " + from_calendar + " to " + to_calendar;
     result.suggestions.push_back("Gregorian");
     result.suggestions.push_back("Julian");
     return result;
@@ -542,12 +536,11 @@ ValidationResult StringValidator::sanitize_input(const std::string& str) {
   std::string result = str;
 
   // Remove control characters (ASCII 0-31 except tab, newline, carriage return)
-  result.erase(std::remove_if(
-                   result.begin(), result.end(),
-                   [](char c) {
-                     auto uc = static_cast<unsigned char>(c);
-                     return uc < 32 && c != '\t' && c != '\n' && c != '\r';
-                   }),
+  result.erase(std::remove_if(result.begin(), result.end(),
+                              [](char c) {
+                                auto uc = static_cast<unsigned char>(c);
+                                return uc < 32 && c != '\t' && c != '\n' && c != '\r';
+                              }),
                result.end());
 
   // Trim whitespace
@@ -634,7 +627,8 @@ ValidationResult StringValidator::validate_json(const std::string& str) {
         if (brace_count < 0) {
           ValidationResult result;
           result.is_valid = false;
-          result.error_message = "Unexpected '}' at line " + std::to_string(line) + ", column " + std::to_string(column);
+          result.error_message = "Unexpected '}' at line " + std::to_string(line) + ", column " +
+                                 std::to_string(column);
           result.suggestions.push_back("Check for mismatched braces");
           return result;
         }
@@ -647,7 +641,8 @@ ValidationResult StringValidator::validate_json(const std::string& str) {
         if (bracket_count < 0) {
           ValidationResult result;
           result.is_valid = false;
-          result.error_message = "Unexpected ']' at line " + std::to_string(line) + ", column " + std::to_string(column);
+          result.error_message = "Unexpected ']' at line " + std::to_string(line) + ", column " +
+                                 std::to_string(column);
           result.suggestions.push_back("Check for mismatched brackets");
           return result;
         }
@@ -658,7 +653,8 @@ ValidationResult StringValidator::validate_json(const std::string& str) {
   if (brace_count != 0) {
     ValidationResult result;
     result.is_valid = false;
-    result.error_message = "Mismatched braces - missing " + std::to_string(brace_count) + " closing brace(s)";
+    result.error_message =
+        "Mismatched braces - missing " + std::to_string(brace_count) + " closing brace(s)";
     result.suggestions.push_back("Ensure all '{' have matching '}'");
     return result;
   }
@@ -666,7 +662,8 @@ ValidationResult StringValidator::validate_json(const std::string& str) {
   if (bracket_count != 0) {
     ValidationResult result;
     result.is_valid = false;
-    result.error_message = "Mismatched brackets - missing " + std::to_string(bracket_count) + " closing bracket(s)";
+    result.error_message =
+        "Mismatched brackets - missing " + std::to_string(bracket_count) + " closing bracket(s)";
     result.suggestions.push_back("Ensure all '[' have matching ']'");
     return result;
   }
@@ -682,8 +679,7 @@ ValidationResult StringValidator::validate_json(const std::string& str) {
   // Check for common JSON syntax errors using simple string patterns
   // Look for missing commas (simplified check)
   if (trimmed.find("}\n  \"") != std::string::npos ||
-      trimmed.find("}\r\n  \"") != std::string::npos ||
-      trimmed.find("} \"") != std::string::npos) {
+      trimmed.find("}\r\n  \"") != std::string::npos || trimmed.find("} \"") != std::string::npos) {
     ValidationResult result;
     result.is_valid = false;
     result.error_message = "Missing comma between key-value pairs";
@@ -705,7 +701,8 @@ ValidationResult StringValidator::validate_json(const std::string& str) {
     if (next_pos < trimmed.length() && trimmed[next_pos] == '"') {
       // Look backwards from the newline to find the last non-whitespace character
       size_t prev_pos = pos - 1;
-      while (prev_pos > 0 && (trimmed[prev_pos] == ' ' || trimmed[prev_pos] == '\t' || trimmed[prev_pos] == '\r')) {
+      while (prev_pos > 0 &&
+             (trimmed[prev_pos] == ' ' || trimmed[prev_pos] == '\t' || trimmed[prev_pos] == '\r')) {
         prev_pos--;
       }
 
@@ -725,8 +722,7 @@ ValidationResult StringValidator::validate_json(const std::string& str) {
 }
 
 // InputValidator implementation
-ValidationResult InputValidator::validate_argument(const std::string& ,
-                                                   const std::string& value,
+ValidationResult InputValidator::validate_argument(const std::string&, const std::string& value,
                                                    const std::string& expected_type) {
   if (expected_type == "date") {
     return DateTimeValidator::validate_date(value);

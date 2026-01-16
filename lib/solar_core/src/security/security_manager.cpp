@@ -5,18 +5,18 @@
 
 #include "solar_core/security/security_manager.hpp"
 
+#include <openssl/evp.h>
+#include <openssl/rand.h>
+#include <openssl/sha.h>
+
 #include <algorithm>
 #include <chrono>
+#include <cstring>
 #include <iomanip>
 #include <mutex>
 #include <random>
 #include <sstream>
 #include <unordered_map>
-#include <cstring>
-
-#include <openssl/evp.h>
-#include <openssl/rand.h>
-#include <openssl/sha.h>
 
 #include "solar_utils/logging.hpp"
 
@@ -29,11 +29,16 @@ using namespace SolarSystem::Utils;
  */
 std::string to_string(UserRole role) {
   switch (role) {
-    case UserRole::GUEST: return "GUEST";
-    case UserRole::USER: return "USER";
-    case UserRole::ADMIN: return "ADMIN";
-    case UserRole::SUPER_ADMIN: return "SUPER_ADMIN";
-    default: return "UNKNOWN";
+    case UserRole::GUEST:
+      return "GUEST";
+    case UserRole::USER:
+      return "USER";
+    case UserRole::ADMIN:
+      return "ADMIN";
+    case UserRole::SUPER_ADMIN:
+      return "SUPER_ADMIN";
+    default:
+      return "UNKNOWN";
   }
 }
 
@@ -64,19 +69,16 @@ std::string PasswordHasher::hash(const std::string& password) {
   // Derive key using PBKDF2
   if (PKCS5_PBKDF2_HMAC(password.c_str(), static_cast<int>(password.size()),
                         reinterpret_cast<const unsigned char*>(salt.c_str()),
-                        static_cast<int>(salt.size()),
-                        iterations, EVP_sha256(),
-                        key_length, derived_key) != 1) {
+                        static_cast<int>(salt.size()), iterations, EVP_sha256(), key_length,
+                        derived_key) != 1) {
     // Fallback to SHA-256 if PBKDF2 fails
     unsigned char hash_bytes[SHA256_DIGEST_LENGTH];
     std::string salted = password + salt;
-    SHA256(reinterpret_cast<const unsigned char*>(salted.c_str()),
-           salted.size(), hash_bytes);
+    SHA256(reinterpret_cast<const unsigned char*>(salted.c_str()), salted.size(), hash_bytes);
 
     std::ostringstream oss;
     for (int i = 0; i < SHA256_DIGEST_LENGTH; ++i) {
-      oss << std::hex << std::setfill('0') << std::setw(2)
-          << static_cast<int>(hash_bytes[i]);
+      oss << std::hex << std::setfill('0') << std::setw(2) << static_cast<int>(hash_bytes[i]);
     }
     return oss.str() + ":" + salt;
   }
@@ -84,8 +86,7 @@ std::string PasswordHasher::hash(const std::string& password) {
   // Convert derived key to hex string
   std::ostringstream oss;
   for (int i = 0; i < key_length; ++i) {
-    oss << std::hex << std::setfill('0') << std::setw(2)
-        << static_cast<int>(derived_key[i]);
+    oss << std::hex << std::setfill('0') << std::setw(2) << static_cast<int>(derived_key[i]);
   }
 
   return oss.str() + ":" + salt;
@@ -108,25 +109,21 @@ bool PasswordHasher::verify(const std::string& password, const std::string& hash
   // Derive key using PBKDF2
   if (PKCS5_PBKDF2_HMAC(password.c_str(), static_cast<int>(password.size()),
                         reinterpret_cast<const unsigned char*>(salt.c_str()),
-                        static_cast<int>(salt.size()),
-                        iterations, EVP_sha256(),
-                        key_length, derived_key) != 1) {
+                        static_cast<int>(salt.size()), iterations, EVP_sha256(), key_length,
+                        derived_key) != 1) {
     return false;
   }
 
   // Convert derived key to hex string
   std::ostringstream oss;
   for (int i = 0; i < key_length; ++i) {
-    oss << std::hex << std::setfill('0') << std::setw(2)
-        << static_cast<int>(derived_key[i]);
+    oss << std::hex << std::setfill('0') << std::setw(2) << static_cast<int>(derived_key[i]);
   }
 
   return oss.str() == stored_hash;
 }
 
-std::string PasswordHasher::generate_salt() {
-  return TokenGenerator::generate(16);
-}
+std::string PasswordHasher::generate_salt() { return TokenGenerator::generate(16); }
 
 /**
  * @brief Token generator implementation
@@ -180,11 +177,12 @@ struct SecurityManager::Impl {
   SecurityConfig config;
   std::unordered_map<std::string, User> users;
   std::unordered_map<std::string, std::string> passwords;  // user_id -> hashed_password
-  std::unordered_map<std::string, AuthToken> tokens;  // token -> AuthToken
+  std::unordered_map<std::string, AuthToken> tokens;       // token -> AuthToken
   std::unordered_map<std::string, std::vector<std::string>> user_tokens;  // user_id -> tokens
   std::vector<SecurityEvent> events;
   std::unordered_map<std::string, size_t> failed_attempts;  // user_id -> count
-  std::unordered_map<std::string, std::chrono::system_clock::time_point> lockouts;  // user_id -> unlock_time
+  std::unordered_map<std::string, std::chrono::system_clock::time_point>
+      lockouts;  // user_id -> unlock_time
 
   mutable std::mutex mutex;
   SecurityEventCallback event_callback;
@@ -196,15 +194,10 @@ struct SecurityManager::Impl {
     admin.username = "admin";
     admin.email = "admin@solarsystem.local";
     admin.role = UserRole::SUPER_ADMIN;
-    admin.permissions = {
-        Permission::READ_DATA,
-        Permission::WRITE_DATA,
-        Permission::EXECUTE_SIMULATION,
-        Permission::MANAGE_USERS,
-        Permission::CONFIGURE_SYSTEM,
-        Permission::VIEW_LOGS,
-        Permission::MANAGE_SECURITY
-    };
+    admin.permissions = {Permission::READ_DATA,          Permission::WRITE_DATA,
+                         Permission::EXECUTE_SIMULATION, Permission::MANAGE_USERS,
+                         Permission::CONFIGURE_SYSTEM,   Permission::VIEW_LOGS,
+                         Permission::MANAGE_SECURITY};
     admin.created_at = std::chrono::system_clock::now();
     admin.is_active = true;
 
@@ -270,10 +263,9 @@ std::optional<AuthToken> SecurityManager::authenticate(const Credentials& creden
   std::lock_guard<std::mutex> lock(impl_->mutex);
 
   // Find user by username
-  auto user_it = std::find_if(impl_->users.begin(), impl_->users.end(),
-                               [&](const auto& pair) {
-                                 return pair.second.username == credentials.username;
-                               });
+  auto user_it = std::find_if(impl_->users.begin(), impl_->users.end(), [&](const auto& pair) {
+    return pair.second.username == credentials.username;
+  });
 
   if (user_it == impl_->users.end()) {
     LOG_WARN("SecurityManager", "Authentication failed: user not found");
@@ -415,9 +407,8 @@ void SecurityManager::revoke_token(const std::string& token) {
   if (it != impl_->tokens.end()) {
     // Remove from user_tokens
     auto& user_token_list = impl_->user_tokens[it->second.user_id];
-    user_token_list.erase(
-        std::remove(user_token_list.begin(), user_token_list.end(), token),
-        user_token_list.end());
+    user_token_list.erase(std::remove(user_token_list.begin(), user_token_list.end(), token),
+                          user_token_list.end());
 
     impl_->tokens.erase(it);
 
@@ -494,11 +485,8 @@ std::vector<SecurityEvent> SecurityManager::get_security_events(
   }
 
   std::vector<SecurityEvent> filtered;
-  std::copy_if(impl_->events.begin(), impl_->events.end(),
-               std::back_inserter(filtered),
-               [since](const SecurityEvent& event) {
-                 return event.timestamp >= since;
-               });
+  std::copy_if(impl_->events.begin(), impl_->events.end(), std::back_inserter(filtered),
+               [since](const SecurityEvent& event) { return event.timestamp >= since; });
 
   return filtered;
 }

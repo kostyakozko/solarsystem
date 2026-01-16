@@ -5,10 +5,10 @@
 
 #pragma once
 
+#include <memory>
+
 #include "solar_core/connection/connection_manager.hpp"
 #include "solar_core/streaming/realtime_stream.hpp"
-
-#include <memory>
 
 namespace SolarSystem::Connection {
 
@@ -20,9 +20,8 @@ class StreamingConnection : public IConnection {
   /**
    * @brief Construct streaming connection
    */
-  explicit StreamingConnection(
-      std::string id,
-      std::shared_ptr<SolarSystem::Streaming::RealtimeStream> stream);
+  explicit StreamingConnection(std::string id,
+                               std::shared_ptr<SolarSystem::Streaming::RealtimeStream> stream);
 
   /**
    * @brief Destructor

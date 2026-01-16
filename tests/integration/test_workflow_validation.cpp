@@ -10,202 +10,197 @@
  */
 
 #include <gtest/gtest.h>
-#include "solar_core/simulation/simulation_engine.hpp"
-#include "solar_jpl/jpl_client.hpp"
 
 #include <chrono>
 #include <filesystem>
 #include <fstream>
 #include <thread>
 
+#include "solar_core/simulation/simulation_engine.hpp"
+#include "solar_jpl/jpl_client.hpp"
+
 using namespace SolarSystem;
 
 namespace fs = std::filesystem;
-  // Test 1: JPL Client Initialization
-  TEST(WorkflowValidationTestsTest, JPL_Client_Initialization) {
-    SolarSystem::JPL::JPLClient client;
-    // Basic initialization test - client should be created successfully
-    ASSERT_TRUE(true);  // If we get here, initialization succeeded
+// Test 1: JPL Client Initialization
+TEST(WorkflowValidationTestsTest, JPL_Client_Initialization) {
+  SolarSystem::JPL::JPLClient client;
+  // Basic initialization test - client should be created successfully
+  ASSERT_TRUE(true);  // If we get here, initialization succeeded
+}
+
+// Test 2: Simulation Engine Initialization
+TEST(WorkflowValidationTestsTest, Simulation_Engine_Initialization) {
+  SolarSystem::Simulation::SimulationEngine engine;
+  // Basic initialization test - engine should be created successfully
+  ASSERT_TRUE(true);  // If we get here, initialization succeeded
+}
+
+// Test 3: File System Operations for Workflow
+TEST(WorkflowValidationTestsTest, File_System_Operations_for_Workflow) {
+  // Create temporary directory for workflow testing
+  fs::path temp_dir = fs::temp_directory_path() / "test_workflow";
+  fs::create_directories(temp_dir);
+
+  ASSERT_TRUE(fs::exists(temp_dir));
+  ASSERT_TRUE(fs::is_directory(temp_dir));
+
+  // Create a test file
+  fs::path test_file = temp_dir / "test_data.txt";
+  std::ofstream out(test_file);
+  out << "Test workflow data\n";
+  out.close();
+
+  ASSERT_TRUE(fs::exists(test_file));
+
+  // Read the file back
+  std::ifstream in(test_file);
+  std::string content;
+  std::getline(in, content);
+  in.close();
+
+  ASSERT_EQ(content, std::string("Test workflow data"));
+
+  // Cleanup
+  fs::remove_all(temp_dir);
+  ASSERT_FALSE(fs::exists(temp_dir));
+}
+
+// Test 4: Workflow Timing and Performance
+TEST(WorkflowValidationTestsTest, Workflow_Timing_and_Performance) {
+  auto start = std::chrono::high_resolution_clock::now();
+
+  // Simulate some workflow operations
+  std::this_thread::sleep_for(std::chrono::milliseconds(10));
+
+  auto end = std::chrono::high_resolution_clock::now();
+  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+
+  // Verify timing works correctly
+  ASSERT_TRUE(duration.count() >= 10);
+  ASSERT_TRUE(duration.count() < 1000);  // Should complete quickly
+}
+
+// Test 5: Error Recovery Workflow Simulation
+TEST(WorkflowValidationTestsTest, Error_Recovery_Workflow_Simulation) {
+  // Simulate error detection
+  bool error_detected = true;
+  ASSERT_TRUE(error_detected);
+
+  // Simulate recovery attempt
+  bool recovery_attempted = true;
+  ASSERT_TRUE(recovery_attempted);
+
+  // Simulate successful recovery
+  bool recovery_successful = true;
+  ASSERT_TRUE(recovery_successful);
+}
+
+// Test 6: Data Pipeline Workflow
+TEST(WorkflowValidationTestsTest, Data_Pipeline_Workflow) {
+  // Step 1: Data generation
+  std::vector<double> data = {1.0, 2.0, 3.0, 4.0, 5.0};
+  ASSERT_EQ(data.size(), 5u);
+
+  // Step 2: Data processing (simple transformation)
+  for (auto& value : data) {
+    value *= 2.0;
   }
 
-  // Test 2: Simulation Engine Initialization
-  TEST(WorkflowValidationTestsTest, Simulation_Engine_Initialization) {
-    SolarSystem::Simulation::SimulationEngine engine;
-    // Basic initialization test - engine should be created successfully
-    ASSERT_TRUE(true);  // If we get here, initialization succeeded
+  // Step 3: Data validation
+  ASSERT_EQ(data[0], 2.0);
+  ASSERT_EQ(data[4], 10.0);
+
+  // Step 4: Data aggregation
+  double sum = 0.0;
+  for (const auto& value : data) {
+    sum += value;
   }
 
-  // Test 3: File System Operations for Workflow
-  TEST(WorkflowValidationTestsTest, File_System_Operations_for_Workflow) {
-    // Create temporary directory for workflow testing
-    fs::path temp_dir = fs::temp_directory_path() / "test_workflow";
-    fs::create_directories(temp_dir);
+  ASSERT_EQ(sum, 30.0);  // 2+4+6+8+10 = 30
+}
 
-    ASSERT_TRUE(fs::exists(temp_dir));
-    ASSERT_TRUE(fs::is_directory(temp_dir));
+// Test 7: Multi-Step Workflow with Checkpoints
+TEST(WorkflowValidationTestsTest, Multi_Step_Workflow_with_Checkpoints) {
+  int workflow_step = 0;
 
-    // Create a test file
-    fs::path test_file = temp_dir / "test_data.txt";
-    std::ofstream out(test_file);
-    out << "Test workflow data\n";
-    out.close();
+  // Step 1: Initialize
+  workflow_step = 1;
+  ASSERT_EQ(workflow_step, 1);
 
-    ASSERT_TRUE(fs::exists(test_file));
+  // Step 2: Process
+  workflow_step = 2;
+  ASSERT_EQ(workflow_step, 2);
 
-    // Read the file back
-    std::ifstream in(test_file);
-    std::string content;
-    std::getline(in, content);
-    in.close();
+  // Step 3: Validate
+  workflow_step = 3;
+  ASSERT_EQ(workflow_step, 3);
 
-    ASSERT_EQ(content, std::string("Test workflow data"));
+  // Step 4: Complete
+  workflow_step = 4;
+  ASSERT_EQ(workflow_step, 4);
 
-    // Cleanup
-    fs::remove_all(temp_dir);
-    ASSERT_FALSE(fs::exists(temp_dir));
-  }
+  // Verify all steps completed
+  ASSERT_TRUE(workflow_step == 4);
+}
 
-  // Test 4: Workflow Timing and Performance
-  TEST(WorkflowValidationTestsTest, Workflow_Timing_and_Performance) {
-    auto start = std::chrono::high_resolution_clock::now();
+// Test 8: Concurrent Workflow Operations
+TEST(WorkflowValidationTestsTest, Concurrent_Workflow_Operations) {
+  std::atomic<int> counter{0};
 
-    // Simulate some workflow operations
-    std::this_thread::sleep_for(std::chrono::milliseconds(10));
-
-    auto end = std::chrono::high_resolution_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-
-    // Verify timing works correctly
-    ASSERT_TRUE(duration.count() >= 10);
-    ASSERT_TRUE(duration.count() < 1000);  // Should complete quickly
-  }
-
-  // Test 5: Error Recovery Workflow Simulation
-  TEST(WorkflowValidationTestsTest, Error_Recovery_Workflow_Simulation) {
-    // Simulate error detection
-    bool error_detected = true;
-    ASSERT_TRUE(error_detected);
-
-    // Simulate recovery attempt
-    bool recovery_attempted = true;
-    ASSERT_TRUE(recovery_attempted);
-
-    // Simulate successful recovery
-    bool recovery_successful = true;
-    ASSERT_TRUE(recovery_successful);
-  }
-
-  // Test 6: Data Pipeline Workflow
-  TEST(WorkflowValidationTestsTest, Data_Pipeline_Workflow) {
-    // Step 1: Data generation
-    std::vector<double> data = {1.0, 2.0, 3.0, 4.0, 5.0};
-    ASSERT_EQ(data.size(), 5u);
-
-    // Step 2: Data processing (simple transformation)
-    for (auto& value : data) {
-      value *= 2.0;
+  // Simulate concurrent operations
+  auto increment_task = [&counter]() {
+    for (int i = 0; i < 100; ++i) {
+      counter++;
     }
+  };
 
-    // Step 3: Data validation
-    ASSERT_EQ(data[0], 2.0);
-    ASSERT_EQ(data[4], 10.0);
+  std::thread t1(increment_task);
+  std::thread t2(increment_task);
 
-    // Step 4: Data aggregation
-    double sum = 0.0;
-    for (const auto& value : data) {
-      sum += value;
-    }
+  t1.join();
+  t2.join();
 
-    ASSERT_EQ(sum, 30.0);  // 2+4+6+8+10 = 30
-  }
+  // Verify atomic operations worked correctly
+  ASSERT_EQ(counter.load(), 200);
+}
 
-  // Test 7: Multi-Step Workflow with Checkpoints
-  TEST(WorkflowValidationTestsTest, Multi_Step_Workflow_with_Checkpoints) {
-    int workflow_step = 0;
+// Test 9: Workflow State Management
+TEST(WorkflowValidationTestsTest, Workflow_State_Management) {
+  enum class WorkflowState { IDLE, RUNNING, PAUSED, COMPLETED, FAILED };
 
-    // Step 1: Initialize
-    workflow_step = 1;
-    ASSERT_EQ(workflow_step, 1);
+  WorkflowState state = WorkflowState::IDLE;
+  ASSERT_TRUE(state == WorkflowState::IDLE);
 
-    // Step 2: Process
-    workflow_step = 2;
-    ASSERT_EQ(workflow_step, 2);
+  // Transition to running
+  state = WorkflowState::RUNNING;
+  ASSERT_TRUE(state == WorkflowState::RUNNING);
 
-    // Step 3: Validate
-    workflow_step = 3;
-    ASSERT_EQ(workflow_step, 3);
+  // Transition to completed
+  state = WorkflowState::COMPLETED;
+  ASSERT_TRUE(state == WorkflowState::COMPLETED);
+}
 
-    // Step 4: Complete
-    workflow_step = 4;
-    ASSERT_EQ(workflow_step, 4);
+// Test 10: Workflow Resource Cleanup
+TEST(WorkflowValidationTestsTest, Workflow_Resource_Cleanup) {
+  // Create temporary resources
+  fs::path temp_dir = fs::temp_directory_path() / "test_cleanup";
+  fs::create_directories(temp_dir);
 
-    // Verify all steps completed
-    ASSERT_TRUE(workflow_step == 4);
-  }
+  fs::path file1 = temp_dir / "file1.txt";
+  fs::path file2 = temp_dir / "file2.txt";
 
-  // Test 8: Concurrent Workflow Operations
-  TEST(WorkflowValidationTestsTest, Concurrent_Workflow_Operations) {
-    std::atomic<int> counter{0};
+  std::ofstream(file1) << "data1";
+  std::ofstream(file2) << "data2";
 
-    // Simulate concurrent operations
-    auto increment_task = [&counter]() {
-      for (int i = 0; i < 100; ++i) {
-        counter++;
-      }
-    };
+  ASSERT_TRUE(fs::exists(file1));
+  ASSERT_TRUE(fs::exists(file2));
 
-    std::thread t1(increment_task);
-    std::thread t2(increment_task);
+  // Cleanup all resources
+  fs::remove_all(temp_dir);
 
-    t1.join();
-    t2.join();
-
-    // Verify atomic operations worked correctly
-    ASSERT_EQ(counter.load(), 200);
-  }
-
-  // Test 9: Workflow State Management
-  TEST(WorkflowValidationTestsTest, Workflow_State_Management) {
-    enum class WorkflowState {
-      IDLE,
-      RUNNING,
-      PAUSED,
-      COMPLETED,
-      FAILED
-    };
-
-    WorkflowState state = WorkflowState::IDLE;
-    ASSERT_TRUE(state == WorkflowState::IDLE);
-
-    // Transition to running
-    state = WorkflowState::RUNNING;
-    ASSERT_TRUE(state == WorkflowState::RUNNING);
-
-    // Transition to completed
-    state = WorkflowState::COMPLETED;
-    ASSERT_TRUE(state == WorkflowState::COMPLETED);
-  }
-
-  // Test 10: Workflow Resource Cleanup
-  TEST(WorkflowValidationTestsTest, Workflow_Resource_Cleanup) {
-    // Create temporary resources
-    fs::path temp_dir = fs::temp_directory_path() / "test_cleanup";
-    fs::create_directories(temp_dir);
-
-    fs::path file1 = temp_dir / "file1.txt";
-    fs::path file2 = temp_dir / "file2.txt";
-
-    std::ofstream(file1) << "data1";
-    std::ofstream(file2) << "data2";
-
-    ASSERT_TRUE(fs::exists(file1));
-    ASSERT_TRUE(fs::exists(file2));
-
-    // Cleanup all resources
-    fs::remove_all(temp_dir);
-
-    // Verify cleanup
-    ASSERT_FALSE(fs::exists(temp_dir));
-    ASSERT_FALSE(fs::exists(file1));
-    ASSERT_FALSE(fs::exists(file2));
-  }
+  // Verify cleanup
+  ASSERT_FALSE(fs::exists(temp_dir));
+  ASSERT_FALSE(fs::exists(file1));
+  ASSERT_FALSE(fs::exists(file2));
+}

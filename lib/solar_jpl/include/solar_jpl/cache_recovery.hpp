@@ -18,8 +18,8 @@
 #include <string>
 #include <vector>
 
-#include "solar_jpl/export.hpp"
 #include "jpl_client.hpp"
+#include "solar_jpl/export.hpp"
 
 namespace SolarSystem::JPL {
 
@@ -27,12 +27,12 @@ namespace SolarSystem::JPL {
  * @brief Recovery strategy types
  */
 enum class RecoveryStrategy {
-  CrossFormatRecovery,      // Recover from alternate format (binary/JSON)
-  BackupRestoration,        // Restore from backup
-  PartialReconstruction,    // Reconstruct from partial data
-  MetadataRegeneration,     // Regenerate metadata
-  FreshFetch,               // Clear and fetch fresh data
-  UserGuided                // Interactive user-guided recovery
+  CrossFormatRecovery,    // Recover from alternate format (binary/JSON)
+  BackupRestoration,      // Restore from backup
+  PartialReconstruction,  // Reconstruct from partial data
+  MetadataRegeneration,   // Regenerate metadata
+  FreshFetch,             // Clear and fetch fresh data
+  UserGuided              // Interactive user-guided recovery
 };
 
 /**
@@ -87,8 +87,7 @@ class SOLAR_JPL_API CacheRecoveryManager {
   /**
    * @brief Attempt automatic recovery
    */
-  [[nodiscard]] RecoveryResult attempt_automatic_recovery(
-      const RecoveryOptions& options = {});
+  [[nodiscard]] RecoveryResult attempt_automatic_recovery(const RecoveryOptions& options = {});
 
   /**
    * @brief Recover from cross-format (binary <-> JSON)
@@ -165,26 +164,22 @@ class SOLAR_JPL_API CacheRecoveryManager {
   /**
    * @brief Save data to binary cache
    */
-  [[nodiscard]] JPLVoidResult save_binary_cache(
-      const std::vector<EphemerisData>& data) const;
+  [[nodiscard]] JPLVoidResult save_binary_cache(const std::vector<EphemerisData>& data) const;
 
   /**
    * @brief Save data to JSON cache
    */
-  [[nodiscard]] JPLVoidResult save_json_cache(
-      const std::vector<EphemerisData>& data) const;
+  [[nodiscard]] JPLVoidResult save_json_cache(const std::vector<EphemerisData>& data) const;
 
   /**
    * @brief Calculate checksum for data
    */
-  [[nodiscard]] uint64_t calculate_checksum(
-      const std::vector<EphemerisData>& data) const;
+  [[nodiscard]] uint64_t calculate_checksum(const std::vector<EphemerisData>& data) const;
 
   /**
    * @brief Validate recovered data
    */
-  [[nodiscard]] bool validate_recovered_data(
-      const std::vector<EphemerisData>& data) const;
+  [[nodiscard]] bool validate_recovered_data(const std::vector<EphemerisData>& data) const;
 
   /**
    * @brief Merge partial data from multiple sources
@@ -216,4 +211,3 @@ namespace RecoveryUtils {
 }  // namespace RecoveryUtils
 
 }  // namespace SolarSystem::JPL
-

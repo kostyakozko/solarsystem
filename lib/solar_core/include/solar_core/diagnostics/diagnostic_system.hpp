@@ -20,12 +20,7 @@ namespace SolarSystem::Diagnostics {
 /**
  * @brief Diagnostic severity levels
  */
-enum class DiagnosticSeverity {
-  INFO,
-  WARNING,
-  ERROR,
-  CRITICAL
-};
+enum class DiagnosticSeverity { INFO, WARNING, ERROR, CRITICAL };
 
 /**
  * @brief Diagnostic category
@@ -71,8 +66,7 @@ struct DiagnosticCheckResult {
   std::vector<DiagnosticIssue> issues;
   std::chrono::milliseconds duration;
 
-  DiagnosticCheckResult()
-      : passed(true), duration(0) {}
+  DiagnosticCheckResult() : passed(true), duration(0) {}
 };
 
 /**
@@ -95,20 +89,14 @@ struct DiagnosticCheck {
   DiagnosticCheckFunc check_func;
   bool enabled;
 
-  DiagnosticCheck()
-      : category(DiagnosticCategory::SYSTEM), enabled(true) {}
+  DiagnosticCheck() : category(DiagnosticCategory::SYSTEM), enabled(true) {}
 };
 
 /**
  * @brief System health status
  */
 struct SystemHealth {
-  enum class Status {
-    HEALTHY,
-    DEGRADED,
-    UNHEALTHY,
-    CRITICAL
-  };
+  enum class Status { HEALTHY, DEGRADED, UNHEALTHY, CRITICAL };
 
   Status status;
   int total_checks;
@@ -143,7 +131,7 @@ struct DiagnosticReport {
  * @brief Diagnostic system
  */
 class SOLAR_CORE_API DiagnosticSystem {
-public:
+ public:
   static DiagnosticSystem& instance();
 
   // Check registration
@@ -182,7 +170,7 @@ public:
   void collect_system_info();
   std::map<std::string, std::string> get_system_info() const;
 
-private:
+ private:
   DiagnosticSystem() = default;
 
   mutable std::mutex mutex_;
@@ -197,7 +185,7 @@ private:
  * @brief Built-in diagnostic checks
  */
 class SOLAR_CORE_API BuiltInChecks {
-public:
+ public:
   static SOLAR_CORE_API DiagnosticCheckResult check_memory_usage();
   static SOLAR_CORE_API DiagnosticCheckResult check_disk_space();
   static SOLAR_CORE_API DiagnosticCheckResult check_file_permissions();
@@ -211,7 +199,7 @@ public:
  * @brief Troubleshooting assistant
  */
 class SOLAR_CORE_API TroubleshootingAssistant {
-public:
+ public:
   static TroubleshootingAssistant& instance();
 
   // Problem detection
@@ -227,7 +215,7 @@ public:
   void add_solution(const std::string& problem_pattern, const std::string& solution);
   std::vector<std::string> find_solutions(const std::string& problem);
 
-private:
+ private:
   TroubleshootingAssistant() = default;
 
   std::mutex mutex_;

@@ -20,7 +20,7 @@ namespace CI {
 // CIArtifactGenerator implementation
 
 bool CIArtifactGenerator::generate_junit_xml(const std::vector<TestSuiteResult>& suites,
-                                              const std::string& output_file) {
+                                             const std::string& output_file) {
   std::ofstream file(output_file);
   if (!file.is_open()) {
     return false;
@@ -32,10 +32,9 @@ bool CIArtifactGenerator::generate_junit_xml(const std::vector<TestSuiteResult>&
 
   // Write each test suite
   for (const auto& suite : suites) {
-    file << "  <testsuite name=\"" << suite.name << "\" tests=\"" << suite.tests
-         << "\" failures=\"" << suite.failures << "\" errors=\"" << suite.errors
-         << "\" skipped=\"" << suite.skipped << "\" time=\"" << std::fixed << std::setpr
-         << suite.time_seconds << "\">\n";
+    file << "  <testsuite name=\"" << suite.name << "\" tests=\"" << suite.tests << "\" failures=\""
+         << suite.failures << "\" errors=\"" << suite.errors << "\" skipped=\"" << suite.skipped
+         << "\" time=\"" << std::fixed << std::setpr << suite.time_seconds << "\">\n";
 
     // Write each test case
     for (const auto& test_case : suite.test_cases) {
@@ -71,8 +70,8 @@ bool CIArtifactGenerator::generate_junit_xml(const std::vector<TestSuiteResult>&
 }
 
 bool CIArtifactGenerator::generate_coverage_report(const std::string& coverage_data_file,
-                                                    const std::string& output_dir,
-                                                    const std::string& format) {
+                                                   const std::string& output_dir,
+                                                   const std::string& format) {
   // Create output directory
   std::filesystem::create_directories(output_dir);
 
@@ -109,7 +108,7 @@ bool CIArtifactGenerator::generate_coverage_report(const std::string& coverage_d
 }
 
 bool CIArtifactGenerator::generate_performance_report(const std::map<std::string, double>& metrics,
-                                                       const std::string& output_file) {
+                                                      const std::string& output_file) {
   std::ofstream file(output_file);
   if (!file.is_open()) {
     return false;
@@ -306,7 +305,8 @@ EnhancedMemoryMonitor::MemoryUsage EnhancedMemoryMonitor::get_current_usage() {
   if (pages > 0 && page_size > 0) {
     size_t total_memory = static_cast<size_t>(pages) * static_cast<size_t>(page_size);
     usage.available_bytes = static_cast<size_t>(avail_pages) * static_cast<size_t>(page_size);
-    usage.usage_percent = (static_cast<double>(usage.rss_bytes) / static_cast<double>(total_memory)) * 100.0;
+    usage.usage_percent =
+        (static_cast<double>(usage.rss_bytes) / static_cast<double>(total_memory)) * 100.0;
   }
 
   // Virtual memory size (approximate)
@@ -339,7 +339,7 @@ size_t EnhancedMemoryMonitor::get_memory_limit() {
 }
 
 bool EnhancedMemoryMonitor::detect_memory_leak(size_t baseline_bytes, size_t current_bytes,
-                                                 double threshold_percent) {
+                                               double threshold_percent) {
   if (baseline_bytes == 0) {
     return false;  // Can't detect leak without baseline
   }
@@ -354,4 +354,3 @@ bool EnhancedMemoryMonitor::detect_memory_leak(size_t baseline_bytes, size_t cur
 
 }  // namespace CI
 }  // namespace TestUtils
-

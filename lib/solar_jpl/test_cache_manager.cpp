@@ -3,11 +3,11 @@
  * @brief Test program for intelligent cache management system
  */
 
+#include <iomanip>
+#include <iostream>
+
 #include "solar_jpl/cache_manager.hpp"
 #include "solar_jpl/jpl_client.hpp"
-
-#include <iostream>
-#include <iomanip>
 
 using namespace SolarSystem::JPL;
 
@@ -17,8 +17,8 @@ void print_statistics(const CacheStatistics& stats) {
   std::cout << "Total writes: " << stats.total_writes << std::endl;
   std::cout << "Cache hits: " << stats.cache_hits << std::endl;
   std::cout << "Cache misses: " << stats.cache_misses << std::endl;
-  std::cout << "Hit ratio: " << std::fixed << std::setprecision(2)
-            << (stats.hit_ratio() * 100.0) << "%" << std::endl;
+  std::cout << "Hit ratio: " << std::fixed << std::setprecision(2) << (stats.hit_ratio() * 100.0)
+            << "%" << std::endl;
 
   std::cout << "\nValidation attempts: " << stats.validation_attempts << std::endl;
   std::cout << "Validation successes: " << stats.validation_successes << std::endl;
@@ -57,7 +57,8 @@ int main() {
     auto validation_result = cache_manager->validate_cache(ValidationLevel::Basic);
     if (is_success(validation_result)) {
       bool is_valid = get_value(validation_result);
-      std::cout << "✓ Cache validation completed. Valid: " << (is_valid ? "Yes" : "No") << std::endl;
+      std::cout << "✓ Cache validation completed. Valid: " << (is_valid ? "Yes" : "No")
+                << std::endl;
     } else {
       std::cout << "✗ Cache validation failed" << std::endl;
     }
@@ -67,8 +68,8 @@ int main() {
     auto health_result = cache_manager->get_cache_health();
     if (is_success(health_result)) {
       double health = get_value(health_result);
-      std::cout << "✓ Cache health: " << std::fixed << std::setprecision(1)
-                << (health * 100.0) << "%" << std::endl;
+      std::cout << "✓ Cache health: " << std::fixed << std::setprecision(1) << (health * 100.0)
+                << "%" << std::endl;
     } else {
       std::cout << "✗ Failed to assess cache health" << std::endl;
     }

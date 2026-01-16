@@ -19,8 +19,8 @@
 #include <unordered_map>
 #include <vector>
 
-#include "solar_jpl/export.hpp"
 #include "jpl_client.hpp"
+#include "solar_jpl/export.hpp"
 
 // Forward declaration to avoid circular dependency
 namespace SolarSystem::JPL {
@@ -65,10 +65,10 @@ enum class ValidationErrorType {
  * @brief Validation severity levels
  */
 enum class ValidationSeverity {
-  Info,      // Informational, no action needed
-  Warning,   // Potential issue, should be reviewed
-  Error,     // Definite problem, needs correction
-  Critical   // Critical issue, data unusable
+  Info,     // Informational, no action needed
+  Warning,  // Potential issue, should be reviewed
+  Error,    // Definite problem, needs correction
+  Critical  // Critical issue, data unusable
 };
 
 /**
@@ -163,7 +163,8 @@ struct SOLAR_JPL_API ValidationReport {
   /**
    * @brief Get issues by severity
    */
-  [[nodiscard]] std::vector<ValidationIssue> get_issues_by_severity(ValidationSeverity severity) const;
+  [[nodiscard]] std::vector<ValidationIssue> get_issues_by_severity(
+      ValidationSeverity severity) const;
 
   /**
    * @brief Generate human-readable summary
@@ -181,17 +182,17 @@ struct SOLAR_JPL_API ValidationReport {
  */
 struct SOLAR_JPL_API DataValidatorConfig {
   // Validation thresholds
-  double position_min_km = 1e3;           // 1,000 km minimum distance
-  double position_max_km = 1e12;          // 1 trillion km maximum distance
-  double velocity_max_km_s = 1e6;         // 1 million km/s maximum velocity
-  double mass_min_kg = 1e10;              // 10 billion kg minimum mass
-  double mass_max_kg = 1e35;              // 10^35 kg maximum mass
+  double position_min_km = 1e3;    // 1,000 km minimum distance
+  double position_max_km = 1e12;   // 1 trillion km maximum distance
+  double velocity_max_km_s = 1e6;  // 1 million km/s maximum velocity
+  double mass_min_kg = 1e10;       // 10 billion kg minimum mass
+  double mass_max_kg = 1e35;       // 10^35 kg maximum mass
 
   // Quality thresholds
-  double completeness_threshold = 0.95;    // 95% completeness required
-  double accuracy_threshold = 0.90;       // 90% accuracy required
-  double consistency_threshold = 0.95;     // 95% consistency required
-  double overall_quality_threshold = 0.85; // 85% overall quality required
+  double completeness_threshold = 0.95;     // 95% completeness required
+  double accuracy_threshold = 0.90;         // 90% accuracy required
+  double consistency_threshold = 0.95;      // 95% consistency required
+  double overall_quality_threshold = 0.85;  // 85% overall quality required
 
   // Validation behavior
   bool enable_cross_format_validation = true;
@@ -202,7 +203,7 @@ struct SOLAR_JPL_API DataValidatorConfig {
 
   // Performance settings
   size_t max_concurrent_validations = 4;
-  std::chrono::seconds validation_timeout = std::chrono::seconds(300); // 5 minutes
+  std::chrono::seconds validation_timeout = std::chrono::seconds(300);  // 5 minutes
   bool enable_detailed_logging = true;
 
   /**
@@ -215,7 +216,7 @@ struct SOLAR_JPL_API DataValidatorConfig {
  * @brief Comprehensive Data Validator
  */
 class SOLAR_JPL_API DataValidator {
-public:
+ public:
   /**
    * @brief Construct data validator with configuration
    */
@@ -237,23 +238,19 @@ public:
   /**
    * @brief Validate individual ephemeris data entry
    */
-  [[nodiscard]] JPLResult<ValidationReport> validate_ephemeris_data(
-    const EphemerisData& data
-  );
+  [[nodiscard]] JPLResult<ValidationReport> validate_ephemeris_data(const EphemerisData& data);
 
   /**
    * @brief Validate collection of ephemeris data
    */
   [[nodiscard]] JPLResult<ValidationReport> validate_ephemeris_collection(
-    const std::vector<EphemerisData>& data_collection
-  );
+      const std::vector<EphemerisData>& data_collection);
 
   /**
    * @brief Validate cache data integrity
    */
   [[nodiscard]] JPLResult<ValidationReport> validate_cache_integrity(
-    const std::filesystem::path& cache_directory
-  );
+      const std::filesystem::path& cache_directory);
 
   // Data Quality Assessment
 
@@ -261,22 +258,19 @@ public:
    * @brief Assess data quality and generate metrics
    */
   [[nodiscard]] JPLResult<DataQualityMetrics> assess_data_quality(
-    const std::vector<EphemerisData>& data_collection
-  );
+      const std::vector<EphemerisData>& data_collection);
 
   /**
    * @brief Generate comprehensive quality report
    */
   [[nodiscard]] JPLResult<ValidationReport> generate_quality_report(
-    const std::vector<EphemerisData>& data_collection
-  );
+      const std::vector<EphemerisData>& data_collection);
 
   /**
    * @brief Validate data against expected statistical distributions
    */
   [[nodiscard]] JPLResult<ValidationReport> validate_statistical_properties(
-    const std::vector<EphemerisData>& data_collection
-  );
+      const std::vector<EphemerisData>& data_collection);
 
   // Format Validation
 
@@ -284,23 +278,19 @@ public:
    * @brief Validate binary cache format
    */
   [[nodiscard]] JPLResult<ValidationReport> validate_binary_format(
-    const std::filesystem::path& binary_file
-  );
+      const std::filesystem::path& binary_file);
 
   /**
    * @brief Validate JSON cache format
    */
   [[nodiscard]] JPLResult<ValidationReport> validate_json_format(
-    const std::filesystem::path& json_file
-  );
+      const std::filesystem::path& json_file);
 
   /**
    * @brief Validate and convert between formats
    */
   [[nodiscard]] JPLResult<ValidationReport> validate_format_conversion(
-    const std::filesystem::path& source_file,
-    const std::filesystem::path& target_file
-  );
+      const std::filesystem::path& source_file, const std::filesystem::path& target_file);
 
   // Consistency Validation
 
@@ -308,24 +298,19 @@ public:
    * @brief Validate consistency between binary and JSON formats
    */
   [[nodiscard]] JPLResult<ValidationReport> validate_cross_format_consistency(
-    const std::filesystem::path& binary_file,
-    const std::filesystem::path& json_file
-  );
+      const std::filesystem::path& binary_file, const std::filesystem::path& json_file);
 
   /**
    * @brief Validate metadata consistency
    */
   [[nodiscard]] JPLResult<ValidationReport> validate_metadata_consistency(
-    const CacheMetadata& metadata,
-    const std::vector<EphemerisData>& actual_data
-  );
+      const CacheMetadata& metadata, const std::vector<EphemerisData>& actual_data);
 
   /**
    * @brief Validate temporal consistency
    */
   [[nodiscard]] JPLResult<ValidationReport> validate_temporal_consistency(
-    const std::vector<EphemerisData>& data_collection
-  );
+      const std::vector<EphemerisData>& data_collection);
 
   // Configuration and Utilities
 
@@ -349,7 +334,7 @@ public:
    */
   void reset_statistics();
 
-private:
+ private:
   DataValidatorConfig config_;
 
   // Validation statistics
@@ -357,87 +342,58 @@ private:
 
   // Internal validation methods
   [[nodiscard]] ValidationIssue create_validation_issue(
-    ValidationErrorType error_type,
-    ValidationSeverity severity,
-    const std::string& description,
-    const std::string& affected_body = "",
-    int affected_jpl_id = -1,
-    const std::string& suggested_action = ""
-  ) const;
+      ValidationErrorType error_type, ValidationSeverity severity, const std::string& description,
+      const std::string& affected_body = "", int affected_jpl_id = -1,
+      const std::string& suggested_action = "") const;
 
   [[nodiscard]] JPLResult<bool> validate_position_vector(
-    const SolarSystem::Math::Vector3d& position,
-    const std::string& body_name,
-    std::vector<ValidationIssue>& issues
-  ) const;
+      const SolarSystem::Math::Vector3d& position, const std::string& body_name,
+      std::vector<ValidationIssue>& issues) const;
 
   [[nodiscard]] JPLResult<bool> validate_velocity_vector(
-    const SolarSystem::Math::Vector3d& velocity,
-    const std::string& body_name,
-    std::vector<ValidationIssue>& issues
-  ) const;
+      const SolarSystem::Math::Vector3d& velocity, const std::string& body_name,
+      std::vector<ValidationIssue>& issues) const;
 
-  [[nodiscard]] JPLResult<bool> validate_mass_value(
-    long double mass,
-    const std::string& body_name,
-    std::vector<ValidationIssue>& issues
-  ) const;
+  [[nodiscard]] JPLResult<bool> validate_mass_value(long double mass, const std::string& body_name,
+                                                    std::vector<ValidationIssue>& issues) const;
 
-  [[nodiscard]] JPLResult<bool> validate_jpl_id(
-    int jpl_id,
-    const std::string& body_name,
-    std::vector<ValidationIssue>& issues
-  ) const;
+  [[nodiscard]] JPLResult<bool> validate_jpl_id(int jpl_id, const std::string& body_name,
+                                                std::vector<ValidationIssue>& issues) const;
 
-  [[nodiscard]] JPLResult<bool> validate_body_name(
-    const std::string& body_name,
-    std::vector<ValidationIssue>& issues
-  ) const;
+  [[nodiscard]] JPLResult<bool> validate_body_name(const std::string& body_name,
+                                                   std::vector<ValidationIssue>& issues) const;
 
-  [[nodiscard]] JPLResult<bool> validate_epoch(
-    const std::chrono::system_clock::time_point& epoch,
-    const std::string& body_name,
-    std::vector<ValidationIssue>& issues
-  ) const;
+  [[nodiscard]] JPLResult<bool> validate_epoch(const std::chrono::system_clock::time_point& epoch,
+                                               const std::string& body_name,
+                                               std::vector<ValidationIssue>& issues) const;
 
   // Statistical validation helpers
   [[nodiscard]] JPLResult<bool> validate_position_distribution(
-    const std::vector<EphemerisData>& data_collection,
-    std::vector<ValidationIssue>& issues
-  ) const;
+      const std::vector<EphemerisData>& data_collection,
+      std::vector<ValidationIssue>& issues) const;
 
   [[nodiscard]] JPLResult<bool> validate_velocity_distribution(
-    const std::vector<EphemerisData>& data_collection,
-    std::vector<ValidationIssue>& issues
-  ) const;
+      const std::vector<EphemerisData>& data_collection,
+      std::vector<ValidationIssue>& issues) const;
 
   [[nodiscard]] JPLResult<bool> validate_mass_distribution(
-    const std::vector<EphemerisData>& data_collection,
-    std::vector<ValidationIssue>& issues
-  ) const;
+      const std::vector<EphemerisData>& data_collection,
+      std::vector<ValidationIssue>& issues) const;
 
   // Format validation helpers
-  [[nodiscard]] JPLResult<bool> validate_binary_header(
-    std::ifstream& file,
-    std::vector<ValidationIssue>& issues
-  ) const;
+  [[nodiscard]] JPLResult<bool> validate_binary_header(std::ifstream& file,
+                                                       std::vector<ValidationIssue>& issues) const;
 
-  [[nodiscard]] JPLResult<bool> validate_json_structure(
-    const std::string& json_content,
-    std::vector<ValidationIssue>& issues
-  ) const;
+  [[nodiscard]] JPLResult<bool> validate_json_structure(const std::string& json_content,
+                                                        std::vector<ValidationIssue>& issues) const;
 
   // Consistency validation helpers
-  [[nodiscard]] JPLResult<bool> compare_ephemeris_data(
-    const EphemerisData& data1,
-    const EphemerisData& data2,
-    double tolerance,
-    std::vector<ValidationIssue>& issues
-  ) const;
+  [[nodiscard]] JPLResult<bool> compare_ephemeris_data(const EphemerisData& data1,
+                                                       const EphemerisData& data2, double tolerance,
+                                                       std::vector<ValidationIssue>& issues) const;
 
   [[nodiscard]] JPLResult<uint64_t> calculate_data_checksum(
-    const std::vector<EphemerisData>& data_collection
-  ) const;
+      const std::vector<EphemerisData>& data_collection) const;
 
   // Utility methods
   void update_statistics(const std::string& operation) const;
@@ -448,7 +404,7 @@ private:
  * @brief Data Validator Factory
  */
 class SOLAR_JPL_API DataValidatorFactory {
-public:
+ public:
   /**
    * @brief Create default data validator
    */
@@ -483,25 +439,21 @@ namespace ValidationUtils {
 /**
  * @brief Check if value is within reasonable astronomical range
  */
-[[nodiscard]] SOLAR_JPL_API bool is_reasonable_astronomical_value(
-  double value,
-  const std::string& value_type
-);
+[[nodiscard]] SOLAR_JPL_API bool is_reasonable_astronomical_value(double value,
+                                                                  const std::string& value_type);
 
 /**
  * @brief Calculate statistical outliers in data collection
  */
 [[nodiscard]] SOLAR_JPL_API std::vector<size_t> find_statistical_outliers(
-  const std::vector<double>& values,
-  double threshold = 3.0  // Standard deviations
+    const std::vector<double>& values,
+    double threshold = 3.0  // Standard deviations
 );
 
 /**
  * @brief Generate validation report summary
  */
-[[nodiscard]] SOLAR_JPL_API std::string generate_validation_summary(
-  const ValidationReport& report
-);
+[[nodiscard]] SOLAR_JPL_API std::string generate_validation_summary(const ValidationReport& report);
 
 }  // namespace ValidationUtils
 

@@ -18,17 +18,16 @@
 #include <functional>
 #include <memory>
 #include <mutex>
-
-#include "solar_utils/export.hpp"
 #include <optional>
 #include <string>
 #include <thread>
 #include <unordered_map>
 #include <vector>
 
-#include "solar_utils/workflow_orchestration.hpp"
 #include "solar_utils/error_handling.hpp"
+#include "solar_utils/export.hpp"
 #include "solar_utils/logging.hpp"
+#include "solar_utils/workflow_orchestration.hpp"
 
 namespace SolarSystem::Utils::Status {
 
@@ -36,37 +35,37 @@ namespace SolarSystem::Utils::Status {
  * @brief System-wide status levels
  */
 enum class SystemStatus {
-  Optimal,      // All components healthy, no issues
-  Healthy,      // Minor warnings but fully functional
-  Degraded,     // Some components have issues but system operational
-  Critical,     // Major issues affecting functionality
-  Failed,       // System not operational
-  Unknown       // Status cannot be determined
+  Optimal,   // All components healthy, no issues
+  Healthy,   // Minor warnings but fully functional
+  Degraded,  // Some components have issues but system operational
+  Critical,  // Major issues affecting functionality
+  Failed,    // System not operational
+  Unknown    // Status cannot be determined
 };
 
 /**
  * @brief Status alert severity levels
  */
 enum class AlertSeverity {
-  Info,         // Informational messages
-  Warning,      // Potential issues that should be monitored
-  Error,        // Issues that affect functionality
-  Critical,     // Severe issues requiring immediate attention
-  Emergency     // System-threatening issues
+  Info,      // Informational messages
+  Warning,   // Potential issues that should be monitored
+  Error,     // Issues that affect functionality
+  Critical,  // Severe issues requiring immediate attention
+  Emergency  // System-threatening issues
 };
 
 /**
  * @brief Status alert types
  */
 enum class AlertType {
-  ComponentHealth,      // Component health changes
-  PerformanceIssue,     // Performance degradation
-  ConnectivityIssue,    // Network/service connectivity problems
-  ResourceExhaustion,   // Resource usage issues
-  SecurityEvent,        // Security-related events
-  ConfigurationIssue,   // Configuration problems
-  DataIntegrity,        // Data validation/integrity issues
-  WorkflowFailure       // Workflow execution failures
+  ComponentHealth,     // Component health changes
+  PerformanceIssue,    // Performance degradation
+  ConnectivityIssue,   // Network/service connectivity problems
+  ResourceExhaustion,  // Resource usage issues
+  SecurityEvent,       // Security-related events
+  ConfigurationIssue,  // Configuration problems
+  DataIntegrity,       // Data validation/integrity issues
+  WorkflowFailure      // Workflow execution failures
 };
 
 /**
@@ -98,8 +97,7 @@ struct PerformanceMetrics {
    * @brief Check if metrics indicate performance issues
    */
   [[nodiscard]] bool has_performance_issues() const {
-    return cpu_usage_percent > 80.0 ||
-           response_time > std::chrono::milliseconds(5000) ||
+    return cpu_usage_percent > 80.0 || response_time > std::chrono::milliseconds(5000) ||
            get_success_rate() < 0.95;
   }
 };
@@ -123,8 +121,9 @@ struct StatusAlert {
   std::unordered_map<std::string, std::string> metadata;
   std::vector<std::string> suggested_actions;
 
-  StatusAlert() : timestamp(std::chrono::system_clock::now()),
-                  expires_at(timestamp + std::chrono::hours(24)) {}
+  StatusAlert()
+      : timestamp(std::chrono::system_clock::now()),
+        expires_at(timestamp + std::chrono::hours(24)) {}
 
   // Make the struct movable and copyable
   StatusAlert(const StatusAlert&) = default;
@@ -181,10 +180,9 @@ struct EnhancedComponentStatus {
    */
   void add_alert(const StatusAlert& alert) {
     // Remove expired alerts
-    active_alerts.erase(
-      std::remove_if(active_alerts.begin(), active_alerts.end(),
-                     [](const StatusAlert& a) { return !a.is_active(); }),
-      active_alerts.end());
+    active_alerts.erase(std::remove_if(active_alerts.begin(), active_alerts.end(),
+                                       [](const StatusAlert& a) { return !a.is_active(); }),
+                        active_alerts.end());
 
     // Add new alert
     active_alerts.push_back(alert);
@@ -207,8 +205,7 @@ struct EnhancedComponentStatus {
   [[nodiscard]] bool needs_attention() const {
     return base_status.health == Workflow::ComponentHealth::Critical ||
            base_status.health == Workflow::ComponentHealth::Failed ||
-           performance.has_performance_issues() ||
-           !active_alerts.empty();
+           performance.has_performance_issues() || !active_alerts.empty();
   }
 };
 
@@ -235,8 +232,7 @@ struct SystemHealthSummary {
    * @brief Check if system is operational
    */
   [[nodiscard]] bool is_operational() const {
-    return overall_status == SystemStatus::Optimal ||
-           overall_status == SystemStatus::Healthy ||
+    return overall_status == SystemStatus::Optimal || overall_status == SystemStatus::Healthy ||
            overall_status == SystemStatus::Degraded;
   }
 
@@ -244,9 +240,9 @@ struct SystemHealthSummary {
    * @brief Get availability percentage
    */
   [[nodiscard]] double get_availability_percentage() const {
-    return total_components > 0 ?
-           static_cast<double>(healthy_components + warning_components) / static_cast<double>(total_components) * 100.0 :
-           100.0;
+    return total_components > 0 ? static_cast<double>(healthy_components + warning_components) /
+                                      static_cast<double>(total_components) * 100.0
+                                : 100.0;
   }
 };
 
@@ -274,8 +270,10 @@ struct StatusDecisionRule {
   std::string id;
   std::string name;
   std::string description;
-  std::function<bool(const SystemHealthSummary&, const std::vector<EnhancedComponentStatus>&)> condition;
-  std::function<void(const SystemHealthSummary&, const std::vector<EnhancedComponentStatus>&)> action;
+  std::function<bool(const SystemHealthSummary&, const std::vector<EnhancedComponentStatus>&)>
+      condition;
+  std::function<void(const SystemHealthSummary&, const std::vector<EnhancedComponentStatus>&)>
+      action;
   bool enabled = true;
   std::chrono::seconds cooldown_period{300};  // 5 minutes
   std::chrono::system_clock::time_point last_triggered;
@@ -285,7 +283,9 @@ struct StatusDecisionRule {
   StatusDecisionRule() : last_triggered(std::chrono::system_clock::time_point::min()) {}
 
   StatusDecisionRule(const std::string& rule_id, const std::string& rule_name)
-      : id(rule_id), name(rule_name), last_triggered(std::chrono::system_clock::time_point::min()) {}
+      : id(rule_id),
+        name(rule_name),
+        last_triggered(std::chrono::system_clock::time_point::min()) {}
 
   /**
    * @brief Check if rule can be triggered
@@ -350,11 +350,9 @@ class SOLAR_UTILS_API RealTimeStatusMonitor {
   /**
    * @brief Register component for enhanced monitoring
    */
-  void register_component(
-      Workflow::ComponentType type,
-      const std::string& name,
-      std::function<Workflow::ComponentStatus()> health_check,
-      std::function<PerformanceMetrics()> performance_check = nullptr);
+  void register_component(Workflow::ComponentType type, const std::string& name,
+                          std::function<Workflow::ComponentStatus()> health_check,
+                          std::function<PerformanceMetrics()> performance_check = nullptr);
 
   /**
    * @brief Unregister component
@@ -406,9 +404,10 @@ class SOLAR_UTILS_API RealTimeStatusMonitor {
     std::chrono::system_clock::time_point last_health_check;
     std::chrono::system_clock::time_point last_performance_check;
 
-    ComponentMonitorInfo() : status(Workflow::ComponentType::Launcher, ""),
-                             last_health_check(std::chrono::system_clock::now()),
-                             last_performance_check(std::chrono::system_clock::now()) {}
+    ComponentMonitorInfo()
+        : status(Workflow::ComponentType::Launcher, ""),
+          last_health_check(std::chrono::system_clock::now()),
+          last_performance_check(std::chrono::system_clock::now()) {}
 
     ComponentMonitorInfo(Workflow::ComponentType type, const std::string& name)
         : status(type, name),
@@ -428,7 +427,8 @@ class SOLAR_UTILS_API RealTimeStatusMonitor {
   void check_component_performance(ComponentMonitorInfo& info);
   void generate_health_alerts(const ComponentMonitorInfo& info);
   std::string get_component_key(Workflow::ComponentType type, const std::string& name) const;
-  SystemStatus calculate_system_status(const std::vector<EnhancedComponentStatus>& components) const;
+  SystemStatus calculate_system_status(
+      const std::vector<EnhancedComponentStatus>& components) const;
 };
 
 /**
@@ -593,16 +593,16 @@ class SOLAR_UTILS_API StatusManager {
   /**
    * @brief Get decision engine
    */
-  [[nodiscard]] std::shared_ptr<StatusDecisionEngine> get_decision_engine() { return decision_engine_; }
+  [[nodiscard]] std::shared_ptr<StatusDecisionEngine> get_decision_engine() {
+    return decision_engine_;
+  }
 
   /**
    * @brief Register component with comprehensive monitoring
    */
-  void register_component(
-      Workflow::ComponentType type,
-      const std::string& name,
-      std::function<Workflow::ComponentStatus()> health_check,
-      std::function<PerformanceMetrics()> performance_check = nullptr);
+  void register_component(Workflow::ComponentType type, const std::string& name,
+                          std::function<Workflow::ComponentStatus()> health_check,
+                          std::function<PerformanceMetrics()> performance_check = nullptr);
 
   /**
    * @brief Get system health summary
@@ -669,13 +669,11 @@ namespace Utils {
 /**
  * @brief Create status alert
  */
-[[nodiscard]] SOLAR_UTILS_API StatusAlert create_alert(
-    AlertType type,
-    AlertSeverity severity,
-    const std::string& title,
-    const std::string& description,
-    const std::string& component_name,
-    Workflow::ComponentType component_type);
+[[nodiscard]] SOLAR_UTILS_API StatusAlert create_alert(AlertType type, AlertSeverity severity,
+                                                       const std::string& title,
+                                                       const std::string& description,
+                                                       const std::string& component_name,
+                                                       Workflow::ComponentType component_type);
 
 /**
  * @brief Calculate component availability
@@ -698,7 +696,8 @@ namespace Utils {
 #define STATUS_IS_OPERATIONAL() \
   SolarSystem::Utils::Status::StatusManager::instance().is_system_operational()
 
-#define STATUS_CREATE_ALERT(type, severity, title, description, component, comp_type) \
-  SolarSystem::Utils::Status::Utils::create_alert(type, severity, title, description, component, comp_type)
+#define STATUS_CREATE_ALERT(type, severity, title, description, component, comp_type)            \
+  SolarSystem::Utils::Status::Utils::create_alert(type, severity, title, description, component, \
+                                                  comp_type)
 
 }  // namespace SolarSystem::Utils::Status

@@ -115,11 +115,12 @@ struct LauncherConfig {
  * @brief JSON configuration parser for LauncherConfig
  */
 class ConfigurationParser {
-public:
+ public:
   /**
    * @brief Parse JSON configuration into LauncherConfig
    */
-  static bool parse_json_config(const std::string& json_content, LauncherConfig& config, std::string* error = nullptr) {
+  static bool parse_json_config(const std::string& json_content, LauncherConfig& config,
+                                std::string* error = nullptr) {
     using namespace SolarSystem::Utils::Validation;
 
     // First, validate JSON syntax using comprehensive validator
@@ -218,25 +219,29 @@ public:
       try {
         int timeout_seconds = std::stoi(timeout_match[1].str());
         if (timeout_seconds <= 0) {
-          if (error) *error = "Invalid timeout_seconds: must be a positive integer (got " + std::to_string(timeout_seconds) + ")";
+          if (error)
+            *error = "Invalid timeout_seconds: must be a positive integer (got " +
+                     std::to_string(timeout_seconds) + ")";
           return false;
         }
         if (timeout_seconds > 86400) {  // 24 hours max
-          if (error) *error = "Invalid timeout_seconds: maximum allowed is 86400 seconds (24 hours), got " + std::to_string(timeout_seconds);
+          if (error)
+            *error = "Invalid timeout_seconds: maximum allowed is 86400 seconds (24 hours), got " +
+                     std::to_string(timeout_seconds);
           return false;
         }
         config.timeout = std::chrono::seconds(timeout_seconds);
       } catch (const std::exception& e) {
-        if (error) *error = "Invalid timeout_seconds value in configuration: " + std::string(e.what());
+        if (error)
+          *error = "Invalid timeout_seconds value in configuration: " + std::string(e.what());
         return false;
       }
     }
 
     // Validate that we don't have unknown keys (basic check)
-    std::vector<std::string> known_keys = {
-      "verbose", "quiet", "batch_mode", "continue_on_error",
-      "show_progress", "auto_fetch", "target_date", "timeout_seconds"
-    };
+    std::vector<std::string> known_keys = {"verbose",           "quiet",          "batch_mode",
+                                           "continue_on_error", "show_progress",  "auto_fetch",
+                                           "target_date",       "timeout_seconds"};
 
     // Simple check for unknown keys by looking for quoted strings that might be keys
     std::regex key_pattern("\"([^\"]+)\"\\s*:");
@@ -270,7 +275,8 @@ public:
   /**
    * @brief Validate configuration for internal conflicts
    */
-  static bool validate_configuration_conflicts(const LauncherConfig& config, std::string* error = nullptr) {
+  static bool validate_configuration_conflicts(const LauncherConfig& config,
+                                               std::string* error = nullptr) {
     // Check for mutually exclusive options
     if (config.verbose_output && config.quiet_mode) {
       if (error) {
@@ -311,7 +317,8 @@ public:
   /**
    * @brief Validate final configuration after all overrides
    */
-  static bool validate_final_configuration(const LauncherConfig& config, std::string* error = nullptr) {
+  static bool validate_final_configuration(const LauncherConfig& config,
+                                           std::string* error = nullptr) {
     // Re-run conflict validation on final configuration
     if (!validate_configuration_conflicts(config, error)) {
       return false;
@@ -320,9 +327,9 @@ public:
     // Additional validation for final configuration
     // Check that we have at least one operation to perform
     bool has_operation = config.show_status || config.show_help || config.show_version ||
-                        config.fetch_data || config.update_data || config.force_update ||
-                        config.validate_cache || config.clean_cache || config.rebuild_cache ||
-                        config.test_storage || config.run_simulation;
+                         config.fetch_data || config.update_data || config.force_update ||
+                         config.validate_cache || config.clean_cache || config.rebuild_cache ||
+                         config.test_storage || config.run_simulation;
 
     if (!has_operation) {
       // This is actually OK - default behavior is to show status
@@ -772,7 +779,8 @@ class SimulationStep : public WorkflowStep {
 
         // Create body collection for simulation
         BodySelector selector;
-        selector.body_set(SolarSystem::Bodies::BodyFactory::DefaultBodySet::IMPORTANT);  // Use balanced body set for launcher demonstrations
+        selector.body_set(SolarSystem::Bodies::BodyFactory::DefaultBodySet::
+                              IMPORTANT);  // Use balanced body set for launcher demonstrations
 
         auto body_collection_result = selector.build();
         if (!body_collection_result.has_value()) {
@@ -1283,8 +1291,10 @@ int main(int argc, char* argv[]) {
         LOG_INFO("Config", "Configuration loaded and validated from: " + config_path.string());
         if (config->verbose_output) {
           std::cout << "✅ Configuration loaded from: " << config_path << "\n";
-          std::cout << "📋 Option precedence: Command-line arguments override config file settings\n";
-          std::cout << "🔍 Configuration validation: All settings validated for conflicts and consistency\n";
+          std::cout
+              << "📋 Option precedence: Command-line arguments override config file settings\n";
+          std::cout << "🔍 Configuration validation: All settings validated for conflicts and "
+                       "consistency\n";
         }
       } catch (const std::exception& e) {
         LOG_ERROR("Config", "Failed to read configuration file: " + std::string(e.what()));
@@ -1377,9 +1387,11 @@ int main(int argc, char* argv[]) {
       std::string execution_id;
 
       // Get the execution ID (simplified - in production would be returned from execute_workflow)
-      auto active_workflows = workflow_orchestrator.get_component_coordinator().get_all_component_status();
+      auto active_workflows =
+          workflow_orchestrator.get_component_coordinator().get_all_component_status();
 
-      while (workflow_future.wait_for(std::chrono::milliseconds(500)) != std::future_status::ready) {
+      while (workflow_future.wait_for(std::chrono::milliseconds(500)) !=
+             std::future_status::ready) {
         // Update progress display
         std::cout << "⏳ Workflow in progress...\r" << std::flush;
       }

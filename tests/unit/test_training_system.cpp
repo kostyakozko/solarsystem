@@ -12,10 +12,10 @@
  * Requirements: All requirements
  */
 
+#include <gtest/gtest.h>
+
 #include <string>
 #include <vector>
-
-#include <gtest/gtest.h>
 
 class TrainingSystem {
  public:

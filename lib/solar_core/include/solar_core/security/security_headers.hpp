@@ -131,8 +131,7 @@ class CORSManager {
    * @brief Get CORS headers for request
    */
   [[nodiscard]] std::map<std::string, std::string> get_cors_headers(
-      const std::string& origin,
-      const std::string& method) const;
+      const std::string& origin, const std::string& method) const;
 
   /**
    * @brief Check if origin is allowed

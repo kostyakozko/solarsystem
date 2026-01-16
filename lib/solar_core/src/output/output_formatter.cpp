@@ -1,13 +1,13 @@
 #include "solar_core/output/output_formatter.hpp"
 
+#include <zlib.h>
+
 #include <algorithm>
 #include <cmath>
 #include <fstream>
 #include <iomanip>
-#include <sstream>
-#include <zlib.h>
-
 #include <nlohmann/json.hpp>
+#include <sstream>
 
 namespace SolarSystem::Output {
 
@@ -36,7 +36,8 @@ std::string OutputMetadata::to_json() const {
   return j.dump(2);
 }
 
-Utils::Expected<OutputMetadata, std::string> OutputMetadata::from_json(const std::string& json_str) {
+Utils::Expected<OutputMetadata, std::string> OutputMetadata::from_json(
+    const std::string& json_str) {
   try {
     auto j = nlohmann::json::parse(json_str);
     OutputMetadata metadata;
@@ -79,7 +80,8 @@ Utils::Expected<OutputMetadata, std::string> OutputMetadata::from_json(const std
 
     return metadata;
   } catch (const nlohmann::json::exception& e) {
-    return Utils::Expected<OutputMetadata, std::string>(std::string("JSON parsing error: ") + e.what());
+    return Utils::Expected<OutputMetadata, std::string>(std::string("JSON parsing error: ") +
+                                                        e.what());
   }
 }
 
@@ -157,9 +159,7 @@ void ValidationResult::add_error(const std::string& error) {
   is_valid = false;
 }
 
-void ValidationResult::add_warning(const std::string& warning) {
-  warnings.push_back(warning);
-}
+void ValidationResult::add_warning(const std::string& warning) { warnings.push_back(warning); }
 
 void ValidationResult::add_suggestion(const std::string& suggestion) {
   suggestions.push_back(suggestion);
@@ -193,8 +193,8 @@ std::string ValidationResult::summary() const {
 // FormattedOutput Implementation
 // ============================================================================
 
-Utils::Expected<void, std::string> FormattedOutput::write_to_file(
-    const std::filesystem::path& path, bool create_backup) const {
+Utils::Expected<void, std::string> FormattedOutput::write_to_file(const std::filesystem::path& path,
+                                                                  bool create_backup) const {
   // Create backup if requested and file exists
   if (create_backup && std::filesystem::exists(path)) {
     auto backup_path = path;
@@ -283,7 +283,8 @@ Utils::Expected<FormattedOutput, std::string> OutputFormatter::format_bodies(
       formatted_content = format_as_markdown(bodies, state, options);
       break;
     default:
-      return Utils::Expected<FormattedOutput, std::string>(std::string("Unsupported output format"));
+      return Utils::Expected<FormattedOutput, std::string>(
+          std::string("Unsupported output format"));
   }
 
   output.content = formatted_content;
@@ -347,7 +348,8 @@ Utils::Expected<FormattedOutput, std::string> OutputFormatter::format_state(
       formatted_content = format_as_markdown(empty_bodies, state, options);
       break;
     default:
-      return Utils::Expected<FormattedOutput, std::string>(std::string("Unsupported output format"));
+      return Utils::Expected<FormattedOutput, std::string>(
+          std::string("Unsupported output format"));
   }
 
   output.content = formatted_content;
@@ -402,8 +404,8 @@ ValidationResult OutputFormatter::validate_output(const Bodies::BodyCollection& 
   // Calculate data completeness
   size_t total_data_points = bodies.size() * 6;  // 3 position + 3 velocity per body
   if (total_data_points > 0) {
-    result.data_completeness =
-        1.0 - (static_cast<double>(result.missing_data_points) / static_cast<double>(total_data_points));
+    result.data_completeness = 1.0 - (static_cast<double>(result.missing_data_points) /
+                                      static_cast<double>(total_data_points));
   }
 
   // Calculate data consistency
@@ -413,9 +415,7 @@ ValidationResult OutputFormatter::validate_output(const Bodies::BodyCollection& 
   return result;
 }
 
-std::string OutputFormatter::compress(const std::string& data,
-                                     CompressionType type,
-                                     int level) {
+std::string OutputFormatter::compress(const std::string& data, CompressionType type, int level) {
   if (type == CompressionType::NONE || data.empty()) {
     return data;
   }
@@ -431,9 +431,7 @@ std::string OutputFormatter::compress(const std::string& data,
   }
 
   int result = compress2(compressed_data.data(), &compressed_size,
-                        reinterpret_cast<const uint8_t*>(data.data()),
-                        data.size(),
-                        zlib_level);
+                         reinterpret_cast<const uint8_t*>(data.data()), data.size(), zlib_level);
 
   if (result != Z_OK) {
     // Compression failed, return original data
@@ -447,8 +445,7 @@ std::string OutputFormatter::compress(const std::string& data,
   return std::string(reinterpret_cast<char*>(compressed_data.data()), compressed_size);
 }
 
-std::string OutputFormatter::decompress(
-    const std::string& compressed_data, CompressionType type) {
+std::string OutputFormatter::decompress(const std::string& compressed_data, CompressionType type) {
   if (type == CompressionType::NONE || compressed_data.empty()) {
     return compressed_data;
   }
@@ -458,17 +455,17 @@ std::string OutputFormatter::decompress(
   uLongf uncompressed_size = compressed_data.size() * 4;
   std::vector<uint8_t> uncompressed_data(uncompressed_size);
 
-  int result = uncompress(uncompressed_data.data(), &uncompressed_size,
-                         reinterpret_cast<const uint8_t*>(compressed_data.data()),
-                         compressed_data.size());
+  int result =
+      uncompress(uncompressed_data.data(), &uncompressed_size,
+                 reinterpret_cast<const uint8_t*>(compressed_data.data()), compressed_data.size());
 
   // If buffer was too small, try with larger buffer
   if (result == Z_BUF_ERROR) {
     uncompressed_size = compressed_data.size() * 10;
     uncompressed_data.resize(uncompressed_size);
     result = uncompress(uncompressed_data.data(), &uncompressed_size,
-                       reinterpret_cast<const uint8_t*>(compressed_data.data()),
-                       compressed_data.size());
+                        reinterpret_cast<const uint8_t*>(compressed_data.data()),
+                        compressed_data.size());
   }
 
   if (result != Z_OK) {
@@ -488,9 +485,7 @@ std::vector<OutputFormat> OutputFormatter::supported_formats() {
           OutputFormat::MARKDOWN};
 }
 
-std::string OutputFormatter::format_name(OutputFormat format) {
-  return to_string(format);
-}
+std::string OutputFormatter::format_name(OutputFormat format) { return to_string(format); }
 
 Utils::Expected<OutputFormat, std::string> OutputFormatter::parse_format(
     const std::string& format_str) {
@@ -504,16 +499,17 @@ Utils::Expected<OutputFormat, std::string> OutputFormatter::parse_format(
   if (lower == "markdown" || lower == "md") return OutputFormat::MARKDOWN;
   if (lower == "binary" || lower == "bin") return OutputFormat::BINARY;
 
-  return Utils::Expected<OutputFormat, std::string>(std::string("Unknown output format: ") + format_str);
+  return Utils::Expected<OutputFormat, std::string>(std::string("Unknown output format: ") +
+                                                    format_str);
 }
 
 // ============================================================================
 // Format-specific implementations
 // ============================================================================
 
-std::string OutputFormatter::format_as_text(
-    const Bodies::BodyCollection& bodies, const Simulation::SimulationState& state,
-    const OutputOptions& options) {
+std::string OutputFormatter::format_as_text(const Bodies::BodyCollection& bodies,
+                                            const Simulation::SimulationState& state,
+                                            const OutputOptions& options) {
   std::ostringstream oss;
 
   // Set precision
@@ -578,27 +574,23 @@ std::string OutputFormatter::format_as_text(
   return oss.str();
 }
 
-std::string OutputFormatter::format_as_json(
-    const Bodies::BodyCollection& bodies, const Simulation::SimulationState& state,
-    const OutputOptions& options) {
+std::string OutputFormatter::format_as_json(const Bodies::BodyCollection& bodies,
+                                            const Simulation::SimulationState& state,
+                                            const OutputOptions& options) {
   nlohmann::json doc;
 
   // Metadata
   if (options.include_metadata) {
-    doc["metadata"] = {
-      {"generated_at", format_timestamp(std::chrono::system_clock::now())},
-      {"simulation_time", format_timestamp(state.reference_time)},
-      {"iteration_count", state.iteration_count},
-      {"total_energy", state.total_energy}
-    };
+    doc["metadata"] = {{"generated_at", format_timestamp(std::chrono::system_clock::now())},
+                       {"simulation_time", format_timestamp(state.reference_time)},
+                       {"iteration_count", state.iteration_count},
+                       {"total_energy", state.total_energy}};
   }
 
   // Barycenter
-  doc["barycenter"] = {
-    {"x", static_cast<double>(state.center_of_mass.x())},
-    {"y", static_cast<double>(state.center_of_mass.y())},
-    {"z", static_cast<double>(state.center_of_mass.z())}
-  };
+  doc["barycenter"] = {{"x", static_cast<double>(state.center_of_mass.x())},
+                       {"y", static_cast<double>(state.center_of_mass.y())},
+                       {"z", static_cast<double>(state.center_of_mass.z())}};
 
   // Bodies
   nlohmann::json bodies_array = nlohmann::json::array();
@@ -613,19 +605,15 @@ std::string OutputFormatter::format_as_json(
     nlohmann::json body_obj;
     body_obj["name"] = std::string(body.name());
     body_obj["mass"] = static_cast<double>(body.mass());
-    body_obj["position"] = {
-      {"x", static_cast<double>(pos.x())},
-      {"y", static_cast<double>(pos.y())},
-      {"z", static_cast<double>(pos.z())}
-    };
+    body_obj["position"] = {{"x", static_cast<double>(pos.x())},
+                            {"y", static_cast<double>(pos.y())},
+                            {"z", static_cast<double>(pos.z())}};
 
     if (options.filter.include_velocities) {
       const auto& vel = body.velocity();
-      body_obj["velocity"] = {
-        {"x", static_cast<double>(vel.x())},
-        {"y", static_cast<double>(vel.y())},
-        {"z", static_cast<double>(vel.z())}
-      };
+      body_obj["velocity"] = {{"x", static_cast<double>(vel.x())},
+                              {"y", static_cast<double>(vel.y())},
+                              {"z", static_cast<double>(vel.z())}};
     }
 
     bodies_array.push_back(body_obj);
@@ -636,9 +624,9 @@ std::string OutputFormatter::format_as_json(
   return doc.dump(2) + "\n";
 }
 
-std::string OutputFormatter::format_as_csv(
-    const Bodies::BodyCollection& bodies, const Simulation::SimulationState& state,
-    const OutputOptions& options) {
+std::string OutputFormatter::format_as_csv(const Bodies::BodyCollection& bodies,
+                                           const Simulation::SimulationState& state,
+                                           const OutputOptions& options) {
   std::ostringstream oss;
 
   // Header
@@ -663,8 +651,8 @@ std::string OutputFormatter::format_as_csv(
 
     long double distance = pos.magnitude();
 
-    oss << body.name() << "," << body.mass() << "," << pos.x() << "," << pos.y() << ","
-        << pos.z() << "," << distance;
+    oss << body.name() << "," << body.mass() << "," << pos.x() << "," << pos.y() << "," << pos.z()
+        << "," << distance;
 
     if (options.filter.include_velocities) {
       const auto& vel = body.velocity();
@@ -677,9 +665,9 @@ std::string OutputFormatter::format_as_csv(
   return oss.str();
 }
 
-std::string OutputFormatter::format_as_xml(
-    const Bodies::BodyCollection& bodies, const Simulation::SimulationState& state,
-    const OutputOptions& options) {
+std::string OutputFormatter::format_as_xml(const Bodies::BodyCollection& bodies,
+                                           const Simulation::SimulationState& state,
+                                           const OutputOptions& options) {
   std::ostringstream oss;
 
   oss << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
@@ -741,9 +729,9 @@ std::string OutputFormatter::format_as_xml(
   return oss.str();
 }
 
-std::string OutputFormatter::format_as_markdown(
-    const Bodies::BodyCollection& bodies, const Simulation::SimulationState& state,
-    const OutputOptions& options) {
+std::string OutputFormatter::format_as_markdown(const Bodies::BodyCollection& bodies,
+                                                const Simulation::SimulationState& state,
+                                                const OutputOptions& options) {
   std::ostringstream oss;
 
   // Header
@@ -787,8 +775,8 @@ std::string OutputFormatter::format_as_markdown(
 
     long double distance = pos.magnitude();
 
-    oss << "| " << body.name() << " | " << pos.x() << " | " << pos.y() << " | " << pos.z()
-        << " | " << distance << " |";
+    oss << "| " << body.name() << " | " << pos.x() << " | " << pos.y() << " | " << pos.z() << " | "
+        << distance << " |";
 
     if (options.filter.include_velocities) {
       const auto& vel = body.velocity();
@@ -865,8 +853,7 @@ Utils::Expected<void, std::string> OutputArchiver::create_archive(
         return Utils::Expected<void, std::string>("Failed to open file: " + file_path.string());
       }
 
-      std::string content((std::istreambuf_iterator<char>(file)),
-                         std::istreambuf_iterator<char>());
+      std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
       file.close();
 
       // Compress if requested
@@ -963,16 +950,14 @@ Utils::Expected<std::vector<std::string>, std::string> OutputArchiver::list_arch
   try {
     std::ifstream archive(archive_path, std::ios::binary);
     if (!archive.is_open()) {
-      return Utils::Expected<std::vector<std::string>, std::string>(
-          "Failed to open archive file");
+      return Utils::Expected<std::vector<std::string>, std::string>("Failed to open archive file");
     }
 
     // Read and verify header
     char header[16];
     archive.read(header, 16);
     if (std::string(header, 16) != "SOLAR_ARCHIVE_V1") {
-      return Utils::Expected<std::vector<std::string>, std::string>(
-          "Invalid archive format");
+      return Utils::Expected<std::vector<std::string>, std::string>("Invalid archive format");
     }
 
     // Read number of files
@@ -1062,4 +1047,3 @@ std::string to_string(CompressionType compression) {
 }
 
 }  // namespace SolarSystem::Output
-

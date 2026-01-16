@@ -33,10 +33,8 @@ bool JPLConnectivityManager::is_jpl_service_available() const {
 
   if (!available) {
     // Test fallback endpoints
-    std::vector<std::string> fallback_endpoints = {
-      "https://ssd-api.jpl.nasa.gov/horizons.api",
-      "https://horizons.jpl.nasa.gov/api"
-    };
+    std::vector<std::string> fallback_endpoints = {"https://ssd-api.jpl.nasa.gov/horizons.api",
+                                                   "https://horizons.jpl.nasa.gov/api"};
 
     for (const auto& endpoint : fallback_endpoints) {
       if (test_jpl_endpoint(endpoint)) {
@@ -68,9 +66,10 @@ ComponentStatus JPLConnectivityManager::test_jpl_connectivity() {
 
     // Add metrics
     status.metrics["fallback_mode"] = fallback_mode_active_.load() ? "true" : "false";
-    status.metrics["last_check"] = std::to_string(
-      std::chrono::duration_cast<std::chrono::seconds>(
-        std::chrono::system_clock::now().time_since_epoch()).count());
+    status.metrics["last_check"] =
+        std::to_string(std::chrono::duration_cast<std::chrono::seconds>(
+                           std::chrono::system_clock::now().time_since_epoch())
+                           .count());
 
   } catch (const std::exception& e) {
     status.health = ComponentHealth::Failed;
@@ -78,8 +77,8 @@ ComponentStatus JPLConnectivityManager::test_jpl_connectivity() {
     status.health_score = 0.0;
 
     DetailedError error(ErrorCode::ConnectionFailed,
-                       "JPL connectivity test exception: " + std::string(e.what()),
-                       ErrorSeverity::Error, "JPLConnectivityManager::test_jpl_connectivity");
+                        "JPL connectivity test exception: " + std::string(e.what()),
+                        ErrorSeverity::Error, "JPLConnectivityManager::test_jpl_connectivity");
     status.recent_errors.push_back(error);
   }
 
@@ -108,14 +107,15 @@ bool JPLConnectivityManager::resolve_jpl_connectivity_issues() {
   return resolved;
 }
 
-std::unordered_map<std::string, std::string> JPLConnectivityManager::get_jpl_health_metrics() const {
+std::unordered_map<std::string, std::string> JPLConnectivityManager::get_jpl_health_metrics()
+    const {
   std::unordered_map<std::string, std::string> metrics;
 
   metrics["service_available"] = is_jpl_service_available() ? "true" : "false";
   metrics["fallback_mode"] = fallback_mode_active_.load() ? "true" : "false";
   metrics["last_check_time"] = std::to_string(
-    std::chrono::duration_cast<std::chrono::seconds>(
-      last_connectivity_check_.time_since_epoch()).count());
+      std::chrono::duration_cast<std::chrono::seconds>(last_connectivity_check_.time_since_epoch())
+          .count());
   metrics["check_interval_seconds"] = std::to_string(connectivity_check_interval_.count());
 
   return metrics;
@@ -123,8 +123,7 @@ std::unordered_map<std::string, std::string> JPLConnectivityManager::get_jpl_hea
 
 void JPLConnectivityManager::set_fallback_mode(bool enabled) {
   fallback_mode_active_.store(enabled);
-  LOG_INFO("JPLConnectivityManager",
-           enabled ? "Fallback mode enabled" : "Fallback mode disabled");
+  LOG_INFO("JPLConnectivityManager", enabled ? "Fallback mode enabled" : "Fallback mode disabled");
 }
 
 bool JPLConnectivityManager::is_fallback_mode_active() const {
@@ -154,8 +153,7 @@ bool JPLConnectivityManager::test_jpl_endpoint(const std::string& endpoint) cons
     return dis(gen) < 0.6;
 
   } catch (const std::exception& e) {
-    LOG_ERROR("JPLConnectivityManager",
-              "Exception testing endpoint " + endpoint + ": " + e.what());
+    LOG_ERROR("JPLConnectivityManager", "Exception testing endpoint " + endpoint + ": " + e.what());
     return false;
   }
 }
@@ -187,7 +185,8 @@ void ComponentCoordinator::register_component(ComponentType type, const std::str
 
   components_[key] = std::move(info);
 
-  LOG_INFO("ComponentCoordinator", "Registered component: " + name + " (" + Utils::to_string(type) + ")");
+  LOG_INFO("ComponentCoordinator",
+           "Registered component: " + name + " (" + Utils::to_string(type) + ")");
 }
 
 void ComponentCoordinator::unregister_component(ComponentType type, const std::string& name) {
@@ -234,9 +233,8 @@ bool ComponentCoordinator::are_components_available(
   for (ComponentType required_type : required_components) {
     bool found = false;
     for (const auto& [key, info] : components_) {
-      if (info.type == required_type &&
-          (info.last_status.health == ComponentHealth::Healthy ||
-           info.last_status.health == ComponentHealth::Warning)) {
+      if (info.type == required_type && (info.last_status.health == ComponentHealth::Healthy ||
+                                         info.last_status.health == ComponentHealth::Warning)) {
         found = true;
         break;
       }
@@ -312,7 +310,7 @@ void ComponentCoordinator::monitoring_loop() {
             }
           } catch (const std::exception& e) {
             LOG_ERROR("ComponentCoordinator",
-                     "Health check failed for " + info.name + ": " + e.what());
+                      "Health check failed for " + info.name + ": " + e.what());
 
             info.last_status.health = ComponentHealth::Failed;
             info.last_status.status_message = "Health check exception: " + std::string(e.what());
@@ -328,12 +326,14 @@ void ComponentCoordinator::monitoring_loop() {
   }
 }
 
-std::string ComponentCoordinator::get_component_key(ComponentType type, const std::string& name) const {
+std::string ComponentCoordinator::get_component_key(ComponentType type,
+                                                    const std::string& name) const {
   return Utils::to_string(type) + "::" + name;
 }
 
 // ProgressTracker Implementation
-void ProgressTracker::start_tracking(const std::string& execution_id, const WorkflowDefinition& workflow) {
+void ProgressTracker::start_tracking(const std::string& execution_id,
+                                     const WorkflowDefinition& workflow) {
   std::lock_guard<std::mutex> lock(tracking_mutex_);
 
   TrackingInfo info;
@@ -342,10 +342,12 @@ void ProgressTracker::start_tracking(const std::string& execution_id, const Work
 
   tracking_data_[execution_id] = std::move(info);
 
-  LOG_INFO("ProgressTracker", "Started tracking wlow: " + workflow.name + " (" + execution_id + ")");
+  LOG_INFO("ProgressTracker",
+           "Started tracking wlow: " + workflow.name + " (" + execution_id + ")");
 }
 
-void ProgressTracker::update_step_progress(const std::string& execution_id, const ProgressInfo& progress) {
+void ProgressTracker::update_step_progress(const std::string& execution_id,
+                                           const ProgressInfo& progress) {
   std::lock_guard<std::mutex> lock(tracking_mutex_);
 
   auto it = tracking_data_.find(execution_id);
@@ -378,12 +380,13 @@ void ProgressTracker::fail_step(const std::string& execution_id, const std::stri
   if (it != tracking_data_.end()) {
     it->second.completed_steps[step_id] = false;
 
-    LOG_ERROR("ProgressTracker", "Failed step: " + step_id + " in workflow " + execution_id +
-              " - " + error.message);
+    LOG_ERROR("ProgressTracker",
+              "Failed step: " + step_id + " in workflow " + execution_id + " - " + error.message);
   }
 }
 
-std::optional<ProgressInfo> ProgressTracker::get_current_progress(const std::string& execution_id) const {
+std::optional<ProgressInfo> ProgressTracker::get_current_progress(
+    const std::string& execution_id) const {
   std::lock_guard<std::mutex> lock(tracking_mutex_);
 
   auto it = tracking_data_.find(execution_id);
@@ -417,10 +420,12 @@ double ProgressTracker::get_overall_progress(const std::string& execution_id) co
     }
   }
 
-  return (static_cast<double>(completed_count) / static_cast<double>(workflow.steps.size())) * 100.0;
+  return (static_cast<double>(completed_count) / static_cast<double>(workflow.steps.size())) *
+         100.0;
 }
 
-std::vector<ProgressInfo> ProgressTracker::get_progress_history(const std::string& execution_id) const {
+std::vector<ProgressInfo> ProgressTracker::get_progress_history(
+    const std::string& execution_id) const {
   std::lock_guard<std::mutex> lock(tracking_mutex_);
 
   auto it = tracking_data_.find(execution_id);
@@ -454,7 +459,8 @@ WorkflowExecutionEngine::~WorkflowExecutionEngine() {
 
 bool WorkflowExecutionEngine::execute_workflow_sync(const WorkflowDefinition& workflow,
                                                     WorkflowContext& context) {
-  LOG_INFO("WorkflowExecutionEngine", "Starting synchronous execution of workflow: " + workflow.name);
+  LOG_INFO("WorkflowExecutionEngine",
+           "Starting synchronous execution of workflow: " + workflow.name);
 
   update_workflow_status(context, WorkflowStatus::Initializing);
 
@@ -494,8 +500,7 @@ bool WorkflowExecutionEngine::execute_workflow_sync(const WorkflowDefinition& wo
 
       // Validate step dependencies
       if (!validate_step_dependencies(step, context)) {
-        LOG_ERROR("WorkflowExecutionEngine",
-                 "Step dependencies not met for: " + step.name);
+        LOG_ERROR("WorkflowExecutionEngine", "Step dependencies not met for: " + step.name);
 
         if (!workflow.continue_on_error && step.is_critical) {
           overall_success = false;
@@ -531,12 +536,11 @@ bool WorkflowExecutionEngine::execute_workflow_sync(const WorkflowDefinition& wo
     }
 
   } catch (const std::exception& e) {
-    LOG_ERROR("WorkflowExecutionEngine",
-             "Workflow execution exception: " + std::string(e.what()));
+    LOG_ERROR("WorkflowExecutionEngine", "Workflow execution exception: " + std::string(e.what()));
 
     DetailedError error(ErrorCode::OperationFailed,
-                       "Workflow execution exception: " + std::string(e.what()),
-                       ErrorSeverity::Error, "WorkflowExecutionEngine::execute_workflow_sync");
+                        "Workflow execution exception: " + std::string(e.what()),
+                        ErrorSeverity::Error, "WorkflowExecutionEngine::execute_workflow_sync");
     context.errors.push_back(error);
 
     update_workflow_status(context, WorkflowStatus::Failed);
@@ -558,7 +562,6 @@ bool WorkflowExecutionEngine::execute_workflow_sync(const WorkflowDefinition& wo
 
 std::future<bool> WorkflowExecutionEngine::execute_workflow_async(
     const WorkflowDefinition& workflow, std::shared_ptr<WorkflowContext> context) {
-
   return std::async(std::launch::async, [this, workflow, context]() {
     return execute_workflow_sync(workflow, *context);
   });
@@ -594,7 +597,8 @@ void WorkflowExecutionEngine::resume_workflow(const std::string& execution_id) {
   }
 }
 
-std::vector<std::shared_ptr<WorkflowContext>> WorkflowExecutionEngine::get_active_workflows() const {
+std::vector<std::shared_ptr<WorkflowContext>> WorkflowExecutionEngine::get_active_workflows()
+    const {
   std::lock_guard<std::mutex> lock(execution_mutex_);
 
   std::vector<std::shared_ptr<WorkflowContext>> contexts;
@@ -657,8 +661,8 @@ bool WorkflowExecutionEngine::execute_step(const WorkflowStep& step, WorkflowCon
       if (success) {
         // Validate step result if validator provided
         if (step.validate && !step.validate()) {
-          LOG_WARN("WorkflowExecutionEngine",
-                  "Step validation failed: " + step.name + " (attempt " + std::to_string(attempt + 1) + ")");
+          LOG_WARN("WorkflowExecutionEngine", "Step validation failed: " + step.name +
+                                                  " (attempt " + std::to_string(attempt + 1) + ")");
 
           if (attempt < step.max_retries) {
             attempt++;
@@ -669,13 +673,13 @@ bool WorkflowExecutionEngine::execute_step(const WorkflowStep& step, WorkflowCon
           }
         }
 
-        LOG_INFO("WorkflowExecutionEngine",
-                "Step completed successfully: " + step.name + " (duration: " +
-                std::to_string(duration.count()) + "ms)");
+        LOG_INFO("WorkflowExecutionEngine", "Step completed successfully: " + step.name +
+                                                " (duration: " + std::to_string(duration.count()) +
+                                                "ms)");
         return true;
       } else {
-        LOG_WARN("WorkflowExecutionEngine",
-                "Step execution failed: " + step.name + " (attempt " + std::to_string(attempt + 1) + ")");
+        LOG_WARN("WorkflowExecutionEngine", "Step execution failed: " + step.name + " (attempt " +
+                                                std::to_string(attempt + 1) + ")");
 
         if (attempt < step.max_retries) {
           attempt++;
@@ -684,9 +688,10 @@ bool WorkflowExecutionEngine::execute_step(const WorkflowStep& step, WorkflowCon
         } else {
           // Try recovery if available
           if (step.recover) {
-            DetailedError error(ErrorCode::OperationFailed,
-                               "Step execution failed after " + std::to_string(step.max_retries + 1) + " attempts",
-                               ErrorSeverity::Error, "WorkflowExecutionEngine::execute_step");
+            DetailedError error(
+                ErrorCode::OperationFailed,
+                "Step execution failed after " + std::to_string(step.max_retries + 1) + " attempts",
+                ErrorSeverity::Error, "WorkflowExecutionEngine::execute_step");
 
             if (step.recover(error)) {
               LOG_INFO("WorkflowExecutionEngine", "Step recovery successful: " + step.name);
@@ -700,11 +705,11 @@ bool WorkflowExecutionEngine::execute_step(const WorkflowStep& step, WorkflowCon
 
     } catch (const std::exception& e) {
       LOG_ERROR("WorkflowExecutionEngine",
-               "Step execution exception: " + step.name + " - " + e.what());
+                "Step execution exception: " + step.name + " - " + e.what());
 
       DetailedError error(ErrorCode::OperationFailed,
-                         "Step execution exception: " + std::string(e.what()),
-                         ErrorSeverity::Error, "WorkflowExecutionEngine::execute_step");
+                          "Step execution exception: " + std::string(e.what()),
+                          ErrorSeverity::Error, "WorkflowExecutionEngine::execute_step");
       context.errors.push_back(error);
 
       if (attempt < step.max_retries) {
@@ -737,7 +742,8 @@ bool WorkflowExecutionEngine::validate_step_dependencies(const WorkflowStep& ste
   return true;
 }
 
-void WorkflowExecutionEngine::update_workflow_status(WorkflowContext& context, WorkflowStatus status) {
+void WorkflowExecutionEngine::update_workflow_status(WorkflowContext& context,
+                                                     WorkflowStatus status) {
   context.status = status;
 
   // Calculate overall progress based on completed steps
@@ -779,8 +785,10 @@ std::string WorkflowExecutionEngine::generate_execution_id() const {
     ss << std::hex << dis(gen);
   }
 
-  ss << "_" << std::chrono::duration_cast<std::chrono::milliseconds>(
-    std::chrono::system_clock::now().time_since_epoch()).count();
+  ss << "_"
+     << std::chrono::duration_cast<std::chrono::milliseconds>(
+            std::chrono::system_clock::now().time_since_epoch())
+            .count();
 
   return ss.str();
 }
@@ -790,56 +798,86 @@ namespace Utils {
 
 std::string to_string(WorkflowStatus status) {
   switch (status) {
-    case WorkflowStatus::NotStarted: return "NotStarted";
-    case WorkflowStatus::Initializing: return "Initializing";
-    case WorkflowStatus::Running: return "Running";
-    case WorkflowStatus::Paused: return "Paused";
-    case WorkflowStatus::Completed: return "Completed";
-    case WorkflowStatus::Failed: return "Failed";
-    case WorkflowStatus::Cancelled: return "Cancelled";
-    case WorkflowStatus::Timeout: return "Timeout";
-    default: return "Unknown";
+    case WorkflowStatus::NotStarted:
+      return "NotStarted";
+    case WorkflowStatus::Initializing:
+      return "Initializing";
+    case WorkflowStatus::Running:
+      return "Running";
+    case WorkflowStatus::Paused:
+      return "Paused";
+    case WorkflowStatus::Completed:
+      return "Completed";
+    case WorkflowStatus::Failed:
+      return "Failed";
+    case WorkflowStatus::Cancelled:
+      return "Cancelled";
+    case WorkflowStatus::Timeout:
+      return "Timeout";
+    default:
+      return "Unknown";
   }
 }
 
 std::string to_string(ComponentType type) {
   switch (type) {
-    case ComponentType::Launcher: return "Launcher";
-    case ComponentType::Fetch: return "Fetch";
-    case ComponentType::Simulation: return "Simulation";
-    case ComponentType::Realtime: return "Realtime";
-    case ComponentType::WebServer: return "WebServer";
-    case ComponentType::JPLClient: return "JPLClient";
-    case ComponentType::CacheManager: return "CacheManager";
-    case ComponentType::DataValidator: return "DataValidator";
-    default: return "Unknown";
+    case ComponentType::Launcher:
+      return "Launcher";
+    case ComponentType::Fetch:
+      return "Fetch";
+    case ComponentType::Simulation:
+      return "Simulation";
+    case ComponentType::Realtime:
+      return "Realtime";
+    case ComponentType::WebServer:
+      return "WebServer";
+    case ComponentType::JPLClient:
+      return "JPLClient";
+    case ComponentType::CacheManager:
+      return "CacheManager";
+    case ComponentType::DataValidator:
+      return "DataValidator";
+    default:
+      return "Unknown";
   }
 }
 
 std::string to_string(ComponentHealth health) {
   switch (health) {
-    case ComponentHealth::Healthy: return "Healthy";
-    case ComponentHealth::Warning: return "Warning";
-    case ComponentHealth::Critical: return "Critical";
-    case ComponentHealth::Failed: return "Failed";
-    case ComponentHealth::Unknown: return "Unknown";
-    default: return "Unknown";
+    case ComponentHealth::Healthy:
+      return "Healthy";
+    case ComponentHealth::Warning:
+      return "Warning";
+    case ComponentHealth::Critical:
+      return "Critical";
+    case ComponentHealth::Failed:
+      return "Failed";
+    case ComponentHealth::Unknown:
+      return "Unknown";
+    default:
+      return "Unknown";
   }
 }
 
 std::string to_string(StepPriority priority) {
   switch (priority) {
-    case StepPriority::Low: return "Low";
-    case StepPriority::Normal: return "Normal";
-    case StepPriority::High: return "High";
-    case StepPriority::Critical: return "Critical";
-    default: return "Unknown";
+    case StepPriority::Low:
+      return "Low";
+    case StepPriority::Normal:
+      return "Normal";
+    case StepPriority::High:
+      return "High";
+    case StepPriority::Critical:
+      return "Critical";
+    default:
+      return "Unknown";
   }
 }
 
 std::function<void(const ProgressInfo&)> create_progress_callback(const std::string& execution_id) {
   return [execution_id](const ProgressInfo& progress) {
-    WorkflowOrchestrator::instance().get_progress_tracker().update_step_progress(execution_id, progress);
+    WorkflowOrchestrator::instance().get_progress_tracker().update_step_progress(execution_id,
+                                                                                 progress);
   };
 }
 
@@ -881,7 +919,7 @@ ValidationResult validate_workflow_definition(const WorkflowDefinition& workflow
     for (const auto& dep : step.dependencies) {
       if (step_ids.find(dep) == step_ids.end()) {
         result.add_error(ErrorCode::InvalidInput,
-                        "Step " + step.id + " depends on non-existent step: " + dep);
+                         "Step " + step.id + " depends on non-existent step: " + dep);
       }
     }
   }
@@ -892,7 +930,6 @@ ValidationResult validate_workflow_definition(const WorkflowDefinition& workflow
 
 std::chrono::system_clock::time_point calculate_estimated_completion(
     const WorkflowDefinition& workflow, double current_progress) {
-
   auto now = std::chrono::system_clock::now();
 
   if (current_progress <= 0.0) {
@@ -906,7 +943,7 @@ std::chrono::system_clock::time_point calculate_estimated_completion(
 
   if (progress_rate > 0.0) {
     auto estimated_remaining_time = std::chrono::duration_cast<std::chrono::seconds>(
-      workflow.total_timeout * (remaining_progress / 100.0));
+        workflow.total_timeout * (remaining_progress / 100.0));
     return now + estimated_remaining_time;
   }
 
@@ -963,15 +1000,15 @@ void WorkflowOrchestrator::register_workflow(const WorkflowDefinition& workflow)
   // Validate workflow definition
   auto validation_result = Utils::validate_workflow_definition(workflow);
   if (!validation_result.is_valid) {
-    LOG_ERROR("WorkflowOrchestrator",
-             "Cannot register invalid workflow: " + workflow.name + " - " +
-             validation_result.to_string());
+    LOG_ERROR("WorkflowOrchestrator", "Cannot register invalid workflow: " + workflow.name + " - " +
+                                          validation_result.to_string());
     return;
   }
 
   registered_workflows_[workflow.id] = workflow;
 
-  LOG_INFO("WorkflowOrchestrator", "Registered workflow: " + workflow.name + " (" + workflow.id + ")");
+  LOG_INFO("WorkflowOrchestrator",
+           "Registered workflow: " + workflow.name + " (" + workflow.id + ")");
 }
 
 void WorkflowOrchestrator::unregister_workflow(const std::string& workflow_id) {
@@ -985,9 +1022,7 @@ void WorkflowOrchestrator::unregister_workflow(const std::string& workflow_id) {
 }
 
 std::future<bool> WorkflowOrchestrator::execute_workflow(
-    const std::string& workflow_id,
-    const std::unordered_map<std::string, std::string>& variables) {
-
+    const std::string& workflow_id, const std::unordered_map<std::string, std::string>& variables) {
   std::lock_guard<std::mutex> lock(workflows_mutex_);
 
   auto it = registered_workflows_.find(workflow_id);
@@ -1006,7 +1041,6 @@ std::future<bool> WorkflowOrchestrator::execute_workflow(
 std::future<bool> WorkflowOrchestrator::execute_custom_workflow(
     const WorkflowDefinition& workflow,
     const std::unordered_map<std::string, std::string>& variables) {
-
   // Generate execution ID
   static std::random_device rd;
   static std::mt19937 gen(rd());
@@ -1017,8 +1051,10 @@ std::future<bool> WorkflowOrchestrator::execute_custom_workflow(
   for (int i = 0; i < 8; ++i) {
     ss << std::hex << dis(gen);
   }
-  ss << "_" << std::chrono::duration_cast<std::chrono::milliseconds>(
-    std::chrono::system_clock::now().time_since_epoch()).count();
+  ss << "_"
+     << std::chrono::duration_cast<std::chrono::milliseconds>(
+            std::chrono::system_clock::now().time_since_epoch())
+            .count();
 
   std::string execution_id = ss.str();
 
@@ -1030,7 +1066,7 @@ std::future<bool> WorkflowOrchestrator::execute_custom_workflow(
   progress_tracker_.start_tracking(execution_id, workflow);
 
   LOG_INFO("WorkflowOrchestrator",
-          "Starting execution of workflow: " + workflow.name + " (" + execution_id + ")");
+           "Starting execution of workflow: " + workflow.name + " (" + execution_id + ")");
 
   // Execute workflow asynchronously
   return execution_engine_.execute_workflow_async(workflow, context);
@@ -1038,7 +1074,6 @@ std::future<bool> WorkflowOrchestrator::execute_custom_workflow(
 
 std::optional<WorkflowStatus> WorkflowOrchestrator::get_workflow_status(
     const std::string& execution_id) const {
-
   auto context = execution_engine_.get_workflow_context(execution_id);
   if (context) {
     return context->status;
@@ -1082,8 +1117,8 @@ std::string WorkflowOrchestrator::generate_system_health_report() const {
   report << "Component Status (" << components.size() << " components):\n";
 
   for (const auto& component : components) {
-    report << "  " << component.name << " (" << Utils::to_string(component.type) << "): "
-           << Utils::to_string(component.health);
+    report << "  " << component.name << " (" << Utils::to_string(component.type)
+           << "): " << Utils::to_string(component.health);
 
     if (!component.status_message.empty()) {
       report << " - " << component.status_message;
@@ -1104,9 +1139,9 @@ std::string WorkflowOrchestrator::generate_system_health_report() const {
   report << "\nActive Workflows (" << active_workflows.size() << "):\n";
 
   for (const auto& context : active_workflows) {
-    report << "  " << context->execution_id << " (" << context->workflow_id << "): "
-           << Utils::to_string(context->status) << " - "
-           << std::fixed << std::setprecision(1) << context->overall_progress << "%\n";
+    report << "  " << context->execution_id << " (" << context->workflow_id
+           << "): " << Utils::to_string(context->status) << " - " << std::fixed
+           << std::setprecision(1) << context->overall_progress << "%\n";
   }
 
   return report.str();
@@ -1130,37 +1165,33 @@ void WorkflowOrchestrator::setup_default_workflows() {
 
 void WorkflowOrchestrator::setup_component_monitoring() {
   // Register JPL client monitoring
-  component_coordinator_.register_component(
-    ComponentType::JPLClient, "JPL_HORIZONS_API",
-    [this]() { return jpl_manager_.test_jpl_connectivity(); }
-  );
+  component_coordinator_.register_component(ComponentType::JPLClient, "JPL_HORIZONS_API", [this]() {
+    return jpl_manager_.test_jpl_connectivity();
+  });
 
   // Register cache manager monitoring
-  component_coordinator_.register_component(
-    ComponentType::CacheManager, "EphemerisCache",
-    []() {
-      ComponentStatus status(ComponentType::CacheManager, "EphemerisCache");
+  component_coordinator_.register_component(ComponentType::CacheManager, "EphemerisCache", []() {
+    ComponentStatus status(ComponentType::CacheManager, "EphemerisCache");
 
-      // Check if cache files exist
-      bool binary_exists = std::filesystem::exists("ephemeris_cache.bin");
-      bool json_exists = std::filesystem::exists("ephemeris_data.json");
+    // Check if cache files exist
+    bool binary_exists = std::filesystem::exists("ephemeris_cache.bin");
+    bool json_exists = std::filesystem::exists("ephemeris_data.json");
 
-      if (binary_exists || json_exists) {
-        status.health = ComponentHealth::Healthy;
-        status.status_message = "Cache files available";
-        status.health_score = 1.0;
+    if (binary_exists || json_exists) {
+      status.health = ComponentHealth::Healthy;
+      status.status_message = "Cache files available";
+      status.health_score = 1.0;
 
-        status.metrics["binary_cache"] = binary_exists ? "available" : "missing";
-        status.metrics["json_cache"] = json_exists ? "available" : "missing";
-      } else {
-        status.health = ComponentHealth::Warning;
-        status.status_message = "No cache files found";
-        status.health_score = 0.5;
-      }
-
-      return status;
+      status.metrics["binary_cache"] = binary_exists ? "available" : "missing";
+      status.metrics["json_cache"] = json_exists ? "available" : "missing";
+    } else {
+      status.health = ComponentHealth::Warning;
+      status.status_message = "No cache files found";
+      status.health_score = 0.5;
     }
-  );
+
+    return status;
+  });
 
   LOG_INFO("WorkflowOrchestrator", "Component monitoring setup complete");
 }
@@ -1196,7 +1227,7 @@ WorkflowDefinition WorkflowBuilder::create_simulation_workflow() {
 WorkflowDefinition WorkflowBuilder::create_complete_workflow() {
   WorkflowDefinition workflow("complete_system", "Complete System Workflow");
   workflow.description = "Complete data management and simulation workflow";
-  workflow.continue_on_error = true;  // Continue on non-critical errors
+  workflow.continue_on_error = true;                   // Continue on non-critical errors
   workflow.total_timeout = std::chrono::seconds(900);  // 15 minutes
 
   // Add all workflow steps
@@ -1243,7 +1274,8 @@ WorkflowStep WorkflowBuilder::create_jpl_connectivity_check_step() {
   step.max_retries = 2;
   step.is_critical = false;  // Can continue with cached data
 
-  step.execute = [](const ProgressInfo& progress, std::function<void(const ProgressInfo&)> callback) {
+  step.execute = [](const ProgressInfo& progress,
+                    std::function<void(const ProgressInfo&)> callback) {
     LOG_INFO("JPLConnectivityCheck", "Checking JPL HORIZONS API connectivity");
 
     auto& jpl_manager = WorkflowOrchestrator::instance().get_jpl_connectivity_manager();
@@ -1288,7 +1320,8 @@ WorkflowStep WorkflowBuilder::create_jpl_data_fetch_step() {
   step.is_critical = false;  // Can use cached data
   step.dependencies = {"jpl_connectivity_check"};
 
-  step.execute = [](const ProgressInfo& progress, std::function<void(const ProgressInfo&)> callback) {
+  step.execute = [](const ProgressInfo& progress,
+                    std::function<void(const ProgressInfo&)> callback) {
     LOG_INFO("JPLDataFetch", "Fetching ephemeris data from JPL HORIZONS");
 
     auto& jpl_manager = WorkflowOrchestrator::instance().get_jpl_connectivity_manager();
@@ -1365,7 +1398,8 @@ WorkflowStep WorkflowBuilder::create_cache_validation_step() {
   step.max_retries = 1;
   step.is_critical = false;
 
-  step.execute = [](const ProgressInfo& progress, std::function<void(const ProgressInfo&)> callback) {
+  step.execute = [](const ProgressInfo& progress,
+                    std::function<void(const ProgressInfo&)> callback) {
     LOG_INFO("CacheValidation", "Validating ephemeris cache");
 
     ProgressInfo updated_progress = progress;
@@ -1417,7 +1451,8 @@ WorkflowStep WorkflowBuilder::create_cache_rebuild_step() {
   step.is_critical = false;
   step.dependencies = {"cache_validation"};
 
-  step.execute = [](const ProgressInfo& progress, std::function<void(const ProgressInfo&)> callback) {
+  step.execute = [](const ProgressInfo& progress,
+                    std::function<void(const ProgressInfo&)> callback) {
     LOG_INFO("CacheRebuild", "Rebuilding binary cache from JSON data");
 
     ProgressInfo updated_progress = progress;
@@ -1472,7 +1507,8 @@ WorkflowStep WorkflowBuilder::create_simulation_execution_step() {
   step.is_critical = true;
   step.dependencies = {"cache_validation"};
 
-  step.execute = [](const ProgressInfo& progress, std::function<void(const ProgressInfo&)> callback) {
+  step.execute = [](const ProgressInfo& progress,
+                    std::function<void(const ProgressInfo&)> callback) {
     LOG_INFO("SimulationExecution", "Starting solar system simulation");
 
     ProgressInfo updated_progress = progress;
@@ -1536,7 +1572,8 @@ WorkflowStep WorkflowBuilder::create_error_recovery_step() {
   step.max_retries = 2;
   step.is_critical = false;
 
-  step.execute = [](const ProgressInfo& progress, std::function<void(const ProgressInfo&)> callback) {
+  step.execute = [](const ProgressInfo& progress,
+                    std::function<void(const ProgressInfo&)> callback) {
     LOG_INFO("ErrorRecovery", "Attempting system error recovery");
 
     ProgressInfo updated_progress = progress;

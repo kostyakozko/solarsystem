@@ -4,11 +4,12 @@
  * @note Migrated to Google Test
  */
 
+#include <gtest/gtest.h>
+
 #include <filesystem>
 #include <iostream>
 
 #include "benchmark_utils.h"
-#include <gtest/gtest.h>
 
 // Web Server Performance Benchmark Test
 TEST(WebServerBenchmark, ResponsePerformanceValidation) {

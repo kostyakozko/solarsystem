@@ -1,18 +1,18 @@
 #pragma once
 
+#include <algorithm>
 #include <chrono>
+#include <cstdlib>
+#include <fstream>
 #include <functional>
+#include <iomanip>
 #include <iostream>
 #include <memory>
+#include <sstream>
 #include <string>
+#include <thread>
 #include <unordered_map>
 #include <vector>
-#include <fstream>
-#include <sstream>
-#include <iomanip>
-#include <cstdlib>
-#include <thread>
-#include <algorithm>
 
 namespace SolarSystem::Testing {
 
@@ -27,7 +27,7 @@ struct TestResult {
   std::chrono::system_clock::time_point timestamp;
 
   TestResult(const std::string& name)
-    : test_name(name), timestamp(std::chrono::system_clock::now()) {}
+      : test_name(name), timestamp(std::chrono::system_clock::now()) {}
 
   [[nodiscard]] double execution_time_ms() const {
     return std::chrono::duration<double, std::milli>(execution_time).count();
@@ -38,7 +38,7 @@ struct TestResult {
  * @brief Enhanced test framework with performance monitoring
  */
 class EnhancedTestFramework {
-public:
+ public:
   static EnhancedTestFramework& instance() {
     static EnhancedTestFramework framework;
     return framework;
@@ -68,19 +68,19 @@ public:
 
     auto end_time = std::chrono::high_resolution_clock::now();
     result.execution_time =
-      std::chrono::duration_cast<std::chrono::nanoseconds>(end_time - start_time);
+        std::chrono::duration_cast<std::chrono::nanoseconds>(end_time - start_time);
 
     // Store result
     test_results_.push_back(result);
 
     // Print metrics
-    std::cout << "  ⏱️  Time: " << std::fixed << std::setprecision(2)
-              << result.execution_time_ms() << " ms" << std::endl;
+    std::cout << "  ⏱️  Time: " << std::fixed << std::setprecision(2) << result.execution_time_ms()
+              << " ms" << std::endl;
     std::cout << std::endl;
   }
 
   void run_test_suite(const std::string& suite_name,
-                     const std::vector<std::pair<std::string, std::function<void()>>>& tests) {
+                      const std::vector<std::pair<std::string, std::function<void()>>>& tests) {
     std::cout << std::endl << "🚀 Running Test Suite: " << suite_name << std::endl;
     std::cout << std::string(50, '=') << std::endl;
 
@@ -91,7 +91,8 @@ public:
     }
 
     auto suite_end = std::chrono::high_resolution_clock::now();
-    auto suite_duration = std::chrono::duration_cast<std::chrono::milliseconds>(suite_end - suite_start);
+    auto suite_duration =
+        std::chrono::duration_cast<std::chrono::milliseconds>(suite_end - suite_start);
 
     print_suite_summary(suite_name, suite_duration);
   }
@@ -120,15 +121,15 @@ public:
   [[nodiscard]] size_t get_total_tests() const { return test_results_.size(); }
   [[nodiscard]] size_t get_passed_tests() const {
     return static_cast<size_t>(std::count_if(test_results_.begin(), test_results_.end(),
-                        [](const TestResult& r) { return r.passed; }));
+                                             [](const TestResult& r) { return r.passed; }));
   }
   [[nodiscard]] size_t get_failed_tests() const { return get_total_tests() - get_passed_tests(); }
 
-private:
+ private:
   std::vector<TestResult> test_results_;
 
   void print_suite_summary(const std::string& suite_name,
-                          std::chrono::milliseconds duration) const {
+                           std::chrono::milliseconds duration) const {
     size_t suite_tests = 0;
     size_t suite_passed = 0;
 
@@ -172,7 +173,8 @@ private:
     report << "<h1>🚀 Solar System Test Report</h1>" << std::endl;
     auto now = std::chrono::system_clock::now();
     auto time_t = std::chrono::system_clock::to_time_t(now);
-    report << "<p>Generated: " << std::put_time(std::localtime(&time_t), "%Y-%m-%d %H:%M:%S") << "</p>" << std::endl;
+    report << "<p>Generated: " << std::put_time(std::localtime(&time_t), "%Y-%m-%d %H:%M:%S")
+           << "</p>" << std::endl;
     report << "</div>" << std::endl;
 
     // Summary
@@ -182,7 +184,8 @@ private:
     report << "<p><strong>Passed:</strong> " << get_passed_tests() << "</p>" << std::endl;
     report << "<p><strong>Failed:</strong> " << get_failed_tests() << "</p>" << std::endl;
     report << "<p><strong>Success Rate:</strong> " << std::fixed << std::setprecision(1)
-           << (get_total_tests() > 0 ? (get_passed_tests() * 100.0 / get_total_tests()) : 0.0) << "%</p>" << std::endl;
+           << (get_total_tests() > 0 ? (get_passed_tests() * 100.0 / get_total_tests()) : 0.0)
+           << "%</p>" << std::endl;
     report << "</div>" << std::endl;
 
     // Test Results
@@ -191,7 +194,8 @@ private:
       std::string css_class = result.passed ? "passed" : "failed";
 
       report << "<div class='test-result " << css_class << "'>" << std::endl;
-      report << "<h3>" << (result.passed ? "✅" : "❌") << " " << result.test_name << "</h3>" << std::endl;
+      report << "<h3>" << (result.passed ? "✅" : "❌") << " " << result.test_name << "</h3>"
+             << std::endl;
 
       if (!result.error_message.empty()) {
         report << "<p><strong>Error:</strong> " << result.error_message << "</p>" << std::endl;
@@ -209,29 +213,28 @@ private:
 };
 
 // Convenience macros for testing
-#define ENHANCED_TEST(name, code) \
-  EnhancedTestFramework::instance().run_test(name, [&]() { code; })
+#define ENHANCED_TEST(name, code) EnhancedTestFramework::instance().run_test(name, [&]() { code; })
 
 #define ENHANCED_TEST_SUITE(suite_name, tests) \
   EnhancedTestFramework::instance().run_test_suite(suite_name, tests)
 
-#define ASSERT_TRUE(condition) \
-  if (!(condition)) { \
+#define ASSERT_TRUE(condition)                                 \
+  if (!(condition)) {                                          \
     throw std::runtime_error("Assertion failed: " #condition); \
   }
 
-#define ASSERT_FALSE(condition) \
-  if (condition) { \
+#define ASSERT_FALSE(condition)                                 \
+  if (condition) {                                              \
     throw std::runtime_error("Assertion failed: !" #condition); \
   }
 
-#define ASSERT_EQ(expected, actual) \
-  if ((expected) != (actual)) { \
+#define ASSERT_EQ(expected, actual)                                          \
+  if ((expected) != (actual)) {                                              \
     throw std::runtime_error("Assertion failed: " #expected " == " #actual); \
   }
 
-#define ASSERT_NE(expected, actual) \
-  if ((expected) == (actual)) { \
+#define ASSERT_NE(expected, actual)                                          \
+  if ((expected) == (actual)) {                                              \
     throw std::runtime_error("Assertion failed: " #expected " != " #actual); \
   }
 

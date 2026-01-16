@@ -22,11 +22,11 @@ struct DataPointQuality {
   std::chrono::system_clock::time_point timestamp;
 
   // Core quality metrics
-  double overall_score = 1.0;        // 0.0 to 1.0, composite quality score
-  double data_freshness = 1.0;       // How recent the data is
-  double data_accuracy = 1.0;        // Estimated accuracy of the data
-  double data_completeness = 1.0;    // Completeness of required fields
-  double data_consistency = 1.0;     // Consistency with previous data
+  double overall_score = 1.0;      // 0.0 to 1.0, composite quality score
+  double data_freshness = 1.0;     // How recent the data is
+  double data_accuracy = 1.0;      // Estimated accuracy of the data
+  double data_completeness = 1.0;  // Completeness of required fields
+  double data_consistency = 1.0;   // Consistency with previous data
 
   // Performance metrics
   std::chrono::milliseconds latency{0};
@@ -72,10 +72,10 @@ struct SnapshotQuality {
   std::chrono::milliseconds processing_time{0};
 
   // Quality distribution
-  size_t excellent_quality_count = 0;  // score >= 0.9
-  size_t good_quality_count = 0;       // score >= 0.7
-  size_t acceptable_quality_count = 0; // score >= 0.5
-  size_t poor_quality_count = 0;       // score < 0.5
+  size_t excellent_quality_count = 0;   // score >= 0.9
+  size_t good_quality_count = 0;        // score >= 0.7
+  size_t acceptable_quality_count = 0;  // score >= 0.5
+  size_t poor_quality_count = 0;        // score < 0.5
 
   std::vector<DataPointQuality> body_qualities;
   std::vector<std::string> system_warnings;
@@ -94,9 +94,9 @@ struct QualityTrends {
   size_t total_snapshots_analyzed = 0;
 
   // Trend analysis
-  double quality_trend_slope = 0.0;        // Positive = improving, negative = degrading
-  double latency_trend_slope = 0.0;        // Positive = increasing latency
-  double reliability_score = 1.0;          // Overall system reliability
+  double quality_trend_slope = 0.0;  // Positive = improving, negative = degrading
+  double latency_trend_slope = 0.0;  // Positive = increasing latency
+  double reliability_score = 1.0;    // Overall system reliability
 
   // Statistical summaries
   double avg_quality_score = 1.0;
@@ -109,9 +109,9 @@ struct QualityTrends {
   std::chrono::milliseconds max_latency{0};
 
   // Problem frequency
-  double error_rate = 0.0;              // Errors per snapshot
-  double warning_rate = 0.0;            // Warnings per snapshot
-  double anomaly_rate = 0.0;            // Anomalies per snapshot
+  double error_rate = 0.0;    // Errors per snapshot
+  double warning_rate = 0.0;  // Warnings per snapshot
+  double anomaly_rate = 0.0;  // Anomalies per snapshot
 
   // Per-body analysis
   std::unordered_map<std::string, double> body_avg_quality;
@@ -158,17 +158,17 @@ struct QualityMonitorConfig {
 /**
  * @brief Callback function types for quality events
  */
-using QualityAlertCallback = std::function<void(const std::string& alert_message,
-                                               const SnapshotQuality& snapshot)>;
+using QualityAlertCallback =
+    std::function<void(const std::string& alert_message, const SnapshotQuality& snapshot)>;
 using TrendAnalysisCallback = std::function<void(const QualityTrends& trends)>;
-using AnomalyDetectionCallback = std::function<void(const std::string& body_name,
-                                                   const DataPointQuality& anomaly)>;
+using AnomalyDetectionCallback =
+    std::function<void(const std::string& body_name, const DataPointQuality& anomaly)>;
 
 /**
  * @brief Comprehensive quality monitoring system for data streams
  */
 class SOLAR_CORE_API QualityMonitor {
-public:
+ public:
   explicit QualityMonitor(QualityMonitorConfig config = {});
   ~QualityMonitor();
 
@@ -203,8 +203,7 @@ public:
   [[nodiscard]] std::vector<SnapshotQuality> get_quality_history(
       std::chrono::milliseconds window = std::chrono::hours{1}) const;
   [[nodiscard]] std::vector<SnapshotQuality> get_quality_history(
-      std::chrono::system_clock::time_point start,
-      std::chrono::system_clock::time_point end) const;
+      std::chrono::system_clock::time_point start, std::chrono::system_clock::time_point end) const;
 
   // Real-time status
   [[nodiscard]] SnapshotQuality get_latest_quality() const;
@@ -227,7 +226,7 @@ public:
   [[nodiscard]] std::string get_status_summary() const;
   [[nodiscard]] std::string get_quality_report() const;
 
-private:
+ private:
   QualityMonitorConfig config_;
   std::atomic<bool> running_{false};
 
@@ -268,8 +267,9 @@ private:
   [[nodiscard]] bool is_outlier(const DataPoint& data_point, const std::string& body_name) const;
 
   // Trend analysis
-  [[nodiscard]] double calculate_trend_slope(const std::vector<double>& values,
-                                            const std::vector<std::chrono::system_clock::time_point>& times) const;
+  [[nodiscard]] double calculate_trend_slope(
+      const std::vector<double>& values,
+      const std::vector<std::chrono::system_clock::time_point>& times) const;
 
   // Alert management
   void check_quality_alerts(const SnapshotQuality& quality);
@@ -283,15 +283,14 @@ private:
   // Utility methods
   void maintain_history_size();
   [[nodiscard]] std::vector<SnapshotQuality> filter_history_by_time(
-      std::chrono::system_clock::time_point start,
-      std::chrono::system_clock::time_point end) const;
+      std::chrono::system_clock::time_point start, std::chrono::system_clock::time_point end) const;
 };
 
 /**
  * @brief Factory for creating quality monitors with common configurations
  */
 class SOLAR_CORE_API QualityMonitorFactory {
-public:
+ public:
   [[nodiscard]] static std::unique_ptr<QualityMonitor> create_basic_monitor();
   [[nodiscard]] static std::unique_ptr<QualityMonitor> create_strict_monitor();
   [[nodiscard]] static std::unique_ptr<QualityMonitor> create_performance_monitor();

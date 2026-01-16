@@ -51,14 +51,10 @@ JSONValidationResult JSONValidator::validate_syntax(const std::string& json) {
   char first = trimmed.front();
   char last = trimmed.back();
 
-  bool valid_structure =
-      (first == '{' && last == '}') ||
-      (first == '[' && last == ']') ||
-      (first == '"' && last == '"') ||
-      (trimmed == "null") ||
-      (trimmed == "true") ||
-      (trimmed == "false") ||
-      is_valid_json_number(trimmed);
+  bool valid_structure = (first == '{' && last == '}') || (first == '[' && last == ']') ||
+                         (first == '"' && last == '"') || (trimmed == "null") ||
+                         (trimmed == "true") || (trimmed == "false") ||
+                         is_valid_json_number(trimmed);
 
   if (!valid_structure) {
     JSONValidationError error;
@@ -97,9 +93,8 @@ JSONValidationResult JSONValidator::validate_structure(const std::string& json) 
 /**
  * @brief Validate JSON against schema
  */
-JSONValidationResult JSONValidator::validate_schema(
-    const std::string& json, const JSONSchema& schema) {
-
+JSONValidationResult JSONValidator::validate_schema(const std::string& json,
+                                                    const JSONSchema& schema) {
   // First validate syntax
   auto syntax_result = validate_syntax(json);
   if (!syntax_result.is_valid) {
@@ -123,8 +118,8 @@ JSONValidationResult JSONValidator::validate_schema(
   // Validate type matches schema
   if (*json_type != schema.type) {
     JSONValidationError error;
-    error.message = "Type mismatch: expected " + type_to_string(schema.type) +
-                   ", got " + type_to_string(*json_type);
+    error.message = "Type mismatch: expected " + type_to_string(schema.type) + ", got " +
+                    type_to_string(*json_type);
     result.errors.push_back(error);
     result.is_valid = false;
     return result;
@@ -189,9 +184,8 @@ JSONValidationResult JSONValidator::validate_schema(
 /**
  * @brief Sanitize JSON for security
  */
-JSONValidationResult JSONValidator::sanitize_json(
-    const std::string& json, size_t max_depth, size_t max_size) {
-
+JSONValidationResult JSONValidator::sanitize_json(const std::string& json, size_t max_depth,
+                                                  size_t max_size) {
   JSONValidationResult result;
 
   // Check size limit
@@ -233,14 +227,7 @@ JSONValidationResult JSONValidator::sanitize_json(
 bool JSONValidator::has_injection_risk(const std::string& json) {
   // Check for suspicious patterns
   std::vector<std::string> suspicious_patterns = {
-      "__proto__",
-      "constructor",
-      "prototype",
-      "<script",
-      "javascript:",
-      "onerror=",
-      "onload="
-  };
+      "__proto__", "constructor", "prototype", "<script", "javascript:", "onerror=", "onload="};
 
   for (const auto& pattern : suspicious_patterns) {
     if (json.find(pattern) != std::string::npos) {
@@ -254,9 +241,7 @@ bool JSONValidator::has_injection_risk(const std::string& json) {
 /**
  * @brief Validate JSON streaming
  */
-JSONValidationResult JSONValidator::validate_streaming(
-    const std::string& json, size_t chunk_size) {
-
+JSONValidationResult JSONValidator::validate_streaming(const std::string& json, size_t chunk_size) {
   JSONValidationResult result;
 
   // Process in chunks
@@ -475,9 +460,7 @@ bool JSONValidator::is_valid_json_boolean(const std::string& str) {
 /**
  * @brief Validate JSON null
  */
-bool JSONValidator::is_valid_json_null(const std::string& str) {
-  return str == "null";
-}
+bool JSONValidator::is_valid_json_null(const std::string& str) { return str == "null"; }
 
 // Private helper methods
 
@@ -555,19 +538,25 @@ size_t JSONValidator::calculate_depth(const std::string& json) {
 
 std::string JSONValidator::type_to_string(JSONType type) {
   switch (type) {
-    case JSONType::Null: return "null";
-    case JSONType::Boolean: return "boolean";
-    case JSONType::Number: return "number";
-    case JSONType::String: return "string";
-    case JSONType::Array: return "array";
-    case JSONType::Object: return "object";
-    default: return "unknown";
+    case JSONType::Null:
+      return "null";
+    case JSONType::Boolean:
+      return "boolean";
+    case JSONType::Number:
+      return "number";
+    case JSONType::String:
+      return "string";
+    case JSONType::Array:
+      return "array";
+    case JSONType::Object:
+      return "object";
+    default:
+      return "unknown";
   }
 }
 
-bool JSONValidator::validate_string_schema(
-    const std::string& json, const JSONSchema& schema, JSONValidationResult& result) {
-
+bool JSONValidator::validate_string_schema(const std::string& json, const JSONSchema& schema,
+                                           JSONValidationResult& result) {
   // Extract string content (remove quotes)
   if (json.size() < 2) return false;
   std::string content = json.substr(1, json.size() - 2);
@@ -575,16 +564,16 @@ bool JSONValidator::validate_string_schema(
   // Check length constraints
   if (schema.min_length && content.length() < *schema.min_length) {
     JSONValidationError error;
-    error.message = "String length " + std::to_string(content.length()) +
-                   " is less than minimum " + std::to_string(*schema.min_length);
+    error.message = "String length " + std::to_string(content.length()) + " is less than minimum " +
+                    std::to_string(*schema.min_length);
     result.errors.push_back(error);
     return false;
   }
 
   if (schema.max_length && content.length() > *schema.max_length) {
     JSONValidationError error;
-    error.message = "String length " + std::to_string(content.length()) +
-                   " exceeds maximum " + std::to_string(*schema.max_length);
+    error.message = "String length " + std::to_string(content.length()) + " exceeds maximum " +
+                    std::to_string(*schema.max_length);
     result.errors.push_back(error);
     return false;
   }
@@ -603,16 +592,15 @@ bool JSONValidator::validate_string_schema(
   return true;
 }
 
-bool JSONValidator::validate_number_schema(
-    const std::string& json, const JSONSchema& schema, JSONValidationResult& result) {
-
+bool JSONValidator::validate_number_schema(const std::string& json, const JSONSchema& schema,
+                                           JSONValidationResult& result) {
   double value = std::stod(json);
 
   // Check minimum
   if (schema.minimum && value < *schema.minimum) {
     JSONValidationError error;
-    error.message = "Number " + std::to_string(value) +
-                   " is less than minimum " + std::to_string(*schema.minimum);
+    error.message = "Number " + std::to_string(value) + " is less than minimum " +
+                    std::to_string(*schema.minimum);
     result.errors.push_back(error);
     return false;
   }
@@ -620,8 +608,8 @@ bool JSONValidator::validate_number_schema(
   // Check maximum
   if (schema.maximum && value > *schema.maximum) {
     JSONValidationError error;
-    error.message = "Number " + std::to_string(value) +
-                   " exceeds maximum " + std::to_string(*schema.maximum);
+    error.message =
+        "Number " + std::to_string(value) + " exceeds maximum " + std::to_string(*schema.maximum);
     result.errors.push_back(error);
     return false;
   }
@@ -629,9 +617,8 @@ bool JSONValidator::validate_number_schema(
   return true;
 }
 
-bool JSONValidator::validate_array_schema(
-    const std::string& json, const JSONSchema& schema, JSONValidationResult& result) {
-
+bool JSONValidator::validate_array_schema(const std::string& json, const JSONSchema& schema,
+                                          JSONValidationResult& result) {
   // Count array elements
   size_t element_count = 0;
   size_t depth = 0;
@@ -677,16 +664,16 @@ bool JSONValidator::validate_array_schema(
   // Check length constraints
   if (schema.min_length && element_count < *schema.min_length) {
     JSONValidationError error;
-    error.message = "Array length " + std::to_string(element_count) +
-                   " is less than minimum " + std::to_string(*schema.min_length);
+    error.message = "Array length " + std::to_string(element_count) + " is less than minimum " +
+                    std::to_string(*schema.min_length);
     result.errors.push_back(error);
     return false;
   }
 
   if (schema.max_length && element_count > *schema.max_length) {
     JSONValidationError error;
-    error.message = "Array length " + std::to_string(element_count) +
-                   " exceeds maximum " + std::to_string(*schema.max_length);
+    error.message = "Array length " + std::to_string(element_count) + " exceeds maximum " +
+                    std::to_string(*schema.max_length);
     result.errors.push_back(error);
     return false;
   }
@@ -697,9 +684,8 @@ bool JSONValidator::validate_array_schema(
   return true;
 }
 
-bool JSONValidator::validate_object_schema(
-    const std::string& json, const JSONSchema& schema, JSONValidationResult& result) {
-
+bool JSONValidator::validate_object_schema(const std::string& json, const JSONSchema& schema,
+                                           JSONValidationResult& result) {
   // TODO: Full object property validation would require a proper JSON parser
   // For now, we do basic validation
 
@@ -757,8 +743,7 @@ JSONSchemaBuilder& JSONSchemaBuilder::max_length(size_t len) {
   return *this;
 }
 
-JSONSchemaBuilder& JSONSchemaBuilder::property(
-    const std::string& name, const JSONSchema& schema) {
+JSONSchemaBuilder& JSONSchemaBuilder::property(const std::string& name, const JSONSchema& schema) {
   schema_.properties[name] = schema;
   return *this;
 }
@@ -773,9 +758,6 @@ JSONSchemaBuilder& JSONSchemaBuilder::enum_values(const std::vector<std::string>
   return *this;
 }
 
-JSONSchema JSONSchemaBuilder::build() const {
-  return schema_;
-}
+JSONSchema JSONSchemaBuilder::build() const { return schema_; }
 
 }  // namespace SolarSystem::Utils::Validation
-

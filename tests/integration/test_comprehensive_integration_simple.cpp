@@ -42,11 +42,10 @@ int main() {
   // Test 2: Simulation Engine Integration
   std::cout << "\n🧪 Test 2: Simulation Engine Integration..." << std::endl;
   try {
-    Simulation::SimulationConfig config{
-        .time_step = 86400.0,
-        .gravitational_constant = 6.67430e-11,
-        .use_adaptive_timestep = false,
-        .enable_collision_detection = false};
+    Simulation::SimulationConfig config{.time_step = 86400.0,
+                                        .gravitational_constant = 6.67430e-11,
+                                        .use_adaptive_timestep = false,
+                                        .enable_collision_detection = false};
 
     Simulation::SimulationEngine engine(config);
 
@@ -59,8 +58,8 @@ int main() {
 
     auto bodies_result = factory.create_default_bodies(options);
     if (bodies_result.has_value()) {
-      auto init_result = engine.initialize(std::move(bodies_result.value()),
-                                           std::chrono::system_clock::now());
+      auto init_result =
+          engine.initialize(std::move(bodies_result.value()), std::chrono::system_clock::now());
       if (init_result.has_value()) {
         std::cout << "  ✓ Simulation engine initialized successfully" << std::endl;
         tests_passed++;
@@ -92,12 +91,12 @@ int main() {
       throw std::runtime_error("Failed to create bodies");
     }
 
-    Simulation::SimulationConfig config{
-        .time_step = 86400.0, .gravitational_constant = 6.67430e-11};
+    Simulation::SimulationConfig config{.time_step = 86400.0,
+                                        .gravitational_constant = 6.67430e-11};
 
     Simulation::SimulationEngine engine(config);
-    auto init_result = engine.initialize(std::move(bodies_result.value()),
-                                         std::chrono::system_clock::now());
+    auto init_result =
+        engine.initialize(std::move(bodies_result.value()), std::chrono::system_clock::now());
     if (!init_result.has_value()) {
       throw std::runtime_error("Failed to initialize simulation");
     }
@@ -140,8 +139,8 @@ int main() {
   std::cout << "INTEGRATION TEST SUMMARY" << std::endl;
   std::cout << std::string(60, '=') << std::endl;
   std::cout << "Total Tests: " << (tests_passed + tests_failed) << std::endl;
-  std::cout << "Passed: " << tests_passed << " (" << (tests_passed * 100 / (tests_passed + tests_failed))
-            << "%)" << std::endl;
+  std::cout << "Passed: " << tests_passed << " ("
+            << (tests_passed * 100 / (tests_passed + tests_failed)) << "%)" << std::endl;
   std::cout << "Failed: " << tests_failed << std::endl;
   std::cout << std::string(60, '=') << std::endl;
 

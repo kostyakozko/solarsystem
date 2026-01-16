@@ -10,6 +10,8 @@
  * - Real data integration testing
  */
 
+#include <gtest/gtest.h>
+
 #include <chrono>
 #include <filesystem>
 #include <fstream>
@@ -20,7 +22,6 @@
 #include "solar_core/simulation/simulation_engine.hpp"
 #include "solar_jpl/jpl_client.hpp"
 #include "test_data_manager.hpp"
-#include <gtest/gtest.h>
 
 using namespace SolarSystem;
 using namespace TestData;

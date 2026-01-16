@@ -11,25 +11,20 @@
 
 #pragma once
 
-#include "solar_core/security/security_manager.hpp"
-
 #include <chrono>
 #include <functional>
 #include <memory>
 #include <string>
 #include <vector>
 
+#include "solar_core/security/security_manager.hpp"
+
 namespace SolarSystem::Security {
 
 /**
  * @brief Threat level
  */
-enum class ThreatLevel {
-  LOW,
-  MEDIUM,
-  HIGH,
-  CRITICAL
-};
+enum class ThreatLevel { LOW, MEDIUM, HIGH, CRITICAL };
 
 /**
  * @brief Convert threat level to string
@@ -104,8 +99,7 @@ class SecurityMonitor {
   /**
    * @brief Check for threats
    */
-  [[nodiscard]] std::vector<SecurityAlert> check_threats(
-      const std::string& identifier);
+  [[nodiscard]] std::vector<SecurityAlert> check_threats(const std::string& identifier);
 
   /**
    * @brief Get security metrics

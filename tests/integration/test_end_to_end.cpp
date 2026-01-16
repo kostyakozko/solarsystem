@@ -16,6 +16,7 @@
  * Requirements: 2.1, 2.2
  */
 
+#include <gtest/gtest.h>
 #include <unistd.h>
 
 #include <chrono>
@@ -30,7 +31,6 @@
 #include "solar_core/bodies/body_factory.hpp"
 #include "solar_core/simulation/simulation_engine.hpp"
 #include "test_data_manager.hpp"
-#include <gtest/gtest.h>
 
 using namespace SolarSystem;
 using namespace TestData;
@@ -112,7 +112,7 @@ TEST(EndToEndIntegrationTest, Solar_System_Launcher_Complete_Workflow) {
     auto result = TestApplicationRunner::run_command("./solar_system_launcher --help");
     ASSERT_TRUE(result.success);
     ASSERT_TRUE(result.stdout_output.find("Solar System") != std::string::npos ||
-result.stdout_output.find("Usage") != std::string::npos);
+                result.stdout_output.find("Usage") != std::string::npos);
   }
 
   // Test launcher status check
@@ -427,7 +427,6 @@ TEST(EndToEndIntegrationTest, Performance_and_Scalability_Validation) {
   }
 }
 
-
 // ============================================================================
 // TASK 5: END-TO-END WORKFLOW INTEGRATION TESTS
 // ============================================================================
@@ -506,8 +505,8 @@ TEST(EndToEndIntegrationTest, Launcher_Coordination_and_Component_Orchestration)
 
   // Test 2: Launcher simulation coordination
   {
-    auto result = TestApplicationRunner::run_command(
-        "./solar_system_launcher --simulate --date 2025-01-20");
+    auto result =
+        TestApplicationRunner::run_command("./solar_system_launcher --simulate --date 2025-01-20");
     ASSERT_TRUE(result.success);
 
     // Should coordinate fetch and simulation
@@ -522,8 +521,8 @@ TEST(EndToEndIntegrationTest, Launcher_Coordination_and_Component_Orchestration)
   // Test 3: Component interaction through launcher
   {
     // Test that launcher properly coordinates multiple components
-    auto result = TestApplicationRunner::run_command(
-        "./solar_system_launcher --simulate --date 2025-02-14");
+    auto result =
+        TestApplicationRunner::run_command("./solar_system_launcher --simulate --date 2025-02-14");
     ASSERT_TRUE(result.success);
 
     // Verify output indicates successful coordination
@@ -553,8 +552,8 @@ TEST(EndToEndIntegrationTest, Launcher_Coordination_and_Component_Orchestration)
     ASSERT_TRUE(result1.success);
 
     // Second operation
-    auto result2 = TestApplicationRunner::run_command(
-        "./solar_system_launcher --simulate --date 2025-03-01");
+    auto result2 =
+        TestApplicationRunner::run_command("./solar_system_launcher --simulate --date 2025-03-01");
     ASSERT_TRUE(result2.success);
 
     // Both should succeed independently
@@ -657,8 +656,8 @@ TEST(EndToEndIntegrationTest, Web_Integration_with_Backend_Services) {
 
   // Test 6: Web server handles invalid requests gracefully
   {
-    std::string cmd = "curl -s -w '%{http_code}' http://localhost:" + std::to_string(test_port) +
-                      "/nonexistent";
+    std::string cmd =
+        "curl -s -w '%{http_code}' http://localhost:" + std::to_string(test_port) + "/nonexistent";
     auto result = TestApplicationRunner::run_command(cmd, 5);
 
     // Should return 404 or similar error code
@@ -685,8 +684,8 @@ TEST(EndToEndIntegrationTest, Real_time_Monitoring_Integration) {
 
   // Test 2: Short real-time monitoring session
   {
-    auto result =
-        TestApplicationRunner::run_command("./solar_system_realtime --no-continuous --duration 3", 10);
+    auto result = TestApplicationRunner::run_command(
+        "./solar_system_realtime --no-continuous --duration 3", 10);
     ASSERT_TRUE(result.success);
 
     // Should provide monitoring output
@@ -698,8 +697,8 @@ TEST(EndToEndIntegrationTest, Real_time_Monitoring_Integration) {
 
   // Test 3: Real-time monitoring with specific bodies
   {
-    auto result =
-        TestApplicationRunner::run_command("./solar_system_realtime --no-continuous --duration 2", 10);
+    auto result = TestApplicationRunner::run_command(
+        "./solar_system_realtime --no-continuous --duration 2", 10);
     ASSERT_TRUE(result.success);
 
     // Should complete quickly
@@ -830,8 +829,8 @@ TEST(EndToEndIntegrationTest, Component_Interaction_and_Data_Flow_Validation) {
 
   // Test 3: Real-time monitoring data flow
   {
-    auto result =
-        TestApplicationRunner::run_command("./solar_system_realtime --no-continuous --duration 2", 10);
+    auto result = TestApplicationRunner::run_command(
+        "./solar_system_realtime --no-continuous --duration 2", 10);
     ASSERT_TRUE(result.success);
 
     // Should provide real-time data
@@ -849,8 +848,8 @@ TEST(EndToEndIntegrationTest, Component_Interaction_and_Data_Flow_Validation) {
     ASSERT_TRUE(sim.success);
 
     // Run real-time
-    auto rt =
-        TestApplicationRunner::run_command("./solar_system_realtime --no-continuous --duration 1", 5);
+    auto rt = TestApplicationRunner::run_command(
+        "./solar_system_realtime --no-continuous --duration 1", 5);
     ASSERT_TRUE(rt.success);
 
     // All components should work together
@@ -924,12 +923,11 @@ TEST(EndToEndIntegrationTest, Workflow_Resilience_and_Error_Recovery) {
 
   // Test 4: Real-time monitoring recovers from interruptions
   {
-    auto result =
-        TestApplicationRunner::run_command("./solar_system_realtime --no-continuous --duration 2", 10);
+    auto result = TestApplicationRunner::run_command(
+        "./solar_system_realtime --no-continuous --duration 2", 10);
     ASSERT_TRUE(result.success);
 
     // Should complete successfully
     ASSERT_FALSE(result.stdout_output.empty());
   }
 }
-

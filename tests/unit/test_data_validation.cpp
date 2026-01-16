@@ -12,6 +12,8 @@
  * Requirements: 5.3
  */
 
+#include <gtest/gtest.h>
+
 #include <algorithm>
 #include <cmath>
 #include <map>
@@ -19,8 +21,6 @@
 #include <set>
 #include <string>
 #include <vector>
-
-#include <gtest/gtest.h>
 
 /**
  * @brief Test data validation system
@@ -32,7 +32,7 @@ class TestDataValidator {
     bool is_valid = true;
     std::vector<std::string> errors;
     std::vector<std::string> warnings;
-    double quality_score = 1.0; // 0.0 to 1.0
+    double quality_score = 1.0;  // 0.0 to 1.0
     std::string summary;
   };
 
@@ -124,13 +124,11 @@ class TestDataValidator {
 
     // Consistency checks
     if (body.orbital_period_s > 0.0 && body.semi_major_axis_m == 0.0) {
-      result.warnings.push_back(
-          "Body has orbital period but zero semi-major axis");
+      result.warnings.push_back("Body has orbital period but zero semi-major axis");
       result.quality_score *= 0.8;
     }
 
-    result.summary = result.is_valid ? "Valid astronomical body"
-                                     : "Invalid astronomical body";
+    result.summary = result.is_valid ? "Valid astronomical body" : "Invalid astronomical body";
     return result;
   }
 
@@ -151,37 +149,32 @@ class TestDataValidator {
     }
 
     // Position validation
-    if (!std::isfinite(data.x) || !std::isfinite(data.y) ||
-        !std::isfinite(data.z)) {
+    if (!std::isfinite(data.x) || !std::isfinite(data.y) || !std::isfinite(data.z)) {
       result.is_valid = false;
       result.errors.push_back("Position contains non-finite values");
     }
 
     // Velocity validation
-    if (!std::isfinite(data.vx) || !std::isfinite(data.vy) ||
-        !std::isfinite(data.vz)) {
+    if (!std::isfinite(data.vx) || !std::isfinite(data.vy) || !std::isfinite(data.vz)) {
       result.is_valid = false;
       result.errors.push_back("Velocity contains non-finite values");
     }
 
     // Magnitude checks
-    double pos_magnitude =
-        std::sqrt(data.x * data.x + data.y * data.y + data.z * data.z);
-    double vel_magnitude =
-        std::sqrt(data.vx * data.vx + data.vy * data.vy + data.vz * data.vz);
+    double pos_magnitude = std::sqrt(data.x * data.x + data.y * data.y + data.z * data.z);
+    double vel_magnitude = std::sqrt(data.vx * data.vx + data.vy * data.vy + data.vz * data.vz);
 
-    if (pos_magnitude > 1e13) { // Beyond solar system
+    if (pos_magnitude > 1e13) {  // Beyond solar system
       result.warnings.push_back("Position magnitude very large");
       result.quality_score *= 0.9;
     }
 
-    if (vel_magnitude > 1e6) { // Faster than escape velocity
+    if (vel_magnitude > 1e6) {  // Faster than escape velocity
       result.warnings.push_back("Velocity magnitude very large");
       result.quality_score *= 0.9;
     }
 
-    result.summary =
-        result.is_valid ? "Valid ephemeris data" : "Invalid ephemeris data";
+    result.summary = result.is_valid ? "Valid ephemeris data" : "Invalid ephemeris data";
     return result;
   }
 
@@ -211,13 +204,11 @@ class TestDataValidator {
     }
 
     // Integrator validation
-    std::set<std::string> valid_integrators = {"euler", "rk4", "leapfrog",
-                                                "verlet", "rk45"};
+    std::set<std::string> valid_integrators = {"euler", "rk4", "leapfrog", "verlet", "rk45"};
     if (config.integrator.empty()) {
       result.is_valid = false;
       result.errors.push_back("Integrator name is empty");
-    } else if (valid_integrators.find(config.integrator) ==
-               valid_integrators.end()) {
+    } else if (valid_integrators.find(config.integrator) == valid_integrators.end()) {
       result.warnings.push_back("Unknown integrator: " + config.integrator);
       result.quality_score *= 0.9;
     }
@@ -240,15 +231,13 @@ class TestDataValidator {
       result.errors.push_back("Output frequency must be positive");
     }
 
-    result.summary =
-        result.is_valid ? "Valid configuration" : "Invalid configuration";
+    result.summary = result.is_valid ? "Valid configuration" : "Invalid configuration";
     return result;
   }
 
   // Validate cross-references between bodies and ephemeris
-  ValidationResult validate_cross_references(
-      const std::vector<AstronomicalBody>& bodies,
-      const std::vector<EphemerisData>& ephemeris_list) {
+  ValidationResult validate_cross_references(const std::vector<AstronomicalBody>& bodies,
+                                             const std::vector<EphemerisData>& ephemeris_list) {
     ValidationResult result;
 
     // Build set of body names
@@ -263,8 +252,7 @@ class TestDataValidator {
       referenced_bodies.insert(eph.body_id);
 
       if (body_names.find(eph.body_id) == body_names.end()) {
-        result.errors.push_back("Ephemeris references unknown body: " +
-                                eph.body_id);
+        result.errors.push_back("Ephemeris references unknown body: " + eph.body_id);
         result.is_valid = false;
       }
     }
@@ -277,14 +265,12 @@ class TestDataValidator {
       }
     }
 
-    result.summary = result.is_valid ? "Valid cross-references"
-                                     : "Invalid cross-references";
+    result.summary = result.is_valid ? "Valid cross-references" : "Invalid cross-references";
     return result;
   }
 
   // Validate time series consistency
-  ValidationResult validate_time_series(
-      const std::vector<EphemerisData>& series) {
+  ValidationResult validate_time_series(const std::vector<EphemerisData>& series) {
     ValidationResult result;
 
     if (series.empty()) {
@@ -330,14 +316,12 @@ class TestDataValidator {
       }
     }
 
-    result.summary =
-        result.is_valid ? "Valid time series" : "Invalid time series";
+    result.summary = result.is_valid ? "Valid time series" : "Invalid time series";
     return result;
   }
 
   // Generate comprehensive quality report
-  std::string generate_quality_report(
-      const std::vector<ValidationResult>& results) {
+  std::string generate_quality_report(const std::vector<ValidationResult>& results) {
     std::string report = "=== Data Quality Report ===\n";
 
     int total = static_cast<int>(results.size());
@@ -364,86 +348,234 @@ class TestDataValidator {
     return report;
   }
 };
-  // Test 1: Data consistency and integrity checking
-  TEST(TestDataValidationSystemTestsTest, Data_Consistency_and_Integrity_Checking) {
-    TestDataValidator validator;
+// Test 1: Data consistency and integrity checking
+TEST(TestDataValidationSystemTestsTest, Data_Consistency_and_Integrity_Checking) {
+  TestDataValidator validator;
 
-    // Test 1.1: Valid astronomical body
-    {
-      TestDataValidator::AstronomicalBody body;
-      body.name = "Earth";
-      body.mass_kg = 5.972e24;
-      body.radius_m = 6.371e6;
-      body.orbital_period_s = 31557600.0;
-      body.semi_major_axis_m = 1.496e11;
-      body.eccentricity = 0.0167;
-      body.inclination_deg = 0.0;
+  // Test 1.1: Valid astronomical body
+  {
+    TestDataValidator::AstronomicalBody body;
+    body.name = "Earth";
+    body.mass_kg = 5.972e24;
+    body.radius_m = 6.371e6;
+    body.orbital_period_s = 31557600.0;
+    body.semi_major_axis_m = 1.496e11;
+    body.eccentricity = 0.0167;
+    body.inclination_deg = 0.0;
 
-      auto result = validator.validate_astronomical_body(body);
-      ASSERT_TRUE(result.is_valid);
-      ASSERT_TRUE(result.errors.empty());
-      ASSERT_EQ(result.quality_score, 1.0);
-    }
-
-    // Test 1.2: Invalid astronomical body (negative mass)
-    {
-      TestDataValidator::AstronomicalBody body;
-      body.name = "Invalid";
-      body.mass_kg = -1000.0;
-      body.radius_m = 1000.0;
-      body.orbital_period_s = 0.0;
-      body.semi_major_axis_m = 0.0;
-      body.eccentricity = 0.0;
-      body.inclination_deg = 0.0;
-
-      auto result = validator.validate_astronomical_body(body);
-      ASSERT_FALSE(result.is_valid);
-      ASSERT_FALSE(result.errors.empty());
-      EXPECT_NE(std::string::npos, result.errors[0].find("positive"));
-    }
-
-    // Test 1.3: Body with warnings
-    {
-      TestDataValidator::AstronomicalBody body;
-      body.name = "HighEccentricity";
-      body.mass_kg = 1e24;
-      body.radius_m = 1e6;
-      body.orbital_period_s = 1e7;
-      body.semi_major_axis_m = 1e11;
-      body.eccentricity = 0.95; // Very high
-      body.inclination_deg = 5.0;
-
-      auto result = validator.validate_astronomical_body(body);
-      ASSERT_TRUE(result.is_valid);
-      ASSERT_FALSE(result.warnings.empty());
-      ASSERT_LT(result.quality_score, 1.0);
-    }
-
-    // Test 1.4: Invalid eccentricity
-    {
-      TestDataValidator::AstronomicalBody body;
-      body.name = "BadEccentricity";
-      body.mass_kg = 1e24;
-      body.radius_m = 1e6;
-      body.orbital_period_s = 1e7;
-      body.semi_major_axis_m = 1e11;
-      body.eccentricity = 1.5; // Invalid
-      body.inclination_deg = 5.0;
-
-      auto result = validator.validate_astronomical_body(body);
-      ASSERT_FALSE(result.is_valid);
-      EXPECT_NE(std::string::npos, result.errors[0].find("Eccentricity"));
-    }
+    auto result = validator.validate_astronomical_body(body);
+    ASSERT_TRUE(result.is_valid);
+    ASSERT_TRUE(result.errors.empty());
+    ASSERT_EQ(result.quality_score, 1.0);
   }
 
-  // Test 2: Format validation for all data types
-  TEST(TestDataValidationSystemTestsTest, Format_Validation) {
-    TestDataValidator validator;
+  // Test 1.2: Invalid astronomical body (negative mass)
+  {
+    TestDataValidator::AstronomicalBody body;
+    body.name = "Invalid";
+    body.mass_kg = -1000.0;
+    body.radius_m = 1000.0;
+    body.orbital_period_s = 0.0;
+    body.semi_major_axis_m = 0.0;
+    body.eccentricity = 0.0;
+    body.inclination_deg = 0.0;
 
-    // Test 2.1: Valid ephemeris data
-    {
+    auto result = validator.validate_astronomical_body(body);
+    ASSERT_FALSE(result.is_valid);
+    ASSERT_FALSE(result.errors.empty());
+    EXPECT_NE(std::string::npos, result.errors[0].find("positive"));
+  }
+
+  // Test 1.3: Body with warnings
+  {
+    TestDataValidator::AstronomicalBody body;
+    body.name = "HighEccentricity";
+    body.mass_kg = 1e24;
+    body.radius_m = 1e6;
+    body.orbital_period_s = 1e7;
+    body.semi_major_axis_m = 1e11;
+    body.eccentricity = 0.95;  // Very high
+    body.inclination_deg = 5.0;
+
+    auto result = validator.validate_astronomical_body(body);
+    ASSERT_TRUE(result.is_valid);
+    ASSERT_FALSE(result.warnings.empty());
+    ASSERT_LT(result.quality_score, 1.0);
+  }
+
+  // Test 1.4: Invalid eccentricity
+  {
+    TestDataValidator::AstronomicalBody body;
+    body.name = "BadEccentricity";
+    body.mass_kg = 1e24;
+    body.radius_m = 1e6;
+    body.orbital_period_s = 1e7;
+    body.semi_major_axis_m = 1e11;
+    body.eccentricity = 1.5;  // Invalid
+    body.inclination_deg = 5.0;
+
+    auto result = validator.validate_astronomical_body(body);
+    ASSERT_FALSE(result.is_valid);
+    EXPECT_NE(std::string::npos, result.errors[0].find("Eccentricity"));
+  }
+}
+
+// Test 2: Format validation for all data types
+TEST(TestDataValidationSystemTestsTest, Format_Validation) {
+  TestDataValidator validator;
+
+  // Test 2.1: Valid ephemeris data
+  {
+    TestDataValidator::EphemerisData data;
+    data.jd = 2451545.0;
+    data.x = 1.496e11;
+    data.y = 0.0;
+    data.z = 0.0;
+    data.vx = 0.0;
+    data.vy = 29780.0;
+    data.vz = 0.0;
+    data.body_id = "Earth";
+
+    auto result = validator.validate_ephemeris_data(data);
+    ASSERT_TRUE(result.is_valid);
+    ASSERT_TRUE(result.errors.empty());
+  }
+
+  // Test 2.2: Invalid ephemeris (non-finite values)
+  {
+    TestDataValidator::EphemerisData data;
+    data.jd = 2451545.0;
+    data.x = std::numeric_limits<double>::infinity();
+    data.y = 0.0;
+    data.z = 0.0;
+    data.vx = 0.0;
+    data.vy = 0.0;
+    data.vz = 0.0;
+    data.body_id = "Invalid";
+
+    auto result = validator.validate_ephemeris_data(data);
+    ASSERT_FALSE(result.is_valid);
+    EXPECT_NE(std::string::npos, result.errors[0].find("non-finite"));
+  }
+
+  // Test 2.3: Valid configuration
+  {
+    TestDataValidator::ConfigurationData config;
+    config.timestep_s = 3600.0;
+    config.duration_s = 86400.0;
+    config.integrator = "rk4";
+    config.tolerance = 1e-9;
+    config.enable_relativity = false;
+    config.output_frequency = 10;
+
+    auto result = validator.validate_configuration(config);
+    ASSERT_TRUE(result.is_valid);
+    ASSERT_TRUE(result.errors.empty());
+  }
+
+  // Test 2.4: Invalid configuration (negative timestep)
+  {
+    TestDataValidator::ConfigurationData config;
+    config.timestep_s = -100.0;
+    config.duration_s = 86400.0;
+    config.integrator = "rk4";
+    config.tolerance = 1e-9;
+    config.enable_relativity = false;
+    config.output_frequency = 10;
+
+    auto result = validator.validate_configuration(config);
+    ASSERT_FALSE(result.is_valid);
+    EXPECT_NE(std::string::npos, result.errors[0].find("positive"));
+  }
+}
+
+// Test 3: Cross-reference validation
+TEST(TestDataValidationSystemTestsTest, Cross_Reference_Validation) {
+  TestDataValidator validator;
+
+  // Test 3.1: Valid cross-references
+  {
+    std::vector<TestDataValidator::AstronomicalBody> bodies;
+    TestDataValidator::AstronomicalBody earth;
+    earth.name = "Earth";
+    earth.mass_kg = 5.972e24;
+    earth.radius_m = 6.371e6;
+    earth.orbital_period_s = 31557600.0;
+    earth.semi_major_axis_m = 1.496e11;
+    earth.eccentricity = 0.0167;
+    earth.inclination_deg = 0.0;
+    bodies.push_back(earth);
+
+    std::vector<TestDataValidator::EphemerisData> ephemeris;
+    TestDataValidator::EphemerisData data;
+    data.jd = 2451545.0;
+    data.x = 1.496e11;
+    data.y = 0.0;
+    data.z = 0.0;
+    data.vx = 0.0;
+    data.vy = 29780.0;
+    data.vz = 0.0;
+    data.body_id = "Earth";
+    ephemeris.push_back(data);
+
+    auto result = validator.validate_cross_references(bodies, ephemeris);
+    ASSERT_TRUE(result.is_valid);
+    ASSERT_TRUE(result.errors.empty());
+  }
+
+  // Test 3.2: Invalid cross-reference (unknown body)
+  {
+    std::vector<TestDataValidator::AstronomicalBody> bodies;
+    std::vector<TestDataValidator::EphemerisData> ephemeris;
+
+    TestDataValidator::EphemerisData data;
+    data.jd = 2451545.0;
+    data.x = 0.0;
+    data.y = 0.0;
+    data.z = 0.0;
+    data.vx = 0.0;
+    data.vy = 0.0;
+    data.vz = 0.0;
+    data.body_id = "UnknownBody";
+    ephemeris.push_back(data);
+
+    auto result = validator.validate_cross_references(bodies, ephemeris);
+    ASSERT_FALSE(result.is_valid);
+    EXPECT_NE(std::string::npos, result.errors[0].find("unknown body"));
+  }
+
+  // Test 3.3: Warning for body without ephemeris
+  {
+    std::vector<TestDataValidator::AstronomicalBody> bodies;
+    TestDataValidator::AstronomicalBody mars;
+    mars.name = "Mars";
+    mars.mass_kg = 6.39e23;
+    mars.radius_m = 3.39e6;
+    mars.orbital_period_s = 59355072.0;
+    mars.semi_major_axis_m = 2.279e11;
+    mars.eccentricity = 0.0934;
+    mars.inclination_deg = 1.85;
+    bodies.push_back(mars);
+
+    std::vector<TestDataValidator::EphemerisData> ephemeris;
+
+    auto result = validator.validate_cross_references(bodies, ephemeris);
+    ASSERT_TRUE(result.is_valid);
+    ASSERT_FALSE(result.warnings.empty());
+    ASSERT_LT(result.quality_score, 1.0);
+  }
+}
+
+// Test 4: Time series validation
+TEST(TestDataValidationSystemTestsTest, Time_Series_Validation) {
+  TestDataValidator validator;
+
+  // Test 4.1: Valid time series
+  {
+    std::vector<TestDataValidator::EphemerisData> series;
+    for (int i = 0; i < 5; ++i) {
       TestDataValidator::EphemerisData data;
-      data.jd = 2451545.0;
+      data.jd = 2451545.0 + i;
       data.x = 1.496e11;
       data.y = 0.0;
       data.z = 0.0;
@@ -451,277 +583,129 @@ class TestDataValidator {
       data.vy = 29780.0;
       data.vz = 0.0;
       data.body_id = "Earth";
-
-      auto result = validator.validate_ephemeris_data(data);
-      ASSERT_TRUE(result.is_valid);
-      ASSERT_TRUE(result.errors.empty());
+      series.push_back(data);
     }
 
-    // Test 2.2: Invalid ephemeris (non-finite values)
-    {
-      TestDataValidator::EphemerisData data;
-      data.jd = 2451545.0;
-      data.x = std::numeric_limits<double>::infinity();
-      data.y = 0.0;
-      data.z = 0.0;
-      data.vx = 0.0;
-      data.vy = 0.0;
-      data.vz = 0.0;
-      data.body_id = "Invalid";
-
-      auto result = validator.validate_ephemeris_data(data);
-      ASSERT_FALSE(result.is_valid);
-      EXPECT_NE(std::string::npos, result.errors[0].find("non-finite"));
-    }
-
-    // Test 2.3: Valid configuration
-    {
-      TestDataValidator::ConfigurationData config;
-      config.timestep_s = 3600.0;
-      config.duration_s = 86400.0;
-      config.integrator = "rk4";
-      config.tolerance = 1e-9;
-      config.enable_relativity = false;
-      config.output_frequency = 10;
-
-      auto result = validator.validate_configuration(config);
-      ASSERT_TRUE(result.is_valid);
-      ASSERT_TRUE(result.errors.empty());
-    }
-
-    // Test 2.4: Invalid configuration (negative timestep)
-    {
-      TestDataValidator::ConfigurationData config;
-      config.timestep_s = -100.0;
-      config.duration_s = 86400.0;
-      config.integrator = "rk4";
-      config.tolerance = 1e-9;
-      config.enable_relativity = false;
-      config.output_frequency = 10;
-
-      auto result = validator.validate_configuration(config);
-      ASSERT_FALSE(result.is_valid);
-      EXPECT_NE(std::string::npos, result.errors[0].find("positive"));
-    }
+    auto result = validator.validate_time_series(series);
+    ASSERT_TRUE(result.is_valid);
+    ASSERT_TRUE(result.errors.empty());
   }
 
-  // Test 3: Cross-reference validation
-  TEST(TestDataValidationSystemTestsTest, Cross_Reference_Validation) {
-    TestDataValidator validator;
+  // Test 4.2: Invalid time series (not monotonic)
+  {
+    std::vector<TestDataValidator::EphemerisData> series;
+    TestDataValidator::EphemerisData data1;
+    data1.jd = 2451545.0;
+    data1.body_id = "Earth";
+    data1.x = data1.y = data1.z = 0.0;
+    data1.vx = data1.vy = data1.vz = 0.0;
 
-    // Test 3.1: Valid cross-references
-    {
-      std::vector<TestDataValidator::AstronomicalBody> bodies;
-      TestDataValidator::AstronomicalBody earth;
-      earth.name = "Earth";
-      earth.mass_kg = 5.972e24;
-      earth.radius_m = 6.371e6;
-      earth.orbital_period_s = 31557600.0;
-      earth.semi_major_axis_m = 1.496e11;
-      earth.eccentricity = 0.0167;
-      earth.inclination_deg = 0.0;
-      bodies.push_back(earth);
+    TestDataValidator::EphemerisData data2;
+    data2.jd = 2451544.0;  // Earlier time!
+    data2.body_id = "Earth";
+    data2.x = data2.y = data2.z = 0.0;
+    data2.vx = data2.vy = data2.vz = 0.0;
 
-      std::vector<TestDataValidator::EphemerisData> ephemeris;
-      TestDataValidator::EphemerisData data;
-      data.jd = 2451545.0;
-      data.x = 1.496e11;
-      data.y = 0.0;
-      data.z = 0.0;
-      data.vx = 0.0;
-      data.vy = 29780.0;
-      data.vz = 0.0;
-      data.body_id = "Earth";
-      ephemeris.push_back(data);
+    series.push_back(data1);
+    series.push_back(data2);
 
-      auto result = validator.validate_cross_references(bodies, ephemeris);
-      ASSERT_TRUE(result.is_valid);
-      ASSERT_TRUE(result.errors.empty());
-    }
-
-    // Test 3.2: Invalid cross-reference (unknown body)
-    {
-      std::vector<TestDataValidator::AstronomicalBody> bodies;
-      std::vector<TestDataValidator::EphemerisData> ephemeris;
-
-      TestDataValidator::EphemerisData data;
-      data.jd = 2451545.0;
-      data.x = 0.0;
-      data.y = 0.0;
-      data.z = 0.0;
-      data.vx = 0.0;
-      data.vy = 0.0;
-      data.vz = 0.0;
-      data.body_id = "UnknownBody";
-      ephemeris.push_back(data);
-
-      auto result = validator.validate_cross_references(bodies, ephemeris);
-      ASSERT_FALSE(result.is_valid);
-      EXPECT_NE(std::string::npos, result.errors[0].find("unknown body"));
-    }
-
-    // Test 3.3: Warning for body without ephemeris
-    {
-      std::vector<TestDataValidator::AstronomicalBody> bodies;
-      TestDataValidator::AstronomicalBody mars;
-      mars.name = "Mars";
-      mars.mass_kg = 6.39e23;
-      mars.radius_m = 3.39e6;
-      mars.orbital_period_s = 59355072.0;
-      mars.semi_major_axis_m = 2.279e11;
-      mars.eccentricity = 0.0934;
-      mars.inclination_deg = 1.85;
-      bodies.push_back(mars);
-
-      std::vector<TestDataValidator::EphemerisData> ephemeris;
-
-      auto result = validator.validate_cross_references(bodies, ephemeris);
-      ASSERT_TRUE(result.is_valid);
-      ASSERT_FALSE(result.warnings.empty());
-      ASSERT_LT(result.quality_score, 1.0);
-    }
+    auto result = validator.validate_time_series(series);
+    ASSERT_FALSE(result.is_valid);
+    EXPECT_NE(std::string::npos, result.errors[0].find("monotonically"));
   }
 
-  // Test 4: Time series validation
-  TEST(TestDataValidationSystemTestsTest, Time_Series_Validation) {
-    TestDataValidator validator;
+  // Test 4.3: Inconsistent body IDs
+  {
+    std::vector<TestDataValidator::EphemerisData> series;
+    TestDataValidator::EphemerisData data1;
+    data1.jd = 2451545.0;
+    data1.body_id = "Earth";
+    data1.x = data1.y = data1.z = 0.0;
+    data1.vx = data1.vy = data1.vz = 0.0;
 
-    // Test 4.1: Valid time series
-    {
-      std::vector<TestDataValidator::EphemerisData> series;
-      for (int i = 0; i < 5; ++i) {
-        TestDataValidator::EphemerisData data;
-        data.jd = 2451545.0 + i;
-        data.x = 1.496e11;
-        data.y = 0.0;
-        data.z = 0.0;
-        data.vx = 0.0;
-        data.vy = 29780.0;
-        data.vz = 0.0;
-        data.body_id = "Earth";
-        series.push_back(data);
-      }
+    TestDataValidator::EphemerisData data2;
+    data2.jd = 2451546.0;
+    data2.body_id = "Mars";  // Different body!
+    data2.x = data2.y = data2.z = 0.0;
+    data2.vx = data2.vy = data2.vz = 0.0;
 
-      auto result = validator.validate_time_series(series);
-      ASSERT_TRUE(result.is_valid);
-      ASSERT_TRUE(result.errors.empty());
-    }
+    series.push_back(data1);
+    series.push_back(data2);
 
-    // Test 4.2: Invalid time series (not monotonic)
-    {
-      std::vector<TestDataValidator::EphemerisData> series;
-      TestDataValidator::EphemerisData data1;
-      data1.jd = 2451545.0;
-      data1.body_id = "Earth";
-      data1.x = data1.y = data1.z = 0.0;
-      data1.vx = data1.vy = data1.vz = 0.0;
-
-      TestDataValidator::EphemerisData data2;
-      data2.jd = 2451544.0; // Earlier time!
-      data2.body_id = "Earth";
-      data2.x = data2.y = data2.z = 0.0;
-      data2.vx = data2.vy = data2.vz = 0.0;
-
-      series.push_back(data1);
-      series.push_back(data2);
-
-      auto result = validator.validate_time_series(series);
-      ASSERT_FALSE(result.is_valid);
-      EXPECT_NE(std::string::npos, result.errors[0].find("monotonically"));
-    }
-
-    // Test 4.3: Inconsistent body IDs
-    {
-      std::vector<TestDataValidator::EphemerisData> series;
-      TestDataValidator::EphemerisData data1;
-      data1.jd = 2451545.0;
-      data1.body_id = "Earth";
-      data1.x = data1.y = data1.z = 0.0;
-      data1.vx = data1.vy = data1.vz = 0.0;
-
-      TestDataValidator::EphemerisData data2;
-      data2.jd = 2451546.0;
-      data2.body_id = "Mars"; // Different body!
-      data2.x = data2.y = data2.z = 0.0;
-      data2.vx = data2.vy = data2.vz = 0.0;
-
-      series.push_back(data1);
-      series.push_back(data2);
-
-      auto result = validator.validate_time_series(series);
-      ASSERT_FALSE(result.is_valid);
-      EXPECT_NE(std::string::npos, result.errors[0].find("Inconsistent"));
-    }
-
-    // Test 4.4: Empty time series
-    {
-      std::vector<TestDataValidator::EphemerisData> series;
-      auto result = validator.validate_time_series(series);
-      ASSERT_FALSE(result.warnings.empty());
-      ASSERT_EQ(result.quality_score, 0.5);
-    }
+    auto result = validator.validate_time_series(series);
+    ASSERT_FALSE(result.is_valid);
+    EXPECT_NE(std::string::npos, result.errors[0].find("Inconsistent"));
   }
 
-  // Test 5: Data quality assessment and reporting
-  TEST(TestDataValidationSystemTestsTest, Data_Quality_Assessment_and_Reporting) {
-    TestDataValidator validator;
-
-    // Test 5.1: Generate quality report
-    {
-      std::vector<TestDataValidator::ValidationResult> results;
-
-      // Add some valid results
-      for (int i = 0; i < 7; ++i) {
-        TestDataValidator::ValidationResult result;
-        result.is_valid = true;
-        result.quality_score = 1.0;
-        results.push_back(result);
-      }
-
-      // Add some results with warnings
-      for (int i = 0; i < 2; ++i) {
-        TestDataValidator::ValidationResult result;
-        result.is_valid = true;
-        result.warnings.push_back("Some warning");
-        result.quality_score = 0.9;
-        results.push_back(result);
-      }
-
-      // Add an invalid result
-      TestDataValidator::ValidationResult invalid;
-      invalid.is_valid = false;
-      invalid.errors.push_back("Some error");
-      invalid.quality_score = 0.0;
-      results.push_back(invalid);
-
-      std::string report = validator.generate_quality_report(results);
-
-      EXPECT_NE(std::string::npos, report.find("Total validations: 10"));
-      EXPECT_NE(std::string::npos, report.find("Valid: 9"));
-      EXPECT_NE(std::string::npos, report.find("Invalid: 1"));
-      EXPECT_NE(std::string::npos, report.find("With warnings: 2"));
-    }
-
-    // Test 5.2: Quality score calculation
-    {
-      std::vector<TestDataValidator::ValidationResult> results;
-
-      TestDataValidator::ValidationResult r1;
-      r1.quality_score = 1.0;
-      results.push_back(r1);
-
-      TestDataValidator::ValidationResult r2;
-      r2.quality_score = 0.8;
-      results.push_back(r2);
-
-      std::string report = validator.generate_quality_report(results);
-      EXPECT_NE(std::string::npos, report.find("0.9")); // Average
-    }
-
-    // Test 5.3: Empty report
-    {
-      std::vector<TestDataValidator::ValidationResult> results;
-      std::string report = validator.generate_quality_report(results);
-      EXPECT_NE(std::string::npos, report.find("Total validations: 0"));
-    }
+  // Test 4.4: Empty time series
+  {
+    std::vector<TestDataValidator::EphemerisData> series;
+    auto result = validator.validate_time_series(series);
+    ASSERT_FALSE(result.warnings.empty());
+    ASSERT_EQ(result.quality_score, 0.5);
   }
+}
+
+// Test 5: Data quality assessment and reporting
+TEST(TestDataValidationSystemTestsTest, Data_Quality_Assessment_and_Reporting) {
+  TestDataValidator validator;
+
+  // Test 5.1: Generate quality report
+  {
+    std::vector<TestDataValidator::ValidationResult> results;
+
+    // Add some valid results
+    for (int i = 0; i < 7; ++i) {
+      TestDataValidator::ValidationResult result;
+      result.is_valid = true;
+      result.quality_score = 1.0;
+      results.push_back(result);
+    }
+
+    // Add some results with warnings
+    for (int i = 0; i < 2; ++i) {
+      TestDataValidator::ValidationResult result;
+      result.is_valid = true;
+      result.warnings.push_back("Some warning");
+      result.quality_score = 0.9;
+      results.push_back(result);
+    }
+
+    // Add an invalid result
+    TestDataValidator::ValidationResult invalid;
+    invalid.is_valid = false;
+    invalid.errors.push_back("Some error");
+    invalid.quality_score = 0.0;
+    results.push_back(invalid);
+
+    std::string report = validator.generate_quality_report(results);
+
+    EXPECT_NE(std::string::npos, report.find("Total validations: 10"));
+    EXPECT_NE(std::string::npos, report.find("Valid: 9"));
+    EXPECT_NE(std::string::npos, report.find("Invalid: 1"));
+    EXPECT_NE(std::string::npos, report.find("With warnings: 2"));
+  }
+
+  // Test 5.2: Quality score calculation
+  {
+    std::vector<TestDataValidator::ValidationResult> results;
+
+    TestDataValidator::ValidationResult r1;
+    r1.quality_score = 1.0;
+    results.push_back(r1);
+
+    TestDataValidator::ValidationResult r2;
+    r2.quality_score = 0.8;
+    results.push_back(r2);
+
+    std::string report = validator.generate_quality_report(results);
+    EXPECT_NE(std::string::npos, report.find("0.9"));  // Average
+  }
+
+  // Test 5.3: Empty report
+  {
+    std::vector<TestDataValidator::ValidationResult> results;
+    std::string report = validator.generate_quality_report(results);
+    EXPECT_NE(std::string::npos, report.find("Total validations: 0"));
+  }
+}

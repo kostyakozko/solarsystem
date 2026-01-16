@@ -592,49 +592,54 @@ SimulationArgumentParser::SimulationArgumentParser(std::string_view program_name
         config_.verbose = true;
       }));
 
-  parser_.add_option(Option("", "--body-set", "Select standardized body set (essential|important|complete)")
-                         .requires_value()
-                         .action([this](const std::optional<std::string>& value) {
-                           if (value) {
-                             std::string set = *value;
-                             // Convert to lowercase for case-insensitive comparison
-                             std::transform(set.begin(), set.end(), set.begin(), ::tolower);
-                             if (set == "essential" || set == "important" || set == "complete") {
-                               config_.body_set = set;
-                             } else {
-                               throw std::invalid_argument("Invalid body set. Use: essential, important, or complete");
-                             }
-                           }
-                         }));
+  parser_.add_option(
+      Option("", "--body-set", "Select standardized body set (essential|important|complete)")
+          .requires_value()
+          .action([this](const std::optional<std::string>& value) {
+            if (value) {
+              std::string set = *value;
+              // Convert to lowercase for case-insensitive comparison
+              std::transform(set.begin(), set.end(), set.begin(), ::tolower);
+              if (set == "essential" || set == "important" || set == "complete") {
+                config_.body_set = set;
+              } else {
+                throw std::invalid_argument(
+                    "Invalid body set. Use: essential, important, or complete");
+              }
+            }
+          }));
 
   // Checkpoint options
-  parser_.add_option(Option("", "--enable-checkpointing", "Enable automatic checkpointing during simulation")
-                         .as_flag()
-                         .action([this](const auto&) { config_.enable_checkpointing = true; }));
+  parser_.add_option(
+      Option("", "--enable-checkpointing", "Enable automatic checkpointing during simulation")
+          .as_flag()
+          .action([this](const auto&) { config_.enable_checkpointing = true; }));
 
-  parser_.add_option(Option("", "--checkpoint-interval", "Set checkpoint interval in seconds (default: 3600)")
-                         .requires_value()
-                         .validate([](const std::string& value) {
-                           try {
-                             int interval = std::stoi(value);
-                             return interval > 0 && interval <= 86400;  // 1 second to 1 day
-                           } catch (...) {
-                             return false;
-                           }
-                         })
-                         .action([this](const std::optional<std::string>& value) {
-                           if (value) {
-                             config_.checkpoint_interval = *value;
-                           }
-                         }));
+  parser_.add_option(
+      Option("", "--checkpoint-interval", "Set checkpoint interval in seconds (default: 3600)")
+          .requires_value()
+          .validate([](const std::string& value) {
+            try {
+              int interval = std::stoi(value);
+              return interval > 0 && interval <= 86400;  // 1 second to 1 day
+            } catch (...) {
+              return false;
+            }
+          })
+          .action([this](const std::optional<std::string>& value) {
+            if (value) {
+              config_.checkpoint_interval = *value;
+            }
+          }));
 
-  parser_.add_option(Option("", "--checkpoint-dir", "Set checkpoint directory (default: checkpoints)")
-                         .requires_value()
-                         .action([this](const std::optional<std::string>& value) {
-                           if (value) {
-                             config_.checkpoint_directory = *value;
-                           }
-                         }));
+  parser_.add_option(
+      Option("", "--checkpoint-dir", "Set checkpoint directory (default: checkpoints)")
+          .requires_value()
+          .action([this](const std::optional<std::string>& value) {
+            if (value) {
+              config_.checkpoint_directory = *value;
+            }
+          }));
 
   parser_.add_option(Option("", "--resume-from", "Resume simulation from checkpoint ID")
                          .requires_value()
@@ -1027,51 +1032,58 @@ RealtimeArgumentParser::RealtimeArgumentParser(std::string_view program_name)
                            }
                          }));
 
-  parser_.add_option(Option("", "--body-set", "Select standardized body set (essential|important|complete)")
-                         .requires_value()
-                         .action([this](const std::optional<std::string>& value) {
-                           if (value) {
-                             std::string set = *value;
-                             // Convert to lowercase for case-insensitive comparison
-                             std::transform(set.begin(), set.end(), set.begin(), ::tolower);
-                             if (set == "essential" || set == "important" || set == "complete") {
-                               config_.body_set = set;
-                             } else {
-                               throw std::invalid_argument("Invalid body set. Use: essential, important, or complete");
-                             }
-                           }
-                         }));
+  parser_.add_option(
+      Option("", "--body-set", "Select standardized body set (essential|important|complete)")
+          .requires_value()
+          .action([this](const std::optional<std::string>& value) {
+            if (value) {
+              std::string set = *value;
+              // Convert to lowercase for case-insensitive comparison
+              std::transform(set.begin(), set.end(), set.begin(), ::tolower);
+              if (set == "essential" || set == "important" || set == "complete") {
+                config_.body_set = set;
+              } else {
+                throw std::invalid_argument(
+                    "Invalid body set. Use: essential, important, or complete");
+              }
+            }
+          }));
 
   // Visualization options
-  parser_.add_option(Option("", "--viz-mode", "Visualization mode (table|grid|list|minimal|detailed|dashboard)")
-                         .requires_value()
-                         .action([this](const std::optional<std::string>& value) {
-                           if (value) {
-                             std::string mode = *value;
-                             std::transform(mode.begin(), mode.end(), mode.begin(), ::tolower);
-                             if (mode == "table" || mode == "grid" || mode == "list" ||
-                                 mode == "minimal" || mode == "detailed" || mode == "dashboard") {
-                               config_.visualization_mode = mode;
-                             } else {
-                               throw std::invalid_argument("Invalid visualization mode. Use: table, grid, list, minimal, detailed, or dashboard");
-                             }
-                           }
-                         }));
+  parser_.add_option(
+      Option("", "--viz-mode", "Visualization mode (table|grid|list|minimal|detailed|dashboard)")
+          .requires_value()
+          .action([this](const std::optional<std::string>& value) {
+            if (value) {
+              std::string mode = *value;
+              std::transform(mode.begin(), mode.end(), mode.begin(), ::tolower);
+              if (mode == "table" || mode == "grid" || mode == "list" || mode == "minimal" ||
+                  mode == "detailed" || mode == "dashboard") {
+                config_.visualization_mode = mode;
+              } else {
+                throw std::invalid_argument(
+                    "Invalid visualization mode. Use: table, grid, list, minimal, detailed, or "
+                    "dashboard");
+              }
+            }
+          }));
 
-  parser_.add_option(Option("", "--export-format", "Export format (text|csv|json|html|markdown)")
-                         .requires_value()
-                         .action([this](const std::optional<std::string>& value) {
-                           if (value) {
-                             std::string format = *value;
-                             std::transform(format.begin(), format.end(), format.begin(), ::tolower);
-                             if (format == "text" || format == "csv" || format == "json" ||
-                                 format == "html" || format == "markdown") {
-                               config_.export_format = format;
-                             } else {
-                               throw std::invalid_argument("Invalid export format. Use: text, csv, json, html, or markdown");
-                             }
-                           }
-                         }));
+  parser_.add_option(
+      Option("", "--export-format", "Export format (text|csv|json|html|markdown)")
+          .requires_value()
+          .action([this](const std::optional<std::string>& value) {
+            if (value) {
+              std::string format = *value;
+              std::transform(format.begin(), format.end(), format.begin(), ::tolower);
+              if (format == "text" || format == "csv" || format == "json" || format == "html" ||
+                  format == "markdown") {
+                config_.export_format = format;
+              } else {
+                throw std::invalid_argument(
+                    "Invalid export format. Use: text, csv, json, html, or markdown");
+              }
+            }
+          }));
 
   parser_.add_option(Option("", "--no-export", "Disable export functionality")
                          .as_flag()
@@ -1177,10 +1189,13 @@ void RealtimeArgumentParser::print_usage() const {
   std::cout << "  --duration N           Stop monitoring after N seconds\n\n";
 
   std::cout << "🌍 Body Selection:\n";
-  std::cout << "  --body-set SET         Use standardized body set (essential|important|complete)\n";
+  std::cout
+      << "  --body-set SET         Use standardized body set (essential|important|complete)\n";
   std::cout << "                         essential: Sun + 8 planets (9 bodies, fastest)\n";
-  std::cout << "                         important: + major moons + dwarf planets (18 bodies, balanced)\n";
-  std::cout << "                         complete: All available bodies (27 bodies, comprehensive)\n";
+  std::cout << "                         important: + major moons + dwarf planets (18 bodies, "
+               "balanced)\n";
+  std::cout
+      << "                         complete: All available bodies (27 bodies, comprehensive)\n";
   std::cout << "                         Default: important\n";
   std::cout << "  --bodies LIST          Monitor specific bodies (comma-separated)\n";
   std::cout << "                         Example: --bodies Sun,Earth,Moon,Mars\n";

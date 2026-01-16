@@ -18,8 +18,6 @@
 #include <functional>
 #include <future>
 #include <memory>
-
-#include "solar_utils/export.hpp"
 #include <mutex>
 #include <optional>
 #include <queue>
@@ -30,6 +28,7 @@
 
 #include "solar_utils/error_handling.hpp"
 #include "solar_utils/error_recovery.hpp"
+#include "solar_utils/export.hpp"
 #include "solar_utils/logging.hpp"
 
 namespace SolarSystem::Utils::Workflow {
@@ -65,23 +64,12 @@ enum class ComponentType {
 /**
  * @brief Component health status
  */
-enum class ComponentHealth {
-  Healthy,
-  Warning,
-  Critical,
-  Failed,
-  Unknown
-};
+enum class ComponentHealth { Healthy, Warning, Critical, Failed, Unknown };
 
 /**
  * @brief Workflow step execution priority
  */
-enum class StepPriority {
-  Low = 0,
-  Normal = 1,
-  High = 2,
-  Critical = 3
-};
+enum class StepPriority { Low = 0, Normal = 1, High = 2, Critical = 3 };
 
 /**
  * @brief Progress information for workflow steps
@@ -189,8 +177,7 @@ struct WorkflowContext {
   std::optional<std::string> failure_reason;
 
   WorkflowContext(const std::string& exec_id, const std::string& wf_id)
-      : execution_id(exec_id), workflow_id(wf_id),
-        start_time(std::chrono::system_clock::now()) {}
+      : execution_id(exec_id), workflow_id(wf_id), start_time(std::chrono::system_clock::now()) {}
 };
 
 /**
@@ -262,8 +249,8 @@ class SOLAR_UTILS_API ComponentCoordinator {
   /**
    * @brief Get status of specific component
    */
-  [[nodiscard]] std::optional<ComponentStatus> get_component_status(
-      ComponentType type, const std::string& name) const;
+  [[nodiscard]] std::optional<ComponentStatus> get_component_status(ComponentType type,
+                                                                    const std::string& name) const;
 
   /**
    * @brief Check if required components are available
@@ -311,8 +298,10 @@ class SOLAR_UTILS_API ComponentCoordinator {
     ComponentStatus last_status;
     std::chrono::system_clock::time_point last_check;
 
-    ComponentInfo() : type(ComponentType::Launcher), last_status(ComponentType::Launcher, ""),
-                      last_check(std::chrono::system_clock::now()) {}
+    ComponentInfo()
+        : type(ComponentType::Launcher),
+          last_status(ComponentType::Launcher, ""),
+          last_check(std::chrono::system_clock::now()) {}
   };
 
   mutable std::mutex components_mutex_;
@@ -485,14 +474,16 @@ class SOLAR_UTILS_API WorkflowOrchestrator {
   /**
    * @brief Execute a registered workflow
    */
-  [[nodiscard]] std::future<bool> execute_workflow(const std::string& workflow_id,
-                                                   const std::unordered_map<std::string, std::string>& variables = {});
+  [[nodiscard]] std::future<bool> execute_workflow(
+      const std::string& workflow_id,
+      const std::unordered_map<std::string, std::string>& variables = {});
 
   /**
    * @brief Execute a custom workflow
    */
-  [[nodiscard]] std::future<bool> execute_custom_workflow(const WorkflowDefinition& workflow,
-                                                          const std::unordered_map<std::string, std::string>& variables = {});
+  [[nodiscard]] std::future<bool> execute_custom_workflow(
+      const WorkflowDefinition& workflow,
+      const std::unordered_map<std::string, std::string>& variables = {});
 
   /**
    * @brief Get workflow execution status
@@ -639,7 +630,8 @@ namespace Utils {
 /**
  * @brief Validate workflow definition
  */
-[[nodiscard]] SOLAR_UTILS_API ValidationResult validate_workflow_definition(const WorkflowDefinition& workflow);
+[[nodiscard]] SOLAR_UTILS_API ValidationResult
+validate_workflow_definition(const WorkflowDefinition& workflow);
 
 /**
  * @brief Calculate estimated completion time
@@ -668,4 +660,3 @@ namespace Utils {
   SolarSystem::Utils::Workflow::WorkflowOrchestrator::instance().get_workflow_progress(execution_id)
 
 }  // namespace SolarSystem::Utils::Workflow
-

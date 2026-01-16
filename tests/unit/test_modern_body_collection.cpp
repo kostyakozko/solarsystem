@@ -46,26 +46,24 @@ TEST(ModernBodyCollection, AddMultipleBodies) {
   BodyCollection collection;
 
   // Add Sun
-  collection.add_body(
-      CelestialBody::Properties{.name = "Sun",
-                                .mass = 1.98847e30,
-                                .position = Vector3d{0.0, 0.0, 0.0},
-                                .velocity = Vector3d{0.0, 0.0, 0.0},
-                                .type = BodyType::Star,
-                                .priority = BodyPriority::Essential,
-                                .jpl_id = "",
-                                .creation_date = std::chrono::system_clock::now()});
+  collection.add_body(CelestialBody::Properties{.name = "Sun",
+                                                .mass = 1.98847e30,
+                                                .position = Vector3d{0.0, 0.0, 0.0},
+                                                .velocity = Vector3d{0.0, 0.0, 0.0},
+                                                .type = BodyType::Star,
+                                                .priority = BodyPriority::Essential,
+                                                .jpl_id = "",
+                                                .creation_date = std::chrono::system_clock::now()});
 
   // Add Earth
-  collection.add_body(
-      CelestialBody::Properties{.name = "Earth",
-                                .mass = 5.97219e24,
-                                .position = Vector3d{1.496e11, 0.0, 0.0},
-                                .velocity = Vector3d{0.0, 29780.0, 0.0},
-                                .type = BodyType::Planet,
-                                .priority = BodyPriority::Essential,
-                                .jpl_id = "",
-                                .creation_date = std::chrono::system_clock::now()});
+  collection.add_body(CelestialBody::Properties{.name = "Earth",
+                                                .mass = 5.97219e24,
+                                                .position = Vector3d{1.496e11, 0.0, 0.0},
+                                                .velocity = Vector3d{0.0, 29780.0, 0.0},
+                                                .type = BodyType::Planet,
+                                                .priority = BodyPriority::Essential,
+                                                .jpl_id = "",
+                                                .creation_date = std::chrono::system_clock::now()});
 
   EXPECT_EQ(2, collection.size());
   EXPECT_TRUE(collection.contains("Sun"));
@@ -98,15 +96,14 @@ TEST(ModernBodyCollection, DuplicateNamePrevention) {
 TEST(ModernBodyCollection, BodyLookup) {
   BodyCollection collection;
 
-  collection.add_body(
-      CelestialBody::Properties{.name = "Mars",
-                                .mass = 6.41693e23,
-                                .position = Vector3d{2.279e11, 0.0, 0.0},
-                                .velocity = Vector3d{0.0, 24077.0, 0.0},
-                                .type = BodyType::Planet,
-                                .priority = BodyPriority::Essential,
-                                .jpl_id = "",
-                                .creation_date = std::chrono::system_clock::now()});
+  collection.add_body(CelestialBody::Properties{.name = "Mars",
+                                                .mass = 6.41693e23,
+                                                .position = Vector3d{2.279e11, 0.0, 0.0},
+                                                .velocity = Vector3d{0.0, 24077.0, 0.0},
+                                                .type = BodyType::Planet,
+                                                .priority = BodyPriority::Essential,
+                                                .jpl_id = "",
+                                                .creation_date = std::chrono::system_clock::now()});
 
   auto found = collection.find_body("Mars");
   ASSERT_TRUE(found.has_value());
@@ -120,25 +117,23 @@ TEST(ModernBodyCollection, BodyLookup) {
 TEST(ModernBodyCollection, BodyRemoval) {
   BodyCollection collection;
 
-  collection.add_body(
-      CelestialBody::Properties{.name = "Venus",
-                                .mass = 4.86732e24,
-                                .position = Vector3d{1.082e11, 0.0, 0.0},
-                                .velocity = Vector3d{0.0, 35020.0, 0.0},
-                                .type = BodyType::Planet,
-                                .priority = BodyPriority::Essential,
-                                .jpl_id = "",
-                                .creation_date = std::chrono::system_clock::now()});
+  collection.add_body(CelestialBody::Properties{.name = "Venus",
+                                                .mass = 4.86732e24,
+                                                .position = Vector3d{1.082e11, 0.0, 0.0},
+                                                .velocity = Vector3d{0.0, 35020.0, 0.0},
+                                                .type = BodyType::Planet,
+                                                .priority = BodyPriority::Essential,
+                                                .jpl_id = "",
+                                                .creation_date = std::chrono::system_clock::now()});
 
-  collection.add_body(
-      CelestialBody::Properties{.name = "Mercury",
-                                .mass = 3.30104e23,
-                                .position = Vector3d{5.79e10, 0.0, 0.0},
-                                .velocity = Vector3d{0.0, 47362.0, 0.0},
-                                .type = BodyType::Planet,
-                                .priority = BodyPriority::Essential,
-                                .jpl_id = "",
-                                .creation_date = std::chrono::system_clock::now()});
+  collection.add_body(CelestialBody::Properties{.name = "Mercury",
+                                                .mass = 3.30104e23,
+                                                .position = Vector3d{5.79e10, 0.0, 0.0},
+                                                .velocity = Vector3d{0.0, 47362.0, 0.0},
+                                                .type = BodyType::Planet,
+                                                .priority = BodyPriority::Essential,
+                                                .jpl_id = "",
+                                                .creation_date = std::chrono::system_clock::now()});
 
   EXPECT_EQ(2, collection.size());
   EXPECT_TRUE(collection.contains("Venus"));
@@ -162,35 +157,32 @@ TEST(ModernBodyCollection, FilterByType) {
   BodyCollection collection;
 
   // Add different types
-  collection.add_body(
-      CelestialBody::Properties{.name = "Sun",
-                                .mass = 1.98847e30,
-                                .position = Vector3d{0.0, 0.0, 0.0},
-                                .velocity = Vector3d{0.0, 0.0, 0.0},
-                                .type = BodyType::Star,
-                                .priority = BodyPriority::Essential,
-                                .jpl_id = "",
-                                .creation_date = std::chrono::system_clock::now()});
+  collection.add_body(CelestialBody::Properties{.name = "Sun",
+                                                .mass = 1.98847e30,
+                                                .position = Vector3d{0.0, 0.0, 0.0},
+                                                .velocity = Vector3d{0.0, 0.0, 0.0},
+                                                .type = BodyType::Star,
+                                                .priority = BodyPriority::Essential,
+                                                .jpl_id = "",
+                                                .creation_date = std::chrono::system_clock::now()});
 
-  collection.add_body(
-      CelestialBody::Properties{.name = "Earth",
-                                .mass = 5.97219e24,
-                                .position = Vector3d{1.496e11, 0.0, 0.0},
-                                .velocity = Vector3d{0.0, 29780.0, 0.0},
-                                .type = BodyType::Planet,
-                                .priority = BodyPriority::Essential,
-                                .jpl_id = "",
-                                .creation_date = std::chrono::system_clock::now()});
+  collection.add_body(CelestialBody::Properties{.name = "Earth",
+                                                .mass = 5.97219e24,
+                                                .position = Vector3d{1.496e11, 0.0, 0.0},
+                                                .velocity = Vector3d{0.0, 29780.0, 0.0},
+                                                .type = BodyType::Planet,
+                                                .priority = BodyPriority::Essential,
+                                                .jpl_id = "",
+                                                .creation_date = std::chrono::system_clock::now()});
 
-  collection.add_body(
-      CelestialBody::Properties{.name = "Moon",
-                                .mass = 7.342e22,
-                                .position = Vector3d{1.496e11 + 3.844e8, 0.0, 0.0},
-                                .velocity = Vector3d{0.0, 29780.0 + 1022.0, 0.0},
-                                .type = BodyType::Moon,
-                                .priority = BodyPriority::Important,
-                                .jpl_id = "",
-                                .creation_date = std::chrono::system_clock::now()});
+  collection.add_body(CelestialBody::Properties{.name = "Moon",
+                                                .mass = 7.342e22,
+                                                .position = Vector3d{1.496e11 + 3.844e8, 0.0, 0.0},
+                                                .velocity = Vector3d{0.0, 29780.0 + 1022.0, 0.0},
+                                                .type = BodyType::Moon,
+                                                .priority = BodyPriority::Important,
+                                                .jpl_id = "",
+                                                .creation_date = std::chrono::system_clock::now()});
 
   auto stars = collection.filter_by_type(BodyType::Star);
   ASSERT_EQ(1, stars.size());
@@ -211,35 +203,32 @@ TEST(ModernBodyCollection, FilterByType) {
 TEST(ModernBodyCollection, FilterByPriority) {
   BodyCollection collection;
 
-  collection.add_body(
-      CelestialBody::Properties{.name = "Earth",
-                                .mass = 5.97219e24,
-                                .position = Vector3d{1.496e11, 0.0, 0.0},
-                                .velocity = Vector3d{0.0, 29780.0, 0.0},
-                                .type = BodyType::Planet,
-                                .priority = BodyPriority::Essential,
-                                .jpl_id = "",
-                                .creation_date = std::chrono::system_clock::now()});
+  collection.add_body(CelestialBody::Properties{.name = "Earth",
+                                                .mass = 5.97219e24,
+                                                .position = Vector3d{1.496e11, 0.0, 0.0},
+                                                .velocity = Vector3d{0.0, 29780.0, 0.0},
+                                                .type = BodyType::Planet,
+                                                .priority = BodyPriority::Essential,
+                                                .jpl_id = "",
+                                                .creation_date = std::chrono::system_clock::now()});
 
-  collection.add_body(
-      CelestialBody::Properties{.name = "Moon",
-                                .mass = 7.342e22,
-                                .position = Vector3d{1.496e11 + 3.844e8, 0.0, 0.0},
-                                .velocity = Vector3d{0.0, 29780.0 + 1022.0, 0.0},
-                                .type = BodyType::Moon,
-                                .priority = BodyPriority::Important,
-                                .jpl_id = "",
-                                .creation_date = std::chrono::system_clock::now()});
+  collection.add_body(CelestialBody::Properties{.name = "Moon",
+                                                .mass = 7.342e22,
+                                                .position = Vector3d{1.496e11 + 3.844e8, 0.0, 0.0},
+                                                .velocity = Vector3d{0.0, 29780.0 + 1022.0, 0.0},
+                                                .type = BodyType::Moon,
+                                                .priority = BodyPriority::Important,
+                                                .jpl_id = "",
+                                                .creation_date = std::chrono::system_clock::now()});
 
-  collection.add_body(
-      CelestialBody::Properties{.name = "Voyager1",
-                                .mass = 722.0,
-                                .position = Vector3d{2.0e13, 0.0, 0.0},
-                                .velocity = Vector3d{0.0, 17000.0, 0.0},
-                                .type = BodyType::Spacecraft,
-                                .priority = BodyPriority::Optional,
-                                .jpl_id = "",
-                                .creation_date = std::chrono::system_clock::now()});
+  collection.add_body(CelestialBody::Properties{.name = "Voyager1",
+                                                .mass = 722.0,
+                                                .position = Vector3d{2.0e13, 0.0, 0.0},
+                                                .velocity = Vector3d{0.0, 17000.0, 0.0},
+                                                .type = BodyType::Spacecraft,
+                                                .priority = BodyPriority::Optional,
+                                                .jpl_id = "",
+                                                .creation_date = std::chrono::system_clock::now()});
 
   auto essential = collection.filter_essential();
   ASSERT_EQ(1, essential.size());
@@ -262,45 +251,41 @@ TEST(ModernBodyCollection, CountOperations) {
   BodyCollection collection;
 
   // Add various bodies
-  collection.add_body(
-      CelestialBody::Properties{.name = "Sun",
-                                .mass = 1.98847e30,
-                                .position = Vector3d{},
-                                .velocity = Vector3d{},
-                                .type = BodyType::Star,
-                                .priority = BodyPriority::Essential,
-                                .jpl_id = "",
-                                .creation_date = std::chrono::system_clock::now()});
+  collection.add_body(CelestialBody::Properties{.name = "Sun",
+                                                .mass = 1.98847e30,
+                                                .position = Vector3d{},
+                                                .velocity = Vector3d{},
+                                                .type = BodyType::Star,
+                                                .priority = BodyPriority::Essential,
+                                                .jpl_id = "",
+                                                .creation_date = std::chrono::system_clock::now()});
 
-  collection.add_body(
-      CelestialBody::Properties{.name = "Earth",
-                                .mass = 5.97219e24,
-                                .position = Vector3d{},
-                                .velocity = Vector3d{},
-                                .type = BodyType::Planet,
-                                .priority = BodyPriority::Essential,
-                                .jpl_id = "",
-                                .creation_date = std::chrono::system_clock::now()});
+  collection.add_body(CelestialBody::Properties{.name = "Earth",
+                                                .mass = 5.97219e24,
+                                                .position = Vector3d{},
+                                                .velocity = Vector3d{},
+                                                .type = BodyType::Planet,
+                                                .priority = BodyPriority::Essential,
+                                                .jpl_id = "",
+                                                .creation_date = std::chrono::system_clock::now()});
 
-  collection.add_body(
-      CelestialBody::Properties{.name = "Mars",
-                                .mass = 6.41693e23,
-                                .position = Vector3d{},
-                                .velocity = Vector3d{},
-                                .type = BodyType::Planet,
-                                .priority = BodyPriority::Essential,
-                                .jpl_id = "",
-                                .creation_date = std::chrono::system_clock::now()});
+  collection.add_body(CelestialBody::Properties{.name = "Mars",
+                                                .mass = 6.41693e23,
+                                                .position = Vector3d{},
+                                                .velocity = Vector3d{},
+                                                .type = BodyType::Planet,
+                                                .priority = BodyPriority::Essential,
+                                                .jpl_id = "",
+                                                .creation_date = std::chrono::system_clock::now()});
 
-  collection.add_body(
-      CelestialBody::Properties{.name = "Moon",
-                                .mass = 7.342e22,
-                                .position = Vector3d{},
-                                .velocity = Vector3d{},
-                                .type = BodyType::Moon,
-                                .priority = BodyPriority::Important,
-                                .jpl_id = "",
-                                .creation_date = std::chrono::system_clock::now()});
+  collection.add_body(CelestialBody::Properties{.name = "Moon",
+                                                .mass = 7.342e22,
+                                                .position = Vector3d{},
+                                                .velocity = Vector3d{},
+                                                .type = BodyType::Moon,
+                                                .priority = BodyPriority::Important,
+                                                .jpl_id = "",
+                                                .creation_date = std::chrono::system_clock::now()});
 
   EXPECT_EQ(1, collection.count_by_type(BodyType::Star));
   EXPECT_EQ(2, collection.count_by_type(BodyType::Planet));
@@ -319,35 +304,32 @@ TEST(ModernBodyCollection, CountOperations) {
 TEST(ModernBodyCollection, TotalMassCalculation) {
   BodyCollection collection;
 
-  collection.add_body(
-      CelestialBody::Properties{.name = "Body1",
-                                .mass = 1000.0,
-                                .position = Vector3d{},
-                                .velocity = Vector3d{},
-                                .type = BodyType::Planet,
-                                .priority = BodyPriority::Essential,
-                                .jpl_id = "",
-                                .creation_date = std::chrono::system_clock::now()});
+  collection.add_body(CelestialBody::Properties{.name = "Body1",
+                                                .mass = 1000.0,
+                                                .position = Vector3d{},
+                                                .velocity = Vector3d{},
+                                                .type = BodyType::Planet,
+                                                .priority = BodyPriority::Essential,
+                                                .jpl_id = "",
+                                                .creation_date = std::chrono::system_clock::now()});
 
-  collection.add_body(
-      CelestialBody::Properties{.name = "Body2",
-                                .mass = 2000.0,
-                                .position = Vector3d{},
-                                .velocity = Vector3d{},
-                                .type = BodyType::Planet,
-                                .priority = BodyPriority::Essential,
-                                .jpl_id = "",
-                                .creation_date = std::chrono::system_clock::now()});
+  collection.add_body(CelestialBody::Properties{.name = "Body2",
+                                                .mass = 2000.0,
+                                                .position = Vector3d{},
+                                                .velocity = Vector3d{},
+                                                .type = BodyType::Planet,
+                                                .priority = BodyPriority::Essential,
+                                                .jpl_id = "",
+                                                .creation_date = std::chrono::system_clock::now()});
 
-  collection.add_body(
-      CelestialBody::Properties{.name = "Body3",
-                                .mass = 3000.0,
-                                .position = Vector3d{},
-                                .velocity = Vector3d{},
-                                .type = BodyType::Planet,
-                                .priority = BodyPriority::Essential,
-                                .jpl_id = "",
-                                .creation_date = std::chrono::system_clock::now()});
+  collection.add_body(CelestialBody::Properties{.name = "Body3",
+                                                .mass = 3000.0,
+                                                .position = Vector3d{},
+                                                .velocity = Vector3d{},
+                                                .type = BodyType::Planet,
+                                                .priority = BodyPriority::Essential,
+                                                .jpl_id = "",
+                                                .creation_date = std::chrono::system_clock::now()});
 
   double total = collection.total_mass();
   EXPECT_EQ(6000.0, total);
@@ -357,25 +339,23 @@ TEST(ModernBodyCollection, CenterOfMassCalculation) {
   BodyCollection collection;
 
   // Two equal masses at opposite positions
-  collection.add_body(
-      CelestialBody::Properties{.name = "Body1",
-                                .mass = 1000.0,
-                                .position = Vector3d{-10.0, 0.0, 0.0},
-                                .velocity = Vector3d{},
-                                .type = BodyType::Planet,
-                                .priority = BodyPriority::Essential,
-                                .jpl_id = "",
-                                .creation_date = std::chrono::system_clock::now()});
+  collection.add_body(CelestialBody::Properties{.name = "Body1",
+                                                .mass = 1000.0,
+                                                .position = Vector3d{-10.0, 0.0, 0.0},
+                                                .velocity = Vector3d{},
+                                                .type = BodyType::Planet,
+                                                .priority = BodyPriority::Essential,
+                                                .jpl_id = "",
+                                                .creation_date = std::chrono::system_clock::now()});
 
-  collection.add_body(
-      CelestialBody::Properties{.name = "Body2",
-                                .mass = 1000.0,
-                                .position = Vector3d{10.0, 0.0, 0.0},
-                                .velocity = Vector3d{},
-                                .type = BodyType::Planet,
-                                .priority = BodyPriority::Essential,
-                                .jpl_id = "",
-                                .creation_date = std::chrono::system_clock::now()});
+  collection.add_body(CelestialBody::Properties{.name = "Body2",
+                                                .mass = 1000.0,
+                                                .position = Vector3d{10.0, 0.0, 0.0},
+                                                .velocity = Vector3d{},
+                                                .type = BodyType::Planet,
+                                                .priority = BodyPriority::Essential,
+                                                .jpl_id = "",
+                                                .creation_date = std::chrono::system_clock::now()});
 
   auto com = collection.center_of_mass();
   EXPECT_LT(std::abs(com.x()), 1e-10);  // Should be at origin
@@ -390,25 +370,23 @@ TEST(ModernBodyCollection, CenterOfMassCalculation) {
 TEST(ModernBodyCollection, ApplyToAllBodies) {
   BodyCollection collection;
 
-  collection.add_body(
-      CelestialBody::Properties{.name = "Body1",
-                                .mass = 1000.0,
-                                .position = Vector3d{1.0, 0.0, 0.0},
-                                .velocity = Vector3d{},
-                                .type = BodyType::Planet,
-                                .priority = BodyPriority::Essential,
-                                .jpl_id = "",
-                                .creation_date = std::chrono::system_clock::now()});
+  collection.add_body(CelestialBody::Properties{.name = "Body1",
+                                                .mass = 1000.0,
+                                                .position = Vector3d{1.0, 0.0, 0.0},
+                                                .velocity = Vector3d{},
+                                                .type = BodyType::Planet,
+                                                .priority = BodyPriority::Essential,
+                                                .jpl_id = "",
+                                                .creation_date = std::chrono::system_clock::now()});
 
-  collection.add_body(
-      CelestialBody::Properties{.name = "Body2",
-                                .mass = 2000.0,
-                                .position = Vector3d{2.0, 0.0, 0.0},
-                                .velocity = Vector3d{},
-                                .type = BodyType::Planet,
-                                .priority = BodyPriority::Essential,
-                                .jpl_id = "",
-                                .creation_date = std::chrono::system_clock::now()});
+  collection.add_body(CelestialBody::Properties{.name = "Body2",
+                                                .mass = 2000.0,
+                                                .position = Vector3d{2.0, 0.0, 0.0},
+                                                .velocity = Vector3d{},
+                                                .type = BodyType::Planet,
+                                                .priority = BodyPriority::Essential,
+                                                .jpl_id = "",
+                                                .creation_date = std::chrono::system_clock::now()});
 
   // Move all bodies by (10, 0, 0)
   Vector3d offset{10.0, 0.0, 0.0};
@@ -428,25 +406,23 @@ TEST(ModernBodyCollection, ApplyToAllBodies) {
 TEST(ModernBodyCollection, ApplyToFilteredBodies) {
   BodyCollection collection;
 
-  collection.add_body(
-      CelestialBody::Properties{.name = "Planet1",
-                                .mass = 1000.0,
-                                .position = Vector3d{1.0, 0.0, 0.0},
-                                .velocity = Vector3d{},
-                                .type = BodyType::Planet,
-                                .priority = BodyPriority::Essential,
-                                .jpl_id = "",
-                                .creation_date = std::chrono::system_clock::now()});
+  collection.add_body(CelestialBody::Properties{.name = "Planet1",
+                                                .mass = 1000.0,
+                                                .position = Vector3d{1.0, 0.0, 0.0},
+                                                .velocity = Vector3d{},
+                                                .type = BodyType::Planet,
+                                                .priority = BodyPriority::Essential,
+                                                .jpl_id = "",
+                                                .creation_date = std::chrono::system_clock::now()});
 
-  collection.add_body(
-      CelestialBody::Properties{.name = "Moon1",
-                                .mass = 100.0,
-                                .position = Vector3d{2.0, 0.0, 0.0},
-                                .velocity = Vector3d{},
-                                .type = BodyType::Moon,
-                                .priority = BodyPriority::Important,
-                                .jpl_id = "",
-                                .creation_date = std::chrono::system_clock::now()});
+  collection.add_body(CelestialBody::Properties{.name = "Moon1",
+                                                .mass = 100.0,
+                                                .position = Vector3d{2.0, 0.0, 0.0},
+                                                .velocity = Vector3d{},
+                                                .type = BodyType::Moon,
+                                                .priority = BodyPriority::Important,
+                                                .jpl_id = "",
+                                                .creation_date = std::chrono::system_clock::now()});
 
   // Only move planets
   Vector3d offset{5.0, 0.0, 0.0};
@@ -469,15 +445,14 @@ TEST(ModernBodyCollection, Validation) {
   BodyCollection collection;
 
   // Valid collection
-  collection.add_body(
-      CelestialBody::Properties{.name = "ValidBody",
-                                .mass = 1000.0,
-                                .position = Vector3d{},
-                                .velocity = Vector3d{},
-                                .type = BodyType::Planet,
-                                .priority = BodyPriority::Essential,
-                                .jpl_id = "",
-                                .creation_date = std::chrono::system_clock::now()});
+  collection.add_body(CelestialBody::Properties{.name = "ValidBody",
+                                                .mass = 1000.0,
+                                                .position = Vector3d{},
+                                                .velocity = Vector3d{},
+                                                .type = BodyType::Planet,
+                                                .priority = BodyPriority::Essential,
+                                                .jpl_id = "",
+                                                .creation_date = std::chrono::system_clock::now()});
 
   EXPECT_TRUE(collection.validate());
   EXPECT_TRUE(collection.get_validation_errors().empty());
@@ -486,25 +461,23 @@ TEST(ModernBodyCollection, Validation) {
 TEST(ModernBodyCollection, IteratorSupport) {
   BodyCollection collection;
 
-  collection.add_body(
-      CelestialBody::Properties{.name = "Body1",
-                                .mass = 1000.0,
-                                .position = Vector3d{},
-                                .velocity = Vector3d{},
-                                .type = BodyType::Planet,
-                                .priority = BodyPriority::Essential,
-                                .jpl_id = "",
-                                .creation_date = std::chrono::system_clock::now()});
+  collection.add_body(CelestialBody::Properties{.name = "Body1",
+                                                .mass = 1000.0,
+                                                .position = Vector3d{},
+                                                .velocity = Vector3d{},
+                                                .type = BodyType::Planet,
+                                                .priority = BodyPriority::Essential,
+                                                .jpl_id = "",
+                                                .creation_date = std::chrono::system_clock::now()});
 
-  collection.add_body(
-      CelestialBody::Properties{.name = "Body2",
-                                .mass = 2000.0,
-                                .position = Vector3d{},
-                                .velocity = Vector3d{},
-                                .type = BodyType::Planet,
-                                .priority = BodyPriority::Essential,
-                                .jpl_id = "",
-                                .creation_date = std::chrono::system_clock::now()});
+  collection.add_body(CelestialBody::Properties{.name = "Body2",
+                                                .mass = 2000.0,
+                                                .position = Vector3d{},
+                                                .velocity = Vector3d{},
+                                                .type = BodyType::Planet,
+                                                .priority = BodyPriority::Essential,
+                                                .jpl_id = "",
+                                                .creation_date = std::chrono::system_clock::now()});
 
   // Test range-based for loop
   size_t count = 0;
@@ -530,15 +503,14 @@ TEST(ModernBodyCollection, IteratorSupport) {
 TEST(ModernBodyCollection, ClearCollection) {
   BodyCollection collection;
 
-  collection.add_body(
-      CelestialBody::Properties{.name = "Body1",
-                                .mass = 1000.0,
-                                .position = Vector3d{},
-                                .velocity = Vector3d{},
-                                .type = BodyType::Planet,
-                                .priority = BodyPriority::Essential,
-                                .jpl_id = "",
-                                .creation_date = std::chrono::system_clock::now()});
+  collection.add_body(CelestialBody::Properties{.name = "Body1",
+                                                .mass = 1000.0,
+                                                .position = Vector3d{},
+                                                .velocity = Vector3d{},
+                                                .type = BodyType::Planet,
+                                                .priority = BodyPriority::Essential,
+                                                .jpl_id = "",
+                                                .creation_date = std::chrono::system_clock::now()});
 
   EXPECT_FALSE(collection.empty());
   EXPECT_EQ(1, collection.size());

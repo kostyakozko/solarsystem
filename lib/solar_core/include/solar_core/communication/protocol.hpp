@@ -173,7 +173,7 @@ class RetryProtocol : public IProtocol {
   };
 
   explicit RetryProtocol(std::shared_ptr<IProtocol> underlying_protocol,
-                        RetryConfig config = RetryConfig());
+                         RetryConfig config = RetryConfig());
   ~RetryProtocol() override;
 
   [[nodiscard]] SolarSystem::Utils::Expected<void, ProtocolError> initialize() override;

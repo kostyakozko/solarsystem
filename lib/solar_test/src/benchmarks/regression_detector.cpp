@@ -400,8 +400,8 @@ std::string RegressionDetector::generate_regression_report(
       << "\n\n";
 
   size_t total_benchmarks = analyses.size();
-  size_t regressions = static_cast<size_t>(std::count_if(analyses.begin(), analyses.end(),
-                                     [](const auto& a) { return a.has_regression; }));
+  size_t regressions = static_cast<size_t>(std::count_if(
+      analyses.begin(), analyses.end(), [](const auto& a) { return a.has_regression; }));
 
   oss << "Summary:\n";
   oss << "  Total Benchmarks: " << total_benchmarks << "\n";
@@ -444,8 +444,8 @@ void RegressionDetector::generate_ci_output(const std::vector<RegressionAnalysis
   file << "  \"regression_summary\": {\n";
   file << "    \"total_benchmarks\": " << analyses.size() << ",\n";
 
-  size_t regressions = static_cast<size_t>(std::count_if(analyses.begin(), analyses.end(),
-                                     [](const auto& a) { return a.has_regression; }));
+  size_t regressions = static_cast<size_t>(std::count_if(
+      analyses.begin(), analyses.end(), [](const auto& a) { return a.has_regression; }));
   file << "    \"regressions_found\": " << regressions << ",\n";
   file << "    \"has_critical_regressions\": "
        << (has_critical_regressions(analyses) ? "true" : "false") << "\n";

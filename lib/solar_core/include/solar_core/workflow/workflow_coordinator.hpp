@@ -26,13 +26,7 @@ namespace SolarSystem::Workflow {
 /**
  * @brief Workflow transaction state
  */
-enum class TransactionState {
-  NOT_STARTED,
-  IN_PROGRESS,
-  COMMITTED,
-  ROLLED_BACK,
-  FAILED
-};
+enum class TransactionState { NOT_STARTED, IN_PROGRESS, COMMITTED, ROLLED_BACK, FAILED };
 
 /**
  * @brief Workflow step result
@@ -60,7 +54,7 @@ class SOLAR_CORE_API WorkflowTransaction {
    * @brief Add step to transaction
    */
   void add_step(const std::string& step_id, StepFunction step_func,
-               RollbackFunction rollback_func = nullptr);
+                RollbackFunction rollback_func = nullptr);
 
   /**
    * @brief Execute transaction
@@ -182,8 +176,7 @@ class SOLAR_CORE_API DistributedWorkflowExecutor {
    * @brief Execute workflow across multiple nodes
    */
   [[nodiscard]] SolarSystem::Utils::Expected<void, std::string> execute_distributed(
-      std::shared_ptr<WorkflowTransaction> transaction,
-      const std::vector<std::string>& node_ids);
+      std::shared_ptr<WorkflowTransaction> transaction, const std::vector<std::string>& node_ids);
 
   /**
    * @brief Check node availability

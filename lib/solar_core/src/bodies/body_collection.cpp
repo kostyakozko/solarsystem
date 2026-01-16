@@ -5,11 +5,10 @@
 #include <cmath>
 #include <iomanip>
 #include <iostream>
+#include <nlohmann/json.hpp>
 #include <numeric>
 #include <regex>
 #include <sstream>
-
-#include <nlohmann/json.hpp>
 
 namespace SolarSystem::Bodies {
 

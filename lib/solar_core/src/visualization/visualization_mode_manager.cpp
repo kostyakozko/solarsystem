@@ -3,18 +3,16 @@
  * @brief Implementation of visualization mode manager
  */
 
-#include "solar_core/visualization/visualization_modes.hpp"
-
 #include <fstream>
 #include <sstream>
+
+#include "solar_core/visualization/visualization_modes.hpp"
 
 namespace SolarSystem::Visualization {
 
 // VisualizationModeManager implementation
 Utils::Expected<void, std::string> VisualizationModeManager::register_mode(
-    VisualizationMode mode,
-    std::unique_ptr<VisualizationRenderer> renderer) {
-
+    VisualizationMode mode, std::unique_ptr<VisualizationRenderer> renderer) {
   if (!renderer) {
     return Utils::Expected<void, std::string>(std::string("Renderer cannot be null"));
   }
@@ -23,11 +21,12 @@ Utils::Expected<void, std::string> VisualizationModeManager::register_mode(
   return Utils::Expected<void, std::string>();
 }
 
-Utils::Expected<void, std::string> VisualizationModeManager::set_active_mode(VisualizationMode mode) {
+Utils::Expected<void, std::string> VisualizationModeManager::set_active_mode(
+    VisualizationMode mode) {
   auto it = renderers_.find(mode);
   if (it == renderers_.end()) {
-    return Utils::Expected<void, std::string>(
-        "Visualization mode not registered: " + to_string(mode));
+    return Utils::Expected<void, std::string>("Visualization mode not registered: " +
+                                              to_string(mode));
   }
 
   active_mode_ = mode;
@@ -36,7 +35,6 @@ Utils::Expected<void, std::string> VisualizationModeManager::set_active_mode(Vis
 
 Utils::Expected<VisualizationFrame, std::string> VisualizationModeManager::render(
     const Streaming::DataSnapshot& snapshot) {
-
   auto it = renderers_.find(active_mode_);
   if (it == renderers_.end()) {
     return Utils::Expected<VisualizationFrame, std::string>(
@@ -80,17 +78,15 @@ std::string VisualizationModeManager::get_mode_description(VisualizationMode mod
 }
 
 Utils::Expected<void, std::string> VisualizationModeManager::save_preset(
-    const std::string& name,
-    const VisualizationConfig& config) {
-
+    const std::string& name, const VisualizationConfig& config) {
   if (name.empty()) {
     return Utils::Expected<void, std::string>(std::string("Preset name cannot be empty"));
   }
 
   auto validation_result = config.validate();
   if (!validation_result) {
-    return Utils::Expected<void, std::string>(
-        "Invalid configuration: " + validation_result.error());
+    return Utils::Expected<void, std::string>("Invalid configuration: " +
+                                              validation_result.error());
   }
 
   presets_[name] = config;
@@ -99,11 +95,9 @@ Utils::Expected<void, std::string> VisualizationModeManager::save_preset(
 
 Utils::Expected<VisualizationConfig, std::string> VisualizationModeManager::load_preset(
     const std::string& name) {
-
   auto it = presets_.find(name);
   if (it == presets_.end()) {
-    return Utils::Expected<VisualizationConfig, std::string>(
-        "Preset not found: " + name);
+    return Utils::Expected<VisualizationConfig, std::string>("Preset not found: " + name);
   }
 
   return Utils::Expected<VisualizationConfig, std::string>(it->second);

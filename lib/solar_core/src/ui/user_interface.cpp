@@ -5,11 +5,11 @@
 
 #include "solar_core/ui/user_interface.hpp"
 
-#include <sstream>
-#include <iomanip>
 #include <algorithm>
 #include <cmath>
+#include <iomanip>
 #include <iostream>
+#include <sstream>
 
 namespace SolarSystem::UI {
 
@@ -52,13 +52,9 @@ void StatusFeedback::error(const std::string& message) {
   messages_.push_back(msg);
 }
 
-void StatusFeedback::clear() {
-  messages_.clear();
-}
+void StatusFeedback::clear() { messages_.clear(); }
 
-std::vector<StatusMessage> StatusFeedback::get_messages() const {
-  return messages_;
-}
+std::vector<StatusMessage> StatusFeedback::get_messages() const { return messages_; }
 
 std::string StatusFeedback::format_message(const StatusMessage& msg) const {
   std::ostringstream oss;
@@ -178,7 +174,7 @@ bool InteractiveInput::confirm(const std::string& question, bool default_yes) {
 }
 
 std::string InteractiveInput::select(const std::string& prompt_text,
-                                    const std::vector<std::string>& options) {
+                                     const std::vector<std::string>& options) {
   if (!interactive_mode_ || options.empty()) {
     return options.empty() ? "" : options[0];
   }
@@ -222,13 +218,9 @@ std::string InteractiveInput::select(const std::string& prompt_text,
   return options[0];
 }
 
-void InteractiveInput::set_interactive_mode(bool enabled) {
-  interactive_mode_ = enabled;
-}
+void InteractiveInput::set_interactive_mode(bool enabled) { interactive_mode_ = enabled; }
 
-bool InteractiveInput::is_interactive() const {
-  return interactive_mode_;
-}
+bool InteractiveInput::is_interactive() const { return interactive_mode_; }
 
 // AccessibilitySupport implementation
 
@@ -241,9 +233,7 @@ void AccessibilitySupport::enable_screen_reader_mode(bool enabled) {
   screen_reader_mode_ = enabled;
 }
 
-bool AccessibilitySupport::is_screen_reader_enabled() const {
-  return screen_reader_mode_;
-}
+bool AccessibilitySupport::is_screen_reader_enabled() const { return screen_reader_mode_; }
 
 std::string AccessibilitySupport::format_for_screen_reader(const std::string& text) const {
   if (!screen_reader_mode_) {
@@ -275,31 +265,24 @@ std::string AccessibilitySupport::format_for_screen_reader(const std::string& te
   return result;
 }
 
-void AccessibilitySupport::enable_high_contrast(bool enabled) {
-  high_contrast_ = enabled;
-}
+void AccessibilitySupport::enable_high_contrast(bool enabled) { high_contrast_ = enabled; }
 
-bool AccessibilitySupport::is_high_contrast_enabled() const {
-  return high_contrast_;
-}
+bool AccessibilitySupport::is_high_contrast_enabled() const { return high_contrast_; }
 
 void AccessibilitySupport::set_text_scale(double scale) {
   text_scale_ = std::max(0.5, std::min(3.0, scale));
 }
 
-double AccessibilitySupport::get_text_scale() const {
-  return text_scale_;
-}
+double AccessibilitySupport::get_text_scale() const { return text_scale_; }
 
 void AccessibilitySupport::enable_keyboard_shortcuts(bool enabled) {
   keyboard_shortcuts_ = enabled;
 }
 
-bool AccessibilitySupport::are_keyboard_shortcuts_enabled() const {
-  return keyboard_shortcuts_;
-}
+bool AccessibilitySupport::are_keyboard_shortcuts_enabled() const { return keyboard_shortcuts_; }
 
-void AccessibilitySupport::set_alt_text(const std::string& element_id, const std::string& alt_text) {
+void AccessibilitySupport::set_alt_text(const std::string& element_id,
+                                        const std::string& alt_text) {
   alt_texts_[element_id] = alt_text;
 }
 
@@ -314,7 +297,7 @@ std::string AccessibilitySupport::get_alt_text(const std::string& element_id) co
 // FormattingUtils implementation
 
 std::string FormattingUtils::format_table(const std::vector<std::vector<std::string>>& data,
-                                         const std::vector<std::string>& headers) {
+                                          const std::vector<std::string>& headers) {
   if (data.empty()) {
     return "";
   }
@@ -409,20 +392,25 @@ std::string FormattingUtils::format_box(const std::string& content, const std::s
 std::string FormattingUtils::colorize(const std::string& text, const std::string& color) {
   // ANSI color codes
   std::string color_code;
-  if (color == "red") color_code = "\033[31m";
-  else if (color == "green") color_code = "\033[32m";
-  else if (color == "yellow") color_code = "\033[33m";
-  else if (color == "blue") color_code = "\033[34m";
-  else if (color == "magenta") color_code = "\033[35m";
-  else if (color == "cyan") color_code = "\033[36m";
-  else return text;
+  if (color == "red")
+    color_code = "\033[31m";
+  else if (color == "green")
+    color_code = "\033[32m";
+  else if (color == "yellow")
+    color_code = "\033[33m";
+  else if (color == "blue")
+    color_code = "\033[34m";
+  else if (color == "magenta")
+    color_code = "\033[35m";
+  else if (color == "cyan")
+    color_code = "\033[36m";
+  else
+    return text;
 
   return color_code + text + "\033[0m";
 }
 
-std::string FormattingUtils::bold(const std::string& text) {
-  return "\033[1m" + text + "\033[0m";
-}
+std::string FormattingUtils::bold(const std::string& text) { return "\033[1m" + text + "\033[0m"; }
 
 std::string FormattingUtils::italic(const std::string& text) {
   return "\033[3m" + text + "\033[0m";

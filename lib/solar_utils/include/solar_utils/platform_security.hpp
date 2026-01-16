@@ -16,10 +16,10 @@ namespace SolarSystem::Utils::Platform {
  * @brief Platform-specific security information
  */
 struct SecurityInfo {
-  bool is_elevated;           // Running with elevated privileges
-  std::string current_user;   // Current user name
+  bool is_elevated;                 // Running with elevated privileges
+  std::string current_user;         // Current user name
   std::vector<std::string> groups;  // User groups
-  bool has_admin_rights;      // Has administrator rights
+  bool has_admin_rights;            // Has administrator rights
 };
 
 /**
@@ -63,14 +63,12 @@ class PlatformSecurity {
   /**
    * @brief Check file permissions
    */
-  static std::optional<FilePermissions> get_file_permissions(
-      const std::filesystem::path& path);
+  static std::optional<FilePermissions> get_file_permissions(const std::filesystem::path& path);
 
   /**
    * @brief Set file permissions (Unix-style mode)
    */
-  static bool set_file_permissions(
-      const std::filesystem::path& path, int mode);
+  static bool set_file_permissions(const std::filesystem::path& path, int mode);
 
   /**
    * @brief Check if path is secure (no symlink attacks, etc.)
@@ -87,14 +85,12 @@ class PlatformSecurity {
   static SecurityInfo get_security_info_windows();
   static std::optional<FilePermissions> get_file_permissions_windows(
       const std::filesystem::path& path);
-  static bool set_file_permissions_windows(
-      const std::filesystem::path& path, int mode);
+  static bool set_file_permissions_windows(const std::filesystem::path& path, int mode);
 #else
   static SecurityInfo get_security_info_posix();
   static std::optional<FilePermissions> get_file_permissions_posix(
       const std::filesystem::path& path);
-  static bool set_file_permissions_posix(
-      const std::filesystem::path& path, int mode);
+  static bool set_file_permissions_posix(const std::filesystem::path& path, int mode);
 #endif
 };
 

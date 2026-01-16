@@ -115,9 +115,8 @@ class MultiTierRateLimiter {
   /**
    * @brief Check specific tier
    */
-  [[nodiscard]] RateLimitResult check_tier(
-      const std::string& tier_name,
-      const std::string& identifier);
+  [[nodiscard]] RateLimitResult check_tier(const std::string& tier_name,
+                                           const std::string& identifier);
 
  private:
   std::unordered_map<std::string, std::unique_ptr<RateLimiter>> tiers_;

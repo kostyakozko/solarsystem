@@ -6,10 +6,10 @@
 #include "solar_core/workflow/workflow_coordinator.hpp"
 
 #include <algorithm>
+#include <atomic>
+#include <future>
 #include <map>
 #include <mutex>
-#include <future>
-#include <atomic>
 
 namespace SolarSystem::Workflow {
 
@@ -53,15 +53,14 @@ SolarSystem::Utils::Expected<void, std::string> WorkflowTransaction::execute() {
         rollback();
         state_ = TransactionState::FAILED;  // Set FAILED after rollback
         return SolarSystem::Utils::Expected<void, std::string>(
-            "Step '" + step_id + "' failed: " +
-            result.error_message.value_or("Unknown error"));
+            "Step '" + step_id + "' failed: " + result.error_message.value_or("Unknown error"));
       }
     } catch (const std::exception& ex) {
       // Exception during step execution
       rollback();
       state_ = TransactionState::FAILED;  // Set FAILED after rollback
-      return SolarSystem::Utils::Expected<void, std::string>(
-          "Step '" + step_id + "' threw exception: " + ex.what());
+      return SolarSystem::Utils::Expected<void, std::string>("Step '" + step_id +
+                                                             "' threw exception: " + ex.what());
     }
   }
 
@@ -289,25 +288,26 @@ SolarSystem::Utils::Expected<void, std::string> DistributedWorkflowExecutor::exe
     const auto& node_id = node_ids[i];
 
     // Launch async execution for this node
-    futures.push_back(std::async(std::launch::async, [&, node_id]() -> SolarSystem::Utils::Expected<void, std::string> {
-      // In production: serialize and send via gRPC
-      // For now: execute portion of transaction locally
+    futures.push_back(std::async(
+        std::launch::async, [&, node_id]() -> SolarSystem::Utils::Expected<void, std::string> {
+          // In production: serialize and send via gRPC
+          // For now: execute portion of transaction locally
 
-      // Simulate node execution
-      auto result = transaction->execute();
+          // Simulate node execution
+          auto result = transaction->execute();
 
-      if (result.has_value()) {
-        completed_steps++;
-      } else {
-        has_error.store(true);
-        std::lock_guard<std::mutex> err_lock(error_mutex);
-        if (error_message.empty()) {
-          error_message = "Node " + node_id + " failed: " + result.error();
-        }
-      }
+          if (result.has_value()) {
+            completed_steps++;
+          } else {
+            has_error.store(true);
+            std::lock_guard<std::mutex> err_lock(error_mutex);
+            if (error_message.empty()) {
+              error_message = "Node " + node_id + " failed: " + result.error();
+            }
+          }
 
-      return result;
-    }));
+          return result;
+        }));
   }
 
   // Wait for all nodes to complete

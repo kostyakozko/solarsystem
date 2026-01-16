@@ -5,6 +5,7 @@
  */
 
 #include <gtest/gtest.h>
+
 #include <filesystem>
 #include <fstream>
 #include <sstream>
@@ -15,28 +16,27 @@
 using namespace SolarSystem::Utils::Advanced;
 using namespace SolarSystem::Utils;
 TEST(AdvancedConfigurationIntegrationTests, Basic_Integration) {
-    auto manager = std::make_unique<AdvancedConfigManager>();
+  auto manager = std::make_unique<AdvancedConfigManager>();
 
-    // Test that manager can be created and basic functionality works
-    ASSERT_NE(nullptr, manager );
+  // Test that manager can be created and basic functionality works
+  ASSERT_NE(nullptr, manager);
 
-    // Test loading default configuration
-    auto config = Config::get_default();
+  // Test loading default configuration
+  auto config = Config::get_default();
 
-    // Test that the configuration is valid
-    auto validation_result = manager->validate_configuration(config);
-    ASSERT_TRUE(validation_result.is_valid);
+  // Test that the configuration is valid
+  auto validation_result = manager->validate_configuration(config);
+  ASSERT_TRUE(validation_result.is_valid);
 }
 
 TEST(AdvancedConfigurationIntegrationTests, Template_Integration) {
-    auto manager = std::make_unique<AdvancedConfigManager>();
+  auto manager = std::make_unique<AdvancedConfigManager>();
 
-    // Test applying a template
-    auto result = manager->apply_template("development");
-    if (result.has_value()) {
-      // Template applied successfully
-      auto validation_result = manager->validate_configuration(result.value());
-      ASSERT_TRUE(validation_result.is_valid);
-    }
+  // Test applying a template
+  auto result = manager->apply_template("development");
+  if (result.has_value()) {
+    // Template applied successfully
+    auto validation_result = manager->validate_configuration(result.value());
+    ASSERT_TRUE(validation_result.is_valid);
+  }
 }
-

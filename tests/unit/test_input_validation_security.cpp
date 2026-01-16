@@ -12,12 +12,12 @@
  * Requirements: 7.1, 7.4
  */
 
+#include <gtest/gtest.h>
+
 #include <cstring>
 #include <memory>
 #include <string>
 #include <vector>
-
-#include <gtest/gtest.h>
 
 /**
  * @brief Input validation and sanitization security tester
@@ -40,8 +40,8 @@ class InputSecurityValidator {
 
     // Check for SQL injection patterns
     std::vector<std::string> sql_patterns = {
-        "' OR '1'='1", "'; DROP TABLE", "UNION SELECT", "-- ", "/*", "*/",
-        "xp_", "sp_", "exec(", "execute("};
+        "' OR '1'='1", "'; DROP TABLE", "UNION SELECT", "-- ",   "/*",
+        "*/",          "xp_",           "sp_",          "exec(", "execute("};
 
     for (const auto& pattern : sql_patterns) {
       if (input.find(pattern) != std::string::npos) {
@@ -72,14 +72,12 @@ class InputSecurityValidator {
     result.sanitized_input = input;
 
     // Check for command injection patterns
-    std::vector<std::string> cmd_patterns = {";", "&&", "||", "|", "`",
-                                              "$(",  "$()", ">", "<"};
+    std::vector<std::string> cmd_patterns = {";", "&&", "||", "|", "`", "$(", "$()", ">", "<"};
 
     for (const auto& pattern : cmd_patterns) {
       if (input.find(pattern) != std::string::npos) {
         result.is_safe = false;
-        result.threats_detected.push_back("Command injection pattern: " +
-                                          pattern);
+        result.threats_detected.push_back("Command injection pattern: " + pattern);
       }
     }
 
@@ -90,8 +88,7 @@ class InputSecurityValidator {
         if (std::isalnum(c) || c == ' ' || c == '-' || c == '_') {
           result.sanitized_input += c;
         } else {
-          result.sanitization_applied.push_back(
-              std::string("Removed character: ") + c);
+          result.sanitization_applied.push_back(std::string("Removed character: ") + c);
         }
       }
     }
@@ -105,9 +102,8 @@ class InputSecurityValidator {
     result.sanitized_input = input;
 
     // Check for XSS patterns
-    std::vector<std::string> xss_patterns = {"<script", "javascript:",
-                                              "onerror=", "onload=",
-                                              "<iframe",  "eval("};
+    std::vector<std::string> xss_patterns = {
+        "<script", "javascript:", "onerror=", "onload=", "<iframe", "eval("};
 
     for (const auto& pattern : xss_patterns) {
       if (input.find(pattern) != std::string::npos) {
@@ -151,8 +147,7 @@ class InputSecurityValidator {
   }
 
   // Validate buffer boundaries
-  ValidationResult validate_buffer_input(const std::string& input,
-                                         size_t max_length) {
+  ValidationResult validate_buffer_input(const std::string& input, size_t max_length) {
     ValidationResult result;
     result.sanitized_input = input;
 
@@ -160,8 +155,7 @@ class InputSecurityValidator {
       result.is_safe = false;
       result.is_valid = false;
       result.threats_detected.push_back("Buffer overflow risk: input length " +
-                                        std::to_string(input.length()) +
-                                        " exceeds max " +
+                                        std::to_string(input.length()) + " exceeds max " +
                                         std::to_string(max_length));
       result.sanitized_input = input.substr(0, max_length);
       result.sanitization_applied.push_back("Truncated to max length");
@@ -172,17 +166,16 @@ class InputSecurityValidator {
 
   // Fuzz test with random inputs
   std::vector<ValidationResult> fuzz_test(
-      std::function<ValidationResult(const std::string&)> validator,
-      int num_tests) {
+      std::function<ValidationResult(const std::string&)> validator, int num_tests) {
     std::vector<ValidationResult> results;
 
     // Generate various fuzzing inputs
     std::vector<std::string> fuzz_inputs = {
-        "",  // Empty
-        std::string(1000, 'A'),  // Long string
-        std::string(1, '\0'),    // Null byte
-        "' OR '1'='1",           // SQL injection
-        "; rm -rf /",            // Command injection
+        "",                           // Empty
+        std::string(1000, 'A'),       // Long string
+        std::string(1, '\0'),         // Null byte
+        "' OR '1'='1",                // SQL injection
+        "; rm -rf /",                 // Command injection
         "<script>alert(1)</script>",  // XSS
         std::string(100, '\xFF'),     // Invalid UTF-8
         "../../../etc/passwd",        // Path traversal
@@ -190,8 +183,7 @@ class InputSecurityValidator {
         "\r\n\r\n"                    // CRLF injection
     };
 
-    for (size_t i = 0; i < static_cast<size_t>(num_tests) && i < fuzz_inputs.size();
-         ++i) {
+    for (size_t i = 0; i < static_cast<size_t>(num_tests) && i < fuzz_inputs.size(); ++i) {
       results.push_back(validator(fuzz_inputs[i]));
     }
 
@@ -199,8 +191,7 @@ class InputSecurityValidator {
   }
 
   // Validate CSRF token
-  bool validate_csrf_token(const std::string& token,
-                          const std::string& expected_token) {
+  bool validate_csrf_token(const std::string& token, const std::string& expected_token) {
     if (token.empty() || expected_token.empty()) {
       return false;
     }
@@ -226,8 +217,7 @@ class InputSecurityValidator {
     result.sanitized_input = path;
 
     // Check for path traversal patterns
-    if (path.find("..") != std::string::npos ||
-        path.find("//") != std::string::npos ||
+    if (path.find("..") != std::string::npos || path.find("//") != std::string::npos ||
         path.find("\\\\") != std::string::npos) {
       result.is_safe = false;
       result.threats_detected.push_back("Path traversal attempt detected");
@@ -239,8 +229,7 @@ class InputSecurityValidator {
           i++;  // Skip ..
           result.sanitization_applied.push_back("Removed ..");
         } else if (path[i] == '/' || path[i] == '\\') {
-          if (result.sanitized_input.empty() ||
-              result.sanitized_input.back() != '/') {
+          if (result.sanitized_input.empty() || result.sanitized_input.back() != '/') {
             result.sanitized_input += '/';
           } else {
             result.sanitization_applied.push_back("Normalized duplicate slash");
@@ -254,221 +243,209 @@ class InputSecurityValidator {
     return result;
   }
 };
-  // Test 1: SQL injection testing
-  TEST(InputValidationAndSanitizationSecurityTestsTest, SQL_Injection_Testing) {
-    InputSecurityValidator validator;
+// Test 1: SQL injection testing
+TEST(InputValidationAndSanitizationSecurityTestsTest, SQL_Injection_Testing) {
+  InputSecurityValidator validator;
 
-    // Test 1.1: Detect SQL injection
-    auto result1 = validator.validate_sql_input("admin' OR '1'='1");
-    ASSERT_FALSE(result1.is_safe);
-    ASSERT_FALSE(result1.threats_detected.empty());
+  // Test 1.1: Detect SQL injection
+  auto result1 = validator.validate_sql_input("admin' OR '1'='1");
+  ASSERT_FALSE(result1.is_safe);
+  ASSERT_FALSE(result1.threats_detected.empty());
 
-    // Test 1.2: Safe SQL input
-    auto result2 = validator.validate_sql_input("john_doe");
-    ASSERT_TRUE(result2.is_safe);
-    ASSERT_TRUE(result2.threats_detected.empty());
+  // Test 1.2: Safe SQL input
+  auto result2 = validator.validate_sql_input("john_doe");
+  ASSERT_TRUE(result2.is_safe);
+  ASSERT_TRUE(result2.threats_detected.empty());
 
-    // Test 1.3: DROP TABLE injection
-    auto result3 = validator.validate_sql_input("'; DROP TABLE users; --");
-    ASSERT_FALSE(result3.is_safe);
-    ASSERT_FALSE(result3.sanitization_applied.empty());
+  // Test 1.3: DROP TABLE injection
+  auto result3 = validator.validate_sql_input("'; DROP TABLE users; --");
+  ASSERT_FALSE(result3.is_safe);
+  ASSERT_FALSE(result3.sanitization_applied.empty());
 
-    // Test 1.4: UNION SELECT injection
-    auto result4 = validator.validate_sql_input("1 UNION SELECT * FROM users");
-    ASSERT_FALSE(result4.is_safe);
-  }
+  // Test 1.4: UNION SELECT injection
+  auto result4 = validator.validate_sql_input("1 UNION SELECT * FROM users");
+  ASSERT_FALSE(result4.is_safe);
+}
 
-  // Test 2: Command injection testing
-  TEST(InputValidationAndSanitizationSecurityTestsTest, Command_Injection_Testing) {
-    InputSecurityValidator validator;
+// Test 2: Command injection testing
+TEST(InputValidationAndSanitizationSecurityTestsTest, Command_Injection_Testing) {
+  InputSecurityValidator validator;
 
-    // Test 2.1: Detect command injection with semicolon
-    auto result1 = validator.validate_command_input("file.txt; rm -rf /");
-    ASSERT_FALSE(result1.is_safe);
-    ASSERT_FALSE(result1.threats_detected.empty());
+  // Test 2.1: Detect command injection with semicolon
+  auto result1 = validator.validate_command_input("file.txt; rm -rf /");
+  ASSERT_FALSE(result1.is_safe);
+  ASSERT_FALSE(result1.threats_detected.empty());
 
-    // Test 2.2: Safe command input
-    auto result2 = validator.validate_command_input("myfile.txt");
-    ASSERT_TRUE(result2.is_safe);
+  // Test 2.2: Safe command input
+  auto result2 = validator.validate_command_input("myfile.txt");
+  ASSERT_TRUE(result2.is_safe);
 
-    // Test 2.3: Pipe injection
-    auto result3 = validator.validate_command_input("file.txt | cat /etc/passwd");
-    ASSERT_FALSE(result3.is_safe);
+  // Test 2.3: Pipe injection
+  auto result3 = validator.validate_command_input("file.txt | cat /etc/passwd");
+  ASSERT_FALSE(result3.is_safe);
 
-    // Test 2.4: Command substitution
-    auto result4 = validator.validate_command_input("$(whoami)");
-    ASSERT_FALSE(result4.is_safe);
-    ASSERT_FALSE(result4.sanitized_input.empty());
-  }
+  // Test 2.4: Command substitution
+  auto result4 = validator.validate_command_input("$(whoami)");
+  ASSERT_FALSE(result4.is_safe);
+  ASSERT_FALSE(result4.sanitized_input.empty());
+}
 
-  // Test 3: XSS testing
-  TEST(InputValidationAndSanitizationSecurityTestsTest, Cross_Site_Scripting_XSS_Testing) {
-    InputSecurityValidator validator;
+// Test 3: XSS testing
+TEST(InputValidationAndSanitizationSecurityTestsTest, Cross_Site_Scripting_XSS_Testing) {
+  InputSecurityValidator validator;
 
-    // Test 3.1: Detect script tag
-    auto result1 = validator.validate_xss_input("<script>alert('XSS')</script>");
-    ASSERT_FALSE(result1.is_safe);
-    ASSERT_FALSE(result1.threats_detected.empty());
+  // Test 3.1: Detect script tag
+  auto result1 = validator.validate_xss_input("<script>alert('XSS')</script>");
+  ASSERT_FALSE(result1.is_safe);
+  ASSERT_FALSE(result1.threats_detected.empty());
 
-    // Test 3.2: Safe HTML input
-    auto result2 = validator.validate_xss_input("Hello World");
-    ASSERT_TRUE(result2.is_safe);
+  // Test 3.2: Safe HTML input
+  auto result2 = validator.validate_xss_input("Hello World");
+  ASSERT_TRUE(result2.is_safe);
 
-    // Test 3.3: JavaScript protocol
-    auto result3 = validator.validate_xss_input("javascript:alert(1)");
-    ASSERT_FALSE(result3.is_safe);
+  // Test 3.3: JavaScript protocol
+  auto result3 = validator.validate_xss_input("javascript:alert(1)");
+  ASSERT_FALSE(result3.is_safe);
 
-    // Test 3.4: Event handler injection
-    auto result4 = validator.validate_xss_input("<img onerror='alert(1)'>");
-    ASSERT_FALSE(result4.is_safe);
-    EXPECT_NE(std::string::npos, result4.sanitized_input.find("&lt;"));
-  }
+  // Test 3.4: Event handler injection
+  auto result4 = validator.validate_xss_input("<img onerror='alert(1)'>");
+  ASSERT_FALSE(result4.is_safe);
+  EXPECT_NE(std::string::npos, result4.sanitized_input.find("&lt;"));
+}
 
-  // Test 4: Buffer overflow testing
-  TEST(InputValidationAndSanitizationSecurityTestsTest, Buffer_Overflow_Testing) {
-    InputSecurityValidator validator;
+// Test 4: Buffer overflow testing
+TEST(InputValidationAndSanitizationSecurityTestsTest, Buffer_Overflow_Testing) {
+  InputSecurityValidator validator;
 
-    // Test 4.1: Input within bounds
-    auto result1 = validator.validate_buffer_input("short", 100);
-    ASSERT_TRUE(result1.is_safe);
-    ASSERT_TRUE(result1.is_valid);
+  // Test 4.1: Input within bounds
+  auto result1 = validator.validate_buffer_input("short", 100);
+  ASSERT_TRUE(result1.is_safe);
+  ASSERT_TRUE(result1.is_valid);
 
-    // Test 4.2: Input exceeds bounds
-    std::string long_input(1000, 'A');
-    auto result2 = validator.validate_buffer_input(long_input, 100);
-    ASSERT_FALSE(result2.is_safe);
-    ASSERT_FALSE(result2.is_valid);
-    ASSERT_EQ(result2.sanitized_input.length(), 100);
+  // Test 4.2: Input exceeds bounds
+  std::string long_input(1000, 'A');
+  auto result2 = validator.validate_buffer_input(long_input, 100);
+  ASSERT_FALSE(result2.is_safe);
+  ASSERT_FALSE(result2.is_valid);
+  ASSERT_EQ(result2.sanitized_input.length(), 100);
 
-    // Test 4.3: Exact boundary
-    std::string exact_input(100, 'B');
-    auto result3 = validator.validate_buffer_input(exact_input, 100);
-    ASSERT_TRUE(result3.is_safe);
+  // Test 4.3: Exact boundary
+  std::string exact_input(100, 'B');
+  auto result3 = validator.validate_buffer_input(exact_input, 100);
+  ASSERT_TRUE(result3.is_safe);
 
-    // Test 4.4: Empty input
-    auto result4 = validator.validate_buffer_input("", 100);
-    ASSERT_TRUE(result4.is_safe);
-  }
+  // Test 4.4: Empty input
+  auto result4 = validator.validate_buffer_input("", 100);
+  ASSERT_TRUE(result4.is_safe);
+}
 
-  // Test 5: Input fuzzing
-  TEST(InputValidationAndSanitizationSecurityTestsTest, Input_Fuzzing) {
-    InputSecurityValidator validator;
+// Test 5: Input fuzzing
+TEST(InputValidationAndSanitizationSecurityTestsTest, Input_Fuzzing) {
+  InputSecurityValidator validator;
 
-    // Test 5.1: Fuzz SQL validator
-    auto sql_results = validator.fuzz_test(
-        [&validator](const std::string& input) {
-          return validator.validate_sql_input(input);
-        },
-        10);
+  // Test 5.1: Fuzz SQL validator
+  auto sql_results = validator.fuzz_test(
+      [&validator](const std::string& input) { return validator.validate_sql_input(input); }, 10);
 
-    ASSERT_FALSE(sql_results.empty());
-    bool found_threat = false;
-    for (const auto& result : sql_results) {
-      if (!result.is_safe) {
-        found_threat = true;
-        break;
-      }
+  ASSERT_FALSE(sql_results.empty());
+  bool found_threat = false;
+  for (const auto& result : sql_results) {
+    if (!result.is_safe) {
+      found_threat = true;
+      break;
     }
-    ASSERT_TRUE(found_threat);
-
-    // Test 5.2: Fuzz command validator
-    auto cmd_results = validator.fuzz_test(
-        [&validator](const std::string& input) {
-          return validator.validate_command_input(input);
-        },
-        10);
-
-    ASSERT_FALSE(cmd_results.empty());
-
-    // Test 5.3: Fuzz XSS validator
-    auto xss_results = validator.fuzz_test(
-        [&validator](const std::string& input) {
-          return validator.validate_xss_input(input);
-        },
-        10);
-
-    ASSERT_FALSE(xss_results.empty());
   }
+  ASSERT_TRUE(found_threat);
 
-  // Test 6: CSRF token validation
-  TEST(InputValidationAndSanitizationSecurityTestsTest, CSRF_Token_Validation) {
-    InputSecurityValidator validator;
+  // Test 5.2: Fuzz command validator
+  auto cmd_results = validator.fuzz_test(
+      [&validator](const std::string& input) { return validator.validate_command_input(input); },
+      10);
 
-    // Test 6.1: Valid token
-    std::string token = "abc123xyz789";
-    ASSERT_TRUE(validator.validate_csrf_token(token, token));
+  ASSERT_FALSE(cmd_results.empty());
 
-    // Test 6.2: Invalid token
-    ASSERT_FALSE(validator.validate_csrf_token("wrong", token));
+  // Test 5.3: Fuzz XSS validator
+  auto xss_results = validator.fuzz_test(
+      [&validator](const std::string& input) { return validator.validate_xss_input(input); }, 10);
 
-    // Test 6.3: Empty token
-    ASSERT_FALSE(validator.validate_csrf_token("", token));
+  ASSERT_FALSE(xss_results.empty());
+}
 
-    // Test 6.4: Different length tokens
-    ASSERT_FALSE(validator.validate_csrf_token("short", token));
+// Test 6: CSRF token validation
+TEST(InputValidationAndSanitizationSecurityTestsTest, CSRF_Token_Validation) {
+  InputSecurityValidator validator;
 
-    // Test 6.5: Case sensitivity
-    ASSERT_FALSE(validator.validate_csrf_token("ABC123XYZ789", token));
-  }
+  // Test 6.1: Valid token
+  std::string token = "abc123xyz789";
+  ASSERT_TRUE(validator.validate_csrf_token(token, token));
 
-  // Test 7: Path traversal testing
-  TEST(InputValidationAndSanitizationSecurityTestsTest, Path_Traversal_Testing) {
-    InputSecurityValidator validator;
+  // Test 6.2: Invalid token
+  ASSERT_FALSE(validator.validate_csrf_token("wrong", token));
 
-    // Test 7.1: Detect path traversal
-    auto result1 = validator.validate_path_input("../../../etc/passwd");
-    ASSERT_FALSE(result1.is_safe);
-    ASSERT_FALSE(result1.threats_detected.empty());
+  // Test 6.3: Empty token
+  ASSERT_FALSE(validator.validate_csrf_token("", token));
 
-    // Test 7.2: Safe path
-    auto result2 = validator.validate_path_input("files/document.txt");
-    ASSERT_TRUE(result2.is_safe);
+  // Test 6.4: Different length tokens
+  ASSERT_FALSE(validator.validate_csrf_token("short", token));
 
-    // Test 7.3: Windows path traversal
-    auto result3 = validator.validate_path_input("..\\..\\windows\\system32");
-    ASSERT_FALSE(result3.is_safe);
+  // Test 6.5: Case sensitivity
+  ASSERT_FALSE(validator.validate_csrf_token("ABC123XYZ789", token));
+}
 
-    // Test 7.4: Double slash
-    auto result4 = validator.validate_path_input("files//secret//data.txt");
-    ASSERT_FALSE(result4.is_safe);
-    ASSERT_FALSE(result4.sanitization_applied.empty());
-  }
+// Test 7: Path traversal testing
+TEST(InputValidationAndSanitizationSecurityTestsTest, Path_Traversal_Testing) {
+  InputSecurityValidator validator;
 
-  // Test 8: Combined security validation
-  TEST(InputValidationAndSanitizationSecurityTestsTest, Combined_Security_Validation) {
-    InputSecurityValidator validator;
+  // Test 7.1: Detect path traversal
+  auto result1 = validator.validate_path_input("../../../etc/passwd");
+  ASSERT_FALSE(result1.is_safe);
+  ASSERT_FALSE(result1.threats_detected.empty());
 
-    // Test 8.1: Multiple threat types
-    std::vector<std::string> malicious_inputs = {
-        "'; DROP TABLE users; --",
-        "; cat /etc/passwd",
-        "<script>alert(document.cookie)</script>",
-        "../../../etc/shadow",
-        std::string(10000, 'A')};
+  // Test 7.2: Safe path
+  auto result2 = validator.validate_path_input("files/document.txt");
+  ASSERT_TRUE(result2.is_safe);
 
-    int threats_detected = 0;
-    for (const auto& input : malicious_inputs) {
-      auto sql_result = validator.validate_sql_input(input);
-      auto cmd_result = validator.validate_command_input(input);
-      auto xss_result = validator.validate_xss_input(input);
-      auto path_result = validator.validate_path_input(input);
-      auto buffer_result = validator.validate_buffer_input(input, 1000);
+  // Test 7.3: Windows path traversal
+  auto result3 = validator.validate_path_input("..\\..\\windows\\system32");
+  ASSERT_FALSE(result3.is_safe);
 
-      if (!sql_result.is_safe || !cmd_result.is_safe || !xss_result.is_safe ||
-          !path_result.is_safe || !buffer_result.is_safe) {
-        threats_detected++;
-      }
+  // Test 7.4: Double slash
+  auto result4 = validator.validate_path_input("files//secret//data.txt");
+  ASSERT_FALSE(result4.is_safe);
+  ASSERT_FALSE(result4.sanitization_applied.empty());
+}
+
+// Test 8: Combined security validation
+TEST(InputValidationAndSanitizationSecurityTestsTest, Combined_Security_Validation) {
+  InputSecurityValidator validator;
+
+  // Test 8.1: Multiple threat types
+  std::vector<std::string> malicious_inputs = {"'; DROP TABLE users; --", "; cat /etc/passwd",
+                                               "<script>alert(document.cookie)</script>",
+                                               "../../../etc/shadow", std::string(10000, 'A')};
+
+  int threats_detected = 0;
+  for (const auto& input : malicious_inputs) {
+    auto sql_result = validator.validate_sql_input(input);
+    auto cmd_result = validator.validate_command_input(input);
+    auto xss_result = validator.validate_xss_input(input);
+    auto path_result = validator.validate_path_input(input);
+    auto buffer_result = validator.validate_buffer_input(input, 1000);
+
+    if (!sql_result.is_safe || !cmd_result.is_safe || !xss_result.is_safe || !path_result.is_safe ||
+        !buffer_result.is_safe) {
+      threats_detected++;
     }
-
-    ASSERT_EQ(threats_detected, 5);  // All inputs should be detected as threats
-
-    // Test 8.2: Safe inputs pass all validators
-    std::string safe_input = "normal_text_123";
-    auto sql_safe = validator.validate_sql_input(safe_input);
-    auto cmd_safe = validator.validate_command_input(safe_input);
-    auto xss_safe = validator.validate_xss_input(safe_input);
-    auto path_safe = validator.validate_path_input(safe_input);
-
-    ASSERT_TRUE(sql_safe.is_safe && cmd_safe.is_safe && xss_safe.is_safe &&
-                path_safe.is_safe);
   }
+
+  ASSERT_EQ(threats_detected, 5);  // All inputs should be detected as threats
+
+  // Test 8.2: Safe inputs pass all validators
+  std::string safe_input = "normal_text_123";
+  auto sql_safe = validator.validate_sql_input(safe_input);
+  auto cmd_safe = validator.validate_command_input(safe_input);
+  auto xss_safe = validator.validate_xss_input(safe_input);
+  auto path_safe = validator.validate_path_input(safe_input);
+
+  ASSERT_TRUE(sql_safe.is_safe && cmd_safe.is_safe && xss_safe.is_safe && path_safe.is_safe);
+}

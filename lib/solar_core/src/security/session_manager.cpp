@@ -4,12 +4,13 @@
  */
 
 #include "solar_core/security/session_manager.hpp"
-#include "solar_core/security/security_manager.hpp"
 
 #include <algorithm>
 #include <mutex>
 #include <thread>
 #include <unordered_map>
+
+#include "solar_core/security/security_manager.hpp"
 
 namespace SolarSystem::Security {
 
@@ -124,10 +125,8 @@ void SessionManager::destroy_user_sessions(const std::string& user_id) {
   }
 }
 
-void SessionManager::set_session_data(
-    const std::string& session_id,
-    const std::string& key,
-    const std::string& value) {
+void SessionManager::set_session_data(const std::string& session_id, const std::string& key,
+                                      const std::string& value) {
   std::lock_guard<std::mutex> lock(impl_->mutex);
 
   auto it = impl_->sessions.find(session_id);
@@ -136,9 +135,8 @@ void SessionManager::set_session_data(
   }
 }
 
-std::optional<std::string> SessionManager::get_session_data(
-    const std::string& session_id,
-    const std::string& key) {
+std::optional<std::string> SessionManager::get_session_data(const std::string& session_id,
+                                                            const std::string& key) {
   std::lock_guard<std::mutex> lock(impl_->mutex);
 
   auto it = impl_->sessions.find(session_id);

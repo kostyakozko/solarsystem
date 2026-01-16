@@ -12,10 +12,6 @@
 
 #pragma once
 
-#include "solar_core/export.hpp"
-#include "solar_core/performance/request_handler.hpp"
-#include "solar_core/security/rate_limiter.hpp"
-
 #include <chrono>
 #include <functional>
 #include <map>
@@ -23,6 +19,10 @@
 #include <optional>
 #include <string>
 #include <vector>
+
+#include "solar_core/export.hpp"
+#include "solar_core/performance/request_handler.hpp"
+#include "solar_core/security/rate_limiter.hpp"
 
 namespace SolarSystem::API {
 
@@ -111,8 +111,7 @@ class SOLAR_CORE_API APIManager {
   /**
    * @brief Handle API request
    */
-  [[nodiscard]] Performance::HttpResponse handle_request(
-      const Performance::HttpRequest& request);
+  [[nodiscard]] Performance::HttpResponse handle_request(const Performance::HttpRequest& request);
 
   /**
    * @brief Get API documentation
@@ -157,22 +156,19 @@ class APIDocumentationGenerator {
   /**
    * @brief Generate OpenAPI/Swagger documentation
    */
-  [[nodiscard]] static std::string generate_openapi(
-      const std::vector<APIEndpoint>& endpoints,
-      const std::string& title = "Solar System API",
-      const APIVersion& version = {1, 0, 0});
+  [[nodiscard]] static std::string generate_openapi(const std::vector<APIEndpoint>& endpoints,
+                                                    const std::string& title = "Solar System API",
+                                                    const APIVersion& version = {1, 0, 0});
 
   /**
    * @brief Generate Markdown documentation
    */
-  [[nodiscard]] static std::string generate_markdown(
-      const std::vector<APIEndpoint>& endpoints);
+  [[nodiscard]] static std::string generate_markdown(const std::vector<APIEndpoint>& endpoints);
 
   /**
    * @brief Generate HTML documentation
    */
-  [[nodiscard]] static std::string generate_html(
-      const std::vector<APIEndpoint>& endpoints);
+  [[nodiscard]] static std::string generate_html(const std::vector<APIEndpoint>& endpoints);
 };
 
 /**
@@ -183,24 +179,21 @@ class APIValidator {
   /**
    * @brief Validate request against endpoint definition
    */
-  [[nodiscard]] static bool validate_request(
-      const Performance::HttpRequest& request,
-      const APIEndpoint& endpoint,
-      std::string* error = nullptr);
+  [[nodiscard]] static bool validate_request(const Performance::HttpRequest& request,
+                                             const APIEndpoint& endpoint,
+                                             std::string* error = nullptr);
 
   /**
    * @brief Validate API version
    */
-  [[nodiscard]] static bool validate_version(
-      const APIVersion& requested,
-      const APIVersion& supported);
+  [[nodiscard]] static bool validate_version(const APIVersion& requested,
+                                             const APIVersion& supported);
 
   /**
    * @brief Validate required parameters
    */
-  [[nodiscard]] static bool validate_parameters(
-      const std::map<std::string, std::string>& params,
-      const std::vector<std::string>& required);
+  [[nodiscard]] static bool validate_parameters(const std::map<std::string, std::string>& params,
+                                                const std::vector<std::string>& required);
 };
 
 }  // namespace SolarSystem::API

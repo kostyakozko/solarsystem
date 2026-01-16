@@ -7,9 +7,10 @@
 
 #include "solar_utils/windows_utils.hpp"
 
-#include <windows.h>
 #include <psapi.h>
+#include <windows.h>
 #include <winsvc.h>
+
 #include <sstream>
 
 namespace SolarSystem::Utils::Windows {
@@ -30,12 +31,12 @@ WindowsSystemInfo WindowsUtils::get_system_info() {
   OSVERSIONINFOEXW osvi = {};
   osvi.dwOSVersionInfoSize = sizeof(osvi);
 
-  #pragma warning(push)
-  #pragma warning(disable: 4996)  // Suppress deprecation warning
+#pragma warning(push)
+#pragma warning(disable : 4996)  // Suppress deprecation warning
   if (GetVersionExW(reinterpret_cast<OSVERSIONINFOW*>(&osvi))) {
     info.build_number = std::to_string(osvi.dwBuildNumber);
   }
-  #pragma warning(pop)
+#pragma warning(pop)
 
   return info;
 }
@@ -44,14 +45,14 @@ std::string WindowsUtils::get_windows_version() {
   OSVERSIONINFOEXW osvi = {};
   osvi.dwOSVersionInfoSize = sizeof(osvi);
 
-  #pragma warning(push)
-  #pragma warning(disable: 4996)
+#pragma warning(push)
+#pragma warning(disable : 4996)
   if (GetVersionExW(reinterpret_cast<OSVERSIONINFOW*>(&osvi))) {
     std::ostringstream oss;
     oss << osvi.dwMajorVersion << "." << osvi.dwMinorVersion;
     return oss.str();
   }
-  #pragma warning(pop)
+#pragma warning(pop)
 
   return "Unknown";
 }
@@ -60,12 +61,12 @@ bool WindowsUtils::is_windows_10_or_later() {
   OSVERSIONINFOEXW osvi = {};
   osvi.dwOSVersionInfoSize = sizeof(osvi);
 
-  #pragma warning(push)
-  #pragma warning(disable: 4996)
+#pragma warning(push)
+#pragma warning(disable : 4996)
   if (GetVersionExW(reinterpret_cast<OSVERSIONINFOW*>(&osvi))) {
     return osvi.dwMajorVersion >= 10;
   }
-  #pragma warning(pop)
+#pragma warning(pop)
 
   return false;
 }
@@ -118,10 +119,8 @@ size_t WindowsUtils::get_available_memory_mb() {
 
 // RegistryUtils implementation
 
-std::optional<std::string> RegistryUtils::read_string(
-    const std::string& key_path,
-    const std::string& value_name) {
-
+std::optional<std::string> RegistryUtils::read_string(const std::string& key_path,
+                                                      const std::string& value_name) {
   HKEY hKey;
   if (RegOpenKeyExA(HKEY_LOCAL_MACHINE, key_path.c_str(), 0, KEY_READ, &hKey) != ERROR_SUCCESS) {
     return std::nullopt;
@@ -132,7 +131,7 @@ std::optional<std::string> RegistryUtils::read_string(
   DWORD type;
 
   LONG result = RegQueryValueExA(hKey, value_name.c_str(), nullptr, &type,
-       reinterpret_cast<LPBYTE>(buffer), &bufferSize);
+                                 reinterpret_cast<LPBYTE>(buffer), &bufferSize);
 
   RegCloseKey(hKey);
 
@@ -143,10 +142,8 @@ std::optional<std::string> RegistryUtils::read_string(
   return std::nullopt;
 }
 
-std::optional<uint32_t> RegistryUtils::read_dword(
-    const std::string& key_path,
-    const std::string& value_name) {
-
+std::optional<uint32_t> RegistryUtils::read_dword(const std::string& key_path,
+                                                  const std::string& value_name) {
   HKEY hKey;
   if (RegOpenKeyExA(HKEY_LOCAL_MACHINE, key_path.c_str(), 0, KEY_READ, &hKey) != ERROR_SUCCESS) {
     return std::nullopt;
@@ -168,14 +165,11 @@ std::optional<uint32_t> RegistryUtils::read_dword(
   return std::nullopt;
 }
 
-bool RegistryUtils::write_string(
-    const std::string& key_path,
-    const std::string& value_name,
-    const std::string& value) {
-
+bool RegistryUtils::write_string(const std::string& key_path, const std::string& value_name,
+                                 const std::string& value) {
   HKEY hKey;
-  if (RegCreateKeyExA(HKEY_LOCAL_MACHINE, key_path.c_str(), 0, nullptr,
-                     REG_OPTION_NON_VOLATILE, KEY_WRITE, nullptr, &hKey, nullptr) != ERROR_SUCCESS) {
+  if (RegCreateKeyExA(HKEY_LOCAL_MACHINE, key_path.c_str(), 0, nullptr, REG_OPTION_NON_VOLATILE,
+                      KEY_WRITE, nullptr, &hKey, nullptr) != ERROR_SUCCESS) {
     return false;
   }
 
@@ -188,14 +182,11 @@ bool RegistryUtils::write_string(
   return result == ERROR_SUCCESS;
 }
 
-bool RegistryUtils::write_dword(
-    const std::string& key_path,
-    const std::string& value_name,
-    uint32_t value) {
-
+bool RegistryUtils::write_dword(const std::string& key_path, const std::string& value_name,
+                                uint32_t value) {
   HKEY hKey;
-  if (RegCreateKeyExA(HKEY_LOCAL_MACHINE, key_path.c_str(), 0, nullptr,
-                     REG_OPTION_NON_VOLATILE, KEY_WRITE, nullptr, &hKey, nullptr) != ERROR_SUCCESS) {
+  if (RegCreateKeyExA(HKEY_LOCAL_MACHINE, key_path.c_str(), 0, nullptr, REG_OPTION_NON_VOLATILE,
+                      KEY_WRITE, nullptr, &hKey, nullptr) != ERROR_SUCCESS) {
     return false;
   }
 
@@ -237,8 +228,8 @@ std::vector<std::string> RegistryUtils::list_values(const std::string& key_path)
 
   while (true) {
     valueNameSize = sizeof(valueName);
-    LONG result = RegEnumValueA(hKey, index++, valueName, &valueNameSize,
-                                nullptr, nullptr, nullptr, nullptr);
+    LONG result =
+        RegEnumValueA(hKey, index++, valueName, &valueNameSize, nullptr, nullptr, nullptr, nullptr);
 
     if (result == ERROR_SUCCESS) {
       values.push_back(std::string(valueName));
@@ -347,27 +338,17 @@ bool ServiceUtils::stop_service(const std::string& service_name) {
   return result;
 }
 
-bool ServiceUtils::install_service(
-    const std::string& service_name,
-    const std::string& display_name,
-    const std::filesystem::path& executable_path) {
-
+bool ServiceUtils::install_service(const std::string& service_name, const std::string& display_name,
+                                   const std::filesystem::path& executable_path) {
   SC_HANDLE scm = OpenSCManagerA(nullptr, nullptr, SC_MANAGER_CREATE_SERVICE);
   if (!scm) {
     return false;
   }
 
-  SC_HANDLE service = CreateServiceA(
-      scm,
-      service_name.c_str(),
-      display_name.c_str(),
-      SERVICE_ALL_ACCESS,
-      SERVICE_WIN32_OWN_PROCESS,
-      SERVICE_AUTO_START,
-      SERVICE_ERROR_NORMAL,
-      executable_path.string().c_str(),
-      nullptr, nullptr, nullptr, nullptr, nullptr
-  );
+  SC_HANDLE service =
+      CreateServiceA(scm, service_name.c_str(), display_name.c_str(), SERVICE_ALL_ACCESS,
+                     SERVICE_WIN32_OWN_PROCESS, SERVICE_AUTO_START, SERVICE_ERROR_NORMAL,
+                     executable_path.string().c_str(), nullptr, nullptr, nullptr, nullptr, nullptr);
 
   bool result = (service != nullptr);
 
@@ -403,9 +384,8 @@ uint32_t WindowsFileSystem::get_file_attributes(const std::filesystem::path& pat
   return GetFileAttributesW(path.wstring().c_str());
 }
 
-bool WindowsFileSystem::set_file_attributes(
-    const std::filesystem::path& path,
-    uint32_t attributes) {
+bool WindowsFileSystem::set_file_attributes(const std::filesystem::path& path,
+                                            uint32_t attributes) {
   return SetFileAttributesW(path.wstring().c_str(), attributes) != 0;
 }
 
@@ -449,9 +429,7 @@ bool WindowsFileSystem::set_readonly(const std::filesystem::path& path, bool rea
   return set_file_attributes(path, attrs);
 }
 
-std::optional<std::string> WindowsFileSystem::get_short_path(
-    const std::filesystem::path& path) {
-
+std::optional<std::string> WindowsFileSystem::get_short_path(const std::filesystem::path& path) {
   wchar_t shortPath[MAX_PATH];
   DWORD result = GetShortPathNameW(path.wstring().c_str(), shortPath, MAX_PATH);
 
@@ -463,9 +441,7 @@ std::optional<std::string> WindowsFileSystem::get_short_path(
   return std::nullopt;
 }
 
-std::optional<std::string> WindowsFileSystem::get_long_path(
-    const std::filesystem::path& path) {
-
+std::optional<std::string> WindowsFileSystem::get_long_path(const std::filesystem::path& path) {
   wchar_t longPath[MAX_PATH];
   DWORD result = GetLongPathNameW(path.wstring().c_str(), longPath, MAX_PATH);
 

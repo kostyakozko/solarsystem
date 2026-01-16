@@ -23,15 +23,7 @@ namespace SolarSystem::Performance {
 /**
  * @brief HTTP method enumeration
  */
-enum class HttpMethod {
-  GET,
-  POST,
-  PUT,
-  DELETE,
-  PATCH,
-  HEAD,
-  OPTIONS
-};
+enum class HttpMethod { GET, POST, PUT, DELETE, PATCH, HEAD, OPTIONS };
 
 /**
  * @brief Convert HTTP method to string
@@ -95,14 +87,14 @@ class HttpRouter {
   /**
    * @brief Add route with authentication requirement
    */
-  void add_route(HttpMethod method, const std::string& path, RequestHandler handler, bool requires_auth);
+  void add_route(HttpMethod method, const std::string& path, RequestHandler handler,
+                 bool requires_auth);
 
   /**
    * @brief Find handler for request
    */
-  [[nodiscard]] std::optional<RequestHandler> find_handler(
-      HttpMethod method,
-      const std::string& path) const;
+  [[nodiscard]] std::optional<RequestHandler> find_handler(HttpMethod method,
+                                                           const std::string& path) const;
 
   /**
    * @brief Check if route requires authentication

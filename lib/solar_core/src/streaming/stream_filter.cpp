@@ -37,7 +37,8 @@ std::optional<DataSnapshot> BodySelectionFilter::apply(const DataSnapshot& snaps
   for (const auto& point : filtered_snapshot.data_points) {
     total_quality += point.quality_score;
   }
-  filtered_snapshot.overall_quality = total_quality / static_cast<double>(filtered_snapshot.data_points.size());
+  filtered_snapshot.overall_quality =
+      total_quality / static_cast<double>(filtered_snapshot.data_points.size());
 
   return filtered_snapshot;
 }
@@ -50,9 +51,7 @@ void BodySelectionFilter::remove_body(const std::string& body_name) {
   selected_bodies_.erase(body_name);
 }
 
-void BodySelectionFilter::clear_bodies() {
-  selected_bodies_.clear();
-}
+void BodySelectionFilter::clear_bodies() { selected_bodies_.clear(); }
 
 const std::unordered_set<std::string>& BodySelectionFilter::get_selected_bodies() const noexcept {
   return selected_bodies_;
@@ -90,7 +89,8 @@ std::optional<DataSnapshot> QualityFilter::apply(const DataSnapshot& snapshot) {
   for (const auto& point : filtered_snapshot.data_points) {
     total_quality += point.quality_score;
   }
-  filtered_snapshot.overall_quality = total_quality / static_cast<double>(filtered_snapshot.data_points.size());
+  filtered_snapshot.overall_quality =
+      total_quality / static_cast<double>(filtered_snapshot.data_points.size());
 
   return filtered_snapshot;
 }
@@ -122,13 +122,15 @@ std::optional<DataSnapshot> LatencyFilter::apply(const DataSnapshot& snapshot) {
   for (const auto& point : filtered_snapshot.data_points) {
     total_quality += point.quality_score;
   }
-  filtered_snapshot.overall_quality = total_quality / static_cast<double>(filtered_snapshot.data_points.size());
+  filtered_snapshot.overall_quality =
+      total_quality / static_cast<double>(filtered_snapshot.data_points.size());
 
   return filtered_snapshot;
 }
 
 // RateLimitFilter implementation
-RateLimitFilter::RateLimitFilter(std::chrono::milliseconds min_interval) : min_interval_(min_interval) {}
+RateLimitFilter::RateLimitFilter(std::chrono::milliseconds min_interval)
+    : min_interval_(min_interval) {}
 
 std::optional<DataSnapshot> RateLimitFilter::apply(const DataSnapshot& snapshot) {
   if (!enabled_) {
@@ -170,7 +172,7 @@ std::optional<DataSnapshot> DuplicationFilter::apply(const DataSnapshot& snapsho
 }
 
 bool DuplicationFilter::is_significantly_different(const DataSnapshot& current,
-                                                  const DataSnapshot& previous) const {
+                                                   const DataSnapshot& previous) const {
   // If different number of bodies, it's definitely different
   if (current.data_points.size() != previous.data_points.size()) {
     return true;
@@ -180,9 +182,9 @@ bool DuplicationFilter::is_significantly_different(const DataSnapshot& current,
   for (const auto& current_point : current.data_points) {
     // Find corresponding body in previous snapshot
     auto prev_it = std::find_if(previous.data_points.begin(), previous.data_points.end(),
-                               [&current_point](const DataPoint& prev_point) {
-                                 return prev_point.body_name == current_point.body_name;
-                               });
+                                [&current_point](const DataPoint& prev_point) {
+                                  return prev_point.body_name == current_point.body_name;
+                                });
 
     if (prev_it == previous.data_points.end()) {
       return true;  // Body not found in previous snapshot
@@ -196,12 +198,12 @@ bool DuplicationFilter::is_significantly_different(const DataSnapshot& current,
   return false;  // No significant differences found
 }
 
-bool DuplicationFilter::is_body_different(const DataPoint& current, const DataPoint& previous) const {
+bool DuplicationFilter::is_body_different(const DataPoint& current,
+                                          const DataPoint& previous) const {
   // Check position difference
   auto pos_diff = current.position - previous.position;
-  double pos_magnitude = static_cast<double>(std::sqrt(pos_diff.x() * pos_diff.x() +
-                                  pos_diff.y() * pos_diff.y() +
-                                  pos_diff.z() * pos_diff.z()));
+  double pos_magnitude = static_cast<double>(std::sqrt(
+      pos_diff.x() * pos_diff.x() + pos_diff.y() * pos_diff.y() + pos_diff.z() * pos_diff.z()));
 
   if (pos_magnitude > position_tolerance_) {
     return true;
@@ -209,9 +211,8 @@ bool DuplicationFilter::is_body_different(const DataPoint& current, const DataPo
 
   // Check velocity difference
   auto vel_diff = current.velocity - previous.velocity;
-  double vel_magnitude = static_cast<double>(std::sqrt(vel_diff.x() * vel_diff.x() +
-                                  vel_diff.y() * vel_diff.y() +
-                                  vel_diff.z() * vel_diff.z()));
+  double vel_magnitude = static_cast<double>(std::sqrt(
+      vel_diff.x() * vel_diff.x() + vel_diff.y() * vel_diff.y() + vel_diff.z() * vel_diff.z()));
 
   if (vel_magnitude > velocity_tolerance_) {
     return true;
@@ -257,7 +258,8 @@ std::optional<DataSnapshot> PredicateFilter::apply(const DataSnapshot& snapshot)
     for (const auto& point : filtered_snapshot.data_points) {
       total_quality += point.quality_score;
     }
-    filtered_snapshot.overall_quality = total_quality / static_cast<double>(filtered_snapshot.data_points.size());
+    filtered_snapshot.overall_quality =
+        total_quality / static_cast<double>(filtered_snapshot.data_points.size());
 
     return filtered_snapshot;
   }
@@ -309,17 +311,14 @@ void FilterChain::add_filter(std::unique_ptr<StreamFilter> filter) {
 }
 
 void FilterChain::remove_filter(const std::string& filter_name) {
-  filters_.erase(
-      std::remove_if(filters_.begin(), filters_.end(),
-                     [&filter_name](const std::unique_ptr<StreamFilter>& filter) {
-                       return filter && filter->get_name() == filter_name;
-                     }),
-      filters_.end());
+  filters_.erase(std::remove_if(filters_.begin(), filters_.end(),
+                                [&filter_name](const std::unique_ptr<StreamFilter>& filter) {
+                                  return filter && filter->get_name() == filter_name;
+                                }),
+                 filters_.end());
 }
 
-void FilterChain::clear_filters() {
-  filters_.clear();
-}
+void FilterChain::clear_filters() { filters_.clear(); }
 
 const std::vector<std::unique_ptr<StreamFilter>>& FilterChain::get_filters() const noexcept {
   return filters_;
@@ -341,9 +340,9 @@ void FilterChain::disable_filter(const std::string& filter_name) {
 
 StreamFilter* FilterChain::find_filter(const std::string& name) {
   auto it = std::find_if(filters_.begin(), filters_.end(),
-                        [&name](const std::unique_ptr<StreamFilter>& filter) {
-                          return filter && filter->get_name() == name;
-                        });
+                         [&name](const std::unique_ptr<StreamFilter>& filter) {
+                           return filter && filter->get_name() == name;
+                         });
   return (it != filters_.end()) ? it->get() : nullptr;
 }
 

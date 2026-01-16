@@ -5,20 +5,20 @@
 
 #include "solar_core/error/error_messaging.hpp"
 
-#include <sstream>
 #include <algorithm>
-#include <iomanip>
 #include <chrono>
+#include <iomanip>
 #include <nlohmann/json.hpp>
+#include <sstream>
 
 // Platform-specific includes for command execution
 #ifdef _WIN32
 #include <windows.h>
 #else
+#include <signal.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
-#include <signal.h>
 #endif
 
 // libcurl for HTTP error reporting
@@ -87,9 +87,7 @@ ErrorMessageBuilder& ErrorMessageBuilder::user_reportable(bool reportable) {
   return *this;
 }
 
-ErrorMessage ErrorMessageBuilder::build() const {
-  return message_;
-}
+ErrorMessage ErrorMessageBuilder::build() const { return message_; }
 
 // ErrorMessaging implementation
 
@@ -99,11 +97,12 @@ ErrorMessaging& ErrorMessaging::instance() {
 }
 
 void ErrorMessaging::register_error_template(const std::string& error_code,
-                                            const ErrorMessage& template_msg) {
+                                             const ErrorMessage& template_msg) {
   error_templates_[error_code] = template_msg;
 }
 
-std::optional<ErrorMessage> ErrorMessaging::get_error_template(const std::string& error_code) const {
+std::optional<ErrorMessage> ErrorMessaging::get_error_template(
+    const std::string& error_code) const {
   auto it = error_templates_.find(error_code);
   if (it != error_templates_.end()) {
     return it->second;
@@ -180,8 +179,10 @@ std::string ErrorMessaging::format_error_detailed(const ErrorMessage& error) con
 
   // Error code and severity
   oss << "║ Error Code: " << std::left << std::setw(48) << error.error_code << " ║\n";
-  oss << "║ Severity:   " << std::left << std::setw(48) << severity_to_string(error.severity) << " ║\n";
-  oss << "║ Category:   " << std::left << std::setw(48) << category_to_string(error.category) << " ║\n";
+  oss << "║ Severity:   " << std::left << std::setw(48) << severity_to_string(error.severity)
+      << " ║\n";
+  oss << "║ Category:   " << std::left << std::setw(48) << category_to_string(error.category)
+      << " ║\n";
 
   if (!error.context.empty()) {
     oss << "║ Context:    " << std::left << std::setw(48) << error.context << " ║\n";
@@ -257,11 +258,9 @@ std::string ErrorMessaging::format_error_json(const ErrorMessage& error) const {
 
   nlohmann::json recovery_actions = nlohmann::json::array();
   for (const auto& action : error.recovery_actions) {
-    recovery_actions.push_back({
-      {"description", action.description},
-      {"command", action.command},
-      {"automatic", action.automatic}
-    });
+    recovery_actions.push_back({{"description", action.description},
+                                {"command", action.command},
+                                {"automatic", action.automatic}});
   }
   j["recovery_actions"] = recovery_actions;
 
@@ -272,19 +271,14 @@ std::string ErrorMessaging::format_error_json(const ErrorMessage& error) const {
   return j.dump(2) + "\n";
 }
 
-void ErrorMessaging::report_error(const ErrorMessage& error) {
-  error_history_.push_back(error);
-}
+void ErrorMessaging::report_error(const ErrorMessage& error) { error_history_.push_back(error); }
 
-std::vector<ErrorMessage> ErrorMessaging::get_error_history() const {
-  return error_history_;
-}
+std::vector<ErrorMessage> ErrorMessaging::get_error_history() const { return error_history_; }
 
-void ErrorMessaging::clear_error_history() {
-  error_history_.clear();
-}
+void ErrorMessaging::clear_error_history() { error_history_.clear(); }
 
-std::vector<RecoveryAction> ErrorMessaging::suggest_recovery_actions(const std::string& error_code) const {
+std::vector<RecoveryAction> ErrorMessaging::suggest_recovery_actions(
+    const std::string& error_code) const {
   auto error_template = get_error_template(error_code);
   if (error_template) {
     return error_template->recovery_actions;
@@ -298,15 +292,14 @@ bool ErrorMessaging::execute_recovery_action(const RecoveryAction& action) {
   }
 
   // Security validation - only allow whitelisted commands
-  static const std::vector<std::string> allowed_commands = {
-    "restart", "clear_cache", "reset_config", "reload", "cleanup"
-  };
+  static const std::vector<std::string> allowed_commands = {"restart", "clear_cache",
+                                                            "reset_config", "reload", "cleanup"};
 
   // Extract command name (first word)
   std::string command_name = action.command.substr(0, action.command.find(' '));
 
-  bool is_allowed = std::find(allowed_commands.begin(), allowed_commands.end(),
-                              command_name) != allowed_commands.end();
+  bool is_allowed = std::find(allowed_commands.begin(), allowed_commands.end(), command_name) !=
+                    allowed_commands.end();
 
   if (!is_allowed) {
     // Log security violation
@@ -326,17 +319,16 @@ bool ErrorMessaging::execute_recovery_action(const RecoveryAction& action) {
     std::string cmd_copy = action.command;
 
     // Start the child process with timeout
-    if (!CreateProcessA(
-        nullptr,                    // No module name (use command line)
-        &cmd_copy[0],              // Command line (mutable)
-        nullptr,                    // Process handle not inheritable
-        nullptr,                    // Thread handle not inheritable
-        FALSE,                      // Set handle inheritance to FALSE
-        CREATE_NO_WINDOW,          // No console window
-        nullptr,                    // Use parent's environment block
-        nullptr,                    // Use parent's starting directory
-        &si,                       // Pointer to STARTUPINFO structure
-        &pi))                      // Pointer to PROCESS_INFORMATION structure
+    if (!CreateProcessA(nullptr,           // No module name (use command line)
+                        &cmd_copy[0],      // Command line (mutable)
+                        nullptr,           // Process handle not inheritable
+                        nullptr,           // Thread handle not inheritable
+                        FALSE,             // Set handle inheritance to FALSE
+                        CREATE_NO_WINDOW,  // No console window
+                        nullptr,           // Use parent's environment block
+                        nullptr,           // Use parent's starting directory
+                        &si,               // Pointer to STARTUPINFO structure
+                        &pi))              // Pointer to PROCESS_INFORMATION structure
     {
       return false;
     }
@@ -407,7 +399,7 @@ bool ErrorMessaging::execute_recovery_action(const RecoveryAction& action) {
 
       if (result == -1) {
         // Wait failed or timeout
-        kill(pid, SIGKILL);  // Kill child process
+        kill(pid, SIGKILL);        // Kill child process
         waitpid(pid, nullptr, 0);  // Clean up zombie
         return false;
       }
@@ -425,30 +417,22 @@ bool ErrorMessaging::execute_recovery_action(const RecoveryAction& action) {
   }
 }
 
-void ErrorMessaging::set_language(const std::string& language) {
-  current_language_ = language;
-}
+void ErrorMessaging::set_language(const std::string& language) { current_language_ = language; }
 
-std::string ErrorMessaging::get_language() const {
-  return current_language_;
-}
+std::string ErrorMessaging::get_language() const { return current_language_; }
 
-size_t ErrorMessaging::get_error_count() const {
-  return error_history_.size();
-}
+size_t ErrorMessaging::get_error_count() const { return error_history_.size(); }
 
 size_t ErrorMessaging::get_error_count_by_severity(ErrorSeverity severity) const {
-  return static_cast<size_t>(std::count_if(error_history_.begin(), error_history_.end(),
-                        [severity](const ErrorMessage& error) {
-                          return error.severity == severity;
-                        }));
+  return static_cast<size_t>(
+      std::count_if(error_history_.begin(), error_history_.end(),
+                    [severity](const ErrorMessage& error) { return error.severity == severity; }));
 }
 
 size_t ErrorMessaging::get_error_count_by_category(ErrorCategory category) const {
-  return static_cast<size_t>(std::count_if(error_history_.begin(), error_history_.end(),
-                        [category](const ErrorMessage& error) {
-                          return error.category == category;
-                        }));
+  return static_cast<size_t>(
+      std::count_if(error_history_.begin(), error_history_.end(),
+                    [category](const ErrorMessage& error) { return error.category == category; }));
 }
 
 // ErrorFeedback implementation
@@ -569,4 +553,3 @@ bool ErrorFeedback::send_error_report(const std::string& report) {
 }
 
 }  // namespace SolarSystem::Error
-

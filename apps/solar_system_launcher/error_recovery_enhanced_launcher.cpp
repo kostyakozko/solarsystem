@@ -33,12 +33,12 @@
 // Enhanced Solar System Suite APIs with intelligent error recovery
 #include "solar_core/bodies/body_factory.hpp"
 #include "solar_core/builders/simulation_builder.hpp"
-#include "solar_utils/logging.hpp"
-#include "solar_utils/validation/input_validator.hpp"
-#include "solar_utils/workflow_orchestration.hpp"
-#include "solar_utils/status_management.hpp"
 #include "solar_utils/error_handling.hpp"
 #include "solar_utils/error_recovery.hpp"
+#include "solar_utils/logging.hpp"
+#include "solar_utils/status_management.hpp"
+#include "solar_utils/validation/input_validator.hpp"
+#include "solar_utils/workflow_orchestration.hpp"
 
 using namespace SolarSystem::Core::Builders;
 using namespace SolarSystem::Utils;
@@ -146,7 +146,8 @@ class LauncherErrorRecoverySystem {
 
       LOG_INFO("LauncherErrorRecovery", "Error recovery system initialized successfully");
     } catch (const std::exception& e) {
-      LOG_ERROR("LauncherErrorRecovery", "Failed to initialize error recovery system: " + std::string(e.what()));
+      LOG_ERROR("LauncherErrorRecovery",
+                "Failed to initialize error recovery system: " + std::string(e.what()));
       // Continue without error recovery
     }
   }
@@ -205,19 +206,28 @@ class LauncherErrorRecoverySystem {
     auto active_recoveries = recovery_manager.get_active_recoveries();
     std::cout << "\n🔄 Active Recoveries: " << active_recoveries.size() << "\n";
     for (const auto& recovery : active_recoveries) {
-      std::cout << "  • " << recovery.workflow_id << " ("
-                << [](RecoveryStatus status) {
-                     switch (status) {
-                       case RecoveryStatus::NotStarted: return "NotStarted";
-                       case RecoveryStatus::InProgress: return "InProgress";
-                       case RecoveryStatus::WaitingForUser: return "WaitingForUser";
-                       case RecoveryStatus::Completed: return "Completed";
-                       case RecoveryStatus::Failed: return "Failed";
-                       case RecoveryStatus::Cancelled: return "Cancelled";
-                       case RecoveryStatus::Timeout: return "Timeout";
-                       default: return "Unknown";
-                     }
-                   }(recovery.status) << ")\n";
+      std::cout << "  • " << recovery.workflow_id << " (" <<
+          [](RecoveryStatus status) {
+            switch (status) {
+              case RecoveryStatus::NotStarted:
+                return "NotStarted";
+              case RecoveryStatus::InProgress:
+                return "InProgress";
+              case RecoveryStatus::WaitingForUser:
+                return "WaitingForUser";
+              case RecoveryStatus::Completed:
+                return "Completed";
+              case RecoveryStatus::Failed:
+                return "Failed";
+              case RecoveryStatus::Cancelled:
+                return "Cancelled";
+              case RecoveryStatus::Timeout:
+                return "Timeout";
+              default:
+                return "Unknown";
+            }
+          }(recovery.status)
+                << ")\n";
     }
 
     // Prevention statistics
@@ -229,8 +239,8 @@ class LauncherErrorRecoverySystem {
     if (detection_system.is_monitoring()) {
       std::cout << "  ✅ Status: ACTIVE\n";
       auto health_score = detection_system.get_overall_health_score();
-      std::cout << "  📊 Health Score: " << std::fixed << std::setprecision(2)
-                << health_score << "/1.0\n";
+      std::cout << "  📊 Health Score: " << std::fixed << std::setprecision(2) << health_score
+                << "/1.0\n";
     } else {
       std::cout << "  ❌ Status: INACTIVE\n";
     }
@@ -287,7 +297,8 @@ class LauncherErrorRecoverySystem {
 
       if (!jpl_manager.is_jpl_service_available()) {
         jpl_manager.set_fallback_mode(true);
-        LOG_INFO("LauncherErrorRecovery", "Enabled JPL fallback mode to prevent connectivity errors");
+        LOG_INFO("LauncherErrorRecovery",
+                 "Enabled JPL fallback mode to prevent connectivity errors");
         return true;
       }
       return false;
@@ -355,10 +366,8 @@ class LauncherErrorRecoverySystem {
       auto& jpl_manager = orchestrator.get_jpl_connectivity_manager();
 
       if (!jpl_manager.is_jpl_service_available()) {
-        DetailedError error(ErrorCode::NetworkUnavailable,
-                          "JPL HORIZONS API is not accessible",
-                          ErrorSeverity::Warning,
-                          "JPL connectivity check");
+        DetailedError error(ErrorCode::NetworkUnavailable, "JPL HORIZONS API is not accessible",
+                            ErrorSeverity::Warning, "JPL connectivity check");
         error.suggestions.push_back("Check network connectivity");
         error.suggestions.push_back("Verify JPL HORIZONS service status");
         error.recovery_action = "Enable fallback mode";
@@ -399,67 +408,66 @@ class LauncherErrorRecoverySystem {
     auto& recovery_manager = AdvancedErrorRecoveryManager::instance();
 
     recovery_manager.set_user_interaction_handler(
-      [](const UserInteractionRequest& request) -> UserInteractionResponse {
-        UserInteractionResponse response;
-        response.request_id = request.id;
-        response.response_time = std::chrono::system_clock::now();
+        [](const UserInteractionRequest& request) -> UserInteractionResponse {
+          UserInteractionResponse response;
+          response.request_id = request.id;
+          response.response_time = std::chrono::system_clock::now();
 
-        std::cout << "\n🤖 User Interaction Required\n";
-        std::cout << "Title: " << request.title << "\n";
-        std::cout << "Message: " << request.message << "\n";
+          std::cout << "\n🤖 User Interaction Required\n";
+          std::cout << "Title: " << request.title << "\n";
+          std::cout << "Message: " << request.message << "\n";
 
-        switch (request.type) {
-          case UserInteractionType::Confirmation: {
-            std::cout << "Confirm (y/n): ";
-            std::string input;
-            std::getline(std::cin, input);
-            response.selected_option = (input == "y" || input == "yes") ? "yes" : "no";
-            break;
-          }
-
-          case UserInteractionType::Selection: {
-            std::cout << "Options:\n";
-            for (size_t i = 0; i < request.options.size(); ++i) {
-              std::cout << "  " << (i + 1) << ". " << request.options[i] << "\n";
+          switch (request.type) {
+            case UserInteractionType::Confirmation: {
+              std::cout << "Confirm (y/n): ";
+              std::string input;
+              std::getline(std::cin, input);
+              response.selected_option = (input == "y" || input == "yes") ? "yes" : "no";
+              break;
             }
-            std::cout << "Select option (1-" << request.options.size() << "): ";
 
-            std::string input;
-            std::getline(std::cin, input);
-            try {
-              size_t choice = std::stoul(input);
-              if (choice >= 1 && choice <= request.options.size()) {
-                response.selected_option = request.options[choice - 1];
-              } else {
+            case UserInteractionType::Selection: {
+              std::cout << "Options:\n";
+              for (size_t i = 0; i < request.options.size(); ++i) {
+                std::cout << "  " << (i + 1) << ". " << request.options[i] << "\n";
+              }
+              std::cout << "Select option (1-" << request.options.size() << "): ";
+
+              std::string input;
+              std::getline(std::cin, input);
+              try {
+                size_t choice = std::stoul(input);
+                if (choice >= 1 && choice <= request.options.size()) {
+                  response.selected_option = request.options[choice - 1];
+                } else {
+                  response.selected_option = request.default_value;
+                }
+              } catch (...) {
                 response.selected_option = request.default_value;
               }
-            } catch (...) {
-              response.selected_option = request.default_value;
+              break;
             }
-            break;
+
+            case UserInteractionType::Input: {
+              std::cout << "Enter value";
+              if (!request.default_value.empty()) {
+                std::cout << " (default: " << request.default_value << ")";
+              }
+              std::cout << ": ";
+
+              std::string input;
+              std::getline(std::cin, input);
+              response.user_input = input.empty() ? request.default_value : input;
+              break;
+            }
+
+            default:
+              response.cancelled = true;
+              break;
           }
 
-          case UserInteractionType::Input: {
-            std::cout << "Enter value";
-            if (!request.default_value.empty()) {
-              std::cout << " (default: " << request.default_value << ")";
-            }
-            std::cout << ": ";
-
-            std::string input;
-            std::getline(std::cin, input);
-            response.user_input = input.empty() ? request.default_value : input;
-            break;
-          }
-
-          default:
-            response.cancelled = true;
-            break;
-        }
-
-        return response;
-      }
-    );
+          return response;
+        });
 
     LOG_INFO("LauncherErrorRecovery", "Set up user interaction handler");
   }
@@ -538,9 +546,9 @@ class LauncherErrorRecoverySystem {
       bool binary_exists = std::filesystem::exists(cache_dir / "ephemeris_cache.bin");
       bool json_exists = std::filesystem::exists(cache_dir / "ephemeris_data.json");
 
-      LOG_INFO("CacheRecovery", "Cache diagnosis - Binary: " +
-               std::string(binary_exists ? "OK" : "Missing") +
-               ", JSON: " + std::string(json_exists ? "OK" : "Missing"));
+      LOG_INFO("CacheRecovery",
+               "Cache diagnosis - Binary: " + std::string(binary_exists ? "OK" : "Missing") +
+                   ", JSON: " + std::string(json_exists ? "OK" : "Missing"));
 
       return binary_exists || json_exists;
     };
@@ -571,7 +579,8 @@ class LauncherErrorRecoverySystem {
     rebuild_confirmation.id = "rebuild_confirmation";
     rebuild_confirmation.type = UserInteractionType::Confirmation;
     rebuild_confirmation.title = "Cache Rebuild Required";
-    rebuild_confirmation.message = "Cache files are corrupted or missing. Rebuild from available data?";
+    rebuild_confirmation.message =
+        "Cache files are corrupted or missing. Rebuild from available data?";
     rebuild_confirmation.timeout = std::chrono::seconds(30);
     rebuild_step.user_interactions.push_back(rebuild_confirmation);
 
@@ -619,7 +628,8 @@ class LauncherErrorRecoverySystem {
     reset_confirmation.id = "reset_confirmation";
     reset_confirmation.type = UserInteractionType::Confirmation;
     reset_confirmation.title = "Configuration Reset";
-    reset_confirmation.message = "Reset configuration to safe defaults? This will lose custom settings.";
+    reset_confirmation.message =
+        "Reset configuration to safe defaults? This will lose custom settings.";
     reset_confirmation.timeout = std::chrono::seconds(60);
     reset_step.user_interactions.push_back(reset_confirmation);
 
@@ -674,9 +684,8 @@ class LauncherErrorRecoverySystem {
 
     // Create a network error
     DetailedError network_error(ErrorCode::ConnectionFailed,
-                               "Failed to connect to JPL HORIZONS API",
-                               ErrorSeverity::Error,
-                               "JPL connectivity test");
+                                "Failed to connect to JPL HORIZONS API", ErrorSeverity::Error,
+                                "JPL connectivity test");
     network_error.suggestions.push_back("Check network connectivity");
     network_error.suggestions.push_back("Enable fallback mode");
 
@@ -693,10 +702,8 @@ class LauncherErrorRecoverySystem {
     std::cout << "💾 Testing Cache Error Recovery\n";
 
     // Create a cache error
-    DetailedError cache_error(ErrorCode::FileCorrupted,
-                             "Ephemeris cache file is corrupted",
-                             ErrorSeverity::Warning,
-                             "Cache validation");
+    DetailedError cache_error(ErrorCode::FileCorrupted, "Ephemeris cache file is corrupted",
+                              ErrorSeverity::Warning, "Cache validation");
     cache_error.suggestions.push_back("Rebuild cache from JSON data");
     cache_error.suggestions.push_back("Re-fetch data from JPL");
 
@@ -713,10 +720,8 @@ class LauncherErrorRecoverySystem {
     std::cout << "⚙️  Testing Configuration Error Recovery\n";
 
     // Create a configuration error
-    DetailedError config_error(ErrorCode::ConfigInvalid,
-                              "Invalid configuration parameter detected",
-                              ErrorSeverity::Error,
-                              "Configuration validation");
+    DetailedError config_error(ErrorCode::ConfigInvalid, "Invalid configuration parameter detected",
+                               ErrorSeverity::Error, "Configuration validation");
     config_error.suggestions.push_back("Reset to default configuration");
     config_error.suggestions.push_back("Validate configuration file");
 
@@ -733,10 +738,8 @@ class LauncherErrorRecoverySystem {
     std::cout << "🧠 Testing Memory Error Recovery\n";
 
     // Create a memory error
-    DetailedError memory_error(ErrorCode::OutOfMemory,
-                              "Insufficient memory for simulation",
-                              ErrorSeverity::Critical,
-                              "Simulation initialization");
+    DetailedError memory_error(ErrorCode::OutOfMemory, "Insufficient memory for simulation",
+                               ErrorSeverity::Critical, "Simulation initialization");
     memory_error.suggestions.push_back("Reduce simulation complexity");
     memory_error.suggestions.push_back("Free unused resources");
 
@@ -783,8 +786,8 @@ class ErrorRecoveryLauncherUI {
     }
 
     double health_score = error_system.get_system_health_score();
-    std::cout << "  📊 Health Score: " << std::fixed << std::setprecision(2)
-              << health_score << "/1.0\n";
+    std::cout << "  📊 Health Score: " << std::fixed << std::setprecision(2) << health_score
+              << "/1.0\n";
 
     // Error statistics
     auto error_stats = error_system.get_error_statistics();
@@ -794,8 +797,10 @@ class ErrorRecoveryLauncherUI {
     std::cout << "  Failed Recoveries: " << error_stats.failed_recoveries << "\n";
 
     if (error_stats.total_errors > 0) {
-      double recovery_rate = static_cast<double>(error_stats.successful_recoveries) /
-                            static_cast<double>(error_stats.successful_recoveries + error_stats.failed_recoveries) * 100.0;
+      double recovery_rate =
+          static_cast<double>(error_stats.successful_recoveries) /
+          static_cast<double>(error_stats.successful_recoveries + error_stats.failed_recoveries) *
+          100.0;
       std::cout << "  Recovery Success Rate: " << std::fixed << std::setprecision(1)
                 << recovery_rate << "%\n";
     }
@@ -938,9 +943,8 @@ class ErrorRecoveryArgumentParser {
           } else {
             // Create and handle validation error with recovery
             DetailedError validation_error(ErrorCode::InvalidFormat,
-                                         "Invalid date format: " + date_str,
-                                         ErrorSeverity::Error,
-                                         "Date validation");
+                                           "Invalid date format: " + date_str, ErrorSeverity::Error,
+                                           "Date validation");
             validation_error.suggestions = validation_result.suggestions;
 
             LauncherErrorRecoverySystem::handle_error_with_recovery(validation_error);
@@ -958,9 +962,8 @@ class ErrorRecoveryArgumentParser {
           } catch (const std::exception& e) {
             // Create and handle parsing error with recovery
             DetailedError parsing_error(ErrorCode::InvalidInput,
-                                       "Invalid timeout value: " + std::string(argv[i]),
-                                       ErrorSeverity::Error,
-                                       "Argument parsing");
+                                        "Invalid timeout value: " + std::string(argv[i]),
+                                        ErrorSeverity::Error, "Argument parsing");
             parsing_error.suggestions.push_back("Use a positive integer value");
 
             LauncherErrorRecoverySystem::handle_error_with_recovery(parsing_error);
@@ -973,9 +976,8 @@ class ErrorRecoveryArgumentParser {
       } else {
         // Create and handle unknown argument error with recovery
         DetailedError unknown_arg_error(ErrorCode::InvalidInput,
-                                       "Unknown argument: " + std::string(arg),
-                                       ErrorSeverity::Warning,
-                                       "Argument parsing");
+                                        "Unknown argument: " + std::string(arg),
+                                        ErrorSeverity::Warning, "Argument parsing");
         unknown_arg_error.suggestions.push_back("Use --help to see available options");
 
         LauncherErrorRecoverySystem::handle_error_with_recovery(unknown_arg_error);
@@ -1069,8 +1071,8 @@ int main(int argc, char* argv[]) {
     bool needs_error_recovery = false;
     for (int i = 1; i < argc; ++i) {
       std::string_view arg = argv[i];
-      if (arg == "--test-recovery" || arg == "--recovery-dashboard" ||
-          arg == "--error-report" || arg == "--export-recovery-data") {
+      if (arg == "--test-recovery" || arg == "--recovery-dashboard" || arg == "--error-report" ||
+          arg == "--export-recovery-data") {
         needs_error_recovery = true;
         break;
       }
@@ -1080,7 +1082,8 @@ int main(int argc, char* argv[]) {
       LauncherErrorRecoverySystem::initialize();
       std::cout << "✅ Error recovery system initialized\n";
     } else {
-      std::cout << "ℹ️  Error recovery system available but not initialized (use --test-recovery to activate)\n";
+      std::cout << "ℹ️  Error recovery system available but not initialized (use --test-recovery to "
+                   "activate)\n";
     }
 
     // Parse command line arguments with error recovery
@@ -1151,7 +1154,6 @@ int main(int argc, char* argv[]) {
     // Handle data operations with error recovery
     if (config->fetch_data || config->update_data || config->force_update ||
         config->validate_cache || config->clean_cache || config->rebuild_cache) {
-
       std::cout << "🔄 Executing data operations with error recovery support\n\n";
 
       try {
@@ -1189,9 +1191,8 @@ int main(int argc, char* argv[]) {
           if (i == 1) {
             // Test error recovery with a simulated network error
             DetailedError test_error(ErrorCode::NetworkUnavailable,
-                                   "Simulated network connectivity issue during data operations",
-                                   ErrorSeverity::Warning,
-                                   "Data operations monitoring");
+                                     "Simulated network connectivity issue during data operations",
+                                     ErrorSeverity::Warning, "Data operations monitoring");
 
             std::cout << "⚠️  Detected potential issue - attempting error recovery\n";
             success = LauncherErrorRecoverySystem::handle_error_with_recovery(test_error);
@@ -1207,7 +1208,8 @@ int main(int argc, char* argv[]) {
 
       } catch (const std::exception& e) {
         // Handle exceptions with error recovery
-        DetailedError exception_error = ErrorUtils::create_error_from_exception(e, "Data operations");
+        DetailedError exception_error =
+            ErrorUtils::create_error_from_exception(e, "Data operations");
         LauncherErrorRecoverySystem::handle_error_with_recovery(exception_error);
         return 1;
       }
@@ -1239,9 +1241,8 @@ int main(int argc, char* argv[]) {
           auto body_collection_result = selector.build();
           if (!body_collection_result.has_value()) {
             DetailedError body_error(ErrorCode::ResourceUnavailable,
-                                   "Failed to build body collection for simulation",
-                                   ErrorSeverity::Error,
-                                   "Simulation initialization");
+                                     "Failed to build body collection for simulation",
+                                     ErrorSeverity::Error, "Simulation initialization");
             success = LauncherErrorRecoverySystem::handle_error_with_recovery(body_error);
           } else {
             // Create and run simulation
@@ -1255,9 +1256,8 @@ int main(int argc, char* argv[]) {
 
             if (!simulation) {
               DetailedError sim_error(ErrorCode::OperationFailed,
-                                    "Failed to build simulation: " + error_message,
-                                    ErrorSeverity::Error,
-                                    "Simulation creation");
+                                      "Failed to build simulation: " + error_message,
+                                      ErrorSeverity::Error, "Simulation creation");
               success = LauncherErrorRecoverySystem::handle_error_with_recovery(sim_error);
             } else {
               std::cout << "✅ Simulation executed successfully\n";
@@ -1265,7 +1265,8 @@ int main(int argc, char* argv[]) {
             }
           }
         } catch (const std::exception& e) {
-          DetailedError sim_exception = ErrorUtils::create_error_from_exception(e, "Simulation execution");
+          DetailedError sim_exception =
+              ErrorUtils::create_error_from_exception(e, "Simulation execution");
           success = LauncherErrorRecoverySystem::handle_error_with_recovery(sim_exception);
         }
 
@@ -1283,7 +1284,8 @@ int main(int argc, char* argv[]) {
 
       } catch (const std::exception& e) {
         // Handle exceptions with error recovery
-        DetailedError exception_error = ErrorUtils::create_error_from_exception(e, "Simulation execution");
+        DetailedError exception_error =
+            ErrorUtils::create_error_from_exception(e, "Simulation execution");
         LauncherErrorRecoverySystem::handle_error_with_recovery(exception_error);
         return 1;
       }

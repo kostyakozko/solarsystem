@@ -60,7 +60,8 @@ void RealTimeStatusMonitor::stop_monitoring() {
       // Use a timeout to avoid hanging
       monitoring_thread_->join();
     } catch (const std::exception& e) {
-      LOG_WARN("RealTimeStatusMonitor", "Error joining monitoring thread: " + std::string(e.what()));
+      LOG_WARN("RealTimeStatusMonitor",
+               "Error joining monitoring thread: " + std::string(e.what()));
     }
   }
   monitoring_thread_.reset();
@@ -69,11 +70,9 @@ void RealTimeStatusMonitor::stop_monitoring() {
 }
 
 void RealTimeStatusMonitor::register_component(
-    Workflow::ComponentType type,
-    const std::string& name,
+    Workflow::ComponentType type, const std::string& name,
     std::function<Workflow::ComponentStatus()> health_check,
     std::function<PerformanceMetrics()> performance_check) {
-
   std::lock_guard<std::mutex> lock(monitor_mutex_);
 
   std::string key = get_component_key(type, name);
@@ -87,11 +86,13 @@ void RealTimeStatusMonitor::register_component(
       auto initial_status = health_check();
       info.status.base_status = initial_status;
       LOG_INFO("RealTimeStatusMonitor", "Initial health check for " + name + ": " +
-               Workflow::Utils::to_string(initial_status.health));
+                                            Workflow::Utils::to_string(initial_status.health));
     } catch (const std::exception& e) {
-      LOG_WARN("RealTimeStatusMonitor", "Initial health check failed for " + name + ": " + e.what());
+      LOG_WARN("RealTimeStatusMonitor",
+               "Initial health check failed for " + name + ": " + e.what());
       info.status.base_status.health = Workflow::ComponentHealth::Failed;
-      info.status.base_status.status_message = "Initial health check failed: " + std::string(e.what());
+      info.status.base_status.status_message =
+          "Initial health check failed: " + std::string(e.what());
     }
   }
 
@@ -102,7 +103,8 @@ void RealTimeStatusMonitor::register_component(
       info.status.update_performance(initial_metrics);
       LOG_INFO("RealTimeStatusMonitor", "Initial performance check completed for " + name);
     } catch (const std::exception& e) {
-      LOG_WARN("RealTimeStatusMonitor", "Initial performance check failed for " + name + ": " + e.what());
+      LOG_WARN("RealTimeStatusMonitor",
+               "Initial performance check failed for " + name + ": " + e.what());
     }
   }
 
@@ -111,7 +113,8 @@ void RealTimeStatusMonitor::register_component(
   LOG_INFO("RealTimeStatusMonitor", "Registered component for enhanced monitoring: " + name);
 }
 
-void RealTimeStatusMonitor::unregister_component(Workflow::ComponentType type, const std::string& name) {
+void RealTimeStatusMonitor::unregister_component(Workflow::ComponentType type,
+                                                 const std::string& name) {
   std::lock_guard<std::mutex> lock(monitor_mutex_);
 
   std::string key = get_component_key(type, name);
@@ -124,7 +127,6 @@ void RealTimeStatusMonitor::unregister_component(Workflow::ComponentType type, c
 
 std::optional<EnhancedComponentStatus> RealTimeStatusMonitor::get_component_status(
     Workflow::ComponentType type, const std::string& name) const {
-
   std::lock_guard<std::mutex> lock(monitor_mutex_);
 
   std::string key = get_component_key(type, name);
@@ -206,15 +208,18 @@ SystemHealthSummary RealTimeStatusMonitor::get_system_health_summary() const {
 
   // Generate top issues and recommendations
   if (summary.failed_components > 0) {
-    summary.top_issues.push_back(std::to_string(summary.failed_components) + " components have failed");
+    summary.top_issues.push_back(std::to_string(summary.failed_components) +
+                                 " components have failed");
     summary.recommendations.push_back("Investigate and restart failed components");
   }
   if (summary.critical_components > 0) {
-    summary.top_issues.push_back(std::to_string(summary.critical_components) + " components are in critical state");
+    summary.top_issues.push_back(std::to_string(summary.critical_components) +
+                                 " components are in critical state");
     summary.recommendations.push_back("Check component logs and resolve critical issues");
   }
   if (summary.critical_alerts > 0) {
-    summary.top_issues.push_back(std::to_string(summary.critical_alerts) + " critical alerts active");
+    summary.top_issues.push_back(std::to_string(summary.critical_alerts) +
+                                 " critical alerts active");
     summary.recommendations.push_back("Review and address critical alerts immediately");
   }
 
@@ -234,10 +239,12 @@ void RealTimeStatusMonitor::add_alert(const StatusAlert& alert) {
     it->second.status.add_alert(alert);
   }
 
-  LOG_INFO("RealTimeStatusMonitor", "Added alert: " + alert.title + " for component: " + alert.component_name);
+  LOG_INFO("RealTimeStatusMonitor",
+           "Added alert: " + alert.title + " for component: " + alert.component_name);
 }
 
-std::vector<StatusAlert> RealTimeStatusMonitor::get_active_alerts(AlertSeverity min_severity) const {
+std::vector<StatusAlert> RealTimeStatusMonitor::get_active_alerts(
+    AlertSeverity min_severity) const {
   std::lock_guard<std::mutex> lock(monitor_mutex_);
 
   std::vector<StatusAlert> active_alerts;
@@ -261,7 +268,8 @@ std::vector<StatusAlert> RealTimeStatusMonitor::get_active_alerts(AlertSeverity 
   return active_alerts;
 }
 
-void RealTimeStatusMonitor::acknowledge_alert(const std::string& alert_id, const std::string& user) {
+void RealTimeStatusMonitor::acknowledge_alert(const std::string& alert_id,
+                                              const std::string& user) {
   std::lock_guard<std::mutex> lock(monitor_mutex_);
 
   // Acknowledge in global alert list
@@ -286,7 +294,8 @@ void RealTimeStatusMonitor::acknowledge_alert(const std::string& alert_id, const
 
 void RealTimeStatusMonitor::set_monitoring_interval(std::chrono::seconds interval) {
   monitoring_interval_ = interval;
-  LOG_INFO("RealTimeStatusMonitor", "Monitoring interval set to " + std::to_string(interval.count()) + " seconds");
+  LOG_INFO("RealTimeStatusMonitor",
+           "Monitoring interval set to " + std::to_string(interval.count()) + " seconds");
 }
 
 void RealTimeStatusMonitor::monitoring_loop() {
@@ -316,12 +325,11 @@ void RealTimeStatusMonitor::monitoring_loop() {
 
       // Clean up expired alerts
       auto now_time = std::chrono::system_clock::now();
-      alerts_.erase(
-        std::remove_if(alerts_.begin(), alerts_.end(),
-                       [now_time](const StatusAlert& alert) {
-                         return now_time >= alert.expires_at;
-                       }),
-        alerts_.end());
+      alerts_.erase(std::remove_if(alerts_.begin(), alerts_.end(),
+                                   [now_time](const StatusAlert& alert) {
+                                     return now_time >= alert.expires_at;
+                                   }),
+                    alerts_.end());
 
     } catch (const std::exception& e) {
       LOG_ERROR("RealTimeStatusMonitor", "Error in monitoring loop: " + std::string(e.what()));
@@ -342,15 +350,15 @@ void RealTimeStatusMonitor::check_component_health(ComponentMonitorInfo& info) {
 
       // Log health changes
       if (old_health != new_status.health) {
-        LOG_INFO("RealTimeStatusMonitor",
-                 "Component " + info.status.base_status.name + " health changed from " +
-                 Workflow::Utils::to_string(old_health) + " to " +
-                 Workflow::Utils::to_string(new_status.health));
+        LOG_INFO("RealTimeStatusMonitor", "Component " + info.status.base_status.name +
+                                              " health changed from " +
+                                              Workflow::Utils::to_string(old_health) + " to " +
+                                              Workflow::Utils::to_string(new_status.health));
       }
     }
   } catch (const std::exception& e) {
-    LOG_ERROR("RealTimeStatusMonitor",
-              "Error checking health for component " + info.status.base_status.name + ": " + e.what());
+    LOG_ERROR("RealTimeStatusMonitor", "Error checking health for component " +
+                                           info.status.base_status.name + ": " + e.what());
 
     info.status.base_status.health = Workflow::ComponentHealth::Failed;
     info.status.base_status.status_message = "Health check failed: " + std::string(e.what());
@@ -370,29 +378,25 @@ void RealTimeStatusMonitor::check_component_performance(ComponentMonitorInfo& in
       }
     }
   } catch (const std::exception& e) {
-    LOG_ERROR("RealTimeStatusMonitor",
-              "Error checking performance for component " + info.status.base_status.name + ": " + e.what());
+    LOG_ERROR("RealTimeStatusMonitor", "Error checking performance for component " +
+                                           info.status.base_status.name + ": " + e.what());
   }
 }
 
 void RealTimeStatusMonitor::generate_health_alerts(const ComponentMonitorInfo& info) {
   // Generate alerts based on component health and performance
   if (info.status.base_status.health == Workflow::ComponentHealth::Failed) {
-    StatusAlert alert = Utils::create_alert(
-      AlertType::ComponentHealth,
-      AlertSeverity::Critical,
-      "Component Failed",
-      "Component " + info.status.base_status.name + " has failed: " + info.status.base_status.status_message,
-      info.status.base_status.name,
-      info.status.base_status.type
-    );
+    StatusAlert alert =
+        Utils::create_alert(AlertType::ComponentHealth, AlertSeverity::Critical, "Component Failed",
+                            "Component " + info.status.base_status.name +
+                                " has failed: " + info.status.base_status.status_message,
+                            info.status.base_status.name, info.status.base_status.type);
 
     // Check if this alert already exists
     bool alert_exists = false;
     for (const auto& existing_alert : info.status.active_alerts) {
       if (existing_alert.type == alert.type &&
-          existing_alert.component_name == alert.component_name &&
-          existing_alert.is_active()) {
+          existing_alert.component_name == alert.component_name && existing_alert.is_active()) {
         alert_exists = true;
         break;
       }
@@ -405,20 +409,15 @@ void RealTimeStatusMonitor::generate_health_alerts(const ComponentMonitorInfo& i
 
   if (info.status.performance.has_performance_issues()) {
     StatusAlert alert = Utils::create_alert(
-      AlertType::PerformanceIssue,
-      AlertSeverity::Warning,
-      "Performance Degradation",
-      "Component " + info.status.base_status.name + " is experiencing performance issues",
-      info.status.base_status.name,
-      info.status.base_status.type
-    );
+        AlertType::PerformanceIssue, AlertSeverity::Warning, "Performance Degradation",
+        "Component " + info.status.base_status.name + " is experiencing performance issues",
+        info.status.base_status.name, info.status.base_status.type);
 
     // Check if this alert already exists
     bool alert_exists = false;
     for (const auto& existing_alert : info.status.active_alerts) {
       if (existing_alert.type == alert.type &&
-          existing_alert.component_name == alert.component_name &&
-          existing_alert.is_active()) {
+          existing_alert.component_name == alert.component_name && existing_alert.is_active()) {
         alert_exists = true;
         break;
       }
@@ -430,11 +429,13 @@ void RealTimeStatusMonitor::generate_health_alerts(const ComponentMonitorInfo& i
   }
 }
 
-std::string RealTimeStatusMonitor::get_component_key(Workflow::ComponentType type, const std::string& name) const {
+std::string RealTimeStatusMonitor::get_component_key(Workflow::ComponentType type,
+                                                     const std::string& name) const {
   return Workflow::Utils::to_string(type) + "::" + name;
 }
 
-SystemStatus RealTimeStatusMonitor::calculate_system_status(const std::vector<EnhancedComponentStatus>& components) const {
+SystemStatus RealTimeStatusMonitor::calculate_system_status(
+    const std::vector<EnhancedComponentStatus>& components) const {
   if (components.empty()) {
     return SystemStatus::Unknown;
   }
@@ -487,9 +488,7 @@ SystemStatus RealTimeStatusMonitor::calculate_system_status(const std::vector<En
 StatusDashboard::StatusDashboard(std::shared_ptr<RealTimeStatusMonitor> monitor)
     : monitor_(monitor) {}
 
-void StatusDashboard::set_configuration(const DashboardConfig& config) {
-  config_ = config;
-}
+void StatusDashboard::set_configuration(const DashboardConfig& config) { config_ = config; }
 
 void StatusDashboard::display_system_overview() const {
   auto summary = monitor_->get_system_health_summary();
@@ -577,11 +576,17 @@ void StatusDashboard::display_performance_metrics() const {
     const auto& metrics = component.performance;
 
     std::cout << "Component: " << component.base_status.name << "\n";
-    std::cout << "  Response Time: " << std::chrono::duration_cast<std::chrono::milliseconds>(metrics.response_time).count() << "ms\n";
-    std::cout << "  CPU Usage: " << std::fixed << std::setprecision(1) << metrics.cpu_usage_percent << "%\n";
+    std::cout
+        << "  Response Time: "
+        << std::chrono::duration_cast<std::chrono::milliseconds>(metrics.response_time).count()
+        << "ms\n";
+    std::cout << "  CPU Usage: " << std::fixed << std::setprecision(1) << metrics.cpu_usage_percent
+              << "%\n";
     std::cout << "  Memory Usage: " << (metrics.memory_usage_bytes / 1024 / 1024) << " MB\n";
-    std::cout << "  Success Rate: " << std::fixed << std::setprecision(1) << (metrics.get_success_rate() * 100) << "%\n";
-    std::cout << "  Throughput: " << std::fixed << std::setprecision(2) << metrics.throughput_operations_per_second << " ops/sec\n";
+    std::cout << "  Success Rate: " << std::fixed << std::setprecision(1)
+              << (metrics.get_success_rate() * 100) << "%\n";
+    std::cout << "  Throughput: " << std::fixed << std::setprecision(2)
+              << metrics.throughput_operations_per_second << " ops/sec\n";
 
     if (metrics.has_performance_issues()) {
       std::cout << "  ⚠️  Performance Issues Detected\n";
@@ -600,24 +605,28 @@ std::string StatusDashboard::generate_status_report() const {
 
   report << "Solar System Suite - Status Report\n";
   auto time_t_val = std::chrono::system_clock::to_time_t(summary.last_updated);
-  report << "Generated: " << std::put_time(std::localtime(&time_t_val), "%Y-%m-%d %H:%M:%S") << "\n\n";
+  report << "Generated: " << std::put_time(std::localtime(&time_t_val), "%Y-%m-%d %H:%M:%S")
+         << "\n\n";
 
   report << "System Overview:\n";
   report << "  Status: " << Utils::to_string(summary.overall_status) << "\n";
-  report << "  Health Score: " << std::fixed << std::setprecision(2) << summary.overall_health_score << "/1.0\n";
-  report << "  Availability: " << std::fixed << std::setprecision(1) << summary.get_availability_percentage() << "%\n";
-  report << "  Components: " << summary.total_components << " total, "
-         << summary.healthy_components << " healthy, "
-         << summary.warning_components << " warning, "
-         << summary.critical_components << " critical, "
-         << summary.failed_components << " failed\n";
-  report << "  Active Alerts: " << summary.active_alerts << " (" << summary.critical_alerts << " critical)\n\n";
+  report << "  Health Score: " << std::fixed << std::setprecision(2) << summary.overall_health_score
+         << "/1.0\n";
+  report << "  Availability: " << std::fixed << std::setprecision(1)
+         << summary.get_availability_percentage() << "%\n";
+  report << "  Components: " << summary.total_components << " total, " << summary.healthy_components
+         << " healthy, " << summary.warning_components << " warning, "
+         << summary.critical_components << " critical, " << summary.failed_components
+         << " failed\n";
+  report << "  Active Alerts: " << summary.active_alerts << " (" << summary.critical_alerts
+         << " critical)\n\n";
 
   if (!components.empty()) {
     report << "Component Status:\n";
     for (const auto& component : components) {
-      report << "  " << component.base_status.name << " (" << Workflow::Utils::to_string(component.base_status.type) << "): "
-             << format_health_status(component.base_status.health);
+      report << "  " << component.base_status.name << " ("
+             << Workflow::Utils::to_string(component.base_status.type)
+             << "): " << format_health_status(component.base_status.health);
       if (!component.base_status.status_message.empty()) {
         report << " - " << component.base_status.status_message;
       }
@@ -629,8 +638,8 @@ std::string StatusDashboard::generate_status_report() const {
   if (!alerts.empty()) {
     report << "Active Alerts:\n";
     for (const auto& alert : alerts) {
-      report << "  [" << format_alert_severity(alert.severity) << "] "
-             << alert.title << " (" << alert.component_name << ")\n";
+      report << "  [" << format_alert_severity(alert.severity) << "] " << alert.title << " ("
+             << alert.component_name << ")\n";
       report << "    " << alert.description << "\n";
       report << "    Created: " << format_duration(alert.timestamp) << " ago\n";
     }
@@ -649,7 +658,10 @@ std::string StatusDashboard::generate_json_report() const {
   auto alerts = monitor_->get_active_alerts();
 
   json << "{\n";
-  json << "  \"timestamp\": \"" << std::chrono::duration_cast<std::chrono::seconds>(summary.last_updated.time_since_epoch()).count() << "\",\n";
+  json << "  \"timestamp\": \""
+       << std::chrono::duration_cast<std::chrono::seconds>(summary.last_updated.time_since_epoch())
+              .count()
+       << "\",\n";
   json << "  \"system_status\": \"" << Utils::to_string(summary.overall_status) << "\",\n";
   json << "  \"health_score\": " << summary.overall_health_score << ",\n";
   json << "  \"availability_percentage\": " << summary.get_availability_percentage() << ",\n";
@@ -675,7 +687,8 @@ void StatusDashboard::start_interactive_dashboard() {
   }
 
   dashboard_active_.store(true);
-  dashboard_thread_ = std::make_unique<std::thread>(&StatusDashboard::interactive_dashboard_loop, this);
+  dashboard_thread_ =
+      std::make_unique<std::thread>(&StatusDashboard::interactive_dashboard_loop, this);
 
   LOG_INFO("StatusDashboard", "Started interactive dashboard");
 }
@@ -759,20 +772,19 @@ void StatusDashboard::display_system_health_bar(const SystemHealthSummary& summa
       break;
   }
 
-  std::cout << " (Score: " << std::fixed << std::setprecision(2) << summary.overall_health_score << "/1.0)\n";
+  std::cout << " (Score: " << std::fixed << std::setprecision(2) << summary.overall_health_score
+            << "/1.0)\n";
 }
 
-void StatusDashboard::display_component_table(const std::vector<EnhancedComponentStatus>& components) const {
+void StatusDashboard::display_component_table(
+    const std::vector<EnhancedComponentStatus>& components) const {
   if (components.empty()) {
     return;
   }
 
   // Table header
-  std::cout << std::left << std::setw(20) << "Component"
-            << std::setw(15) << "Type"
-            << std::setw(12) << "Health"
-            << std::setw(8) << "Score"
-            << std::setw(8) << "Alerts"
+  std::cout << std::left << std::setw(20) << "Component" << std::setw(15) << "Type" << std::setw(12)
+            << "Health" << std::setw(8) << "Score" << std::setw(8) << "Alerts"
             << "Status Message\n";
   std::cout << std::string(80, '-') << "\n";
 
@@ -785,9 +797,10 @@ void StatusDashboard::display_component_table(const std::vector<EnhancedComponen
     }
 
     std::cout << std::left << std::setw(20) << component.base_status.name.substr(0, 19)
-              << std::setw(15) << Workflow::Utils::to_string(component.base_status.type).substr(0, 14)
-              << std::setw(12) << format_health_status(component.base_status.health)
-              << std::setw(8) << std::fixed << std::setprecision(2) << component.get_comprehensive_health_score()
+              << std::setw(15)
+              << Workflow::Utils::to_string(component.base_status.type).substr(0, 14)
+              << std::setw(12) << format_health_status(component.base_status.health) << std::setw(8)
+              << std::fixed << std::setprecision(2) << component.get_comprehensive_health_score()
               << std::setw(8) << component.active_alerts.size()
               << component.base_status.status_message.substr(0, 30) << "\n";
 
@@ -802,10 +815,8 @@ void StatusDashboard::display_alert_table(const std::vector<StatusAlert>& alerts
   }
 
   // Table header
-  std::cout << std::left << std::setw(10) << "Severity"
-            << std::setw(20) << "Component"
-            << std::setw(25) << "Title"
-            << std::setw(12) << "Age"
+  std::cout << std::left << std::setw(10) << "Severity" << std::setw(20) << "Component"
+            << std::setw(25) << "Title" << std::setw(12) << "Age"
             << "Description\n";
   std::cout << std::string(80, '-') << "\n";
 
@@ -818,9 +829,8 @@ void StatusDashboard::display_alert_table(const std::vector<StatusAlert>& alerts
     }
 
     std::cout << std::left << std::setw(10) << format_alert_severity(alert.severity)
-              << std::setw(20) << alert.component_name.substr(0, 19)
-              << std::setw(25) << alert.title.substr(0, 24)
-              << std::setw(12) << format_duration(alert.timestamp)
+              << std::setw(20) << alert.component_name.substr(0, 19) << std::setw(25)
+              << alert.title.substr(0, 24) << std::setw(12) << format_duration(alert.timestamp)
               << alert.description.substr(0, 30) << "\n";
 
     displayed++;
@@ -830,22 +840,33 @@ void StatusDashboard::display_alert_table(const std::vector<StatusAlert>& alerts
 
 std::string StatusDashboard::format_health_status(Workflow::ComponentHealth health) const {
   switch (health) {
-    case Workflow::ComponentHealth::Healthy: return "✅ Healthy";
-    case Workflow::ComponentHealth::Warning: return "⚠️  Warning";
-    case Workflow::ComponentHealth::Critical: return "🔴 Critical";
-    case Workflow::ComponentHealth::Failed: return "❌ Failed";
-    default: return "❓ Unknown";
+    case Workflow::ComponentHealth::Healthy:
+      return "✅ Healthy";
+    case Workflow::ComponentHealth::Warning:
+      return "⚠️  Warning";
+    case Workflow::ComponentHealth::Critical:
+      return "🔴 Critical";
+    case Workflow::ComponentHealth::Failed:
+      return "❌ Failed";
+    default:
+      return "❓ Unknown";
   }
 }
 
 std::string StatusDashboard::format_alert_severity(AlertSeverity severity) const {
   switch (severity) {
-    case AlertSeverity::Info: return "ℹ️  Info";
-    case AlertSeverity::Warning: return "⚠️  Warning";
-    case AlertSeverity::Error: return "🔴 Error";
-    case AlertSeverity::Critical: return "🚨 Critical";
-    case AlertSeverity::Emergency: return "🆘 Emergency";
-    default: return "❓ Unknown";
+    case AlertSeverity::Info:
+      return "ℹ️  Info";
+    case AlertSeverity::Warning:
+      return "⚠️  Warning";
+    case AlertSeverity::Error:
+      return "🔴 Error";
+    case AlertSeverity::Critical:
+      return "🚨 Critical";
+    case AlertSeverity::Emergency:
+      return "🆘 Emergency";
+    default:
+      return "❓ Unknown";
   }
 }
 
@@ -855,7 +876,8 @@ std::string StatusDashboard::format_duration(std::chrono::system_clock::time_poi
 
   auto hours = std::chrono::duration_cast<std::chrono::hours>(duration);
   auto minutes = std::chrono::duration_cast<std::chrono::minutes>(duration % std::chrono::hours(1));
-  auto seconds = std::chrono::duration_cast<std::chrono::seconds>(duration % std::chrono::minutes(1));
+  auto seconds =
+      std::chrono::duration_cast<std::chrono::seconds>(duration % std::chrono::minutes(1));
 
   if (hours.count() > 0) {
     return std::to_string(hours.count()) + "h " + std::to_string(minutes.count()) + "m";
@@ -990,18 +1012,18 @@ void StatusDecisionEngine::setup_default_rules() {
   // Rule: Alert on system critical status
   StatusDecisionRule critical_system_rule("critical_system", "Critical System Status Alert");
   critical_system_rule.description = "Alert when system status becomes critical";
-  critical_system_rule.condition = [](const SystemHealthSummary& summary, const std::vector<EnhancedComponentStatus>&) {
-    return summary.overall_status == SystemStatus::Critical || summary.overall_status == SystemStatus::Failed;
+  critical_system_rule.condition = [](const SystemHealthSummary& summary,
+                                      const std::vector<EnhancedComponentStatus>&) {
+    return summary.overall_status == SystemStatus::Critical ||
+           summary.overall_status == SystemStatus::Failed;
   };
-  critical_system_rule.action = [this](const SystemHealthSummary& summary, const std::vector<EnhancedComponentStatus>&) {
+  critical_system_rule.action = [this](const SystemHealthSummary& summary,
+                                       const std::vector<EnhancedComponentStatus>&) {
     StatusAlert alert = Utils::create_alert(
-      AlertType::ComponentHealth,
-      AlertSeverity::Critical,
-      "System Status Critical",
-      "System status is " + Utils::to_string(summary.overall_status) + " - immediate attention required",
-      "System",
-      Workflow::ComponentType::Launcher
-    );
+        AlertType::ComponentHealth, AlertSeverity::Critical, "System Status Critical",
+        "System status is " + Utils::to_string(summary.overall_status) +
+            " - immediate attention required",
+        "System", Workflow::ComponentType::Launcher);
     monitor_->add_alert(alert);
   };
   add_decision_rule(critical_system_rule);
@@ -1009,26 +1031,27 @@ void StatusDecisionEngine::setup_default_rules() {
   // Rule: Alert on multiple component failures
   StatusDecisionRule multiple_failures_rule("multiple_failures", "Multiple Component Failures");
   multiple_failures_rule.description = "Alert when multiple components fail simultaneously";
-  multiple_failures_rule.condition = [](const SystemHealthSummary& summary, const std::vector<EnhancedComponentStatus>&) {
+  multiple_failures_rule.condition = [](const SystemHealthSummary& summary,
+                                        const std::vector<EnhancedComponentStatus>&) {
     return summary.failed_components >= 2;
   };
-  multiple_failures_rule.action = [this](const SystemHealthSummary& summary, const std::vector<EnhancedComponentStatus>&) {
+  multiple_failures_rule.action = [this](const SystemHealthSummary& summary,
+                                         const std::vector<EnhancedComponentStatus>&) {
     StatusAlert alert = Utils::create_alert(
-      AlertType::ComponentHealth,
-      AlertSeverity::Emergency,
-      "Multiple Component Failures",
-      std::to_string(summary.failed_components) + " components have failed - system stability at risk",
-      "System",
-      Workflow::ComponentType::Launcher
-    );
+        AlertType::ComponentHealth, AlertSeverity::Emergency, "Multiple Component Failures",
+        std::to_string(summary.failed_components) +
+            " components have failed - system stability at risk",
+        "System", Workflow::ComponentType::Launcher);
     monitor_->add_alert(alert);
   };
   add_decision_rule(multiple_failures_rule);
 
   // Rule: Performance degradation alert
-  StatusDecisionRule performance_rule("performance_degradation", "Performance Degradation Detection");
+  StatusDecisionRule performance_rule("performance_degradation",
+                                      "Performance Degradation Detection");
   performance_rule.description = "Alert when system performance degrades significantly";
-  performance_rule.condition = [](const SystemHealthSummary& /* summary */, const std::vector<EnhancedComponentStatus>& components) {
+  performance_rule.condition = [](const SystemHealthSummary& /* summary */,
+                                  const std::vector<EnhancedComponentStatus>& components) {
     size_t performance_issues = 0;
     for (const auto& component : components) {
       if (component.performance.has_performance_issues()) {
@@ -1037,7 +1060,8 @@ void StatusDecisionEngine::setup_default_rules() {
     }
     return performance_issues > components.size() / 2;  // More than half have issues
   };
-  performance_rule.action = [this](const SystemHealthSummary&, const std::vector<EnhancedComponentStatus>& components) {
+  performance_rule.action = [this](const SystemHealthSummary&,
+                                   const std::vector<EnhancedComponentStatus>& components) {
     size_t affected_count = 0;
     for (const auto& component : components) {
       if (component.performance.has_performance_issues()) {
@@ -1046,13 +1070,9 @@ void StatusDecisionEngine::setup_default_rules() {
     }
 
     StatusAlert alert = Utils::create_alert(
-      AlertType::PerformanceIssue,
-      AlertSeverity::Warning,
-      "System Performance Degradation",
-      std::to_string(affected_count) + " components experiencing performance issues",
-      "System",
-      Workflow::ComponentType::Launcher
-    );
+        AlertType::PerformanceIssue, AlertSeverity::Warning, "System Performance Degradation",
+        std::to_string(affected_count) + " components experiencing performance issues", "System",
+        Workflow::ComponentType::Launcher);
     monitor_->add_alert(alert);
   };
   add_decision_rule(performance_rule);
@@ -1149,12 +1169,9 @@ void StatusManager::shutdown() {
   LOG_INFO("StatusManager", "Status management system shutdown completed");
 }
 
-void StatusManager::register_component(
-    Workflow::ComponentType type,
-    const std::string& name,
-    std::function<Workflow::ComponentStatus()> health_check,
-    std::function<PerformanceMetrics()> performance_check) {
-
+void StatusManager::register_component(Workflow::ComponentType type, const std::string& name,
+                                       std::function<Workflow::ComponentStatus()> health_check,
+                                       std::function<PerformanceMetrics()> performance_check) {
   if (monitor_) {
     monitor_->register_component(type, name, health_check, performance_check);
   }
@@ -1192,25 +1209,23 @@ void StatusManager::setup_default_components() {
   // This will be called by applications to register their components
   // For now, we'll register a system component
   register_component(
-    Workflow::ComponentType::Launcher,
-    "StatusManager",
-    []() {
-      Workflow::ComponentStatus status(Workflow::ComponentType::Launcher, "StatusManager");
-      status.health = Workflow::ComponentHealth::Healthy;
-      status.status_message = "Status management system operational";
-      status.health_score = 1.0;
-      return status;
-    },
-    []() {
-      PerformanceMetrics metrics;
-      metrics.response_time = std::chrono::milliseconds(1);
-      metrics.cpu_usage_percent = 5.0;
-      metrics.memory_usage_bytes = 1024 * 1024;  // 1MB
-      metrics.success_count = 100;
-      metrics.error_count = 0;
-      return metrics;
-    }
-  );
+      Workflow::ComponentType::Launcher, "StatusManager",
+      []() {
+        Workflow::ComponentStatus status(Workflow::ComponentType::Launcher, "StatusManager");
+        status.health = Workflow::ComponentHealth::Healthy;
+        status.status_message = "Status management system operational";
+        status.health_score = 1.0;
+        return status;
+      },
+      []() {
+        PerformanceMetrics metrics;
+        metrics.response_time = std::chrono::milliseconds(1);
+        metrics.cpu_usage_percent = 5.0;
+        metrics.memory_usage_bytes = 1024 * 1024;  // 1MB
+        metrics.success_count = 100;
+        metrics.error_count = 0;
+        return metrics;
+      });
 }
 
 void StatusManager::setup_default_decision_rules() {
@@ -1222,42 +1237,65 @@ namespace Utils {
 
 std::string to_string(SystemStatus status) {
   switch (status) {
-    case SystemStatus::Optimal: return "Optimal";
-    case SystemStatus::Healthy: return "Healthy";
-    case SystemStatus::Degraded: return "Degraded";
-    case SystemStatus::Critical: return "Critical";
-    case SystemStatus::Failed: return "Failed";
-    case SystemStatus::Unknown: return "Unknown";
-    default: return "Unknown";
+    case SystemStatus::Optimal:
+      return "Optimal";
+    case SystemStatus::Healthy:
+      return "Healthy";
+    case SystemStatus::Degraded:
+      return "Degraded";
+    case SystemStatus::Critical:
+      return "Critical";
+    case SystemStatus::Failed:
+      return "Failed";
+    case SystemStatus::Unknown:
+      return "Unknown";
+    default:
+      return "Unknown";
   }
 }
 
 std::string to_string(AlertSeverity severity) {
   switch (severity) {
-    case AlertSeverity::Info: return "Info";
-    case AlertSeverity::Warning: return "Warning";
-    case AlertSeverity::Error: return "Error";
-    case AlertSeverity::Critical: return "Critical";
-    case AlertSeverity::Emergency: return "Emergency";
-    default: return "Unknown";
+    case AlertSeverity::Info:
+      return "Info";
+    case AlertSeverity::Warning:
+      return "Warning";
+    case AlertSeverity::Error:
+      return "Error";
+    case AlertSeverity::Critical:
+      return "Critical";
+    case AlertSeverity::Emergency:
+      return "Emergency";
+    default:
+      return "Unknown";
   }
 }
 
 std::string to_string(AlertType type) {
   switch (type) {
-    case AlertType::ComponentHealth: return "ComponentHealth";
-    case AlertType::PerformanceIssue: return "PerformanceIssue";
-    case AlertType::ConnectivityIssue: return "ConnectivityIssue";
-    case AlertType::ResourceExhaustion: return "ResourceExhaustion";
-    case AlertType::SecurityEvent: return "SecurityEvent";
-    case AlertType::ConfigurationIssue: return "ConfigurationIssue";
-    case AlertType::DataIntegrity: return "DataIntegrity";
-    case AlertType::WorkflowFailure: return "WorkflowFailure";
-    default: return "Unknown";
+    case AlertType::ComponentHealth:
+      return "ComponentHealth";
+    case AlertType::PerformanceIssue:
+      return "PerformanceIssue";
+    case AlertType::ConnectivityIssue:
+      return "ConnectivityIssue";
+    case AlertType::ResourceExhaustion:
+      return "ResourceExhaustion";
+    case AlertType::SecurityEvent:
+      return "SecurityEvent";
+    case AlertType::ConfigurationIssue:
+      return "ConfigurationIssue";
+    case AlertType::DataIntegrity:
+      return "DataIntegrity";
+    case AlertType::WorkflowFailure:
+      return "WorkflowFailure";
+    default:
+      return "Unknown";
   }
 }
 
-std::function<PerformanceMetrics()> create_performance_collector(const std::string& component_name) {
+std::function<PerformanceMetrics()> create_performance_collector(
+    const std::string& component_name) {
   return [component_name]() {
     PerformanceMetrics metrics;
 
@@ -1266,28 +1304,25 @@ std::function<PerformanceMetrics()> create_performance_collector(const std::stri
     static std::random_device rd;
     static std::mt19937 gen(rd());
     static std::uniform_real_distribution<> cpu_dist(0.0, 100.0);
-    static std::uniform_int_distribution<> memory_dist(1024*1024, 100*1024*1024);  // 1MB to 100MB
-    static std::uniform_int_distribution<> response_dist(1, 1000);  // 1ms to 1s
+    static std::uniform_int_distribution<> memory_dist(1024 * 1024,
+                                                       100 * 1024 * 1024);  // 1MB to 100MB
+    static std::uniform_int_distribution<> response_dist(1, 1000);          // 1ms to 1s
 
     metrics.cpu_usage_percent = cpu_dist(gen);
     metrics.memory_usage_bytes = static_cast<size_t>(memory_dist(gen));
     metrics.response_time = std::chrono::milliseconds(response_dist(gen));
     metrics.success_count = 95 + (gen() % 5);  // 95-99 successes
-    metrics.error_count = gen() % 3;  // 0-2 errors
-    metrics.throughput_operations_per_second = 10.0 + static_cast<double>(gen() % 90);  // 10-100 ops/sec
+    metrics.error_count = gen() % 3;           // 0-2 errors
+    metrics.throughput_operations_per_second =
+        10.0 + static_cast<double>(gen() % 90);  // 10-100 ops/sec
 
     return metrics;
   };
 }
 
-StatusAlert create_alert(
-    AlertType type,
-    AlertSeverity severity,
-    const std::string& title,
-    const std::string& description,
-    const std::string& component_name,
-    Workflow::ComponentType component_type) {
-
+StatusAlert create_alert(AlertType type, AlertSeverity severity, const std::string& title,
+                         const std::string& description, const std::string& component_name,
+                         Workflow::ComponentType component_type) {
   StatusAlert alert;
 
   // Generate unique ID
@@ -1328,10 +1363,8 @@ StatusAlert create_alert(
   return alert;
 }
 
-double calculate_availability(
-    const std::vector<Workflow::ComponentStatus>& status_history,
-    std::chrono::hours window) {
-
+double calculate_availability(const std::vector<Workflow::ComponentStatus>& status_history,
+                              std::chrono::hours window) {
   if (status_history.empty()) {
     return 100.0;
   }
@@ -1352,7 +1385,9 @@ double calculate_availability(
     }
   }
 
-  return total_checks > 0 ? (static_cast<double>(healthy_checks) / static_cast<double>(total_checks) * 100.0) : 100.0;
+  return total_checks > 0
+             ? (static_cast<double>(healthy_checks) / static_cast<double>(total_checks) * 100.0)
+             : 100.0;
 }
 
 }  // namespace Utils

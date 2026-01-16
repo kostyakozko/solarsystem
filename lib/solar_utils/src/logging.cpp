@@ -3,9 +3,9 @@
 #include <algorithm>
 #include <filesystem>
 #include <iomanip>
+#include <nlohmann/json.hpp>
 #include <regex>
 #include <thread>
-#include <nlohmann/json.hpp>
 
 namespace SolarSystem::Utils {
 
@@ -745,7 +745,8 @@ std::vector<LogEntry> Logger::get_recent_logs(size_t count) const {
       return all_entries;
     }
 
-    return std::vector<LogEntry>(all_entries.end() - static_cast<std::ptrdiff_t>(count), all_entries.end());
+    return std::vector<LogEntry>(all_entries.end() - static_cast<std::ptrdiff_t>(count),
+                                 all_entries.end());
   }
 
   return {};

@@ -285,6 +285,7 @@ constexpr std::array<BodyDefinition, BODY_COUNT> FALLBACK_SOLAR_SYSTEM = {
 /**
  * @brief Get all bodies of a specific priority from fallback data
  */
-[[nodiscard]] SOLAR_CORE_API std::vector<BodyDefinition> get_bodies_by_priority(Bodies::BodyPriority priority);
+[[nodiscard]] SOLAR_CORE_API std::vector<BodyDefinition> get_bodies_by_priority(
+    Bodies::BodyPriority priority);
 
 }  // namespace SolarSystem::Data

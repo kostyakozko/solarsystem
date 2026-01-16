@@ -12,13 +12,13 @@
  * Requirements: 10.5
  */
 
+#include <gtest/gtest.h>
+
 #include <algorithm>
 #include <chrono>
 #include <map>
 #include <string>
 #include <vector>
-
-#include <gtest/gtest.h>
 
 /**
  * @brief Flaky test detector
@@ -99,8 +99,7 @@ class TestExecutionMonitor {
     std::chrono::milliseconds max_duration{0};
   };
 
-  void record_run(const std::string& test_name, bool success,
-                 std::chrono::milliseconds duration) {
+  void record_run(const std::string& test_name, bool success, std::chrono::milliseconds duration) {
     auto& metrics = test_metrics_[test_name];
     metrics.total_runs++;
 
@@ -182,9 +181,9 @@ class TestPerformanceOptimizer {
 
     // Sort by priority
     std::sort(all_suggestions.begin(), all_suggestions.end(),
-             [](const OptimizationSuggestion& a, const OptimizationSuggestion& b) {
-               return a.priority > b.priority;
-             });
+              [](const OptimizationSuggestion& a, const OptimizationSuggestion& b) {
+                return a.priority > b.priority;
+              });
 
     return all_suggestions;
   }
@@ -244,181 +243,181 @@ class TestSuiteMaintenanceManager {
   std::set<std::string> duplicate_tests_;
   std::set<std::string> outdated_tests_;
 };
-  // Test 1: Flaky test detection
-  TEST(TestReliabilityAndMaintenanceTestsTest, Flaky_Test_Detection) {
-    FlakyTestDetector detector;
+// Test 1: Flaky test detection
+TEST(TestReliabilityAndMaintenanceTestsTest, Flaky_Test_Detection) {
+  FlakyTestDetector detector;
 
-    // Test 1.1: Record stable test executions
-    for (int i = 0; i < 10; ++i) {
-      FlakyTestDetector::TestExecution exec;
-      exec.test_name = "stable_test";
-      exec.passed = true;
-      exec.duration = std::chrono::milliseconds(10);
-      detector.record_execution(exec);
-    }
-
-    ASSERT_FALSE(detector.is_flaky("stable_test"));
-    ASSERT_EQ(detector.get_pass_rate("stable_test"), 100.0);
-
-    // Test 1.2: Record flaky test executions
-    for (int i = 0; i < 10; ++i) {
-      FlakyTestDetector::TestExecution exec;
-      exec.test_name = "flaky_test";
-      exec.passed = (i % 2 == 0);  // Alternates between pass and fail
-      exec.duration = std::chrono::milliseconds(10);
-      detector.record_execution(exec);
-    }
-
-    ASSERT_TRUE(detector.is_flaky("flaky_test"));
-    ASSERT_EQ(detector.get_pass_rate("flaky_test"), 50.0);
-
-    // Test 1.3: Get all flaky tests
-    auto flaky_tests = detector.get_flaky_tests();
-    ASSERT_EQ(flaky_tests.size(), 1);
-    ASSERT_EQ(flaky_tests[0], "flaky_test");
+  // Test 1.1: Record stable test executions
+  for (int i = 0; i < 10; ++i) {
+    FlakyTestDetector::TestExecution exec;
+    exec.test_name = "stable_test";
+    exec.passed = true;
+    exec.duration = std::chrono::milliseconds(10);
+    detector.record_execution(exec);
   }
 
-  // Test 2: Test execution monitoring
-  TEST(TestReliabilityAndMaintenanceTestsTest, Test_Execution_Monitoring) {
-    TestExecutionMonitor monitor;
+  ASSERT_FALSE(detector.is_flaky("stable_test"));
+  ASSERT_EQ(detector.get_pass_rate("stable_test"), 100.0);
 
-    // Test 2.1: Record test runs
-    monitor.record_run("test1", true, std::chrono::milliseconds(10));
-    monitor.record_run("test1", true, std::chrono::milliseconds(20));
-    monitor.record_run("test1", false, std::chrono::milliseconds(15));
-
-    auto metrics = monitor.get_metrics("test1");
-    ASSERT_EQ(metrics.total_runs, 3);
-    ASSERT_EQ(metrics.successful_runs, 2);
-    ASSERT_EQ(metrics.failed_runs, 1);
-    ASSERT_EQ(metrics.avg_duration.count(), 15);  // (10+20+15)/3
-    ASSERT_EQ(metrics.min_duration.count(), 10);
-    ASSERT_EQ(metrics.max_duration.count(), 20);
-
-    // Test 2.2: Identify slow tests
-    monitor.record_run("slow_test", true, std::chrono::milliseconds(500));
-    auto slow_tests = monitor.get_slow_tests(std::chrono::milliseconds(100));
-    ASSERT_EQ(slow_tests.size(), 1);
-    ASSERT_EQ(slow_tests[0], "slow_test");
+  // Test 1.2: Record flaky test executions
+  for (int i = 0; i < 10; ++i) {
+    FlakyTestDetector::TestExecution exec;
+    exec.test_name = "flaky_test";
+    exec.passed = (i % 2 == 0);  // Alternates between pass and fail
+    exec.duration = std::chrono::milliseconds(10);
+    detector.record_execution(exec);
   }
 
-  // Test 3: Performance optimization
-  TEST(TestReliabilityAndMaintenanceTestsTest, Performance_Optimization) {
-    TestPerformanceOptimizer optimizer;
+  ASSERT_TRUE(detector.is_flaky("flaky_test"));
+  ASSERT_EQ(detector.get_pass_rate("flaky_test"), 50.0);
 
-    // Test 3.1: Analyze slow test
-    auto suggestions1 = optimizer.analyze_test("very_slow_test", std::chrono::milliseconds(2000));
-    ASSERT_FALSE(suggestions1.empty());
-    ASSERT_EQ(suggestions1[0].priority, 5);
+  // Test 1.3: Get all flaky tests
+  auto flaky_tests = detector.get_flaky_tests();
+  ASSERT_EQ(flaky_tests.size(), 1);
+  ASSERT_EQ(flaky_tests[0], "flaky_test");
+}
 
-    // Test 3.2: Analyze moderately slow test
-    auto suggestions2 = optimizer.analyze_test("moderate_test", std::chrono::milliseconds(200));
-    ASSERT_FALSE(suggestions2.empty());
-    ASSERT_EQ(suggestions2[0].priority, 3);
+// Test 2: Test execution monitoring
+TEST(TestReliabilityAndMaintenanceTestsTest, Test_Execution_Monitoring) {
+  TestExecutionMonitor monitor;
 
-    // Test 3.3: Analyze fast test
-    auto suggestions3 = optimizer.analyze_test("fast_test", std::chrono::milliseconds(10));
-    ASSERT_TRUE(suggestions3.empty());
+  // Test 2.1: Record test runs
+  monitor.record_run("test1", true, std::chrono::milliseconds(10));
+  monitor.record_run("test1", true, std::chrono::milliseconds(20));
+  monitor.record_run("test1", false, std::chrono::milliseconds(15));
 
-    // Test 3.4: Get all suggestions
-    std::map<std::string, std::chrono::milliseconds> test_durations = {
-        {"test1", std::chrono::milliseconds(1500)},
-        {"test2", std::chrono::milliseconds(150)},
-        {"test3", std::chrono::milliseconds(50)}};
+  auto metrics = monitor.get_metrics("test1");
+  ASSERT_EQ(metrics.total_runs, 3);
+  ASSERT_EQ(metrics.successful_runs, 2);
+  ASSERT_EQ(metrics.failed_runs, 1);
+  ASSERT_EQ(metrics.avg_duration.count(), 15);  // (10+20+15)/3
+  ASSERT_EQ(metrics.min_duration.count(), 10);
+  ASSERT_EQ(metrics.max_duration.count(), 20);
 
-    auto all_suggestions = optimizer.get_all_suggestions(test_durations);
-    ASSERT_EQ(all_suggestions.size(), 2);  // test1 and test2
-    ASSERT_EQ(all_suggestions[0].priority, 5);  // test1 (highest priority)
-  }
+  // Test 2.2: Identify slow tests
+  monitor.record_run("slow_test", true, std::chrono::milliseconds(500));
+  auto slow_tests = monitor.get_slow_tests(std::chrono::milliseconds(100));
+  ASSERT_EQ(slow_tests.size(), 1);
+  ASSERT_EQ(slow_tests[0], "slow_test");
+}
 
-  // Test 4: Test suite maintenance
-  TEST(TestReliabilityAndMaintenanceTestsTest, Test_Suite_Maintenance) {
-    TestSuiteMaintenanceManager manager;
+// Test 3: Performance optimization
+TEST(TestReliabilityAndMaintenanceTestsTest, Performance_Optimization) {
+  TestPerformanceOptimizer optimizer;
 
-    // Test 4.1: Mark tests for maintenance
-    manager.mark_deprecated("old_test");
-    manager.mark_duplicate("duplicate_test");
-    manager.mark_outdated("outdated_test");
+  // Test 3.1: Analyze slow test
+  auto suggestions1 = optimizer.analyze_test("very_slow_test", std::chrono::milliseconds(2000));
+  ASSERT_FALSE(suggestions1.empty());
+  ASSERT_EQ(suggestions1[0].priority, 5);
 
-    // Test 4.2: Generate maintenance report
-    std::vector<std::string> all_tests = {"test1", "test2", "old_test", "duplicate_test",
-                                         "outdated_test"};
-    auto report = manager.generate_report(all_tests);
+  // Test 3.2: Analyze moderately slow test
+  auto suggestions2 = optimizer.analyze_test("moderate_test", std::chrono::milliseconds(200));
+  ASSERT_FALSE(suggestions2.empty());
+  ASSERT_EQ(suggestions2[0].priority, 3);
 
-    ASSERT_EQ(report.total_tests, 5);
-    ASSERT_EQ(report.deprecated_tests, 1);
-    ASSERT_EQ(report.duplicate_tests, 1);
-    ASSERT_EQ(report.outdated_tests, 1);
-    ASSERT_EQ(report.tests_to_remove.size(), 2);  // deprecated + duplicate
-    ASSERT_EQ(report.tests_to_update.size(), 1);  // outdated
+  // Test 3.3: Analyze fast test
+  auto suggestions3 = optimizer.analyze_test("fast_test", std::chrono::milliseconds(10));
+  ASSERT_TRUE(suggestions3.empty());
 
-    // Test 4.3: Cleanup test
-    manager.cleanup_test("old_test");
-    report = manager.generate_report(all_tests);
-    ASSERT_EQ(report.deprecated_tests, 0);
-  }
+  // Test 3.4: Get all suggestions
+  std::map<std::string, std::chrono::milliseconds> test_durations = {
+      {"test1", std::chrono::milliseconds(1500)},
+      {"test2", std::chrono::milliseconds(150)},
+      {"test3", std::chrono::milliseconds(50)}};
 
-  // Test 5: Comprehensive reliability workflow
-  TEST(TestReliabilityAndMaintenanceTestsTest, Comprehensive_Reliability_Workflow) {
-    FlakyTestDetector flaky_detector;
-    TestExecutionMonitor monitor;
-    TestPerformanceOptimizer optimizer;
-    TestSuiteMaintenanceManager maintenance;
+  auto all_suggestions = optimizer.get_all_suggestions(test_durations);
+  ASSERT_EQ(all_suggestions.size(), 2);       // test1 and test2
+  ASSERT_EQ(all_suggestions[0].priority, 5);  // test1 (highest priority)
+}
 
-    // Test 5.1: Simulate test suite execution
-    std::vector<std::string> test_suite = {"test1", "test2", "test3", "flaky_test"};
+// Test 4: Test suite maintenance
+TEST(TestReliabilityAndMaintenanceTestsTest, Test_Suite_Maintenance) {
+  TestSuiteMaintenanceManager manager;
 
-    for (int run = 0; run < 10; ++run) {
-      for (const auto& test_name : test_suite) {
-        bool passed = true;
-        std::chrono::milliseconds duration(50);
+  // Test 4.1: Mark tests for maintenance
+  manager.mark_deprecated("old_test");
+  manager.mark_duplicate("duplicate_test");
+  manager.mark_outdated("outdated_test");
 
-        // Simulate flaky test
-        if (test_name == "flaky_test") {
-          passed = (run % 3 != 0);  // Fails every 3rd run
-        }
+  // Test 4.2: Generate maintenance report
+  std::vector<std::string> all_tests = {"test1", "test2", "old_test", "duplicate_test",
+                                        "outdated_test"};
+  auto report = manager.generate_report(all_tests);
 
-        // Simulate slow test
-        if (test_name == "test3") {
-          duration = std::chrono::milliseconds(500);
-        }
+  ASSERT_EQ(report.total_tests, 5);
+  ASSERT_EQ(report.deprecated_tests, 1);
+  ASSERT_EQ(report.duplicate_tests, 1);
+  ASSERT_EQ(report.outdated_tests, 1);
+  ASSERT_EQ(report.tests_to_remove.size(), 2);  // deprecated + duplicate
+  ASSERT_EQ(report.tests_to_update.size(), 1);  // outdated
 
-        // Record execution
-        FlakyTestDetector::TestExecution exec;
-        exec.test_name = test_name;
-        exec.passed = passed;
-        exec.duration = duration;
-        flaky_detector.record_execution(exec);
+  // Test 4.3: Cleanup test
+  manager.cleanup_test("old_test");
+  report = manager.generate_report(all_tests);
+  ASSERT_EQ(report.deprecated_tests, 0);
+}
 
-        monitor.record_run(test_name, passed, duration);
-      }
-    }
+// Test 5: Comprehensive reliability workflow
+TEST(TestReliabilityAndMaintenanceTestsTest, Comprehensive_Reliability_Workflow) {
+  FlakyTestDetector flaky_detector;
+  TestExecutionMonitor monitor;
+  TestPerformanceOptimizer optimizer;
+  TestSuiteMaintenanceManager maintenance;
 
-    // Test 5.2: Identify flaky tests
-    auto flaky_tests = flaky_detector.get_flaky_tests();
-    ASSERT_EQ(flaky_tests.size(), 1);
-    ASSERT_EQ(flaky_tests[0], "flaky_test");
+  // Test 5.1: Simulate test suite execution
+  std::vector<std::string> test_suite = {"test1", "test2", "test3", "flaky_test"};
 
-    // Test 5.3: Identify slow tests
-    auto slow_tests = monitor.get_slow_tests(std::chrono::milliseconds(100));
-    ASSERT_EQ(slow_tests.size(), 1);
-    ASSERT_EQ(slow_tests[0], "test3");
-
-    // Test 5.4: Get optimization suggestions
-    std::map<std::string, std::chrono::milliseconds> durations;
+  for (int run = 0; run < 10; ++run) {
     for (const auto& test_name : test_suite) {
-      auto metrics = monitor.get_metrics(test_name);
-      durations[test_name] = metrics.avg_duration;
+      bool passed = true;
+      std::chrono::milliseconds duration(50);
+
+      // Simulate flaky test
+      if (test_name == "flaky_test") {
+        passed = (run % 3 != 0);  // Fails every 3rd run
+      }
+
+      // Simulate slow test
+      if (test_name == "test3") {
+        duration = std::chrono::milliseconds(500);
+      }
+
+      // Record execution
+      FlakyTestDetector::TestExecution exec;
+      exec.test_name = test_name;
+      exec.passed = passed;
+      exec.duration = duration;
+      flaky_detector.record_execution(exec);
+
+      monitor.record_run(test_name, passed, duration);
     }
-
-    auto suggestions = optimizer.get_all_suggestions(durations);
-    ASSERT_FALSE(suggestions.empty());
-
-    // Test 5.5: Mark problematic tests for maintenance
-    for (const auto& test_name : flaky_tests) {
-      maintenance.mark_outdated(test_name);
-    }
-
-    auto report = maintenance.generate_report(test_suite);
-    ASSERT_EQ(report.tests_to_update.size(), 1);
   }
+
+  // Test 5.2: Identify flaky tests
+  auto flaky_tests = flaky_detector.get_flaky_tests();
+  ASSERT_EQ(flaky_tests.size(), 1);
+  ASSERT_EQ(flaky_tests[0], "flaky_test");
+
+  // Test 5.3: Identify slow tests
+  auto slow_tests = monitor.get_slow_tests(std::chrono::milliseconds(100));
+  ASSERT_EQ(slow_tests.size(), 1);
+  ASSERT_EQ(slow_tests[0], "test3");
+
+  // Test 5.4: Get optimization suggestions
+  std::map<std::string, std::chrono::milliseconds> durations;
+  for (const auto& test_name : test_suite) {
+    auto metrics = monitor.get_metrics(test_name);
+    durations[test_name] = metrics.avg_duration;
+  }
+
+  auto suggestions = optimizer.get_all_suggestions(durations);
+  ASSERT_FALSE(suggestions.empty());
+
+  // Test 5.5: Mark problematic tests for maintenance
+  for (const auto& test_name : flaky_tests) {
+    maintenance.mark_outdated(test_name);
+  }
+
+  auto report = maintenance.generate_report(test_suite);
+  ASSERT_EQ(report.tests_to_update.size(), 1);
+}

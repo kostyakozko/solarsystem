@@ -12,6 +12,8 @@
  * Requirements: 3.2, 3.3
  */
 
+#include <gtest/gtest.h>
+
 #include <algorithm>
 #include <chrono>
 #include <cmath>
@@ -26,7 +28,6 @@
 #include "solar_core/bodies/body_factory.hpp"
 #include "solar_core/simulation/simulation_engine.hpp"
 #include "test_data_manager.hpp"
-#include <gtest/gtest.h>
 
 using namespace Benchmark;
 using namespace SolarSystem;
@@ -59,8 +60,8 @@ class BaselineManager {
   struct TrendAnalysis {
     std::string metric_name;
     std::vector<double> historical_values;
-    double trend_slope;  // Positive = improving, Negative = degrading
-    double r_squared;    // Goodness of fit
+    double trend_slope;           // Positive = improving, Negative = degrading
+    double r_squared;             // Goodness of fit
     std::string trend_direction;  // "improving", "stable", "degrading"
   };
 
@@ -122,20 +123,29 @@ class BaselineManager {
       std::string key = line.substr(0, colon_pos);
       std::string value = line.substr(colon_pos + 1);
 
-      if (key == "VERSION") baseline.version_id = value;
-      else if (key == "TIMESTAMP") baseline.timestamp = value;
-      else if (key == "COMMIT") baseline.git_commit = value;
-      else if (key == "PLATFORM") baseline.platform = value;
+      if (key == "VERSION")
+        baseline.version_id = value;
+      else if (key == "TIMESTAMP")
+        baseline.timestamp = value;
+      else if (key == "COMMIT")
+        baseline.git_commit = value;
+      else if (key == "PLATFORM")
+        baseline.platform = value;
       else if (key == "BENCHMARK") {
         current_benchmark = value;
         current_result.name = value;
-      }
-      else if (key == "DURATION_MS") current_result.duration_ms = std::stod(value);
-      else if (key == "AVG_MS") current_result.avg_duration_ms = std::stod(value);
-      else if (key == "MIN_MS") current_result.min_duration_ms = std::stod(value);
-      else if (key == "MAX_MS") current_result.max_duration_ms = std::stod(value);
-      else if (key == "STD_DEV") current_result.std_deviation_ms = std::stod(value);
-      else if (key == "ITERATIONS") current_result.iterations = std::stoull(value);
+      } else if (key == "DURATION_MS")
+        current_result.duration_ms = std::stod(value);
+      else if (key == "AVG_MS")
+        current_result.avg_duration_ms = std::stod(value);
+      else if (key == "MIN_MS")
+        current_result.min_duration_ms = std::stod(value);
+      else if (key == "MAX_MS")
+        current_result.max_duration_ms = std::stod(value);
+      else if (key == "STD_DEV")
+        current_result.std_deviation_ms = std::stod(value);
+      else if (key == "ITERATIONS")
+        current_result.iterations = std::stoull(value);
     }
 
     return baseline;
@@ -143,10 +153,8 @@ class BaselineManager {
 
   // Compare two baselines
   static std::vector<RegressionDetector::RegressionReport> compare_baselines(
-      const BaselineVersion& baseline,
-      const BaselineVersion& current,
+      const BaselineVersion& baseline, const BaselineVersion& current,
       double threshold_percent = 10.0) {
-
     std::vector<RegressionDetector::RegressionReport> reports;
 
     for (const auto& [name, current_result] : current.results) {
@@ -161,8 +169,9 @@ class BaselineManager {
       report.current_performance = current_result.avg_duration_ms;
 
       double change = current_result.avg_duration_ms - baseline_it->second.avg_duration_ms;
-      report.change_percent = (baseline_it->second.avg_duration_ms != 0.0) ?
-                              (change / baseline_it->second.avg_duration_ms * 100.0) : 0.0;
+      report.change_percent = (baseline_it->second.avg_duration_ms != 0.0)
+                                  ? (change / baseline_it->second.avg_duration_ms * 100.0)
+                                  : 0.0;
 
       report.is_regression = report.change_percent > threshold_percent;
 
@@ -181,10 +190,8 @@ class BaselineManager {
   }
 
   // Perform t-test for statistical significance
-  static SignificanceTest perform_t_test(
-      const std::vector<double>& baseline_samples,
-      const std::vector<double>& current_samples) {
-
+  static SignificanceTest perform_t_test(const std::vector<double>& baseline_samples,
+                                         const std::vector<double>& current_samples) {
     SignificanceTest test;
     test.test_name = "Two-Sample T-Test";
 
@@ -196,9 +203,9 @@ class BaselineManager {
 
     // Calculate means
     double baseline_mean = std::accumulate(baseline_samples.begin(), baseline_samples.end(), 0.0) /
-                          static_cast<double>(baseline_samples.size());
+                           static_cast<double>(baseline_samples.size());
     double current_mean = std::accumulate(current_samples.begin(), current_samples.end(), 0.0) /
-                         static_cast<double>(current_samples.size());
+                          static_cast<double>(current_samples.size());
 
     // Calculate standard deviations
     double baseline_var = 0.0;
@@ -216,9 +223,8 @@ class BaselineManager {
     current_var /= static_cast<double>(current_samples.size());
 
     // Calculate t-statistic
-    double pooled_std = std::sqrt(
-        (baseline_var / static_cast<double>(baseline_samples.size())) +
-        (current_var / static_cast<double>(current_samples.size())));
+    double pooled_std = std::sqrt((baseline_var / static_cast<double>(baseline_samples.size())) +
+                                  (current_var / static_cast<double>(current_samples.size())));
 
     if (pooled_std > 0.0) {
       test.t_statistic = (current_mean - baseline_mean) / pooled_std;
@@ -244,10 +250,8 @@ class BaselineManager {
   }
 
   // Analyze performance trends
-  static TrendAnalysis analyze_trend(
-      const std::string& metric_name,
-      const std::vector<double>& historical_values) {
-
+  static TrendAnalysis analyze_trend(const std::string& metric_name,
+                                     const std::vector<double>& historical_values) {
     TrendAnalysis analysis;
     analysis.metric_name = metric_name;
     analysis.historical_values = historical_values;
@@ -273,8 +277,8 @@ class BaselineManager {
     }
 
     double n_double = static_cast<double>(n);
-    analysis.trend_slope = (n_double * sum_xy - sum_x * sum_y) /
-                          (n_double * sum_x2 - sum_x * sum_x);
+    analysis.trend_slope =
+        (n_double * sum_xy - sum_x * sum_y) / (n_double * sum_x2 - sum_x * sum_x);
 
     // Calculate R-squared
     double mean_y = sum_y / n_double;
@@ -303,374 +307,376 @@ class BaselineManager {
     return analysis;
   }
 };
-  // ============================================================================
-  // TASK 9: PERFORMANCE BASELINE MANAGEMENT SYSTEM
-  // ============================================================================
+// ============================================================================
+// TASK 9: PERFORMANCE BASELINE MANAGEMENT SYSTEM
+// ============================================================================
 
-  // Test 1: Baseline storage and versioning system
-  TEST(BaselineManagementSystemTestsTest, Baseline_Storage_and_Versioning_System) {
-    auto test_env = TestDataManager::create_test_environment();
-    std::string baseline_dir = test_env->path_string() + "/baselines";
-    std::filesystem::create_directories(baseline_dir);
+// Test 1: Baseline storage and versioning system
+TEST(BaselineManagementSystemTestsTest, Baseline_Storage_and_Versioning_System) {
+  auto test_env = TestDataManager::create_test_environment();
+  std::string baseline_dir = test_env->path_string() + "/baselines";
+  std::filesystem::create_directories(baseline_dir);
 
-    // Test 1.1: Create and save baseline
-    {
+  // Test 1.1: Create and save baseline
+  {
+    BaselineManager::BaselineVersion baseline;
+    baseline.version_id = "v1.0.0";
+    baseline.timestamp = "2025-01-01T00:00:00Z";
+    baseline.git_commit = "abc123";
+    baseline.platform = "macOS-arm64";
+
+    // Add some performance results
+    PerformanceResult result1;
+    result1.name = "test_benchmark_1";
+    result1.duration_ms = 100.0;
+    result1.avg_duration_ms = 95.0;
+    result1.min_duration_ms = 90.0;
+    result1.max_duration_ms = 110.0;
+    result1.std_deviation_ms = 5.0;
+    result1.iterations = 100;
+
+    baseline.results["test_benchmark_1"] = result1;
+
+    std::string filepath = baseline_dir + "/baseline_v1.txt";
+    bool saved = BaselineManager::save_baseline(baseline, filepath);
+
+    ASSERT_TRUE(saved);
+    ASSERT_TRUE(std::filesystem::exists(filepath));
+  }
+
+  // Test 1.2: Load baseline
+  {
+    std::string filepath = baseline_dir + "/baseline_v1.txt";
+    auto loaded = BaselineManager::load_baseline(filepath);
+
+    ASSERT_EQ(loaded.version_id, "v1.0.0");
+    ASSERT_EQ(loaded.timestamp, "2025-01-01T00:00:00Z");
+    ASSERT_EQ(loaded.git_commit, "abc123");
+    ASSERT_EQ(loaded.platform, "macOS-arm64");
+    ASSERT_EQ(loaded.results.size(), 1);
+    ASSERT_TRUE(loaded.results.find("test_benchmark_1") != loaded.results.end());
+  }
+
+  // Test 1.3: Multiple baseline versions
+  {
+    for (int i = 2; i <= 5; ++i) {
       BaselineManager::BaselineVersion baseline;
-      baseline.version_id = "v1.0.0";
-      baseline.timestamp = "2025-01-01T00:00:00Z";
-      baseline.git_commit = "abc123";
+      baseline.version_id = "v1.0." + std::to_string(i);
+      baseline.timestamp = "2025-01-0" + std::to_string(i) + "T00:00:00Z";
+      baseline.git_commit = "commit" + std::to_string(i);
       baseline.platform = "macOS-arm64";
 
-      // Add some performance results
-      PerformanceResult result1;
-      result1.name = "test_benchmark_1";
-      result1.duration_ms = 100.0;
-      result1.avg_duration_ms = 95.0;
-      result1.min_duration_ms = 90.0;
-      result1.max_duration_ms = 110.0;
-      result1.std_deviation_ms = 5.0;
-      result1.iterations = 100;
+      PerformanceResult result;
+      result.name = "test_benchmark";
+      result.avg_duration_ms = 100.0 + static_cast<double>(i);
+      result.iterations = 100;
 
-      baseline.results["test_benchmark_1"] = result1;
+      baseline.results["test_benchmark"] = result;
 
-      std::string filepath = baseline_dir + "/baseline_v1.txt";
+      std::string filepath = baseline_dir + "/baseline_v" + std::to_string(i) + ".txt";
       bool saved = BaselineManager::save_baseline(baseline, filepath);
-
       ASSERT_TRUE(saved);
+    }
+
+    // Verify all versions exist
+    for (int i = 1; i <= 5; ++i) {
+      std::string filepath = baseline_dir + "/baseline_v" + std::to_string(i) + ".txt";
       ASSERT_TRUE(std::filesystem::exists(filepath));
     }
+  }
+}
 
-    // Test 1.2: Load baseline
-    {
-      std::string filepath = baseline_dir + "/baseline_v1.txt";
-      auto loaded = BaselineManager::load_baseline(filepath);
+// Test 2: Baseline comparison and regression detection
+TEST(BaselineManagementSystemTestsTest, Baseline_Comparison_and_Regression_Detection) {
+  // Test 2.1: Detect regression
+  {
+    BaselineManager::BaselineVersion baseline;
+    baseline.version_id = "v1.0.0";
 
-      ASSERT_EQ(loaded.version_id, "v1.0.0");
-      ASSERT_EQ(loaded.timestamp, "2025-01-01T00:00:00Z");
-      ASSERT_EQ(loaded.git_commit, "abc123");
-      ASSERT_EQ(loaded.platform, "macOS-arm64");
-      ASSERT_EQ(loaded.results.size(), 1);
-      ASSERT_TRUE(loaded.results.find("test_benchmark_1") != loaded.results.end());
-    }
+    PerformanceResult baseline_result;
+    baseline_result.name = "performance_test";
+    baseline_result.avg_duration_ms = 100.0;
+    baseline.results["performance_test"] = baseline_result;
 
-    // Test 1.3: Multiple baseline versions
-    {
-      for (int i = 2; i <= 5; ++i) {
-        BaselineManager::BaselineVersion baseline;
-        baseline.version_id = "v1.0." + std::to_string(i);
-        baseline.timestamp = "2025-01-0" + std::to_string(i) + "T00:00:00Z";
-        baseline.git_commit = "commit" + std::to_string(i);
-        baseline.platform = "macOS-arm64";
+    BaselineManager::BaselineVersion current;
+    current.version_id = "v1.0.1";
 
-        PerformanceResult result;
-        result.name = "test_benchmark";
-        result.avg_duration_ms = 100.0 + static_cast<double>(i);
-        result.iterations = 100;
+    PerformanceResult current_result;
+    current_result.name = "performance_test";
+    current_result.avg_duration_ms = 120.0;  // 20% slower - regression!
+    current.results["performance_test"] = current_result;
 
-        baseline.results["test_benchmark"] = result;
+    auto reports = BaselineManager::compare_baselines(baseline, current, 10.0);
 
-        std::string filepath = baseline_dir + "/baseline_v" + std::to_string(i) + ".txt";
-        bool saved = BaselineManager::save_baseline(baseline, filepath);
-        ASSERT_TRUE(saved);
-      }
-
-      // Verify all versions exist
-      for (int i = 1; i <= 5; ++i) {
-        std::string filepath = baseline_dir + "/baseline_v" + std::to_string(i) + ".txt";
-        ASSERT_TRUE(std::filesystem::exists(filepath));
-      }
-    }
+    ASSERT_EQ(reports.size(), 1);
+    ASSERT_TRUE(reports[0].is_regression);
+    ASSERT_EQ(reports[0].status, "REGRESSION");
+    ASSERT_GT(reports[0].change_percent, 10.0);
   }
 
-  // Test 2: Baseline comparison and regression detection
-  TEST(BaselineManagementSystemTestsTest, Baseline_Comparison_and_Regression_Detection) {
-    // Test 2.1: Detect regression
-    {
-      BaselineManager::BaselineVersion baseline;
-      baseline.version_id = "v1.0.0";
+  // Test 2.2: Detect improvement
+  {
+    BaselineManager::BaselineVersion baseline;
+    PerformanceResult baseline_result;
+    baseline_result.name = "optimized_test";
+    baseline_result.avg_duration_ms = 100.0;
+    baseline.results["optimized_test"] = baseline_result;
+
+    BaselineManager::BaselineVersion current;
+    PerformanceResult current_result;
+    current_result.name = "optimized_test";
+    current_result.avg_duration_ms = 80.0;  // 20% faster - improvement!
+    current.results["optimized_test"] = current_result;
+
+    auto reports = BaselineManager::compare_baselines(baseline, current, 10.0);
+
+    ASSERT_EQ(reports.size(), 1);
+    ASSERT_FALSE(reports[0].is_regression);
+    ASSERT_EQ(reports[0].status, "IMPROVEMENT");
+    ASSERT_LT(reports[0].change_percent, -10.0);
+  }
+
+  // Test 2.3: Stable performance
+  {
+    BaselineManager::BaselineVersion baseline;
+    PerformanceResult baseline_result;
+    baseline_result.name = "stable_test";
+    baseline_result.avg_duration_ms = 100.0;
+    baseline.results["stable_test"] = baseline_result;
+
+    BaselineManager::BaselineVersion current;
+    PerformanceResult current_result;
+    current_result.name = "stable_test";
+    current_result.avg_duration_ms = 105.0;  // 5% change - within threshold
+    current.results["stable_test"] = current_result;
+
+    auto reports = BaselineManager::compare_baselines(baseline, current, 10.0);
+
+    ASSERT_EQ(reports.size(), 1);
+    ASSERT_FALSE(reports[0].is_regression);
+    ASSERT_EQ(reports[0].status, "STABLE");
+  }
+
+  // Test 2.4: Multiple benchmarks comparison
+  {
+    BaselineManager::BaselineVersion baseline;
+    BaselineManager::BaselineVersion current;
+
+    for (int i = 1; i <= 5; ++i) {
+      std::string name = "benchmark_" + std::to_string(i);
 
       PerformanceResult baseline_result;
-      baseline_result.name = "performance_test";
+      baseline_result.name = name;
       baseline_result.avg_duration_ms = 100.0;
-      baseline.results["performance_test"] = baseline_result;
-
-      BaselineManager::BaselineVersion current;
-      current.version_id = "v1.0.1";
+      baseline.results[name] = baseline_result;
 
       PerformanceResult current_result;
-      current_result.name = "performance_test";
-      current_result.avg_duration_ms = 120.0;  // 20% slower - regression!
-      current.results["performance_test"] = current_result;
-
-      auto reports = BaselineManager::compare_baselines(baseline, current, 10.0);
-
-      ASSERT_EQ(reports.size(), 1);
-      ASSERT_TRUE(reports[0].is_regression);
-      ASSERT_EQ(reports[0].status, "REGRESSION");
-      ASSERT_GT(reports[0].change_percent, 10.0);
+      current_result.name = name;
+      // Vary performance: some regressions, some improvements, some stable
+      current_result.avg_duration_ms = 100.0 + static_cast<double>((i - 3) * 15);
+      current.results[name] = current_result;
     }
 
-    // Test 2.2: Detect improvement
-    {
-      BaselineManager::BaselineVersion baseline;
-      PerformanceResult baseline_result;
-      baseline_result.name = "optimized_test";
-      baseline_result.avg_duration_ms = 100.0;
-      baseline.results["optimized_test"] = baseline_result;
+    auto reports = BaselineManager::compare_baselines(baseline, current, 10.0);
 
-      BaselineManager::BaselineVersion current;
-      PerformanceResult current_result;
-      current_result.name = "optimized_test";
-      current_result.avg_duration_ms = 80.0;  // 20% faster - improvement!
-      current.results["optimized_test"] = current_result;
+    ASSERT_EQ(reports.size(), 5);
 
-      auto reports = BaselineManager::compare_baselines(baseline, current, 10.0);
-
-      ASSERT_EQ(reports.size(), 1);
-      ASSERT_FALSE(reports[0].is_regression);
-      ASSERT_EQ(reports[0].status, "IMPROVEMENT");
-      ASSERT_LT(reports[0].change_percent, -10.0);
+    // Count different statuses
+    int regressions = 0, improvements = 0, stable = 0;
+    for (const auto& report : reports) {
+      if (report.status == "REGRESSION")
+        regressions++;
+      else if (report.status == "IMPROVEMENT")
+        improvements++;
+      else if (report.status == "STABLE")
+        stable++;
     }
 
-    // Test 2.3: Stable performance
-    {
-      BaselineManager::BaselineVersion baseline;
-      PerformanceResult baseline_result;
-      baseline_result.name = "stable_test";
-      baseline_result.avg_duration_ms = 100.0;
-      baseline.results["stable_test"] = baseline_result;
+    ASSERT_GT(regressions, 0);
+    ASSERT_GT(improvements, 0);
+    ASSERT_GT(stable, 0);
+  }
+}
 
-      BaselineManager::BaselineVersion current;
-      PerformanceResult current_result;
-      current_result.name = "stable_test";
-      current_result.avg_duration_ms = 105.0;  // 5% change - within threshold
-      current.results["stable_test"] = current_result;
+// Test 3: Statistical significance testing
+TEST(BaselineManagementSystemTestsTest, Statistical_Significance_Testing) {
+  // Test 3.1: Significant difference
+  {
+    std::vector<double> baseline_samples = {100.0, 101.0, 99.0, 100.5, 100.2};
+    std::vector<double> current_samples = {120.0, 121.0, 119.0, 120.5, 120.2};
 
-      auto reports = BaselineManager::compare_baselines(baseline, current, 10.0);
+    auto test = BaselineManager::perform_t_test(baseline_samples, current_samples);
 
-      ASSERT_EQ(reports.size(), 1);
-      ASSERT_FALSE(reports[0].is_regression);
-      ASSERT_EQ(reports[0].status, "STABLE");
-    }
-
-    // Test 2.4: Multiple benchmarks comparison
-    {
-      BaselineManager::BaselineVersion baseline;
-      BaselineManager::BaselineVersion current;
-
-      for (int i = 1; i <= 5; ++i) {
-        std::string name = "benchmark_" + std::to_string(i);
-
-        PerformanceResult baseline_result;
-        baseline_result.name = name;
-        baseline_result.avg_duration_ms = 100.0;
-        baseline.results[name] = baseline_result;
-
-        PerformanceResult current_result;
-        current_result.name = name;
-        // Vary performance: some regressions, some improvements, some stable
-        current_result.avg_duration_ms = 100.0 + static_cast<double>((i - 3) * 15);
-        current.results[name] = current_result;
-      }
-
-      auto reports = BaselineManager::compare_baselines(baseline, current, 10.0);
-
-      ASSERT_EQ(reports.size(), 5);
-
-      // Count different statuses
-      int regressions = 0, improvements = 0, stable = 0;
-      for (const auto& report : reports) {
-        if (report.status == "REGRESSION") regressions++;
-        else if (report.status == "IMPROVEMENT") improvements++;
-        else if (report.status == "STABLE") stable++;
-      }
-
-      ASSERT_GT(regressions, 0);
-      ASSERT_GT(improvements, 0);
-      ASSERT_GT(stable, 0);
-    }
+    ASSERT_TRUE(test.is_significant);
+    ASSERT_GT(std::abs(test.t_statistic), 2.0);
+    ASSERT_LT(test.p_value, 0.05);
+    ASSERT_FALSE(test.interpretation.empty());
   }
 
-  // Test 3: Statistical significance testing
-  TEST(BaselineManagementSystemTestsTest, Statistical_Significance_Testing) {
-    // Test 3.1: Significant difference
-    {
-      std::vector<double> baseline_samples = {100.0, 101.0, 99.0, 100.5, 100.2};
-      std::vector<double> current_samples = {120.0, 121.0, 119.0, 120.5, 120.2};
+  // Test 3.2: No significant difference
+  {
+    std::vector<double> baseline_samples = {100.0, 101.0, 99.0, 100.5, 100.2};
+    std::vector<double> current_samples = {100.5, 101.5, 99.5, 101.0, 100.7};
 
-      auto test = BaselineManager::perform_t_test(baseline_samples, current_samples);
+    auto test = BaselineManager::perform_t_test(baseline_samples, current_samples);
 
-      ASSERT_TRUE(test.is_significant);
-      ASSERT_GT(std::abs(test.t_statistic), 2.0);
-      ASSERT_LT(test.p_value, 0.05);
-      ASSERT_FALSE(test.interpretation.empty());
-    }
-
-    // Test 3.2: No significant difference
-    {
-      std::vector<double> baseline_samples = {100.0, 101.0, 99.0, 100.5, 100.2};
-      std::vector<double> current_samples = {100.5, 101.5, 99.5, 101.0, 100.7};
-
-      auto test = BaselineManager::perform_t_test(baseline_samples, current_samples);
-
-      ASSERT_FALSE(test.is_significant);
-      ASSERT_GE(test.p_value, 0.05);
-    }
-
-    // Test 3.3: Performance improvement significance
-    {
-      std::vector<double> baseline_samples = {100.0, 101.0, 99.0, 100.5, 100.2};
-      std::vector<double> current_samples = {80.0, 81.0, 79.0, 80.5, 80.2};
-
-      auto test = BaselineManager::perform_t_test(baseline_samples, current_samples);
-
-      ASSERT_TRUE(test.is_significant);
-      ASSERT_LT(test.t_statistic, -2.0);  // Negative = improvement
-      EXPECT_NE(std::string::npos, test.interpretation.find("improvement"));
-    }
-
-    // Test 3.4: Edge cases
-    {
-      std::vector<double> empty_samples;
-      std::vector<double> valid_samples = {100.0, 101.0, 99.0};
-
-      auto test = BaselineManager::perform_t_test(empty_samples, valid_samples);
-
-      ASSERT_FALSE(test.is_significant);
-      EXPECT_NE(std::string::npos, test.interpretation.find("Insufficient"));
-    }
+    ASSERT_FALSE(test.is_significant);
+    ASSERT_GE(test.p_value, 0.05);
   }
 
-  // Test 4: Performance trend analysis and reporting
-  TEST(BaselineManagementSystemTestsTest, Performance_Trend_Analysis_and_Reporting) {
-    // Test 4.1: Improving trend
-    {
-      std::vector<double> improving_values = {100.0, 95.0, 90.0, 85.0, 80.0};
+  // Test 3.3: Performance improvement significance
+  {
+    std::vector<double> baseline_samples = {100.0, 101.0, 99.0, 100.5, 100.2};
+    std::vector<double> current_samples = {80.0, 81.0, 79.0, 80.5, 80.2};
 
-      auto trend = BaselineManager::analyze_trend("improving_metric", improving_values);
+    auto test = BaselineManager::perform_t_test(baseline_samples, current_samples);
 
-      ASSERT_EQ(trend.metric_name, "improving_metric");
-      ASSERT_EQ(trend.historical_values.size(), 5);
-      ASSERT_LT(trend.trend_slope, -0.01);  // Negative slope = improving
-      ASSERT_TRUE(trend.trend_direction == "improving" || trend.trend_direction == "stable");
-      ASSERT_GT(trend.r_squared, 0.8);  // Strong correlation
-    }
-
-    // Test 4.2: Degrading trend
-    {
-      std::vector<double> degrading_values = {80.0, 85.0, 90.0, 95.0, 100.0};
-
-      auto trend = BaselineManager::analyze_trend("degrading_metric", degrading_values);
-
-      ASSERT_GT(trend.trend_slope, 0.01);  // Positive slope = degrading
-      ASSERT_TRUE(trend.trend_direction == "degrading" || trend.trend_direction == "stable");
-      ASSERT_GT(trend.r_squared, 0.8);
-    }
-
-    // Test 4.3: Stable trend
-    {
-      std::vector<double> stable_values = {100.0, 100.5, 99.5, 100.2, 99.8};
-
-      auto trend = BaselineManager::analyze_trend("stable_metric", stable_values);
-
-      ASSERT_NEAR(trend.trend_slope, 0.0, 0.5);
-      // Direction could be stable or slightly improving/degrading due to small variations
-      ASSERT_TRUE(trend.trend_direction == "stable" ||
-                  trend.trend_direction == "improving" ||
-                  trend.trend_direction == "degrading");
-    }
-
-    // Test 4.4: Noisy data
-    {
-      std::vector<double> noisy_values = {100.0, 110.0, 95.0, 105.0, 90.0, 115.0};
-
-      auto trend = BaselineManager::analyze_trend("noisy_metric", noisy_values);
-
-      ASSERT_FALSE(trend.metric_name.empty());
-      ASSERT_EQ(trend.historical_values.size(), 6);
-      // R-squared should be lower for noisy data
-      ASSERT_LT(trend.r_squared, 0.9);
-    }
-
-    // Test 4.5: Insufficient data
-    {
-      std::vector<double> single_value = {100.0};
-
-      auto trend = BaselineManager::analyze_trend("insufficient_metric", single_value);
-
-      ASSERT_EQ(trend.trend_direction, "insufficient_data");
-      ASSERT_EQ(trend.trend_slope, 0.0);
-    }
+    ASSERT_TRUE(test.is_significant);
+    ASSERT_LT(test.t_statistic, -2.0);  // Negative = improvement
+    EXPECT_NE(std::string::npos, test.interpretation.find("improvement"));
   }
 
-  // Test 5: Integrated baseline management workflow
-  TEST(BaselineManagementSystemTestsTest, Integrated_Baseline_Management_Workflow) {
-    auto test_env = TestDataManager::create_test_environment();
-    std::string baseline_dir = test_env->path_string() + "/baselines";
-    std::filesystem::create_directories(baseline_dir);
+  // Test 3.4: Edge cases
+  {
+    std::vector<double> empty_samples;
+    std::vector<double> valid_samples = {100.0, 101.0, 99.0};
 
-    // Test 5.1: Complete workflow
-    {
-      // Step 1: Create initial baseline
-      BenchmarkSuite suite("Baseline Workflow");
+    auto test = BaselineManager::perform_t_test(empty_samples, valid_samples);
 
-      suite.run_benchmark(
-          "workflow_test",
-          []() {
-            Bodies::BodyFactory factory;
-            auto result = factory.create_body("Earth");
-            (void)result;
-          },
-          10);
+    ASSERT_FALSE(test.is_significant);
+    EXPECT_NE(std::string::npos, test.interpretation.find("Insufficient"));
+  }
+}
 
-      auto results = suite.get_results();
-      ASSERT_FALSE(results.empty());
+// Test 4: Performance trend analysis and reporting
+TEST(BaselineManagementSystemTestsTest, Performance_Trend_Analysis_and_Reporting) {
+  // Test 4.1: Improving trend
+  {
+    std::vector<double> improving_values = {100.0, 95.0, 90.0, 85.0, 80.0};
 
-      // Step 2: Save as baseline
-      BaselineManager::BaselineVersion baseline;
-      baseline.version_id = "v1.0.0";
-      baseline.timestamp = "2025-01-01T00:00:00Z";
-      baseline.git_commit = "initial";
-      baseline.platform = "test";
+    auto trend = BaselineManager::analyze_trend("improving_metric", improving_values);
 
-      for (const auto& result : results) {
-        baseline.results[result.name] = result;
-      }
+    ASSERT_EQ(trend.metric_name, "improving_metric");
+    ASSERT_EQ(trend.historical_values.size(), 5);
+    ASSERT_LT(trend.trend_slope, -0.01);  // Negative slope = improving
+    ASSERT_TRUE(trend.trend_direction == "improving" || trend.trend_direction == "stable");
+    ASSERT_GT(trend.r_squared, 0.8);  // Strong correlation
+  }
 
-      std::string baseline_file = baseline_dir + "/workflow_baseline.txt";
-      bool saved = BaselineManager::save_baseline(baseline, baseline_file);
-      ASSERT_TRUE(saved);
+  // Test 4.2: Degrading trend
+  {
+    std::vector<double> degrading_values = {80.0, 85.0, 90.0, 95.0, 100.0};
 
-      // Step 3: Run new benchmarks
-      BenchmarkSuite suite2("Current Run");
-      suite2.run_benchmark(
-          "workflow_test",
-          []() {
-            Bodies::BodyFactory factory;
-            auto result = factory.create_body("Earth");
-            (void)result;
-          },
-          10);
+    auto trend = BaselineManager::analyze_trend("degrading_metric", degrading_values);
 
-      auto current_results = suite2.get_results();
-      ASSERT_FALSE(current_results.empty());
+    ASSERT_GT(trend.trend_slope, 0.01);  // Positive slope = degrading
+    ASSERT_TRUE(trend.trend_direction == "degrading" || trend.trend_direction == "stable");
+    ASSERT_GT(trend.r_squared, 0.8);
+  }
 
-      // Step 4: Compare with baseline
-      BaselineManager::BaselineVersion current;
-      current.version_id = "v1.0.1";
-      for (const auto& result : current_results) {
-        current.results[result.name] = result;
-      }
+  // Test 4.3: Stable trend
+  {
+    std::vector<double> stable_values = {100.0, 100.5, 99.5, 100.2, 99.8};
 
-      auto reports = BaselineManager::compare_baselines(baseline, current, 20.0);
-      ASSERT_FALSE(reports.empty());
+    auto trend = BaselineManager::analyze_trend("stable_metric", stable_values);
 
-      // Step 5: Verify comparison results
-      for (const auto& report : reports) {
-        ASSERT_FALSE(report.benchmark_name.empty());
-        ASSERT_GT(report.baseline_performance, 0.0);
-        ASSERT_GT(report.current_performance, 0.0);
-        ASSERT_FALSE(report.status.empty());
-      }
+    ASSERT_NEAR(trend.trend_slope, 0.0, 0.5);
+    // Direction could be stable or slightly improving/degrading due to small variations
+    ASSERT_TRUE(trend.trend_direction == "stable" || trend.trend_direction == "improving" ||
+                trend.trend_direction == "degrading");
+  }
+
+  // Test 4.4: Noisy data
+  {
+    std::vector<double> noisy_values = {100.0, 110.0, 95.0, 105.0, 90.0, 115.0};
+
+    auto trend = BaselineManager::analyze_trend("noisy_metric", noisy_values);
+
+    ASSERT_FALSE(trend.metric_name.empty());
+    ASSERT_EQ(trend.historical_values.size(), 6);
+    // R-squared should be lower for noisy data
+    ASSERT_LT(trend.r_squared, 0.9);
+  }
+
+  // Test 4.5: Insufficient data
+  {
+    std::vector<double> single_value = {100.0};
+
+    auto trend = BaselineManager::analyze_trend("insufficient_metric", single_value);
+
+    ASSERT_EQ(trend.trend_direction, "insufficient_data");
+    ASSERT_EQ(trend.trend_slope, 0.0);
+  }
+}
+
+// Test 5: Integrated baseline management workflow
+TEST(BaselineManagementSystemTestsTest, Integrated_Baseline_Management_Workflow) {
+  auto test_env = TestDataManager::create_test_environment();
+  std::string baseline_dir = test_env->path_string() + "/baselines";
+  std::filesystem::create_directories(baseline_dir);
+
+  // Test 5.1: Complete workflow
+  {
+    // Step 1: Create initial baseline
+    BenchmarkSuite suite("Baseline Workflow");
+
+    suite.run_benchmark(
+        "workflow_test",
+        []() {
+          Bodies::BodyFactory factory;
+          auto result = factory.create_body("Earth");
+          (void)result;
+        },
+        10);
+
+    auto results = suite.get_results();
+    ASSERT_FALSE(results.empty());
+
+    // Step 2: Save as baseline
+    BaselineManager::BaselineVersion baseline;
+    baseline.version_id = "v1.0.0";
+    baseline.timestamp = "2025-01-01T00:00:00Z";
+    baseline.git_commit = "initial";
+    baseline.platform = "test";
+
+    for (const auto& result : results) {
+      baseline.results[result.name] = result;
+    }
+
+    std::string baseline_file = baseline_dir + "/workflow_baseline.txt";
+    bool saved = BaselineManager::save_baseline(baseline, baseline_file);
+    ASSERT_TRUE(saved);
+
+    // Step 3: Run new benchmarks
+    BenchmarkSuite suite2("Current Run");
+    suite2.run_benchmark(
+        "workflow_test",
+        []() {
+          Bodies::BodyFactory factory;
+          auto result = factory.create_body("Earth");
+          (void)result;
+        },
+        10);
+
+    auto current_results = suite2.get_results();
+    ASSERT_FALSE(current_results.empty());
+
+    // Step 4: Compare with baseline
+    BaselineManager::BaselineVersion current;
+    current.version_id = "v1.0.1";
+    for (const auto& result : current_results) {
+      current.results[result.name] = result;
+    }
+
+    auto reports = BaselineManager::compare_baselines(baseline, current, 20.0);
+    ASSERT_FALSE(reports.empty());
+
+    // Step 5: Verify comparison results
+    for (const auto& report : reports) {
+      ASSERT_FALSE(report.benchmark_name.empty());
+      ASSERT_GT(report.baseline_performance, 0.0);
+      ASSERT_GT(report.current_performance, 0.0);
+      ASSERT_FALSE(report.status.empty());
     }
   }
+}

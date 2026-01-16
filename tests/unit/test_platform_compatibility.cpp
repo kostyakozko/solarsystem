@@ -12,11 +12,11 @@
  * Requirements: 9.1, 9.2
  */
 
+#include <gtest/gtest.h>
+
 #include <cstdint>
 #include <string>
 #include <vector>
-
-#include <gtest/gtest.h>
 
 /**
  * @brief Platform information detector
@@ -250,250 +250,250 @@ class CompilerFeatures {
 
   static int get_cpp_version() { return static_cast<int>(__cplusplus); }
 };
-  // Test 1: Platform detection
-  TEST(PlatformCompatibilityTestsTest, Platform_Detection) {
-    auto os = PlatformDetector::detect_os();
-    auto compiler = PlatformDetector::detect_compiler();
-    auto arch = PlatformDetector::detect_architecture();
+// Test 1: Platform detection
+TEST(PlatformCompatibilityTestsTest, Platform_Detection) {
+  auto os = PlatformDetector::detect_os();
+  auto compiler = PlatformDetector::detect_compiler();
+  auto arch = PlatformDetector::detect_architecture();
 
-    // Test 1.1: OS detection
-    ASSERT_TRUE(os != PlatformDetector::OS::Unknown);
-    std::string os_name = PlatformDetector::os_to_string(os);
-    ASSERT_FALSE(os_name.empty());
-    ASSERT_TRUE(os_name != "Unknown");
+  // Test 1.1: OS detection
+  ASSERT_TRUE(os != PlatformDetector::OS::Unknown);
+  std::string os_name = PlatformDetector::os_to_string(os);
+  ASSERT_FALSE(os_name.empty());
+  ASSERT_TRUE(os_name != "Unknown");
 
-    // Test 1.2: Compiler detection
-    ASSERT_TRUE(compiler != PlatformDetector::Compiler::Unknown);
-    std::string compiler_name = PlatformDetector::compiler_to_string(compiler);
-    ASSERT_FALSE(compiler_name.empty());
-    ASSERT_TRUE(compiler_name != "Unknown");
+  // Test 1.2: Compiler detection
+  ASSERT_TRUE(compiler != PlatformDetector::Compiler::Unknown);
+  std::string compiler_name = PlatformDetector::compiler_to_string(compiler);
+  ASSERT_FALSE(compiler_name.empty());
+  ASSERT_TRUE(compiler_name != "Unknown");
 
-    // Test 1.3: Architecture detection
-    ASSERT_TRUE(arch != PlatformDetector::Architecture::Unknown);
-    std::string arch_name = PlatformDetector::architecture_to_string(arch);
-    ASSERT_FALSE(arch_name.empty());
-    ASSERT_TRUE(arch_name != "Unknown");
+  // Test 1.3: Architecture detection
+  ASSERT_TRUE(arch != PlatformDetector::Architecture::Unknown);
+  std::string arch_name = PlatformDetector::architecture_to_string(arch);
+  ASSERT_FALSE(arch_name.empty());
+  ASSERT_TRUE(arch_name != "Unknown");
+}
+
+// Test 2: Endianness detection
+TEST(PlatformCompatibilityTestsTest, Endianness_Detection) {
+  bool is_little = PlatformDetector::is_little_endian();
+
+  // Test 2.1: Endianness is deterministic
+  ASSERT_EQ(is_little, PlatformDetector::is_little_endian());
+
+  // Test 2.2: Most modern systems are little-endian
+  // (This is informational, not a strict requirement)
+  ASSERT_TRUE(is_little || !is_little);  // Always passes, just documents the check
+}
+
+// Test 3: Pointer size and 64-bit support
+TEST(PlatformCompatibilityTestsTest, Pointer_Size_and_64_bit_Support) {
+  size_t ptr_size = PlatformDetector::get_pointer_size();
+  bool supports_64 = PlatformDetector::supports_64bit();
+
+  // Test 3.1: Pointer size is valid
+  ASSERT_TRUE(ptr_size == 4 || ptr_size == 8);
+
+  // Test 3.2: 64-bit support consistency
+  if (supports_64) {
+    ASSERT_EQ(ptr_size, 8);
+  } else {
+    ASSERT_EQ(ptr_size, 4);
   }
 
-  // Test 2: Endianness detection
-  TEST(PlatformCompatibilityTestsTest, Endianness_Detection) {
-    bool is_little = PlatformDetector::is_little_endian();
-
-    // Test 2.1: Endianness is deterministic
-    ASSERT_EQ(is_little, PlatformDetector::is_little_endian());
-
-    // Test 2.2: Most modern systems are little-endian
-    // (This is informational, not a strict requirement)
-    ASSERT_TRUE(is_little || !is_little);  // Always passes, just documents the check
+  // Test 3.3: Architecture matches pointer size
+  auto arch = PlatformDetector::detect_architecture();
+  if (arch == PlatformDetector::Architecture::x86_64 ||
+      arch == PlatformDetector::Architecture::ARM64) {
+    ASSERT_TRUE(supports_64);
   }
+}
 
-  // Test 3: Pointer size and 64-bit support
-  TEST(PlatformCompatibilityTestsTest, Pointer_Size_and_64_bit_Support) {
-    size_t ptr_size = PlatformDetector::get_pointer_size();
-    bool supports_64 = PlatformDetector::supports_64bit();
+// Test 4: Path handling
+TEST(PlatformCompatibilityTestsTest, Path_Handling) {
+  char sep = PathHandler::get_path_separator();
 
-    // Test 3.1: Pointer size is valid
-    ASSERT_TRUE(ptr_size == 4 || ptr_size == 8);
+  // Test 4.1: Path separator is valid
+  ASSERT_TRUE(sep == '/' || sep == '\\');
 
-    // Test 3.2: 64-bit support consistency
-    if (supports_64) {
-      ASSERT_EQ(ptr_size, 8);
-    } else {
-      ASSERT_EQ(ptr_size, 4);
-    }
+  // Test 4.2: Path normalization
+  std::string path1 = "dir1/dir2\\dir3";
+  std::string normalized = PathHandler::normalize_path(path1);
+  ASSERT_FALSE(normalized.empty());
 
-    // Test 3.3: Architecture matches pointer size
-    auto arch = PlatformDetector::detect_architecture();
-    if (arch == PlatformDetector::Architecture::x86_64 ||
-        arch == PlatformDetector::Architecture::ARM64) {
-      ASSERT_TRUE(supports_64);
-    }
-  }
+  // All separators should be consistent
+  bool has_forward = normalized.find('/') != std::string::npos;
+  bool has_backward = normalized.find('\\') != std::string::npos;
+  ASSERT_FALSE(has_forward && has_backward);  // Should not have both
 
-  // Test 4: Path handling
-  TEST(PlatformCompatibilityTestsTest, Path_Handling) {
-    char sep = PathHandler::get_path_separator();
+  // Test 4.3: Path joining
+  std::string joined = PathHandler::join_paths("dir1", "dir2");
+  EXPECT_NE(std::string::npos, joined.find("dir1"));
+  EXPECT_NE(std::string::npos, joined.find("dir2"));
 
-    // Test 4.1: Path separator is valid
-    ASSERT_TRUE(sep == '/' || sep == '\\');
+  // Test 4.4: Empty path handling
+  std::string empty_join1 = PathHandler::join_paths("", "dir");
+  ASSERT_EQ(empty_join1, "dir");
 
-    // Test 4.2: Path normalization
-    std::string path1 = "dir1/dir2\\dir3";
-    std::string normalized = PathHandler::normalize_path(path1);
-    ASSERT_FALSE(normalized.empty());
+  std::string empty_join2 = PathHandler::join_paths("dir", "");
+  ASSERT_EQ(empty_join2, "dir");
+}
 
-    // All separators should be consistent
-    bool has_forward = normalized.find('/') != std::string::npos;
-    bool has_backward = normalized.find('\\') != std::string::npos;
-    ASSERT_FALSE(has_forward && has_backward);  // Should not have both
+// Test 5: Type sizes
+TEST(PlatformCompatibilityTestsTest, Type_Sizes) {
+  auto sizes = TypeSizeValidator::get_type_sizes();
 
-    // Test 4.3: Path joining
-    std::string joined = PathHandler::join_paths("dir1", "dir2");
-    EXPECT_NE(std::string::npos, joined.find("dir1"));
-    EXPECT_NE(std::string::npos, joined.find("dir2"));
+  // Test 5.1: Standard type sizes
+  ASSERT_EQ(sizes.char_size, 1);
+  ASSERT_GE(sizes.short_size, 2);
+  ASSERT_GE(sizes.int_size, 2);
+  ASSERT_GE(sizes.long_size, 4);
+  ASSERT_GE(sizes.long_long_size, 8);
+  ASSERT_EQ(sizes.float_size, 4);
+  ASSERT_EQ(sizes.double_size, 8);
 
-    // Test 4.4: Empty path handling
-    std::string empty_join1 = PathHandler::join_paths("", "dir");
-    ASSERT_EQ(empty_join1, "dir");
+  // Test 5.2: Size relationships
+  ASSERT_LE(sizes.char_size, sizes.short_size);
+  ASSERT_LE(sizes.short_size, sizes.int_size);
+  ASSERT_LE(sizes.int_size, sizes.long_size);
+  ASSERT_LE(sizes.long_size, sizes.long_long_size);
 
-    std::string empty_join2 = PathHandler::join_paths("dir", "");
-    ASSERT_EQ(empty_join2, "dir");
-  }
+  // Test 5.3: Validate against standard
+  ASSERT_TRUE(TypeSizeValidator::validate_standard_sizes(sizes));
+}
 
-  // Test 5: Type sizes
-  TEST(PlatformCompatibilityTestsTest, Type_Sizes) {
-    auto sizes = TypeSizeValidator::get_type_sizes();
+// Test 6: Compiler features
+TEST(PlatformCompatibilityTestsTest, Compiler_Features) {
+  // Test 6.1: C++ version detection
+  int cpp_version = CompilerFeatures::get_cpp_version();
+  ASSERT_GT(cpp_version, 0);
 
-    // Test 5.1: Standard type sizes
-    ASSERT_EQ(sizes.char_size, 1);
-    ASSERT_GE(sizes.short_size, 2);
-    ASSERT_GE(sizes.int_size, 2);
-    ASSERT_GE(sizes.long_size, 4);
-    ASSERT_GE(sizes.long_long_size, 8);
-    ASSERT_EQ(sizes.float_size, 4);
-    ASSERT_EQ(sizes.double_size, 8);
+  // Test 6.2: C++11 support (minimum requirement)
+  ASSERT_TRUE(CompilerFeatures::has_cpp11());
 
-    // Test 5.2: Size relationships
-    ASSERT_LE(sizes.char_size, sizes.short_size);
-    ASSERT_LE(sizes.short_size, sizes.int_size);
-    ASSERT_LE(sizes.int_size, sizes.long_size);
-    ASSERT_LE(sizes.long_size, sizes.long_long_size);
-
-    // Test 5.3: Validate against standard
-    ASSERT_TRUE(TypeSizeValidator::validate_standard_sizes(sizes));
-  }
-
-  // Test 6: Compiler features
-  TEST(PlatformCompatibilityTestsTest, Compiler_Features) {
-    // Test 6.1: C++ version detection
-    int cpp_version = CompilerFeatures::get_cpp_version();
-    ASSERT_GT(cpp_version, 0);
-
-    // Test 6.2: C++11 support (minimum requirement)
+  // Test 6.3: C++14 support
+  bool has_cpp14 = CompilerFeatures::has_cpp14();
+  if (has_cpp14) {
     ASSERT_TRUE(CompilerFeatures::has_cpp11());
-
-    // Test 6.3: C++14 support
-    bool has_cpp14 = CompilerFeatures::has_cpp14();
-    if (has_cpp14) {
-      ASSERT_TRUE(CompilerFeatures::has_cpp11());
-    }
-
-    // Test 6.4: C++17 support
-    bool has_cpp17 = CompilerFeatures::has_cpp17();
-    if (has_cpp17) {
-      ASSERT_TRUE(CompilerFeatures::has_cpp14());
-    }
-
-    // Test 6.5: C++20 support (project requirement)
-    ASSERT_TRUE(CompilerFeatures::has_cpp20());
   }
 
-  // Test 7: Integer types
-  TEST(PlatformCompatibilityTestsTest, Integer_Types) {
-    // Test 7.1: Fixed-width integer types
-    ASSERT_EQ(sizeof(int8_t), 1);
-    ASSERT_EQ(sizeof(int16_t), 2);
-    ASSERT_EQ(sizeof(int32_t), 4);
-    ASSERT_EQ(sizeof(int64_t), 8);
-
-    ASSERT_EQ(sizeof(uint8_t), 1);
-    ASSERT_EQ(sizeof(uint16_t), 2);
-    ASSERT_EQ(sizeof(uint32_t), 4);
-    ASSERT_EQ(sizeof(uint64_t), 8);
-
-    // Test 7.2: Size_t is pointer-sized
-    ASSERT_EQ(sizeof(size_t), sizeof(void*));
-
-    // Test 7.3: Intptr_t can hold a pointer
-    ASSERT_EQ(sizeof(intptr_t), sizeof(void*));
-    ASSERT_EQ(sizeof(uintptr_t), sizeof(void*));
+  // Test 6.4: C++17 support
+  bool has_cpp17 = CompilerFeatures::has_cpp17();
+  if (has_cpp17) {
+    ASSERT_TRUE(CompilerFeatures::has_cpp14());
   }
 
-  // Test 8: Platform-specific behavior
-  TEST(PlatformCompatibilityTestsTest, Platform_Specific_Behavior) {
-    auto os = PlatformDetector::detect_os();
+  // Test 6.5: C++20 support (project requirement)
+  ASSERT_TRUE(CompilerFeatures::has_cpp20());
+}
 
-    // Test 8.1: Path separator matches OS
-    char sep = PathHandler::get_path_separator();
-    if (os == PlatformDetector::OS::Windows) {
-      ASSERT_EQ(sep, '\\');
-    } else {
-      ASSERT_EQ(sep, '/');
-    }
+// Test 7: Integer types
+TEST(PlatformCompatibilityTestsTest, Integer_Types) {
+  // Test 7.1: Fixed-width integer types
+  ASSERT_EQ(sizeof(int8_t), 1);
+  ASSERT_EQ(sizeof(int16_t), 2);
+  ASSERT_EQ(sizeof(int32_t), 4);
+  ASSERT_EQ(sizeof(int64_t), 8);
 
-    // Test 8.2: Line ending awareness (informational)
-    // Different platforms use different line endings:
-    // Windows: \r\n, Unix/Linux/macOS: \n
-    // This test just documents the awareness
-    std::string newline = "\n";
-    ASSERT_FALSE(newline.empty());
+  ASSERT_EQ(sizeof(uint8_t), 1);
+  ASSERT_EQ(sizeof(uint16_t), 2);
+  ASSERT_EQ(sizeof(uint32_t), 4);
+  ASSERT_EQ(sizeof(uint64_t), 8);
 
-    // Test 8.3: Case sensitivity awareness
-    // Windows is case-insensitive, Unix-like systems are case-sensitive
-    // This is informational for path handling
-    bool is_unix_like = (os == PlatformDetector::OS::macOS || os == PlatformDetector::OS::Linux ||
-                        os == PlatformDetector::OS::BSD);
-    bool is_windows = (os == PlatformDetector::OS::Windows);
-    ASSERT_TRUE(is_unix_like || is_windows);
+  // Test 7.2: Size_t is pointer-sized
+  ASSERT_EQ(sizeof(size_t), sizeof(void*));
+
+  // Test 7.3: Intptr_t can hold a pointer
+  ASSERT_EQ(sizeof(intptr_t), sizeof(void*));
+  ASSERT_EQ(sizeof(uintptr_t), sizeof(void*));
+}
+
+// Test 8: Platform-specific behavior
+TEST(PlatformCompatibilityTestsTest, Platform_Specific_Behavior) {
+  auto os = PlatformDetector::detect_os();
+
+  // Test 8.1: Path separator matches OS
+  char sep = PathHandler::get_path_separator();
+  if (os == PlatformDetector::OS::Windows) {
+    ASSERT_EQ(sep, '\\');
+  } else {
+    ASSERT_EQ(sep, '/');
   }
 
-  // Test 9: Compiler-specific features
-  TEST(PlatformCompatibilityTestsTest, Compiler_Specific_Features) {
-    auto compiler = PlatformDetector::detect_compiler();
+  // Test 8.2: Line ending awareness (informational)
+  // Different platforms use different line endings:
+  // Windows: \r\n, Unix/Linux/macOS: \n
+  // This test just documents the awareness
+  std::string newline = "\n";
+  ASSERT_FALSE(newline.empty());
 
-    // Test 9.1: Compiler is recognized
-    ASSERT_TRUE(compiler == PlatformDetector::Compiler::GCC ||
-                compiler == PlatformDetector::Compiler::Clang ||
-                compiler == PlatformDetector::Compiler::MSVC);
+  // Test 8.3: Case sensitivity awareness
+  // Windows is case-insensitive, Unix-like systems are case-sensitive
+  // This is informational for path handling
+  bool is_unix_like = (os == PlatformDetector::OS::macOS || os == PlatformDetector::OS::Linux ||
+                       os == PlatformDetector::OS::BSD);
+  bool is_windows = (os == PlatformDetector::OS::Windows);
+  ASSERT_TRUE(is_unix_like || is_windows);
+}
 
-    // Test 9.2: Compiler version macros exist
+// Test 9: Compiler-specific features
+TEST(PlatformCompatibilityTestsTest, Compiler_Specific_Features) {
+  auto compiler = PlatformDetector::detect_compiler();
+
+  // Test 9.1: Compiler is recognized
+  ASSERT_TRUE(compiler == PlatformDetector::Compiler::GCC ||
+              compiler == PlatformDetector::Compiler::Clang ||
+              compiler == PlatformDetector::Compiler::MSVC);
+
+  // Test 9.2: Compiler version macros exist
 #if defined(__clang__)
-    EXPECT_GE(__clang_major__ , 0);
+  EXPECT_GE(__clang_major__, 0);
 #elif defined(__GNUC__)
-    EXPECT_GE(__GNUC__ , 0);
+  EXPECT_GE(__GNUC__, 0);
 #elif defined(_MSC_VER)
-    EXPECT_GE(_MSC_VER , 0);
+  EXPECT_GE(_MSC_VER, 0);
 #endif
 
-    // Test 9.3: Standard library is available
-    std::vector<int> test_vector = {1, 2, 3};
-    ASSERT_EQ(test_vector.size(), 3);
+  // Test 9.3: Standard library is available
+  std::vector<int> test_vector = {1, 2, 3};
+  ASSERT_EQ(test_vector.size(), 3);
+}
+
+// Test 10: Cross-platform compatibility summary
+TEST(PlatformCompatibilityTestsTest, Cross_Platform_Compatibility_Summary) {
+  auto os = PlatformDetector::detect_os();
+  auto compiler = PlatformDetector::detect_compiler();
+  auto arch = PlatformDetector::detect_architecture();
+
+  // Test 10.1: All platform info is available
+  ASSERT_TRUE(os != PlatformDetector::OS::Unknown);
+  ASSERT_TRUE(compiler != PlatformDetector::Compiler::Unknown);
+  ASSERT_TRUE(arch != PlatformDetector::Architecture::Unknown);
+
+  // Test 10.2: Platform combination is valid
+  bool valid_combination = false;
+
+  // macOS typically uses Clang on x86_64 or ARM64
+  if (os == PlatformDetector::OS::macOS) {
+    valid_combination = (compiler == PlatformDetector::Compiler::Clang) &&
+                        (arch == PlatformDetector::Architecture::x86_64 ||
+                         arch == PlatformDetector::Architecture::ARM64);
+  }
+  // Linux can use GCC or Clang on various architectures
+  else if (os == PlatformDetector::OS::Linux) {
+    valid_combination = (compiler == PlatformDetector::Compiler::GCC ||
+                         compiler == PlatformDetector::Compiler::Clang);
+  }
+  // Windows typically uses MSVC
+  else if (os == PlatformDetector::OS::Windows) {
+    valid_combination = (compiler == PlatformDetector::Compiler::MSVC ||
+                         compiler == PlatformDetector::Compiler::Clang ||
+                         compiler == PlatformDetector::Compiler::GCC);
   }
 
-  // Test 10: Cross-platform compatibility summary
-  TEST(PlatformCompatibilityTestsTest, Cross_Platform_Compatibility_Summary) {
-    auto os = PlatformDetector::detect_os();
-    auto compiler = PlatformDetector::detect_compiler();
-    auto arch = PlatformDetector::detect_architecture();
+  ASSERT_TRUE(valid_combination);
 
-    // Test 10.1: All platform info is available
-    ASSERT_TRUE(os != PlatformDetector::OS::Unknown);
-    ASSERT_TRUE(compiler != PlatformDetector::Compiler::Unknown);
-    ASSERT_TRUE(arch != PlatformDetector::Architecture::Unknown);
-
-    // Test 10.2: Platform combination is valid
-    bool valid_combination = false;
-
-    // macOS typically uses Clang on x86_64 or ARM64
-    if (os == PlatformDetector::OS::macOS) {
-      valid_combination = (compiler == PlatformDetector::Compiler::Clang) &&
-                         (arch == PlatformDetector::Architecture::x86_64 ||
-                          arch == PlatformDetector::Architecture::ARM64);
-    }
-    // Linux can use GCC or Clang on various architectures
-    else if (os == PlatformDetector::OS::Linux) {
-      valid_combination = (compiler == PlatformDetector::Compiler::GCC ||
-                          compiler == PlatformDetector::Compiler::Clang);
-    }
-    // Windows typically uses MSVC
-    else if (os == PlatformDetector::OS::Windows) {
-      valid_combination = (compiler == PlatformDetector::Compiler::MSVC ||
-                          compiler == PlatformDetector::Compiler::Clang ||
-                          compiler == PlatformDetector::Compiler::GCC);
-    }
-
-    ASSERT_TRUE(valid_combination);
-
-    // Test 10.3: C++20 support is available
-    ASSERT_TRUE(CompilerFeatures::has_cpp20());
-  }
+  // Test 10.3: C++20 support is available
+  ASSERT_TRUE(CompilerFeatures::has_cpp20());
+}

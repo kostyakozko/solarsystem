@@ -137,8 +137,8 @@ TEST_F(Vector3OperationsTest, ZeroVectorNormalization) {
 // ============================================================================
 // Use for testing the same logic with different inputs
 
-class Vector3MagnitudeTest : public ::testing::TestWithParam<std::tuple<double, double, double, double>> {
-};
+class Vector3MagnitudeTest
+    : public ::testing::TestWithParam<std::tuple<double, double, double, double>> {};
 
 TEST_P(Vector3MagnitudeTest, CalculatesMagnitudeCorrectly) {
   auto [x, y, z, expected_mag] = GetParam();
@@ -147,18 +147,15 @@ TEST_P(Vector3MagnitudeTest, CalculatesMagnitudeCorrectly) {
   EXPECT_NEAR(expected_mag, mag, 1e-10);
 }
 
-INSTANTIATE_TEST_SUITE_P(
-    MagnitudeValues,
-    Vector3MagnitudeTest,
-    ::testing::Values(
-        std::make_tuple(3.0, 4.0, 0.0, 5.0),      // 3-4-5 triangle
-        std::make_tuple(0.0, 0.0, 0.0, 0.0),      // Zero vector
-        std::make_tuple(1.0, 0.0, 0.0, 1.0),      // Unit x
-        std::make_tuple(0.0, 1.0, 0.0, 1.0),      // Unit y
-        std::make_tuple(0.0, 0.0, 1.0, 1.0),      // Unit z
-        std::make_tuple(1.0, 1.0, 1.0, std::sqrt(3.0))  // Diagonal
-    )
-);
+INSTANTIATE_TEST_SUITE_P(MagnitudeValues, Vector3MagnitudeTest,
+                         ::testing::Values(std::make_tuple(3.0, 4.0, 0.0, 5.0),  // 3-4-5 triangle
+                                           std::make_tuple(0.0, 0.0, 0.0, 0.0),  // Zero vector
+                                           std::make_tuple(1.0, 0.0, 0.0, 1.0),  // Unit x
+                                           std::make_tuple(0.0, 1.0, 0.0, 1.0),  // Unit y
+                                           std::make_tuple(0.0, 0.0, 1.0, 1.0),  // Unit z
+                                           std::make_tuple(1.0, 1.0, 1.0,
+                                                           std::sqrt(3.0))  // Diagonal
+                                           ));
 
 // ============================================================================
 // Assertion Examples
@@ -168,8 +165,8 @@ INSTANTIATE_TEST_SUITE_P(
 TEST(AssertionExamples, BooleanAssertions) {
   EXPECT_TRUE(true);
   EXPECT_FALSE(false);
-  ASSERT_TRUE(true);   // Fatal - stops test on failure
-  ASSERT_FALSE(false); // Fatal
+  ASSERT_TRUE(true);    // Fatal - stops test on failure
+  ASSERT_FALSE(false);  // Fatal
 }
 
 TEST(AssertionExamples, EqualityAssertions) {
@@ -233,8 +230,7 @@ TYPED_TEST(Vector3TypedTest, DefaultConstructorCreatesZeroVector) {
 }
 
 TYPED_TEST(Vector3TypedTest, MagnitudeCalculation) {
-  typename TestFixture::VectorType v(static_cast<TypeParam>(3.0),
-                                     static_cast<TypeParam>(4.0),
+  typename TestFixture::VectorType v(static_cast<TypeParam>(3.0), static_cast<TypeParam>(4.0),
                                      static_cast<TypeParam>(0.0));
   TypeParam mag = v.magnitude();
   EXPECT_NEAR(static_cast<TypeParam>(5.0), mag, static_cast<TypeParam>(1e-5));

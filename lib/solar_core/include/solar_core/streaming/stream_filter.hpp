@@ -1,16 +1,16 @@
 #pragma once
 
+#include <chrono>
 #include <functional>
 #include <memory>
 #include <string>
-#include <vector>
 #include <unordered_set>
-#include <chrono>
+#include <vector>
 
-#include "solar_core/export.hpp"
-#include "solar_core/streaming/data_stream.hpp"
 #include "solar_core/bodies/celestial_body.hpp"
+#include "solar_core/export.hpp"
 #include "solar_core/math/vector3.hpp"
+#include "solar_core/streaming/data_stream.hpp"
 
 namespace SolarSystem::Streaming {
 
@@ -18,7 +18,7 @@ namespace SolarSystem::Streaming {
  * @brief Base class for data stream filters
  */
 class SOLAR_CORE_API StreamFilter {
-public:
+ public:
   virtual ~StreamFilter() = default;
 
   /**
@@ -43,7 +43,7 @@ public:
    */
   virtual void set_enabled(bool enabled) noexcept { enabled_ = enabled; }
 
-protected:
+ protected:
   bool enabled_ = true;
 };
 
@@ -51,7 +51,7 @@ protected:
  * @brief Filter that selects only specific celestial bodies
  */
 class SOLAR_CORE_API BodySelectionFilter : public StreamFilter {
-public:
+ public:
   explicit BodySelectionFilter(std::vector<std::string> selected_bodies);
   explicit BodySelectionFilter(std::unordered_set<std::string> selected_bodies);
 
@@ -64,7 +64,7 @@ public:
   void clear_bodies();
   [[nodiscard]] const std::unordered_set<std::string>& get_selected_bodies() const noexcept;
 
-private:
+ private:
   std::unordered_set<std::string> selected_bodies_;
 };
 
@@ -72,7 +72,7 @@ private:
  * @brief Filter that removes data points below a quality threshold
  */
 class SOLAR_CORE_API QualityFilter : public StreamFilter {
-public:
+ public:
   explicit QualityFilter(double min_quality = 0.7);
 
   [[nodiscard]] std::optional<DataSnapshot> apply(const DataSnapshot& snapshot) override;
@@ -85,7 +85,7 @@ public:
   void set_drop_entire_snapshot(bool drop) noexcept { drop_entire_snapshot_ = drop; }
   [[nodiscard]] bool get_drop_entire_snapshot() const noexcept { return drop_entire_snapshot_; }
 
-private:
+ private:
   double min_quality_;
   bool drop_entire_snapshot_ = false;  // If true, drop entire snapshot if any body fails quality
 };
@@ -94,7 +94,7 @@ private:
  * @brief Filter that removes data points with excessive latency
  */
 class SOLAR_CORE_API LatencyFilter : public StreamFilter {
-public:
+ public:
   explicit LatencyFilter(std::chrono::milliseconds max_latency = std::chrono::milliseconds{2000});
 
   [[nodiscard]] std::optional<DataSnapshot> apply(const DataSnapshot& snapshot) override;
@@ -104,7 +104,7 @@ public:
   void set_max_latency(std::chrono::milliseconds latency) noexcept { max_latency_ = latency; }
   [[nodiscard]] std::chrono::milliseconds get_max_latency() const noexcept { return max_latency_; }
 
-private:
+ private:
   std::chrono::milliseconds max_latency_;
 };
 
@@ -112,7 +112,7 @@ private:
  * @brief Filter that applies rate limiting to reduce update frequency
  */
 class SOLAR_CORE_API RateLimitFilter : public StreamFilter {
-public:
+ public:
   explicit RateLimitFilter(std::chrono::milliseconds min_interval = std::chrono::milliseconds{100});
 
   [[nodiscard]] std::optional<DataSnapshot> apply(const DataSnapshot& snapshot) override;
@@ -120,11 +120,13 @@ public:
 
   // Configuration
   void set_min_interval(std::chrono::milliseconds interval) noexcept { min_interval_ = interval; }
-  [[nodiscard]] std::chrono::milliseconds get_min_interval() const noexcept { return min_interval_; }
+  [[nodiscard]] std::chrono::milliseconds get_min_interval() const noexcept {
+    return min_interval_;
+  }
 
   void reset() noexcept { last_passed_time_ = std::chrono::system_clock::time_point{}; }
 
-private:
+ private:
   std::chrono::milliseconds min_interval_;
   std::chrono::system_clock::time_point last_passed_time_;
 };
@@ -133,9 +135,9 @@ private:
  * @brief Filter that removes duplicate or nearly identical data points
  */
 class SOLAR_CORE_API DuplicationFilter : public StreamFilter {
-public:
+ public:
   explicit DuplicationFilter(double position_tolerance = 1000.0,  // meters
-                           double velocity_tolerance = 1.0);      // m/s
+                             double velocity_tolerance = 1.0);    // m/s
 
   [[nodiscard]] std::optional<DataSnapshot> apply(const DataSnapshot& snapshot) override;
   [[nodiscard]] std::string get_name() const override { return "DuplicationFilter"; }
@@ -148,13 +150,13 @@ public:
 
   void clear_cache() { last_snapshot_.reset(); }
 
-private:
+ private:
   double position_tolerance_;
   double velocity_tolerance_;
   std::optional<DataSnapshot> last_snapshot_;
 
   [[nodiscard]] bool is_significantly_different(const DataSnapshot& current,
-                                               const DataSnapshot& previous) const;
+                                                const DataSnapshot& previous) const;
   [[nodiscard]] bool is_body_different(const DataPoint& current, const DataPoint& previous) const;
 };
 
@@ -162,7 +164,7 @@ private:
  * @brief Custom filter using user-provided predicate function
  */
 class SOLAR_CORE_API PredicateFilter : public StreamFilter {
-public:
+ public:
   using SnapshotPredicate = std::function<bool(const DataSnapshot&)>;
   using DataPointPredicate = std::function<bool(const DataPoint&)>;
 
@@ -172,7 +174,7 @@ public:
   [[nodiscard]] std::optional<DataSnapshot> apply(const DataSnapshot& snapshot) override;
   [[nodiscard]] std::string get_name() const override { return name_; }
 
-private:
+ private:
   SnapshotPredicate snapshot_predicate_;
   DataPointPredicate datapoint_predicate_;
   std::string name_;
@@ -182,7 +184,7 @@ private:
  * @brief Composite filter that applies multiple filters in sequence
  */
 class SOLAR_CORE_API FilterChain : public StreamFilter {
-public:
+ public:
   FilterChain() = default;
   explicit FilterChain(std::vector<std::unique_ptr<StreamFilter>> filters);
 
@@ -201,7 +203,7 @@ public:
   void enable_filter(const std::string& filter_name);
   void disable_filter(const std::string& filter_name);
 
-private:
+ private:
   std::vector<std::unique_ptr<StreamFilter>> filters_;
 
   [[nodiscard]] StreamFilter* find_filter(const std::string& name);
@@ -211,7 +213,7 @@ private:
  * @brief Factory for creating common filter configurations
  */
 class SOLAR_CORE_API FilterFactory {
-public:
+ public:
   // Predefined filter chains
   [[nodiscard]] static std::unique_ptr<FilterChain> create_basic_filter_chain();
   [[nodiscard]] static std::unique_ptr<FilterChain> create_high_quality_filter_chain();
@@ -221,7 +223,8 @@ public:
   // Individual filter creation
   [[nodiscard]] static std::unique_ptr<BodySelectionFilter> create_body_selection_filter(
       const std::vector<std::string>& bodies);
-  [[nodiscard]] static std::unique_ptr<QualityFilter> create_quality_filter(double min_quality = 0.7);
+  [[nodiscard]] static std::unique_ptr<QualityFilter> create_quality_filter(
+      double min_quality = 0.7);
   [[nodiscard]] static std::unique_ptr<LatencyFilter> create_latency_filter(
       std::chrono::milliseconds max_latency = std::chrono::milliseconds{2000});
   [[nodiscard]] static std::unique_ptr<RateLimitFilter> create_rate_limit_filter(

@@ -1,27 +1,27 @@
-#include "../test_framework_enhanced.hpp"
-#include <vector>
-#include <thread>
 #include <chrono>
-#include <random>
 #include <memory>
+#include <random>
+#include <thread>
+#include <vector>
+
+#include "../test_framework_enhanced.hpp"
 
 using namespace SolarSystem::Testing;
 
 class PerformanceComprehensiveTests {
-public:
+ public:
   static void run_all_tests() {
     auto& framework = EnhancedTestFramework::instance();
 
     framework.load_performance_baselines("performance_baselines.txt");
 
     std::vector<std::pair<std::string, std::function<void()>>> tests = {
-      {"BasicPerformance", test_basic_performance},
-      {"MemoryAllocationPerformance", test_memory_allocation_performance},
-      {"ConcurrentPerformance", test_concurrent_performance},
-      {"CPUIntensivePerformance", test_cpu_intensive_performance},
-      {"StressTestPerformance", test_stress_test_performance},
-      {"ScalabilityTest", test_scalability}
-    };
+        {"BasicPerformance", test_basic_performance},
+        {"MemoryAllocationPerformance", test_memory_allocation_performance},
+        {"ConcurrentPerformance", test_concurrent_performance},
+        {"CPUIntensivePerformance", test_cpu_intensive_performance},
+        {"StressTestPerformance", test_stress_test_performance},
+        {"ScalabilityTest", test_scalability}};
 
     framework.run_test_suite("PerformanceComprehensive", tests);
 
@@ -29,7 +29,7 @@ public:
     framework.generate_report("performance_comprehensive_report.html");
   }
 
-private:
+ private:
   static void test_basic_performance() {
     // Test basic performance
     volatile int result = 0;
@@ -144,7 +144,7 @@ private:
     // Also verify that we have some meaningful time differences
     // If all times are very small, the test might not be meaningful
     double total_time = execution_times[0] + execution_times[1] + execution_times[2];
-    ASSERT_TRUE(total_time > 100); // At least 100 microseconds total
+    ASSERT_TRUE(total_time > 100);  // At least 100 microseconds total
   }
 };
 
@@ -161,8 +161,9 @@ int main() {
     std::cout << "Passed: " << framework.get_passed_tests() << std::endl;
     std::cout << "Failed: " << framework.get_failed_tests() << std::endl;
     std::cout << "Success rate: " << std::fixed << std::setprecision(1)
-              << (framework.get_total_tests() > 0 ?
-                  (framework.get_passed_tests() * 100.0 / framework.get_total_tests()) : 0.0)
+              << (framework.get_total_tests() > 0
+                      ? (framework.get_passed_tests() * 100.0 / framework.get_total_tests())
+                      : 0.0)
               << "%" << std::endl;
 
     return framework.get_failed_tests() == 0 ? 0 : 1;

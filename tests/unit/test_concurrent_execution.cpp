@@ -7,8 +7,8 @@
  * concurrent tests without resource conflicts or race conditions.
  */
 
-#include <gtest/gtest.h>
 #include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 #include <atomic>
 #include <future>
@@ -70,7 +70,6 @@ TEST(ConcurrentExecution, ConcurrentPortAllocation) {
   std::set<int> unique_ports(allocated_ports.begin(), allocated_ports.end());
   ASSERT_EQ(unique_ports.size(), num_threads);
 }
-
 
 // Test 2: Concurrent resource cleanup
 TEST(ConcurrentExecution, ConcurrentResourceCleanup) {
@@ -228,7 +227,6 @@ TEST(ConcurrentExecution, ConcurrentPerformanceMonitoring) {
   auto all_metrics = TestPerformanceMonitor::get_all_metrics();
   ASSERT_GE(all_metrics.size(), num_threads);
 }
-
 
 // Test 5: Stress test with mixed operations
 TEST(ConcurrentExecution, MixedOperationsStressTest) {

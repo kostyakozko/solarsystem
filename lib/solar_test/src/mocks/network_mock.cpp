@@ -132,8 +132,8 @@ void NetworkMock::simulate_network_congestion(double congestion_factor) {
   condition.congestion_factor = congestion_factor;
   condition.bandwidth_bps =
       static_cast<size_t>(static_cast<double>(condition.bandwidth_bps) / congestion_factor);
-  condition.base_latency = std::chrono::milliseconds(
-      static_cast<int64_t>(static_cast<double>(condition.base_latency.count()) * congestion_factor));
+  condition.base_latency = std::chrono::milliseconds(static_cast<int64_t>(
+      static_cast<double>(condition.base_latency.count()) * congestion_factor));
   set_network_condition(condition);
 }
 
@@ -243,8 +243,7 @@ bool NetworkMock::load_mock_responses_from_directory(const std::string& director
         continue;
       }
 
-      std::string content((std::istreambuf_iterator<char>(file)),
-                          std::istreambuf_iterator<char>());
+      std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
       file.close();
 
       // Extract URL pattern from filename
@@ -274,7 +273,8 @@ bool NetworkMock::load_mock_responses_from_directory(const std::string& director
       MockHttpResponse response;
       response.status_code = 200;
       response.body = content;
-      response.headers["Content-Type"] = filename.ends_with(".json") ? "application/json" : "text/plain";
+      response.headers["Content-Type"] =
+          filename.ends_with(".json") ? "application/json" : "text/plain";
       response.headers["Content-Length"] = std::to_string(content.length());
 
       // Store response for URL pattern
@@ -924,10 +924,10 @@ std::vector<NetworkCondition> NetworkTestUtils::create_network_condition_sequenc
     double factor = static_cast<double>(i) / static_cast<double>(steps - 1);
 
     NetworkCondition condition;
-    condition.bandwidth_bps = static_cast<size_t>(
-        static_cast<double>(start_condition.bandwidth_bps) +
-        factor * (static_cast<double>(end_condition.bandwidth_bps) -
-                  static_cast<double>(start_condition.bandwidth_bps)));
+    condition.bandwidth_bps =
+        static_cast<size_t>(static_cast<double>(start_condition.bandwidth_bps) +
+                            factor * (static_cast<double>(end_condition.bandwidth_bps) -
+                                      static_cast<double>(start_condition.bandwidth_bps)));
 
     auto start_latency_ms = static_cast<double>(start_condition.base_latency.count());
     auto end_latency_ms = static_cast<double>(end_condition.base_latency.count());

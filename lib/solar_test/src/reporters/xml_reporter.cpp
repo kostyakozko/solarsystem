@@ -195,7 +195,8 @@ void XmlReporter::write_system_err_element(const TestResult& result) {
 
 std::string XmlReporter::xml_escape(const std::string& text) const {
   std::string escaped;
-  escaped.reserve(static_cast<size_t>(static_cast<double>(text.length()) * 1.2));  // Reserve some extra space
+  escaped.reserve(
+      static_cast<size_t>(static_cast<double>(text.length()) * 1.2));  // Reserve some extra space
 
   for (char c : text) {
     switch (c) {

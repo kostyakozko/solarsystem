@@ -72,7 +72,8 @@ void ConsoleReporter::on_test_started(const std::string& test_name) {
     }
     *config_.output_stream << "\n";
   } else if (config_.show_progress) {
-    double percentage = static_cast<double>(current_test_index_) / static_cast<double>(total_tests_) * 100.0;
+    double percentage =
+        static_cast<double>(current_test_index_) / static_cast<double>(total_tests_) * 100.0;
     print_progress_bar(percentage);
   }
 }

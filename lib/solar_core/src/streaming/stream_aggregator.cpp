@@ -11,8 +11,9 @@ namespace SolarSystem::Streaming {
 std::string AggregateSnapshot::to_string() const {
   std::ostringstream oss;
   oss << "AggregateSnapshot {\n";
-  oss << "  Timestamp: " << std::chrono::duration_cast<std::chrono::seconds>(
-      timestamp.time_since_epoch()).count() << "\n";
+  oss << "  Timestamp: "
+      << std::chrono::duration_cast<std::chrono::seconds>(timestamp.time_since_epoch()).count()
+      << "\n";
   oss << "  Total Bodies: " << total_bodies << "\n";
   oss << "  Total Samples: " << total_samples << "\n";
   oss << "  Overall Quality: " << overall_avg_quality << "\n";
@@ -87,15 +88,15 @@ void TimeWindowAggregator::cleanup_old_snapshots() {
   auto now = std::chrono::system_clock::now();
   auto cutoff_time = now - window_duration_;
 
-  snapshots_.erase(
-      std::remove_if(snapshots_.begin(), snapshots_.end(),
-                     [cutoff_time](const DataSnapshot& snapshot) {
-                       return snapshot.timestamp < cutoff_time;
-                     }),
-      snapshots_.end());
+  snapshots_.erase(std::remove_if(snapshots_.begin(), snapshots_.end(),
+                                  [cutoff_time](const DataSnapshot& snapshot) {
+                                    return snapshot.timestamp < cutoff_time;
+                                  }),
+                   snapshots_.end());
 }
 
-BodyAggregateData TimeWindowAggregator::calculate_body_aggregate(const std::string& body_name) const {
+BodyAggregateData TimeWindowAggregator::calculate_body_aggregate(
+    const std::string& body_name) const {
   BodyAggregateData aggregate;
   aggregate.body_name = body_name;
 
@@ -128,7 +129,8 @@ BodyAggregateData TimeWindowAggregator::calculate_body_aggregate(const std::stri
   return aggregate;
 }
 
-std::vector<const DataPoint*> TimeWindowAggregator::get_body_data_points(const std::string& body_name) const {
+std::vector<const DataPoint*> TimeWindowAggregator::get_body_data_points(
+    const std::string& body_name) const {
   std::vector<const DataPoint*> points;
 
   for (const auto& snapshot : snapshots_) {
@@ -214,7 +216,8 @@ void SampleCountAggregator::maintain_sample_limit() {
   }
 }
 
-BodyAggregateData SampleCountAggregator::calculate_body_aggregate(const std::string& body_name) const {
+BodyAggregateData SampleCountAggregator::calculate_body_aggregate(
+    const std::string& body_name) const {
   BodyAggregateData aggregate;
   aggregate.body_name = body_name;
 
@@ -233,20 +236,17 @@ BodyAggregateData SampleCountAggregator::calculate_body_aggregate(const std::str
 
   for (const auto* point : data_points) {
     pos_sum = pos_sum + point->position;
-    pos_sq_sum = pos_sq_sum + Math::Vector3d{
-        point->position.x() * point->position.x(),
-        point->position.y() * point->position.y(),
-        point->position.z() * point->position.z()};
+    pos_sq_sum = pos_sq_sum + Math::Vector3d{point->position.x() * point->position.x(),
+                                             point->position.y() * point->position.y(),
+                                             point->position.z() * point->position.z()};
 
     // Update min/max
-    min_pos = Math::Vector3d{
-        std::min(min_pos.x(), point->position.x()),
-        std::min(min_pos.y(), point->position.y()),
-        std::min(min_pos.z(), point->position.z())};
-    max_pos = Math::Vector3d{
-        std::max(max_pos.x(), point->position.x()),
-        std::max(max_pos.y(), point->position.y()),
-        std::max(max_pos.z(), point->position.z())};
+    min_pos = Math::Vector3d{std::min(min_pos.x(), point->position.x()),
+                             std::min(min_pos.y(), point->position.y()),
+                             std::min(min_pos.z(), point->position.z())};
+    max_pos = Math::Vector3d{std::max(max_pos.x(), point->position.x()),
+                             std::max(max_pos.y(), point->position.y()),
+                             std::max(max_pos.z(), point->position.z())};
   }
 
   aggregate.avg_position = pos_sum * (1.0 / static_cast<double>(data_points.size()));
@@ -254,10 +254,9 @@ BodyAggregateData SampleCountAggregator::calculate_body_aggregate(const std::str
   aggregate.max_position = max_pos;
 
   // Calculate position variance
-  Math::Vector3d mean_sq{
-      aggregate.avg_position.x() * aggregate.avg_position.x(),
-      aggregate.avg_position.y() * aggregate.avg_position.y(),
-      aggregate.avg_position.z() * aggregate.avg_position.z()};
+  Math::Vector3d mean_sq{aggregate.avg_position.x() * aggregate.avg_position.x(),
+                         aggregate.avg_position.y() * aggregate.avg_position.y(),
+                         aggregate.avg_position.z() * aggregate.avg_position.z()};
   Math::Vector3d sq_mean = pos_sq_sum * (1.0 / static_cast<double>(data_points.size()));
   aggregate.position_variance = sq_mean - mean_sq;
 
@@ -276,14 +275,12 @@ BodyAggregateData SampleCountAggregator::calculate_body_aggregate(const std::str
     min_speed = std::min(min_speed, speed);
     max_speed = std::max(max_speed, speed);
 
-    min_vel = Math::Vector3d{
-        std::min(min_vel.x(), point->velocity.x()),
-        std::min(min_vel.y(), point->velocity.y()),
-        std::min(min_vel.z(), point->velocity.z())};
-    max_vel = Math::Vector3d{
-        std::max(max_vel.x(), point->velocity.x()),
-        std::max(max_vel.y(), point->velocity.y()),
-        std::max(max_vel.z(), point->velocity.z())};
+    min_vel = Math::Vector3d{std::min(min_vel.x(), point->velocity.x()),
+                             std::min(min_vel.y(), point->velocity.y()),
+                             std::min(min_vel.z(), point->velocity.z())};
+    max_vel = Math::Vector3d{std::max(max_vel.x(), point->velocity.x()),
+                             std::max(max_vel.y(), point->velocity.y()),
+                             std::max(max_vel.z(), point->velocity.z())};
   }
 
   aggregate.avg_velocity = vel_sum * (1.0 / static_cast<double>(data_points.size()));
@@ -329,7 +326,8 @@ BodyAggregateData SampleCountAggregator::calculate_body_aggregate(const std::str
   return aggregate;
 }
 
-std::vector<const DataPoint*> SampleCountAggregator::get_body_data_points(const std::string& body_name) const {
+std::vector<const DataPoint*> SampleCountAggregator::get_body_data_points(
+    const std::string& body_name) const {
   std::vector<const DataPoint*> points;
 
   for (const auto& snapshot : snapshots_) {
@@ -436,23 +434,19 @@ void RealtimeAggregator::RunningStats::add_data_point(const DataPoint& point) {
     min_quality = point.quality_score;
   } else {
     // Update min/max values for all metrics with proper component-wise comparison
-    min_position = Math::Vector3d{
-        std::min(min_position.x(), point.position.x()),
-        std::min(min_position.y(), point.position.y()),
-        std::min(min_position.z(), point.position.z())};
-    max_position = Math::Vector3d{
-        std::max(max_position.x(), point.position.x()),
-        std::max(max_position.y(), point.position.y()),
-        std::max(max_position.z(), point.position.z())};
+    min_position = Math::Vector3d{std::min(min_position.x(), point.position.x()),
+                                  std::min(min_position.y(), point.position.y()),
+                                  std::min(min_position.z(), point.position.z())};
+    max_position = Math::Vector3d{std::max(max_position.x(), point.position.x()),
+                                  std::max(max_position.y(), point.position.y()),
+                                  std::max(max_position.z(), point.position.z())};
 
-    min_velocity = Math::Vector3d{
-        std::min(min_velocity.x(), point.velocity.x()),
-        std::min(min_velocity.y(), point.velocity.y()),
-        std::min(min_velocity.z(), point.velocity.z())};
-    max_velocity = Math::Vector3d{
-        std::max(max_velocity.x(), point.velocity.x()),
-        std::max(max_velocity.y(), point.velocity.y()),
-        std::max(max_velocity.z(), point.velocity.z())};
+    min_velocity = Math::Vector3d{std::min(min_velocity.x(), point.velocity.x()),
+                                  std::min(min_velocity.y(), point.velocity.y()),
+                                  std::min(min_velocity.z(), point.velocity.z())};
+    max_velocity = Math::Vector3d{std::max(max_velocity.x(), point.velocity.x()),
+                                  std::max(max_velocity.y(), point.velocity.y()),
+                                  std::max(max_velocity.z(), point.velocity.z())};
 
     min_quality = std::min(min_quality, point.quality_score);
   }
@@ -464,7 +458,8 @@ void RealtimeAggregator::RunningStats::add_data_point(const DataPoint& point) {
   }
 }
 
-BodyAggregateData RealtimeAggregator::RunningStats::to_aggregate_data(const std::string& body_name) const {
+BodyAggregateData RealtimeAggregator::RunningStats::to_aggregate_data(
+    const std::string& body_name) const {
   BodyAggregateData aggregate;
   aggregate.body_name = body_name;
   aggregate.sample_count = count;
@@ -483,9 +478,7 @@ BodyAggregateData RealtimeAggregator::RunningStats::to_aggregate_data(const std:
   return aggregate;
 }
 
-void RealtimeAggregator::RunningStats::reset() {
-  *this = RunningStats{};
-}
+void RealtimeAggregator::RunningStats::reset() { *this = RunningStats{}; }
 
 // CallbackAggregator implementation
 CallbackAggregator::CallbackAggregator(std::unique_ptr<StreamAggregator> base_aggregator)

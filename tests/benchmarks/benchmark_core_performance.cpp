@@ -10,6 +10,8 @@
  * - JPL response parsing and data conversion performance
  */
 
+#include <gtest/gtest.h>
+
 #include <chrono>
 #include <filesystem>
 #include <fstream>
@@ -21,7 +23,6 @@
 #include "benchmark_utils.h"
 #include "solar_core/bodies/celestial_body.hpp"
 #include "solar_core/math/vector3.hpp"
-#include <gtest/gtest.h>
 
 using namespace SolarSystem;
 

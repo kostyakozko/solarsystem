@@ -1,15 +1,15 @@
 #pragma once
 
+#include <atomic>
 #include <chrono>
+#include <condition_variable>
+#include <fstream>
+#include <memory>
+#include <mutex>
 #include <string>
+#include <thread>
 #include <unordered_map>
 #include <vector>
-#include <memory>
-#include <fstream>
-#include <thread>
-#include <atomic>
-#include <mutex>
-#include <condition_variable>
 
 #ifdef __APPLE__
 #include <mach/mach.h>
@@ -18,6 +18,7 @@
 #elif __linux__
 #include <sys/resource.h>
 #include <unistd.h>
+
 #include <fstream>
 #include <sstream>
 #endif
@@ -100,10 +101,10 @@ struct PerformanceBaseline {
                                    double threshold = 1.5) const {
     if (baseline_time.count() == 0) return false;
 
-    double time_ratio = static_cast<double>(metrics.execution_time.count()) /
-                       baseline_time.count();
-    double memory_ratio = baseline_memory_kb > 0 ?
-                         static_cast<double>(metrics.peak_memory_kb) / baseline_memory_kb : 1.0;
+    double time_ratio = static_cast<double>(metrics.execution_time.count()) / baseline_time.count();
+    double memory_ratio = baseline_memory_kb > 0
+                              ? static_cast<double>(metrics.peak_memory_kb) / baseline_memory_kb
+                              : 1.0;
 
     return time_ratio > threshold || memory_ratio > threshold;
   }
@@ -131,7 +132,7 @@ struct RegressionAlert {
  * @brief System resource monitor
  */
 class SystemResourceMonitor {
-public:
+ public:
   SystemResourceMonitor() = default;
   ~SystemResourceMonitor() { stop_monitoring(); }
 
@@ -163,7 +164,7 @@ public:
     return current_io_stats_;
   }
 
-private:
+ private:
   std::atomic<bool> monitoring_active_{false};
   std::thread monitor_thread_;
   std::condition_variable monitor_cv_;
@@ -191,14 +192,14 @@ private:
       std::lock_guard<std::mutex> lock(stats_mutex_);
 
       auto total_time = usage.ru_utime.tv_sec + usage.ru_stime.tv_sec +
-                       (usage.ru_utime.tv_usec + usage.ru_stime.tv_usec) / 1000000.0;
+                        (usage.ru_utime.tv_usec + usage.ru_stime.tv_usec) / 1000000.0;
 
-      current_cpu_stats_.user_percent = (usage.ru_utime.tv_sec +
-                                        usage.ru_utime.tv_usec / 1000000.0) / total_time * 100.0;
-      current_cpu_stats_.system_percent = (usage.ru_stime.tv_sec +
-                                          usage.ru_stime.tv_usec / 1000000.0) / total_time * 100.0;
-      current_cpu_stats_.total_percent = current_cpu_stats_.user_percent +
-                                        current_cpu_stats_.system_percent;
+      current_cpu_stats_.user_percent =
+          (usage.ru_utime.tv_sec + usage.ru_utime.tv_usec / 1000000.0) / total_time * 100.0;
+      current_cpu_stats_.system_percent =
+          (usage.ru_stime.tv_sec + usage.ru_stime.tv_usec / 1000000.0) / total_time * 100.0;
+      current_cpu_stats_.total_percent =
+          current_cpu_stats_.user_percent + current_cpu_stats_.system_percent;
       current_cpu_stats_.context_switches = usage.ru_nvcsw + usage.ru_nivcsw;
       current_cpu_stats_.voluntary_switches = usage.ru_nvcsw;
       current_cpu_stats_.involuntary_switches = usage.ru_nivcsw;
@@ -261,7 +262,7 @@ private:
  * @brief Comprehensive performance monitor
  */
 class ComprehensivePerformanceMonitor {
-public:
+ public:
   static ComprehensivePerformanceMonitor& instance() {
     static ComprehensivePerformanceMonitor monitor;
     return monitor;
@@ -303,20 +304,20 @@ public:
 
     PerformanceMetrics metrics;
     metrics.test_name = test_name;
-    metrics.execution_time = std::chrono::duration_cast<std::chrono::nanoseconds>(
-      end_time - state.start_time);
+    metrics.execution_time =
+        std::chrono::duration_cast<std::chrono::nanoseconds>(end_time - state.start_time);
     metrics.cpu_time = std::chrono::nanoseconds(end_cpu_time - state.start_cpu_time);
     metrics.peak_memory_kb = std::max(state.peak_memory, end_memory);
-    metrics.memory_allocated_kb = end_memory > state.start_memory ?
-                                 end_memory - state.start_memory : 0;
+    metrics.memory_allocated_kb =
+        end_memory > state.start_memory ? end_memory - state.start_memory : 0;
     metrics.cpu_stats = system_monitor_.get_cpu_stats();
     metrics.io_stats = system_monitor_.get_io_stats();
     metrics.timestamp = std::chrono::system_clock::now();
 
     // Calculate CPU efficiency
     if (metrics.execution_time.count() > 0) {
-      metrics.cpu_efficiency = static_cast<double>(metrics.cpu_time.count()) /
-                              metrics.execution_time.count();
+      metrics.cpu_efficiency =
+          static_cast<double>(metrics.cpu_time.count()) / metrics.execution_time.count();
     }
 
     // Estimate cache stats (platform-specific implementation would be more accurate)
@@ -372,12 +373,12 @@ public:
     auto updated_time_ns = old_time_ns * (1.0 - alpha) + new_time_ns * alpha;
 
     baseline.baseline_time = std::chrono::nanoseconds(static_cast<long long>(updated_time_ns));
-    baseline.baseline_cpu_percent = baseline.baseline_cpu_percent * (1.0 - alpha) +
-                                   metrics.cpu_stats.total_percent * alpha;
-    baseline.baseline_memory_kb = static_cast<size_t>(
-      baseline.baseline_memory_kb * (1.0 - alpha) + metrics.peak_memory_kb * alpha);
+    baseline.baseline_cpu_percent =
+        baseline.baseline_cpu_percent * (1.0 - alpha) + metrics.cpu_stats.total_percent * alpha;
+    baseline.baseline_memory_kb = static_cast<size_t>(baseline.baseline_memory_kb * (1.0 - alpha) +
+                                                      metrics.peak_memory_kb * alpha);
     baseline.baseline_cache_miss_rate = baseline.baseline_cache_miss_rate * (1.0 - alpha) +
-                                       metrics.cache_stats.cache_miss_rate * alpha;
+                                        metrics.cache_stats.cache_miss_rate * alpha;
     baseline.sample_count++;
   }
 
@@ -401,12 +402,9 @@ public:
     file << "# Format: test_name time_ns cpu_percent memory_kb cache_miss_rate sample_count\\n";
 
     for (const auto& [test_name, baseline] : baselines_) {
-      file << test_name << " "
-           << baseline.baseline_time.count() << " "
-           << baseline.baseline_cpu_percent << " "
-           << baseline.baseline_memory_kb << " "
-           << baseline.baseline_cache_miss_rate << " "
-           << baseline.sample_count << "\\n";
+      file << test_name << " " << baseline.baseline_time.count() << " "
+           << baseline.baseline_cpu_percent << " " << baseline.baseline_memory_kb << " "
+           << baseline.baseline_cache_miss_rate << " " << baseline.sample_count << "\\n";
     }
   }
 
@@ -426,7 +424,8 @@ public:
       double cpu_percent, cache_miss_rate;
       size_t memory_kb, sample_count;
 
-      if (iss >> test_name >> time_ns >> cpu_percent >> memory_kb >> cache_miss_rate >> sample_count) {
+      if (iss >> test_name >> time_ns >> cpu_percent >> memory_kb >> cache_miss_rate >>
+          sample_count) {
         PerformanceBaseline baseline;
         baseline.test_name = test_name;
         baseline.baseline_time = std::chrono::nanoseconds(time_ns);
@@ -441,7 +440,8 @@ public:
     }
   }
 
-  [[nodiscard]] std::vector<PerformanceMetrics> get_test_history(const std::string& test_name) const {
+  [[nodiscard]] std::vector<PerformanceMetrics> get_test_history(
+      const std::string& test_name) const {
     std::lock_guard<std::mutex> lock(monitor_mutex_);
 
     auto it = test_metrics_.find(test_name);
@@ -451,7 +451,7 @@ public:
     return {};
   }
 
-private:
+ private:
   struct TestMonitoringState {
     std::chrono::high_resolution_clock::time_point start_time;
     long long start_cpu_time = 0;
@@ -486,8 +486,8 @@ private:
     struct mach_task_basic_info info;
     mach_msg_type_number_t info_count = MACH_TASK_BASIC_INFO_COUNT;
 
-    if (task_info(mach_task_self(), MACH_TASK_BASIC_INFO,
-                  (task_info_t)&info, &info_count) == KERN_SUCCESS) {
+    if (task_info(mach_task_self(), MACH_TASK_BASIC_INFO, (task_info_t)&info, &info_count) ==
+        KERN_SUCCESS) {
       return info.resident_size / 1024;
     }
 #elif __linux__
@@ -511,14 +511,14 @@ private:
 
     // Estimate based on memory access patterns and execution time
     double memory_intensity = static_cast<double>(metrics.memory_allocated_kb) /
-                             std::max(1.0, metrics.execution_time_ms());
+                              std::max(1.0, metrics.execution_time_ms());
 
     // Higher memory intensity typically correlates with more cache misses
     metrics.cache_stats.cache_miss_rate = std::min(0.5, memory_intensity * 0.001);
-    metrics.cache_stats.cache_references = static_cast<uint64_t>(
-      metrics.execution_time_ms() * 1000);  // Rough estimate
-    metrics.cache_stats.cache_misses = static_cast<uint64_t>(
-      metrics.cache_stats.cache_references * metrics.cache_stats.cache_miss_rate);
+    metrics.cache_stats.cache_references =
+        static_cast<uint64_t>(metrics.execution_time_ms() * 1000);  // Rough estimate
+    metrics.cache_stats.cache_misses = static_cast<uint64_t>(metrics.cache_stats.cache_references *
+                                                             metrics.cache_stats.cache_miss_rate);
   }
 
   void check_for_regressions(const PerformanceMetrics& metrics) {
@@ -540,17 +540,19 @@ private:
 
       // Determine primary regression type
       double time_ratio = baseline.get_regression_factor(metrics);
-      double memory_ratio = baseline.baseline_memory_kb > 0 ?
-                           static_cast<double>(metrics.peak_memory_kb) / baseline.baseline_memory_kb : 1.0;
+      double memory_ratio =
+          baseline.baseline_memory_kb > 0
+              ? static_cast<double>(metrics.peak_memory_kb) / baseline.baseline_memory_kb
+              : 1.0;
 
       if (time_ratio > memory_ratio) {
         alert.metric_type = "time";
-        alert.description = "Execution time regression: " +
-                           std::to_string(time_ratio) + "x slower than baseline";
+        alert.description =
+            "Execution time regression: " + std::to_string(time_ratio) + "x slower than baseline";
       } else {
         alert.metric_type = "memory";
-        alert.description = "Memory usage regression: " +
-                           std::to_string(memory_ratio) + "x more memory than baseline";
+        alert.description = "Memory usage regression: " + std::to_string(memory_ratio) +
+                            "x more memory than baseline";
       }
 
       regression_alerts_.push_back(alert);
@@ -565,18 +567,18 @@ private:
 #define STOP_PERFORMANCE_MONITORING(test_name) \
   ComprehensivePerformanceMonitor::instance().stop_test_monitoring(test_name)
 
-#define PERFORMANCE_TEST(test_name, code) \
-  do { \
-    START_PERFORMANCE_MONITORING(test_name); \
-    try { \
-      code; \
-    } catch (...) { \
-      STOP_PERFORMANCE_MONITORING(test_name); \
-      throw; \
-    } \
-    auto metrics = STOP_PERFORMANCE_MONITORING(test_name); \
+#define PERFORMANCE_TEST(test_name, code)                                             \
+  do {                                                                                \
+    START_PERFORMANCE_MONITORING(test_name);                                          \
+    try {                                                                             \
+      code;                                                                           \
+    } catch (...) {                                                                   \
+      STOP_PERFORMANCE_MONITORING(test_name);                                         \
+      throw;                                                                          \
+    }                                                                                 \
+    auto metrics = STOP_PERFORMANCE_MONITORING(test_name);                            \
     std::cout << "⚡ " << test_name << " - " << metrics.execution_time_ms() << "ms, " \
-              << metrics.peak_memory_kb << "KB\\n"; \
-  } while(0)
+              << metrics.peak_memory_kb << "KB\\n";                                   \
+  } while (0)
 
 }  // namespace SolarSystem::Testing

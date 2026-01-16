@@ -11,10 +11,10 @@
 
 #pragma once
 
-#include "solar_core/export.hpp"
-
 #include <optional>
 #include <string>
+
+#include "solar_core/export.hpp"
 
 namespace SolarSystem::UI {
 
@@ -22,11 +22,11 @@ namespace SolarSystem::UI {
  * @brief Accessibility configuration
  */
 struct AccessibilityConfig {
-  bool screen_reader_mode = false;      // Optimize for screen readers
-  bool high_contrast_mode = false;      // High contrast colors
-  bool no_unicode = false;              // ASCII-only characters
-  bool verbose_descriptions = false;    // Detailed descriptions
-  bool keyboard_shortcuts = true;       // Enable keyboard shortcuts
+  bool screen_reader_mode = false;    // Optimize for screen readers
+  bool high_contrast_mode = false;    // High contrast colors
+  bool no_unicode = false;            // ASCII-only characters
+  bool verbose_descriptions = false;  // Detailed descriptions
+  bool keyboard_shortcuts = true;     // Enable keyboard shortcuts
 };
 
 /**
@@ -68,7 +68,7 @@ class SOLAR_CORE_API AccessibilityManager {
    * @brief Get accessible alternative for Unicode character
    */
   [[nodiscard]] std::string get_accessible_char(const std::string& unicode_char,
-                                                 const std::string& ascii_fallback) const;
+                                                const std::string& ascii_fallback) const;
 
   /**
    * @brief Get accessible color code
@@ -79,7 +79,7 @@ class SOLAR_CORE_API AccessibilityManager {
    * @brief Format text for accessibility
    */
   [[nodiscard]] std::string format_accessible(const std::string& text,
-                                               const std::string& description = "") const;
+                                              const std::string& description = "") const;
 
  private:
   AccessibilityManager() = default;

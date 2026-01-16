@@ -27,10 +27,10 @@
 // Enhanced Solar System Suite APIs with workflow orchestration
 #include "solar_core/bodies/body_factory.hpp"
 #include "solar_core/builders/simulation_builder.hpp"
+#include "solar_utils/error_handling.hpp"
 #include "solar_utils/logging.hpp"
 #include "solar_utils/validation/input_validator.hpp"
 #include "solar_utils/workflow_orchestration.hpp"
-#include "solar_utils/error_handling.hpp"
 
 using namespace SolarSystem::Core::Builders;
 using namespace SolarSystem::Utils;
@@ -130,8 +130,8 @@ class EnhancedLauncherUI {
     double progress = orchestrator.get_workflow_progress(execution_id);
 
     if (status.has_value()) {
-      std::cout << "🔄 Workflow Status: " <to_string(*status)
-                << " (" << std::fixed << std::setprecision(1) << progress << "%)\n";
+      std::cout << "🔄 Workflow Status: " <
+          to_string(*status) << " (" << std::fixed << std::setprecision(1) << progress << "%)\n";
 
       // Show progress bar
       print_progress_bar("Overall Progress", progress / 100.0);
@@ -179,16 +179,25 @@ class EnhancedLauncherUI {
     for (const auto& component : components) {
       std::string health_icon;
       switch (component.health) {
-        case ComponentHealth::Healthy: health_icon = "✅"; break;
-        case ComponentHealth::Warning: health_icon = "⚠️"; break;
-        case ComponentHealth::Critical: health_icon = "🔴"; break;
-        case ComponentHealth::Failed: health_icon = "❌"; break;
-        default: health_icon = "❓"; break;
+        case ComponentHealth::Healthy:
+          health_icon = "✅";
+          break;
+        case ComponentHealth::Warning:
+          health_icon = "⚠️";
+          break;
+        case ComponentHealth::Critical:
+          health_icon = "🔴";
+          break;
+        case ComponentHealth::Failed:
+          health_icon = "❌";
+          break;
+        default:
+          health_icon = "❓";
+          break;
       }
 
-      std::cout << "  " << health_icon << " " << component.name
-                << " (" << Utils::to_string(component.type) << "): "
-                << Utils::to_string(component.health);
+      std::cout << "  " << health_icon << " " << component.name << " ("
+                << Utils::to_string(component.type) << "): " << Utils::to_string(component.health);
 
       if (!component.status_message.empty()) {
         std::cout << " - " << component.status_message;
@@ -334,7 +343,8 @@ class LauncherWorkflowFactory {
     jpl_check.retry_delay = std::chrono::milliseconds(2000);
     jpl_check.is_critical = false;
 
-    jpl_check.execute = [config](const ProgressInfo& progress, std::function<void(const ProgressInfo&)> callback) {
+    jpl_check.execute = [config](const ProgressInfo& progress,
+                                 std::function<void(const ProgressInfo&)> callback) {
       LOG_INFO("LauncherWorkflow", "Enhanced JPL connectivity check starting");
 
       auto& jpl_manager = WorkflowOrchestrator::instance().get_jpl_connectivity_manager();
@@ -348,7 +358,8 @@ class LauncherWorkflowFactory {
       bool connected = false;
       for (int attempt = 1; attempt <= 3 && !connected; ++attempt) {
         updated_progress.completion_percentage = 10.0 + (attempt * 20.0);
-        updated_progress.current_operation = "Connectivity attempt " + std::to_string(attempt) + "/3";
+        updated_progress.current_operation =
+            "Connectivity attempt " + std::to_string(attempt) + "/3";
         callback(updated_progress);
 
         connected = jpl_manager.is_jpl_service_available();
@@ -389,7 +400,8 @@ class LauncherWorkflowFactory {
       data_fetch.retry_delay = std::chrono::milliseconds(3000);
       data_fetch.dependencies = {"jpl_connectivity_enhanced"};
 
-      data_fetch.execute = [config](const ProgressInfo& progress, std::function<void(const ProgressInfo&)> callback) {
+      data_fetch.execute = [config](const ProgressInfo& progress,
+                                    std::function<void(const ProgressInfo&)> callback) {
         LOG_INFO("LauncherWorkflow", "Enhanced data fetch operation starting");
 
         auto& jpl_manager = WorkflowOrchestrator::instance().get_jpl_connectivity_manager();
@@ -408,15 +420,13 @@ class LauncherWorkflowFactory {
         }
 
         // Simulate enhanced data fetching with progress updates
-        std::vector<std::string> operations = {
-          "Connecting to JPL HORIZONS API",
-          "Authenticating with JPL services",
-          "Requesting ephemeris data",
-          "Downloading planetary data",
-          "Processing moon data",
-          "Validating data integrity",
-          "Caching data locally"
-        };
+        std::vector<std::string> operations = {"Connecting to JPL HORIZONS API",
+                                               "Authenticating with JPL services",
+                                               "Requesting ephemeris data",
+                                               "Downloading planetary data",
+                                               "Processing moon data",
+                                               "Validating data integrity",
+                                               "Caching data locally"};
 
         for (size_t i = 0; i < operations.size(); ++i) {
           updated_progress.completion_percentage = 10.0 + (i * 12.0);
@@ -454,7 +464,8 @@ class LauncherWorkflowFactory {
       cache_ops.timeout = std::chrono::seconds(60);
       cache_ops.max_retries = 2;
 
-      cache_ops.execute = [config](const ProgressInfo& progress, std::function<void(const ProgressInfo&)> callback) {
+      cache_ops.execute = [config](const ProgressInfo& progress,
+                                   std::function<void(const ProgressInfo&)> callback) {
         LOG_INFO("LauncherWorkflow", "Enhanced cache operations starting");
 
         ProgressInfo updated_progress = progress;
@@ -467,9 +478,9 @@ class LauncherWorkflowFactory {
         bool json_exists = std::filesystem::exists("ephemeris_data.json");
 
         updated_progress.completion_percentage = 30.0;
-        updated_progress.current_operation = "Cache analysis: Binary=" +
-          std::string(binary_exists ? "OK" : "Missing") + ", JSON=" +
-          std::string(json_exists ? "OK" : "Missing");
+        updated_progress.current_operation =
+            "Cache analysis: Binary=" + std::string(binary_exists ? "OK" : "Missing") +
+            ", JSON=" + std::string(json_exists ? "OK" : "Missing");
         callback(updated_progress);
 
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
@@ -518,7 +529,8 @@ class LauncherWorkflowFactory {
   /**
    * @brief Create simulation workflow for launcher
    */
-  static WorkflowDefinition create_launcher_simulation_workflow(const EnhancedLauncherConfig& config) {
+  static WorkflowDefinition create_launcher_simulation_workflow(
+      const EnhancedLauncherConfig& config) {
     WorkflowDefinition workflow("launcher_simulation", "Launcher Simulation Execution");
     workflow.description = "Enhanced simulation workflow with data validation and recovery";
     workflow.continue_on_error = config.continue_on_error;
@@ -532,7 +544,8 @@ class LauncherWorkflowFactory {
       auto_fetch.timeout = std::chrono::seconds(60);
       auto_fetch.max_retries = 2;
 
-      auto_fetch.execute = [](const ProgressInfo& progress, std::function<void(const ProgressInfo&)> callback) {
+      auto_fetch.execute = [](const ProgressInfo& progress,
+                              std::function<void(const ProgressInfo&)> callback) {
         LOG_INFO("LauncherWorkflow", "Enhanced auto-fetch starting");
 
         auto& jpl_manager = WorkflowOrchestrator::instance().get_jpl_connectivity_manager();
@@ -578,7 +591,8 @@ class LauncherWorkflowFactory {
       simulation.dependencies = {"auto_fetch_enhanced"};
     }
 
-    simulation.execute = [config](const ProgressInfo& progress, std::function<void(const ProgressInfo&)> callback) {
+    simulation.execute = [config](const ProgressInfo& progress,
+                                  std::function<void(const ProgressInfo&)> callback) {
       LOG_INFO("LauncherWorkflow", "Enhanced simulation execution starting");
 
       ProgressInfo updated_progress = progress;
@@ -825,14 +839,16 @@ class EnhancedArgumentParser {
     std::cout << "  --version          Show version information\n\n";
 
     std::cout << "💡 Enhanced Examples:\n";
-    std::cout << "  " << program_name << "                           # Show enhanced system status\n";
+    std::cout << "  " << program_name
+              << "                           # Show enhanced system status\n";
     std::cout << "  " << program_name
               << " --simulate                # Run simulation with orchestration\n";
     std::cout << "  " << program_name
               << " --simulate --date 2025-12-31  # Simulate with workflow tracking\n";
     std::cout << "  " << program_name << " --fetch --update          # Enhanced JPL data update\n";
     std::cout << "  " << program_name << " --simulate --auto-fetch   # Intelligent auto-fetch\n";
-    std::cout << "  " << program_name << " --fetch --force --simulate # Complete enhanced workflow\n";
+    std::cout << "  " << program_name
+              << " --fetch --force --simulate # Complete enhanced workflow\n";
     std::cout << "  " << program_name
               << " --validate --verbose      # Comprehensive validation\n\n";
 

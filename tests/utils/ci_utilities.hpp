@@ -55,26 +55,26 @@ class CIArtifactGenerator {
    * @brief Generate JUnit XML report
    */
   static bool generate_junit_xml(const std::vector<TestSuiteResult>& suites,
-                                  const std::string& output_file);
+                                 const std::string& output_file);
 
   /**
    * @brief Generate coverage report in multiple formats
    */
   static bool generate_coverage_report(const std::string& coverage_data_file,
-                                        const std::string& output_dir,
-                                        const std::string& format = "html");
+                                       const std::string& output_dir,
+                                       const std::string& format = "html");
 
   /**
    * @brief Generate performance report with metrics
    */
   static bool generate_performance_report(const std::map<std::string, double>& metrics,
-                                           const std::string& output_file);
+                                          const std::string& output_file);
 
   /**
    * @brief Aggregate test results from multiple sources
    */
   static TestSuiteResult aggregate_results(const std::vector<TestCaseResult>& test_cases,
-                                            const std::string& suite_name);
+                                           const std::string& suite_name);
 };
 
 /**
@@ -119,11 +119,11 @@ class EnvironmentDetector {
 class EnhancedMemoryMonitor {
  public:
   struct MemoryUsage {
-    size_t rss_bytes;           // Resident set size
-    size_t virtual_bytes;       // Virtual memory size
-    size_t peak_rss_bytes;      // Peak RSS
-    size_t available_bytes;     // Available system memory
-    double usage_percent;       // Memory usage percentage
+    size_t rss_bytes;        // Resident set size
+    size_t virtual_bytes;    // Virtual memory size
+    size_t peak_rss_bytes;   // Peak RSS
+    size_t available_bytes;  // Available system memory
+    double usage_percent;    // Memory usage percentage
   };
 
   /**
@@ -145,7 +145,7 @@ class EnhancedMemoryMonitor {
    * @brief Detect memory leaks
    */
   static bool detect_memory_leak(size_t baseline_bytes, size_t current_bytes,
-                                  double threshold_percent = 10.0);
+                                 double threshold_percent = 10.0);
 };
 
 }  // namespace CI

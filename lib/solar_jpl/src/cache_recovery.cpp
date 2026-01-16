@@ -22,8 +22,7 @@ CacheRecoveryManager::CacheRecoveryManager(const std::filesystem::path& cache_di
 /**
  * @brief Attempt automatic recovery
  */
-RecoveryResult CacheRecoveryManager::attempt_automatic_recovery(
-    const RecoveryOptions& options) {
+RecoveryResult CacheRecoveryManager::attempt_automatic_recovery(const RecoveryOptions& options) {
   auto start_time = std::chrono::steady_clock::now();
 
   RecoveryResult result;
@@ -107,8 +106,8 @@ RecoveryResult CacheRecoveryManager::attempt_automatic_recovery(
   }
 
   auto end_time = std::chrono::steady_clock::now();
-  result.recovery_duration = std::chrono::duration_cast<std::chrono::milliseconds>(
-      end_time - start_time);
+  result.recovery_duration =
+      std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
 
   last_recovery_result_ = result;
   return result;
@@ -166,8 +165,8 @@ JPLResult<std::vector<EphemerisData>> CacheRecoveryManager::restore_from_backup(
   // Copy backup to cache directory
   std::error_code ec;
   std::filesystem::remove_all(cache_directory_, ec);
-  std::filesystem::copy(backup_path, cache_directory_,
-                       std::filesystem::copy_options::recursive, ec);
+  std::filesystem::copy(backup_path, cache_directory_, std::filesystem::copy_options::recursive,
+                        ec);
 
   if (ec) {
     return JPLError::CacheError;
@@ -269,10 +268,11 @@ JPLResult<CacheMetadata> CacheRecoveryManager::regenerate_metadata() {
   }
 
   nlohmann::json j;
-  j["created_at"] = std::chrono::duration_cast<std::chrono::seconds>(
-      metadata.created_at.time_since_epoch()).count();
-  j["epoch"] = std::chrono::duration_cast<std::chrono::seconds>(
-      metadata.epoch.time_since_epoch()).count();
+  j["created_at"] =
+      std::chrono::duration_cast<std::chrono::seconds>(metadata.created_at.time_since_epoch())
+          .count();
+  j["epoch"] =
+      std::chrono::duration_cast<std::chrono::seconds>(metadata.epoch.time_since_epoch()).count();
   j["source"] = metadata.source;
   j["body_count"] = metadata.body_count;
   j["checksum"] = metadata.checksum;
@@ -316,7 +316,8 @@ std::vector<RecoveryStrategy> CacheRecoveryManager::analyze_and_suggest_strategi
 /**
  * @brief Estimate recovery probabilities
  */
-std::unordered_map<RecoveryStrategy, double> CacheRecoveryManager::estimate_recovery_probabilities() {
+std::unordered_map<RecoveryStrategy, double>
+CacheRecoveryManager::estimate_recovery_probabilities() {
   std::unordered_map<RecoveryStrategy, double> probabilities;
 
   bool has_binary = has_valid_binary_cache();
@@ -324,17 +325,14 @@ std::unordered_map<RecoveryStrategy, double> CacheRecoveryManager::estimate_reco
   bool has_backups = has_available_backups();
 
   // Estimate probabilities based on available resources
-  probabilities[RecoveryStrategy::CrossFormatRecovery] =
-      (has_binary || has_json) ? 0.8 : 0.0;
+  probabilities[RecoveryStrategy::CrossFormatRecovery] = (has_binary || has_json) ? 0.8 : 0.0;
 
-  probabilities[RecoveryStrategy::BackupRestoration] =
-      has_backups ? 0.9 : 0.0;
+  probabilities[RecoveryStrategy::BackupRestoration] = has_backups ? 0.9 : 0.0;
 
   probabilities[RecoveryStrategy::PartialReconstruction] =
       (has_binary || has_json || has_backups) ? 0.6 : 0.0;
 
-  probabilities[RecoveryStrategy::MetadataRegeneration] =
-      (has_binary || has_json) ? 0.7 : 0.0;
+  probabilities[RecoveryStrategy::MetadataRegeneration] = (has_binary || has_json) ? 0.7 : 0.0;
 
   probabilities[RecoveryStrategy::FreshFetch] = 1.0;  // Always works
 
@@ -383,10 +381,13 @@ RecoveryResult CacheRecoveryManager::interactive_recovery() {
   options.interactive_mode = false;
 
   // Temporarily enable only the selected strategy
-  options.allow_cross_format_recovery = (selected_strategy == RecoveryStrategy::CrossFormatRecovery);
+  options.allow_cross_format_recovery =
+      (selected_strategy == RecoveryStrategy::CrossFormatRecovery);
   options.allow_backup_restoration = (selected_strategy == RecoveryStrategy::BackupRestoration);
-  options.allow_partial_reconstruction = (selected_strategy == RecoveryStrategy::PartialReconstruction);
-  options.allow_metadata_regeneration = (selected_strategy == RecoveryStrategy::MetadataRegeneration);
+  options.allow_partial_reconstruction =
+      (selected_strategy == RecoveryStrategy::PartialReconstruction);
+  options.allow_metadata_regeneration =
+      (selected_strategy == RecoveryStrategy::MetadataRegeneration);
   options.allow_fresh_fetch = (selected_strategy == RecoveryStrategy::FreshFetch);
 
   result = attempt_automatic_recovery(options);
@@ -405,20 +406,17 @@ RecoveryResult CacheRecoveryManager::interactive_recovery() {
 
 bool CacheRecoveryManager::has_valid_binary_cache() const {
   auto binary_path = cache_directory_ / "ephemeris_cache.bin";
-  return std::filesystem::exists(binary_path) &&
-         std::filesystem::file_size(binary_path) > 0;
+  return std::filesystem::exists(binary_path) && std::filesystem::file_size(binary_path) > 0;
 }
 
 bool CacheRecoveryManager::has_valid_json_cache() const {
   auto json_path = cache_directory_ / "ephemeris_data.json";
-  return std::filesystem::exists(json_path) &&
-         std::filesystem::file_size(json_path) > 0;
+  return std::filesystem::exists(json_path) && std::filesystem::file_size(json_path) > 0;
 }
 
 bool CacheRecoveryManager::has_available_backups() const {
   auto backup_dir = cache_directory_.parent_path() / "cache_backups";
-  return std::filesystem::exists(backup_dir) &&
-         !std::filesystem::is_empty(backup_dir);
+  return std::filesystem::exists(backup_dir) && !std::filesystem::is_empty(backup_dir);
 }
 
 JPLResult<std::vector<EphemerisData>> CacheRecoveryManager::load_binary_cache() const {
@@ -431,20 +429,17 @@ JPLResult<std::vector<EphemerisData>> CacheRecoveryManager::load_json_cache() co
   return JPLError::CacheError;
 }
 
-JPLVoidResult CacheRecoveryManager::save_binary_cache(
-    const std::vector<EphemerisData>&) const {
+JPLVoidResult CacheRecoveryManager::save_binary_cache(const std::vector<EphemerisData>&) const {
   // Simplified implementation - would use actual binary saving
   return success();
 }
 
-JPLVoidResult CacheRecoveryManager::save_json_cache(
-    const std::vector<EphemerisData>&) const {
+JPLVoidResult CacheRecoveryManager::save_json_cache(const std::vector<EphemerisData>&) const {
   // Simplified implementation - would use actual JSON saving
   return success();
 }
 
-uint64_t CacheRecoveryManager::calculate_checksum(
-    const std::vector<EphemerisData>& data) const {
+uint64_t CacheRecoveryManager::calculate_checksum(const std::vector<EphemerisData>& data) const {
   uint64_t checksum = 0;
   for (const auto& body_data : data) {
     checksum += static_cast<uint64_t>(body_data.jpl_id);
@@ -454,8 +449,7 @@ uint64_t CacheRecoveryManager::calculate_checksum(
   return checksum;
 }
 
-bool CacheRecoveryManager::validate_recovered_data(
-    const std::vector<EphemerisData>& data) const {
+bool CacheRecoveryManager::validate_recovered_data(const std::vector<EphemerisData>& data) const {
   if (data.empty()) {
     return false;
   }
@@ -472,7 +466,6 @@ bool CacheRecoveryManager::validate_recovered_data(
 
 std::vector<EphemerisData> CacheRecoveryManager::merge_partial_data(
     const std::vector<std::vector<EphemerisData>>& partial_datasets) const {
-
   std::unordered_map<int, EphemerisData> merged_map;
 
   // Merge data from all sources, preferring newer data
@@ -562,5 +555,3 @@ bool get_user_confirmation(const std::string& prompt) {
 }  // namespace RecoveryUtils
 
 }  // namespace SolarSystem::JPL
-
-

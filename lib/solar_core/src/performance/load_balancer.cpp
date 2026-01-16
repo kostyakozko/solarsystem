@@ -47,10 +47,10 @@ struct LoadBalancer::Impl {
     auto healthy = get_healthy_backends_internal();
     if (healthy.empty()) return std::nullopt;
 
-    auto it = std::min_element(healthy.begin(), healthy.end(),
-                                [](const Backend& a, const Backend& b) {
-                                  return a.active_connections < b.active_connections;
-                                });
+    auto it =
+        std::min_element(healthy.begin(), healthy.end(), [](const Backend& a, const Backend& b) {
+          return a.active_connections < b.active_connections;
+        });
 
     return *it;
   }
@@ -187,8 +187,8 @@ void LoadBalancer::update_backend_connections(const std::string& backend_id, int
                          [&backend_id](const Backend& b) { return b.id == backend_id; });
 
   if (it != impl_->backends.end()) {
-    it->active_connections = static_cast<size_t>(
-        std::max(0, static_cast<int>(it->active_connections) + delta));
+    it->active_connections =
+        static_cast<size_t>(std::max(0, static_cast<int>(it->active_connections) + delta));
   }
 }
 

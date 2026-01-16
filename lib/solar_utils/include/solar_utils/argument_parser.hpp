@@ -12,8 +12,6 @@
 
 #pragma once
 
-#include "solar_utils/export.hpp"
-
 #include <chrono>
 #include <concepts>
 #include <functional>
@@ -26,6 +24,7 @@
 #include <vector>
 
 #include "solar_utils/expected.hpp"
+#include "solar_utils/export.hpp"
 #include "solar_utils/validation/input_validator.hpp"
 
 namespace SolarSystem::Utils {

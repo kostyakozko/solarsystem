@@ -10,6 +10,8 @@
  * - Deployment and installation processes
  */
 
+#include <gtest/gtest.h>
+
 #include <chrono>
 #include <cstdlib>
 #include <filesystem>
@@ -21,7 +23,6 @@
 #include <vector>
 
 #include "test_data_manager.hpp"
-#include <gtest/gtest.h>
 
 using namespace TestData;
 
@@ -64,263 +65,256 @@ std::string get_executable_path(const std::string& exe_name) {
   static std::string build_dir = std::filesystem::current_path().string();
   return build_dir + "/" + exe_name;
 }
-  // Test launcher application workflow
-  TEST(ApplicationWorkflowIntegrationTestsTest, Launcher_Status_Check) {
-    // Test that launcher can check system status
-    std::string command = "./solar_system_launcher --status";
-    std::string output = execute_command(command);
+// Test launcher application workflow
+TEST(ApplicationWorkflowIntegrationTestsTest, Launcher_Status_Check) {
+  // Test that launcher can check system status
+  std::string command = "./solar_system_launcher --status";
+  std::string output = execute_command(command);
 
-    // Should contain status information
-    EXPECT_NE(std::string::npos, output.find("Solar System Suite"));
-    EXPECT_NE(std::string::npos, output.find("Status"));
+  // Should contain status information
+  EXPECT_NE(std::string::npos, output.find("Solar System Suite"));
+  EXPECT_NE(std::string::npos, output.find("Status"));
+}
+
+// Test data fetching workflow
+TEST(ApplicationWorkflowIntegrationTestsTest, Data_Fetch_Workflow) {
+  // Test that fetch application can validate storage
+  std::string command = "./solar_system_fetch --test-storage";
+  std::string output = execute_command(command);
+
+  // Should attempt storage test (may pass or fail depending on cache state)
+  // The important thing is that the command runs and produces output
+  ASSERT_TRUE(output.find("Testing storage") != std::string::npos ||
+              output.find("Storage test") != std::string::npos ||
+              output.find("storage") != std::string::npos);
+}
+
+// Test simulation workflow
+TEST(ApplicationWorkflowIntegrationTestsTest, Basic_Simulation_Workflow) {
+  // Test that simulation can run with a future date
+  std::string command = "./solar_system --date 2025-07-01";
+  std::string output = execute_command(command);
+
+  // Should complete simulation
+  ASSERT_TRUE(output.find("Simulation") != std::string::npos ||
+              output.find("completed") != std::string::npos ||
+              output.find("2025-07-01") != std::string::npos);
+}
+
+// Test launcher coordinated workflow
+TEST(ApplicationWorkflowIntegrationTestsTest, Launcher_Coordinated_Simulation) {
+  // Test launcher's ability to coordinate fetch and simulate
+  std::string command = "./solar_system_launcher --simulate --date 2025-08-01";
+  std::string output = execute_command(command);
+
+  // Should show coordination between components
+  // Note: The launcher workflow orchestration is currently a stub implementation
+  // that doesn't pass through the target date to the simulation output.
+  // We verify that the simulation workflow executes successfully instead.
+  ASSERT_TRUE(output.find("simulation") != std::string::npos ||
+              output.find("Simulation") != std::string::npos);
+  EXPECT_NE(std::string::npos, output.find("completed"));
+}
+
+// Test real-time application
+TEST(ApplicationWorkflowIntegrationTestsTest, Real_time_Application) {
+  // Test real-time application with no-continuous mode
+  std::string timeout_cmd = get_timeout_command();
+  std::string command;
+  if (!timeout_cmd.empty()) {
+    command = timeout_cmd + " 10s ./solar_system_realtime --no-continuous";
+  } else {
+    command = "./solar_system_realtime --no-continuous";
   }
+  std::string output = execute_command(command);
 
-  // Test data fetching workflow
-  TEST(ApplicationWorkflowIntegrationTestsTest, Data_Fetch_Workflow) {
-    // Test that fetch application can validate storage
-    std::string command = "./solar_system_fetch --test-storage";
-    std::string output = execute_command(command);
+  // Should provide real-time data snapshot
+  ASSERT_TRUE(output.find("Solar System") != std::string::npos ||
+              output.find("Position") != std::string::npos ||
+              output.find("Real-time") != std::string::npos);
+}
 
-    // Should attempt storage test (may pass or fail depending on cache state)
-    // The important thing is that the command runs and produces output
-    ASSERT_TRUE(output.find("Testing storage") != std::string::npos ||
-                output.find("Storage test") != std::string::npos ||
-                output.find("storage") != std::string::npos);
-  }
+// Test web server startup
+TEST(ApplicationWorkflowIntegrationTestsTest, Web_Server_Startup) {
+  // Clean up any existing web servers first
+  [[maybe_unused]] int cleanup_result = system("pkill -f solar_system_web 2>/dev/null || true");
+  std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
-  // Test simulation workflow
-  TEST(ApplicationWorkflowIntegrationTestsTest, Basic_Simulation_Workflow) {
-    // Test that simulation can run with a future date
-    std::string command = "./solar_system --date 2025-07-01";
-    std::string output = execute_command(command);
+  // Use a unique port to avoid conflicts
+  int test_port = 8080 + (rand() % 1000);
+  // Start web server in background
+  std::string start_command = "./apps/solar_system_web/solar_system_web --port " +
+                              std::to_string(test_port) +
+                              " --web-root share/solar_system/web > "
+                              "/dev/null 2>&1 &";
+  [[maybe_unused]] int start_result = system(start_command.c_str());
 
-    // Should complete simulation
-    ASSERT_TRUE(output.find("Simulation") != std::string::npos ||
-                output.find("completed") != std::string::npos ||
-                output.find("2025-07-01") != std::string::npos);
-  }
+  // Give server time to start
+  std::this_thread::sleep_for(std::chrono::seconds(3));
 
-  // Test launcher coordinated workflow
-  TEST(ApplicationWorkflowIntegrationTestsTest, Launcher_Coordinated_Simulation) {
-    // Test launcher's ability to coordinate fetch and simulate
-    std::string command =
-        "./solar_system_launcher --simulate --date 2025-08-01";
-    std::string output = execute_command(command);
-
-    // Should show coordination between components
-    // Note: The launcher workflow orchestration is currently a stub implementation
-    // that doesn't pass through the target date to the simulation output.
-    // We verify that the simulation workflow executes successfully instead.
-    ASSERT_TRUE(output.find("simulation") != std::string::npos ||
-                output.find("Simulation") != std::string::npos);
-    EXPECT_NE(std::string::npos, output.find("completed"));
-  }
-
-  // Test real-time application
-  TEST(ApplicationWorkflowIntegrationTestsTest, Real_time_Application) {
-    // Test real-time application with no-continuous mode
-    std::string timeout_cmd = get_timeout_command();
-    std::string command;
-    if (!timeout_cmd.empty()) {
-      command =
-          timeout_cmd + " 10s ./solar_system_realtime --no-continuous";
-    } else {
-      command = "./solar_system_realtime --no-continuous";
+  // Test if server is responding
+  std::string test_command =
+      "curl -s -o /dev/null -w \"%{http_code}\" http://localhost:" + std::to_string(test_port) +
+      "/api/status 2>/dev/null || "
+      "echo '000'";
+  // Retry logic for server startup
+  bool server_ready = false;
+  std::string response;
+  for (int retry = 0; retry < 5 && !server_ready; retry++) {
+    if (retry > 0) {
+      std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+      std::cout << "Retrying server connection (attempt " << (retry + 1) << "/5)..." << std::endl;
     }
-    std::string output = execute_command(command);
-
-    // Should provide real-time data snapshot
-    ASSERT_TRUE(output.find("Solar System") != std::string::npos ||
-                output.find("Position") != std::string::npos ||
-                output.find("Real-time") != std::string::npos);
+    response = execute_command(test_command);
+    server_ready = (response.find("200") != std::string::npos);
+  }
+  if (!server_ready) {
+    std::ostringstream error_msg;
+    error_msg << "Web server failed to respond with HTTP 200 after retries. Response: '" << response
+              << "'";
+    throw std::runtime_error(error_msg.str());
   }
 
-  // Test web server startup
-  TEST(ApplicationWorkflowIntegrationTestsTest, Web_Server_Startup) {
-    // Clean up any existing web servers first
-    [[maybe_unused]] int cleanup_result = system("pkill -f solar_system_web 2>/dev/null || true");
-    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+  // Clean up - kill the web server
+  [[maybe_unused]] int cleanup_result2 = system("pkill -f solar_system_web 2>/dev/null || true");
+}
 
-    // Use a unique port to avoid conflicts
-    int test_port = 8080 + (rand() % 1000);
-    // Start web server in background
-    std::string start_command = "./apps/solar_system_web/solar_system_web --port " +
-                                std::to_string(test_port) +
-                                " --web-root share/solar_system/web > "
-                                "/dev/null 2>&1 &";
-    [[maybe_unused]] int start_result = system(start_command.c_str());
+// Test data consistency across applications
+TEST(ApplicationWorkflowIntegrationTestsTest, Data_Consistency) {
+  // Run simulation and capture output
+  std::string sim_command = "./apps/solar_system/solar_system --date 2025-06-01";
+  std::string sim_output = execute_command(sim_command);
 
-    // Give server time to start
-    std::this_thread::sleep_for(std::chrono::seconds(3));
+  // Run real-time for same date (if supported)
+  std::string rt_command = "./apps/solar_system_realtime/solar_system_realtime --no-continuous";
+  std::string rt_output = execute_command(rt_command);
 
-    // Test if server is responding
-    std::string test_command =
-        "curl -s -o /dev/null -w \"%{http_code}\" http://localhost:" + std::to_string(test_port) +
-        "/api/status 2>/dev/null || "
-        "echo '000'";
-    // Retry logic for server startup
-    bool server_ready = false;
-    std::string response;
-    for (int retry = 0; retry < 5 && !server_ready; retry++) {
-      if (retry > 0) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-        std::cout << "Retrying server connection (attempt " << (retry + 1) << "/5)..." << std::endl;
-      }
-      response = execute_command(test_command);
-      server_ready = (response.find("200") != std::string::npos);
-    }
-    if (!server_ready) {
-      std::ostringstream error_msg;
-      error_msg << "Web server failed to respond with HTTP 200 after retries. Response: '"
-                << response << "'";
-      throw std::runtime_error(error_msg.str());
-    }
+  // Both should reference the same solar system data
+  // This is a basic consistency check
+  ASSERT_TRUE(!sim_output.empty());
+  ASSERT_TRUE(!rt_output.empty());
+}
 
-    // Clean up - kill the web server
-    [[maybe_unused]] int cleanup_result2 = system("pkill -f solar_system_web 2>/dev/null || true");
+// Test error handling across applications
+TEST(ApplicationWorkflowIntegrationTestsTest, Error_Handling) {
+  // Test invalid argument handling
+  std::string invalid_arg_command = "./apps/solar_system/solar_system --invalid-flag 2>&1";
+  std::string output = execute_command(invalid_arg_command);
+
+  // Should handle error gracefully
+  ASSERT_TRUE(output.find("Error") != std::string::npos ||
+              output.find("Invalid") != std::string::npos ||
+              output.find("Usage") != std::string::npos);
+}
+
+// Test cache file interactions
+TEST(ApplicationWorkflowIntegrationTestsTest, Cache_File_Workflow) {
+  // Check if cache files are created/used properly
+  std::string cache_command = "./solar_system_fetch --validate";
+  std::string output = execute_command(cache_command);
+
+  // Should validate or create cache
+  ASSERT_TRUE(output.find("cache") != std::string::npos ||
+              output.find("Cache") != std::string::npos ||
+              output.find("validation") != std::string::npos);
+}
+
+// Test application help systems
+TEST(ApplicationWorkflowIntegrationTestsTest, Help_System_Consistency) {
+  std::vector<std::string> applications = {
+      "./solar_system_launcher --help", "./solar_system --help", "./solar_system_fetch --help",
+      "./solar_system_realtime --help", "./solar_system_web --help"};
+
+  for (const auto& app_command : applications) {
+    std::string output = execute_command(app_command);
+
+    // Each application should provide help
+    ASSERT_TRUE(output.find("Usage") != std::string::npos ||
+                output.find("Options") != std::string::npos ||
+                output.find("help") != std::string::npos);
+  }
+}
+
+// Test installation verification
+TEST(ApplicationWorkflowIntegrationTestsTest, Installation_Verification) {
+  // Check that all expected files are present
+  std::vector<std::string> expected_files = {"./solar_system_launcher", "./solar_system",
+                                             "./solar_system_fetch", "./solar_system_realtime",
+                                             "./solar_system_web"};
+
+  for (const auto& file : expected_files) {
+    ASSERT_TRUE(file_exists(file));
   }
 
-  // Test data consistency across applications
-  TEST(ApplicationWorkflowIntegrationTestsTest, Data_Consistency) {
-    // Run simulation and capture output
-    std::string sim_command = "./apps/solar_system/solar_system --date 2025-06-01";
-    std::string sim_output = execute_command(sim_command);
+  // Check for documentation
+  ASSERT_TRUE(file_exists("./README.md") || file_exists("../README.md"));
+  ASSERT_TRUE(file_exists("./share/solar_system/web/index.html") ||
+              file_exists("./docs/README.md") || file_exists("../docs/README.md"));
+}
 
-    // Run real-time for same date (if supported)
-    std::string rt_command = "./apps/solar_system_realtime/solar_system_realtime --no-continuous";
-    std::string rt_output = execute_command(rt_command);
+// Test 1: Application startup and initialization
+TEST(ApplicationWorkflowIntegrationTestsTest, Application_Startup_and_Initialization) {
+  // Test each application can start and initialize properly
+  std::vector<std::pair<std::string, std::string>> applications = {
+      {"./solar_system_launcher --version", "version"},
+      {"./solar_system --help", "Usage"},
+      {"./solar_system_fetch --help", "Usage"},
+      {"./solar_system_realtime --help", "Usage"},
+      {"./solar_system_web --help", "Usage"}};
 
-    // Both should reference the same solar system data
-    // This is a basic consistency check
-    ASSERT_TRUE(!sim_output.empty());
-    ASSERT_TRUE(!rt_output.empty());
+  for (const auto& [command, expected_output] : applications) {
+    std::string output = execute_command(command + " 2>&1");
+    EXPECT_NE(std::string::npos, output.find(expected_output));
   }
 
-  // Test error handling across applications
-  TEST(ApplicationWorkflowIntegrationTestsTest, Error_Handling) {
-    // Test invalid argument handling
-    std::string invalid_arg_command = "./apps/solar_system/solar_system --invalid-flag 2>&1";
-    std::string output = execute_command(invalid_arg_command);
-
-    // Should handle error gracefully
-    ASSERT_TRUE(output.find("Error") != std::string::npos ||
-                output.find("Invalid") != std::string::npos ||
-                output.find("Usage") != std::string::npos);
-  }
-
-  // Test cache file interactions
-  TEST(ApplicationWorkflowIntegrationTestsTest, Cache_File_Workflow) {
-    // Check if cache files are created/used properly
-    std::string cache_command = "./solar_system_fetch --validate";
-    std::string output = execute_command(cache_command);
-
-    // Should validate or create cache
-    ASSERT_TRUE(output.find("cache") != std::string::npos ||
-                output.find("Cache") != std::string::npos ||
-                output.find("validation") != std::string::npos);
-  }
-
-  // Test application help systems
-  TEST(ApplicationWorkflowIntegrationTestsTest, Help_System_Consistency) {
-    std::vector<std::string> applications = {
-        "./solar_system_launcher --help",
-        "./solar_system --help",
-        "./solar_system_fetch --help",
-        "./solar_system_realtime --help",
-        "./solar_system_web --help"};
-
-    for (const auto& app_command : applications) {
-      std::string output = execute_command(app_command);
-
-      // Each application should provide help
-      ASSERT_TRUE(output.find("Usage") != std::string::npos ||
-                  output.find("Options") != std::string::npos ||
-                  output.find("help") != std::string::npos);
-    }
-  }
-
-  // Test installation verification
-  TEST(ApplicationWorkflowIntegrationTestsTest, Installation_Verification) {
-    // Check that all expected files are present
-    std::vector<std::string> expected_files = {"./solar_system_launcher",
-                                               "./solar_system",
-                                               "./solar_system_fetch",
-                                               "./solar_system_realtime",
-                                               "./solar_system_web"};
-
-    for (const auto& file : expected_files) {
-      ASSERT_TRUE(file_exists(file));
-    }
-
-    // Check for documentation
-    ASSERT_TRUE(file_exists("./README.md") || file_exists("../README.md"));
-    ASSERT_TRUE(file_exists("./share/solar_system/web/index.html") ||
-                file_exists("./docs/README.md") || file_exists("../docs/README.md"));
-  }
-
-  // Test 1: Application startup and initialization
-  TEST(ApplicationWorkflowIntegrationTestsTest, Application_Startup_and_Initialization) {
-    // Test each application can start and initialize properly
-    std::vector<std::pair<std::string, std::string>> applications = {
-        {"./solar_system_launcher --version", "version"},
-        {"./solar_system --help", "Usage"},
-        {"./solar_system_fetch --help", "Usage"},
-        {"./solar_system_realtime --help", "Usage"},
-        {"./solar_system_web --help", "Usage"}};
-
-    for (const auto& [command, expected_output] : applications) {
-      std::string output = execute_command(command + " 2>&1");
-      EXPECT_NE(std::string::npos, output.find(expected_output));
-    }
-
-    // Test initialization with different working directories
-    {
-      auto test_env = TestDataManager::create_test_environment();
-      std::string old_cwd = std::filesystem::current_path();
-      std::string launcher_path =
-          (std::filesystem::current_path() / "solar_system_launcher").string();
-
-      std::filesystem::current_path(test_env->path());
-
-      std::string output = execute_command(launcher_path + " --status 2>&1");
-      ASSERT_TRUE(output.find("Status") != std::string::npos ||
-                  output.find("Solar System") != std::string::npos);
-
-      std::filesystem::current_path(old_cwd);
-    }
-
-    // Test initialization with missing dependencies
-    {
-      // Temporarily rename a library to test graceful degradation
-      std::string lib_path = "./lib/libsolar_core.a";
-      std::string backup_path = "./lib/libsolar_core.a.backup";
-
-      if (std::filesystem::exists(lib_path)) {
-        std::filesystem::rename(lib_path, backup_path);
-
-        // Application should handle missing library gracefully
-        std::string output =
-            execute_command(get_executable_path("solar_system_launcher") + " --status 2>&1");
-        // Should either work with fallback or provide clear error message
-        ASSERT_TRUE(output.find("Status") != std::string::npos ||
-                    output.find("Error") != std::string::npos ||
-                    output.find("library") != std::string::npos);
-
-        // Restore library
-        std::filesystem::rename(backup_path, lib_path);
-      }
-    }
-  }
-
-  // Test 2: Configuration loading and validation
-  TEST(ApplicationWorkflowIntegrationTestsTest, Configuration_Loading_and_Validation) {
+  // Test initialization with different working directories
+  {
     auto test_env = TestDataManager::create_test_environment();
+    std::string old_cwd = std::filesystem::current_path();
+    std::string launcher_path =
+        (std::filesystem::current_path() / "solar_system_launcher").string();
 
-    // Test with valid configuration file
-    {
-      std::string config_file = test_env->path_string() + "/solar_config.json";
-      std::ofstream config(config_file);
-      config << R"({
+    std::filesystem::current_path(test_env->path());
+
+    std::string output = execute_command(launcher_path + " --status 2>&1");
+    ASSERT_TRUE(output.find("Status") != std::string::npos ||
+                output.find("Solar System") != std::string::npos);
+
+    std::filesystem::current_path(old_cwd);
+  }
+
+  // Test initialization with missing dependencies
+  {
+    // Temporarily rename a library to test graceful degradation
+    std::string lib_path = "./lib/libsolar_core.a";
+    std::string backup_path = "./lib/libsolar_core.a.backup";
+
+    if (std::filesystem::exists(lib_path)) {
+      std::filesystem::rename(lib_path, backup_path);
+
+      // Application should handle missing library gracefully
+      std::string output =
+          execute_command(get_executable_path("solar_system_launcher") + " --status 2>&1");
+      // Should either work with fallback or provide clear error message
+      ASSERT_TRUE(output.find("Status") != std::string::npos ||
+                  output.find("Error") != std::string::npos ||
+                  output.find("library") != std::string::npos);
+
+      // Restore library
+      std::filesystem::rename(backup_path, lib_path);
+    }
+  }
+}
+
+// Test 2: Configuration loading and validation
+TEST(ApplicationWorkflowIntegrationTestsTest, Configuration_Loading_and_Validation) {
+  auto test_env = TestDataManager::create_test_environment();
+
+  // Test with valid configuration file
+  {
+    std::string config_file = test_env->path_string() + "/solar_config.json";
+    std::ofstream config(config_file);
+    config << R"({
         "simulation": {
           "default_timestep": 60,
           "integration_method": "leapfrog",
@@ -337,291 +331,293 @@ std::string get_executable_path(const std::string& exe_name) {
           "web_root": "./web"
         }
       })";
-      config.close();
+    config.close();
 
-      std::string command =
-          get_executable_path("solar_system_launcher") + " --config " + config_file + " --status";
-      std::string output = execute_command(command + " 2>&1");
-      ASSERT_TRUE(output.find("Status") != std::string::npos ||
-                  output.find("configuration") != std::string::npos);
-    }
-
-    // Test with invalid configuration file
-    {
-      std::string invalid_config = test_env->path_string() + "/invalid_config.json";
-      std::ofstream config(invalid_config);
-      config << "{ invalid json content }";
-      config.close();
-
-      std::string command = get_executable_path("solar_system_launcher") + " --config " +
-                            invalid_config + " --status";
-      std::string output = execute_command(command + " 2>&1");
-      // Should handle invalid config gracefully
-      ASSERT_TRUE(output.find("Error") != std::string::npos ||
-                  output.find("invalid") != std::string::npos ||
-                  output.find("Status") != std::string::npos);  // May use defaults
-    }
-
-    // Test with missing configuration file
-    {
-      std::string missing_config = test_env->path_string() + "/nonexistent.json";
-      std::string command = get_executable_path("solar_system_launcher") + " --config " +
-                            missing_config + " --status";
-      std::string output = execute_command(command + " 2>&1");
-      // Should handle missing config gracefully
-      ASSERT_TRUE(output.find("Error") != std::string::npos ||
-                  output.find("not found") != std::string::npos ||
-                  output.find("Status") != std::string::npos);  // May use defaults
-    }
-
-    // Test environment variable configuration
-    {
-      setenv("SOLAR_SYSTEM_CACHE_DIR", test_env->path_string().c_str(), 1);
-
-      std::string output =
-          execute_command(get_executable_path("solar_system_launcher") + " --status 2>&1");
-      EXPECT_NE(std::string::npos, output.find("Status"));
-
-      unsetenv("SOLAR_SYSTEM_CACHE_DIR");
-      unsetenv("SOLAR_SYSTEM_LOG_LEVEL");
-    }
+    std::string command =
+        get_executable_path("solar_system_launcher") + " --config " + config_file + " --status";
+    std::string output = execute_command(command + " 2>&1");
+    ASSERT_TRUE(output.find("Status") != std::string::npos ||
+                output.find("configuration") != std::string::npos);
   }
 
-  // Test 3: Inter-application communication
-  TEST(ApplicationWorkflowIntegrationTestsTest, Inter_Application_Communication) {
-    auto test_env = TestDataManager::create_test_environment();
-    std::string shared_cache = test_env->path_string() + "/shared_cache";
-    std::filesystem::create_directories(shared_cache);
+  // Test with invalid configuration file
+  {
+    std::string invalid_config = test_env->path_string() + "/invalid_config.json";
+    std::ofstream config(invalid_config);
+    config << "{ invalid json content }";
+    config.close();
 
-    // Test data sharing through cache
-    {
-      // Step 1: Fetch data using fetch application
-      std::string fetch_command = "./build/solar_system_fetch --cache-dir " + shared_cache +
-                                  " --bodies Sun,Earth,Moon --update-cache";
-      std::string fetch_output = execute_command(fetch_command + " 2>&1");
-      ASSERT_TRUE(fetch_output.find("Error") == std::string::npos ||
-                  fetch_output.find("completed") != std::string::npos ||
-                  fetch_output.find("cache") != std::string::npos);
-
-      // Step 2: Use cached data in simulation
-      std::string sim_command = "./build/solar_system --cache-dir " + shared_cache +
-                                " --bodies Sun,Earth,Moon --duration 3600 --use-cache";
-      std::string sim_output = execute_command(sim_command + " 2>&1");
-      ASSERT_TRUE(sim_output.find("Error") == std::string::npos ||
-                  sim_output.find("Simulation") != std::string::npos ||
-                  sim_output.find("completed") != std::string::npos);
-
-      // Step 3: Verify cache files were created and used
-      // Cache files may or may not exist depending on implementation
-      // Just verify the applications ran without critical errors
-    }
-
-    // Test launcher coordination
-    {
-      std::string launcher_command = "./build/solar_system_launcher --cache-dir " + shared_cache +
-                                     " --simulate --bodies Sun,Earth --duration 1800";
-      std::string launcher_output = execute_command(launcher_command + " 2>&1");
-      ASSERT_TRUE(launcher_output.find("Error") == std::string::npos ||
-                  launcher_output.find("completed") != std::string::npos ||
-                  launcher_output.find("Simulation") != std::string::npos);
-    }
-
-    // Test web server with shared data
-    {
-      int test_port = 8088;
-      std::string web_command = "./build/solar_system_web --port " + std::to_string(test_port) +
-                                " --cache-dir " + shared_cache + " &";
-      [[maybe_unused]] int result = system(web_command.c_str());
-
-      std::this_thread::sleep_for(std::chrono::seconds(2));
-
-      // Test API endpoint
-      std::string api_test =
-          "curl -s -f http://localhost:" + std::to_string(test_port) + "/api/status";
-      std::string api_output = execute_command(api_test + " 2>/dev/null || echo 'FAILED'");
-
-      // Clean up web server
-      std::string cleanup = "pkill -f 'solar_system_web.*--port " + std::to_string(test_port) + "'";
-      [[maybe_unused]] int result2 = system(cleanup.c_str());
-
-      // API may or may not work depending on implementation, just verify no crashes
-      ASSERT_TRUE(api_output.find("FAILED") == std::string::npos || api_output.length() > 0);
-    }
+    std::string command =
+        get_executable_path("solar_system_launcher") + " --config " + invalid_config + " --status";
+    std::string output = execute_command(command + " 2>&1");
+    // Should handle invalid config gracefully
+    ASSERT_TRUE(output.find("Error") != std::string::npos ||
+                output.find("invalid") != std::string::npos ||
+                output.find("Status") != std::string::npos);  // May use defaults
   }
 
-  // Test 4: Deployment and installation processes
-  TEST(ApplicationWorkflowIntegrationTestsTest, Deployment_and_Installation_Validation) {
-      // Test installation directory structure
-      {std::vector<std::string> expected_dirs = {"./bin", "./lib", "./include", "./share"};
+  // Test with missing configuration file
+  {
+    std::string missing_config = test_env->path_string() + "/nonexistent.json";
+    std::string command =
+        get_executable_path("solar_system_launcher") + " --config " + missing_config + " --status";
+    std::string output = execute_command(command + " 2>&1");
+    // Should handle missing config gracefully
+    ASSERT_TRUE(output.find("Error") != std::string::npos ||
+                output.find("not found") != std::string::npos ||
+                output.find("Status") != std::string::npos);  // May use defaults
+  }
 
-  for (const auto& dir : expected_dirs) {
-    if (std::filesystem::exists(dir)) {
-      ASSERT_TRUE(std::filesystem::is_directory(dir));
-    }
-    // Directories may not exist in test environment, that's OK
+  // Test environment variable configuration
+  {
+    setenv("SOLAR_SYSTEM_CACHE_DIR", test_env->path_string().c_str(), 1);
+
+    std::string output =
+        execute_command(get_executable_path("solar_system_launcher") + " --status 2>&1");
+    EXPECT_NE(std::string::npos, output.find("Status"));
+
+    unsetenv("SOLAR_SYSTEM_CACHE_DIR");
+    unsetenv("SOLAR_SYSTEM_LOG_LEVEL");
   }
 }
 
-// Test executable permissions and dependencies
-{
-  std::vector<std::string> executables = {
-      "./build/solar_system_launcher", "./build/solar_system", "./build/solar_system_fetch",
-      "./build/solar_system_realtime", "./build/solar_system_web"};
-
-  for (const auto& exe : executables) {
-    if (std::filesystem::exists(exe)) {
-      // Check if executable
-      auto perms = std::filesystem::status(exe).permissions();
-      ASSERT_TRUE((perms & std::filesystem::perms::owner_exec) != std::filesystem::perms::none);
-
-      // Test basic execution (help command should work)
-      std::string test_command = exe + " --help 2>&1";
-      std::string output = execute_command(test_command);
-      ASSERT_TRUE(output.find("Usage") != std::string::npos ||
-                  output.find("Options") != std::string::npos ||
-                  output.find("help") != std::string::npos ||
-                  output.length() > 10);  // Some output expected
-    }
-  }
-}
-
-// Test library dependencies
-{
-  std::vector<std::string> libraries = {"./lib/libsolar_core.a", "./lib/libsolar_jpl.a",
-                                        "./lib/libsolar_utils.a", "./lib/libsolar_test.a"};
-
-  for (const auto& lib : libraries) {
-    if (std::filesystem::exists(lib)) {
-      ASSERT_TRUE(std::filesystem::file_size(lib) > 0);
-    }
-  }
-}
-
-// Test documentation and web assets
-{
-  // Test runs from build directory, so check both build and source locations
-  std::vector<std::string> doc_files = {
-      "./README.md",                              // Build dir
-      "../README.md",                             // Source root from build
-      "./docs/README.md",                         // Build dir docs
-      "../docs/README.md",                        // Source docs
-      "./share/solar_system/web/index.html",     // Installed location
-      "./web/index.html",                         // Build web
-      "../apps/solar_system_web/web/index.html"  // Source web assets
-  };
-
-  bool found_readme = false;
-  bool found_web_assets = false;
-
-  for (const auto& file : doc_files) {
-    if (std::filesystem::exists(file)) {
-      if (file.find("README") != std::string::npos) {
-        found_readme = true;
-      }
-      if (file.find("index.html") != std::string::npos) {
-        found_web_assets = true;
-      }
-    }
-  }
-
-  // At least some documentation should exist
-  ASSERT_TRUE(found_readme || found_web_assets);
-}
-
-// Test cache directory creation and permissions
-{
+// Test 3: Inter-application communication
+TEST(ApplicationWorkflowIntegrationTestsTest, Inter_Application_Communication) {
   auto test_env = TestDataManager::create_test_environment();
-  std::string cache_test_dir = test_env->path_string() + "/cache_test";
+  std::string shared_cache = test_env->path_string() + "/shared_cache";
+  std::filesystem::create_directories(shared_cache);
 
-  std::string command =
-      "./build/solar_system_fetch --cache-dir " + cache_test_dir + " --test-storage";
-  std::string output = execute_command(command + " 2>&1");
+  // Test data sharing through cache
+  {
+    // Step 1: Fetch data using fetch application
+    std::string fetch_command = "./build/solar_system_fetch --cache-dir " + shared_cache +
+                                " --bodies Sun,Earth,Moon --update-cache";
+    std::string fetch_output = execute_command(fetch_command + " 2>&1");
+    ASSERT_TRUE(fetch_output.find("Error") == std::string::npos ||
+                fetch_output.find("completed") != std::string::npos ||
+                fetch_output.find("cache") != std::string::npos);
 
-  // Should be able to create and use cache directory
-  ASSERT_TRUE(output.find("Error") == std::string::npos ||
-              output.find("test") != std::string::npos ||
-              output.find("storage") != std::string::npos);
+    // Step 2: Use cached data in simulation
+    std::string sim_command = "./build/solar_system --cache-dir " + shared_cache +
+                              " --bodies Sun,Earth,Moon --duration 3600 --use-cache";
+    std::string sim_output = execute_command(sim_command + " 2>&1");
+    ASSERT_TRUE(sim_output.find("Error") == std::string::npos ||
+                sim_output.find("Simulation") != std::string::npos ||
+                sim_output.find("completed") != std::string::npos);
+
+    // Step 3: Verify cache files were created and used
+    // Cache files may or may not exist depending on implementation
+    // Just verify the applications ran without critical errors
+  }
+
+  // Test launcher coordination
+  {
+    std::string launcher_command = "./build/solar_system_launcher --cache-dir " + shared_cache +
+                                   " --simulate --bodies Sun,Earth --duration 1800";
+    std::string launcher_output = execute_command(launcher_command + " 2>&1");
+    ASSERT_TRUE(launcher_output.find("Error") == std::string::npos ||
+                launcher_output.find("completed") != std::string::npos ||
+                launcher_output.find("Simulation") != std::string::npos);
+  }
+
+  // Test web server with shared data
+  {
+    int test_port = 8088;
+    std::string web_command = "./build/solar_system_web --port " + std::to_string(test_port) +
+                              " --cache-dir " + shared_cache + " &";
+    [[maybe_unused]] int result = system(web_command.c_str());
+
+    std::this_thread::sleep_for(std::chrono::seconds(2));
+
+    // Test API endpoint
+    std::string api_test =
+        "curl -s -f http://localhost:" + std::to_string(test_port) + "/api/status";
+    std::string api_output = execute_command(api_test + " 2>/dev/null || echo 'FAILED'");
+
+    // Clean up web server
+    std::string cleanup = "pkill -f 'solar_system_web.*--port " + std::to_string(test_port) + "'";
+    [[maybe_unused]] int result2 = system(cleanup.c_str());
+
+    // API may or may not work depending on implementation, just verify no crashes
+    ASSERT_TRUE(api_output.find("FAILED") == std::string::npos || api_output.length() > 0);
+  }
 }
+
+// Test 4: Deployment and installation processes
+TEST(ApplicationWorkflowIntegrationTestsTest, Deployment_and_Installation_Validation) {
+  // Test installation directory structure
+  {
+    std::vector<std::string> expected_dirs = {"./bin", "./lib", "./include", "./share"};
+
+    for (const auto& dir : expected_dirs) {
+      if (std::filesystem::exists(dir)) {
+        ASSERT_TRUE(std::filesystem::is_directory(dir));
+      }
+      // Directories may not exist in test environment, that's OK
+    }
+  }
+
+  // Test executable permissions and dependencies
+  {
+    std::vector<std::string> executables = {
+        "./build/solar_system_launcher", "./build/solar_system", "./build/solar_system_fetch",
+        "./build/solar_system_realtime", "./build/solar_system_web"};
+
+    for (const auto& exe : executables) {
+      if (std::filesystem::exists(exe)) {
+        // Check if executable
+        auto perms = std::filesystem::status(exe).permissions();
+        ASSERT_TRUE((perms & std::filesystem::perms::owner_exec) != std::filesystem::perms::none);
+
+        // Test basic execution (help command should work)
+        std::string test_command = exe + " --help 2>&1";
+        std::string output = execute_command(test_command);
+        ASSERT_TRUE(output.find("Usage") != std::string::npos ||
+                    output.find("Options") != std::string::npos ||
+                    output.find("help") != std::string::npos ||
+                    output.length() > 10);  // Some output expected
+      }
+    }
+  }
+
+  // Test library dependencies
+  {
+    std::vector<std::string> libraries = {"./lib/libsolar_core.a", "./lib/libsolar_jpl.a",
+                                          "./lib/libsolar_utils.a", "./lib/libsolar_test.a"};
+
+    for (const auto& lib : libraries) {
+      if (std::filesystem::exists(lib)) {
+        ASSERT_TRUE(std::filesystem::file_size(lib) > 0);
+      }
+    }
+  }
+
+  // Test documentation and web assets
+  {
+    // Test runs from build directory, so check both build and source locations
+    std::vector<std::string> doc_files = {
+        "./README.md",                             // Build dir
+        "../README.md",                            // Source root from build
+        "./docs/README.md",                        // Build dir docs
+        "../docs/README.md",                       // Source docs
+        "./share/solar_system/web/index.html",     // Installed location
+        "./web/index.html",                        // Build web
+        "../apps/solar_system_web/web/index.html"  // Source web assets
+    };
+
+    bool found_readme = false;
+    bool found_web_assets = false;
+
+    for (const auto& file : doc_files) {
+      if (std::filesystem::exists(file)) {
+        if (file.find("README") != std::string::npos) {
+          found_readme = true;
+        }
+        if (file.find("index.html") != std::string::npos) {
+          found_web_assets = true;
+        }
+      }
+    }
+
+    // At least some documentation should exist
+    ASSERT_TRUE(found_readme || found_web_assets);
+  }
+
+  // Test cache directory creation and permissions
+  {
+    auto test_env = TestDataManager::create_test_environment();
+    std::string cache_test_dir = test_env->path_string() + "/cache_test";
+
+    std::string command =
+        "./build/solar_system_fetch --cache-dir " + cache_test_dir + " --test-storage";
+    std::string output = execute_command(command + " 2>&1");
+
+    // Should be able to create and use cache directory
+    ASSERT_TRUE(output.find("Error") == std::string::npos ||
+                output.find("test") != std::string::npos ||
+                output.find("storage") != std::string::npos);
+  }
 }
 
 // Test 5: System resource management
 TEST(ApplicationWorkflowIntegrationTestsTest, System_Resource_Management) {
-    // Test memory usage patterns
-    {std::string command =
-         "./build/solar_system --bodies Sun,Earth,Moon --duration 3600 --timestep 60";
-auto start_time = std::chrono::high_resolution_clock::now();
+  // Test memory usage patterns
+  {
+    std::string command =
+        "./build/solar_system --bodies Sun,Earth,Moon --duration 3600 --timestep 60";
+    auto start_time = std::chrono::high_resolution_clock::now();
 
-std::string output = execute_command(command + " 2>&1");
+    std::string output = execute_command(command + " 2>&1");
 
-auto end_time = std::chrono::high_resolution_clock::now();
-auto duration = std::chrono::duration_cast<std::chrono::seconds>(end_time - start_time);
+    auto end_time = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::seconds>(end_time - start_time);
 
-// Should complete within reasonable time (< 30 seconds)
-ASSERT_LT(duration.count(), 30);
+    // Should complete within reasonable time (< 30 seconds)
+    ASSERT_LT(duration.count(), 30);
 
-// Should not report memory errors
-ASSERT_TRUE(output.find("out of memory") == std::string::npos);
-ASSERT_TRUE(output.find("segmentation fault") == std::string::npos);
-}
-
-// Test file handle management
-{
-  // Run multiple applications concurrently
-  std::vector<std::string> commands = {"./build/solar_system_launcher --status &",
-                                       "./build/solar_system_fetch --test-storage &",
-                                       "./build/solar_system --bodies Sun,Earth --duration 1800 &"};
-
-  for (const auto& cmd : commands) {
-    [[maybe_unused]] int result = system(cmd.c_str());
+    // Should not report memory errors
+    ASSERT_TRUE(output.find("out of memory") == std::string::npos);
+    ASSERT_TRUE(output.find("segmentation fault") == std::string::npos);
   }
 
-  std::this_thread::sleep_for(std::chrono::seconds(3));
+  // Test file handle management
+  {
+    // Run multiple applications concurrently
+    std::vector<std::string> commands = {
+        "./build/solar_system_launcher --status &", "./build/solar_system_fetch --test-storage &",
+        "./build/solar_system --bodies Sun,Earth --duration 1800 &"};
 
-  // Check for any zombie processes or resource leaks
-  std::string ps_output = execute_command("ps aux | grep solar_system | grep -v grep");
-
-  // Clean up any remaining processes
-  [[maybe_unused]] int result = system("pkill -f solar_system 2>/dev/null || true");
-
-  // Should not have excessive number of processes
-  int process_count = 0;
-  std::istringstream iss(ps_output);
-  std::string line;
-  while (std::getline(iss, line)) {
-    if (line.find("solar_system") != std::string::npos) {
-      process_count++;
+    for (const auto& cmd : commands) {
+      [[maybe_unused]] int result = system(cmd.c_str());
     }
+
+    std::this_thread::sleep_for(std::chrono::seconds(3));
+
+    // Check for any zombie processes or resource leaks
+    std::string ps_output = execute_command("ps aux | grep solar_system | grep -v grep");
+
+    // Clean up any remaining processes
+    [[maybe_unused]] int result = system("pkill -f solar_system 2>/dev/null || true");
+
+    // Should not have excessive number of processes
+    int process_count = 0;
+    std::istringstream iss(ps_output);
+    std::string line;
+    while (std::getline(iss, line)) {
+      if (line.find("solar_system") != std::string::npos) {
+        process_count++;
+      }
+    }
+    ASSERT_LT(process_count, 10);  // Reasonable limit
   }
-  ASSERT_LT(process_count, 10);  // Reasonable limit
-}
 
-// Test network resource cleanup
-{
-  int test_port = 8089;
+  // Test network resource cleanup
+  {
+    int test_port = 8089;
 
-  // Start web server
-  std::string start_cmd = "./build/solar_system_web --port " + std::to_string(test_port) + " &";
-  [[maybe_unused]] int result2 = system(start_cmd.c_str());
+    // Start web server
+    std::string start_cmd = "./build/solar_system_web --port " + std::to_string(test_port) + " &";
+    [[maybe_unused]] int result2 = system(start_cmd.c_str());
 
-  std::this_thread::sleep_for(std::chrono::seconds(2));
+    std::this_thread::sleep_for(std::chrono::seconds(2));
 
-  // Check port is in use
-  std::string port_check = "lsof -i:" + std::to_string(test_port) + " 2>/dev/null";
-  std::string port_output = execute_command(port_check);
+    // Check port is in use
+    std::string port_check = "lsof -i:" + std::to_string(test_port) + " 2>/dev/null";
+    std::string port_output = execute_command(port_check);
 
-  // Stop web server
-  std::string stop_cmd = "pkill -f 'solar_system_web.*--port " + std::to_string(test_port) + "'";
-  [[maybe_unused]] int result3 = system(stop_cmd.c_str());
+    // Stop web server
+    std::string stop_cmd = "pkill -f 'solar_system_web.*--port " + std::to_string(test_port) + "'";
+    [[maybe_unused]] int result3 = system(stop_cmd.c_str());
 
-  std::this_thread::sleep_for(std::chrono::seconds(1));
+    std::this_thread::sleep_for(std::chrono::seconds(1));
 
-  // Check port is released
-  std::string port_check2 = "lsof -i:" + std::to_string(test_port) + " 2>/dev/null";
-  std::string port_output2 = execute_command(port_check2);
+    // Check port is released
+    std::string port_check2 = "lsof -i:" + std::to_string(test_port) + " 2>/dev/null";
+    std::string port_output2 = execute_command(port_check2);
 
-  // Port should be released after stopping server
-  ASSERT_TRUE(port_output2.empty() || port_output2.length() < port_output.length());
-}
+    // Port should be released after stopping server
+    ASSERT_TRUE(port_output2.empty() || port_output2.length() < port_output.length());
+  }
 }
 
 // Test 6: Error propagation and logging

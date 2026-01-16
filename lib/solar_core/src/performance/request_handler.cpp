@@ -6,24 +6,32 @@
 #include "solar_core/performance/request_handler.hpp"
 
 #include <algorithm>
+#include <condition_variable>
+#include <mutex>
+#include <queue>
 #include <sstream>
 #include <thread>
-#include <queue>
-#include <mutex>
-#include <condition_variable>
 
 namespace SolarSystem::Performance {
 
 std::string to_string(HttpMethod method) {
   switch (method) {
-    case HttpMethod::GET: return "GET";
-    case HttpMethod::POST: return "POST";
-    case HttpMethod::PUT: return "PUT";
-    case HttpMethod::DELETE: return "DELETE";
-    case HttpMethod::PATCH: return "PATCH";
-    case HttpMethod::HEAD: return "HEAD";
-    case HttpMethod::OPTIONS: return "OPTIONS";
-    default: return "UNKNOWN";
+    case HttpMethod::GET:
+      return "GET";
+    case HttpMethod::POST:
+      return "POST";
+    case HttpMethod::PUT:
+      return "PUT";
+    case HttpMethod::DELETE:
+      return "DELETE";
+    case HttpMethod::PATCH:
+      return "PATCH";
+    case HttpMethod::HEAD:
+      return "HEAD";
+    case HttpMethod::OPTIONS:
+      return "OPTIONS";
+    default:
+      return "UNKNOWN";
   }
 }
 
@@ -43,8 +51,8 @@ void HttpRouter::add_route(HttpMethod method, const std::string& path, RequestHa
   add_route(method, path, std::move(handler), false);
 }
 
-void HttpRouter::add_route(HttpMethod method, const std::string& path,
-                           RequestHandler handler, bool requires_auth) {
+void HttpRouter::add_route(HttpMethod method, const std::string& path, RequestHandler handler,
+                           bool requires_auth) {
   Route route;
   route.method = method;
   route.path = path;
@@ -53,8 +61,8 @@ void HttpRouter::add_route(HttpMethod method, const std::string& path,
   routes_.push_back(std::move(route));
 }
 
-std::optional<RequestHandler> HttpRouter::find_handler(
-    HttpMethod method, const std::string& path) const {
+std::optional<RequestHandler> HttpRouter::find_handler(HttpMethod method,
+                                                       const std::string& path) const {
   for (const auto& route : routes_) {
     if (route.method == method && route.path == path) {
       return route.handler;
@@ -72,9 +80,7 @@ bool HttpRouter::requires_auth(HttpMethod method, const std::string& path) const
   return false;
 }
 
-std::vector<Route> HttpRouter::get_routes() const {
-  return routes_;
-}
+std::vector<Route> HttpRouter::get_routes() const { return routes_; }
 
 // RequestProcessor implementation
 struct RequestProcessor::Impl {
@@ -148,13 +154,9 @@ HttpResponse RequestProcessor::process_sync(const HttpRequest& request, RequestH
   return handler(request);
 }
 
-size_t RequestProcessor::get_active_count() const {
-  return impl_->active_count.load();
-}
+size_t RequestProcessor::get_active_count() const { return impl_->active_count.load(); }
 
-size_t RequestProcessor::get_total_processed() const {
-  return impl_->total_processed.load();
-}
+size_t RequestProcessor::get_total_processed() const { return impl_->total_processed.load(); }
 
 // HttpRequestParser implementation
 std::optional<HttpRequest> HttpRequestParser::parse(const std::string& raw_request) {
@@ -204,8 +206,7 @@ std::optional<HttpRequest> HttpRequestParser::parse(const std::string& raw_reque
   return request;
 }
 
-std::map<std::string, std::string> HttpRequestParser::parse_query_string(
-    const std::string& query) {
+std::map<std::string, std::string> HttpRequestParser::parse_query_string(const std::string& query) {
   std::map<std::string, std::string> params;
 
   std::istringstream stream(query);
@@ -255,21 +256,40 @@ HttpResponseBuilder& HttpResponseBuilder::status(int code, const std::string& me
   } else {
     // Set default message based on code
     switch (code) {
-      case 200: response_.status_message = "OK"; break;
-      case 201: response_.status_message = "Created"; break;
-      case 204: response_.status_message = "No Content"; break;
-      case 400: response_.status_message = "Bad Request"; break;
-      case 401: response_.status_message = "Unauthorized"; break;
-      case 403: response_.status_message = "Forbidden"; break;
-      case 404: response_.status_message = "Not Found"; break;
-      case 500: response_.status_message = "Internal Server Error"; break;
-      default: response_.status_message = "Unknown"; break;
+      case 200:
+        response_.status_message = "OK";
+        break;
+      case 201:
+        response_.status_message = "Created";
+        break;
+      case 204:
+        response_.status_message = "No Content";
+        break;
+      case 400:
+        response_.status_message = "Bad Request";
+        break;
+      case 401:
+        response_.status_message = "Unauthorized";
+        break;
+      case 403:
+        response_.status_message = "Forbidden";
+        break;
+      case 404:
+        response_.status_message = "Not Found";
+        break;
+      case 500:
+        response_.status_message = "Internal Server Error";
+        break;
+      default:
+        response_.status_message = "Unknown";
+        break;
     }
   }
   return *this;
 }
 
-HttpResponseBuilder& HttpResponseBuilder::header(const std::string& name, const std::string& value) {
+HttpResponseBuilder& HttpResponseBuilder::header(const std::string& name,
+                                                 const std::string& value) {
   response_.headers[name] = value;
   return *this;
 }
@@ -291,9 +311,7 @@ HttpResponseBuilder& HttpResponseBuilder::html(const std::string& html_content) 
   return *this;
 }
 
-HttpResponse HttpResponseBuilder::build() const {
-  return response_;
-}
+HttpResponse HttpResponseBuilder::build() const { return response_; }
 
 std::string HttpResponseBuilder::serialize(const HttpResponse& response) {
   std::ostringstream oss;

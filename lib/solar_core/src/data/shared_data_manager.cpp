@@ -4,11 +4,11 @@
  */
 
 #include "solar_core/data/shared_data_manager.hpp"
-#include <nlohmann/json.hpp>
 
 #include <algorithm>
 #include <map>
 #include <mutex>
+#include <nlohmann/json.hpp>
 
 namespace SolarSystem::Data {
 
@@ -65,7 +65,7 @@ std::vector<std::string> SharedDataManager::get_keys() const {
 }
 
 SyncResult SharedDataManager::synchronize(const std::map<std::string, DataVersion>& remote_versions,
-                                         ConflictResolution strategy) {
+                                          ConflictResolution strategy) {
   std::lock_guard<std::mutex> lock(impl_->mutex);
 
   SyncResult result;
@@ -225,8 +225,8 @@ DistributedCache::CacheStats DistributedCache::get_stats() const {
   std::lock_guard<std::mutex> lock(impl_->mutex);
   impl_->stats.total_entries = impl_->cache_store.size();
   if (impl_->stats.hits + impl_->stats.misses > 0) {
-    impl_->stats.hit_rate =
-        static_cast<double>(impl_->stats.hits) / static_cast<double>(impl_->stats.hits + impl_->stats.misses);
+    impl_->stats.hit_rate = static_cast<double>(impl_->stats.hits) /
+                            static_cast<double>(impl_->stats.hits + impl_->stats.misses);
   }
   return impl_->stats;
 }
@@ -234,8 +234,8 @@ DistributedCache::CacheStats DistributedCache::get_stats() const {
 // Template method implementations with JSON serialization
 
 template <typename T>
-SolarSystem::Utils::Expected<DataVersion, std::string>
-SharedDataManager::store_impl(const std::string& key, const T& value, const std::string& owner) {
+SolarSystem::Utils::Expected<DataVersion, std::string> SharedDataManager::store_impl(
+    const std::string& key, const T& value, const std::string& owner) {
   try {
     // Serialize to JSON
     nlohmann::json j = value;
@@ -246,9 +246,8 @@ SharedDataManager::store_impl(const std::string& key, const T& value, const std:
     // Create new version
     DataVersion version;
     auto existing_version_it = impl_->versions.find(key);
-    version.version = existing_version_it != impl_->versions.end()
-                      ? existing_version_it->second.version + 1
-                      : 1;
+    version.version =
+        existing_version_it != impl_->versions.end() ? existing_version_it->second.version + 1 : 1;
     version.timestamp = std::chrono::system_clock::now();
     version.modified_by = owner;
 
@@ -265,8 +264,7 @@ SharedDataManager::store_impl(const std::string& key, const T& value, const std:
 }
 
 template <typename T>
-std::optional<SharedDataEntry<T>>
-SharedDataManager::retrieve_impl(const std::string& key) {
+std::optional<SharedDataEntry<T>> SharedDataManager::retrieve_impl(const std::string& key) {
   try {
     std::lock_guard<std::mutex> lock(impl_->mutex);
 
@@ -299,9 +297,9 @@ SharedDataManager::retrieve_impl(const std::string& key) {
 }
 
 template <typename T>
-SolarSystem::Utils::Expected<DataVersion, std::string>
-SharedDataManager::update_impl(const std::string& key, const T& value,
-                               const DataVersion& expected_version, const std::string& owner) {
+SolarSystem::Utils::Expected<DataVersion, std::string> SharedDataManager::update_impl(
+    const std::string& key, const T& value, const DataVersion& expected_version,
+    const std::string& owner) {
   try {
     std::lock_guard<std::mutex> lock(impl_->mutex);
 
@@ -335,13 +333,14 @@ SharedDataManager::update_impl(const std::string& key, const T& value,
 
     return SolarSystem::Utils::Expected<DataVersion, std::string>(new_version);
   } catch (const std::exception& e) {
-    return SolarSystem::Utils::Expected<DataVersion, std::string>(
-        std::string("Update failed: ") + e.what());
+    return SolarSystem::Utils::Expected<DataVersion, std::string>(std::string("Update failed: ") +
+                                                                  e.what());
   }
 }
 
 template <typename T>
-void DistributedCache::cache_impl(const std::string& key, const T& value, std::chrono::seconds ttl) {
+void DistributedCache::cache_impl(const std::string& key, const T& value,
+                                  std::chrono::seconds ttl) {
   try {
     std::lock_guard<std::mutex> lock(impl_->mutex);
 
@@ -395,38 +394,44 @@ std::optional<T> DistributedCache::get_impl(const std::string& key) {
 }
 
 // Explicit template instantiations for common types
-template SolarSystem::Utils::Expected<DataVersion, std::string>
-SharedDataManager::store_impl<int>(const std::string&, const int&, const std::string&);
+template SolarSystem::Utils::Expected<DataVersion, std::string> SharedDataManager::store_impl<int>(
+    const std::string&, const int&, const std::string&);
 
 template SolarSystem::Utils::Expected<DataVersion, std::string>
 SharedDataManager::store_impl<double>(const std::string&, const double&, const std::string&);
 
 template SolarSystem::Utils::Expected<DataVersion, std::string>
-SharedDataManager::store_impl<std::string>(const std::string&, const std::string&, const std::string&);
+SharedDataManager::store_impl<std::string>(const std::string&, const std::string&,
+                                           const std::string&);
 
-template std::optional<SharedDataEntry<int>>
-SharedDataManager::retrieve_impl<int>(const std::string&);
+template std::optional<SharedDataEntry<int>> SharedDataManager::retrieve_impl<int>(
+    const std::string&);
 
-template std::optional<SharedDataEntry<double>>
-SharedDataManager::retrieve_impl<double>(const std::string&);
+template std::optional<SharedDataEntry<double>> SharedDataManager::retrieve_impl<double>(
+    const std::string&);
 
-template std::optional<SharedDataEntry<std::string>>
-SharedDataManager::retrieve_impl<std::string>(const std::string&);
+template std::optional<SharedDataEntry<std::string>> SharedDataManager::retrieve_impl<std::string>(
+    const std::string&);
 
-template SolarSystem::Utils::Expected<DataVersion, std::string>
-SharedDataManager::update_impl<int>(const std::string&, const int&, const DataVersion&, const std::string&);
-
-template SolarSystem::Utils::Expected<DataVersion, std::string>
-SharedDataManager::update_impl<double>(const std::string&, const double&, const DataVersion&, const std::string&);
+template SolarSystem::Utils::Expected<DataVersion, std::string> SharedDataManager::update_impl<int>(
+    const std::string&, const int&, const DataVersion&, const std::string&);
 
 template SolarSystem::Utils::Expected<DataVersion, std::string>
-SharedDataManager::update_impl<std::string>(const std::string&, const std::string&, const DataVersion&, const std::string&);
+SharedDataManager::update_impl<double>(const std::string&, const double&, const DataVersion&,
+                                       const std::string&);
 
-template void DistributedCache::cache_impl<int>(const std::string&, const int&, std::chrono::seconds);
+template SolarSystem::Utils::Expected<DataVersion, std::string>
+SharedDataManager::update_impl<std::string>(const std::string&, const std::string&,
+                                            const DataVersion&, const std::string&);
 
-template void DistributedCache::cache_impl<double>(const std::string&, const double&, std::chrono::seconds);
+template void DistributedCache::cache_impl<int>(const std::string&, const int&,
+                                                std::chrono::seconds);
 
-template void DistributedCache::cache_impl<std::string>(const std::string&, const std::string&, std::chrono::seconds);
+template void DistributedCache::cache_impl<double>(const std::string&, const double&,
+                                                   std::chrono::seconds);
+
+template void DistributedCache::cache_impl<std::string>(const std::string&, const std::string&,
+                                                        std::chrono::seconds);
 
 template std::optional<int> DistributedCache::get_impl<int>(const std::string&);
 

@@ -9,8 +9,8 @@
 #include <vector>
 
 #include "solar_core/export.hpp"
-#include "solar_core/streaming/data_stream.hpp"
 #include "solar_core/math/vector3.hpp"
+#include "solar_core/streaming/data_stream.hpp"
 
 namespace SolarSystem::Streaming {
 
@@ -79,7 +79,7 @@ struct AggregateSnapshot {
  * @brief Base class for stream aggregators
  */
 class SOLAR_CORE_API StreamAggregator {
-public:
+ public:
   virtual ~StreamAggregator() = default;
 
   /**
@@ -112,8 +112,9 @@ public:
  * @brief Time-window based aggregator that maintains statistics over a sliding window
  */
 class SOLAR_CORE_API TimeWindowAggregator : public StreamAggregator {
-public:
-  explicit TimeWindowAggregator(std::chrono::milliseconds window_duration = std::chrono::minutes{5});
+ public:
+  explicit TimeWindowAggregator(std::chrono::milliseconds window_duration = std::chrono::minutes{
+                                    5});
 
   void add_snapshot(const DataSnapshot& snapshot) override;
   [[nodiscard]] AggregateSnapshot get_aggregate() const override;
@@ -123,12 +124,14 @@ public:
 
   // Configuration
   void set_window_duration(std::chrono::milliseconds duration);
-  [[nodiscard]] std::chrono::milliseconds get_window_duration() const noexcept { return window_duration_; }
+  [[nodiscard]] std::chrono::milliseconds get_window_duration() const noexcept {
+    return window_duration_;
+  }
 
   void set_min_samples(size_t min_samples) noexcept { min_samples_ = min_samples; }
   [[nodiscard]] size_t get_min_samples() const noexcept { return min_samples_; }
 
-private:
+ private:
   std::chrono::milliseconds window_duration_;
   size_t min_samples_ = 3;
 
@@ -137,14 +140,15 @@ private:
 
   void cleanup_old_snapshots();
   [[nodiscard]] BodyAggregateData calculate_body_aggregate(const std::string& body_name) const;
-  [[nodiscard]] std::vector<const DataPoint*> get_body_data_points(const std::string& body_name) const;
+  [[nodiscard]] std::vector<const DataPoint*> get_body_data_points(
+      const std::string& body_name) const;
 };
 
 /**
  * @brief Sample-count based aggregator that maintains statistics over a fixed number of samples
  */
 class SOLAR_CORE_API SampleCountAggregator : public StreamAggregator {
-public:
+ public:
   explicit SampleCountAggregator(size_t max_samples = 100);
 
   void add_snapshot(const DataSnapshot& snapshot) override;
@@ -160,7 +164,7 @@ public:
   void set_min_samples(size_t min_samples) noexcept { min_samples_ = min_samples; }
   [[nodiscard]] size_t get_min_samples() const noexcept { return min_samples_; }
 
-private:
+ private:
   size_t max_samples_;
   size_t min_samples_ = 3;
 
@@ -169,14 +173,15 @@ private:
 
   void maintain_sample_limit();
   [[nodiscard]] BodyAggregateData calculate_body_aggregate(const std::string& body_name) const;
-  [[nodiscard]] std::vector<const DataPoint*> get_body_data_points(const std::string& body_name) const;
+  [[nodiscard]] std::vector<const DataPoint*> get_body_data_points(
+      const std::string& body_name) const;
 };
 
 /**
  * @brief Real-time aggregator that provides continuous statistics updates
  */
 class SOLAR_CORE_API RealtimeAggregator : public StreamAggregator {
-public:
+ public:
   explicit RealtimeAggregator(std::chrono::milliseconds update_interval = std::chrono::seconds{1});
 
   void add_snapshot(const DataSnapshot& snapshot) override;
@@ -187,13 +192,15 @@ public:
 
   // Configuration
   void set_update_interval(std::chrono::milliseconds interval) { update_interval_ = interval; }
-  [[nodiscard]] std::chrono::milliseconds get_update_interval() const noexcept { return update_interval_; }
+  [[nodiscard]] std::chrono::milliseconds get_update_interval() const noexcept {
+    return update_interval_;
+  }
 
   // Real-time specific methods
   [[nodiscard]] bool is_aggregate_stale() const;
   void force_update();
 
-private:
+ private:
   std::chrono::milliseconds update_interval_;
 
   // Running statistics per body
@@ -243,7 +250,7 @@ private:
  * @brief Callback-based aggregator that triggers user-defined functions on aggregation events
  */
 class SOLAR_CORE_API CallbackAggregator : public StreamAggregator {
-public:
+ public:
   using AggregateCallback = std::function<void(const AggregateSnapshot&)>;
   using ThresholdCallback = std::function<void(const std::string&, const BodyAggregateData&)>;
 
@@ -256,15 +263,21 @@ public:
   [[nodiscard]] bool has_sufficient_data() const override;
 
   // Callback management
-  void set_aggregate_callback(AggregateCallback callback) { aggregate_callback_ = std::move(callback); }
-  void set_threshold_callback(ThresholdCallback callback) { threshold_callback_ = std::move(callback); }
+  void set_aggregate_callback(AggregateCallback callback) {
+    aggregate_callback_ = std::move(callback);
+  }
+  void set_threshold_callback(ThresholdCallback callback) {
+    threshold_callback_ = std::move(callback);
+  }
 
   // Threshold configuration
   void set_quality_threshold(double threshold) { quality_threshold_ = threshold; }
-  void set_latency_threshold(std::chrono::milliseconds threshold) { latency_threshold_ = threshold; }
+  void set_latency_threshold(std::chrono::milliseconds threshold) {
+    latency_threshold_ = threshold;
+  }
   void set_callback_interval(std::chrono::milliseconds interval) { callback_interval_ = interval; }
 
-private:
+ private:
   std::unique_ptr<StreamAggregator> base_aggregator_;
 
   AggregateCallback aggregate_callback_;
@@ -284,7 +297,7 @@ private:
  * @brief Factory for creating common aggregator configurations
  */
 class SOLAR_CORE_API AggregatorFactory {
-public:
+ public:
   // Predefined aggregators
   [[nodiscard]] static std::unique_ptr<TimeWindowAggregator> create_time_window_aggregator(
       std::chrono::milliseconds window_duration = std::chrono::minutes{5});

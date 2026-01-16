@@ -10,8 +10,7 @@
 
 namespace SolarSystem::Security {
 
-SecurityHeaders::SecurityHeaders(SecurityHeadersConfig config)
-    : config_(std::move(config)) {}
+SecurityHeaders::SecurityHeaders(SecurityHeadersConfig config) : config_(std::move(config)) {}
 
 std::map<std::string, std::string> SecurityHeaders::get_headers() const {
   std::map<std::string, std::string> headers;
@@ -87,32 +86,21 @@ std::string SecurityHeaders::get_hsts_header() const {
   return oss.str();
 }
 
-std::string SecurityHeaders::get_frame_options_header() const {
-  return config_.frame_options;
-}
+std::string SecurityHeaders::get_frame_options_header() const { return config_.frame_options; }
 
-std::string SecurityHeaders::get_content_type_options_header() const {
-  return "nosniff";
-}
+std::string SecurityHeaders::get_content_type_options_header() const { return "nosniff"; }
 
-std::string SecurityHeaders::get_xss_protection_header() const {
-  return "1; mode=block";
-}
+std::string SecurityHeaders::get_xss_protection_header() const { return "1; mode=block"; }
 
-std::string SecurityHeaders::get_referrer_policy_header() const {
-  return config_.referrer_policy;
-}
+std::string SecurityHeaders::get_referrer_policy_header() const { return config_.referrer_policy; }
 
-void SecurityHeaders::update_config(const SecurityHeadersConfig& config) {
-  config_ = config;
-}
+void SecurityHeaders::update_config(const SecurityHeadersConfig& config) { config_ = config; }
 
 // CORSManager implementation
 CORSManager::CORSManager(Config config) : config_(std::move(config)) {}
 
-std::map<std::string, std::string> CORSManager::get_cors_headers(
-    const std::string& origin,
-    const std::string& method) const {
+std::map<std::string, std::string> CORSManager::get_cors_headers(const std::string& origin,
+                                                                 const std::string& method) const {
   std::map<std::string, std::string> headers;
 
   if (!config_.enabled) {

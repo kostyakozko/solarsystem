@@ -21,10 +21,10 @@ namespace SolarSystem::Performance {
  * @brief Performance metric types
  */
 enum class MetricType {
-  COUNTER,      // Monotonically increasing value
-  GAUGE,        // Value that can go up or down
-  HISTOGRAM,    // Distribution of values
-  TIMER         // Duration measurements
+  COUNTER,    // Monotonically increasing value
+  GAUGE,      // Value that can go up or down
+  HISTOGRAM,  // Distribution of values
+  TIMER       // Duration measurements
 };
 
 /**
@@ -37,32 +37,25 @@ struct MetricData {
   std::chrono::system_clock::time_point timestamp;
   std::map<std::string, std::string> labels;
 
-  MetricData() : type(MetricType::GAUGE), value(0.0),
-                 timestamp(std::chrono::system_clock::now()) {}
+  MetricData() : type(MetricType::GAUGE), value(0.0), timestamp(std::chrono::system_clock::now()) {}
 };
 
 /**
  * @brief Performance counter - monotonically increasing value
  */
 class Counter {
-public:
+ public:
   explicit Counter(std::string name) : name_(std::move(name)), value_(0) {}
 
-  void increment(double amount = 1.0) {
-    value_.fetch_add(amount, std::memory_order_relaxed);
-  }
+  void increment(double amount = 1.0) { value_.fetch_add(amount, std::memory_order_relaxed); }
 
-  double get() const {
-    return value_.load(std::memory_order_relaxed);
-  }
+  double get() const { return value_.load(std::memory_order_relaxed); }
 
-  void reset() {
-    value_.store(0, std::memory_order_relaxed);
-  }
+  void reset() { value_.store(0, std::memory_order_relaxed); }
 
   const std::string& name() const { return name_; }
 
-private:
+ private:
   std::string name_;
   std::atomic<double> value_;
 };
@@ -71,30 +64,24 @@ private:
  * @brief Performance gauge - value that can go up or down
  */
 class Gauge {
-public:
+ public:
   explicit Gauge(std::string name) : name_(std::move(name)), value_(0) {}
 
-  void set(double value) {
-    value_.store(value, std::memory_order_relaxed);
-  }
+  void set(double value) { value_.store(value, std::memory_order_relaxed); }
 
   void increment(double amount = 1.0) {
     double current = value_.load(std::memory_order_relaxed);
-    while (!value_.compare_exchange_weak(current, current + amount,
-                                         std::memory_order_relaxed)) {}
+    while (!value_.compare_exchange_weak(current, current + amount, std::memory_order_relaxed)) {
+    }
   }
 
-  void decrement(double amount = 1.0) {
-    increment(-amount);
-  }
+  void decrement(double amount = 1.0) { increment(-amount); }
 
-  double get() const {
-    return value_.load(std::memory_order_relaxed);
-  }
+  double get() const { return value_.load(std::memory_order_relaxed); }
 
   const std::string& name() const { return name_; }
 
-private:
+ private:
   std::string name_;
   std::atomic<double> value_;
 };
@@ -103,7 +90,7 @@ private:
  * @brief Performance histogram - distribution of values
  */
 class SOLAR_CORE_API Histogram {
-public:
+ public:
   explicit Histogram(std::string name, std::vector<double> buckets = {});
 
   void observe(double value);
@@ -122,7 +109,7 @@ public:
   Statistics get_statistics() const;
   const std::string& name() const { return name_; }
 
-private:
+ private:
   std::string name_;
   mutable std::mutex mutex_;
   std::vector<double> values_;
@@ -134,41 +121,33 @@ private:
  * @brief Performance timer - duration measurements
  */
 class SOLAR_CORE_API Timer {
-public:
+ public:
   explicit Timer(std::string name) : name_(std::move(name)), histogram_(name) {}
 
   class ScopedTimer {
-  public:
-    explicit ScopedTimer(Timer& timer)
-        : timer_(timer), start_(std::chrono::steady_clock::now()) {}
+   public:
+    explicit ScopedTimer(Timer& timer) : timer_(timer), start_(std::chrono::steady_clock::now()) {}
 
     ~ScopedTimer() {
       auto end = std::chrono::steady_clock::now();
-      auto duration = std::chrono::duration_cast<std::chrono::microseconds>(
-          end - start_).count();
+      auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start_).count();
       timer_.record(static_cast<double>(duration) / 1000000.0);  // Convert to seconds
     }
 
-  private:
+   private:
     Timer& timer_;
     std::chrono::steady_clock::time_point start_;
   };
 
-  void record(double seconds) {
-    histogram_.observe(seconds);
-  }
+  void record(double seconds) { histogram_.observe(seconds); }
 
-  ScopedTimer time() {
-    return ScopedTimer(*this);
-  }
+  ScopedTimer time() { return ScopedTimer(*this); }
 
-  Histogram::Statistics get_statistics() const {
-    return histogram_.get_statistics();
-  }
+  Histogram::Statistics get_statistics() const { return histogram_.get_statistics(); }
 
   const std::string& name() const { return name_; }
 
-private:
+ private:
   std::string name_;
   Histogram histogram_;
 };
@@ -182,8 +161,7 @@ struct PerformanceThreshold {
   double critical_threshold;
   bool above_threshold;  // true = alert when above, false = alert when below
 
-  PerformanceThreshold()
-      : warning_threshold(0), critical_threshold(0), above_threshold(true) {}
+  PerformanceThreshold() : warning_threshold(0), critical_threshold(0), above_threshold(true) {}
 };
 
 /**
@@ -200,7 +178,9 @@ struct PerformanceAlert {
   std::string message;
 
   PerformanceAlert()
-      : severity(Severity::INFO), current_value(0), threshold_value(0),
+      : severity(Severity::INFO),
+        current_value(0),
+        threshold_value(0),
         timestamp(std::chrono::system_clock::now()) {}
 };
 
@@ -208,7 +188,7 @@ struct PerformanceAlert {
  * @brief Performance monitoring system
  */
 class SOLAR_CORE_API PerformanceMonitor {
-public:
+ public:
   static PerformanceMonitor& instance();
 
   // Metric registration
@@ -242,7 +222,7 @@ public:
   void enable_monitoring(bool enabled);
   bool is_monitoring_enabled() const;
 
-private:
+ private:
   PerformanceMonitor() = default;
 
   void check_thresholds();
@@ -263,7 +243,7 @@ private:
  * @brief RAII helper for timing operations
  */
 class ScopedPerformanceTimer {
-public:
+ public:
   explicit ScopedPerformanceTimer(const std::string& timer_name)
       : timer_(PerformanceMonitor::instance().get_timer(timer_name)) {
     if (!timer_) {
@@ -275,13 +255,12 @@ public:
   ~ScopedPerformanceTimer() {
     if (timer_) {
       auto end = std::chrono::steady_clock::now();
-      auto duration = std::chrono::duration_cast<std::chrono::microseconds>(
-          end - start_).count();
+      auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start_).count();
       timer_->record(static_cast<double>(duration) / 1000000.0);
     }
   }
 
-private:
+ private:
   std::shared_ptr<Timer> timer_;
   std::chrono::steady_clock::time_point start_;
 };
@@ -289,19 +268,21 @@ private:
 /**
  * @brief Convenience macros for performance monitoring
  */
-#define PERF_COUNTER_INC(name) \
-  do { \
-    auto counter = SolarSystem::Performance::PerformanceMonitor::instance().get_counter(name); \
-    if (!counter) counter = SolarSystem::Performance::PerformanceMonitor::instance().register_counter(name); \
-    counter->increment(); \
-  } while(0)
+#define PERF_COUNTER_INC(name)                                                                   \
+  do {                                                                                           \
+    auto counter = SolarSystem::Performance::PerformanceMonitor::instance().get_counter(name);   \
+    if (!counter)                                                                                \
+      counter = SolarSystem::Performance::PerformanceMonitor::instance().register_counter(name); \
+    counter->increment();                                                                        \
+  } while (0)
 
-#define PERF_GAUGE_SET(name, value) \
-  do { \
-    auto gauge = SolarSystem::Performance::PerformanceMonitor::instance().get_gauge(name); \
-    if (!gauge) gauge = SolarSystem::Performance::PerformanceMonitor::instance().register_gauge(name); \
-    gauge->set(value); \
-  } while(0)
+#define PERF_GAUGE_SET(name, value)                                                          \
+  do {                                                                                       \
+    auto gauge = SolarSystem::Performance::PerformanceMonitor::instance().get_gauge(name);   \
+    if (!gauge)                                                                              \
+      gauge = SolarSystem::Performance::PerformanceMonitor::instance().register_gauge(name); \
+    gauge->set(value);                                                                       \
+  } while (0)
 
 #define PERF_TIMER_SCOPE(name) \
   SolarSystem::Performance::ScopedPerformanceTimer __perf_timer_##__LINE__(name)

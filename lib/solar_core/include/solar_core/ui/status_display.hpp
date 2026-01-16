@@ -23,11 +23,11 @@ namespace SolarSystem::UI {
  * @brief Status message severity levels
  */
 enum class StatusLevel {
-  SUCCESS,    // ✓ Green - Operation successful
-  INFO,       // ℹ Blue - Informational message
-  WARNING,    // ⚠ Yellow - Warning condition
-  ERROR,      // ✗ Red - Error condition
-  DEBUG       // 🔍 Gray - Debug information
+  SUCCESS,  // ✓ Green - Operation successful
+  INFO,     // ℹ Blue - Informational message
+  WARNING,  // ⚠ Yellow - Warning condition
+  ERROR,    // ✗ Red - Error condition
+  DEBUG     // 🔍 Gray - Debug information
 };
 
 /**

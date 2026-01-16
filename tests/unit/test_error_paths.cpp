@@ -12,6 +12,8 @@
  * Requirements: 6.1, 6.3
  */
 
+#include <gtest/gtest.h>
+
 #include <cerrno>
 #include <chrono>
 #include <cstring>
@@ -23,8 +25,6 @@
 #include <string>
 #include <thread>
 #include <vector>
-
-#include <gtest/gtest.h>
 
 namespace fs = std::filesystem;
 
@@ -56,9 +56,8 @@ class ErrorPathTester {
   };
 
   // Test exception handling
-  ErrorResult test_exception_handling(
-      std::function<void()> operation,
-      std::function<void()> recovery = nullptr) {
+  ErrorResult test_exception_handling(std::function<void()> operation,
+                                      std::function<void()> recovery = nullptr) {
     ErrorResult result;
 
     try {
@@ -99,13 +98,10 @@ class ErrorPathTester {
       std::this_thread::sleep_for(std::chrono::milliseconds(timeout_ms + 100));
 
       auto elapsed = std::chrono::steady_clock::now() - start;
-      auto elapsed_ms =
-          std::chrono::duration_cast<std::chrono::milliseconds>(elapsed)
-              .count();
+      auto elapsed_ms = std::chrono::duration_cast<std::chrono::milliseconds>(elapsed).count();
 
       if (elapsed_ms > timeout_ms) {
-        throw std::runtime_error("Network timeout after " +
-                                 std::to_string(elapsed_ms) + "ms");
+        throw std::runtime_error("Network timeout after " + std::to_string(elapsed_ms) + "ms");
       }
     } catch (const std::exception& e) {
       result.error_occurred = true;
@@ -205,8 +201,7 @@ class ErrorPathTester {
   }
 
   // Test retry mechanism
-  ErrorResult test_retry_mechanism(int max_retries,
-                                   std::function<bool()> operation) {
+  ErrorResult test_retry_mechanism(int max_retries, std::function<bool()> operation) {
     ErrorResult result;
     result.recovery_attempts = 0;
 
@@ -232,8 +227,7 @@ class ErrorPathTester {
   }
 
   // Test graceful degradation
-  ErrorResult test_graceful_degradation(bool primary_available,
-                                        bool fallback_available) {
+  ErrorResult test_graceful_degradation(bool primary_available, bool fallback_available) {
     ErrorResult result;
 
     try {
@@ -259,308 +253,306 @@ class ErrorPathTester {
     return result;
   }
 };
-  // Test 1: Exception handling and error recovery
-  TEST(ErrorPathTestingTest, Exception_Handling_and_Recovery) {
-    ErrorPathTester tester;
+// Test 1: Exception handling and error recovery
+TEST(ErrorPathTestingTest, Exception_Handling_and_Recovery) {
+  ErrorPathTester tester;
 
-    // Test 1.1: Catch and handle runtime error
-    {
-      auto operation = []() { throw std::runtime_error("Test error"); };
+  // Test 1.1: Catch and handle runtime error
+  {
+    auto operation = []() { throw std::runtime_error("Test error"); };
 
-      auto result = tester.test_exception_handling(operation);
-      ASSERT_TRUE(result.error_occurred);
-      ASSERT_FALSE(result.error_message.empty());
-      EXPECT_NE(std::string::npos, result.error_message.find("Test error"));
-    }
+    auto result = tester.test_exception_handling(operation);
+    ASSERT_TRUE(result.error_occurred);
+    ASSERT_FALSE(result.error_message.empty());
+    EXPECT_NE(std::string::npos, result.error_message.find("Test error"));
+  }
 
-    // Test 1.2: Exception with recovery
-    {
-      auto operation = []() { throw std::runtime_error("Recoverable error"); };
-      auto recovery = []() { /* Recovery logic */ };
+  // Test 1.2: Exception with recovery
+  {
+    auto operation = []() { throw std::runtime_error("Recoverable error"); };
+    auto recovery = []() { /* Recovery logic */ };
 
-      auto result = tester.test_exception_handling(operation, recovery);
-      ASSERT_TRUE(result.error_occurred);
-      ASSERT_TRUE(result.recovered);
-      ASSERT_EQ(result.recovery_attempts, 1);
-    }
+    auto result = tester.test_exception_handling(operation, recovery);
+    ASSERT_TRUE(result.error_occurred);
+    ASSERT_TRUE(result.recovered);
+    ASSERT_EQ(result.recovery_attempts, 1);
+  }
 
-    // Test 1.3: No exception thrown
-    {
-      auto operation = []() { /* Normal operation */ };
+  // Test 1.3: No exception thrown
+  {
+    auto operation = []() { /* Normal operation */ };
 
-      auto result = tester.test_exception_handling(operation);
-      ASSERT_FALSE(result.error_occurred);
-      ASSERT_TRUE(result.error_message.empty());
-    }
+    auto result = tester.test_exception_handling(operation);
+    ASSERT_FALSE(result.error_occurred);
+    ASSERT_TRUE(result.error_message.empty());
+  }
 
-    // Test 1.4: Failed recovery
-    {
-      auto operation = []() { throw std::runtime_error("Error"); };
-      auto recovery = []() { throw std::runtime_error("Recovery failed"); };
+  // Test 1.4: Failed recovery
+  {
+    auto operation = []() { throw std::runtime_error("Error"); };
+    auto recovery = []() { throw std::runtime_error("Recovery failed"); };
 
-      auto result = tester.test_exception_handling(operation, recovery);
-      ASSERT_TRUE(result.error_occurred);
-      ASSERT_FALSE(result.recovered);
+    auto result = tester.test_exception_handling(operation, recovery);
+    ASSERT_TRUE(result.error_occurred);
+    ASSERT_FALSE(result.recovered);
+  }
+}
+
+// Test 2: Network failure and timeout scenarios
+TEST(ErrorPathTestingTest, Network_Failure_and_Timeout_Scenarios) {
+  ErrorPathTester tester;
+
+  // Test 2.1: Network timeout
+  {
+    auto result = tester.simulate_network_timeout(50);
+    ASSERT_TRUE(result.error_occurred);
+    ASSERT_TRUE(result.error_type == ErrorPathTester::ErrorType::NetworkTimeout);
+    EXPECT_NE(std::string::npos, result.error_message.find("timeout"));
+  }
+
+  // Test 2.2: Connection refused
+  {
+    auto result = tester.simulate_network_failure("connection_refused");
+    ASSERT_TRUE(result.error_occurred);
+    ASSERT_TRUE(result.error_type == ErrorPathTester::ErrorType::NetworkFailure);
+    EXPECT_NE(std::string::npos, result.error_message.find("refused"));
+  }
+
+  // Test 2.3: Host unreachable
+  {
+    auto result = tester.simulate_network_failure("host_unreachable");
+    ASSERT_TRUE(result.error_occurred);
+    EXPECT_NE(std::string::npos, result.error_message.find("unreachable"));
+  }
+
+  // Test 2.4: Connection reset
+  {
+    auto result = tester.simulate_network_failure("connection_reset");
+    ASSERT_TRUE(result.error_occurred);
+    EXPECT_NE(std::string::npos, result.error_message.find("reset"));
+  }
+}
+
+// Test 3: File system errors and permissions
+TEST(ErrorPathTestingTest, File_System_Errors_and_Permissions) {
+  ErrorPathTester tester;
+
+  // Test 3.1: File not found
+  {
+    auto result = tester.test_file_not_found("/nonexistent/file.txt");
+    ASSERT_TRUE(result.error_occurred);
+    ASSERT_TRUE(result.error_type == ErrorPathTester::ErrorType::FileNotFound);
+    EXPECT_NE(std::string::npos, result.error_message.find("not found"));
+  }
+
+  // Test 3.2: Permission denied (try to write to root)
+  {
+    auto result = tester.test_permission_denied("/root/test_file.txt");
+    ASSERT_TRUE(result.error_occurred);
+    ASSERT_TRUE(result.error_type == ErrorPathTester::ErrorType::PermissionDenied);
+  }
+
+  // Test 3.3: Disk full simulation
+  {
+    auto result = tester.simulate_disk_full();
+    ASSERT_TRUE(result.error_occurred);
+    ASSERT_TRUE(result.error_type == ErrorPathTester::ErrorType::DiskFull);
+    EXPECT_NE(std::string::npos, result.error_message.find("space"));
+  }
+
+  // Test 3.4: Create and access valid file
+  {
+    std::string test_file = "/tmp/test_error_paths.txt";
+    std::ofstream file(test_file);
+    file << "test data";
+    file.close();
+
+    auto result = tester.test_file_not_found(test_file);
+    ASSERT_FALSE(result.error_occurred);
+
+    // Cleanup
+    fs::remove(test_file);
+  }
+}
+
+// Test 4: Memory exhaustion and resource limits
+TEST(ErrorPathTestingTest, Memory_Exhaustion_and_Resource_Limits) {
+  ErrorPathTester tester;
+
+  // Test 4.1: Small allocation (should succeed)
+  {
+    auto result = tester.simulate_memory_exhaustion(1);  // 1 MB
+    ASSERT_FALSE(result.error_occurred);
+  }
+
+  // Test 4.2: Large allocation (may fail on constrained systems)
+  {
+    auto result = tester.simulate_memory_exhaustion(100000);  // 100 GB
+    // This should fail on most systems, but we don't assert
+    // since it depends on available memory
+    if (result.error_occurred) {
+      ASSERT_TRUE(result.error_message.find("Memory") != std::string::npos ||
+                  result.error_message.find("allocation") != std::string::npos);
     }
   }
 
-  // Test 2: Network failure and timeout scenarios
-  TEST(ErrorPathTestingTest, Network_Failure_and_Timeout_Scenarios) {
-    ErrorPathTester tester;
-
-    // Test 2.1: Network timeout
-    {
-      auto result = tester.simulate_network_timeout(50);
-      ASSERT_TRUE(result.error_occurred);
-      ASSERT_TRUE(result.error_type == ErrorPathTester::ErrorType::NetworkTimeout);
-      EXPECT_NE(std::string::npos, result.error_message.find("timeout"));
-    }
-
-    // Test 2.2: Connection refused
-    {
-      auto result = tester.simulate_network_failure("connection_refused");
-      ASSERT_TRUE(result.error_occurred);
-      ASSERT_TRUE(result.error_type == ErrorPathTester::ErrorType::NetworkFailure);
-      EXPECT_NE(std::string::npos, result.error_message.find("refused"));
-    }
-
-    // Test 2.3: Host unreachable
-    {
-      auto result = tester.simulate_network_failure("host_unreachable");
-      ASSERT_TRUE(result.error_occurred);
-      EXPECT_NE(std::string::npos, result.error_message.find("unreachable"));
-    }
-
-    // Test 2.4: Connection reset
-    {
-      auto result = tester.simulate_network_failure("connection_reset");
-      ASSERT_TRUE(result.error_occurred);
-      EXPECT_NE(std::string::npos, result.error_message.find("reset"));
-    }
-  }
-
-  // Test 3: File system errors and permissions
-  TEST(ErrorPathTestingTest, File_System_Errors_and_Permissions) {
-    ErrorPathTester tester;
-
-    // Test 3.1: File not found
-    {
-      auto result = tester.test_file_not_found("/nonexistent/file.txt");
-      ASSERT_TRUE(result.error_occurred);
-      ASSERT_TRUE(result.error_type == ErrorPathTester::ErrorType::FileNotFound);
-      EXPECT_NE(std::string::npos, result.error_message.find("not found"));
-    }
-
-    // Test 3.2: Permission denied (try to write to root)
-    {
-      auto result = tester.test_permission_denied("/root/test_file.txt");
-      ASSERT_TRUE(result.error_occurred);
-      ASSERT_TRUE(result.error_type == ErrorPathTester::ErrorType::PermissionDenied);
-    }
-
-    // Test 3.3: Disk full simulation
-    {
-      auto result = tester.simulate_disk_full();
-      ASSERT_TRUE(result.error_occurred);
-      ASSERT_TRUE(result.error_type == ErrorPathTester::ErrorType::DiskFull);
-      EXPECT_NE(std::string::npos, result.error_message.find("space"));
-    }
-
-    // Test 3.4: Create and access valid file
-    {
-      std::string test_file = "/tmp/test_error_paths.txt";
-      std::ofstream file(test_file);
-      file << "test data";
-      file.close();
-
-      auto result = tester.test_file_not_found(test_file);
-      ASSERT_FALSE(result.error_occurred);
-
-      // Cleanup
-      fs::remove(test_file);
-    }
-  }
-
-  // Test 4: Memory exhaustion and resource limits
-  TEST(ErrorPathTestingTest, Memory_Exhaustion_and_Resource_Limits) {
-    ErrorPathTester tester;
-
-    // Test 4.1: Small allocation (should succeed)
-    {
-      auto result = tester.simulate_memory_exhaustion(1); // 1 MB
-      ASSERT_FALSE(result.error_occurred);
-    }
-
-    // Test 4.2: Large allocation (may fail on constrained systems)
-    {
-      auto result = tester.simulate_memory_exhaustion(100000); // 100 GB
-      // This should fail on most systems, but we don't assert
-      // since it depends on available memory
+  // Test 4.3: Multiple small allocations
+  {
+    bool all_succeeded = true;
+    for (int i = 0; i < 10; ++i) {
+      auto result = tester.simulate_memory_exhaustion(1);
       if (result.error_occurred) {
-        ASSERT_TRUE(result.error_message.find("Memory") !=
-                    std::string::npos ||
-                    result.error_message.find("allocation") !=
-                    std::string::npos);
+        all_succeeded = false;
+        break;
       }
     }
+    ASSERT_TRUE(all_succeeded);
+  }
+}
 
-    // Test 4.3: Multiple small allocations
-    {
-      bool all_succeeded = true;
-      for (int i = 0; i < 10; ++i) {
-        auto result = tester.simulate_memory_exhaustion(1);
-        if (result.error_occurred) {
-          all_succeeded = false;
-          break;
-        }
-      }
-      ASSERT_TRUE(all_succeeded);
-    }
+// Test 5: Retry mechanisms
+TEST(ErrorPathTestingTest, Retry_Mechanisms) {
+  ErrorPathTester tester;
+
+  // Test 5.1: Successful retry
+  {
+    int attempt = 0;
+    auto operation = [&attempt]() {
+      attempt++;
+      return attempt >= 3;  // Succeed on 3rd attempt
+    };
+
+    auto result = tester.test_retry_mechanism(5, operation);
+    ASSERT_TRUE(result.recovered);
+    ASSERT_EQ(result.recovery_attempts, 3);
   }
 
-  // Test 5: Retry mechanisms
-  TEST(ErrorPathTestingTest, Retry_Mechanisms) {
-    ErrorPathTester tester;
+  // Test 5.2: Failed retry (max attempts exceeded)
+  {
+    auto operation = []() { return false; };  // Always fail
 
-    // Test 5.1: Successful retry
-    {
-      int attempt = 0;
-      auto operation = [&attempt]() {
-        attempt++;
-        return attempt >= 3; // Succeed on 3rd attempt
-      };
+    auto result = tester.test_retry_mechanism(3, operation);
+    ASSERT_FALSE(result.recovered);
+    ASSERT_EQ(result.recovery_attempts, 3);
+  }
 
-      auto result = tester.test_retry_mechanism(5, operation);
-      ASSERT_TRUE(result.recovered);
-      ASSERT_EQ(result.recovery_attempts, 3);
-    }
+  // Test 5.3: Immediate success
+  {
+    auto operation = []() { return true; };  // Always succeed
 
-    // Test 5.2: Failed retry (max attempts exceeded)
-    {
-      auto operation = []() { return false; }; // Always fail
+    auto result = tester.test_retry_mechanism(5, operation);
+    ASSERT_TRUE(result.recovered);
+    ASSERT_EQ(result.recovery_attempts, 1);
+  }
 
-      auto result = tester.test_retry_mechanism(3, operation);
-      ASSERT_FALSE(result.recovered);
-      ASSERT_EQ(result.recovery_attempts, 3);
-    }
+  // Test 5.4: Exception during retry
+  {
+    int attempt = 0;
+    auto operation = [&attempt]() {
+      attempt++;
+      if (attempt == 2) {
+        throw std::runtime_error("Retry failed");
+      }
+      return false;
+    };
 
-    // Test 5.3: Immediate success
-    {
-      auto operation = []() { return true; }; // Always succeed
+    auto result = tester.test_retry_mechanism(5, operation);
+    ASSERT_TRUE(result.error_occurred);
+    ASSERT_FALSE(result.recovered);
+  }
+}
 
-      auto result = tester.test_retry_mechanism(5, operation);
-      ASSERT_TRUE(result.recovered);
-      ASSERT_EQ(result.recovery_attempts, 1);
-    }
+// Test 6: Graceful degradation
+TEST(ErrorPathTestingTest, Graceful_Degradation) {
+  ErrorPathTester tester;
 
-    // Test 5.4: Exception during retry
-    {
-      int attempt = 0;
-      auto operation = [&attempt]() {
-        attempt++;
-        if (attempt == 2) {
-          throw std::runtime_error("Retry failed");
-        }
-        return false;
-      };
+  // Test 6.1: Primary service available
+  {
+    auto result = tester.test_graceful_degradation(true, true);
+    ASSERT_FALSE(result.error_occurred);
+    ASSERT_FALSE(result.recovered);
+  }
 
-      auto result = tester.test_retry_mechanism(5, operation);
+  // Test 6.2: Fallback to secondary service
+  {
+    auto result = tester.test_graceful_degradation(false, true);
+    ASSERT_FALSE(result.error_occurred);
+    ASSERT_TRUE(result.recovered);
+    EXPECT_NE(std::string::npos, result.error_message.find("fallback"));
+  }
+
+  // Test 6.3: All services unavailable
+  {
+    auto result = tester.test_graceful_degradation(false, false);
+    ASSERT_TRUE(result.error_occurred);
+    ASSERT_FALSE(result.recovered);
+    EXPECT_NE(std::string::npos, result.error_message.find("unavailable"));
+  }
+}
+
+// Test 7: Complex error scenarios
+TEST(ErrorPathTestingTest, Complex_Error_Scenarios) {
+  ErrorPathTester tester;
+
+  // Test 7.1: Cascading failures
+  {
+    std::vector<ErrorPathTester::ErrorResult> results;
+
+    // Simulate multiple failures
+    results.push_back(tester.simulate_network_failure("connection_refused"));
+    results.push_back(tester.test_file_not_found("/nonexistent.txt"));
+    results.push_back(tester.simulate_disk_full());
+
+    // All should have errors
+    for (const auto& result : results) {
       ASSERT_TRUE(result.error_occurred);
-      ASSERT_FALSE(result.recovered);
     }
+
+    ASSERT_EQ(results.size(), 3);
   }
 
-  // Test 6: Graceful degradation
-  TEST(ErrorPathTestingTest, Graceful_Degradation) {
-    ErrorPathTester tester;
+  // Test 7.2: Error recovery chain
+  {
+    int failures = 0;
+    auto operation = [&failures]() {
+      failures++;
+      if (failures < 3) {
+        throw std::runtime_error("Transient error");
+      }
+      return true;
+    };
 
-    // Test 6.1: Primary service available
-    {
-      auto result = tester.test_graceful_degradation(true, true);
-      ASSERT_FALSE(result.error_occurred);
-      ASSERT_FALSE(result.recovered);
-    }
-
-    // Test 6.2: Fallback to secondary service
-    {
-      auto result = tester.test_graceful_degradation(false, true);
-      ASSERT_FALSE(result.error_occurred);
-      ASSERT_TRUE(result.recovered);
-      EXPECT_NE(std::string::npos, result.error_message.find("fallback"));
-    }
-
-    // Test 6.3: All services unavailable
-    {
-      auto result = tester.test_graceful_degradation(false, false);
-      ASSERT_TRUE(result.error_occurred);
-      ASSERT_FALSE(result.recovered);
-      EXPECT_NE(std::string::npos, result.error_message.find("unavailable"));
-    }
+    auto result = tester.test_retry_mechanism(5, operation);
+    ASSERT_TRUE(result.recovered);
+    ASSERT_GE(result.recovery_attempts, 3);
   }
 
-  // Test 7: Complex error scenarios
-  TEST(ErrorPathTestingTest, Complex_Error_Scenarios) {
-    ErrorPathTester tester;
+  // Test 7.3: Mixed success and failure
+  {
+    std::vector<bool> results;
 
-    // Test 7.1: Cascading failures
-    {
-      std::vector<ErrorPathTester::ErrorResult> results;
-
-      // Simulate multiple failures
-      results.push_back(tester.simulate_network_failure("connection_refused"));
-      results.push_back(tester.test_file_not_found("/nonexistent.txt"));
-      results.push_back(tester.simulate_disk_full());
-
-      // All should have errors
-      for (const auto& result : results) {
-        ASSERT_TRUE(result.error_occurred);
-      }
-
-      ASSERT_EQ(results.size(), 3);
+    // Some operations succeed, some fail
+    try {
+      results.push_back(true);  // Success
+    } catch (...) {
+      results.push_back(false);
     }
 
-    // Test 7.2: Error recovery chain
-    {
-      int failures = 0;
-      auto operation = [&failures]() {
-        failures++;
-        if (failures < 3) {
-          throw std::runtime_error("Transient error");
-        }
-        return true;
-      };
-
-      auto result = tester.test_retry_mechanism(5, operation);
-      ASSERT_TRUE(result.recovered);
-      ASSERT_GE(result.recovery_attempts, 3);
+    try {
+      throw std::runtime_error("Error");
+    } catch (...) {
+      results.push_back(false);  // Failure
     }
 
-    // Test 7.3: Mixed success and failure
-    {
-      std::vector<bool> results;
-
-      // Some operations succeed, some fail
-      try {
-        results.push_back(true); // Success
-      } catch (...) {
-        results.push_back(false);
-      }
-
-      try {
-        throw std::runtime_error("Error");
-      } catch (...) {
-        results.push_back(false); // Failure
-      }
-
-      try {
-        results.push_back(true); // Success
-      } catch (...) {
-        results.push_back(false);
-      }
-
-      ASSERT_EQ(results.size(), 3);
-      ASSERT_TRUE(results[0]);  // First succeeded
-      ASSERT_FALSE(results[1]); // Second failed
-      ASSERT_TRUE(results[2]);  // Third succeeded
+    try {
+      results.push_back(true);  // Success
+    } catch (...) {
+      results.push_back(false);
     }
+
+    ASSERT_EQ(results.size(), 3);
+    ASSERT_TRUE(results[0]);   // First succeeded
+    ASSERT_FALSE(results[1]);  // Second failed
+    ASSERT_TRUE(results[2]);   // Third succeeded
   }
+}

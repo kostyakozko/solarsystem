@@ -10,6 +10,8 @@
  * - Error handling and graceful degradation
  */
 
+#include <gtest/gtest.h>
+
 #include <chrono>
 #include <cstdlib>
 #include <filesystem>
@@ -22,7 +24,6 @@
 #include "solar_core/bodies/body_factory.hpp"
 #include "solar_core/simulation/simulation_engine.hpp"
 #include "test_data_manager.hpp"
-#include <gtest/gtest.h>
 
 using namespace SolarSystem;
 using namespace TestData;
@@ -443,7 +444,8 @@ TEST(WebInterfaceIntegrationTest, Performance_Under_Load) {
   auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
 
   // Most requests should succeed
-  ASSERT_GE(successful_requests, static_cast<int>(total_requests * 0.8));  // At least 80% success rate
+  ASSERT_GE(successful_requests,
+            static_cast<int>(total_requests * 0.8));  // At least 80% success rate
 
   // Average response time should be reasonable (< 200ms per request on macOS)
   // Note: Performance may vary by system, especially on macOS with TIME_WAIT issues

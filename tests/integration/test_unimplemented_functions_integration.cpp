@@ -8,75 +8,76 @@
  */
 
 #include <gtest/gtest.h>
-#include "solar_core/communication/message.hpp"
 
 #include <chrono>
 #include <string>
 #include <thread>
 #include <vector>
 
+#include "solar_core/communication/message.hpp"
+
 using namespace SolarSystem;
 using namespace SolarSystem::Communication;
-  // Test 1: JSON Serialization Round Trip
-  TEST(UnimplementedFunctionsIntegrationTestsTest, JSON_Serialization_Round_Trip) {
-    JsonMessageSerializer serializer;
+// Test 1: JSON Serialization Round Trip
+TEST(UnimplementedFunctionsIntegrationTestsTest, JSON_Serialization_Round_Trip) {
+  JsonMessageSerializer serializer;
 
-    MessageBuilder builder;
-    auto msg = builder.set_type(MessageType::REQUEST)
-                   .set_priority(MessagePriority::NORMAL)
-                   .set_source("test-sender")
-                   .set_destination("test-recipient")
-                   .add_payload("test_key", std::string("test_value"))
-                   .add_payload("test_number", int64_t(42))
-                   .build();
+  MessageBuilder builder;
+  auto msg = builder.set_type(MessageType::REQUEST)
+                 .set_priority(MessagePriority::NORMAL)
+                 .set_source("test-sender")
+                 .set_destination("test-recipient")
+                 .add_payload("test_key", std::string("test_value"))
+                 .add_payload("test_number", int64_t(42))
+                 .build();
 
-    auto serialize_result = serializer.serialize(msg);
-    ASSERT_TRUE(serialize_result.has_value());
+  auto serialize_result = serializer.serialize(msg);
+  ASSERT_TRUE(serialize_result.has_value());
 
-    auto deserialize_result = serializer.deserialize(serialize_result.value());
-    ASSERT_TRUE(deserialize_result.has_value());
+  auto deserialize_result = serializer.deserialize(serialize_result.value());
+  ASSERT_TRUE(deserialize_result.has_value());
 
-    auto deserialized_msg = deserialize_result.value();
-    ASSERT_TRUE(msg.header.type == deserialized_msg.header.type);
-    ASSERT_EQ(msg.header.source_application, deserialized_msg.header.source_application);
-  }
+  auto deserialized_msg = deserialize_result.value();
+  ASSERT_TRUE(msg.header.type == deserialized_msg.header.type);
+  ASSERT_EQ(msg.header.source_application, deserialized_msg.header.source_application);
+}
 
-  // Test 2: Message Validation
-  TEST(UnimplementedFunctionsIntegrationTestsTest, Message_Validation) {
-    auto msg = Message::create_request("app1", "app2", MessagePayload{});
-    bool is_valid = MessageValidator::validate_structure(msg);
-    ASSERT_TRUE(is_valid);
-  }
+// Test 2: Message Validation
+TEST(UnimplementedFunctionsIntegrationTestsTest, Message_Validation) {
+  auto msg = Message::create_request("app1", "app2", MessagePayload{});
+  bool is_valid = MessageValidator::validate_structure(msg);
+  ASSERT_TRUE(is_valid);
+}
 
-  // Test 3: Create Request Message
-  TEST(UnimplementedFunctionsIntegrationTestsTest, Create_Request_Message) {
-    MessagePayload payload;
-    payload["action"] = std::string("fetch_data");
+// Test 3: Create Request Message
+TEST(UnimplementedFunctionsIntegrationTestsTest, Create_Request_Message) {
+  MessagePayload payload;
+  payload["action"] = std::string("fetch_data");
 
-    auto msg = Message::create_request("client", "server", payload);
-    ASSERT_TRUE(msg.header.type == MessageType::REQUEST);
-    ASSERT_TRUE(msg.is_valid());
-  }
+  auto msg = Message::create_request("client", "server", payload);
+  ASSERT_TRUE(msg.header.type == MessageType::REQUEST);
+  ASSERT_TRUE(msg.is_valid());
+}
 
-  // Test 4: Create Response Message
-  TEST(UnimplementedFunctionsIntegrationTestsTest, Create_Response_Message) {
-    auto request = Message::create_request("client", "server", MessagePayload{});
-    auto response = Message::create_response(request, MessagePayload{});
+// Test 4: Create Response Message
+TEST(UnimplementedFunctionsIntegrationTestsTest, Create_Response_Message) {
+  auto request = Message::create_request("client", "server", MessagePayload{});
+  auto response = Message::create_response(request, MessagePayload{});
 
-    ASSERT_TRUE(response.header.type == MessageType::RESPONSE);
-    ASSERT_TRUE(response.header.correlation_id.has_value());
-  }
+  ASSERT_TRUE(response.header.type == MessageType::RESPONSE);
+  ASSERT_TRUE(response.header.correlation_id.has_value());
+}
 
-  // Test 5: Message Expiration
-  TEST(UnimplementedFunctionsIntegrationTestsTest, Message_Expiration) {
-    MessageBuilder builder;
-    auto msg = builder.set_type(MessageType::REQUEST)
-                   .set_source("client")
-                   .set_destination("server")
-                   .set_timeout(std::chrono::milliseconds(100))
-                   .build();
+// Test 5: Message Expiration
+TEST(UnimplementedFunctionsIntegrationTestsTest, Message_Expiration) {
+  MessageBuilder builder;
+  auto msg = builder.set_type(MessageType::REQUEST)
+                 .set_source("client")
+                 .set_destination("server")
+                 .set_timeout(std::chrono::milliseconds(100))
+                 .build();
 
-    ASSERT_FALSE(msg.is_expired());
-    std::this_thread::sleep_for(std::chrono::milliseconds(150));
-    ASSERT_TRUE(msg.is_expired());
-  }
+  ASSERT_FALSE(msg.is_expired());
+  std::this_thread::sleep_for(std::chrono::milliseconds(150));
+  ASSERT_TRUE(msg.is_expired());
+}

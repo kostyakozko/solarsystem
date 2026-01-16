@@ -106,7 +106,8 @@ ValidationResult InputSanitizer::validate_password(const std::string& password, 
   result.sanitized_value = password;
 
   if (password.length() < min_length) {
-    result.error_message = "Password must be at least " + std::to_string(min_length) + " characters";
+    result.error_message =
+        "Password must be at least " + std::to_string(min_length) + " characters";
     return result;
   }
 
@@ -169,9 +170,8 @@ ValidationResult InputSanitizer::validate_port(int port) {
 
 bool InputSanitizer::contains_sql_injection(const std::string& input) {
   static const std::vector<std::string> patterns = {
-      "' OR '", "' AND '", "DROP TABLE", "DELETE FROM", "INSERT INTO",
-      "UPDATE ", "UNION SELECT", "--", "/*", "*/"
-  };
+      "' OR '",  "' AND '",      "DROP TABLE", "DELETE FROM", "INSERT INTO",
+      "UPDATE ", "UNION SELECT", "--",         "/*",          "*/"};
 
   std::string upper_input = input;
   std::transform(upper_input.begin(), upper_input.end(), upper_input.begin(), ::toupper);
@@ -187,8 +187,7 @@ bool InputSanitizer::contains_sql_injection(const std::string& input) {
 
 bool InputSanitizer::contains_xss(const std::string& input) {
   static const std::vector<std::string> patterns = {
-      "<script", "javascript:", "onerror=", "onload=", "<iframe"
-  };
+      "<script", "javascript:", "onerror=", "onload=", "<iframe"};
 
   std::string lower_input = input;
   std::transform(lower_input.begin(), lower_input.end(), lower_input.begin(), ::tolower);
@@ -203,8 +202,7 @@ bool InputSanitizer::contains_xss(const std::string& input) {
 }
 
 bool InputSanitizer::contains_path_traversal(const std::string& input) {
-  return input.find("..") != std::string::npos ||
-         input.find("./") != std::string::npos ||
+  return input.find("..") != std::string::npos || input.find("./") != std::string::npos ||
          input.find("\\") != std::string::npos;
 }
 
@@ -266,25 +264,22 @@ ValidationResult InputSanitizer::validate_integer_range(int value, int min, int 
   result.sanitized_value = std::to_string(value);
 
   if (!result.is_valid) {
-    result.error_message = "Value must be between " + std::to_string(min) +
-                          " and " + std::to_string(max);
+    result.error_message =
+        "Value must be between " + std::to_string(min) + " and " + std::to_string(max);
   }
 
   return result;
 }
 
-ValidationResult InputSanitizer::validate_string_length(
-    const std::string& str,
-    size_t min_length,
-    size_t max_length) {
+ValidationResult InputSanitizer::validate_string_length(const std::string& str, size_t min_length,
+                                                        size_t max_length) {
   ValidationResult result;
   result.sanitized_value = str;
   result.is_valid = (str.length() >= min_length && str.length() <= max_length);
 
   if (!result.is_valid) {
-    result.error_message = "String length must be between " +
-                          std::to_string(min_length) + " and " +
-                          std::to_string(max_length);
+    result.error_message = "String length must be between " + std::to_string(min_length) + " and " +
+                           std::to_string(max_length);
   }
 
   return result;
@@ -292,16 +287,14 @@ ValidationResult InputSanitizer::validate_string_length(
 
 // RequestValidator implementation
 bool RequestValidator::is_valid_http_method(const std::string& method) {
-  static const std::vector<std::string> valid_methods = {
-      "GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"
-  };
+  static const std::vector<std::string> valid_methods = {"GET",   "POST", "PUT",    "DELETE",
+                                                         "PATCH", "HEAD", "OPTIONS"};
 
   return std::find(valid_methods.begin(), valid_methods.end(), method) != valid_methods.end();
 }
 
-ValidationResult RequestValidator::validate_header(
-    const std::string& /* name */,
-    const std::string& value) {
+ValidationResult RequestValidator::validate_header(const std::string& /* name */,
+                                                   const std::string& value) {
   ValidationResult result;
   result.sanitized_value = value;
 
@@ -317,12 +310,8 @@ ValidationResult RequestValidator::validate_header(
 
 bool RequestValidator::is_valid_content_type(const std::string& content_type) {
   static const std::vector<std::string> valid_types = {
-      "application/json",
-      "application/x-www-form-urlencoded",
-      "multipart/form-data",
-      "text/plain",
-      "text/html"
-  };
+      "application/json", "application/x-www-form-urlencoded", "multipart/form-data", "text/plain",
+      "text/html"};
 
   for (const auto& type : valid_types) {
     if (content_type.find(type) != std::string::npos) {

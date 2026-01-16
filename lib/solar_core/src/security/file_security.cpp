@@ -25,10 +25,8 @@ void WhitelistPolicy::remove_allowed_directory(const std::filesystem::path& dir)
       allowed_directories_.end());
 }
 
-FileSecurityResult WhitelistPolicy::check_access(
-    const std::filesystem::path& path,
-    FileAccessMode /* mode */) const {
-
+FileSecurityResult WhitelistPolicy::check_access(const std::filesystem::path& path,
+                                                 FileAccessMode /* mode */) const {
   // Check if file is explicitly allowed
   for (const auto& allowed_file : allowed_files_) {
     if (path == allowed_file) {
@@ -57,14 +55,10 @@ void FileSystemSecurity::set_policy(std::shared_ptr<FileSecurityPolicy> policy) 
   policy_ = std::move(policy);
 }
 
-std::shared_ptr<FileSecurityPolicy> FileSystemSecurity::get_policy() const {
-  return policy_;
-}
+std::shared_ptr<FileSecurityPolicy> FileSystemSecurity::get_policy() const { return policy_; }
 
-FileSecurityResult FileSystemSecurity::check_file_access(
-    const std::filesystem::path& path,
-    FileAccessMode mode) const {
-
+FileSecurityResult FileSystemSecurity::check_file_access(const std::filesystem::path& path,
+                                                         FileAccessMode mode) const {
   if (!policy_) {
     return FileSecurityResult(true, "No policy set - allowing access");
   }
@@ -104,24 +98,17 @@ bool FileSystemSecurity::check_permissions(const std::filesystem::path& path) co
 }
 
 #ifdef _WIN32
-#include <windows.h>
 #include <aclapi.h>
+#include <windows.h>
 
 bool FileSystemSecurity::check_permissions_windows(const std::filesystem::path& path) const {
   // Get file security descriptor
   PSECURITY_DESCRIPTOR pSD = nullptr;
   PACL pDacl = nullptr;
 
-  DWORD result = GetNamedSecurityInfoW(
-      path.wstring().c_str(),
-      SE_FILE_OBJECT,
-      DACL_SECURITY_INFORMATION,
-      nullptr,
-      nullptr,
-      &pDacl,
-      nullptr,
-      &pSD
-  );
+  DWORD result =
+      GetNamedSecurityInfoW(path.wstring().c_str(), SE_FILE_OBJECT, DACL_SECURITY_INFORMATION,
+                            nullptr, nullptr, &pDacl, nullptr, &pSD);
 
   if (result != ERROR_SUCCESS) {
     return false;
@@ -141,25 +128,13 @@ bool FileSystemSecurity::check_permissions_windows(const std::filesystem::path& 
   DWORD grantedAccess = 0;
   BOOL accessStatus = FALSE;
 
-  GENERIC_MAPPING mapping = {
-      FILE_GENERIC_READ,
-      FILE_GENERIC_WRITE,
-      FILE_GENERIC_EXECUTE,
-      FILE_ALL_ACCESS
-  };
+  GENERIC_MAPPING mapping = {FILE_GENERIC_READ, FILE_GENERIC_WRITE, FILE_GENERIC_EXECUTE,
+                             FILE_ALL_ACCESS};
 
   MapGenericMask(&accessMask, &mapping);
 
-  BOOL result_check = AccessCheck(
-      pSD,
-      hToken,
-      accessMask,
-      &mapping,
-      &privilegeSet,
-      &privilegeSetLength,
-      &grantedAccess,
-      &accessStatus
-  );
+  BOOL result_check = AccessCheck(pSD, hToken, accessMask, &mapping, &privilegeSet,
+                                  &privilegeSetLength, &grantedAccess, &accessStatus);
 
   CloseHandle(hToken);
   if (pSD) LocalFree(pSD);
@@ -221,7 +196,6 @@ bool FileSystemSecurity::validate_path(const std::filesystem::path& path) const 
 
 std::optional<std::filesystem::path> FileSystemSecurity::sanitize_path(
     const std::filesystem::path& path) const {
-
   if (!is_safe_path(path)) {
     return std::nullopt;
   }
@@ -236,26 +210,30 @@ std::optional<std::filesystem::path> FileSystemSecurity::sanitize_path(
   return path;
 }
 
-void FileSystemSecurity::log_access(const std::filesystem::path& path,
-                                   FileAccessMode mode,
-                                   bool allowed) const {
+void FileSystemSecurity::log_access(const std::filesystem::path& path, FileAccessMode mode,
+                                    bool allowed) const {
   std::string mode_str;
   switch (mode) {
-    case FileAccessMode::READ: mode_str = "READ"; break;
-    case FileAccessMode::WRITE: mode_str = "WRITE"; break;
-    case FileAccessMode::EXECUTE: mode_str = "EXECUTE"; break;
-    case FileAccessMode::DELETE: mode_str = "DELETE"; break;
+    case FileAccessMode::READ:
+      mode_str = "READ";
+      break;
+    case FileAccessMode::WRITE:
+      mode_str = "WRITE";
+      break;
+    case FileAccessMode::EXECUTE:
+      mode_str = "EXECUTE";
+      break;
+    case FileAccessMode::DELETE:
+      mode_str = "DELETE";
+      break;
   }
 
-  std::string log_entry = (allowed ? "ALLOWED: " : "DENIED: ") +
-                         mode_str + " " + path.string();
+  std::string log_entry = (allowed ? "ALLOWED: " : "DENIED: ") + mode_str + " " + path.string();
   audit_log_.push_back(log_entry);
 }
 
 // SecureFileOperations implementation
-std::optional<std::string> SecureFileOperations::read_file(
-    const std::filesystem::path& path) {
-
+std::optional<std::string> SecureFileOperations::read_file(const std::filesystem::path& path) {
   auto& security = FileSystemSecurity::instance();
   if (!security.can_read(path)) {
     return std::nullopt;
@@ -266,15 +244,12 @@ std::optional<std::string> SecureFileOperations::read_file(
     return std::nullopt;
   }
 
-  std::string content((std::istreambuf_iterator<char>(file)),
-                     std::istreambuf_iterator<char>());
+  std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
   return content;
 }
 
-bool SecureFileOperations::write_file(
-    const std::filesystem::path& path,
-    const std::string& content) {
-
+bool SecureFileOperations::write_file(const std::filesystem::path& path,
+                                      const std::string& content) {
   auto& security = FileSystemSecurity::instance();
   if (!security.can_write(path)) {
     return false;
@@ -289,9 +264,7 @@ bool SecureFileOperations::write_file(
   return file.good();
 }
 
-bool SecureFileOperations::delete_file(
-    const std::filesystem::path& path) {
-
+bool SecureFileOperations::delete_file(const std::filesystem::path& path) {
   auto& security = FileSystemSecurity::instance();
   if (!security.can_delete(path)) {
     return false;
@@ -301,9 +274,7 @@ bool SecureFileOperations::delete_file(
   return std::filesystem::remove(path, ec);
 }
 
-bool SecureFileOperations::create_directory(
-    const std::filesystem::path& path) {
-
+bool SecureFileOperations::create_directory(const std::filesystem::path& path) {
   auto& security = FileSystemSecurity::instance();
   if (!security.can_write(path)) {
     return false;
@@ -315,7 +286,6 @@ bool SecureFileOperations::create_directory(
 
 std::vector<std::filesystem::path> SecureFileOperations::list_directory(
     const std::filesystem::path& path) {
-
   auto& security = FileSystemSecurity::instance();
   if (!security.can_read(path)) {
     return {};

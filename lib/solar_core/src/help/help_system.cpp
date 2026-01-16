@@ -6,9 +6,9 @@
 #include "solar_core/help/help_system.hpp"
 
 #include <algorithm>
-#include <sstream>
 #include <cctype>
 #include <cmath>
+#include <sstream>
 
 namespace SolarSystem::Help {
 
@@ -17,9 +17,7 @@ HelpSystem& HelpSystem::instance() {
   return instance;
 }
 
-void HelpSystem::register_topic(const HelpTopic& topic) {
-  topics_[topic.id] = topic;
-}
+void HelpSystem::register_topic(const HelpTopic& topic) { topics_[topic.id] = topic; }
 
 std::optional<HelpTopic> HelpSystem::get_topic(const std::string& topic_id) const {
   auto it = topics_.find(topic_id);
@@ -133,10 +131,9 @@ std::vector<SearchResult> HelpSystem::search(const std::string& query) const {
   }
 
   // Sort by relevance
-  std::sort(results.begin(), results.end(),
-           [](const SearchResult& a, const SearchResult& b) {
-             return a.relevance_score > b.relevance_score;
-           });
+  std::sort(results.begin(), results.end(), [](const SearchResult& a, const SearchResult& b) {
+    return a.relevance_score > b.relevance_score;
+  });
 
   // Limit to top 10 results
   if (results.size() > 10) {
@@ -183,13 +180,9 @@ std::vector<std::string> HelpSystem::suggest_topics(const std::string& partial_q
   return suggestions;
 }
 
-void HelpSystem::set_context(const std::string& context) {
-  current_context_ = context;
-}
+void HelpSystem::set_context(const std::string& context) { current_context_ = context; }
 
-std::string HelpSystem::get_context() const {
-  return current_context_;
-}
+std::string HelpSystem::get_context() const { return current_context_; }
 
 std::vector<HelpTopic> HelpSystem::get_contextual_help() const {
   if (current_context_.empty()) {
@@ -197,13 +190,11 @@ std::vector<HelpTopic> HelpSystem::get_contextual_help() const {
   }
 
   return search_by_keyword(current_context_).size() > 0
-         ? get_topics_by_category(HelpCategory::COMMANDS)
-         : std::vector<HelpTopic>{};
+             ? get_topics_by_category(HelpCategory::COMMANDS)
+             : std::vector<HelpTopic>{};
 }
 
-void HelpSystem::register_tutorial(const Tutorial& tutorial) {
-  tutorials_[tutorial.id] = tutorial;
-}
+void HelpSystem::register_tutorial(const Tutorial& tutorial) { tutorials_[tutorial.id] = tutorial; }
 
 std::optional<Tutorial> HelpSystem::get_tutorial(const std::string& tutorial_id) const {
   auto it = tutorials_.find(tutorial_id);
@@ -436,9 +427,7 @@ bool HelpAssistant::is_workflow_complete() const {
   return !tutorial || current_step_ >= tutorial->steps.size();
 }
 
-void HelpAssistant::complete_current_step() {
-  ++current_step_;
-}
+void HelpAssistant::complete_current_step() { ++current_step_; }
 
 std::string HelpAssistant::suggest_solution(const std::string& error_message) const {
   auto& help = HelpSystem::instance();
@@ -454,7 +443,8 @@ std::string HelpAssistant::suggest_solution(const std::string& error_message) co
   return "No specific solution found. Try checking the troubleshooting guide.";
 }
 
-std::vector<std::string> HelpAssistant::get_troubleshooting_steps(const std::string& problem) const {
+std::vector<std::string> HelpAssistant::get_troubleshooting_steps(
+    const std::string& problem) const {
   std::vector<std::string> steps;
 
   auto& help = HelpSystem::instance();
@@ -479,7 +469,8 @@ std::vector<std::string> HelpAssistant::get_troubleshooting_steps(const std::str
 }
 
 void HelpAssistant::track_user_progress(const std::string& topic_id) {
-  if (std::find(completed_topics_.begin(), completed_topics_.end(), topic_id) == completed_topics_.end()) {
+  if (std::find(completed_topics_.begin(), completed_topics_.end(), topic_id) ==
+      completed_topics_.end()) {
     completed_topics_.push_back(topic_id);
   }
 }
@@ -491,7 +482,8 @@ std::vector<std::string> HelpAssistant::get_recommended_topics() const {
   std::vector<std::string> recommendations;
 
   for (const auto& topic : all_topics) {
-    if (std::find(completed_topics_.begin(), completed_topics_.end(), topic.id) == completed_topics_.end()) {
+    if (std::find(completed_topics_.begin(), completed_topics_.end(), topic.id) ==
+        completed_topics_.end()) {
       recommendations.push_back(topic.id);
       if (recommendations.size() >= 5) {
         break;
@@ -510,8 +502,8 @@ double HelpAssistant::get_topic_completion_rate() const {
     return 0.0;
   }
 
-  return static_cast<double>(completed_topics_.size()) / static_cast<double>(all_topics.size()) * 100.0;
+  return static_cast<double>(completed_topics_.size()) / static_cast<double>(all_topics.size()) *
+         100.0;
 }
 
 }  // namespace SolarSystem::Help
-

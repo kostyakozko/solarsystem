@@ -216,12 +216,12 @@ void PerformanceMonitor::check_thresholds() {
 
     // Check thresholds
     bool exceeds_critical = threshold.above_threshold
-        ? (current_value > threshold.critical_threshold)
-        : (current_value < threshold.critical_threshold);
+                                ? (current_value > threshold.critical_threshold)
+                                : (current_value < threshold.critical_threshold);
 
     bool exceeds_warning = threshold.above_threshold
-        ? (current_value > threshold.warning_threshold)
-        : (current_value < threshold.warning_threshold);
+                               ? (current_value > threshold.warning_threshold)
+                               : (current_value < threshold.warning_threshold);
 
     if (exceeds_critical) {
       PerformanceAlert alert;
@@ -319,9 +319,15 @@ std::string PerformanceMonitor::generate_report() const {
       const auto& alert = *it;
       oss << "  [";
       switch (alert.severity) {
-        case PerformanceAlert::Severity::INFO: oss << "INFO"; break;
-        case PerformanceAlert::Severity::WARNING: oss << "WARN"; break;
-        case PerformanceAlert::Severity::CRITICAL: oss << "CRIT"; break;
+        case PerformanceAlert::Severity::INFO:
+          oss << "INFO";
+          break;
+        case PerformanceAlert::Severity::WARNING:
+          oss << "WARN";
+          break;
+        case PerformanceAlert::Severity::CRITICAL:
+          oss << "CRIT";
+          break;
       }
       oss << "] " << alert.message << " (value: " << alert.current_value << ")\n";
     }
@@ -368,12 +374,8 @@ void PerformanceMonitor::reset_all() {
   alerts_.clear();
 }
 
-void PerformanceMonitor::enable_monitoring(bool enabled) {
-  monitoring_enabled_ = enabled;
-}
+void PerformanceMonitor::enable_monitoring(bool enabled) { monitoring_enabled_ = enabled; }
 
-bool PerformanceMonitor::is_monitoring_enabled() const {
-  return monitoring_enabled_;
-}
+bool PerformanceMonitor::is_monitoring_enabled() const { return monitoring_enabled_; }
 
 }  // namespace SolarSystem::Performance

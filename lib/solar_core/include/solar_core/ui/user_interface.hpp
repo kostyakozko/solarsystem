@@ -6,12 +6,12 @@
 #ifndef SOLAR_CORE_UI_USER_INTERFACE_HPP
 #define SOLAR_CORE_UI_USER_INTERFACE_HPP
 
+#include <chrono>
+#include <functional>
+#include <map>
+#include <optional>
 #include <string>
 #include <vector>
-#include <functional>
-#include <chrono>
-#include <optional>
-#include <map>
 
 #include "solar_core/ui/status_display.hpp"
 

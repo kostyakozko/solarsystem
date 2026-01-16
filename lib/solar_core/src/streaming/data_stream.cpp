@@ -46,7 +46,8 @@ DataPoint::DataPoint(const Bodies::CelestialBody& body, std::chrono::system_cloc
 }
 
 // DataSnapshot implementation
-DataSnapshot::DataSnapshot(const Bodies::BodyCollection& bodies, std::chrono::system_clock::time_point time)
+DataSnapshot::DataSnapshot(const Bodies::BodyCollection& bodies,
+                           std::chrono::system_clock::time_point time)
     : timestamp(time) {
   auto start_time = std::chrono::steady_clock::now();
 
@@ -105,9 +106,7 @@ std::string StreamStats::to_string() const {
 }
 
 // DataStream implementation
-DataStream::DataStream(StreamConfig config) : config_(std::move(config)) {
-  stats_.reset();
-}
+DataStream::DataStream(StreamConfig config) : config_(std::move(config)) { stats_.reset(); }
 
 DataStream::~DataStream() {
   if (running_.load()) {
@@ -317,9 +316,8 @@ void DataStream::worker_loop() {
     try {
       // Wait for work or timeout
       std::unique_lock<std::mutex> lock(stream_mutex_);
-      stream_cv_.wait_for(lock, config_.update_interval, [this] {
-        return stop_requested_.load() || !paused_.load();
-      });
+      stream_cv_.wait_for(lock, config_.update_interval,
+                          [this] { return stop_requested_.load() || !paused_.load(); });
 
       if (stop_requested_.load()) {
         break;
@@ -388,19 +386,19 @@ void DataStream::monitor_quality(const DataSnapshot& snapshot) {
   // Check overall quality
   if (snapshot.overall_quality < config_.min_quality_threshold) {
     notify_error_callback("Snapshot quality below threshold: " +
-                         std::to_string(snapshot.overall_quality));
+                          std::to_string(snapshot.overall_quality));
   }
 
   // Check individual data points
   for (const auto& point : snapshot.data_points) {
     if (point.quality_score < config_.min_quality_threshold) {
-      notify_error_callback("Data point quality below threshold for " + point.body_name +
-                           ": " + std::to_string(point.quality_score));
+      notify_error_callback("Data point quality below threshold for " + point.body_name + ": " +
+                            std::to_string(point.quality_score));
     }
 
     if (point.latency > config_.max_latency) {
-      notify_error_callback("Data point latency too high for " + point.body_name +
-                           ": " + std::to_string(point.latency.count()) + "ms");
+      notify_error_callback("Data point latency too high for " + point.body_name + ": " +
+                            std::to_string(point.latency.count()) + "ms");
     }
   }
 }

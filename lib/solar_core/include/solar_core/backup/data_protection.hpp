@@ -6,11 +6,11 @@
 #ifndef SOLAR_CORE_BACKUP_DATA_PROTECTION_HPP
 #define SOLAR_CORE_BACKUP_DATA_PROTECTION_HPP
 
-#include <string>
-#include <vector>
-#include <optional>
 #include <chrono>
 #include <functional>
+#include <optional>
+#include <string>
+#include <vector>
 
 #include "solar_core/export.hpp"
 
@@ -19,12 +19,7 @@ namespace SolarSystem::Backup {
 /**
  * @brief Data integrity status
  */
-enum class IntegrityStatus {
-  VALID,
-  CORRUPTED,
-  MISSING,
-  UNKNOWN
-};
+enum class IntegrityStatus { VALID, CORRUPTED, MISSING, UNKNOWN };
 
 /**
  * @brief Data integrity check result

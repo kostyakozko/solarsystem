@@ -12,14 +12,14 @@
  * Requirements: 5.1, 5.4
  */
 
+#include <gtest/gtest.h>
+
 #include <algorithm>
 #include <cmath>
 #include <memory>
 #include <random>
 #include <string>
 #include <vector>
-
-#include <gtest/gtest.h>
 
 /**
  * @brief Test data generation system
@@ -29,30 +29,30 @@ class TestDataGenerator {
   // Astronomical body data
   struct AstronomicalBody {
     std::string name;
-    double mass_kg;           // Mass in kilograms
-    double radius_m;          // Radius in meters
-    double orbital_period_s;  // Orbital period in seconds
-    double semi_major_axis_m; // Semi-major axis in meters
-    double eccentricity;      // Orbital eccentricity (0-1)
-    double inclination_deg;   // Orbital inclination in degrees
+    double mass_kg;            // Mass in kilograms
+    double radius_m;           // Radius in meters
+    double orbital_period_s;   // Orbital period in seconds
+    double semi_major_axis_m;  // Semi-major axis in meters
+    double eccentricity;       // Orbital eccentricity (0-1)
+    double inclination_deg;    // Orbital inclination in degrees
   };
 
   // Ephemeris data point
   struct EphemerisData {
-    double jd;           // Julian date
-    double x, y, z;      // Position in meters
-    double vx, vy, vz;   // Velocity in m/s
-    std::string body_id; // Body identifier
+    double jd;            // Julian date
+    double x, y, z;       // Position in meters
+    double vx, vy, vz;    // Velocity in m/s
+    std::string body_id;  // Body identifier
   };
 
   // Configuration data
   struct ConfigurationData {
-    double timestep_s;        // Simulation timestep in seconds
-    double duration_s;        // Simulation duration in seconds
-    std::string integrator;   // Integration method
-    double tolerance;         // Numerical tolerance
-    bool enable_relativity;   // Relativistic corrections
-    int output_frequency;     // Output every N steps
+    double timestep_s;       // Simulation timestep in seconds
+    double duration_s;       // Simulation duration in seconds
+    std::string integrator;  // Integration method
+    double tolerance;        // Numerical tolerance
+    bool enable_relativity;  // Relativistic corrections
+    int output_frequency;    // Output every N steps
   };
 
   // User input data
@@ -78,34 +78,34 @@ class TestDataGenerator {
 
     if (type == "planet") {
       body.name = "TestPlanet_" + std::to_string(rng_());
-      body.mass_kg = 1e24 + unit_dist_(rng_) * 1e27;  // Earth to Jupiter mass
-      body.radius_m = 6e6 + unit_dist_(rng_) * 6e7;   // Earth to Jupiter radius
-      body.orbital_period_s = 3e7 + unit_dist_(rng_) * 3e8;  // ~1-10 years
-      body.semi_major_axis_m = 1e11 + unit_dist_(rng_) * 7e11; // 1-8 AU
-      body.eccentricity = unit_dist_(rng_) * 0.2;     // Low eccentricity
-      body.inclination_deg = unit_dist_(rng_) * 10.0; // Low inclination
+      body.mass_kg = 1e24 + unit_dist_(rng_) * 1e27;            // Earth to Jupiter mass
+      body.radius_m = 6e6 + unit_dist_(rng_) * 6e7;             // Earth to Jupiter radius
+      body.orbital_period_s = 3e7 + unit_dist_(rng_) * 3e8;     // ~1-10 years
+      body.semi_major_axis_m = 1e11 + unit_dist_(rng_) * 7e11;  // 1-8 AU
+      body.eccentricity = unit_dist_(rng_) * 0.2;               // Low eccentricity
+      body.inclination_deg = unit_dist_(rng_) * 10.0;           // Low inclination
     } else if (type == "moon") {
       body.name = "TestMoon_" + std::to_string(rng_());
-      body.mass_kg = 1e20 + unit_dist_(rng_) * 1e23;  // Small moon to large moon
-      body.radius_m = 1e5 + unit_dist_(rng_) * 2e6;   // 100km to 2000km
-      body.orbital_period_s = 1e5 + unit_dist_(rng_) * 1e7;  // Days to months
-      body.semi_major_axis_m = 1e8 + unit_dist_(rng_) * 1e9; // 100k to 1M km
-      body.eccentricity = unit_dist_(rng_) * 0.1;     // Very low eccentricity
-      body.inclination_deg = unit_dist_(rng_) * 5.0;  // Very low inclination
+      body.mass_kg = 1e20 + unit_dist_(rng_) * 1e23;          // Small moon to large moon
+      body.radius_m = 1e5 + unit_dist_(rng_) * 2e6;           // 100km to 2000km
+      body.orbital_period_s = 1e5 + unit_dist_(rng_) * 1e7;   // Days to months
+      body.semi_major_axis_m = 1e8 + unit_dist_(rng_) * 1e9;  // 100k to 1M km
+      body.eccentricity = unit_dist_(rng_) * 0.1;             // Very low eccentricity
+      body.inclination_deg = unit_dist_(rng_) * 5.0;          // Very low inclination
     } else if (type == "asteroid") {
       body.name = "TestAsteroid_" + std::to_string(rng_());
-      body.mass_kg = 1e15 + unit_dist_(rng_) * 1e20;  // Small to large asteroid
-      body.radius_m = 1e3 + unit_dist_(rng_) * 5e5;   // 1km to 500km
-      body.orbital_period_s = 1e8 + unit_dist_(rng_) * 2e8;  // 3-6 years
-      body.semi_major_axis_m = 2e11 + unit_dist_(rng_) * 3e11; // 2-5 AU
-      body.eccentricity = unit_dist_(rng_) * 0.5;     // Higher eccentricity
-      body.inclination_deg = unit_dist_(rng_) * 30.0; // Higher inclination
+      body.mass_kg = 1e15 + unit_dist_(rng_) * 1e20;            // Small to large asteroid
+      body.radius_m = 1e3 + unit_dist_(rng_) * 5e5;             // 1km to 500km
+      body.orbital_period_s = 1e8 + unit_dist_(rng_) * 2e8;     // 3-6 years
+      body.semi_major_axis_m = 2e11 + unit_dist_(rng_) * 3e11;  // 2-5 AU
+      body.eccentricity = unit_dist_(rng_) * 0.5;               // Higher eccentricity
+      body.inclination_deg = unit_dist_(rng_) * 30.0;           // Higher inclination
     } else {
       // Default: star
       body.name = "TestStar_" + std::to_string(rng_());
       body.mass_kg = 1e30 + unit_dist_(rng_) * 1e30;  // Solar mass range
       body.radius_m = 5e8 + unit_dist_(rng_) * 5e8;   // Solar radius range
-      body.orbital_period_s = 0.0;                     // Stars don't orbit
+      body.orbital_period_s = 0.0;                    // Stars don't orbit
       body.semi_major_axis_m = 0.0;
       body.eccentricity = 0.0;
       body.inclination_deg = 0.0;
@@ -115,33 +115,30 @@ class TestDataGenerator {
   }
 
   // Generate ephemeris data with orbital mechanics
-  EphemerisData generate_ephemeris_data(const AstronomicalBody& body,
-                                        double jd) {
+  EphemerisData generate_ephemeris_data(const AstronomicalBody& body, double jd) {
     EphemerisData data;
     data.jd = jd;
     data.body_id = body.name;
 
     if (body.orbital_period_s > 0) {
       // Calculate orbital position using simplified Kepler orbit
-      double mean_anomaly =
-          2.0 * M_PI * (jd - 2451545.0) * 86400.0 / body.orbital_period_s;
-      double eccentric_anomaly = mean_anomaly; // Simplified (should iterate)
+      double mean_anomaly = 2.0 * M_PI * (jd - 2451545.0) * 86400.0 / body.orbital_period_s;
+      double eccentric_anomaly = mean_anomaly;  // Simplified (should iterate)
 
       // Position in orbital plane
       double a = body.semi_major_axis_m;
       double e = body.eccentricity;
       double r = a * (1.0 - e * std::cos(eccentric_anomaly));
-      double theta = 2.0 * std::atan2(
-          std::sqrt(1.0 + e) * std::sin(eccentric_anomaly / 2.0),
-          std::sqrt(1.0 - e) * std::cos(eccentric_anomaly / 2.0));
+      double theta = 2.0 * std::atan2(std::sqrt(1.0 + e) * std::sin(eccentric_anomaly / 2.0),
+                                      std::sqrt(1.0 - e) * std::cos(eccentric_anomaly / 2.0));
 
       // Convert to Cartesian coordinates
       data.x = r * std::cos(theta);
       data.y = r * std::sin(theta);
-      data.z = 0.0; // Simplified: ignore inclination
+      data.z = 0.0;  // Simplified: ignore inclination
 
       // Velocity (simplified)
-      double v = std::sqrt(1.989e30 * 6.674e-11 / r); // Vis-viva equation
+      double v = std::sqrt(1.989e30 * 6.674e-11 / r);  // Vis-viva equation
       data.vx = -v * std::sin(theta);
       data.vy = v * std::cos(theta);
       data.vz = 0.0;
@@ -165,10 +162,8 @@ class TestDataGenerator {
     config.duration_s = 86400.0 * (1.0 + unit_dist_(rng_) * 3650.0);
 
     // Random integrator
-    std::vector<std::string> integrators = {"euler", "rk4", "leapfrog",
-                                            "verlet"};
-    config.integrator =
-        integrators[rng_() % integrators.size()];
+    std::vector<std::string> integrators = {"euler", "rk4", "leapfrog", "verlet"};
+    config.integrator = integrators[rng_() % integrators.size()];
 
     // Tolerance: 1e-12 to 1e-6
     config.tolerance = std::pow(10.0, -12.0 + unit_dist_(rng_) * 6.0);
@@ -183,22 +178,21 @@ class TestDataGenerator {
   }
 
   // Generate configuration with edge cases
-  ConfigurationData generate_edge_case_configuration(
-      const std::string& edge_case) {
+  ConfigurationData generate_edge_case_configuration(const std::string& edge_case) {
     ConfigurationData config = generate_valid_configuration();
 
     if (edge_case == "min_timestep") {
-      config.timestep_s = 0.001; // Very small timestep
+      config.timestep_s = 0.001;  // Very small timestep
     } else if (edge_case == "max_timestep") {
-      config.timestep_s = 86400.0; // One day timestep
+      config.timestep_s = 86400.0;  // One day timestep
     } else if (edge_case == "min_duration") {
-      config.duration_s = 1.0; // One second
+      config.duration_s = 1.0;  // One second
     } else if (edge_case == "max_duration") {
-      config.duration_s = 3.156e9; // 100 years
+      config.duration_s = 3.156e9;  // 100 years
     } else if (edge_case == "high_tolerance") {
-      config.tolerance = 1e-3; // Low precision
+      config.tolerance = 1e-3;  // Low precision
     } else if (edge_case == "low_tolerance") {
-      config.tolerance = 1e-15; // Very high precision
+      config.tolerance = 1e-15;  // Very high precision
     }
 
     return config;
@@ -237,7 +231,7 @@ class TestDataGenerator {
       input.error_message = "Unknown command";
     } else if (error_type == "missing_argument") {
       input.command = "simulate";
-      input.arguments = {"--timestep"}; // Missing value
+      input.arguments = {"--timestep"};  // Missing value
       input.error_message = "Missing argument value";
     } else if (error_type == "invalid_value") {
       input.command = "simulate";
@@ -257,8 +251,7 @@ class TestDataGenerator {
   }
 
   // Generate batch of astronomical bodies
-  std::vector<AstronomicalBody> generate_solar_system(int num_planets,
-                                                      int num_moons) {
+  std::vector<AstronomicalBody> generate_solar_system(int num_planets, int num_moons) {
     std::vector<AstronomicalBody> bodies;
 
     // Add star
@@ -278,9 +271,9 @@ class TestDataGenerator {
   }
 
   // Generate time series of ephemeris data
-  std::vector<EphemerisData> generate_ephemeris_time_series(
-      const AstronomicalBody& body, double start_jd, double end_jd,
-      double step_days) {
+  std::vector<EphemerisData> generate_ephemeris_time_series(const AstronomicalBody& body,
+                                                            double start_jd, double end_jd,
+                                                            double step_days) {
     std::vector<EphemerisData> series;
 
     for (double jd = start_jd; jd <= end_jd; jd += step_days) {
@@ -293,7 +286,7 @@ class TestDataGenerator {
 
 // Test 1: Astronomical data generators
 TEST(DataGenerationTest, AstronomicalDataGenerators) {
-  TestDataGenerator generator(12345); // Fixed seed for reproducibility
+  TestDataGenerator generator(12345);  // Fixed seed for reproducibility
 
   // Test 1.1: Generate planet data
   {
@@ -338,7 +331,7 @@ TEST(DataGenerationTest, AstronomicalDataGenerators) {
     auto star = generator.generate_astronomical_body("star");
     ASSERT_FALSE(star.name.empty());
     EXPECT_GE(star.mass_kg, 1e30);
-    ASSERT_EQ(star.orbital_period_s, 0.0); // Stars don't orbit
+    ASSERT_EQ(star.orbital_period_s, 0.0);  // Stars don't orbit
     ASSERT_EQ(star.eccentricity, 0.0);
   }
 }
@@ -378,10 +371,9 @@ TEST(DataGenerationTest, EphemerisDataGeneration) {
   // Test 2.3: Generate time series
   {
     auto planet = generator.generate_astronomical_body("planet");
-    auto series = generator.generate_ephemeris_time_series(
-        planet, 2451545.0, 2451555.0, 1.0);
+    auto series = generator.generate_ephemeris_time_series(planet, 2451545.0, 2451555.0, 1.0);
 
-    ASSERT_EQ(series.size(), 11); // 10 days + start
+    ASSERT_EQ(series.size(), 11);  // 10 days + start
     ASSERT_EQ(series[0].jd, 2451545.0);
     ASSERT_EQ(series[10].jd, 2451555.0);
 
@@ -395,8 +387,8 @@ TEST(DataGenerationTest, EphemerisDataGeneration) {
   {
     auto planet = generator.generate_astronomical_body("planet");
     auto eph1 = generator.generate_ephemeris_data(planet, 2451545.0);
-    auto eph2 = generator.generate_ephemeris_data(
-        planet, 2451545.0 + planet.orbital_period_s / 86400.0);
+    auto eph2 =
+        generator.generate_ephemeris_data(planet, 2451545.0 + planet.orbital_period_s / 86400.0);
 
     // After one orbital period, position should be similar
     double dx = eph1.x - eph2.x;
@@ -437,21 +429,18 @@ TEST(DataGenerationTest, ConfigurationDataGeneration) {
     std::sort(integrators.begin(), integrators.end());
     auto last = std::unique(integrators.begin(), integrators.end());
     integrators.erase(last, integrators.end());
-    ASSERT_GT(integrators.size(), 1); // At least 2 different integrators
+    ASSERT_GT(integrators.size(), 1);  // At least 2 different integrators
   }
 
   // Test 3.3: Edge case configurations
   {
-    auto min_timestep =
-        generator.generate_edge_case_configuration("min_timestep");
+    auto min_timestep = generator.generate_edge_case_configuration("min_timestep");
     ASSERT_EQ(min_timestep.timestep_s, 0.001);
 
-    auto max_timestep =
-        generator.generate_edge_case_configuration("max_timestep");
+    auto max_timestep = generator.generate_edge_case_configuration("max_timestep");
     ASSERT_EQ(max_timestep.timestep_s, 86400.0);
 
-    auto low_tolerance =
-        generator.generate_edge_case_configuration("low_tolerance");
+    auto low_tolerance = generator.generate_edge_case_configuration("low_tolerance");
     ASSERT_EQ(low_tolerance.tolerance, 1e-15);
   }
 }
@@ -506,7 +495,7 @@ TEST(DataGenerationTest, BatchDataGeneration) {
   // Test 5.1: Generate solar system
   {
     auto system = generator.generate_solar_system(5, 10);
-    ASSERT_EQ(system.size(), 16); // 1 star + 5 planets + 10 moons
+    ASSERT_EQ(system.size(), 16);  // 1 star + 5 planets + 10 moons
 
     // First should be star
     ASSERT_EQ(system[0].orbital_period_s, 0.0);
@@ -522,14 +511,14 @@ TEST(DataGenerationTest, BatchDataGeneration) {
         moons++;
     }
     ASSERT_EQ(stars, 1);
-    ASSERT_GE(planets, 1); // At least some planets
-    ASSERT_GE(moons, 1);   // At least some moons
+    ASSERT_GE(planets, 1);  // At least some planets
+    ASSERT_GE(moons, 1);    // At least some moons
   }
 
   // Test 5.2: Generate large dataset
   {
     auto large_system = generator.generate_solar_system(20, 50);
-    ASSERT_EQ(large_system.size(), 71); // 1 + 20 + 50
+    ASSERT_EQ(large_system.size(), 71);  // 1 + 20 + 50
 
     // All should have valid data
     for (const auto& body : large_system) {
@@ -545,14 +534,13 @@ TEST(DataGenerationTest, BatchDataGeneration) {
     std::vector<std::vector<TestDataGenerator::EphemerisData>> all_ephemeris;
 
     for (const auto& body : system) {
-      auto series = generator.generate_ephemeris_time_series(
-          body, 2451545.0, 2451550.0, 1.0);
+      auto series = generator.generate_ephemeris_time_series(body, 2451545.0, 2451550.0, 1.0);
       all_ephemeris.push_back(series);
     }
 
-    ASSERT_EQ(all_ephemeris.size(), 4); // 1 star + 3 planets
+    ASSERT_EQ(all_ephemeris.size(), 4);  // 1 star + 3 planets
     for (const auto& series : all_ephemeris) {
-      ASSERT_EQ(series.size(), 6); // 5 days + start
+      ASSERT_EQ(series.size(), 6);  // 5 days + start
     }
   }
 }

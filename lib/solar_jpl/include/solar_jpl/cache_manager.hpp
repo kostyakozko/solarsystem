@@ -11,8 +11,6 @@
 
 #pragma once
 
-#include "solar_jpl/export.hpp"
-
 #include <chrono>
 #include <filesystem>
 #include <memory>
@@ -22,12 +20,13 @@
 #include <vector>
 
 #include "jpl_client.hpp"
+#include "solar_jpl/export.hpp"
 
 // Forward declaration for data validator
 namespace SolarSystem::JPL {
 class DataValidator;
 struct ValidationReport;
-}
+}  // namespace SolarSystem::JPL
 
 namespace SolarSystem::JPL {
 
@@ -36,9 +35,9 @@ namespace SolarSystem::JPL {
  */
 enum class CompressionAlgorithm {
   None,
-  LZ4,      // Fast compression/decompression
-  ZSTD,     // High compression ratio
-  GZIP      // Standard compression
+  LZ4,   // Fast compression/decompression
+  ZSTD,  // High compression ratio
+  GZIP   // Standard compression
 };
 
 /**
@@ -55,9 +54,9 @@ enum class RefreshStrategy {
  * @brief Cache validation levels
  */
 enum class ValidationLevel {
-  Basic,        // Basic file existence and size checks
-  Standard,     // Standard validation with checksum verification
-  Comprehensive // Full validation with cross-format consistency checks
+  Basic,         // Basic file existence and size checks
+  Standard,      // Standard validation with checksum verification
+  Comprehensive  // Full validation with cross-format consistency checks
 };
 
 /**
@@ -145,7 +144,7 @@ struct CacheManagerConfig {
   CompressionAlgorithm compression_algorithm = CompressionAlgorithm::ZSTD;
 
   // Expiration settings
-  std::chrono::hours cache_validity = std::chrono::hours(24 * 30);  // 30 days
+  std::chrono::hours cache_validity = std::chrono::hours(24 * 30);     // 30 days
   std::chrono::hours warning_threshold = std::chrono::hours(24 * 25);  // 25 days
   RefreshStrategy refresh_strategy = RefreshStrategy::TimeBasedAuto;
   std::chrono::hours auto_refresh_interval = std::chrono::hours(24 * 7);  // 7 days
@@ -202,7 +201,7 @@ struct CacheEntryMetadata {
  * @brief Intelligent Cache Manager
  */
 class SOLAR_JPL_API CacheManager {
-public:
+ public:
   /**
    * @brief Construct cache manager with configuration
    */
@@ -235,30 +234,25 @@ public:
    * @brief Load data from cache with intelligent validation
    */
   [[nodiscard]] JPLResult<std::vector<EphemerisData>> load_cache(
-    ValidationLevel validation_level = ValidationLevel::Standard
-  );
+      ValidationLevel validation_level = ValidationLevel::Standard);
 
   /**
    * @brief Save data to cache with optimization
    */
-  [[nodiscard]] JPLVoidResult save_cache(
-    const std::vector<EphemerisData>& data,
-    bool enable_compression = true
-  );
+  [[nodiscard]] JPLVoidResult save_cache(const std::vector<EphemerisData>& data,
+                                         bool enable_compression = true);
 
   /**
    * @brief Validate cache integrity with specified level
    */
   [[nodiscard]] JPLResult<bool> validate_cache(
-    ValidationLevel validation_level = ValidationLevel::Standard
-  );
+      ValidationLevel validation_level = ValidationLevel::Standard);
 
   /**
    * @brief Validate cache with comprehensive data validation
    */
   [[nodiscard]] JPLResult<ValidationReport> validate_cache_comprehensive(
-    ValidationLevel validation_level = ValidationLevel::Comprehensive
-  );
+      ValidationLevel validation_level = ValidationLevel::Comprehensive);
 
   /**
    * @brief Clear cache with optional backup
@@ -281,8 +275,7 @@ public:
    * @brief Compress cache files
    */
   [[nodiscard]] JPLVoidResult compress_cache(
-    CompressionAlgorithm algorithm = CompressionAlgorithm::ZSTD
-  );
+      CompressionAlgorithm algorithm = CompressionAlgorithm::ZSTD);
 
   /**
    * @brief Decompress cache files
@@ -382,7 +375,7 @@ public:
    */
   [[nodiscard]] std::shared_ptr<DataValidator> get_data_validator() const;
 
-private:
+ private:
   CacheManagerConfig config_;
   CacheStatistics statistics_;
   std::optional<CacheEntryMetadata> entry_metadata_;
@@ -409,7 +402,7 @@ private:
  * @brief Cache Manager Factory
  */
 class SOLAR_JPL_API CacheManagerFactory {
-public:
+ public:
   /**
    * @brief Create default cache manager
    */

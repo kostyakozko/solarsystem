@@ -189,8 +189,8 @@ std::optional<ParameterDefinition> AdvancedConfigManager::get_parameter_definiti
 
 SolarSystem::Utils::Expected<Config::AppConfig, std::string>
 AdvancedConfigManager::migrate_configuration(const Config::AppConfig& old_config,
-                                              const std::string& from_version,
-                                              const std::string& to_version) const {
+                                             const std::string& from_version,
+                                             const std::string& to_version) const {
   // Simple migration logic - in a real system this would be more sophisticated
   Config::AppConfig migrated = old_config;
 
@@ -214,15 +214,14 @@ AdvancedConfigManager::upgrade_configuration(const Config::AppConfig& config) co
 
 void AdvancedConfigManager::initialize_parameter_definitions() {
   // Simulation parameters
-  parameter_definitions_["simulation.timestep"] = {
-      .name = "simulation.timestep",
-      .type = "double",
-      .description = "Simulation timestep in seconds",
-      .default_value = "3600.0",
-      .allowed_values = {},
-      .min_value = 0.1,
-      .max_value = 86400.0,
-      .required = false};
+  parameter_definitions_["simulation.timestep"] = {.name = "simulation.timestep",
+                                                   .type = "double",
+                                                   .description = "Simulation timestep in seconds",
+                                                   .default_value = "3600.0",
+                                                   .allowed_values = {},
+                                                   .min_value = 0.1,
+                                                   .max_value = 86400.0,
+                                                   .required = false};
 
   parameter_definitions_["simulation.max_iterations"] = {
       .name = "simulation.max_iterations",
@@ -301,8 +300,8 @@ void AdvancedConfigManager::initialize_presets() {
   presets_["accurate"] = accurate_preset;
 }
 
-ValidationResult AdvancedConfigManager::validate_integer_parameter(
-    const ParameterDefinition& def, const std::string& value) const {
+ValidationResult AdvancedConfigManager::validate_integer_parameter(const ParameterDefinition& def,
+                                                                   const std::string& value) const {
   ValidationResult result;
 
   try {
@@ -332,8 +331,8 @@ ValidationResult AdvancedConfigManager::validate_integer_parameter(
   return result;
 }
 
-ValidationResult AdvancedConfigManager::validate_double_parameter(
-    const ParameterDefinition& def, const std::string& value) const {
+ValidationResult AdvancedConfigManager::validate_double_parameter(const ParameterDefinition& def,
+                                                                  const std::string& value) const {
   ValidationResult result;
 
   try {
@@ -341,15 +340,15 @@ ValidationResult AdvancedConfigManager::validate_double_parameter(
 
     if (def.min_value.has_value() && double_value < def.min_value.value()) {
       result.is_valid = false;
-      result.error_message = "Value " + value + " is below minimum " +
-                             std::to_string(def.min_value.value());
+      result.error_message =
+          "Value " + value + " is below minimum " + std::to_string(def.min_value.value());
       return result;
     }
 
     if (def.max_value.has_value() && double_value > def.max_value.value()) {
       result.is_valid = false;
-      result.error_message = "Value " + value + " is above maximum " +
-                             std::to_string(def.max_value.value());
+      result.error_message =
+          "Value " + value + " is above maximum " + std::to_string(def.max_value.value());
       return result;
     }
 
@@ -363,8 +362,8 @@ ValidationResult AdvancedConfigManager::validate_double_parameter(
   return result;
 }
 
-ValidationResult AdvancedConfigManager::validate_string_parameter(
-    const ParameterDefinition& def, const std::string& value) const {
+ValidationResult AdvancedConfigManager::validate_string_parameter(const ParameterDefinition& def,
+                                                                  const std::string& value) const {
   ValidationResult result;
 
   if (!def.allowed_values.empty()) {
@@ -382,8 +381,8 @@ ValidationResult AdvancedConfigManager::validate_string_parameter(
   return result;
 }
 
-ValidationResult AdvancedConfigManager::validate_bool_parameter(
-    const ParameterDefinition& , const std::string& value) const {
+ValidationResult AdvancedConfigManager::validate_bool_parameter(const ParameterDefinition&,
+                                                                const std::string& value) const {
   ValidationResult result;
 
   std::string lower_value = value;

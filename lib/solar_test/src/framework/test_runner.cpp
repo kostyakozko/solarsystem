@@ -440,19 +440,20 @@ TestSuiteResult ThreadSafeResultCollector::build_suite_result(const std::string&
 size_t ThreadSafeResultCollector::passed_count() const {
   std::lock_guard<std::mutex> lock(results_mutex_);
   return static_cast<size_t>(std::count_if(results_.begin(), results_.end(),
-                       [](const TestResult& r) { return r.succeeded(); }));
+                                           [](const TestResult& r) { return r.succeeded(); }));
 }
 
 size_t ThreadSafeResultCollector::failed_count() const {
   std::lock_guard<std::mutex> lock(results_mutex_);
   return static_cast<size_t>(std::count_if(results_.begin(), results_.end(),
-                       [](const TestResult& r) { return r.failed(); }));
+                                           [](const TestResult& r) { return r.failed(); }));
 }
 
 size_t ThreadSafeResultCollector::skipped_count() const {
   std::lock_guard<std::mutex> lock(results_mutex_);
-  return static_cast<size_t>(std::count_if(results_.begin(), results_.end(),
-                       [](const TestResult& r) { return r.status == TestResult::Status::Skipped; }));
+  return static_cast<size_t>(
+      std::count_if(results_.begin(), results_.end(),
+                    [](const TestResult& r) { return r.status == TestResult::Status::Skipped; }));
 }
 
 // ParallelTestExecutor implementation
@@ -545,7 +546,7 @@ TestSuiteResult ParallelTestExecutor::execute_tests(
 }
 
 TestResult ParallelTestExecutor::execute_single_test_with_coordination(
-    TestCase* test, ThreadSafeResultCollector& ,
+    TestCase* test, ThreadSafeResultCollector&,
     const std::function<void(const TestResult&)>& result_callback) {
   TestResult result;
   result.test_name = test->info().name;

@@ -69,7 +69,8 @@ void save_to_file(const AppConfig& config, const std::filesystem::path& config_f
   file << "# Simulation Configuration\n";
   file << "simulation.timestep=" << config.simulation.timestep << "\n";
   file << "simulation.max_iterations=" << config.simulation.max_iterations << "\n";
-  file << "simulation.enable_adaptive_timestep=" << (config.simulation.enable_adaptive_timestep ? "true" : "false") << "\n";
+  file << "simulation.enable_adaptive_timestep="
+       << (config.simulation.enable_adaptive_timestep ? "true" : "false") << "\n";
   file << "\n";
 
   file << "# Output Configuration\n";

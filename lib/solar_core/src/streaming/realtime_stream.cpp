@@ -6,7 +6,7 @@
 #include "solar_utils/logging.hpp"
 
 // Helper function to create success Expected
-template<typename T>
+template <typename T>
 SolarSystem::Utils::Expected<T, std::string> make_success() {
   if constexpr (std::is_void_v<T>) {
     return SolarSystem::Utils::Expected<void, std::string>();
@@ -16,7 +16,7 @@ SolarSystem::Utils::Expected<T, std::string> make_success() {
 }
 
 // Helper function to create error Expected
-template<typename T>
+template <typename T>
 SolarSystem::Utils::Expected<T, std::string> make_error(const std::string& error) {
   return SolarSystem::Utils::Expected<T, std::string>(error);
 }
@@ -25,8 +25,7 @@ namespace SolarSystem::Streaming {
 
 using namespace SolarSystem::Utils;
 
-RealtimeStream::RealtimeStream(StreamConfig stream_config)
-    : DataStream(std::move(stream_config)) {
+RealtimeStream::RealtimeStream(StreamConfig stream_config) : DataStream(std::move(stream_config)) {
   body_factory_ = std::make_unique<Bodies::BodyFactory>();
   simulation_engine_ = std::make_unique<Simulation::SimulationEngine>();
 }
@@ -66,7 +65,8 @@ Utils::Expected<void, std::string> RealtimeStream::sync_to_current_time() {
 
   if (std::abs(time_diff.count()) > realtime_config_.time_sync_tolerance.count() / 1000) {
     if (realtime_config_.auto_correct_drift) {
-      LOG_INFO("RealtimeStream", "Correcting time drift: " + std::to_string(time_diff.count()) + "s");
+      LOG_INFO("RealtimeStream",
+               "Correcting time drift: " + std::to_string(time_diff.count()) + "s");
 
       // Advance simulation to current time
       auto advance_result = advance_simulation_to(now);
@@ -77,7 +77,7 @@ Utils::Expected<void, std::string> RealtimeStream::sync_to_current_time() {
       last_sync_time_ = now;
     } else {
       LOG_WARN("RealtimeStream", "Time drift detected but auto-correction disabled: " +
-               std::to_string(time_diff.count()) + "s");
+                                     std::to_string(time_diff.count()) + "s");
     }
   }
 
@@ -137,7 +137,8 @@ Utils::Expected<void, std::string> RealtimeStream::advance_simulation_to(
   }
 
   // Calculate time difference in seconds
-  auto time_diff = std::chrono::duration_cast<std::chrono::duration<double>>(target_time - current_time);
+  auto time_diff =
+      std::chrono::duration_cast<std::chrono::duration<double>>(target_time - current_time);
   double duration_seconds = time_diff.count();
 
   // Advance simulation
@@ -192,7 +193,8 @@ Utils::Expected<DataSnapshot, std::string> RealtimeStream::generate_snapshot() {
   }
 
   auto end_time = std::chrono::steady_clock::now();
-  auto generation_time = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
+  auto generation_time =
+      std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
   snapshot.processing_time = generation_time;
 
   return Utils::Expected<DataSnapshot, std::string>(std::move(snapshot));
@@ -249,8 +251,8 @@ Utils::Expected<void, std::string> RealtimeStream::initialize_simulation() {
   last_sync_time_ = now;
   simulation_time_offset_ = 0.0;
 
-  LOG_INFO("RealtimeStream", "Simulation initialized with " +
-           std::to_string(current_bodies_->size()) + " bodies");
+  LOG_INFO("RealtimeStream",
+           "Simulation initialized with " + std::to_string(current_bodies_->size()) + " bodies");
 
   return make_success<void>();
 }
@@ -306,11 +308,12 @@ void RealtimeStream::update_prediction_cache() {
   // Clear old predictions
   auto now = std::chrono::system_clock::now();
   prediction_cache_.erase(
-      std::remove_if(prediction_cache_.begin(), prediction_cache_.end(),
-                     [now](const PredictionState& pred) {
-                       auto age = std::chrono::duration_cast<std::chrono::seconds>(now - pred.timestamp);
-                       return age > std::chrono::seconds{30};  // Remove predictions older than 30 seconds
-                     }),
+      std::remove_if(
+          prediction_cache_.begin(), prediction_cache_.end(),
+          [now](const PredictionState& pred) {
+            auto age = std::chrono::duration_cast<std::chrono::seconds>(now - pred.timestamp);
+            return age > std::chrono::seconds{30};  // Remove predictions older than 30 seconds
+          }),
       prediction_cache_.end());
 
   // Add current state as a prediction
@@ -345,15 +348,15 @@ double RealtimeStream::calculate_quality_score(const Bodies::BodyCollection& bod
 
     // Check for invalid positions
     const auto& pos = body.position();
-    if (std::isnan(pos.x()) || std::isnan(pos.y()) || std::isnan(pos.z()) ||
-        std::isinf(pos.x()) || std::isinf(pos.y()) || std::isinf(pos.z())) {
+    if (std::isnan(pos.x()) || std::isnan(pos.y()) || std::isnan(pos.z()) || std::isinf(pos.x()) ||
+        std::isinf(pos.y()) || std::isinf(pos.z())) {
       body_quality *= 0.1;
     }
 
     // Check for invalid velocities
     const auto& vel = body.velocity();
-    if (std::isnan(vel.x()) || std::isnan(vel.y()) || std::isnan(vel.z()) ||
-        std::isinf(vel.x()) || std::isinf(vel.y()) || std::isinf(vel.z())) {
+    if (std::isnan(vel.x()) || std::isnan(vel.y()) || std::isnan(vel.z()) || std::isinf(vel.x()) ||
+        std::isinf(vel.y()) || std::isinf(vel.z())) {
       body_quality *= 0.1;
     }
 

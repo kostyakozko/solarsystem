@@ -6,12 +6,12 @@
 #ifndef SOLAR_CORE_BACKUP_BACKUP_MANAGER_HPP
 #define SOLAR_CORE_BACKUP_BACKUP_MANAGER_HPP
 
-#include <string>
-#include <vector>
-#include <optional>
 #include <chrono>
 #include <functional>
 #include <memory>
+#include <optional>
+#include <string>
+#include <vector>
 
 #include "solar_core/export.hpp"
 
@@ -73,16 +73,14 @@ class SOLAR_CORE_API BackupManager {
   BackupConfig get_config() const;
 
   // Backup operations
-  BackupResult create_backup(const std::string& source_path,
-                            const std::string& backup_name = "");
+  BackupResult create_backup(const std::string& source_path, const std::string& backup_name = "");
   BackupResult create_incremental_backup(const std::string& source_path,
-                                        const std::string& base_backup_id);
+                                         const std::string& base_backup_id);
 
   // Recovery operations
-  RecoveryResult restore_backup(const std::string& backup_id,
-                               const std::string& destination_path);
+  RecoveryResult restore_backup(const std::string& backup_id, const std::string& destination_path);
   RecoveryResult restore_latest(const std::string& source_path,
-                               const std::string& destination_path);
+                                const std::string& destination_path);
 
   // Backup management
   std::vector<BackupInfo> list_backups(const std::string& source_path = "") const;
@@ -91,8 +89,7 @@ class SOLAR_CORE_API BackupManager {
   void cleanup_old_backups();
 
   // Automated backup
-  void enable_auto_backup(const std::string& source_path,
-                         std::chrono::minutes interval);
+  void enable_auto_backup(const std::string& source_path, std::chrono::minutes interval);
   void disable_auto_backup(const std::string& source_path);
 
   // Statistics

@@ -64,8 +64,8 @@ class SOLAR_UTILS_API DateTimeValidator {
   /**
    * @brief Validate date with timezone information
    */
-  static ValidationResult validate_date_with_timezone(
-      const std::string& date_str, const std::string& timezone = "UTC");
+  static ValidationResult validate_date_with_timezone(const std::string& date_str,
+                                                      const std::string& timezone = "UTC");
 
   /**
    * @brief Validate leap year
@@ -80,9 +80,9 @@ class SOLAR_UTILS_API DateTimeValidator {
   /**
    * @brief Convert between calendar systems (Gregorian/Julian)
    */
-  static ValidationResult convert_calendar_system(
-      const std::string& date_str, const std::string& from_calendar,
-      const std::string& to_calendar);
+  static ValidationResult convert_calendar_system(const std::string& date_str,
+                                                  const std::string& from_calendar,
+                                                  const std::string& to_calendar);
 
   /**
    * @brief Get supported date formats

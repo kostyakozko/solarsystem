@@ -49,7 +49,7 @@ void CLIInterface::initialize() {
 }
 
 void CLIInterface::show_banner(const std::string& app_name, const std::string& version,
-                                const std::string& description) {
+                               const std::string& description) {
   if (config_.quiet) return;
 
   if (config_.accessible_mode) {
@@ -72,7 +72,7 @@ void CLIInterface::show_banner(const std::string& app_name, const std::string& v
 }
 
 void CLIInterface::show_help(const std::string& usage, const std::vector<std::string>& options,
-                              const std::vector<std::string>& examples) {
+                             const std::vector<std::string>& examples) {
   std::cout << "Usage: " << usage << "\n\n";
 
   if (!options.empty()) {
@@ -138,7 +138,7 @@ void CLIInterface::list(const std::vector<std::string>& items) {
 }
 
 void CLIInterface::table(const std::vector<std::string>& headers,
-                          const std::vector<std::vector<std::string>>& rows) {
+                         const std::vector<std::vector<std::string>>& rows) {
   if (config_.quiet) return;
 
   status_->table_header(headers);

@@ -12,17 +12,15 @@
  * Requirements: All requirements
  */
 
-#include <string>
-
 #include <gtest/gtest.h>
+
+#include <string>
 
 class DocumentationManager {
  public:
   bool has_documentation(const std::string& topic) { return !topic.empty(); }
 
-  std::string get_documentation(const std::string& /* topic */) {
-    return "Documentation content";
-  }
+  std::string get_documentation(const std::string& /* topic */) { return "Documentation content"; }
 };
 
 TEST(DocumentationTest, DocumentationAvailability) {

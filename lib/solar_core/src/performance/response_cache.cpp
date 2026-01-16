@@ -69,7 +69,8 @@ std::optional<std::string> ResponseCache::get(const std::string& key) {
   }
 
   impl_->stats.cache_hits++;
-  impl_->stats.hit_rate = static_cast<double>(impl_->stats.cache_hits) / static_cast<double>(impl_->stats.total_requests);
+  impl_->stats.hit_rate = static_cast<double>(impl_->stats.cache_hits) /
+                          static_cast<double>(impl_->stats.total_requests);
 
   it->second.access_count++;
   it->second.last_accessed = now;
@@ -82,7 +83,8 @@ void ResponseCache::put(const std::string& key, const std::string& value) {
   put(key, value, impl_->config.default_ttl);
 }
 
-void ResponseCache::put(const std::string& key, const std::string& value, std::chrono::seconds ttl) {
+void ResponseCache::put(const std::string& key, const std::string& value,
+                        std::chrono::seconds ttl) {
   std::lock_guard<std::mutex> lock(impl_->mutex);
 
   // Check if we need to evict
@@ -162,10 +164,8 @@ size_t ResponseCache::size() const {
 }
 
 // CacheKeyGenerator implementation
-std::string CacheKeyGenerator::generate(
-    const std::string& method,
-    const std::string& path,
-    const std::string& query_string) {
+std::string CacheKeyGenerator::generate(const std::string& method, const std::string& path,
+                                        const std::string& query_string) {
   std::string key = method + ":" + path;
   if (!query_string.empty()) {
     key += "?" + query_string;
@@ -173,8 +173,7 @@ std::string CacheKeyGenerator::generate(
   return key;
 }
 
-std::string CacheKeyGenerator::generate_custom(
-    const std::vector<std::string>& components) {
+std::string CacheKeyGenerator::generate_custom(const std::vector<std::string>& components) {
   std::string key;
   for (size_t i = 0; i < components.size(); ++i) {
     if (i > 0) key += ":";

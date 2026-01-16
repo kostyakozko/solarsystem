@@ -19,8 +19,8 @@
 #include <mutex>
 #include <optional>
 #include <sstream>
-#include <type_traits>
 #include <string>
+#include <type_traits>
 #include <vector>
 
 #include "solar_core/export.hpp"
@@ -37,9 +37,7 @@ struct DataVersion {
   std::string modified_by;
 
   [[nodiscard]] bool operator<(const DataVersion& other) const { return version < other.version; }
-  [[nodiscard]] bool operator==(const DataVersion& other) const {
-    return version == other.version;
-  }
+  [[nodiscard]] bool operator==(const DataVersion& other) const { return version == other.version; }
 };
 
 /**
@@ -59,10 +57,10 @@ struct SharedDataEntry {
  * @brief Data conflict types
  */
 enum class ConflictType {
-  VERSION_MISMATCH,    ///< Version conflict
-  CONCURRENT_MODIFY,   ///< Concurrent modification
-  STALE_DATA,          ///< Data is stale
-  OWNERSHIP_CONFLICT   ///< Ownership conflict
+  VERSION_MISMATCH,   ///< Version conflict
+  CONCURRENT_MODIFY,  ///< Concurrent modification
+  STALE_DATA,         ///< Data is stale
+  OWNERSHIP_CONFLICT  ///< Ownership conflict
 };
 
 /**
@@ -80,11 +78,11 @@ struct DataConflict {
  * @brief Conflict resolution strategy
  */
 enum class ConflictResolution {
-  LAST_WRITE_WINS,     ///< Use most recent write
-  FIRST_WRITE_WINS,    ///< Use first write
-  MANUAL,              ///< Require manual resolution
-  MERGE,               ///< Attempt to merge
-  REJECT               ///< Reject conflicting write
+  LAST_WRITE_WINS,   ///< Use most recent write
+  FIRST_WRITE_WINS,  ///< Use first write
+  MANUAL,            ///< Require manual resolution
+  MERGE,             ///< Attempt to merge
+  REJECT             ///< Reject conflicting write
 };
 
 /**
@@ -169,7 +167,7 @@ class SOLAR_CORE_API SharedDataManager {
    * @brief Lock data for exclusive access
    */
   [[nodiscard]] bool lock(const std::string& key, const std::string& owner,
-                         std::chrono::milliseconds timeout = std::chrono::seconds(30));
+                          std::chrono::milliseconds timeout = std::chrono::seconds(30));
 
   /**
    * @brief Unlock data
@@ -206,8 +204,9 @@ class SOLAR_CORE_API SharedDataManager {
 
   // Template implementation methods (defined in shared_data_manager_impl.hpp)
   template <typename T>
-  SolarSystem::Utils::Expected<DataVersion, std::string> store_impl(
-      const std::string& key, const T& value, const std::string& owner);
+  SolarSystem::Utils::Expected<DataVersion, std::string> store_impl(const std::string& key,
+                                                                    const T& value,
+                                                                    const std::string& owner);
 
   template <typename T>
   std::optional<SharedDataEntry<T>> retrieve_impl(const std::string& key);
@@ -231,7 +230,7 @@ class SOLAR_CORE_API DistributedCache {
    */
   template <typename T>
   void cache(const std::string& key, const T& value,
-            std::chrono::seconds ttl = std::chrono::minutes(10));
+             std::chrono::seconds ttl = std::chrono::minutes(10));
 
   /**
    * @brief Get cached data
@@ -278,28 +277,28 @@ class SOLAR_CORE_API DistributedCache {
 
 template <typename T>
 SolarSystem::Utils::Expected<SolarSystem::Data::DataVersion, std::string>
-SolarSystem::Data::SharedDataManager::store(
-    const std::string& key, const T& value, const std::string& owner) {
+SolarSystem::Data::SharedDataManager::store(const std::string& key, const T& value,
+                                            const std::string& owner) {
   return store_impl(key, value, owner);
 }
 
 template <typename T>
-std::optional<SolarSystem::Data::SharedDataEntry<T>>
-SolarSystem::Data::SharedDataManager::retrieve(const std::string& key) {
+std::optional<SolarSystem::Data::SharedDataEntry<T>> SolarSystem::Data::SharedDataManager::retrieve(
+    const std::string& key) {
   return retrieve_impl<T>(key);
 }
 
 template <typename T>
 SolarSystem::Utils::Expected<SolarSystem::Data::DataVersion, std::string>
-SolarSystem::Data::SharedDataManager::update(
-    const std::string& key, const T& value, const DataVersion& expected_version,
-    const std::string& owner) {
+SolarSystem::Data::SharedDataManager::update(const std::string& key, const T& value,
+                                             const DataVersion& expected_version,
+                                             const std::string& owner) {
   return update_impl(key, value, expected_version, owner);
 }
 
 template <typename T>
-void SolarSystem::Data::DistributedCache::cache(
-    const std::string& key, const T& value, std::chrono::seconds ttl) {
+void SolarSystem::Data::DistributedCache::cache(const std::string& key, const T& value,
+                                                std::chrono::seconds ttl) {
   cache_impl(key, value, ttl);
 }
 
@@ -309,4 +308,3 @@ std::optional<T> SolarSystem::Data::DistributedCache::get(const std::string& key
 }
 
 }  // namespace SolarSystem::Data
-

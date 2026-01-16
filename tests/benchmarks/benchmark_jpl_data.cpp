@@ -10,6 +10,8 @@
  * - Binary vs JSON cache performance comparison
  */
 
+#include <gtest/gtest.h>
+
 #include <chrono>
 #include <filesystem>
 #include <fstream>
@@ -21,7 +23,6 @@
 #include "solar_core/bodies/celestial_body.hpp"
 #include "solar_core/math/vector3.hpp"
 #include "solar_jpl/jpl_client.hpp"
-#include <gtest/gtest.h>
 
 using namespace SolarSystem;
 
@@ -413,7 +414,6 @@ TEST(JPLDataBenchmark, CachePerformanceValidation) {
         (void)result;
       },
       10000);
-
 
   // Create benchmark results directory if it doesn't exist
   std::filesystem::create_directories("benchmark_results");

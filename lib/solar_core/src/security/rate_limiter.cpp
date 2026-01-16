@@ -65,8 +65,8 @@ RateLimitResult RateLimiter::check_limit(const std::string& identifier) {
     // Calculate retry_after
     if (!request_times.empty()) {
       auto oldest = request_times.front();
-      auto time_until_expire = std::chrono::duration_cast<std::chrono::seconds>(
-          oldest + impl_->config.window - now);
+      auto time_until_expire =
+          std::chrono::duration_cast<std::chrono::seconds>(oldest + impl_->config.window - now);
       result.retry_after = time_until_expire;
     }
   } else {
@@ -154,9 +154,8 @@ RateLimitResult MultiTierRateLimiter::check_all_tiers(const std::string& identif
   return result;
 }
 
-RateLimitResult MultiTierRateLimiter::check_tier(
-    const std::string& tier_name,
-    const std::string& identifier) {
+RateLimitResult MultiTierRateLimiter::check_tier(const std::string& tier_name,
+                                                 const std::string& identifier) {
   auto it = tiers_.find(tier_name);
   if (it != tiers_.end()) {
     return it->second->check_limit(identifier);

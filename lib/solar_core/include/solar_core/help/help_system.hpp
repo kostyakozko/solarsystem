@@ -6,11 +6,11 @@
 #ifndef SOLAR_CORE_HELP_HELP_SYSTEM_HPP
 #define SOLAR_CORE_HELP_HELP_SYSTEM_HPP
 
-#include <string>
-#include <vector>
+#include <functional>
 #include <map>
 #include <optional>
-#include <functional>
+#include <string>
+#include <vector>
 
 #include "solar_core/export.hpp"
 
@@ -32,12 +32,7 @@ enum class HelpCategory {
 /**
  * @brief Help content format
  */
-enum class HelpFormat {
-  PLAIN_TEXT,
-  MARKDOWN,
-  HTML,
-  INTERACTIVE
-};
+enum class HelpFormat { PLAIN_TEXT, MARKDOWN, HTML, INTERACTIVE };
 
 /**
  * @brief Help topic information

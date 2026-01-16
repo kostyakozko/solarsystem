@@ -1,11 +1,11 @@
+#include <curl/curl.h>
+
 #include <cstdlib>
 #include <cstring>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
 #include <sstream>
-
-#include <curl/curl.h>
 
 #include "solar_test/benchmarks/regression_detector.hpp"
 
@@ -20,8 +20,8 @@ void CIIntegration::generate_github_actions_output(const std::vector<RegressionA
   }
 
   size_t total_benchmarks = analyses.size();
-  size_t regressions = static_cast<size_t>(std::count_if(analyses.begin(), analyses.end(),
-                                     [](const auto& a) { return a.has_regression; }));
+  size_t regressions = static_cast<size_t>(std::count_if(
+      analyses.begin(), analyses.end(), [](const auto& a) { return a.has_regression; }));
 
   bool has_critical = std::any_of(analyses.begin(), analyses.end(),
                                   [](const auto& a) { return a.severity == "critical"; });
@@ -68,8 +68,8 @@ void CIIntegration::generate_jenkins_output(const std::vector<RegressionAnalysis
   file << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
   file << "<testsuite name=\"PerformanceRegressionTests\" tests=\"" << analyses.size() << "\"";
 
-  size_t failures = static_cast<size_t>(std::count_if(analyses.begin(), analyses.end(),
-                                  [](const auto& a) { return a.has_regression; }));
+  size_t failures = static_cast<size_t>(std::count_if(
+      analyses.begin(), analyses.end(), [](const auto& a) { return a.has_regression; }));
 
   file << " failures=\"" << failures << "\" time=\"0\">\n";
 
@@ -139,8 +139,8 @@ std::string CIIntegration::generate_performance_badge(
   }
 
   size_t total = analyses.size();
-  size_t regressions = static_cast<size_t>(std::count_if(analyses.begin(), analyses.end(),
-                                     [](const auto& a) { return a.has_regression; }));
+  size_t regressions = static_cast<size_t>(std::count_if(
+      analyses.begin(), analyses.end(), [](const auto& a) { return a.has_regression; }));
 
   double success_rate =
       100.0 * static_cast<double>(total - regressions) / static_cast<double>(total);
@@ -235,8 +235,8 @@ void PerformanceAlertSystem::send_trend_alert(const TrendAnalysis& analysis) {
 }
 
 void PerformanceAlertSystem::send_batch_alert(const std::vector<RegressionAnalysis>& analyses) {
-  size_t regressions = static_cast<size_t>(std::count_if(analyses.begin(), analyses.end(),
-                                     [](const auto& a) { return a.has_regression; }));
+  size_t regressions = static_cast<size_t>(std::count_if(
+      analyses.begin(), analyses.end(), [](const auto& a) { return a.has_regression; }));
 
   if (regressions == 0) {
     return;
@@ -577,7 +577,8 @@ void PerformanceAlertSystem::create_github_issue(const std::string& title,
   struct curl_slist* headers = nullptr;
   headers = curl_slist_append(headers, "Content-Type: application/json");
   headers = curl_slist_append(headers, "Accept: application/vnd.github.v3+json");
-  headers = curl_slist_append(headers, ("Authorization: token " + config_.github_issue_token).c_str());
+  headers =
+      curl_slist_append(headers, ("Authorization: token " + config_.github_issue_token).c_str());
   headers = curl_slist_append(headers, "User-Agent: SolarSystem-Suite/4.0.0");
   curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
 
@@ -591,12 +592,13 @@ void PerformanceAlertSystem::create_github_issue(const std::string& title,
 
   // Capture response
   std::string response;
-  curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION,
-                   +[](char* ptr, size_t size, size_t nmemb, void* userdata) -> size_t {
-                     std::string* str = static_cast<std::string*>(userdata);
-                     str->append(ptr, size * nmemb);
-                     return size * nmemb;
-                   });
+  curl_easy_setopt(
+      curl, CURLOPT_WRITEFUNCTION,
+      +[](char* ptr, size_t size, size_t nmemb, void* userdata) -> size_t {
+        std::string* str = static_cast<std::string*>(userdata);
+        str->append(ptr, size * nmemb);
+        return size * nmemb;
+      });
   curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
 
   // Perform the request

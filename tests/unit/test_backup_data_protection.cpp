@@ -5,13 +5,14 @@
  */
 
 #include <gtest/gtest.h>
+
+#include <chrono>
+#include <filesystem>
+#include <fstream>
+#include <thread>
+
 #include "solar_core/backup/backup_manager.hpp"
 #include "solar_core/backup/data_protection.hpp"
-
-#include <fstream>
-#include <filesystem>
-#include <thread>
-#include <chrono>
 
 using namespace SolarSystem::Backup;
 namespace fs = std::filesystem;
@@ -54,90 +55,87 @@ void cleanup_test_environment() {
 
 // Test fixture for backup and data protection tests
 class BackupDataProtectionTest : public ::testing::Test {
-protected:
-  void SetUp() override {
-    setup_test_environment();
-  }
+ protected:
+  void SetUp() override { setup_test_environment(); }
 
-  void TearDown() override {
-    cleanup_test_environment();
-  }
+  void TearDown() override { cleanup_test_environment(); }
 };
 
 TEST_F(BackupDataProtectionTest, Create_Backup) {
-    auto& backup_mgr = BackupManager::instance();
-    auto result = backup_mgr.create_backup(test_file1);
+  auto& backup_mgr = BackupManager::instance();
+  auto result = backup_mgr.create_backup(test_file1);
 
-    if (!result.success) throw std::runtime_error("Backup creation failed");
-    if (!result.backup_info.has_value()) throw std::runtime_error("No backup info");
+  if (!result.success) throw std::runtime_error("Backup creation failed");
+  if (!result.backup_info.has_value()) throw std::runtime_error("No backup info");
 }
 
 TEST_F(BackupDataProtectionTest, Restore_Backup) {
-    auto& backup_mgr = BackupManager::instance();
+  auto& backup_mgr = BackupManager::instance();
 
-    auto backup_result = backup_mgr.create_backup(test_file1);
-    if (!backup_result.success) throw std::runtime_error("Backup creation failed");
+  auto backup_result = backup_mgr.create_backup(test_file1);
+  if (!backup_result.success) throw std::runtime_error("Backup creation failed");
 
-    std::string backup_id = backup_result.backup_info->backup_id;
-    std::string restore_path = test_dir + "/restored_file.txt";
-    auto restore_result = backup_mgr.restore_backup(backup_id, restore_path);
+  std::string backup_id = backup_result.backup_info->backup_id;
+  std::string restore_path = test_dir + "/restored_file.txt";
+  auto restore_result = backup_mgr.restore_backup(backup_id, restore_path);
 
-    if (!restore_result.success) throw std::runtime_error("Restore failed");
-    if (!fs::exists(restore_path)) throw std::runtime_error("Restored file doesn't exist");
+  if (!restore_result.success) throw std::runtime_error("Restore failed");
+  if (!fs::exists(restore_path)) throw std::runtime_error("Restored file doesn't exist");
 }
 
 TEST_F(BackupDataProtectionTest, List_Backups) {
-    auto& backup_mgr = BackupManager::instance();
-    auto backups = backup_mgr.list_backups();
+  auto& backup_mgr = BackupManager::instance();
+  auto backups = backup_mgr.list_backups();
 
-    if (backups.empty()) throw std::runtime_error("No backups found");
+  if (backups.empty()) throw std::runtime_error("No backups found");
 }
 
 TEST_F(BackupDataProtectionTest, Protect_File) {
-    auto& protection = DataProtection::instance();
-    protection.protect_file(test_file1);
+  auto& protection = DataProtection::instance();
+  protection.protect_file(test_file1);
 
-    if (!protection.is_protected(test_file1)) throw std::runtime_error("File not protected");
+  if (!protection.is_protected(test_file1)) throw std::runtime_error("File not protected");
 }
 
 TEST_F(BackupDataProtectionTest, Verify_Integrity) {
-    auto& protection = DataProtection::instance();
-    protection.protect_file(test_file2);
+  auto& protection = DataProtection::instance();
+  protection.protect_file(test_file2);
 
-    auto result = protection.verify_integrity(test_file2);
-    if (result.status != IntegrityStatus::VALID) throw std::runtime_error("Integrity check failed");
+  auto result = protection.verify_integrity(test_file2);
+  if (result.status != IntegrityStatus::VALID) throw std::runtime_error("Integrity check failed");
 }
 
 TEST_F(BackupDataProtectionTest, Detect_Corruption) {
-    auto& protection = DataProtection::instance();
-    std::string test_file3 = test_dir + "/test_file3.txt";
+  auto& protection = DataProtection::instance();
+  std::string test_file3 = test_dir + "/test_file3.txt";
 
-    std::ofstream f(test_file3);
-    f << "Original content\n";
-    f.close();
+  std::ofstream f(test_file3);
+  f << "Original content\n";
+  f.close();
 
-    protection.protect_file(test_file3);
+  protection.protect_file(test_file3);
 
-    std::ofstream f2(test_file3, std::ios::app);
-    f2 << "Modified\n";
-    f2.close();
+  std::ofstream f2(test_file3, std::ios::app);
+  f2 << "Modified\n";
+  f2.close();
 
-    auto result = protection.verify_integrity(test_file3);
-    if (result.status != IntegrityStatus::CORRUPTED) throw std::runtime_error("Corruption not detected");
+  auto result = protection.verify_integrity(test_file3);
+  if (result.status != IntegrityStatus::CORRUPTED)
+    throw std::runtime_error("Corruption not detected");
 }
 
 TEST_F(BackupDataProtectionTest, Disaster_Recovery_Plan) {
-    auto& protection = DataProtection::instance();
+  auto& protection = DataProtection::instance();
 
-    DisasterRecoveryPlan plan;
-    plan.plan_name = "Test Recovery Plan";
-    plan.critical_files = {test_file1, test_file2};
-    plan.backup_location = test_dir + "/backups";
+  DisasterRecoveryPlan plan;
+  plan.plan_name = "Test Recovery Plan";
+  plan.critical_files = {test_file1, test_file2};
+  plan.backup_location = test_dir + "/backups";
 
-    protection.set_recovery_plan(plan);
+  protection.set_recovery_plan(plan);
 
-    auto retrieved_plan = protection.get_recovery_plan();
-    if (retrieved_plan.plan_name != plan.plan_name) throw std::runtime_error("Plan name mismatch");
-    if (retrieved_plan.critical_files.size() != 2) throw std::runtime_error("Critical files count mismatch");
+  auto retrieved_plan = protection.get_recovery_plan();
+  if (retrieved_plan.plan_name != plan.plan_name) throw std::runtime_error("Plan name mismatch");
+  if (retrieved_plan.critical_files.size() != 2)
+    throw std::runtime_error("Critical files count mismatch");
 }
-

@@ -23,14 +23,7 @@ namespace SolarSystem::Utils::Validation {
 /**
  * @brief JSON data types
  */
-enum class JSONType {
-  Null,
-  Boolean,
-  Number,
-  String,
-  Array,
-  Object
-};
+enum class JSONType { Null, Boolean, Number, String, Array, Object };
 
 /**
  * @brief JSON validation error
@@ -61,14 +54,14 @@ struct JSONValidationResult {
 struct JSONSchema {
   JSONType type;
   bool required = false;
-  std::optional<std::string> pattern;  // For string validation
-  std::optional<double> minimum;       // For number validation
-  std::optional<double> maximum;       // For number validation
-  std::optional<size_t> min_length;    // For string/array validation
-  std::optional<size_t> max_length;    // For string/array validation
+  std::optional<std::string> pattern;                      // For string validation
+  std::optional<double> minimum;                           // For number validation
+  std::optional<double> maximum;                           // For number validation
+  std::optional<size_t> min_length;                        // For string/array validation
+  std::optional<size_t> max_length;                        // For string/array validation
   std::unordered_map<std::string, JSONSchema> properties;  // For object validation
-  std::optional<JSONSchema> items;     // For array validation
-  std::vector<std::string> enum_values;  // For enum validation
+  std::optional<JSONSchema> items;                         // For array validation
+  std::vector<std::string> enum_values;                    // For enum validation
 };
 
 /**
@@ -84,8 +77,7 @@ class JSONValidator {
   /**
    * @brief Validate JSON against schema
    */
-  static JSONValidationResult validate_schema(
-      const std::string& json, const JSONSchema& schema);
+  static JSONValidationResult validate_schema(const std::string& json, const JSONSchema& schema);
 
   /**
    * @brief Validate JSON structure and types
@@ -95,8 +87,8 @@ class JSONValidator {
   /**
    * @brief Sanitize JSON for security
    */
-  static JSONValidationResult sanitize_json(
-      const std::string& json, size_t max_depth = 100, size_t max_size = 10485760);
+  static JSONValidationResult sanitize_json(const std::string& json, size_t max_depth = 100,
+                                            size_t max_size = 10485760);
 
   /**
    * @brief Check for JSON injection attacks
@@ -106,8 +98,7 @@ class JSONValidator {
   /**
    * @brief Validate JSON streaming (for large files)
    */
-  static JSONValidationResult validate_streaming(
-      const std::string& json, size_t chunk_size = 4096);
+  static JSONValidationResult validate_streaming(const std::string& json, size_t chunk_size = 4096);
 
   /**
    * @brief Pretty print JSON
@@ -156,8 +147,7 @@ class JSONValidator {
   /**
    * @brief Find matching closing bracket
    */
-  static size_t find_matching_bracket(
-      const std::string& json, size_t start, char open, char close);
+  static size_t find_matching_bracket(const std::string& json, size_t start, char open, char close);
 
   /**
    * @brief Convert JSONType to string
@@ -167,14 +157,14 @@ class JSONValidator {
   /**
    * @brief Schema validation helpers
    */
-  static bool validate_string_schema(
-      const std::string& json, const JSONSchema& schema, JSONValidationResult& result);
-  static bool validate_number_schema(
-      const std::string& json, const JSONSchema& schema, JSONValidationResult& result);
-  static bool validate_array_schema(
-      const std::string& json, const JSONSchema& schema, JSONValidationResult& result);
-  static bool validate_object_schema(
-      const std::string& json, const JSONSchema& schema, JSONValidationResult& result);
+  static bool validate_string_schema(const std::string& json, const JSONSchema& schema,
+                                     JSONValidationResult& result);
+  static bool validate_number_schema(const std::string& json, const JSONSchema& schema,
+                                     JSONValidationResult& result);
+  static bool validate_array_schema(const std::string& json, const JSONSchema& schema,
+                                    JSONValidationResult& result);
+  static bool validate_object_schema(const std::string& json, const JSONSchema& schema,
+                                     JSONValidationResult& result);
 };
 
 /**
@@ -200,4 +190,3 @@ class JSONSchemaBuilder {
 };
 
 }  // namespace SolarSystem::Utils::Validation
-

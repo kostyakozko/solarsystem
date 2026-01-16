@@ -4,7 +4,6 @@
  */
 
 #include "solar_utils/error_handling.hpp"
-#include "solar_utils/network_resource_manager.hpp"
 
 #include <algorithm>
 #include <fstream>
@@ -13,6 +12,8 @@
 #include <mutex>
 #include <sstream>
 #include <thread>
+
+#include "solar_utils/network_resource_manager.hpp"
 
 // Platform-specific includes for syslog
 #ifdef _WIN32
@@ -315,8 +316,7 @@ RecoveryAction ErrorRecoveryManager::determine_recovery_strategy(const DetailedE
   return get_default_recovery_strategy(error);
 }
 
-bool ErrorRecoveryManager::attempt_recovery(const DetailedError&,
-                                            const RecoveryAction& action) {
+bool ErrorRecoveryManager::attempt_recovery(const DetailedError&, const RecoveryAction& action) {
   auto start_time = std::chrono::steady_clock::now();
   bool success = false;
 
@@ -665,7 +665,8 @@ void ErrorLogger::log_to_network(const std::string& message) {
   try {
     // Use the network resource manager we implemented in Task 1
     auto& network_manager = NetworkResourceManager::instance();
-    auto connection = network_manager.get_pooled_connection(network_endpoint_, ConnectionType::HTTP);
+    auto connection =
+        network_manager.get_pooled_connection(network_endpoint_, ConnectionType::HTTP);
 
     if (!connection) {
       // Failed to get connection, fallback to console
@@ -679,7 +680,8 @@ void ErrorLogger::log_to_network(const std::string& message) {
     auto time_t = std::chrono::system_clock::to_time_t(now);
 
     json_payload << "{"
-                 << "\"timestamp\":\"" << std::put_time(std::localtime(&time_t), "%Y-%m-%d %H:%M:%S") << "\","
+                 << "\"timestamp\":\""
+                 << std::put_time(std::localtime(&time_t), "%Y-%m-%d %H:%M:%S") << "\","
                  << "\"application\":\"SolarSystemSuite\","
                  << "\"message\":\"" << message << "\""
                  << "}";
@@ -760,16 +762,15 @@ std::vector<std::string> ErrorLogger::get_memory_logs(size_t max_entries) {
 
   if (!mem_log.is_full) {
     // Buffer not full yet, return from beginning
-    size_t start = mem_log.buffer.size() > entries_to_return
-                   ? mem_log.buffer.size() - entries_to_return
-                   : 0;
+    size_t start =
+        mem_log.buffer.size() > entries_to_return ? mem_log.buffer.size() - entries_to_return : 0;
     result.assign(mem_log.buffer.begin() + static_cast<std::ptrdiff_t>(start),
                   mem_log.buffer.end());
   } else {
     // Buffer is full, return most recent entries in chronological order
     size_t start_idx = mem_log.current_index >= entries_to_return
-                       ? (mem_log.current_index - entries_to_return) % mem_log.buffer.size()
-                       : 0;
+                           ? (mem_log.current_index - entries_to_return) % mem_log.buffer.size()
+                           : 0;
 
     for (size_t i = 0; i < entries_to_return; ++i) {
       size_t idx = (start_idx + i) % mem_log.buffer.size();
@@ -850,7 +851,8 @@ std::vector<ErrorPattern> ErrorPatternAnalyzer::analyze_patterns(
   // Maintain history size limit
   if (error_history_.size() > max_history_size_) {
     error_history_.erase(error_history_.begin(),
-                         error_history_.begin() + static_cast<std::ptrdiff_t>(error_history_.size() - max_history_size_));
+                         error_history_.begin() + static_cast<std::ptrdiff_t>(
+                                                      error_history_.size() - max_history_size_));
   }
 
   // Extract new patterns
@@ -1037,11 +1039,16 @@ void ErrorHandlingSystem::configure(const std::string& config_file) {
 
       // Apply configuration
       if (key == "log_level") {
-        if (value == "debug") logger_->configure(ErrorLogger::LogLevel::Debug, {ErrorLogger::LogTarget::Console});
-        else if (value == "info") logger_->configure(ErrorLogger::LogLevel::Info, {ErrorLogger::LogTarget::Console});
-        else if (value == "warning") logger_->configure(ErrorLogger::LogLevel::Warning, {ErrorLogger::LogTarget::Console});
-        else if (value == "error") logger_->configure(ErrorLogger::LogLevel::Error, {ErrorLogger::LogTarget::Console});
-        else if (value == "critical") logger_->configure(ErrorLogger::LogLevel::Critical, {ErrorLogger::LogTarget::Console});
+        if (value == "debug")
+          logger_->configure(ErrorLogger::LogLevel::Debug, {ErrorLogger::LogTarget::Console});
+        else if (value == "info")
+          logger_->configure(ErrorLogger::LogLevel::Info, {ErrorLogger::LogTarget::Console});
+        else if (value == "warning")
+          logger_->configure(ErrorLogger::LogLevel::Warning, {ErrorLogger::LogTarget::Console});
+        else if (value == "error")
+          logger_->configure(ErrorLogger::LogLevel::Error, {ErrorLogger::LogTarget::Console});
+        else if (value == "critical")
+          logger_->configure(ErrorLogger::LogLevel::Critical, {ErrorLogger::LogTarget::Console});
       } else if (key == "log_file") {
         logger_->set_log_file(value);
       } else if (key == "network_endpoint") {
@@ -1231,14 +1238,11 @@ void ErrorHandlingSystem::import_error_data(const std::string& file_path) {
 
     // Parse CSV format: ERROR,code,severity,timestamp,message
     if (line.find("ERROR,") == 0) {
-      std::istringstream iss(line.substr(6)); // Skip "ERROR,"
+      std::istringstream iss(line.substr(6));  // Skip "ERROR,"
       std::string code_str, severity_str, timestamp_str, message;
 
-      if (std::getline(iss, code_str, ',') &&
-          std::getline(iss, severity_str, ',') &&
-          std::getline(iss, timestamp_str, ',') &&
-          std::getline(iss, message)) {
-
+      if (std::getline(iss, code_str, ',') && std::getline(iss, severity_str, ',') &&
+          std::getline(iss, timestamp_str, ',') && std::getline(iss, message)) {
         try {
           ErrorCode code = static_cast<ErrorCode>(std::stoi(code_str));
           ErrorSeverity severity = static_cast<ErrorSeverity>(std::stoi(severity_str));
@@ -1297,7 +1301,8 @@ void ErrorHandlingSystem::update_health_metrics() {
   if (pattern_analyzer_ && recent_errors_.size() >= 2) {
     std::vector<DetailedError> recent_subset;
     size_t start = recent_errors_.size() > 10 ? recent_errors_.size() - 10 : 0;
-    recent_subset.assign(recent_errors_.begin() + static_cast<std::ptrdiff_t>(start), recent_errors_.end());
+    recent_subset.assign(recent_errors_.begin() + static_cast<std::ptrdiff_t>(start),
+                         recent_errors_.end());
     pattern_analyzer_->analyze_patterns(recent_subset);
   }
 }
@@ -1550,8 +1555,7 @@ ErrorCode string_to_error_code(const std::string& error_string) {
       {"ResourceContention", ErrorCode::ResourceContention},
 
       // Unknown
-      {"Unknown", ErrorCode::Unknown}
-  };
+      {"Unknown", ErrorCode::Unknown}};
 
   auto it = error_code_map.find(error_string);
   if (it != error_code_map.end()) {

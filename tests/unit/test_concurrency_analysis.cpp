@@ -16,6 +16,8 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-lambda-capture"
 
+#include <gtest/gtest.h>
+
 #include <algorithm>
 #include <atomic>
 #include <chrono>
@@ -26,8 +28,6 @@
 #include <string>
 #include <thread>
 #include <vector>
-
-#include <gtest/gtest.h>
 
 /**
  * @brief Thread execution event
@@ -118,8 +118,7 @@ class LockContentionAnalyzer {
   mutable std::mutex mutex_;
 
  public:
-  void record_lock_acquire(const std::string& lock_name, bool contended,
-                          long long wait_time_us) {
+  void record_lock_acquire(const std::string& lock_name, bool contended, long long wait_time_us) {
     std::lock_guard<std::mutex> lock(mutex_);
 
     if (lock_stats_.find(lock_name) == lock_stats_.end()) {
@@ -228,15 +227,13 @@ class DeadlockDetector {
           if (other_tid == tid) continue;
 
           // Check if other thread holds the lock we want
-          bool holds_lock = std::find(other_info.held_locks.begin(),
-                                     other_info.held_locks.end(),
-                                     info.waiting_for) != other_info.held_locks.end();
+          bool holds_lock = std::find(other_info.held_locks.begin(), other_info.held_locks.end(),
+                                      info.waiting_for) != other_info.held_locks.end();
 
           // And is waiting for a lock we hold
           if (holds_lock && !other_info.waiting_for.empty()) {
-            bool we_hold_their_lock =
-                std::find(info.held_locks.begin(), info.held_locks.end(),
-                         other_info.waiting_for) != info.held_locks.end();
+            bool we_hold_their_lock = std::find(info.held_locks.begin(), info.held_locks.end(),
+                                                other_info.waiting_for) != info.held_locks.end();
 
             if (we_hold_their_lock) {
               return true;  // Potential deadlock detected
@@ -360,8 +357,8 @@ TEST(ConcurrencyAnalysisTest, ThreadExecutionTracing) {
   for (int i = 0; i < num_threads; ++i) {
     threads.emplace_back([&tracer, i, events_per_thread]() {
       for (int j = 0; j < events_per_thread; ++j) {
-        tracer.log_event("OPERATION", "Thread " + std::to_string(i) + " event " +
-                                         std::to_string(j));
+        tracer.log_event("OPERATION",
+                         "Thread " + std::to_string(i) + " event " + std::to_string(j));
       }
     });
   }
@@ -472,7 +469,7 @@ TEST(ConcurrencyAnalysisTest, PerformanceProfiling) {
   ASSERT_EQ(profiler.get_call_count("fast_op"), 3);
   ASSERT_EQ(profiler.get_call_count("slow_op"), 2);
 
-  ASSERT_EQ(profiler.get_average_duration("fast_op"), 15);  // (10+20+15)/3
+  ASSERT_EQ(profiler.get_average_duration("fast_op"), 15);   // (10+20+15)/3
   ASSERT_EQ(profiler.get_average_duration("slow_op"), 150);  // (100+200)/2
 
   ASSERT_EQ(profiler.get_min_duration("fast_op"), 10);
@@ -489,8 +486,7 @@ TEST(ConcurrencyAnalysisTest, PerformanceProfiling) {
         auto start = std::chrono::steady_clock::now();
         std::this_thread::sleep_for(std::chrono::microseconds(10));
         auto end = std::chrono::steady_clock::now();
-        auto duration =
-            std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
         profiler.record_operation("concurrent_op", duration);
       }
     });
@@ -500,8 +496,7 @@ TEST(ConcurrencyAnalysisTest, PerformanceProfiling) {
     t.join();
   }
 
-  ASSERT_EQ(profiler.get_call_count("concurrent_op"),
-            num_threads * operations_per_thread);
+  ASSERT_EQ(profiler.get_call_count("concurrent_op"), num_threads * operations_per_thread);
   ASSERT_GT(profiler.get_average_duration("concurrent_op"), 0);
 }
 
@@ -530,9 +525,8 @@ TEST(ConcurrencyAnalysisTest, IntegratedConcurrencyAnalysis) {
         }
 
         auto lock_acquired = std::chrono::steady_clock::now();
-        auto wait_time = std::chrono::duration_cast<std::chrono::microseconds>(
-                            lock_acquired - start)
-                            .count();
+        auto wait_time =
+            std::chrono::duration_cast<std::chrono::microseconds>(lock_acquired - start).count();
 
         lock_analyzer.record_lock_acquire("shared_mutex", contended, wait_time);
 
@@ -576,13 +570,11 @@ TEST(ConcurrencyAnalysisTest, RaceConditionReproduction) {
   for (int i = 0; i < num_threads; ++i) {
     threads.emplace_back([&tracer, &unsafe_counter, increments, i]() {
       for (int j = 0; j < increments; ++j) {
-        tracer.log_event("BEFORE_INCREMENT",
-                        "Thread " + std::to_string(i) + " value: " +
-                            std::to_string(unsafe_counter));
+        tracer.log_event("BEFORE_INCREMENT", "Thread " + std::to_string(i) +
+                                                 " value: " + std::to_string(unsafe_counter));
         unsafe_counter++;
-        tracer.log_event("AFTER_INCREMENT",
-                        "Thread " + std::to_string(i) + " value: " +
-                            std::to_string(unsafe_counter));
+        tracer.log_event("AFTER_INCREMENT", "Thread " + std::to_string(i) +
+                                                " value: " + std::to_string(unsafe_counter));
       }
     });
   }

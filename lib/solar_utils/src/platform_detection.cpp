@@ -5,13 +5,13 @@
 
 #include "solar_utils/platform_detection.hpp"
 
-#include <thread>
-#include <sstream>
 #include <algorithm>
+#include <sstream>
+#include <thread>
 
 #ifdef _WIN32
-#include <windows.h>
 #include <intrin.h>
+#include <windows.h>
 #elif defined(__APPLE__)
 #include <sys/sysctl.h>
 #include <sys/utsname.h>
@@ -59,12 +59,18 @@ OperatingSystem PlatformDetector::detect_os() {
 
 std::string PlatformDetector::get_os_name() {
   switch (detect_os()) {
-    case OperatingSystem::Windows: return "Windows";
-    case OperatingSystem::MacOS: return "macOS";
-    case OperatingSystem::Linux: return "Linux";
-    case OperatingSystem::BSD: return "BSD";
-    case OperatingSystem::Unix: return "Unix";
-    default: return "Unknown";
+    case OperatingSystem::Windows:
+      return "Windows";
+    case OperatingSystem::MacOS:
+      return "macOS";
+    case OperatingSystem::Linux:
+      return "Linux";
+    case OperatingSystem::BSD:
+      return "BSD";
+    case OperatingSystem::Unix:
+      return "Unix";
+    default:
+      return "Unknown";
   }
 }
 
@@ -73,15 +79,14 @@ std::string PlatformDetector::get_os_version() {
   OSVERSIONINFOEXW osvi = {};
   osvi.dwOSVersionInfoSize = sizeof(osvi);
 
-  #pragma warning(push)
-  #pragma warning(disable: 4996)
+#pragma warning(push)
+#pragma warning(disable : 4996)
   if (GetVersionExW(reinterpret_cast<OSVERSIONINFOW*>(&osvi))) {
     std::ostringstream oss;
-    oss << osvi.dwMajorVersion << "." << osvi.dwMinorVersion
-        << "." << osvi.dwBuildNumber;
+    oss << osvi.dwMajorVersion << "." << osvi.dwMinorVersion << "." << osvi.dwBuildNumber;
     return oss.str();
   }
-  #pragma warning(pop)
+#pragma warning(pop)
 
   return "Unknown";
 #else
@@ -113,13 +118,20 @@ Architecture PlatformDetector::detect_architecture() {
 
 std::string PlatformDetector::get_architecture_name() {
   switch (detect_architecture()) {
-    case Architecture::x86: return "x86";
-    case Architecture::x64: return "x64";
-    case Architecture::ARM: return "ARM";
-    case Architecture::ARM64: return "ARM64";
-    case Architecture::PowerPC: return "PowerPC";
-    case Architecture::MIPS: return "MIPS";
-    default: return "Unknown";
+    case Architecture::x86:
+      return "x86";
+    case Architecture::x64:
+      return "x64";
+    case Architecture::ARM:
+      return "ARM";
+    case Architecture::ARM64:
+      return "ARM64";
+    case Architecture::PowerPC:
+      return "PowerPC";
+    case Architecture::MIPS:
+      return "MIPS";
+    default:
+      return "Unknown";
   }
 }
 
@@ -157,18 +169,14 @@ std::string PlatformDetector::get_compiler_version() {
 #endif
 }
 
-bool PlatformDetector::is_64bit() {
-  return sizeof(void*) == 8;
-}
+bool PlatformDetector::is_64bit() { return sizeof(void*) == 8; }
 
 bool PlatformDetector::is_little_endian() {
   int num = 1;
   return *reinterpret_cast<char*>(&num) == 1;
 }
 
-int PlatformDetector::get_pointer_size() {
-  return static_cast<int>(sizeof(void*));
-}
+int PlatformDetector::get_pointer_size() { return static_cast<int>(sizeof(void*)); }
 
 PlatformCapabilities PlatformDetector::detect_capabilities() {
   PlatformCapabilities caps;
@@ -190,8 +198,7 @@ PlatformCapabilities PlatformDetector::detect_capabilities() {
 
 bool PlatformDetector::has_cpu_feature(const std::string& feature) {
   std::string lower_feature = feature;
-  std::transform(lower_feature.begin(), lower_feature.end(),
-                 lower_feature.begin(), ::tolower);
+  std::transform(lower_feature.begin(), lower_feature.end(), lower_feature.begin(), ::tolower);
 
   if (lower_feature == "sse") return FeatureDetector::has_sse();
   if (lower_feature == "avx") return FeatureDetector::has_avx();
@@ -204,20 +211,20 @@ bool PlatformDetector::has_cpu_feature(const std::string& feature) {
 
 std::string PlatformDetector::get_cpu_brand() {
 #if defined(__x86_64__) || defined(_M_X64) || defined(__i386__) || defined(_M_IX86)
-  #ifdef _WIN32
-    int cpuInfo[4];
-    char brand[49] = {0};
+#ifdef _WIN32
+  int cpuInfo[4];
+  char brand[49] = {0};
 
-    __cpuid(cpuInfo, 0x80000000);
-    unsigned int nExIds = cpuInfo[0];
+  __cpuid(cpuInfo, 0x80000000);
+  unsigned int nExIds = cpuInfo[0];
 
-    if (nExIds >= 0x80000004) {
-      __cpuid(reinterpret_cast<int*>(brand), 0x80000002);
-      __cpuid(reinterpret_cast<int*>(brand + 16), 0x80000003);
-      __cpuid(reinterpret_cast<int*>(brand + 32), 0x80000004);
-      return std::string(brand);
-    }
-  #endif
+  if (nExIds >= 0x80000004) {
+    __cpuid(reinterpret_cast<int*>(brand), 0x80000002);
+    __cpuid(reinterpret_cast<int*>(brand + 16), 0x80000003);
+    __cpuid(reinterpret_cast<int*>(brand + 32), 0x80000004);
+    return std::string(brand);
+  }
+#endif
 #endif
   return "Unknown CPU";
 }
@@ -346,7 +353,6 @@ bool VersionComparator::is_at_least(int major, int minor, int patch) {
 
 std::optional<std::tuple<int, int, int>> VersionComparator::parse_version(
     const std::string& version) {
-
   std::istringstream iss(version);
   int major = 0, minor = 0, patch = 0;
   char dot;
@@ -362,9 +368,7 @@ std::optional<std::tuple<int, int, int>> VersionComparator::parse_version(
   return std::make_tuple(major, minor, patch);
 }
 
-int VersionComparator::compare_versions(
-    const std::string& v1, const std::string& v2) {
-
+int VersionComparator::compare_versions(const std::string& v1, const std::string& v2) {
   auto parsed1 = parse_version(v1);
   auto parsed2 = parse_version(v2);
 

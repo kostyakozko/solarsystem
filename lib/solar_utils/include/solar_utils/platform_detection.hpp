@@ -5,47 +5,26 @@
 
 #pragma once
 
+#include <optional>
 #include <string>
 #include <vector>
-#include <optional>
 
 namespace SolarSystem::Utils::Platform {
 
 /**
  * @brief Operating system types
  */
-enum class OperatingSystem {
-  Windows,
-  MacOS,
-  Linux,
-  BSD,
-  Unix,
-  Unknown
-};
+enum class OperatingSystem { Windows, MacOS, Linux, BSD, Unix, Unknown };
 
 /**
  * @brief CPU architecture types
  */
-enum class Architecture {
-  x86,
-  x64,
-  ARM,
-  ARM64,
-  PowerPC,
-  MIPS,
-  Unknown
-};
+enum class Architecture { x86, x64, ARM, ARM64, PowerPC, MIPS, Unknown };
 
 /**
  * @brief Compiler types
  */
-enum class Compiler {
-  MSVC,
-  GCC,
-  Clang,
-  Intel,
-  Unknown
-};
+enum class Compiler { MSVC, GCC, Clang, Intel, Unknown };
 
 /**
  * @brief Platform capabilities
@@ -236,14 +215,12 @@ class VersionComparator {
   /**
    * @brief Parse version string
    */
-  static std::optional<std::tuple<int, int, int>> parse_version(
-      const std::string& version);
+  static std::optional<std::tuple<int, int, int>> parse_version(const std::string& version);
 
   /**
    * @brief Compare two version strings
    */
-  static int compare_versions(
-      const std::string& v1, const std::string& v2);
+  static int compare_versions(const std::string& v1, const std::string& v2);
 };
 
 }  // namespace SolarSystem::Utils::Platform

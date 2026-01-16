@@ -11,6 +11,8 @@
  * - Memory usage patterns under stress
  */
 
+#include <gtest/gtest.h>
+
 #include <atomic>
 #include <chrono>
 #include <filesystem>
@@ -25,7 +27,6 @@
 #include "solar_core/math/vector3.hpp"
 #include "solar_core/simulation/simulation_engine.hpp"
 #include "solar_jpl/jpl_client.hpp"
-#include <gtest/gtest.h>
 
 using namespace SolarSystem;
 

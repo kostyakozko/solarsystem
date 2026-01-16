@@ -11,8 +11,6 @@
 
 #pragma once
 
-#include "solar_core/export.hpp"
-
 #include <atomic>
 #include <chrono>
 #include <functional>
@@ -21,17 +19,19 @@
 #include <optional>
 #include <string>
 
+#include "solar_core/export.hpp"
+
 namespace SolarSystem::UI {
 
 /**
  * @brief Progress indicator styles
  */
 enum class ProgressStyle {
-  BAR,           // [=====>    ] 50%
-  SPINNER,       // ⠋ Processing...
-  DOTS,          // ... Processing
-  PERCENTAGE,    // 50% Complete
-  MINIMAL        // Accessible text-only
+  BAR,         // [=====>    ] 50%
+  SPINNER,     // ⠋ Processing...
+  DOTS,        // ... Processing
+  PERCENTAGE,  // 50% Complete
+  MINIMAL      // Accessible text-only
 };
 
 /**
@@ -129,9 +129,7 @@ class SOLAR_CORE_API ScopedProgress {
 
   void update(double progress) { indicator_.update(progress); }
 
-  void update(double progress, const std::string& message) {
-    indicator_.update(progress, message);
-  }
+  void update(double progress, const std::string& message) { indicator_.update(progress, message); }
 
   // Non-copyable, non-movable
   ScopedProgress(const ScopedProgress&) = delete;

@@ -7,8 +7,8 @@
 
 #include <algorithm>
 #include <mutex>
-#include <sstream>
 #include <nlohmann/json.hpp>
+#include <sstream>
 
 namespace SolarSystem::API {
 
@@ -37,8 +37,7 @@ struct APIManager::Impl {
   bool monitoring_enabled = true;
   mutable std::mutex mutex;
 
-  std::optional<APIEndpoint> find_endpoint(const std::string& path,
-                                           Performance::HttpMethod method,
+  std::optional<APIEndpoint> find_endpoint(const std::string& path, Performance::HttpMethod method,
                                            const APIVersion& version) {
     for (const auto& endpoint : endpoints) {
       if (endpoint.path == path && endpoint.method == method &&
@@ -65,9 +64,10 @@ struct APIManager::Impl {
 
     // Update average response time
     auto total_time = static_cast<long long>(stats.avg_response_time.count()) *
-                      static_cast<long long>(stats.total_requests - 1) +
+                          static_cast<long long>(stats.total_requests - 1) +
                       static_cast<long long>(metadata.response_time.count());
-    stats.avg_response_time = std::chrono::milliseconds(total_time / static_cast<long long>(stats.total_requests));
+    stats.avg_response_time =
+        std::chrono::milliseconds(total_time / static_cast<long long>(stats.total_requests));
   }
 };
 
@@ -83,8 +83,7 @@ void APIManager::register_endpoint(const APIEndpoint& endpoint) {
   impl_->endpoints.push_back(endpoint);
 }
 
-Performance::HttpResponse APIManager::handle_request(
-    const Performance::HttpRequest& request) {
+Performance::HttpResponse APIManager::handle_request(const Performance::HttpRequest& request) {
   std::lock_guard<std::mutex> lock(impl_->mutex);
 
   auto start_time = std::chrono::steady_clock::now();
@@ -103,9 +102,8 @@ Performance::HttpResponse APIManager::handle_request(
 
   if (!endpoint) {
     Performance::HttpResponseBuilder builder;
-    auto response = builder.status(404, "Not Found")
-                        .json("{\"error\": \"Endpoint not found\"}")
-                        .build();
+    auto response =
+        builder.status(404, "Not Found").json("{\"error\": \"Endpoint not found\"}").build();
 
     APIRequestMetadata metadata;
     metadata.endpoint_path = request.path;
@@ -234,17 +232,13 @@ std::vector<APIEndpoint> APIManager::get_endpoints() const {
 }
 
 // APIDocumentationGenerator implementation
-std::string APIDocumentationGenerator::generate_openapi(
-    const std::vector<APIEndpoint>& endpoints,
-    const std::string& title,
-    const APIVersion& version) {
+std::string APIDocumentationGenerator::generate_openapi(const std::vector<APIEndpoint>& endpoints,
+                                                        const std::string& title,
+                                                        const APIVersion& version) {
   nlohmann::json doc;
 
   doc["openapi"] = "3.0.0";
-  doc["info"] = {
-    {"title", title},
-    {"version", version.to_string()}
-  };
+  doc["info"] = {{"title", title}, {"version", version.to_string()}};
 
   nlohmann::json paths = nlohmann::json::object();
 
@@ -252,9 +246,7 @@ std::string APIDocumentationGenerator::generate_openapi(
     nlohmann::json method_obj;
     method_obj["summary"] = endpoint.description;
     method_obj["parameters"] = endpoint.parameters;
-    method_obj["responses"] = {
-      {"200", {{"description", "Success"}}}
-    };
+    method_obj["responses"] = {{"200", {{"description", "Success"}}}};
 
     paths[endpoint.path][Performance::to_string(endpoint.method)] = method_obj;
   }
@@ -292,8 +284,7 @@ std::string APIDocumentationGenerator::generate_markdown(
   return oss.str();
 }
 
-std::string APIDocumentationGenerator::generate_html(
-    const std::vector<APIEndpoint>& endpoints) {
+std::string APIDocumentationGenerator::generate_html(const std::vector<APIEndpoint>& endpoints) {
   std::ostringstream oss;
 
   oss << "<!DOCTYPE html>\n";
@@ -325,10 +316,8 @@ std::string APIDocumentationGenerator::generate_html(
 }
 
 // APIValidator implementation
-bool APIValidator::validate_request(
-    const Performance::HttpRequest& request,
-    const APIEndpoint& endpoint,
-    std::string* error) {
+bool APIValidator::validate_request(const Performance::HttpRequest& request,
+                                    const APIEndpoint& endpoint, std::string* error) {
   // Validate parameters
   if (!validate_parameters(request.query_params, endpoint.parameters)) {
     if (error) *error = "Missing required parameters";
@@ -338,15 +327,12 @@ bool APIValidator::validate_request(
   return true;
 }
 
-bool APIValidator::validate_version(
-    const APIVersion& requested,
-    const APIVersion& supported) {
+bool APIValidator::validate_version(const APIVersion& requested, const APIVersion& supported) {
   return requested.major == supported.major;
 }
 
-bool APIValidator::validate_parameters(
-    const std::map<std::string, std::string>& params,
-    const std::vector<std::string>& required) {
+bool APIValidator::validate_parameters(const std::map<std::string, std::string>& params,
+                                       const std::vector<std::string>& required) {
   for (const auto& req : required) {
     if (params.find(req) == params.end()) {
       return false;

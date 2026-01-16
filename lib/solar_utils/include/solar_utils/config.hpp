@@ -1,10 +1,10 @@
 #pragma once
 
-#include "solar_utils/export.hpp"
-
 #include <chrono>
 #include <filesystem>
 #include <string>
+
+#include "solar_utils/export.hpp"
 
 namespace SolarSystem::Utils {
 
@@ -22,8 +22,8 @@ namespace Config {
  * @brief Simulation configuration
  */
 struct SimulationConfig {
-  double timestep = 3600.0;           // Default: 1 hour
-  int max_iterations = 1000000;       // Default: 1M iterations
+  double timestep = 3600.0;      // Default: 1 hour
+  int max_iterations = 1000000;  // Default: 1M iterations
   bool enable_adaptive_timestep = false;
   double tolerance = 1e-12;
   bool enable_collision_detection = false;
@@ -101,7 +101,8 @@ SOLAR_UTILS_API AppConfig load_from_file(const std::filesystem::path& config_fil
 /**
  * @brief Save configuration to file
  */
-SOLAR_UTILS_API void save_to_file(const AppConfig& config, const std::filesystem::path& config_file);
+SOLAR_UTILS_API void save_to_file(const AppConfig& config,
+                                  const std::filesystem::path& config_file);
 
 }  // namespace Config
 }  // namespace SolarSystem::Utils

@@ -3,35 +3,35 @@
  * @brief Comprehensive tests for the enhanced input validation system (Task 13)
  */
 
-#include "../test_framework_enhanced.hpp"
-#include "solar_utils/validation/input_validator.hpp"
-#include "solar_utils/argument_parser.hpp"
 #include <chrono>
 #include <thread>
+
+#include "../test_framework_enhanced.hpp"
+#include "solar_utils/argument_parser.hpp"
+#include "solar_utils/validation/input_validator.hpp"
 
 using namespace SolarSystem::Utils;
 using namespace SolarSystem::Utils::Validation;
 using namespace SolarSystem::Testing;
 
 class InputValidationTests {
-public:
+ public:
   static void run_all_tests() {
     auto& framework = EnhancedTestFramework::instance();
 
     framework.load_performance_baselines("input_validation_baselines.txt");
 
     std::vector<std::pair<std::string, std::function<void()>>> tests = {
-      {"DateTimeValidation", test_datetime_validation},
-      {"NumericValidation", test_numeric_validation},
-      {"StringValidation", test_string_validation},
-      {"InputSanitization", test_input_sanitization},
-      {"RangeValidation", test_range_validation},
-      {"FormatDetection", test_format_detection},
-      {"ErrorReporting", test_error_reporting},
-      {"SuggestionSystem", test_suggestion_system},
-      {"ArgumentParserIntegration", test_argument_parser_integration},
-      {"PerformanceValidation", test_performance_validation}
-    };
+        {"DateTimeValidation", test_datetime_validation},
+        {"NumericValidation", test_numeric_validation},
+        {"StringValidation", test_string_validation},
+        {"InputSanitization", test_input_sanitization},
+        {"RangeValidation", test_range_validation},
+        {"FormatDetection", test_format_detection},
+        {"ErrorReporting", test_error_reporting},
+        {"SuggestionSystem", test_suggestion_system},
+        {"ArgumentParserIntegration", test_argument_parser_integration},
+        {"PerformanceValidation", test_performance_validation}};
 
     framework.run_test_suite("InputValidation", tests);
 
@@ -39,7 +39,7 @@ public:
     framework.generate_report("input_validation_report.html");
   }
 
-private:
+ private:
   static void test_datetime_validation() {
     // Test multiple date formats (Requirement 5.2)
 
@@ -72,7 +72,8 @@ private:
     auto min_date = std::chrono::system_clock::from_time_t(0);  // 1970
     auto max_date = std::chrono::system_clock::now();
 
-    auto range_result = DateTimeValidator::validate_date_with_range("2030-01-01", min_date, max_date);
+    auto range_result =
+        DateTimeValidator::validate_date_with_range("2030-01-01", min_date, max_date);
     ASSERT_FALSE(range_result.is_valid);
     ASSERT_TRUE(!range_result.error_message.empty());
   }
@@ -190,12 +191,12 @@ private:
     // Test automatic format detection
 
     std::vector<std::string> date_formats = {
-      "2025-12-08",      // ISO
-      "12/08/2025",      // US
-      "08/12/2025",      // European (ambiguous, but should parse)
-      "20251208",        // Compact
-      "today",           // Named
-      "+7 days"          // Relative
+        "2025-12-08",  // ISO
+        "12/08/2025",  // US
+        "08/12/2025",  // European (ambiguous, but should parse)
+        "20251208",    // Compact
+        "today",       // Named
+        "+7 days"      // Relative
     };
 
     for (const auto& date_str : date_formats) {
@@ -261,17 +262,15 @@ private:
     std::string parsed_date;
 
     // Add option with comprehensive date validation
-    parser.add_option(
-      Option("-d", "--date", "Specify date")
-        .requires_value()
-        .validate_as("date")
-        .action([&](const std::optional<std::string>& value) {
-          if (value) {
-            parsed_date = *value;
-            date_set = true;
-          }
-        })
-    );
+    parser.add_option(Option("-d", "--date", "Specify date")
+                          .requires_value()
+                          .validate_as("date")
+                          .action([&](const std::optional<std::string>& value) {
+                            if (value) {
+                              parsed_date = *value;
+                              date_set = true;
+                            }
+                          }));
 
     // Test valid date
     const char* valid_args[] = {"test_program", "--date", "2025-12-08"};
@@ -294,17 +293,15 @@ private:
     int parsed_port = 0;
     bool port_set = false;
 
-    numeric_parser.add_option(
-      Option("-p", "--port", "Specify port")
-        .requires_value()
-        .validate_as("port")
-        .action([&](const std::optional<std::string>& value) {
-          if (value) {
-            parsed_port = std::stoi(*value);
-            port_set = true;
-          }
-        })
-    );
+    numeric_parser.add_option(Option("-p", "--port", "Specify port")
+                                  .requires_value()
+                                  .validate_as("port")
+                                  .action([&](const std::optional<std::string>& value) {
+                                    if (value) {
+                                      parsed_port = std::stoi(*value);
+                                      port_set = true;
+                                    }
+                                  }));
 
     const char* port_args[] = {"test_numeric", "--port", "8080"};
     auto port_result = numeric_parser.parse(3, port_args);
@@ -351,7 +348,8 @@ private:
 
 int main() {
   std::cout << "🚀 Running Comprehensive Input Validation Tests (Task 13)" << std::endl;
-  std::cout << "=========================================================" << std::endl << std::endl;
+  std::cout << "=========================================================" << std::endl
+            << std::endl;
 
   try {
     InputValidationTests::run_all_tests();

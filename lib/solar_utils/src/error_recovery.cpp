@@ -233,7 +233,8 @@ void AdvancedErrorRecoveryManager::record_recovery_outcome(const DetailedError& 
   if (learning_data_.size() > max_learning_data_points_) {
     learning_data_.erase(
         learning_data_.begin(),
-        learning_data_.begin() + static_cast<std::ptrdiff_t>(learning_data_.size() - max_learning_data_points_));
+        learning_data_.begin() +
+            static_cast<std::ptrdiff_t>(learning_data_.size() - max_learning_data_points_));
   }
 }
 
@@ -272,7 +273,8 @@ void AdvancedErrorRecoveryManager::update_recovery_strategies_from_learning() {
 
     for (const auto& [strategy, total] : strategy_total) {
       if (total >= 3) {  // Minimum attempts
-        double success_rate = static_cast<double>(strategy_success[strategy]) / static_cast<double>(total);
+        double success_rate =
+            static_cast<double>(strategy_success[strategy]) / static_cast<double>(total);
         if (success_rate > best_success_rate) {
           best_success_rate = success_rate;
           best_strategy = strategy;
@@ -509,7 +511,8 @@ void ErrorPreventionSystem::update_rule_effectiveness() {
 
   for (auto& [rule_id, rule] : prevention_rules_) {
     if (rule.trigger_count > 0) {
-      double effectiveness = static_cast<double>(rule.success_count) / static_cast<double>(rule.trigger_count);
+      double effectiveness =
+          static_cast<double>(rule.success_count) / static_cast<double>(rule.trigger_count);
 
       // Disable rules with very low effectiveness
       if (effectiveness < 0.1 && rule.trigger_count > 10) {
@@ -529,10 +532,12 @@ std::vector<PreventionRule> ErrorPreventionSystem::get_most_effective_rules(size
 
   // Sort by effectiveness
   std::sort(rules.begin(), rules.end(), [](const PreventionRule& a, const PreventionRule& b) {
-    double eff_a =
-        a.trigger_count > 0 ? static_cast<double>(a.success_count) / static_cast<double>(a.trigger_count) : 0.0;
-    double eff_b =
-        b.trigger_count > 0 ? static_cast<double>(b.success_count) / static_cast<double>(b.trigger_count) : 0.0;
+    double eff_a = a.trigger_count > 0
+                       ? static_cast<double>(a.success_count) / static_cast<double>(a.trigger_count)
+                       : 0.0;
+    double eff_b = b.trigger_count > 0
+                       ? static_cast<double>(b.success_count) / static_cast<double>(b.trigger_count)
+                       : 0.0;
     return eff_a > eff_b;
   });
 
@@ -947,8 +952,9 @@ std::vector<double> MLErrorPatternAnalyzer::extract_features(
   // Add features for each category
   for (int i = 0; i < 10; ++i) {  // Assuming 10 error categories
     ErrorCategory category = static_cast<ErrorCategory>(i);
-    double ratio =
-        errors.empty() ? 0.0 : static_cast<double>(category_counts[category]) / static_cast<double>(errors.size());
+    double ratio = errors.empty() ? 0.0
+                                  : static_cast<double>(category_counts[category]) /
+                                        static_cast<double>(errors.size());
     features.push_back(ratio);
   }
 
@@ -1051,7 +1057,7 @@ bool ErrorRecoveryOrchestrator::handle_error(const DetailedError& error) {
   }
 }
 
-void ErrorRecoveryOrchestrator::configure_recovery_system(const std::string& ) {
+void ErrorRecoveryOrchestrator::configure_recovery_system(const std::string&) {
   // Configuration loading would be implemented here
   // For now, use default configuration
 }
@@ -1372,10 +1378,11 @@ PreventionRule create_memory_leak_prevention_rule() {
   rule.target_codes = {ErrorCode::OutOfMemory, ErrorCode::MemoryLeak};
   rule.confidence_threshold = 0.8;
 
-  rule.condition = [](const DetailedError& ) {
+  rule.condition = [](const DetailedError&) {
     // Check if memory usage is trending upward
     auto stats = ResourceManager::instance().get_statistics();
-    return static_cast<double>(stats.current_bytes_allocated) > static_cast<double>(stats.peak_bytes_allocated) * 0.9;
+    return static_cast<double>(stats.current_bytes_allocated) >
+           static_cast<double>(stats.peak_bytes_allocated) * 0.9;
   };
 
   rule.prevention_action = []() {
@@ -1396,7 +1403,7 @@ PreventionRule create_network_timeout_prevention_rule() {
   rule.target_codes = {ErrorCode::ConnectionTimeout, ErrorCode::NetworkUnavailable};
   rule.confidence_threshold = 0.7;
 
-  rule.condition = [](const DetailedError& ) {
+  rule.condition = [](const DetailedError&) {
     // Check network health
     return !NetworkUtils::is_endpoint_reachable("8.8.8.8", std::chrono::seconds(2));
   };
@@ -1419,12 +1426,12 @@ PreventionRule create_disk_space_prevention_rule() {
   rule.target_codes = {ErrorCode::DiskFull};
   rule.confidence_threshold = 0.9;
 
-  rule.condition = [](const DetailedError& ) {
+  rule.condition = [](const DetailedError&) {
     // Check available disk space
     try {
       auto space_info = std::filesystem::space("/");
-      double usage_ratio =
-          static_cast<double>(space_info.capacity - space_info.available) / static_cast<double>(space_info.capacity);
+      double usage_ratio = static_cast<double>(space_info.capacity - space_info.available) /
+                           static_cast<double>(space_info.capacity);
       return usage_ratio > 0.9;  // 90% full
     } catch (...) {
       return false;
@@ -1455,8 +1462,8 @@ EarlyDetectionMonitor create_memory_usage_monitor() {
       return 1.0;  // No memory usage tracked
     }
 
-    double usage_ratio =
-        static_cast<double>(stats.current_bytes_allocated) / static_cast<double>(stats.peak_bytes_allocated);
+    double usage_ratio = static_cast<double>(stats.current_bytes_allocated) /
+                         static_cast<double>(stats.peak_bytes_allocated);
     return 1.0 - usage_ratio;  // Higher usage = lower health
   };
 
@@ -1504,7 +1511,8 @@ EarlyDetectionMonitor create_network_health_monitor() {
     std::vector<DetailedError> issues;
     auto stats = NetworkResourceManager::instance().get_statistics();
 
-    if (static_cast<double>(stats.connection_failures) > static_cast<double>(stats.total_connections_created) * 0.1) {
+    if (static_cast<double>(stats.connection_failures) >
+        static_cast<double>(stats.total_connections_created) * 0.1) {
       DetailedError connection_issue(ErrorCode::ConnectionFailed,
                                      "High connection failure rate detected",
                                      ErrorSeverity::Warning);
@@ -1529,7 +1537,8 @@ EarlyDetectionMonitor create_filesystem_health_monitor() {
   monitor.health_check = []() {
     try {
       auto space_info = std::filesystem::space("/");
-      double available_ratio = static_cast<double>(space_info.available) / static_cast<double>(space_info.capacity);
+      double available_ratio =
+          static_cast<double>(space_info.available) / static_cast<double>(space_info.capacity);
       return available_ratio;  // More available space = better health
     } catch (...) {
       return 0.5;  // Unknown state
@@ -1540,7 +1549,8 @@ EarlyDetectionMonitor create_filesystem_health_monitor() {
     std::vector<DetailedError> issues;
     auto stats = FileResourceManager::instance().get_statistics();
 
-    if (static_cast<double>(stats.failed_operations) > static_cast<double>(stats.total_files_opened) * 0.05) {
+    if (static_cast<double>(stats.failed_operations) >
+        static_cast<double>(stats.total_files_opened) * 0.05) {
       DetailedError file_issue(ErrorCode::FileAccessDenied,
                                "High file operation failure rate detected", ErrorSeverity::Warning);
       issues.push_back(file_issue);
@@ -1571,7 +1581,8 @@ EarlyDetectionMonitor create_performance_monitor() {
     double performance_score = 1.0;
 
     // Factor in resource usage
-    if (static_cast<double>(resource_stats.current_allocations) > static_cast<double>(resource_stats.peak_allocations) * 0.8) {
+    if (static_cast<double>(resource_stats.current_allocations) >
+        static_cast<double>(resource_stats.peak_allocations) * 0.8) {
       performance_score *= 0.8;
     }
 
@@ -1584,8 +1595,9 @@ EarlyDetectionMonitor create_performance_monitor() {
 
     // Factor in network performance
     if (network_stats.connection_failures > 0) {
-      double failure_rate = static_cast<double>(network_stats.connection_failures) /
-                            static_cast<double>(std::max(size_t{1}, network_stats.total_connections_created));
+      double failure_rate =
+          static_cast<double>(network_stats.connection_failures) /
+          static_cast<double>(std::max(size_t{1}, network_stats.total_connections_created));
       performance_score *= (1.0 - failure_rate);
     }
 

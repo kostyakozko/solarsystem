@@ -4,8 +4,8 @@
  * @note Using Google Test compatibility layer
  */
 
-#include <gtest/gtest.h>
 #include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 #include <fstream>
 
@@ -151,8 +151,8 @@ TEST(TestDiscovery, PatternMatching) {
       {"unit"});
 
   TestDiscovery::instance().register_test_factory(
-      "UniqueTestSimulationEngine",
-      []() { return std::make_unique<UniqueTestSimulationEngine>(); }, {"unit"});
+      "UniqueTestSimulationEngine", []() { return std::make_unique<UniqueTestSimulationEngine>(); },
+      {"unit"});
 
   TestDiscovery::instance().register_test_factory(
       "UniqueBenchmarkCachePerformance",

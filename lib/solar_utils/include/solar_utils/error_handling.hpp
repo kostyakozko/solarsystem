@@ -159,7 +159,8 @@ struct DetailedError {
   DetailedError() : timestamp(std::chrono::system_clock::now()) {}
 
   DetailedError(ErrorCode err_code, const std::string& err_message,
-                ErrorSeverity err_severity = ErrorSeverity::Error, const std::string& err_context = "")
+                ErrorSeverity err_severity = ErrorSeverity::Error,
+                const std::string& err_context = "")
       : code(err_code),
         category(get_category_for_code(err_code)),
         severity(err_severity),
@@ -509,19 +510,22 @@ SOLAR_UTILS_API ErrorCode string_to_error_code(const std::string& code_str);
 
 // Create error from exception
 SOLAR_UTILS_API DetailedError create_error_from_exception(const std::exception& ex,
-                                          const std::string& context = "");
+                                                          const std::string& context = "");
 
 // Create validation error
-SOLAR_UTILS_API DetailedError create_validation_error(const std::string& field, const std::string& value,
-                                      const std::string& expected);
+SOLAR_UTILS_API DetailedError create_validation_error(const std::string& field,
+                                                      const std::string& value,
+                                                      const std::string& expected);
 
 // Create network error
-SOLAR_UTILS_API DetailedError create_network_error(const std::string& endpoint, const std::string& operation,
-                                   const std::string& details);
+SOLAR_UTILS_API DetailedError create_network_error(const std::string& endpoint,
+                                                   const std::string& operation,
+                                                   const std::string& details);
 
 // Create file system error
-SOLAR_UTILS_API DetailedError create_filesystem_error(const std::string& file_path, const std::string& operation,
-                                      const std::string& details);
+SOLAR_UTILS_API DetailedError create_filesystem_error(const std::string& file_path,
+                                                      const std::string& operation,
+                                                      const std::string& details);
 }  // namespace ErrorUtils
 
 /**

@@ -30,10 +30,10 @@
 // Modern Solar System Suite APIs
 #include "solar_core/bodies/body_factory.hpp"
 #include "solar_core/builders/simulation_builder.hpp"
-#include "solar_core/streaming/realtime_stream.hpp"
-#include "solar_core/streaming/stream_filter.hpp"
-#include "solar_core/streaming/stream_aggregator.hpp"
 #include "solar_core/streaming/quality_monitor.hpp"
+#include "solar_core/streaming/realtime_stream.hpp"
+#include "solar_core/streaming/stream_aggregator.hpp"
+#include "solar_core/streaming/stream_filter.hpp"
 #include "solar_core/visualization/visualization_modes.hpp"
 #include "solar_utils/argument_parser.hpp"
 #include "solar_utils/logging.hpp"
@@ -388,7 +388,8 @@ class RealtimeMonitor {
     if (!config_.quiet_mode) {
       std::cout << "\n✨ Monitoring completed successfully!\n";
       std::cout << "📊 Total displays: " << display_count << "\n";
-      std::cout << "🎨 Final visualization mode: " << SolarSystem::Visualization::to_string(current_viz_mode_) << "\n";
+      std::cout << "🎨 Final visualization mode: "
+                << SolarSystem::Visualization::to_string(current_viz_mode_) << "\n";
 
       // Show final streaming statistics
       if (has_streaming_data_) {
@@ -423,8 +424,8 @@ class RealtimeMonitor {
     auto result = viz_manager_->set_active_mode(mode);
     if (result) {
       current_viz_mode_ = mode;
-      LOG_INFO("RealtimeMonitor", "Switched to visualization mode: " +
-               SolarSystem::Visualization::to_string(mode));
+      LOG_INFO("RealtimeMonitor",
+               "Switched to visualization mode: " + SolarSystem::Visualization::to_string(mode));
     } else {
       LOG_ERROR("RealtimeMonitor", "Failed to switch visualization mode: " + result.error());
     }
@@ -450,9 +451,11 @@ class RealtimeMonitor {
   /**
    * @brief Export current visualization
    */
-  void export_current_visualization(std::optional<SolarSystem::Visualization::ExportFormat> format = std::nullopt) {
+  void export_current_visualization(
+      std::optional<SolarSystem::Visualization::ExportFormat> format = std::nullopt) {
     // Use configured format if not specified
-    SolarSystem::Visualization::ExportFormat export_format = SolarSystem::Visualization::ExportFormat::TEXT;
+    SolarSystem::Visualization::ExportFormat export_format =
+        SolarSystem::Visualization::ExportFormat::TEXT;
     if (format) {
       export_format = *format;
     } else {
@@ -522,7 +525,8 @@ class RealtimeMonitor {
       if (has_streaming_data_) {
         std::lock_guard<std::mutex> lock(display_mutex_);
         status += " │ Bodies: " + std::to_string(latest_snapshot_.data_points.size());
-        status += " │ Quality: " + std::to_string(static_cast<int>(latest_snapshot_.overall_quality * 100)) + "%";
+        status += " │ Quality: " +
+                  std::to_string(static_cast<int>(latest_snapshot_.overall_quality * 100)) + "%";
         status += " │ Latency: " + std::to_string(latest_snapshot_.processing_time.count()) + "ms";
       } else {
         status += " │ Waiting for streaming data...";
@@ -599,14 +603,17 @@ class RealtimeMonitor {
     }
 
     std::cout << "🌌 Celestial Bodies (Live Stream):\n";
-    std::cout << "┌─────────────────┬─────────────────────────────────────────────┬─────────┬─────────┐\n";
-    std::cout << "│ Body            │ Position (km)                               │ Quality │ Latency │";
+    std::cout << "┌─────────────────┬─────────────────────────────────────────────┬─────────┬──────"
+                 "───┐\n";
+    std::cout
+        << "│ Body            │ Position (km)                               │ Quality │ Latency │";
 
     if (config_.show_velocities) {
       std::cout << " Velocity (km/s)                         │";
     }
     std::cout << "\n";
-    std::cout << "├─────────────────┼─────────────────────────────────────────────┼─────────┼─────────┤\n";
+    std::cout << "├─────────────────┼─────────────────────────────────────────────┼─────────┼──────"
+                 "───┤\n";
 
     // Display streaming data points
     for (const auto& point : latest_snapshot_.data_points) {
@@ -614,28 +621,27 @@ class RealtimeMonitor {
 
       // Position display (convert from meters to kilometers)
       std::cout << std::fixed << std::setprecision(0);
-      std::cout << "(" << std::setw(12) << point.position.x() / 1000.0
-                << ", " << std::setw(12) << point.position.y() / 1000.0
-                << ", " << std::setw(12) << point.position.z() / 1000.0
-                << ")";
+      std::cout << "(" << std::setw(12) << point.position.x() / 1000.0 << ", " << std::setw(12)
+                << point.position.y() / 1000.0 << ", " << std::setw(12)
+                << point.position.z() / 1000.0 << ")";
 
       // Quality and latency
-      std::cout << " │ " << std::setw(5) << std::setprecision(1)
-                << (point.quality_score * 100.0) << "% │ ";
+      std::cout << " │ " << std::setw(5) << std::setprecision(1) << (point.quality_score * 100.0)
+                << "% │ ";
       std::cout << std::setw(5) << point.latency.count() << "ms │";
 
       if (config_.show_velocities) {
         std::cout << " (" << std::setprecision(2);
-        std::cout << std::setw(8) << point.velocity.x() / 1000.0
-                  << ", " << std::setw(8) << point.velocity.y() / 1000.0
-                  << ", " << std::setw(8) << point.velocity.z() / 1000.0
-                  << ") │";
+        std::cout << std::setw(8) << point.velocity.x() / 1000.0 << ", " << std::setw(8)
+                  << point.velocity.y() / 1000.0 << ", " << std::setw(8)
+                  << point.velocity.z() / 1000.0 << ") │";
       }
 
       std::cout << "\n";
     }
 
-    std::cout << "└─────────────────┴─────────────────────────────────────────────┴─────────┴─────────┘\n\n";
+    std::cout << "└─────────────────┴─────────────────────────────────────────────┴─────────┴──────"
+                 "───┘\n\n";
   }
 
   /**
@@ -729,8 +735,8 @@ class RealtimeMonitor {
 
       // Time since last update
       if (last_data_update_ != std::chrono::system_clock::time_point{}) {
-        auto time_since_update = std::chrono::duration_cast<std::chrono::seconds>(
-            now - last_data_update_);
+        auto time_since_update =
+            std::chrono::duration_cast<std::chrono::seconds>(now - last_data_update_);
         std::cout << "    Last Update: " << time_since_update.count() << "s ago\n";
       }
     }
@@ -753,8 +759,10 @@ class RealtimeMonitor {
         SolarSystem::Visualization::VisualizationMode::TABLE);
     table_config.max_width = 120;
     table_config.use_colors = !config_.quiet_mode;
-    auto table_renderer = std::make_unique<SolarSystem::Visualization::VisualizationRenderer>(table_config);
-    auto table_result = viz_manager_->register_mode(SolarSystem::Visualization::VisualizationMode::TABLE, std::move(table_renderer));
+    auto table_renderer =
+        std::make_unique<SolarSystem::Visualization::VisualizationRenderer>(table_config);
+    auto table_result = viz_manager_->register_mode(
+        SolarSystem::Visualization::VisualizationMode::TABLE, std::move(table_renderer));
     if (!table_result) {
       LOG_ERROR("RealtimeMonitor", "Failed to register table mode: " + table_result.error());
     }
@@ -763,8 +771,10 @@ class RealtimeMonitor {
         SolarSystem::Visualization::VisualizationMode::GRID);
     grid_config.max_width = 120;
     grid_config.use_colors = !config_.quiet_mode;
-    auto grid_renderer = std::make_unique<SolarSystem::Visualization::VisualizationRenderer>(grid_config);
-    auto grid_result = viz_manager_->register_mode(SolarSystem::Visualization::VisualizationMode::GRID, std::move(grid_renderer));
+    auto grid_renderer =
+        std::make_unique<SolarSystem::Visualization::VisualizationRenderer>(grid_config);
+    auto grid_result = viz_manager_->register_mode(
+        SolarSystem::Visualization::VisualizationMode::GRID, std::move(grid_renderer));
     if (!grid_result) {
       LOG_ERROR("RealtimeMonitor", "Failed to register grid mode: " + grid_result.error());
     }
@@ -773,8 +783,10 @@ class RealtimeMonitor {
         SolarSystem::Visualization::VisualizationMode::LIST);
     list_config.max_width = 120;
     list_config.use_colors = !config_.quiet_mode;
-    auto list_renderer = std::make_unique<SolarSystem::Visualization::VisualizationRenderer>(list_config);
-    auto list_result = viz_manager_->register_mode(SolarSystem::Visualization::VisualizationMode::LIST, std::move(list_renderer));
+    auto list_renderer =
+        std::make_unique<SolarSystem::Visualization::VisualizationRenderer>(list_config);
+    auto list_result = viz_manager_->register_mode(
+        SolarSystem::Visualization::VisualizationMode::LIST, std::move(list_renderer));
     if (!list_result) {
       LOG_ERROR("RealtimeMonitor", "Failed to register list mode: " + list_result.error());
     }
@@ -783,8 +795,10 @@ class RealtimeMonitor {
         SolarSystem::Visualization::VisualizationMode::MINIMAL);
     minimal_config.max_width = 80;
     minimal_config.use_colors = !config_.quiet_mode;
-    auto minimal_renderer = std::make_unique<SolarSystem::Visualization::VisualizationRenderer>(minimal_config);
-    auto minimal_result = viz_manager_->register_mode(SolarSystem::Visualization::VisualizationMode::MINIMAL, std::move(minimal_renderer));
+    auto minimal_renderer =
+        std::make_unique<SolarSystem::Visualization::VisualizationRenderer>(minimal_config);
+    auto minimal_result = viz_manager_->register_mode(
+        SolarSystem::Visualization::VisualizationMode::MINIMAL, std::move(minimal_renderer));
     if (!minimal_result) {
       LOG_ERROR("RealtimeMonitor", "Failed to register minimal mode: " + minimal_result.error());
     }
@@ -793,8 +807,10 @@ class RealtimeMonitor {
         SolarSystem::Visualization::VisualizationMode::DETAILED);
     detailed_config.max_width = 140;
     detailed_config.use_colors = !config_.quiet_mode;
-    auto detailed_renderer = std::make_unique<SolarSystem::Visualization::VisualizationRenderer>(detailed_config);
-    auto detailed_result = viz_manager_->register_mode(SolarSystem::Visualization::VisualizationMode::DETAILED, std::move(detailed_renderer));
+    auto detailed_renderer =
+        std::make_unique<SolarSystem::Visualization::VisualizationRenderer>(detailed_config);
+    auto detailed_result = viz_manager_->register_mode(
+        SolarSystem::Visualization::VisualizationMode::DETAILED, std::move(detailed_renderer));
     if (!detailed_result) {
       LOG_ERROR("RealtimeMonitor", "Failed to register detailed mode: " + detailed_result.error());
     }
@@ -803,14 +819,18 @@ class RealtimeMonitor {
         SolarSystem::Visualization::VisualizationMode::DASHBOARD);
     dashboard_config.max_width = 120;
     dashboard_config.use_colors = !config_.quiet_mode;
-    auto dashboard_renderer = std::make_unique<SolarSystem::Visualization::VisualizationRenderer>(dashboard_config);
-    auto dashboard_result = viz_manager_->register_mode(SolarSystem::Visualization::VisualizationMode::DASHBOARD, std::move(dashboard_renderer));
+    auto dashboard_renderer =
+        std::make_unique<SolarSystem::Visualization::VisualizationRenderer>(dashboard_config);
+    auto dashboard_result = viz_manager_->register_mode(
+        SolarSystem::Visualization::VisualizationMode::DASHBOARD, std::move(dashboard_renderer));
     if (!dashboard_result) {
-      LOG_ERROR("RealtimeMonitor", "Failed to register dashboard mode: " + dashboard_result.error());
+      LOG_ERROR("RealtimeMonitor",
+                "Failed to register dashboard mode: " + dashboard_result.error());
     }
 
     // Set mode from configuration
-    auto mode_result = SolarSystem::Visualization::parse_visualization_mode(config_.visualization_mode);
+    auto mode_result =
+        SolarSystem::Visualization::parse_visualization_mode(config_.visualization_mode);
     if (mode_result) {
       current_viz_mode_ = mode_result.value();
     }
@@ -820,7 +840,8 @@ class RealtimeMonitor {
     }
 
     LOG_INFO("RealtimeMonitor", "Visualization system initialized with " +
-             std::to_string(viz_manager_->get_available_modes().size()) + " modes");
+                                    std::to_string(viz_manager_->get_available_modes().size()) +
+                                    " modes");
   }
 
   /**
@@ -848,23 +869,20 @@ class RealtimeMonitor {
     quality_monitor_ = QualityMonitorFactory::create_realtime_monitor();
 
     // Set up callbacks
-    realtime_stream_->set_data_callback([this](const DataSnapshot& snapshot) {
-      handle_data_snapshot(snapshot);
-    });
+    realtime_stream_->set_data_callback(
+        [this](const DataSnapshot& snapshot) { handle_data_snapshot(snapshot); });
 
-    realtime_stream_->set_error_callback([this](const std::string& error) {
-      handle_streaming_error(error);
-    });
+    realtime_stream_->set_error_callback(
+        [this](const std::string& error) { handle_streaming_error(error); });
 
-    realtime_stream_->set_quality_callback([this](const StreamStats& stats) {
-      handle_quality_update(stats);
-    });
+    realtime_stream_->set_quality_callback(
+        [this](const StreamStats& stats) { handle_quality_update(stats); });
 
     // Set up quality monitoring callbacks
-    quality_monitor_->set_quality_alert_callback([this](const std::string& alert,
-                                                        const SnapshotQuality& quality) {
-      handle_quality_alert(alert, quality);
-    });
+    quality_monitor_->set_quality_alert_callback(
+        [this](const std::string& alert, const SnapshotQuality& quality) {
+          handle_quality_alert(alert, quality);
+        });
 
     LOG_INFO("RealtimeMonitor", "Streaming system initialized");
   }
@@ -915,9 +933,9 @@ class RealtimeMonitor {
    */
   void handle_quality_update(const StreamStats& stats) {
     if (config_.verbose_output) {
-      LOG_DEBUG("RealtimeMonitor", "Quality update: avg=" +
-                std::to_string(stats.avg_quality_score) +
-                ", generated=" + std::to_string(stats.total_snapshots_generated.load()));
+      LOG_DEBUG("RealtimeMonitor",
+                "Quality update: avg=" + std::to_string(stats.avg_quality_score) +
+                    ", generated=" + std::to_string(stats.total_snapshots_generated.load()));
     }
   }
 
@@ -927,8 +945,8 @@ class RealtimeMonitor {
   void handle_quality_alert(const std::string& alert, const SnapshotQuality& quality) {
     LOG_WARN("RealtimeMonitor", "Quality alert: " + alert);
     if (!config_.quiet_mode) {
-      std::cout << "🚨 Quality Alert: " << alert << " (Score: "
-                << std::fixed << std::setprecision(3) << quality.overall_score << ")\n";
+      std::cout << "🚨 Quality Alert: " << alert << " (Score: " << std::fixed
+                << std::setprecision(3) << quality.overall_score << ")\n";
     }
   }
 
@@ -1011,7 +1029,8 @@ class RealtimeMonitor {
       std::cout << SolarSystem::Visualization::to_string(mode) << " ";
     }
     std::cout << "\n";
-    std::cout << "Current mode: " << SolarSystem::Visualization::to_string(current_viz_mode_) << "\n";
+    std::cout << "Current mode: " << SolarSystem::Visualization::to_string(current_viz_mode_)
+              << "\n";
     std::cout << "============================================\n\n";
   }
 

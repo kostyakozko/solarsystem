@@ -22,8 +22,8 @@
 #include <vector>
 
 #include "solar_core/export.hpp"
-#include "solar_utils/expected.hpp"
 #include "solar_utils/config.hpp"
+#include "solar_utils/expected.hpp"
 
 namespace SolarSystem::Core::Config {
 
@@ -61,8 +61,7 @@ struct ConfigErrorDetail {
   std::vector<std::string> suggestions;
   std::optional<std::filesystem::path> file_path;
 
-  ConfigErrorDetail(ConfigError code, const std::string& msg)
-      : error_code(code), message(msg) {}
+  ConfigErrorDetail(ConfigError code, const std::string& msg) : error_code(code), message(msg) {}
 
   ConfigErrorDetail(ConfigError code, const std::string& msg, const std::string& ctx)
       : error_code(code), message(msg), context(ctx) {}
@@ -223,8 +222,7 @@ class SOLAR_CORE_API ConfigurationManager {
    * @return Success or error with details
    */
   [[nodiscard]] ConfigResult<void> enable_hot_reload(
-      const std::filesystem::path& config_path,
-      const ConfigChangeCallback& callback = nullptr);
+      const std::filesystem::path& config_path, const ConfigChangeCallback& callback = nullptr);
 
   /**
    * @brief Disable hot-reloading
@@ -412,8 +410,7 @@ class SOLAR_CORE_API ConfigurationManager {
   /**
    * @brief Get parameters that depend on the given parameter
    */
-  [[nodiscard]] std::vector<std::string> get_dependent_parameters(
-      const std::string& param) const;
+  [[nodiscard]] std::vector<std::string> get_dependent_parameters(const std::string& param) const;
 };
 
 /**
@@ -438,7 +435,7 @@ class GlobalConfig {
    * @brief Initialize global configuration with multiple sources
    */
   static ConfigResult<void> initialize(const std::filesystem::path& config_path,
-                                      const std::map<std::string, std::string>& cli_overrides);
+                                       const std::map<std::string, std::string>& cli_overrides);
 
  private:
   static std::unique_ptr<ConfigurationManager> instance_;

@@ -93,7 +93,7 @@ class EnhancedTestReporter : public TestReporter {
 
   // Utility methods for derived classes
   void write_with_error_handling(const std::string& content);
-  template<typename... Args>
+  template <typename... Args>
   void write_formatted(const std::string& format_str, Args&&... args) {
     // Use ostringstream instead of std::format for GCC 11 compatibility
     std::ostringstream oss;

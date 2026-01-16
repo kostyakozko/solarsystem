@@ -12,11 +12,11 @@
  * Requirements: All requirements - cross-cutting concern
  */
 
+#include <gtest/gtest.h>
+
 #include <map>
 #include <string>
 #include <vector>
-
-#include <gtest/gtest.h>
 
 class TestReportGenerator {
  public:

@@ -15,11 +15,16 @@ namespace SolarSystem::Security {
 
 std::string to_string(ThreatLevel level) {
   switch (level) {
-    case ThreatLevel::LOW: return "LOW";
-    case ThreatLevel::MEDIUM: return "MEDIUM";
-    case ThreatLevel::HIGH: return "HIGH";
-    case ThreatLevel::CRITICAL: return "CRITICAL";
-    default: return "UNKNOWN";
+    case ThreatLevel::LOW:
+      return "LOW";
+    case ThreatLevel::MEDIUM:
+      return "MEDIUM";
+    case ThreatLevel::HIGH:
+      return "HIGH";
+    case ThreatLevel::CRITICAL:
+      return "CRITICAL";
+    default:
+      return "UNKNOWN";
   }
 }
 
@@ -119,23 +124,18 @@ void SecurityMonitor::block_ip(const std::string& ip, std::chrono::seconds /* du
 
 void SecurityMonitor::unblock_ip(const std::string& ip) {
   std::lock_guard<std::mutex> lock(impl_->mutex);
-  impl_->blocked_ips.erase(
-      std::remove(impl_->blocked_ips.begin(), impl_->blocked_ips.end(), ip),
-      impl_->blocked_ips.end());
+  impl_->blocked_ips.erase(std::remove(impl_->blocked_ips.begin(), impl_->blocked_ips.end(), ip),
+                           impl_->blocked_ips.end());
 }
 
-std::vector<SecurityAlert> SecurityMonitor::get_recent_alerts(
-    std::chrono::minutes window) const {
+std::vector<SecurityAlert> SecurityMonitor::get_recent_alerts(std::chrono::minutes window) const {
   std::lock_guard<std::mutex> lock(impl_->mutex);
 
   auto cutoff = std::chrono::system_clock::now() - window;
 
   std::vector<SecurityAlert> recent;
-  std::copy_if(impl_->alerts.begin(), impl_->alerts.end(),
-               std::back_inserter(recent),
-               [cutoff](const SecurityAlert& alert) {
-                 return alert.timestamp >= cutoff;
-               });
+  std::copy_if(impl_->alerts.begin(), impl_->alerts.end(), std::back_inserter(recent),
+               [cutoff](const SecurityAlert& alert) { return alert.timestamp >= cutoff; });
 
   return recent;
 }
@@ -145,13 +145,9 @@ void SecurityMonitor::set_alert_callback(AlertCallback callback) {
   impl_->alert_callback = std::move(callback);
 }
 
-void SecurityMonitor::start() {
-  impl_->running.store(true);
-}
+void SecurityMonitor::start() { impl_->running.store(true); }
 
-void SecurityMonitor::stop() {
-  impl_->running.store(false);
-}
+void SecurityMonitor::stop() { impl_->running.store(false); }
 
 // AuditLogger implementation
 static std::vector<SecurityEvent> audit_log;
@@ -162,9 +158,8 @@ void AuditLogger::log(const SecurityEvent& event) {
   audit_log.push_back(event);
 }
 
-std::vector<SecurityEvent> AuditLogger::get_log(
-    std::chrono::system_clock::time_point since,
-    std::chrono::system_clock::time_point until) {
+std::vector<SecurityEvent> AuditLogger::get_log(std::chrono::system_clock::time_point since,
+                                                std::chrono::system_clock::time_point until) {
   std::lock_guard<std::mutex> lock(audit_mutex);
 
   if (since == std::chrono::system_clock::time_point{} &&
@@ -173,12 +168,12 @@ std::vector<SecurityEvent> AuditLogger::get_log(
   }
 
   std::vector<SecurityEvent> filtered;
-  std::copy_if(audit_log.begin(), audit_log.end(),
-               std::back_inserter(filtered),
-               [since, until](const SecurityEvent& event) {
-                 return (since == std::chrono::system_clock::time_point{} || event.timestamp >= since) &&
-                        (until == std::chrono::system_clock::time_point{} || event.timestamp <= until);
-               });
+  std::copy_if(
+      audit_log.begin(), audit_log.end(), std::back_inserter(filtered),
+      [since, until](const SecurityEvent& event) {
+        return (since == std::chrono::system_clock::time_point{} || event.timestamp >= since) &&
+               (until == std::chrono::system_clock::time_point{} || event.timestamp <= until);
+      });
 
   return filtered;
 }
@@ -190,9 +185,7 @@ void AuditLogger::cleanup(std::chrono::hours retention) {
 
   audit_log.erase(
       std::remove_if(audit_log.begin(), audit_log.end(),
-                     [cutoff](const SecurityEvent& event) {
-                       return event.timestamp < cutoff;
-                     }),
+                     [cutoff](const SecurityEvent& event) { return event.timestamp < cutoff; }),
       audit_log.end());
 }
 

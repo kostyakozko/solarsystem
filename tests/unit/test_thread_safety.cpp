@@ -16,14 +16,14 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-lambda-capture"
 
+#include <gtest/gtest.h>
+
 #include <atomic>
 #include <chrono>
 #include <condition_variable>
 #include <mutex>
 #include <thread>
 #include <vector>
-
-#include <gtest/gtest.h>
 
 /**
  * @brief Thread-safe counter for testing

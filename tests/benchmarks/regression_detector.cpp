@@ -4,12 +4,13 @@
  * @note Migrated to Google Test
  */
 
+#include <gtest/gtest.h>
+
 #include <filesystem>
 #include <iostream>
 #include <vector>
 
 #include "benchmark_utils.h"
-#include <gtest/gtest.h>
 
 // Regression Detection Benchmark Test
 TEST(RegressionDetectorBenchmark, PerformanceStabilityValidation) {
@@ -62,8 +63,7 @@ TEST(RegressionDetectorBenchmark, PerformanceStabilityValidation) {
               << "std_dev: " << result.std_deviation_ms << " ms" << std::endl;
 
     // Check for high variance (potential instability)
-    if (result.avg_duration_ms > 0 &&
-        result.std_deviation_ms / result.avg_duration_ms > 0.5) {
+    if (result.avg_duration_ms > 0 && result.std_deviation_ms / result.avg_duration_ms > 0.5) {
       std::cout << "WARNING: High variance detected in " << result.name << std::endl;
       all_stable = false;
     }

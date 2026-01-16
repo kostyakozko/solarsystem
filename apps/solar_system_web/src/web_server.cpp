@@ -627,8 +627,7 @@ class HttpServer {
         // Documents
         {".pdf", "application/pdf"},
         {".doc", "application/msword"},
-        {".docx",
-         "application/vnd.openxmlformats-officedocument.wordprocessingml.document"},
+        {".docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"},
 
         // Other
         {".wasm", "application/wasm"},
@@ -740,8 +739,9 @@ class HttpServer {
     // Add ETag for cache validation
     auto last_write_time = std::filesystem::last_write_time(file_path);
     auto time_since_epoch = last_write_time.time_since_epoch().count();
-    response.headers["ETag"] = "\"" + std::to_string(static_cast<long long>(time_since_epoch)) + "-" +
-                               std::to_string(static_cast<unsigned long long>(file_size)) + "\"";
+    response.headers["ETag"] = "\"" + std::to_string(static_cast<long long>(time_since_epoch)) +
+                               "-" + std::to_string(static_cast<unsigned long long>(file_size)) +
+                               "\"";
 
     // Add security headers
     response.headers["X-Content-Type-Options"] = "nosniff";
@@ -904,11 +904,10 @@ class SolarSystemAPI {
         }
       }
 
-      VERBOSE_LOG_INFO("API", "Bodies request - Type: " +
-                                  (type_filter.has_value() ? *type_filter : "all") +
-                                  ", Name: " + (name_filter.has_value() ? *name_filter : "all") +
-                                  ", Limit: " + std::to_string(limit) +
-                                  ", Offset: " + std::to_string(offset));
+      VERBOSE_LOG_INFO(
+          "API", "Bodies request - Type: " + (type_filter.has_value() ? *type_filter : "all") +
+                     ", Name: " + (name_filter.has_value() ? *name_filter : "all") +
+                     ", Limit: " + std::to_string(limit) + ", Offset: " + std::to_string(offset));
 
       // Get available bodies from factory
       auto available_bodies = factory.get_available_bodies();
@@ -940,8 +939,7 @@ class SolarSystemAPI {
           std::string lower_name = body_name;
           std::string lower_filter = *name_filter;
           std::transform(lower_name.begin(), lower_name.end(), lower_name.begin(), ::tolower);
-          std::transform(lower_filter.begin(), lower_filter.end(), lower_filter.begin(),
-                         ::tolower);
+          std::transform(lower_filter.begin(), lower_filter.end(), lower_filter.begin(), ::tolower);
           if (lower_name.find(lower_filter) == std::string::npos) {
             index++;
             continue;
@@ -1004,11 +1002,13 @@ class SolarSystemAPI {
         auto validation_result = DateTimeValidator::validate_date(*date_param);
 
         if (validation_result.is_valid) {
-          VERBOSE_LOG_INFO("API", "Solar system data requested for validated date: " + validation_result.normalized_value);
+          VERBOSE_LOG_INFO("API", "Solar system data requested for validated date: " +
+                                      validation_result.normalized_value);
           // Modern BodyFactory provides current data automatically
           // No explicit simulation updates needed for current data
         } else {
-          LOG_ERROR("API", "Invalid date in solar system request: " + validation_result.error_message);
+          LOG_ERROR("API",
+                    "Invalid date in solar system request: " + validation_result.error_message);
           // Return structured validation error using nlohmann/json
           nlohmann::json error_j;
           error_j["error"] = "Invalid date parameter";
@@ -1036,13 +1036,9 @@ class SolarSystemAPI {
             body_json["name"] = body.name();
             body_json["type"] = "celestial_body";
             body_json["position"] = {
-                {"x", body.position().x()},
-                {"y", body.position().y()},
-                {"z", body.position().z()}};
+                {"x", body.position().x()}, {"y", body.position().y()}, {"z", body.position().z()}};
             body_json["velocity"] = {
-                {"x", body.velocity().x()},
-                {"y", body.velocity().y()},
-                {"z", body.velocity().z()}};
+                {"x", body.velocity().x()}, {"y", body.velocity().y()}, {"z", body.velocity().z()}};
             j["bodies"].push_back(body_json);
           }
         } else {
@@ -1141,10 +1137,11 @@ class SolarSystemAPI {
           std::tm tm = {};
           if (date_stream >> std::get_time(&tm, "%Y-%m-%d")) {
             target_time = std::chrono::system_clock::from_time_t(std::mktime(&tm));
-            VERBOSE_LOG_INFO("API", "Time travel to validated date: " +
-                                        validation_result.normalized_value);
+            VERBOSE_LOG_INFO(
+                "API", "Time travel to validated date: " + validation_result.normalized_value);
           } else {
-            LOG_ERROR("API", "Failed to parse validated date: " + validation_result.normalized_value);
+            LOG_ERROR("API",
+                      "Failed to parse validated date: " + validation_result.normalized_value);
           }
         } else {
           LOG_ERROR("API", "Invalid date format: " + validation_result.error_message);
@@ -1194,12 +1191,11 @@ class SolarSystemAPI {
       j["status"] = "success";
       j["message"] = "Simulation completed";
 
-      j["configuration"] = {
-          {"date", date_param.has_value() ? *date_param : "current"},
-          {"speed", speed},
-          {"timestep", timestep},
-          {"requested_steps", steps},
-          {"completed_steps", completed_steps}};
+      j["configuration"] = {{"date", date_param.has_value() ? *date_param : "current"},
+                            {"speed", speed},
+                            {"timestep", timestep},
+                            {"requested_steps", steps},
+                            {"completed_steps", completed_steps}};
 
       nlohmann::json results;
       results["body_count"] = final_bodies.size();
@@ -1210,13 +1206,9 @@ class SolarSystemAPI {
         nlohmann::json body_json;
         body_json["name"] = body.name();
         body_json["position"] = {
-            {"x", body.position().x()},
-            {"y", body.position().y()},
-            {"z", body.position().z()}};
+            {"x", body.position().x()}, {"y", body.position().y()}, {"z", body.position().z()}};
         body_json["velocity"] = {
-            {"x", body.velocity().x()},
-            {"y", body.velocity().y()},
-            {"z", body.velocity().z()}};
+            {"x", body.velocity().x()}, {"y", body.velocity().y()}, {"z", body.velocity().z()}};
         results["bodies"].push_back(body_json);
       }
 

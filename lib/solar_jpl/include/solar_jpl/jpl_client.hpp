@@ -24,16 +24,16 @@
 #include <variant>
 #include <vector>
 
-#include "solar_jpl/export.hpp"
 #include "solar_core/bodies/body_mappings.hpp"
 #include "solar_core/bodies/celestial_body.hpp"
 #include "solar_core/math/vector3.hpp"
+#include "solar_jpl/export.hpp"
 
 // Forward declarations
 namespace SolarSystem::JPL {
 class CacheManager;
 class DataValidator;
-}
+}  // namespace SolarSystem::JPL
 
 namespace SolarSystem::JPL {
 
@@ -170,10 +170,10 @@ enum class CircuitBreakerState {
  * @brief Network connectivity status
  */
 enum class NetworkConnectivityStatus {
-  Connected,      // Full network connectivity
-  Limited,        // Limited connectivity (some endpoints reachable)
-  Disconnected,   // No network connectivity
-  Unknown         // Connectivity status unknown
+  Connected,     // Full network connectivity
+  Limited,       // Limited connectivity (some endpoints reachable)
+  Disconnected,  // No network connectivity
+  Unknown        // Connectivity status unknown
 };
 
 /**
@@ -205,8 +205,8 @@ struct NetworkDiagnostics {
    * @brief Check if network is healthy
    */
   [[nodiscard]] bool is_healthy() const {
-    return connectivity_status == NetworkConnectivityStatus::Connected &&
-           success_rate() > 0.8 && packet_loss_rate < 0.2;
+    return connectivity_status == NetworkConnectivityStatus::Connected && success_rate() > 0.8 &&
+           packet_loss_rate < 0.2;
   }
 };
 
@@ -494,8 +494,9 @@ class SOLAR_JPL_API JPLClient {
    */
   [[nodiscard]] NetworkConnectivityStatus test_basic_connectivity();
   [[nodiscard]] JPLResult<std::chrono::milliseconds> ping_endpoint(const std::string& endpoint);
-  [[nodiscard]] JPLVoidResult update_network_diagnostics(
-      bool success, std::chrono::milliseconds response_time, const std::string& error = "");
+  [[nodiscard]] JPLVoidResult update_network_diagnostics(bool success,
+                                                         std::chrono::milliseconds response_time,
+                                                         const std::string& error = "");
   [[nodiscard]] JPLVoidResult monitor_network_health();
   [[nodiscard]] JPLVoidResult test_all_endpoints();
 };
@@ -535,13 +536,14 @@ namespace Utils {
 /**
  * @brief Convert system_clock time point to JPL date string
  */
-[[nodiscard]] SOLAR_JPL_API std::string to_jpl_date_string(std::chrono::system_clock::time_point tp);
+[[nodiscard]] SOLAR_JPL_API std::string to_jpl_date_string(
+    std::chrono::system_clock::time_point tp);
 
 /**
  * @brief Parse JPL date string to system_clock time point
  */
-[[nodiscard]] SOLAR_JPL_API std::optional<std::chrono::system_clock::time_point> from_jpl_date_string(
-    std::string_view date_str);
+[[nodiscard]] SOLAR_JPL_API std::optional<std::chrono::system_clock::time_point>
+from_jpl_date_string(std::string_view date_str);
 
 /**
  * @brief Get current year as time point (January 1st)
@@ -571,7 +573,8 @@ namespace Utils {
 /**
  * @brief Format network diagnostics as human-readable string
  */
-[[nodiscard]] SOLAR_JPL_API std::string format_network_diagnostics(const NetworkDiagnostics& diagnostics);
+[[nodiscard]] SOLAR_JPL_API std::string format_network_diagnostics(
+    const NetworkDiagnostics& diagnostics);
 
 /**
  * @brief Check if endpoint URL is valid

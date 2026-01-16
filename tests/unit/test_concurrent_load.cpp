@@ -16,6 +16,8 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-lambda-capture"
 
+#include <gtest/gtest.h>
+
 #include <algorithm>
 #include <atomic>
 #include <chrono>
@@ -25,8 +27,6 @@
 #include <random>
 #include <thread>
 #include <vector>
-
-#include <gtest/gtest.h>
 
 /**
  * @brief Resource monitor for tracking system usage

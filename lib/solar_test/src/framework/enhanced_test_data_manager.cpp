@@ -22,8 +22,8 @@ std::unordered_map<std::string, double> EnhancedTestDataManager::performance_met
 DataVersion EnhancedTestDataManager::current_version_{1, 2, 0, "Enhanced test data management",
                                                       std::chrono::system_clock::now()};
 
-std::mt19937 TestDataGenerator::random_generator_(
-    static_cast<std::mt19937::result_type>(std::chrono::steady_clock::now().time_since_epoch().count()));
+std::mt19937 TestDataGenerator::random_generator_(static_cast<std::mt19937::result_type>(
+    std::chrono::steady_clock::now().time_since_epoch().count()));
 std::uniform_real_distribution<double> TestDataGenerator::real_dist_(0.0, 1.0);
 std::uniform_int_distribution<int> TestDataGenerator::int_dist_(0, 255);
 

@@ -7,33 +7,45 @@
 
 #include <algorithm>
 #include <iomanip>
-#include <sstream>
-
 #include <nlohmann/json.hpp>
+#include <sstream>
 
 namespace SolarSystem::Diagnostics {
 
 // Utility functions
 std::string severity_to_string(DiagnosticSeverity severity) {
   switch (severity) {
-    case DiagnosticSeverity::INFO: return "INFO";
-    case DiagnosticSeverity::WARNING: return "WARNING";
-    case DiagnosticSeverity::ERROR: return "ERROR";
-    case DiagnosticSeverity::CRITICAL: return "CRITICAL";
-    default: return "UNKNOWN";
+    case DiagnosticSeverity::INFO:
+      return "INFO";
+    case DiagnosticSeverity::WARNING:
+      return "WARNING";
+    case DiagnosticSeverity::ERROR:
+      return "ERROR";
+    case DiagnosticSeverity::CRITICAL:
+      return "CRITICAL";
+    default:
+      return "UNKNOWN";
   }
 }
 
 std::string category_to_string(DiagnosticCategory category) {
   switch (category) {
-    case DiagnosticCategory::SYSTEM: return "SYSTEM";
-    case DiagnosticCategory::MEMORY: return "MEMORY";
-    case DiagnosticCategory::PERFORMANCE: return "PERFORMANCE";
-    case DiagnosticCategory::NETWORK: return "NETWORK";
-    case DiagnosticCategory::DATA: return "DATA";
-    case DiagnosticCategory::CONFIGURATION: return "CONFIGURATION";
-    case DiagnosticCategory::SECURITY: return "SECURITY";
-    default: return "UNKNOWN";
+    case DiagnosticCategory::SYSTEM:
+      return "SYSTEM";
+    case DiagnosticCategory::MEMORY:
+      return "MEMORY";
+    case DiagnosticCategory::PERFORMANCE:
+      return "PERFORMANCE";
+    case DiagnosticCategory::NETWORK:
+      return "NETWORK";
+    case DiagnosticCategory::DATA:
+      return "DATA";
+    case DiagnosticCategory::CONFIGURATION:
+      return "CONFIGURATION";
+    case DiagnosticCategory::SECURITY:
+      return "SECURITY";
+    default:
+      return "UNKNOWN";
   }
 }
 
@@ -65,10 +77,18 @@ std::string DiagnosticReport::to_string() const {
 
   oss << "System Health: ";
   switch (health.status) {
-    case SystemHealth::Status::HEALTHY: oss << "HEALTHY"; break;
-    case SystemHealth::Status::DEGRADED: oss << "DEGRADED"; break;
-    case SystemHealth::Status::UNHEALTHY: oss << "UNHEALTHY"; break;
-    case SystemHealth::Status::CRITICAL: oss << "CRITICAL"; break;
+    case SystemHealth::Status::HEALTHY:
+      oss << "HEALTHY";
+      break;
+    case SystemHealth::Status::DEGRADED:
+      oss << "DEGRADED";
+      break;
+    case SystemHealth::Status::UNHEALTHY:
+      oss << "UNHEALTHY";
+      break;
+    case SystemHealth::Status::CRITICAL:
+      oss << "CRITICAL";
+      break;
   }
   oss << "\n";
   oss << "Checks: " << health.passed_checks << "/" << health.total_checks << " passed\n\n";
@@ -76,8 +96,7 @@ std::string DiagnosticReport::to_string() const {
   if (!health.issues.empty()) {
     oss << "Issues Found (" << health.issues.size() << "):\n";
     for (const auto& issue : health.issues) {
-      oss << "  [" << severity_to_string(issue.severity) << "] "
-          << issue.title << "\n";
+      oss << "  [" << severity_to_string(issue.severity) << "] " << issue.title << "\n";
       oss << "    " << issue.description << "\n";
       if (!issue.suggested_fixes.empty()) {
         oss << "    Suggested fixes:\n";
@@ -160,7 +179,8 @@ DiagnosticReport DiagnosticSystem::run_diagnostics() {
   std::lock_guard<std::mutex> lock(mutex_);
 
   DiagnosticReport report;
-  report.report_id = "DIAG_" + std::to_string(std::chrono::system_clock::now().time_since_epoch().count());
+  report.report_id =
+      "DIAG_" + std::to_string(std::chrono::system_clock::now().time_since_epoch().count());
   report.generated_at = std::chrono::system_clock::now();
 
   issues_.clear();
@@ -240,7 +260,8 @@ DiagnosticCheckResult DiagnosticSystem::run_check(const std::string& check_name)
   return result;
 }
 
-std::vector<DiagnosticCheckResult> DiagnosticSystem::run_category_checks(DiagnosticCategory category) {
+std::vector<DiagnosticCheckResult> DiagnosticSystem::run_category_checks(
+    DiagnosticCategory category) {
   std::lock_guard<std::mutex> lock(mutex_);
 
   std::vector<DiagnosticCheckResult> results;
@@ -264,16 +285,15 @@ SystemHealth DiagnosticSystem::get_system_health() const {
   return health_;
 }
 
-void DiagnosticSystem::update_health() {
-  run_diagnostics();
-}
+void DiagnosticSystem::update_health() { run_diagnostics(); }
 
 std::vector<DiagnosticIssue> DiagnosticSystem::get_issues() const {
   std::lock_guard<std::mutex> lock(mutex_);
   return issues_;
 }
 
-std::vector<DiagnosticIssue> DiagnosticSystem::get_issues_by_severity(DiagnosticSeverity severity) const {
+std::vector<DiagnosticIssue> DiagnosticSystem::get_issues_by_severity(
+    DiagnosticSeverity severity) const {
   std::lock_guard<std::mutex> lock(mutex_);
 
   std::vector<DiagnosticIssue> filtered;
@@ -285,7 +305,8 @@ std::vector<DiagnosticIssue> DiagnosticSystem::get_issues_by_severity(Diagnostic
   return filtered;
 }
 
-std::vector<DiagnosticIssue> DiagnosticSystem::get_issues_by_category(DiagnosticCategory category) const {
+std::vector<DiagnosticIssue> DiagnosticSystem::get_issues_by_category(
+    DiagnosticCategory category) const {
   std::lock_guard<std::mutex> lock(mutex_);
 
   std::vector<DiagnosticIssue> filtered;
@@ -334,9 +355,7 @@ int DiagnosticSystem::auto_fix_all_issues() {
   return fixed_count;
 }
 
-DiagnosticReport DiagnosticSystem::generate_report() {
-  return run_diagnostics();
-}
+DiagnosticReport DiagnosticSystem::generate_report() { return run_diagnostics(); }
 
 std::string DiagnosticSystem::generate_summary() const {
   std::lock_guard<std::mutex> lock(mutex_);
@@ -344,10 +363,18 @@ std::string DiagnosticSystem::generate_summary() const {
   std::ostringstream oss;
   oss << "System Health: ";
   switch (health_.status) {
-    case SystemHealth::Status::HEALTHY: oss << "HEALTHY"; break;
-    case SystemHealth::Status::DEGRADED: oss << "DEGRADED"; break;
-    case SystemHealth::Status::UNHEALTHY: oss << "UNHEALTHY"; break;
-    case SystemHealth::Status::CRITICAL: oss << "CRITICAL"; break;
+    case SystemHealth::Status::HEALTHY:
+      oss << "HEALTHY";
+      break;
+    case SystemHealth::Status::DEGRADED:
+      oss << "DEGRADED";
+      break;
+    case SystemHealth::Status::UNHEALTHY:
+      oss << "UNHEALTHY";
+      break;
+    case SystemHealth::Status::CRITICAL:
+      oss << "CRITICAL";
+      break;
   }
   oss << "\n";
   oss << "Checks: " << health_.passed_checks << "/" << health_.total_checks << " passed\n";
@@ -473,7 +500,8 @@ bool TroubleshootingAssistant::is_network_issue(const DiagnosticIssue& issue) {
   return issue.category == DiagnosticCategory::NETWORK;
 }
 
-void TroubleshootingAssistant::add_solution(const std::string& problem_pattern, const std::string& solution) {
+void TroubleshootingAssistant::add_solution(const std::string& problem_pattern,
+                                            const std::string& solution) {
   std::lock_guard<std::mutex> lock(mutex_);
   solution_database_[problem_pattern].push_back(solution);
 }

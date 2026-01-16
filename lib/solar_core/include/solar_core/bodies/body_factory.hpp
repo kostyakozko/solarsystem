@@ -11,8 +11,8 @@
 #include "solar_core/bodies/celestial_body.hpp"
 #include "solar_core/data/body_definitions.hpp"
 #include "solar_core/export.hpp"
-#include "solar_utils/expected.hpp"
 #include "solar_jpl/jpl_client.hpp"
+#include "solar_utils/expected.hpp"
 
 namespace SolarSystem::Bodies {
 
@@ -55,9 +55,9 @@ class SOLAR_CORE_API BodyFactory {
    * @brief Default body selection policy for consistent behavior across applications
    */
   enum class DefaultBodySet {
-    ESSENTIAL,    // Sun + 8 planets (9 bodies) - fast, essential for basic simulations
-    IMPORTANT,    // Essential + major moons + dwarf planets (18 bodies) - balanced
-    COMPLETE      // All 27 bodies - comprehensive but slower
+    ESSENTIAL,  // Sun + 8 planets (9 bodies) - fast, essential for basic simulations
+    IMPORTANT,  // Essential + major moons + dwarf planets (18 bodies) - balanced
+    COMPLETE    // All 27 bodies - comprehensive but slower
   };
 
   struct CreationOptions {
@@ -69,7 +69,7 @@ class SOLAR_CORE_API BodyFactory {
     DataQuality minimum_quality = DataQuality::ACCEPTABLE;
     bool allow_partial_data = false;
     bool prefer_recent_data = true;
-    std::chrono::hours max_data_age{24 * 30};  // 30 days default
+    std::chrono::hours max_data_age{24 * 30};                     // 30 days default
     DefaultBodySet default_body_set = DefaultBodySet::IMPORTANT;  // Balanced default
   };
 

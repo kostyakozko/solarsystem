@@ -11,8 +11,6 @@
 
 #pragma once
 
-#include "solar_utils/export.hpp"
-
 #include <atomic>
 #include <chrono>
 #include <functional>
@@ -23,6 +21,8 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
+
+#include "solar_utils/export.hpp"
 
 namespace SolarSystem::Utils {
 
@@ -53,8 +53,8 @@ struct ResourceInfo {
   std::function<void()> cleanup_function;
 
   ResourceInfo() = default;
-  ResourceInfo(std::string res_id, ResourceType res_type, size_t size = 0, std::string res_location = "",
-               std::string res_description = "")
+  ResourceInfo(std::string res_id, ResourceType res_type, size_t size = 0,
+               std::string res_location = "", std::string res_description = "")
       : id(std::move(res_id)),
         type(res_type),
         size_bytes(size),

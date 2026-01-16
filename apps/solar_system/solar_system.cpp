@@ -16,8 +16,8 @@
 
 // Modern C++ Solar System classes
 #include "solar_core/bodies/body_factory.hpp"
-#include "solar_core/simulation/simulation_engine.hpp"
 #include "solar_core/simulation/checkpoint.hpp"
+#include "solar_core/simulation/simulation_engine.hpp"
 
 // Modern argument parsing
 #include "solar_utils/argument_parser.hpp"
@@ -112,27 +112,30 @@ bool run_optimized_simulation(Bodies::BodyFactory& factory,
   if (config.enable_checkpointing) {
     Simulation::CheckpointConfig checkpoint_config;
     checkpoint_config.checkpoint_directory = config.checkpoint_directory;
-    checkpoint_config.checkpoint_interval = std::chrono::seconds(std::stoi(config.checkpoint_interval));
+    checkpoint_config.checkpoint_interval =
+        std::chrono::seconds(std::stoi(config.checkpoint_interval));
 
     checkpoint_manager = std::make_unique<Simulation::CheckpointManager>(checkpoint_config);
-    checkpoint_scheduler = std::make_unique<Simulation::CheckpointScheduler>(*checkpoint_manager, checkpoint_config);
+    checkpoint_scheduler =
+        std::make_unique<Simulation::CheckpointScheduler>(*checkpoint_manager, checkpoint_config);
 
-    std::cout << "Checkpointing enabled (interval: " << config.checkpoint_interval << "s, directory: "
-              << config.checkpoint_directory << ")" << std::endl;
+    std::cout << "Checkpointing enabled (interval: " << config.checkpoint_interval
+              << "s, directory: " << config.checkpoint_directory << ")" << std::endl;
   }
 
   // OPTIMIZED: NO progress callback to avoid overhead unless checkpointing
   if (config.enable_checkpointing && checkpoint_scheduler) {
-    engine.set_progress_callback([&checkpoint_scheduler, &engine](const Simulation::SimulationState& state) {
-      if (checkpoint_scheduler->should_checkpoint(state)) {
-        auto result = checkpoint_scheduler->trigger_checkpoint(engine);
-        if (result.has_value()) {
-          std::cout << "Checkpoint saved: " << result.value() << std::endl;
-        } else {
-          std::cerr << "Checkpoint failed: " << to_string(result.error()) << std::endl;
-        }
-      }
-    });
+    engine.set_progress_callback(
+        [&checkpoint_scheduler, &engine](const Simulation::SimulationState& state) {
+          if (checkpoint_scheduler->should_checkpoint(state)) {
+            auto result = checkpoint_scheduler->trigger_checkpoint(engine);
+            if (result.has_value()) {
+              std::cout << "Checkpoint saved: " << result.value() << std::endl;
+            } else {
+              std::cerr << "Checkpoint failed: " << to_string(result.error()) << std::endl;
+            }
+          }
+        });
   }
 
   // Create bodies using configured body set (default: complete for comprehensive simulation)
@@ -173,14 +176,17 @@ bool run_optimized_simulation(Bodies::BodyFactory& factory,
       checkpoint_manager = std::make_unique<Simulation::CheckpointManager>(checkpoint_config);
     }
 
-    auto resume_result = checkpoint_manager->resume_simulation(engine, config.resume_from_checkpoint);
+    auto resume_result =
+        checkpoint_manager->resume_simulation(engine, config.resume_from_checkpoint);
     if (!resume_result.has_value()) {
-      std::cerr << "Failed to resume from checkpoint: " << to_string(resume_result.error()) << std::endl;
+      std::cerr << "Failed to resume from checkpoint: " << to_string(resume_result.error())
+                << std::endl;
       return false;
     }
 
     std::cout << "Successfully resumed from checkpoint" << std::endl;
-    std::cout << "Current simulation time: " << engine.get_current_time() << " seconds" << std::endl;
+    std::cout << "Current simulation time: " << engine.get_current_time() << " seconds"
+              << std::endl;
 
     // Start checkpoint scheduler if enabled
     if (checkpoint_scheduler) {
@@ -225,7 +231,8 @@ bool run_optimized_simulation(Bodies::BodyFactory& factory,
     if (final_checkpoint_result.has_value()) {
       std::cout << "Final checkpoint saved: " << final_checkpoint_result.value() << std::endl;
     } else {
-      std::cerr << "Failed to save final checkpoint: " << to_string(final_checkpoint_result.error()) << std::endl;
+      std::cerr << "Failed to save final checkpoint: " << to_string(final_checkpoint_result.error())
+                << std::endl;
     }
   }
 
@@ -258,8 +265,11 @@ bool handle_checkpoint_operations(const SolarSystem::Utils::SimulationConfig& co
         auto sim_time_t = std::chrono::system_clock::to_time_t(checkpoint.simulation_time);
 
         std::cout << "  ID: " << checkpoint.checkpoint_id << std::endl;
-        std::cout << "    Created: " << std::put_time(std::localtime(&created_time_t), "%Y-%m-%d %H:%M:%S") << std::endl;
-        std::cout << "    Simulation time: " << std::put_time(std::localtime(&sim_time_t), "%Y-%m-%d %H:%M:%S") << std::endl;
+        std::cout << "    Created: "
+                  << std::put_time(std::localtime(&created_time_t), "%Y-%m-%d %H:%M:%S")
+                  << std::endl;
+        std::cout << "    Simulation time: "
+                  << std::put_time(std::localtime(&sim_time_t), "%Y-%m-%d %H:%M:%S") << std::endl;
         std::cout << "    Bodies: " << checkpoint.body_count << std::endl;
         std::cout << "    Iterations: " << checkpoint.iteration_count << std::endl;
         std::cout << "    Size: " << checkpoint.compressed_size << " bytes" << std::endl;

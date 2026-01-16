@@ -34,12 +34,7 @@ enum class MessageType {
 /**
  * @brief Message priority levels
  */
-enum class MessagePriority {
-  LOW = 0,
-  NORMAL = 1,
-  HIGH = 2,
-  CRITICAL = 3
-};
+enum class MessagePriority { LOW = 0, NORMAL = 1, HIGH = 2, CRITICAL = 3 };
 
 /**
  * @brief Message payload value types
@@ -55,15 +50,15 @@ using MessagePayload = std::map<std::string, MessageValue>;
  * @brief Message header information
  */
 struct MessageHeader {
-  std::string message_id;                                      ///< Unique message identifier
-  MessageType type = MessageType::REQUEST;                     ///< Message type
-  MessagePriority priority = MessagePriority::NORMAL;          ///< Message priority
-  std::string source_application;                              ///< Source application name
-  std::string destination_application;                         ///< Destination application name
-  std::chrono::system_clock::time_point timestamp;             ///< Message timestamp
-  std::optional<std::string> correlation_id;                   ///< For request/response correlation
-  std::optional<std::chrono::milliseconds> timeout;            ///< Message timeout
-  std::map<std::string, std::string> metadata;                 ///< Additional metadata
+  std::string message_id;                              ///< Unique message identifier
+  MessageType type = MessageType::REQUEST;             ///< Message type
+  MessagePriority priority = MessagePriority::NORMAL;  ///< Message priority
+  std::string source_application;                      ///< Source application name
+  std::string destination_application;                 ///< Destination application name
+  std::chrono::system_clock::time_point timestamp;     ///< Message timestamp
+  std::optional<std::string> correlation_id;           ///< For request/response correlation
+  std::optional<std::chrono::milliseconds> timeout;    ///< Message timeout
+  std::map<std::string, std::string> metadata;         ///< Additional metadata
 };
 
 /**
@@ -77,25 +72,29 @@ struct Message {
   /**
    * @brief Create a request message
    */
-  static SOLAR_CORE_API Message create_request(const std::string& source, const std::string& destination,
-                                const MessagePayload& payload);
+  static SOLAR_CORE_API Message create_request(const std::string& source,
+                                               const std::string& destination,
+                                               const MessagePayload& payload);
 
   /**
    * @brief Create a response message
    */
-  static SOLAR_CORE_API Message create_response(const Message& request, const MessagePayload& payload);
+  static SOLAR_CORE_API Message create_response(const Message& request,
+                                                const MessagePayload& payload);
 
   /**
    * @brief Create a notification message
    */
-  static SOLAR_CORE_API Message create_notification(const std::string& source, const std::string& destination,
-                                     const MessagePayload& payload);
+  static SOLAR_CORE_API Message create_notification(const std::string& source,
+                                                    const std::string& destination,
+                                                    const MessagePayload& payload);
 
   /**
    * @brief Create an error message
    */
-  static SOLAR_CORE_API Message create_error(const std::string& source, const std::string& destination,
-                              const std::string& error_message, int error_code = -1);
+  static SOLAR_CORE_API Message create_error(const std::string& source,
+                                             const std::string& destination,
+                                             const std::string& error_message, int error_code = -1);
 
   /**
    * @brief Create a heartbeat message

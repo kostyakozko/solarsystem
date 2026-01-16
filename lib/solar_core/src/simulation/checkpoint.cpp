@@ -1,11 +1,12 @@
 #include "solar_core/simulation/checkpoint.hpp"
 
+#include <zlib.h>
+
 #include <algorithm>
 #include <cstring>
 #include <fstream>
 #include <iomanip>
 #include <sstream>
-#include <zlib.h>
 
 namespace SolarSystem::Simulation {
 
@@ -64,8 +65,8 @@ Utils::Expected<std::string, CheckpointResult> CheckpointManager::save_checkpoin
     }
     final_data = std::move(compressed_result.value());
     data.metadata.compressed_size = final_data.size();
-    last_stats_.compression_ratio =
-        static_cast<double>(data.metadata.uncompressed_size) / static_cast<double>(data.metadata.compressed_size);
+    last_stats_.compression_ratio = static_cast<double>(data.metadata.uncompressed_size) /
+                                    static_cast<double>(data.metadata.compressed_size);
   } else {
     final_data = std::move(serialized_data);
     data.metadata.compressed_size = final_data.size();
@@ -199,8 +200,8 @@ Utils::Expected<void, CheckpointResult> CheckpointManager::resume_simulation(
   engine.set_integration_method(checkpoint_data.integration_method);
 
   // Initialize engine with restored state
-  auto init_result =
-      engine.initialize(std::move(checkpoint_data.bodies), checkpoint_data.simulation_state.reference_time);
+  auto init_result = engine.initialize(std::move(checkpoint_data.bodies),
+                                       checkpoint_data.simulation_state.reference_time);
   if (!init_result.has_value()) {
     return Utils::Expected<void, CheckpointResult>{CheckpointResult::ValidationError};
   }
@@ -284,13 +285,15 @@ Utils::Expected<std::vector<uint8_t>, CheckpointResult> CheckpointManager::seria
 
   oss << "CHECKPOINT_VERSION:" << data.metadata.version << "\n";
   oss << "CHECKPOINT_ID:" << data.metadata.checkpoint_id << "\n";
-  oss << "CREATED_AT:" << std::chrono::duration_cast<std::chrono::seconds>(
-                             data.metadata.created_at.time_since_epoch())
-                             .count()
+  oss << "CREATED_AT:"
+      << std::chrono::duration_cast<std::chrono::seconds>(
+             data.metadata.created_at.time_since_epoch())
+             .count()
       << "\n";
-  oss << "SIMULATION_TIME:" << std::chrono::duration_cast<std::chrono::seconds>(
-                                   data.metadata.simulation_time.time_since_epoch())
-                                   .count()
+  oss << "SIMULATION_TIME:"
+      << std::chrono::duration_cast<std::chrono::seconds>(
+             data.metadata.simulation_time.time_since_epoch())
+             .count()
       << "\n";
   oss << "SIMULATION_SECONDS:" << data.metadata.simulation_seconds << "\n";
   oss << "ITERATION_COUNT:" << data.metadata.iteration_count << "\n";
@@ -399,7 +402,7 @@ Utils::Expected<CheckpointData, CheckpointResult> CheckpointManager::deserialize
         props.mass = mass;
         props.position = position;
         props.velocity = velocity;
-        props.type = Bodies::BodyType::Planet;  // Default type
+        props.type = Bodies::BodyType::Planet;             // Default type
         props.priority = Bodies::BodyPriority::Important;  // Default priority
 
         Bodies::CelestialBody body(props);
@@ -425,7 +428,8 @@ Utils::Expected<std::vector<uint8_t>, CheckpointResult> CheckpointManager::compr
   int result = compress(compressed_data.data(), &compressed_size, data.data(), data.size());
 
   if (result != Z_OK) {
-    return Utils::Expected<std::vector<uint8_t>, CheckpointResult>{CheckpointResult::CompressionError};
+    return Utils::Expected<std::vector<uint8_t>, CheckpointResult>{
+        CheckpointResult::CompressionError};
   }
 
   compressed_data.resize(compressed_size);
@@ -451,7 +455,8 @@ Utils::Expected<std::vector<uint8_t>, CheckpointResult> CheckpointManager::decom
   }
 
   if (result != Z_OK) {
-    return Utils::Expected<std::vector<uint8_t>, CheckpointResult>{CheckpointResult::CompressionError};
+    return Utils::Expected<std::vector<uint8_t>, CheckpointResult>{
+        CheckpointResult::CompressionError};
   }
 
   uncompressed_data.resize(uncompressed_size);
@@ -543,7 +548,8 @@ Utils::Expected<std::vector<uint8_t>, CheckpointResult> CheckpointManager::read_
   return Utils::Expected<std::vector<uint8_t>, CheckpointResult>{std::move(data)};
 }
 
-std::filesystem::path CheckpointManager::get_checkpoint_path(const std::string& checkpoint_id) const {
+std::filesystem::path CheckpointManager::get_checkpoint_path(
+    const std::string& checkpoint_id) const {
   return config_.checkpoint_directory / (checkpoint_id + ".checkpoint");
 }
 

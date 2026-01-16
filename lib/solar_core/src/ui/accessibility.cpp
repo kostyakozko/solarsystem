@@ -17,13 +17,12 @@ ColorScheme::Scheme g_color_scheme = ColorScheme::Scheme::DEFAULT;
 bool g_shortcuts_enabled = true;
 
 // Color mappings for different schemes
-const std::map<std::string, std::string> DEFAULT_COLORS = {
-    {"success", "\033[32m"},  // Green
-    {"error", "\033[31m"},    // Red
-    {"warning", "\033[33m"},  // Yellow
-    {"info", "\033[34m"},     // Blue
-    {"debug", "\033[90m"},    // Gray
-    {"reset", "\033[0m"}};
+const std::map<std::string, std::string> DEFAULT_COLORS = {{"success", "\033[32m"},  // Green
+                                                           {"error", "\033[31m"},    // Red
+                                                           {"warning", "\033[33m"},  // Yellow
+                                                           {"info", "\033[34m"},     // Blue
+                                                           {"debug", "\033[90m"},    // Gray
+                                                           {"reset", "\033[0m"}};
 
 const std::map<std::string, std::string> HIGH_CONTRAST_COLORS = {
     {"success", "\033[1;32m"},  // Bold Green
@@ -33,13 +32,12 @@ const std::map<std::string, std::string> HIGH_CONTRAST_COLORS = {
     {"debug", "\033[1;37m"},    // Bold White
     {"reset", "\033[0m"}};
 
-const std::map<std::string, std::string> MONOCHROME_COLORS = {
-    {"success", "\033[1m"},  // Bold
-    {"error", "\033[1m"},    // Bold
-    {"warning", "\033[1m"},  // Bold
-    {"info", ""},            // Normal
-    {"debug", "\033[2m"},    // Dim
-    {"reset", "\033[0m"}};
+const std::map<std::string, std::string> MONOCHROME_COLORS = {{"success", "\033[1m"},  // Bold
+                                                              {"error", "\033[1m"},    // Bold
+                                                              {"warning", "\033[1m"},  // Bold
+                                                              {"info", ""},            // Normal
+                                                              {"debug", "\033[2m"},    // Dim
+                                                              {"reset", "\033[0m"}};
 
 }  // namespace
 
@@ -78,7 +76,7 @@ void AccessibilityManager::auto_detect() {
 }
 
 std::string AccessibilityManager::get_accessible_char(const std::string& unicode_char,
-                                                       const std::string& ascii_fallback) const {
+                                                      const std::string& ascii_fallback) const {
   if (config_.no_unicode || config_.screen_reader_mode) {
     return ascii_fallback;
   }
@@ -93,7 +91,7 @@ std::string AccessibilityManager::get_accessible_color(const std::string& color_
 }
 
 std::string AccessibilityManager::format_accessible(const std::string& text,
-                                                     const std::string& description) const {
+                                                    const std::string& description) const {
   if (config_.screen_reader_mode && !description.empty()) {
     return description + ": " + text;
   }

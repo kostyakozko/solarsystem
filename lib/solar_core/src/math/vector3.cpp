@@ -1,8 +1,9 @@
 #include "solar_core/math/vector3.hpp"
-#include "solar_core/export.hpp"
 
 #include <iomanip>
 #include <sstream>
+
+#include "solar_core/export.hpp"
 
 namespace SolarSystem::Math {
 

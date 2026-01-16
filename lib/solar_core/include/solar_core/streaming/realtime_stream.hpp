@@ -17,7 +17,7 @@ namespace SolarSystem::Streaming {
  * current solar system state.
  */
 class SOLAR_CORE_API RealtimeStream : public DataStream {
-public:
+ public:
   /**
    * @brief Configuration specific to real-time streaming
    */
@@ -36,13 +36,13 @@ public:
         Bodies::BodyFactory::DefaultBodySet::IMPORTANT;
 
     // Real-time specific options
-    bool sync_with_system_time = true;  // Sync simulation time with real time
+    bool sync_with_system_time = true;                    // Sync simulation time with real time
     std::chrono::milliseconds time_sync_tolerance{1000};  // Acceptable time drift
-    bool auto_correct_drift = true;     // Automatically correct time drift
+    bool auto_correct_drift = true;                       // Automatically correct time drift
 
     // Performance options
-    bool enable_prediction = true;      // Predict positions between updates
-    size_t prediction_steps = 5;       // Number of prediction steps
+    bool enable_prediction = true;  // Predict positions between updates
+    size_t prediction_steps = 5;    // Number of prediction steps
     bool cache_intermediate_states = true;
   };
 
@@ -52,7 +52,9 @@ public:
 
   // Configuration
   void set_realtime_config(const RealtimeConfig& config) { realtime_config_ = config; }
-  [[nodiscard]] const RealtimeConfig& get_realtime_config() const noexcept { return realtime_config_; }
+  [[nodiscard]] const RealtimeConfig& get_realtime_config() const noexcept {
+    return realtime_config_;
+  }
 
   // Data source management
   [[nodiscard]] Utils::Expected<void, std::string> set_data_source(
@@ -68,13 +70,13 @@ public:
   [[nodiscard]] Utils::Expected<void, std::string> advance_simulation_to(
       std::chrono::system_clock::time_point target_time);
 
-protected:
+ protected:
   // DataStream interface implementation
   [[nodiscard]] Utils::Expected<DataSnapshot, std::string> generate_snapshot() override;
   [[nodiscard]] Utils::Expected<void, std::string> initialize_stream() override;
   [[nodiscard]] Utils::Expected<void, std::string> cleanup_stream() override;
 
-private:
+ private:
   RealtimeConfig realtime_config_;
 
   // Core components

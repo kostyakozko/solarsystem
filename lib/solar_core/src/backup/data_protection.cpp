@@ -4,15 +4,16 @@
  */
 
 #include "solar_core/backup/data_protection.hpp"
-#include "solar_core/backup/backup_manager.hpp"
-
-#include <fstream>
-#include <sstream>
-#include <iomanip>
-#include <algorithm>
-#include <filesystem>
 
 #include <openssl/evp.h>
+
+#include <algorithm>
+#include <filesystem>
+#include <fstream>
+#include <iomanip>
+#include <sstream>
+
+#include "solar_core/backup/backup_manager.hpp"
 
 namespace SolarSystem::Backup {
 
@@ -61,8 +62,7 @@ std::string DataProtection::calculate_checksum(const std::string& file_path) con
 
   std::ostringstream oss;
   for (unsigned int i = 0; i < hash_len; ++i) {
-    oss << std::hex << std::setfill('0') << std::setw(2)
-        << static_cast<int>(hash[i]);
+    oss << std::hex << std::setfill('0') << std::setw(2) << static_cast<int>(hash[i]);
   }
 
   return oss.str();
@@ -74,10 +74,9 @@ void DataProtection::protect_file(const std::string& file_path) {
   }
 
   // Check if already protected
-  auto it = std::find_if(protected_files_.begin(), protected_files_.end(),
-                        [&file_path](const ProtectedFile& pf) {
-                          return pf.file_path == file_path;
-                        });
+  auto it =
+      std::find_if(protected_files_.begin(), protected_files_.end(),
+                   [&file_path](const ProtectedFile& pf) { return pf.file_path == file_path; });
 
   if (it != protected_files_.end()) {
     // Update existing protection
@@ -103,24 +102,19 @@ void DataProtection::protect_file(const std::string& file_path) {
 void DataProtection::unprotect_file(const std::string& file_path) {
   protected_files_.erase(
       std::remove_if(protected_files_.begin(), protected_files_.end(),
-                    [&file_path](const ProtectedFile& pf) {
-                      return pf.file_path == file_path;
-                    }),
+                     [&file_path](const ProtectedFile& pf) { return pf.file_path == file_path; }),
       protected_files_.end());
 }
 
 bool DataProtection::is_protected(const std::string& file_path) const {
   return std::any_of(protected_files_.begin(), protected_files_.end(),
-                    [&file_path](const ProtectedFile& pf) {
-                      return pf.file_path == file_path;
-                    });
+                     [&file_path](const ProtectedFile& pf) { return pf.file_path == file_path; });
 }
 
 void DataProtection::update_file_metadata(const std::string& file_path) {
-  auto it = std::find_if(protected_files_.begin(), protected_files_.end(),
-                        [&file_path](const ProtectedFile& pf) {
-                          return pf.file_path == file_path;
-                        });
+  auto it =
+      std::find_if(protected_files_.begin(), protected_files_.end(),
+                   [&file_path](const ProtectedFile& pf) { return pf.file_path == file_path; });
 
   if (it != protected_files_.end()) {
     it->checksum = calculate_checksum(file_path);
@@ -135,10 +129,9 @@ IntegrityCheckResult DataProtection::verify_integrity(const std::string& file_pa
   result.check_time = std::chrono::system_clock::now();
 
   // Find protected file
-  auto it = std::find_if(protected_files_.begin(), protected_files_.end(),
-                        [&file_path](const ProtectedFile& pf) {
-                          return pf.file_path == file_path;
-                        });
+  auto it =
+      std::find_if(protected_files_.begin(), protected_files_.end(),
+                   [&file_path](const ProtectedFile& pf) { return pf.file_path == file_path; });
 
   if (it == protected_files_.end()) {
     result.status = IntegrityStatus::UNKNOWN;
@@ -211,11 +204,9 @@ void DataProtection::enable_auto_protection(const std::string& directory) {
 }
 
 void DataProtection::disable_auto_protection(const std::string& directory) {
-  auto_protected_directories_.erase(
-      std::remove(auto_protected_directories_.begin(),
-                 auto_protected_directories_.end(),
-                 directory),
-      auto_protected_directories_.end());
+  auto_protected_directories_.erase(std::remove(auto_protected_directories_.begin(),
+                                                auto_protected_directories_.end(), directory),
+                                    auto_protected_directories_.end());
 }
 
 void DataProtection::set_recovery_plan(const DisasterRecoveryPlan& plan) {
@@ -227,9 +218,7 @@ void DataProtection::set_recovery_plan(const DisasterRecoveryPlan& plan) {
   }
 }
 
-DisasterRecoveryPlan DataProtection::get_recovery_plan() const {
-  return recovery_plan_;
-}
+DisasterRecoveryPlan DataProtection::get_recovery_plan() const { return recovery_plan_; }
 
 bool DataProtection::execute_recovery_plan() {
   if (recovery_plan_.critical_files.empty()) {
@@ -273,9 +262,7 @@ bool DataProtection::test_recovery_plan() {
   return true;
 }
 
-std::vector<ProtectedFile> DataProtection::get_protected_files() const {
-  return protected_files_;
-}
+std::vector<ProtectedFile> DataProtection::get_protected_files() const { return protected_files_; }
 
 size_t DataProtection::get_corrupted_file_count() const {
   size_t count = 0;

@@ -241,10 +241,11 @@ void BoxDisplay::display(const std::string& title, const std::vector<std::string
 
   // Title
   if (colored) {
-    std::cout << "│ " << BOLD << std::setw(static_cast<int>(max_width)) << std::left << title << RESET << " │"
-              << std::endl;
+    std::cout << "│ " << BOLD << std::setw(static_cast<int>(max_width)) << std::left << title
+              << RESET << " │" << std::endl;
   } else {
-    std::cout << "│ " << std::setw(static_cast<int>(max_width)) << std::left << title << " │" << std::endl;
+    std::cout << "│ " << std::setw(static_cast<int>(max_width)) << std::left << title << " │"
+              << std::endl;
   }
 
   // Separator
@@ -252,7 +253,8 @@ void BoxDisplay::display(const std::string& title, const std::vector<std::string
 
   // Content lines
   for (const auto& line : lines) {
-    std::cout << "│ " << std::setw(static_cast<int>(max_width)) << std::left << line << " │" << std::endl;
+    std::cout << "│ " << std::setw(static_cast<int>(max_width)) << std::left << line << " │"
+              << std::endl;
   }
 
   // Bottom border

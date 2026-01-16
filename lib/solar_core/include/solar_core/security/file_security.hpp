@@ -6,10 +6,10 @@
 #pragma once
 
 #include <filesystem>
+#include <functional>
+#include <optional>
 #include <string>
 #include <vector>
-#include <optional>
-#include <functional>
 
 #include "solar_core/export.hpp"
 
@@ -18,12 +18,7 @@ namespace SolarSystem::Security {
 /**
  * @brief File access mode
  */
-enum class FileAccessMode {
-  READ,
-  WRITE,
-  EXECUTE,
-  DELETE
-};
+enum class FileAccessMode { READ, WRITE, EXECUTE, DELETE };
 
 /**
  * @brief File security result
@@ -40,28 +35,26 @@ struct FileSecurityResult {
  * @brief File security policy
  */
 class FileSecurityPolicy {
-public:
+ public:
   virtual ~FileSecurityPolicy() = default;
 
-  virtual FileSecurityResult check_access(
-      const std::filesystem::path& path,
-      FileAccessMode mode) const = 0;
+  virtual FileSecurityResult check_access(const std::filesystem::path& path,
+                                          FileAccessMode mode) const = 0;
 };
 
 /**
  * @brief Whitelist-based file security policy
  */
 class SOLAR_CORE_API WhitelistPolicy : public FileSecurityPolicy {
-public:
+ public:
   void add_allowed_directory(const std::filesystem::path& dir);
   void add_allowed_file(const std::filesystem::path& file);
   void remove_allowed_directory(const std::filesystem::path& dir);
 
-  FileSecurityResult check_access(
-      const std::filesystem::path& path,
-      FileAccessMode mode) const override;
+  FileSecurityResult check_access(const std::filesystem::path& path,
+                                  FileAccessMode mode) const override;
 
-private:
+ private:
   std::vector<std::filesystem::path> allowed_directories_;
   std::vector<std::filesystem::path> allowed_files_;
 };
@@ -70,7 +63,7 @@ private:
  * @brief File system security manager
  */
 class SOLAR_CORE_API FileSystemSecurity {
-public:
+ public:
   static FileSystemSecurity& instance();
 
   // Policy management
@@ -78,9 +71,8 @@ public:
   std::shared_ptr<FileSecurityPolicy> get_policy() const;
 
   // Access control
-  FileSecurityResult check_file_access(
-      const std::filesystem::path& path,
-      FileAccessMode mode) const;
+  FileSecurityResult check_file_access(const std::filesystem::path& path,
+                                       FileAccessMode mode) const;
 
   bool can_read(const std::filesystem::path& path) const;
   bool can_write(const std::filesystem::path& path) const;
@@ -93,15 +85,12 @@ public:
 
   // Path validation
   bool validate_path(const std::filesystem::path& path) const;
-  std::optional<std::filesystem::path> sanitize_path(
-      const std::filesystem::path& path) const;
+  std::optional<std::filesystem::path> sanitize_path(const std::filesystem::path& path) const;
 
   // Audit logging
-  void log_access(const std::filesystem::path& path,
-                 FileAccessMode mode,
-                 bool allowed) const;
+  void log_access(const std::filesystem::path& path, FileAccessMode mode, bool allowed) const;
 
-private:
+ private:
   FileSystemSecurity() = default;
 
   std::shared_ptr<FileSecurityPolicy> policy_;
@@ -119,22 +108,16 @@ private:
  * @brief Secure file operations wrapper
  */
 class SOLAR_CORE_API SecureFileOperations {
-public:
-  static std::optional<std::string> read_file(
-      const std::filesystem::path& path);
+ public:
+  static std::optional<std::string> read_file(const std::filesystem::path& path);
 
-  static bool write_file(
-      const std::filesystem::path& path,
-      const std::string& content);
+  static bool write_file(const std::filesystem::path& path, const std::string& content);
 
-  static bool delete_file(
-      const std::filesystem::path& path);
+  static bool delete_file(const std::filesystem::path& path);
 
-  static bool create_directory(
-      const std::filesystem::path& path);
+  static bool create_directory(const std::filesystem::path& path);
 
-  static std::vector<std::filesystem::path> list_directory(
-      const std::filesystem::path& path);
+  static std::vector<std::filesystem::path> list_directory(const std::filesystem::path& path);
 };
 
 }  // namespace SolarSystem::Security

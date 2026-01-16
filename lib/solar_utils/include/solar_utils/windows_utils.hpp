@@ -30,25 +30,12 @@ struct WindowsSystemInfo {
 /**
  * @brief Windows registry value types
  */
-enum class RegistryValueType {
-  String,
-  DWord,
-  QWord,
-  Binary,
-  MultiString
-};
+enum class RegistryValueType { String, DWord, QWord, Binary, MultiString };
 
 /**
  * @brief Windows service status
  */
-enum class ServiceStatus {
-  Running,
-  Stopped,
-  Paused,
-  StartPending,
-  StopPending,
-  Unknown
-};
+enum class ServiceStatus { Running, Stopped, Paused, StartPending, StopPending, Unknown };
 
 /**
  * @brief Windows utilities class
@@ -99,32 +86,26 @@ class RegistryUtils {
   /**
    * @brief Read string value from registry
    */
-  static std::optional<std::string> read_string(
-      const std::string& key_path,
-      const std::string& value_name);
+  static std::optional<std::string> read_string(const std::string& key_path,
+                                                const std::string& value_name);
 
   /**
    * @brief Read DWORD value from registry
    */
-  static std::optional<uint32_t> read_dword(
-      const std::string& key_path,
-      const std::string& value_name);
+  static std::optional<uint32_t> read_dword(const std::string& key_path,
+                                            const std::string& value_name);
 
   /**
    * @brief Write string value to registry
    */
-  static bool write_string(
-      const std::string& key_path,
-      const std::string& value_name,
-      const std::string& value);
+  static bool write_string(const std::string& key_path, const std::string& value_name,
+                           const std::string& value);
 
   /**
    * @brief Write DWORD value to registry
    */
-  static bool write_dword(
-      const std::string& key_path,
-      const std::string& value_name,
-      uint32_t value);
+  static bool write_dword(const std::string& key_path, const std::string& value_name,
+                          uint32_t value);
 
   /**
    * @brief Check if registry key exists
@@ -170,10 +151,8 @@ class ServiceUtils {
   /**
    * @brief Install a service
    */
-  static bool install_service(
-      const std::string& service_name,
-      const std::string& display_name,
-      const std::filesystem::path& executable_path);
+  static bool install_service(const std::string& service_name, const std::string& display_name,
+                              const std::filesystem::path& executable_path);
 
   /**
    * @brief Uninstall a service
@@ -194,9 +173,7 @@ class WindowsFileSystem {
   /**
    * @brief Set file attributes
    */
-  static bool set_file_attributes(
-      const std::filesystem::path& path,
-      uint32_t attributes);
+  static bool set_file_attributes(const std::filesystem::path& path, uint32_t attributes);
 
   /**
    * @brief Check if file is hidden
@@ -221,14 +198,12 @@ class WindowsFileSystem {
   /**
    * @brief Get short path name (8.3 format)
    */
-  static std::optional<std::string> get_short_path(
-      const std::filesystem::path& path);
+  static std::optional<std::string> get_short_path(const std::filesystem::path& path);
 
   /**
    * @brief Get long path name
    */
-  static std::optional<std::string> get_long_path(
-      const std::filesystem::path& path);
+  static std::optional<std::string> get_long_path(const std::filesystem::path& path);
 };
 
 }  // namespace SolarSystem::Utils::Windows

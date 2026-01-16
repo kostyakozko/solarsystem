@@ -39,9 +39,7 @@ void ProgressIndicator::start(const std::string& task_name) {
   }
 }
 
-void ProgressIndicator::update(double progress) {
-  update(progress, current_task_);
-}
+void ProgressIndicator::update(double progress) { update(progress, current_task_); }
 
 void ProgressIndicator::update(double progress, const std::string& message) {
   if (!active_) return;

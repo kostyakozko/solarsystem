@@ -12,14 +12,14 @@
  * Requirements: 10.1, 10.2
  */
 
+#include <gtest/gtest.h>
+
 #include <algorithm>
 #include <chrono>
 #include <functional>
 #include <map>
 #include <string>
 #include <vector>
-
-#include <gtest/gtest.h>
 
 /**
  * @brief Test execution scheduler
@@ -165,7 +165,7 @@ class TestNotifier {
   };
 
   void send_notification(NotificationType type, const std::string& recipient,
-                        const std::string& message) {
+                         const std::string& message) {
     Notification notification;
     notification.type = type;
     notification.recipient = recipient;
@@ -246,145 +246,145 @@ class TestMaintenanceManager {
  private:
   std::map<std::string, MaintenanceTask> tasks_;
 };
-  // Test 1: Test scheduling
-  TEST(TestAutomationFrameworkTestsTest, Test_Scheduling) {
-    TestScheduler scheduler;
+// Test 1: Test scheduling
+TEST(TestAutomationFrameworkTestsTest, Test_Scheduling) {
+  TestScheduler scheduler;
 
-    // Test 1.1: Add scheduled tests
-    scheduler.add_test("unit_tests", TestScheduler::Schedule::Immediate);
-    scheduler.add_test("integration_tests", TestScheduler::Schedule::Daily);
-    scheduler.add_test("performance_tests", TestScheduler::Schedule::Weekly);
+  // Test 1.1: Add scheduled tests
+  scheduler.add_test("unit_tests", TestScheduler::Schedule::Immediate);
+  scheduler.add_test("integration_tests", TestScheduler::Schedule::Daily);
+  scheduler.add_test("performance_tests", TestScheduler::Schedule::Weekly);
 
-    ASSERT_EQ(scheduler.get_scheduled_test_count(), 3);
+  ASSERT_EQ(scheduler.get_scheduled_test_count(), 3);
 
-    // Test 1.2: Get tests to run
-    auto tests_to_run = scheduler.get_tests_to_run();
-    ASSERT_GE(tests_to_run.size(), 1);  // At least immediate tests
+  // Test 1.2: Get tests to run
+  auto tests_to_run = scheduler.get_tests_to_run();
+  ASSERT_GE(tests_to_run.size(), 1);  // At least immediate tests
 
-    // Test 1.3: Disable/enable tests
-    scheduler.disable_test("performance_tests");
-    scheduler.enable_test("performance_tests");
-    ASSERT_EQ(scheduler.get_scheduled_test_count(), 3);
-  }
+  // Test 1.3: Disable/enable tests
+  scheduler.disable_test("performance_tests");
+  scheduler.enable_test("performance_tests");
+  ASSERT_EQ(scheduler.get_scheduled_test_count(), 3);
+}
 
-  // Test 2: Test result collection
-  TEST(TestAutomationFrameworkTestsTest, Test_Result_Collection) {
-    TestResultCollector collector;
+// Test 2: Test result collection
+TEST(TestAutomationFrameworkTestsTest, Test_Result_Collection) {
+  TestResultCollector collector;
 
-    // Test 2.1: Add passing results
-    TestResultCollector::TestResult result1;
-    result1.test_name = "test1";
-    result1.passed = true;
-    result1.duration = std::chrono::milliseconds(10);
-    collector.add_result(result1);
+  // Test 2.1: Add passing results
+  TestResultCollector::TestResult result1;
+  result1.test_name = "test1";
+  result1.passed = true;
+  result1.duration = std::chrono::milliseconds(10);
+  collector.add_result(result1);
 
-    TestResultCollector::TestResult result2;
-    result2.test_name = "test2";
-    result2.passed = true;
-    result2.duration = std::chrono::milliseconds(20);
-    collector.add_result(result2);
+  TestResultCollector::TestResult result2;
+  result2.test_name = "test2";
+  result2.passed = true;
+  result2.duration = std::chrono::milliseconds(20);
+  collector.add_result(result2);
 
-    ASSERT_EQ(collector.get_passed_count(), 2);
-    ASSERT_EQ(collector.get_failed_count(), 0);
+  ASSERT_EQ(collector.get_passed_count(), 2);
+  ASSERT_EQ(collector.get_failed_count(), 0);
 
-    // Test 2.2: Add failing result
-    TestResultCollector::TestResult result3;
-    result3.test_name = "test3";
-    result3.passed = false;
-    result3.error_message = "Assertion failed";
-    collector.add_result(result3);
+  // Test 2.2: Add failing result
+  TestResultCollector::TestResult result3;
+  result3.test_name = "test3";
+  result3.passed = false;
+  result3.error_message = "Assertion failed";
+  collector.add_result(result3);
 
-    ASSERT_EQ(collector.get_passed_count(), 2);
-    ASSERT_EQ(collector.get_failed_count(), 1);
+  ASSERT_EQ(collector.get_passed_count(), 2);
+  ASSERT_EQ(collector.get_failed_count(), 1);
 
-    // Test 2.3: Get failed results
-    auto failed = collector.get_failed_results();
-    ASSERT_EQ(failed.size(), 1);
-    ASSERT_EQ(failed[0].test_name, "test3");
+  // Test 2.3: Get failed results
+  auto failed = collector.get_failed_results();
+  ASSERT_EQ(failed.size(), 1);
+  ASSERT_EQ(failed[0].test_name, "test3");
 
-    // Test 2.4: Calculate pass rate
-    double pass_rate = collector.get_pass_rate();
-    ASSERT_EQ(pass_rate, 66.66666666666666);  // 2/3 * 100
-  }
+  // Test 2.4: Calculate pass rate
+  double pass_rate = collector.get_pass_rate();
+  ASSERT_EQ(pass_rate, 66.66666666666666);  // 2/3 * 100
+}
 
-  // Test 3: Test notifications
-  TEST(TestAutomationFrameworkTestsTest, Test_Notifications) {
-    TestNotifier notifier;
+// Test 3: Test notifications
+TEST(TestAutomationFrameworkTestsTest, Test_Notifications) {
+  TestNotifier notifier;
 
-    // Test 3.1: Send failure notification
-    notifier.notify_test_failure("test1", "Assertion failed");
-    ASSERT_EQ(notifier.get_notification_count(), 1);
+  // Test 3.1: Send failure notification
+  notifier.notify_test_failure("test1", "Assertion failed");
+  ASSERT_EQ(notifier.get_notification_count(), 1);
 
-    // Test 3.2: Send success notification
-    notifier.notify_test_success("test2");
-    ASSERT_EQ(notifier.get_notification_count(), 2);
+  // Test 3.2: Send success notification
+  notifier.notify_test_success("test2");
+  ASSERT_EQ(notifier.get_notification_count(), 2);
 
-    // Test 3.3: Get notifications
-    auto notifications = notifier.get_notifications();
-    ASSERT_EQ(notifications.size(), 2);
-    EXPECT_NE(std::string::npos, notifications[0].message.find("failed"));
-    EXPECT_NE(std::string::npos, notifications[1].message.find("passed"));
+  // Test 3.3: Get notifications
+  auto notifications = notifier.get_notifications();
+  ASSERT_EQ(notifications.size(), 2);
+  EXPECT_NE(std::string::npos, notifications[0].message.find("failed"));
+  EXPECT_NE(std::string::npos, notifications[1].message.find("passed"));
 
-    // Test 3.4: Clear notifications
-    notifier.clear();
-    ASSERT_EQ(notifier.get_notification_count(), 0);
-  }
+  // Test 3.4: Clear notifications
+  notifier.clear();
+  ASSERT_EQ(notifier.get_notification_count(), 0);
+}
 
-  // Test 4: Test maintenance
-  TEST(TestAutomationFrameworkTestsTest, Test_Maintenance) {
-    TestMaintenanceManager manager;
+// Test 4: Test maintenance
+TEST(TestAutomationFrameworkTestsTest, Test_Maintenance) {
+  TestMaintenanceManager manager;
 
-    // Test 4.1: Add maintenance tasks
-    manager.add_maintenance_task("update_test_data", "Update test fixtures");
-    manager.add_maintenance_task("refactor_tests", "Refactor legacy tests");
-    ASSERT_EQ(manager.get_task_count(), 2);
+  // Test 4.1: Add maintenance tasks
+  manager.add_maintenance_task("update_test_data", "Update test fixtures");
+  manager.add_maintenance_task("refactor_tests", "Refactor legacy tests");
+  ASSERT_EQ(manager.get_task_count(), 2);
 
-    // Test 4.2: Get pending tasks
-    auto pending = manager.get_pending_tasks();
-    ASSERT_EQ(pending.size(), 2);
+  // Test 4.2: Get pending tasks
+  auto pending = manager.get_pending_tasks();
+  ASSERT_EQ(pending.size(), 2);
 
-    // Test 4.3: Complete task
-    manager.complete_task("update_test_data");
-    pending = manager.get_pending_tasks();
-    ASSERT_EQ(pending.size(), 1);
+  // Test 4.3: Complete task
+  manager.complete_task("update_test_data");
+  pending = manager.get_pending_tasks();
+  ASSERT_EQ(pending.size(), 1);
 
-    // Test 4.4: Get overdue tasks
-    auto overdue = manager.get_overdue_tasks();
-    ASSERT_EQ(overdue.size(), 0);  // None are overdue yet
-  }
+  // Test 4.4: Get overdue tasks
+  auto overdue = manager.get_overdue_tasks();
+  ASSERT_EQ(overdue.size(), 0);  // None are overdue yet
+}
 
-  // Test 5: End-to-end automation workflow
-  TEST(TestAutomationFrameworkTestsTest, End_to_End_Automation_Workflow) {
-    TestScheduler scheduler;
-    TestResultCollector collector;
-    TestNotifier notifier;
+// Test 5: End-to-end automation workflow
+TEST(TestAutomationFrameworkTestsTest, End_to_End_Automation_Workflow) {
+  TestScheduler scheduler;
+  TestResultCollector collector;
+  TestNotifier notifier;
 
-    // Test 5.1: Schedule tests
-    scheduler.add_test("automated_test_1", TestScheduler::Schedule::Immediate);
-    scheduler.add_test("automated_test_2", TestScheduler::Schedule::Immediate);
+  // Test 5.1: Schedule tests
+  scheduler.add_test("automated_test_1", TestScheduler::Schedule::Immediate);
+  scheduler.add_test("automated_test_2", TestScheduler::Schedule::Immediate);
 
-    // Test 5.2: Get tests to run
-    auto tests_to_run = scheduler.get_tests_to_run();
-    ASSERT_GE(tests_to_run.size(), 2);
+  // Test 5.2: Get tests to run
+  auto tests_to_run = scheduler.get_tests_to_run();
+  ASSERT_GE(tests_to_run.size(), 2);
 
-    // Test 5.3: Simulate test execution and collect results
-    for (const auto& test_name : tests_to_run) {
-      TestResultCollector::TestResult result;
-      result.test_name = test_name;
-      result.passed = (test_name == "automated_test_1");  // First passes, second fails
-      result.duration = std::chrono::milliseconds(50);
-      collector.add_result(result);
+  // Test 5.3: Simulate test execution and collect results
+  for (const auto& test_name : tests_to_run) {
+    TestResultCollector::TestResult result;
+    result.test_name = test_name;
+    result.passed = (test_name == "automated_test_1");  // First passes, second fails
+    result.duration = std::chrono::milliseconds(50);
+    collector.add_result(result);
 
-      // Test 5.4: Send notifications
-      if (result.passed) {
-        notifier.notify_test_success(test_name);
-      } else {
-        notifier.notify_test_failure(test_name, "Test failed");
-      }
+    // Test 5.4: Send notifications
+    if (result.passed) {
+      notifier.notify_test_success(test_name);
+    } else {
+      notifier.notify_test_failure(test_name, "Test failed");
     }
-
-    // Test 5.5: Verify results
-    ASSERT_EQ(collector.get_passed_count(), 1);
-    ASSERT_EQ(collector.get_failed_count(), 1);
-    ASSERT_EQ(notifier.get_notification_count(), 2);
   }
+
+  // Test 5.5: Verify results
+  ASSERT_EQ(collector.get_passed_count(), 1);
+  ASSERT_EQ(collector.get_failed_count(), 1);
+  ASSERT_EQ(notifier.get_notification_count(), 2);
+}

@@ -24,10 +24,10 @@ namespace SolarSystem::Security {
  * @brief User role enumeration
  */
 enum class UserRole {
-  GUEST,        ///< Read-only access
-  USER,         ///< Standard user access
-  ADMIN,        ///< Administrative access
-  SUPER_ADMIN   ///< Full system access
+  GUEST,       ///< Read-only access
+  USER,        ///< Standard user access
+  ADMIN,       ///< Administrative access
+  SUPER_ADMIN  ///< Full system access
 };
 
 /**
@@ -116,7 +116,7 @@ struct SecurityEvent {
  * @brief Security configuration
  */
 struct SecurityConfig {
-  std::chrono::seconds token_lifetime{3600};  // 1 hour
+  std::chrono::seconds token_lifetime{3600};   // 1 hour
   std::chrono::seconds session_timeout{1800};  // 30 minutes
   size_t max_login_attempts = 5;
   std::chrono::minutes lockout_duration{15};
@@ -137,8 +137,7 @@ class ISecurityManager {
   /**
    * @brief Authenticate user
    */
-  [[nodiscard]] virtual std::optional<AuthToken> authenticate(
-      const Credentials& credentials) = 0;
+  [[nodiscard]] virtual std::optional<AuthToken> authenticate(const Credentials& credentials) = 0;
 
   /**
    * @brief Validate authentication token
@@ -148,15 +147,12 @@ class ISecurityManager {
   /**
    * @brief Get user from token
    */
-  [[nodiscard]] virtual std::optional<User> get_user_from_token(
-      const std::string& token) = 0;
+  [[nodiscard]] virtual std::optional<User> get_user_from_token(const std::string& token) = 0;
 
   /**
    * @brief Authorize action
    */
-  [[nodiscard]] virtual bool authorize(
-      const std::string& token,
-      Permission permission) = 0;
+  [[nodiscard]] virtual bool authorize(const std::string& token, Permission permission) = 0;
 
   /**
    * @brief Revoke token (logout)
@@ -171,8 +167,7 @@ class ISecurityManager {
   /**
    * @brief Check rate limit
    */
-  [[nodiscard]] virtual bool check_rate_limit(
-      const std::string& identifier) = 0;
+  [[nodiscard]] virtual bool check_rate_limit(const std::string& identifier) = 0;
 };
 
 /**
@@ -197,17 +192,13 @@ class SecurityManager : public ISecurityManager {
   SecurityManager& operator=(SecurityManager&&) noexcept;
 
   // ISecurityManager interface
-  [[nodiscard]] std::optional<AuthToken> authenticate(
-      const Credentials& credentials) override;
+  [[nodiscard]] std::optional<AuthToken> authenticate(const Credentials& credentials) override;
 
   [[nodiscard]] bool validate_token(const std::string& token) override;
 
-  [[nodiscard]] std::optional<User> get_user_from_token(
-      const std::string& token) override;
+  [[nodiscard]] std::optional<User> get_user_from_token(const std::string& token) override;
 
-  [[nodiscard]] bool authorize(
-      const std::string& token,
-      Permission permission) override;
+  [[nodiscard]] bool authorize(const std::string& token, Permission permission) override;
 
   void revoke_token(const std::string& token) override;
 
@@ -265,9 +256,7 @@ class PasswordHasher {
   /**
    * @brief Verify password against hash
    */
-  [[nodiscard]] static bool verify(
-      const std::string& password,
-      const std::string& hash);
+  [[nodiscard]] static bool verify(const std::string& password, const std::string& hash);
 
   /**
    * @brief Generate random salt

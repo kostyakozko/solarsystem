@@ -210,7 +210,9 @@ class DataFetcher {
 
     // Test body creation to validate data integrity
     try {
-      auto test_bodies = BodySelector().body_set(SolarSystem::Bodies::BodyFactory::DefaultBodySet::ESSENTIAL).build();
+      auto test_bodies = BodySelector()
+                             .body_set(SolarSystem::Bodies::BodyFactory::DefaultBodySet::ESSENTIAL)
+                             .build();
       if (!test_bodies.has_value()) {
         std::cout << "❌ Failed to create essential bodies from cache\n";
         return false;

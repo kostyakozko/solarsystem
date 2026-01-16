@@ -4,7 +4,6 @@
  */
 
 #include "solar_jpl/cache_manager.hpp"
-#include "solar_jpl/data_validator.hpp"
 
 #include <algorithm>
 #include <cmath>
@@ -14,6 +13,8 @@
 #include <nlohmann/json.hpp>
 #include <sstream>
 #include <thread>
+
+#include "solar_jpl/data_validator.hpp"
 
 namespace SolarSystem::JPL {
 
@@ -98,9 +99,7 @@ CacheManager::CacheManager(CacheManagerConfig config)
 /**
  * @brief Cache manager destructor
  */
-CacheManager::~CacheManager() {
-  (void)shutdown();
-}
+CacheManager::~CacheManager() { (void)shutdown(); }
 
 /**
  * @brief Initialize cache manager
@@ -167,8 +166,10 @@ JPLResult<std::vector<EphemerisData>> CacheManager::load_cache(ValidationLevel v
       binary_path = config_.cache_directory / "ephemeris_cache.bin";
       json_path = config_.cache_directory / "ephemeris_data.json";
 
-      bool has_binary_for_validation = config_.enable_binary_cache && std::filesystem::exists(binary_path);
-      bool has_json_for_validation = config_.enable_json_cache && std::filesystem::exists(json_path);
+      bool has_binary_for_validation =
+          config_.enable_binary_cache && std::filesystem::exists(binary_path);
+      bool has_json_for_validation =
+          config_.enable_json_cache && std::filesystem::exists(json_path);
 
       if (!has_binary_for_validation && !has_json_for_validation) {
         statistics_.cache_misses++;
@@ -210,8 +211,10 @@ JPLResult<std::vector<EphemerisData>> CacheManager::load_cache(ValidationLevel v
             binary_file.read(reinterpret_cast<char*>(&epoch_time), sizeof(epoch_time));
             body_data.epoch = std::chrono::system_clock::from_time_t(epoch_time);
 
-            binary_file.read(reinterpret_cast<char*>(&body_data.position), sizeof(body_data.position));
-            binary_file.read(reinterpret_cast<char*>(&body_data.velocity), sizeof(body_data.velocity));
+            binary_file.read(reinterpret_cast<char*>(&body_data.position),
+                             sizeof(body_data.position));
+            binary_file.read(reinterpret_cast<char*>(&body_data.velocity),
+                             sizeof(body_data.velocity));
 
             // Read mass
             binary_file.read(reinterpret_cast<char*>(&body_data.mass), sizeof(body_data.mass));
@@ -234,8 +237,8 @@ JPLResult<std::vector<EphemerisData>> CacheManager::load_cache(ValidationLevel v
               EphemerisData body_data;
               body_data.jpl_id = item.at("jpl_id").get<int>();
               body_data.body_name = item.at("body_name").get<std::string>();
-              body_data.epoch = std::chrono::system_clock::from_time_t(
-                  item.at("epoch").get<std::time_t>());
+              body_data.epoch =
+                  std::chrono::system_clock::from_time_t(item.at("epoch").get<std::time_t>());
 
               const auto& pos = item.at("position");
               body_data.position = SolarSystem::Math::Vector3d(
@@ -273,7 +276,8 @@ JPLResult<std::vector<EphemerisData>> CacheManager::load_cache(ValidationLevel v
 /**
  * @brief Save data to cache with optimization
  */
-JPLVoidResult CacheManager::save_cache(const std::vector<EphemerisData>& data, bool enable_compression) {
+JPLVoidResult CacheManager::save_cache(const std::vector<EphemerisData>& data,
+                                       bool enable_compression) {
   std::lock_guard<std::mutex> lock(impl_->cache_mutex);
 
   try {
@@ -338,7 +342,8 @@ JPLVoidResult CacheManager::save_cache(const std::vector<EphemerisData>& data, b
 
         // Write data
         for (const auto& body_data : data) {
-          binary_file.write(reinterpret_cast<const char*>(&body_data.jpl_id), sizeof(body_data.jpl_id));
+          binary_file.write(reinterpret_cast<const char*>(&body_data.jpl_id),
+                            sizeof(body_data.jpl_id));
 
           uint32_t name_length = static_cast<uint32_t>(body_data.body_name.length());
           binary_file.write(reinterpret_cast<const char*>(&name_length), sizeof(name_length));
@@ -348,8 +353,10 @@ JPLVoidResult CacheManager::save_cache(const std::vector<EphemerisData>& data, b
           auto epoch_time = std::chrono::system_clock::to_time_t(body_data.epoch);
           binary_file.write(reinterpret_cast<const char*>(&epoch_time), sizeof(epoch_time));
 
-          binary_file.write(reinterpret_cast<const char*>(&body_data.position), sizeof(body_data.position));
-          binary_file.write(reinterpret_cast<const char*>(&body_data.velocity), sizeof(body_data.velocity));
+          binary_file.write(reinterpret_cast<const char*>(&body_data.position),
+                            sizeof(body_data.position));
+          binary_file.write(reinterpret_cast<const char*>(&body_data.velocity),
+                            sizeof(body_data.velocity));
 
           // Write mass
           binary_file.write(reinterpret_cast<const char*>(&body_data.mass), sizeof(body_data.mass));
@@ -606,16 +613,12 @@ JPLVoidResult CacheManager::clear_cache(bool create_backup) {
 /**
  * @brief Get cache statistics
  */
-const CacheStatistics& CacheManager::get_statistics() const {
-  return statistics_;
-}
+const CacheStatistics& CacheManager::get_statistics() const { return statistics_; }
 
 /**
  * @brief Reset statistics
  */
-void CacheManager::reset_statistics() {
-  statistics_ = CacheStatistics{};
-}
+void CacheManager::reset_statistics() { statistics_ = CacheStatistics{}; }
 
 /**
  * @brief Get cache health status
@@ -689,12 +692,12 @@ JPLVoidResult CacheManager::rebuild_cache() {
             std::chrono::system_clock::from_time_t(item.at("epoch").get<std::time_t>());
 
         const auto& pos = item.at("position");
-        body_data.position =
-            SolarSystem::Math::Vector3d(pos[0].get<double>(), pos[1].get<double>(), pos[2].get<double>());
+        body_data.position = SolarSystem::Math::Vector3d(pos[0].get<double>(), pos[1].get<double>(),
+                                                         pos[2].get<double>());
 
         const auto& vel = item.at("velocity");
-        body_data.velocity =
-            SolarSystem::Math::Vector3d(vel[0].get<double>(), vel[1].get<double>(), vel[2].get<double>());
+        body_data.velocity = SolarSystem::Math::Vector3d(vel[0].get<double>(), vel[1].get<double>(),
+                                                         vel[2].get<double>());
 
         body_data.mass = item.at("mass").get<long double>();
         data.push_back(std::move(body_data));
@@ -734,8 +737,10 @@ JPLVoidResult CacheManager::rebuild_cache() {
       auto epoch_time = std::chrono::system_clock::to_time_t(body_data.epoch);
       binary_file.write(reinterpret_cast<const char*>(&epoch_time), sizeof(epoch_time));
 
-      binary_file.write(reinterpret_cast<const char*>(&body_data.position), sizeof(body_data.position));
-      binary_file.write(reinterpret_cast<const char*>(&body_data.velocity), sizeof(body_data.velocity));
+      binary_file.write(reinterpret_cast<const char*>(&body_data.position),
+                        sizeof(body_data.position));
+      binary_file.write(reinterpret_cast<const char*>(&body_data.velocity),
+                        sizeof(body_data.velocity));
       binary_file.write(reinterpret_cast<const char*>(&body_data.mass), sizeof(body_data.mass));
     }
     binary_file.close();
@@ -779,9 +784,7 @@ JPLVoidResult CacheManager::refresh_if_needed() {
 /**
  * @brief Force cache refresh
  */
-JPLVoidResult CacheManager::force_refresh() {
-  return rebuild_cache();
-}
+JPLVoidResult CacheManager::force_refresh() { return rebuild_cache(); }
 
 /**
  * @brief Optimize cache storage
@@ -875,7 +878,7 @@ JPLVoidResult CacheManager::create_backup() {
 
     if (std::filesystem::exists(config_.cache_directory)) {
       std::filesystem::copy(config_.cache_directory, backup_path,
-                           std::filesystem::copy_options::recursive);
+                            std::filesystem::copy_options::recursive);
     }
 
     return success();
@@ -900,7 +903,7 @@ JPLVoidResult CacheManager::restore_from_backup(size_t backup_version) {
     }
 
     std::filesystem::copy(backup_path, config_.cache_directory,
-                         std::filesystem::copy_options::recursive);
+                          std::filesystem::copy_options::recursive);
 
     return success();
   } catch (const std::exception&) {
@@ -1047,7 +1050,8 @@ JPLResult<ValidationReport> CacheManager::validate_cache_comprehensive(Validatio
     }
 
     // Validate cache directory and files
-    auto cache_integrity_result = data_validator_->validate_cache_integrity(config_.cache_directory);
+    auto cache_integrity_result =
+        data_validator_->validate_cache_integrity(config_.cache_directory);
     if (is_success(cache_integrity_result)) {
       statistics_.validation_successes++;
       return get_value(cache_integrity_result);
@@ -1071,9 +1075,7 @@ void CacheManager::set_data_validator(std::shared_ptr<DataValidator> validator) 
 /**
  * @brief Get data validator
  */
-std::shared_ptr<DataValidator> CacheManager::get_data_validator() const {
-  return data_validator_;
-}
+std::shared_ptr<DataValidator> CacheManager::get_data_validator() const { return data_validator_; }
 
 /**
  * @brief Factory methods

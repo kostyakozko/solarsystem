@@ -860,7 +860,6 @@ Utils::Expected<void, std::string> BodyFactory::validate_body_relationships(
 
 Utils::Expected<CelestialBody, std::string> BodyFactory::create_body_with_intelligent_fallback(
     std::string_view name, const CreationOptions& options) const {
-
   // Execute the fallback strategy
   auto fallback_result = execute_fallback_strategy(name, options);
 
@@ -963,8 +962,7 @@ std::vector<BodyFactory::DataSourceInfo> BodyFactory::assess_data_sources(
 }
 
 BodyFactory::DataQuality BodyFactory::assess_data_quality(
-    const CelestialBody& body, DataSource source,
-    std::chrono::system_clock::time_point ) const {
+    const CelestialBody& body, DataSource source, std::chrono::system_clock::time_point) const {
   // Check for basic data validity
   if (body.mass() <= 0.0L) {
     return DataQuality::POOR;
@@ -1189,7 +1187,7 @@ bool BodyFactory::is_data_source_available(DataSource source, std::string_view n
 }
 
 std::chrono::system_clock::time_point BodyFactory::get_data_source_timestamp(
-    DataSource source, std::string_view ) const {
+    DataSource source, std::string_view) const {
   switch (source) {
     case DataSource::JPL_HORIZONS:
       // JPL data is always current
@@ -1300,8 +1298,9 @@ std::vector<std::string> BodyFactory::get_bodies_for_set(DefaultBodySet body_set
 
     case DefaultBodySet::IMPORTANT:
       // Essential + major moons + dwarf planets (18 bodies total)
-      return {"Sun", "Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune",
-              "Moon", "Io", "Europa", "Ganymede", "Callisto", "Titan", "Pluto", "Charon", "Triton"};
+      return {"Sun",      "Mercury",  "Venus",   "Earth", "Mars",   "Jupiter",
+              "Saturn",   "Uranus",   "Neptune", "Moon",  "Io",     "Europa",
+              "Ganymede", "Callisto", "Titan",   "Pluto", "Charon", "Triton"};
 
     case DefaultBodySet::COMPLETE:
       // All 27 bodies - get from body definitions
@@ -1326,11 +1325,14 @@ size_t BodyFactory::get_body_count_for_set(DefaultBodySet body_set) const {
 std::string BodyFactory::get_body_set_description(DefaultBodySet body_set) const {
   switch (body_set) {
     case DefaultBodySet::ESSENTIAL:
-      return "Essential bodies (Sun + 8 planets) - 9 bodies total. Fast performance, suitable for basic simulations.";
+      return "Essential bodies (Sun + 8 planets) - 9 bodies total. Fast performance, suitable for "
+             "basic simulations.";
     case DefaultBodySet::IMPORTANT:
-      return "Important bodies (Essential + major moons + dwarf planets) - 18 bodies total. Balanced performance and completeness.";
+      return "Important bodies (Essential + major moons + dwarf planets) - 18 bodies total. "
+             "Balanced performance and completeness.";
     case DefaultBodySet::COMPLETE:
-      return "Complete solar system (all available bodies) - 27 bodies total. Comprehensive but slower performance.";
+      return "Complete solar system (all available bodies) - 27 bodies total. Comprehensive but "
+             "slower performance.";
     default:
       return "Unknown body set";
   }

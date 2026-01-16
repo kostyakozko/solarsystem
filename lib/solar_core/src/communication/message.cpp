@@ -6,18 +6,17 @@
 #include "solar_core/communication/message.hpp"
 
 #include <algorithm>
+#include <msgpack.hpp>
+#include <nlohmann/json.hpp>
 #include <random>
 #include <sstream>
-
-#include <nlohmann/json.hpp>
-#include <msgpack.hpp>
 
 // OpenSSL for cryptographic signature validation
 #ifdef OPENSSL_VERSION_NUMBER
 #include <openssl/bio.h>
+#include <openssl/err.h>
 #include <openssl/evp.h>
 #include <openssl/pem.h>
-#include <openssl/err.h>
 #endif
 
 namespace SolarSystem::Communication {
@@ -142,7 +141,7 @@ bool MessageValidator::validate_payload(const MessagePayload& /* payload */) {
 }
 
 bool MessageValidator::validate_signature(const Message& message,
-                                         const std::string& public_key_pem) {
+                                          const std::string& public_key_pem) {
   // If no signature is present, validation passes (unsigned message)
   if (!message.signature || message.signature->empty()) {
     return true;
@@ -157,8 +156,7 @@ bool MessageValidator::validate_signature(const Message& message,
   // Use OpenSSL for signature verification
 
   // Create a message digest of the message content
-  std::string message_content = message.header.message_id +
-                                message.header.source_application +
+  std::string message_content = message.header.message_id + message.header.source_application +
                                 message.header.destination_application;
 
   // Add payload to message content
@@ -204,9 +202,9 @@ bool MessageValidator::validate_signature(const Message& message,
   }
 
   // Verify signature
-  int result = EVP_DigestVerifyFinal(ctx,
-                                     reinterpret_cast<const unsigned char*>(message.signature->data()),
-                                     message.signature->size());
+  int result =
+      EVP_DigestVerifyFinal(ctx, reinterpret_cast<const unsigned char*>(message.signature->data()),
+                            message.signature->size());
 
   // Cleanup
   EVP_MD_CTX_free(ctx);
@@ -227,8 +225,8 @@ bool MessageValidator::check_size_limits(const Message& message, size_t max_size
   estimated_size += message.header.message_id.size();
   estimated_size += message.header.source_application.size();
   estimated_size += message.header.destination_application.size();
-  estimated_size += sizeof(MessageType);                    // type enum
-  estimated_size += sizeof(MessagePriority);                // priority enum
+  estimated_size += sizeof(MessageType);                            // type enum
+  estimated_size += sizeof(MessagePriority);                        // priority enum
   estimated_size += sizeof(std::chrono::system_clock::time_point);  // timestamp
 
   // Optional correlation_id
@@ -303,9 +301,7 @@ static MessageType string_to_message_type(const std::string& type_str) {
 }
 
 // Helper function to convert MessagePriority to int
-static int message_priority_to_int(MessagePriority priority) {
-  return static_cast<int>(priority);
-}
+static int message_priority_to_int(MessagePriority priority) { return static_cast<int>(priority); }
 
 // Helper function to convert int to MessagePriority
 static MessagePriority int_to_message_priority(int priority_int) {
@@ -434,8 +430,8 @@ SolarSystem::Utils::Expected<Message, SerializationError> JsonMessageSerializer:
 
     // Deserialize timestamp
     int64_t timestamp_ms = j["header"]["timestamp"].get<int64_t>();
-    msg.header.timestamp = std::chrono::system_clock::time_point(
-        std::chrono::milliseconds(timestamp_ms));
+    msg.header.timestamp =
+        std::chrono::system_clock::time_point(std::chrono::milliseconds(timestamp_ms));
 
     // Deserialize optional fields
     if (j["header"].contains("correlation_id")) {
@@ -550,7 +546,8 @@ BinaryMessageSerializer::serialize(const Message& message) const {
       } else if (std::holds_alternative<std::vector<uint8_t>>(value)) {
         const auto& vec = std::get<std::vector<uint8_t>>(value);
         packer.pack_bin(static_cast<uint32_t>(vec.size()));
-        packer.pack_bin_body(reinterpret_cast<const char*>(vec.data()), static_cast<uint32_t>(vec.size()));
+        packer.pack_bin_body(reinterpret_cast<const char*>(vec.data()),
+                             static_cast<uint32_t>(vec.size()));
       }
     }
 
@@ -576,7 +573,8 @@ SolarSystem::Utils::Expected<Message, SerializationError> BinaryMessageSerialize
     const std::vector<uint8_t>& data) const {
   try {
     // Unpack the data
-    msgpack::object_handle oh = msgpack::unpack(reinterpret_cast<const char*>(data.data()), data.size());
+    msgpack::object_handle oh =
+        msgpack::unpack(reinterpret_cast<const char*>(data.data()), data.size());
     msgpack::object obj = oh.get();
 
     // Convert to map
@@ -624,8 +622,8 @@ SolarSystem::Utils::Expected<Message, SerializationError> BinaryMessageSerialize
           } else if (hkey == "timestamp") {
             int64_t timestamp_ms;
             hp->val.convert(timestamp_ms);
-            msg.header.timestamp = std::chrono::system_clock::time_point(
-                std::chrono::milliseconds(timestamp_ms));
+            msg.header.timestamp =
+                std::chrono::system_clock::time_point(std::chrono::milliseconds(timestamp_ms));
           } else if (hkey == "correlation_id") {
             if (hp->val.type != msgpack::type::NIL) {
               std::string corr_id;
@@ -675,7 +673,8 @@ SolarSystem::Utils::Expected<Message, SerializationError> BinaryMessageSerialize
             int64_t int_val;
             pp->val.convert(int_val);
             msg.payload[pkey] = int_val;
-          } else if (pp->val.type == msgpack::type::FLOAT32 || pp->val.type == msgpack::type::FLOAT64) {
+          } else if (pp->val.type == msgpack::type::FLOAT32 ||
+                     pp->val.type == msgpack::type::FLOAT64) {
             double dbl_val;
             pp->val.convert(dbl_val);
             msg.payload[pkey] = dbl_val;

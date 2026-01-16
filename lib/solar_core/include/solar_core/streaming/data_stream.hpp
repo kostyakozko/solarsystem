@@ -12,8 +12,8 @@
 #include <thread>
 #include <vector>
 
-#include "solar_core/bodies/celestial_body.hpp"
 #include "solar_core/bodies/body_collection.hpp"
+#include "solar_core/bodies/celestial_body.hpp"
 #include "solar_core/export.hpp"
 #include "solar_core/math/vector3.hpp"
 #include "solar_utils/expected.hpp"
@@ -39,7 +39,7 @@ struct DataPoint {
 
   DataPoint() = default;
   explicit DataPoint(const Bodies::CelestialBody& body,
-                    std::chrono::system_clock::time_point time = std::chrono::system_clock::now());
+                     std::chrono::system_clock::time_point time = std::chrono::system_clock::now());
 };
 
 /**
@@ -57,8 +57,9 @@ struct DataSnapshot {
   std::vector<std::string> warnings;
 
   DataSnapshot() = default;
-  explicit DataSnapshot(const Bodies::BodyCollection& bodies,
-                       std::chrono::system_clock::time_point time = std::chrono::system_clock::now());
+  explicit DataSnapshot(
+      const Bodies::BodyCollection& bodies,
+      std::chrono::system_clock::time_point time = std::chrono::system_clock::now());
 };
 
 /**
@@ -71,8 +72,8 @@ struct StreamConfig {
   size_t max_queue_size = 100;                      // Max queued snapshots for consumers
 
   // Quality thresholds
-  double min_quality_threshold = 0.7;               // Minimum acceptable quality
-  std::chrono::milliseconds max_latency{2000};      // Maximum acceptable latency
+  double min_quality_threshold = 0.7;           // Minimum acceptable quality
+  std::chrono::milliseconds max_latency{2000};  // Maximum acceptable latency
 
   // Filtering options
   bool enable_filtering = true;
@@ -119,7 +120,7 @@ using QualityCallback = std::function<void(const StreamStats&)>;
  * @brief Main data streaming interface
  */
 class SOLAR_CORE_API DataStream {
-public:
+ public:
   explicit DataStream(StreamConfig config = {});
   virtual ~DataStream();
 
@@ -158,7 +159,7 @@ public:
   // Manual data push (for testing or external data sources)
   [[nodiscard]] Utils::Expected<void, std::string> push_snapshot(const DataSnapshot& snapshot);
 
-protected:
+ protected:
   // Virtual methods for derived classes to implement
   [[nodiscard]] virtual Utils::Expected<DataSnapshot, std::string> generate_snapshot() = 0;
   [[nodiscard]] virtual Utils::Expected<void, std::string> initialize_stream() = 0;
@@ -172,7 +173,7 @@ protected:
   [[nodiscard]] bool should_drop_snapshot(const DataSnapshot& snapshot) const;
   void update_stats(const DataSnapshot& snapshot);
 
-private:
+ private:
   StreamConfig config_;
   std::atomic<bool> running_{false};
   std::atomic<bool> paused_{false};

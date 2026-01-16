@@ -7,10 +7,9 @@
 #include <fstream>
 #include <iomanip>
 #include <locale>
+#include <nlohmann/json.hpp>
 #include <regex>
 #include <sstream>
-
-#include <nlohmann/json.hpp>
 
 #include "solar_core/bodies/body_factory.hpp"
 #include "solar_core/data/body_definitions.hpp"

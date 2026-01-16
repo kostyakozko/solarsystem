@@ -12,10 +12,10 @@
  * Requirements: All requirements - cross-cutting concern
  */
 
+#include <gtest/gtest.h>
+
 #include <string>
 #include <vector>
-
-#include <gtest/gtest.h>
 
 class TestAnalytics {
  public:

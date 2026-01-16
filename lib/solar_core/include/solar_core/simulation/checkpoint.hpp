@@ -6,8 +6,8 @@
 #include <string>
 #include <vector>
 
-#include "solar_core/export.hpp"
 #include "solar_core/bodies/body_collection.hpp"
+#include "solar_core/export.hpp"
 #include "solar_core/simulation/simulation_engine.hpp"
 #include "solar_utils/expected.hpp"
 

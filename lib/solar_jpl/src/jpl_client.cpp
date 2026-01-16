@@ -4,8 +4,6 @@
  */
 
 #include "solar_jpl/jpl_client.hpp"
-#include "solar_jpl/cache_manager.hpp"
-#include "solar_jpl/data_validator.hpp"
 
 #include <algorithm>
 #include <cmath>
@@ -18,6 +16,9 @@
 #include <regex>
 #include <sstream>
 #include <thread>
+
+#include "solar_jpl/cache_manager.hpp"
+#include "solar_jpl/data_validator.hpp"
 
 // For HTTP requests (using system curl for now)
 #include <cstdio>
@@ -45,7 +46,8 @@ struct JPLClient::Impl {
    * @brief Execute system command and capture output
    */
   [[nodiscard]] std::string execute_command(const std::string& command) {
-    std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(command.c_str(), "r"), pclose);
+    using pclose_t = int (*)(FILE*);
+    std::unique_ptr<FILE, pclose_t> pipe(popen(command.c_str(), "r"), pclose);
     if (!pipe) {
       return "";
     }
@@ -743,7 +745,8 @@ JPLResult<EphemerisData> JPLClient::parse_jpl_response(const std::string& respon
     auto now = std::chrono::system_clock::now();
     auto time_since_epoch = now.time_since_epoch();
     auto seconds = std::chrono::duration_cast<std::chrono::seconds>(time_since_epoch).count();
-    double angle = static_cast<double>(seconds % 31536000) * 2.0 * M_PI / 31536000.0;  // Annual orbit
+    double angle =
+        static_cast<double>(seconds % 31536000) * 2.0 * M_PI / 31536000.0;  // Annual orbit
 
     data.position = SolarSystem::Math::Vector3d{orbital_radius * std::cos(angle),
                                                 orbital_radius * std::sin(angle), 0.0};
@@ -2705,7 +2708,8 @@ JPLResult<std::string> JPLClient::make_resilient_request(const std::string& url,
   auto primary_result = execute_request_with_circuit_breaker(url, params);
 
   auto request_end = std::chrono::steady_clock::now();
-  auto request_duration = std::chrono::duration_cast<std::chrono::milliseconds>(request_end - request_start);
+  auto request_duration =
+      std::chrono::duration_cast<std::chrono::milliseconds>(request_end - request_start);
 
   if (is_success(primary_result)) {
     // Update diagnostics with successful request
@@ -2721,7 +2725,8 @@ JPLResult<std::string> JPLClient::make_resilient_request(const std::string& url,
     auto fallback_start = std::chrono::steady_clock::now();
     auto fallback_result = try_fallback_endpoints(params);
     auto fallback_end = std::chrono::steady_clock::now();
-    auto fallback_duration = std::chrono::duration_cast<std::chrono::milliseconds>(fallback_end - fallback_start);
+    auto fallback_duration =
+        std::chrono::duration_cast<std::chrono::milliseconds>(fallback_end - fallback_start);
 
     if (is_success(fallback_result)) {
       // Update diagnostics with successful fallback
@@ -2895,7 +2900,6 @@ std::optional<ConnectionPoolEntry*> JPLClient::acquire_connection(const std::str
   for (auto& entry : connection_pool_) {
     if (entry.endpoint == endpoint && entry.is_available &&
         entry.active_requests < config_.max_concurrent_requests) {
-
       // Check if connection is still fresh (not too old)
       auto connection_age = now - entry.last_used;
       if (connection_age > config_.connection_keep_alive) {
@@ -2946,7 +2950,8 @@ void JPLClient::release_connection(const std::string& endpoint) {
   for (auto& entry : connection_pool_) {
     if (entry.endpoint == endpoint && !entry.is_available) {
       entry.is_available = true;
-      entry.active_requests = static_cast<size_t>(std::max(0, static_cast<int>(entry.active_requests) - 1));
+      entry.active_requests =
+          static_cast<size_t>(std::max(0, static_cast<int>(entry.active_requests) - 1));
       entry.last_used = std::chrono::system_clock::now();
       break;
     }
@@ -2969,7 +2974,8 @@ void JPLClient::cleanup_expired_connections() {
                                             return true;
                                           }
 
-                                          // Remove if connection has been idle and available for too long
+                                          // Remove if connection has been idle and available for
+                                          // too long
                                           if (entry.is_available && entry.active_requests == 0 &&
                                               age > std::chrono::seconds(60)) {
                                             return true;
@@ -2991,7 +2997,7 @@ void JPLClient::cleanup_expired_connections() {
 /**
  * @brief Check if circuit breaker should allow request
  */
-bool CircuitBreaker::should_allow_request(const JPLClientConfig& ) const {
+bool CircuitBreaker::should_allow_request(const JPLClientConfig&) const {
   auto now = std::chrono::system_clock::now();
 
   switch (state) {
@@ -3169,7 +3175,9 @@ double JPLClient::get_network_health_score() const {
   // Response time component (20% weight)
   if (network_diagnostics_.average_response_time.count() > 0) {
     // Good response time is under 2 seconds
-    auto response_score = std::max(0.0, 1.0 - (static_cast<double>(network_diagnostics_.average_response_time.count()) / 2000.0));
+    auto response_score = std::max(
+        0.0,
+        1.0 - (static_cast<double>(network_diagnostics_.average_response_time.count()) / 2000.0));
     score += response_score * 0.2;
   }
 
@@ -3227,9 +3235,9 @@ JPLResult<std::chrono::milliseconds> JPLClient::ping_endpoint(const std::string&
 /**
  * @brief Update network diagnostics with request results
  */
-JPLVoidResult JPLClient::update_network_diagnostics(
-    bool success, std::chrono::milliseconds response_time, const std::string& error) {
-
+JPLVoidResult JPLClient::update_network_diagnostics(bool success,
+                                                    std::chrono::milliseconds response_time,
+                                                    const std::string& error) {
   if (success) {
     network_diagnostics_.successful_requests++;
 
@@ -3242,11 +3250,15 @@ JPLVoidResult JPLClient::update_network_diagnostics(
     }
 
     // Update average response time (simple moving average)
-    auto total_requests = network_diagnostics_.successful_requests + network_diagnostics_.failed_requests;
+    auto total_requests =
+        network_diagnostics_.successful_requests + network_diagnostics_.failed_requests;
     if (total_requests > 0) {
       auto current_avg = static_cast<uint64_t>(network_diagnostics_.average_response_time.count());
-      auto new_avg = (current_avg * (total_requests - 1) + static_cast<uint64_t>(response_time.count())) / total_requests;
-      network_diagnostics_.average_response_time = std::chrono::milliseconds(static_cast<long long>(new_avg));
+      auto new_avg =
+          (current_avg * (total_requests - 1) + static_cast<uint64_t>(response_time.count())) /
+          total_requests;
+      network_diagnostics_.average_response_time =
+          std::chrono::milliseconds(static_cast<long long>(new_avg));
     }
   } else {
     network_diagnostics_.failed_requests++;
@@ -3256,10 +3268,12 @@ JPLVoidResult JPLClient::update_network_diagnostics(
   }
 
   // Update packet loss rate
-  auto total_requests = network_diagnostics_.successful_requests + network_diagnostics_.failed_requests;
+  auto total_requests =
+      network_diagnostics_.successful_requests + network_diagnostics_.failed_requests;
   if (total_requests > 0) {
     network_diagnostics_.packet_loss_rate =
-        static_cast<double>(network_diagnostics_.failed_requests) / static_cast<double>(total_requests);
+        static_cast<double>(network_diagnostics_.failed_requests) /
+        static_cast<double>(total_requests);
   }
 
   return std::nullopt;
@@ -3288,8 +3302,6 @@ JPLVoidResult JPLClient::monitor_network_health() {
 /**
  * @brief Test all configured endpoints
  */
-JPLVoidResult JPLClient::test_all_endpoints() {
-  return run_network_diagnostics();
-}
+JPLVoidResult JPLClient::test_all_endpoints() { return run_network_diagnostics(); }
 
 }  // namespace SolarSystem::JPL

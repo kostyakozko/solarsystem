@@ -6,11 +6,11 @@
 #ifndef SOLAR_CORE_ERROR_ERROR_MESSAGING_HPP
 #define SOLAR_CORE_ERROR_ERROR_MESSAGING_HPP
 
-#include <string>
-#include <vector>
+#include <functional>
 #include <map>
 #include <optional>
-#include <functional>
+#include <string>
+#include <vector>
 
 #include "solar_core/export.hpp"
 
@@ -19,13 +19,7 @@ namespace SolarSystem::Error {
 /**
  * @brief Error severity level
  */
-enum class ErrorSeverity {
-  INFO,
-  WARNING,
-  ERROR,
-  CRITICAL,
-  FATAL
-};
+enum class ErrorSeverity { INFO, WARNING, ERROR, CRITICAL, FATAL };
 
 /**
  * @brief Error category

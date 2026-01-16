@@ -28,12 +28,12 @@ namespace SolarSystem::Connection {
  * @brief Connection state enumeration
  */
 enum class ConnectionState {
-  DISCONNECTED,   ///< Not connected
-  CONNECTING,     ///< Connection in progress
-  CONNECTED,      ///< Successfully connected
-  RECONNECTING,   ///< Attempting to reconnect
-  DEGRADED,       ///< Connected but with reduced functionality
-  FAILED          ///< Connection failed permanently
+  DISCONNECTED,  ///< Not connected
+  CONNECTING,    ///< Connection in progress
+  CONNECTED,     ///< Successfully connected
+  RECONNECTING,  ///< Attempting to reconnect
+  DEGRADED,      ///< Connected but with reduced functionality
+  FAILED         ///< Connection failed permanently
 };
 
 /**

@@ -12,13 +12,13 @@
  * Requirements: 4.3, 4.5
  */
 
+#include <gtest/gtest.h>
+
 #include <functional>
 #include <map>
 #include <memory>
 #include <string>
 #include <vector>
-
-#include <gtest/gtest.h>
 
 /**
  * @brief Programmable mock behavior system
@@ -42,9 +42,7 @@ class ProgrammableMock {
   ProgrammableMock() : current_state_(State::Initial) {}
 
   // Configure behavior
-  void set_behavior(const std::string& key, BehaviorRule rule) {
-    behaviors_[key] = rule;
-  }
+  void set_behavior(const std::string& key, BehaviorRule rule) { behaviors_[key] = rule; }
 
   // Execute with behavior
   Response execute(const std::string& input) {
@@ -89,20 +87,14 @@ class ProgrammableMock {
   }
 
   // Recording
-  void record_interaction(const std::string& input) {
-    interactions_.push_back(input);
-  }
+  void record_interaction(const std::string& input) { interactions_.push_back(input); }
 
-  const std::vector<std::string>& get_interactions() const {
-    return interactions_;
-  }
+  const std::vector<std::string>& get_interactions() const { return interactions_; }
 
   void clear_interactions() { interactions_.clear(); }
 
   // Playback
-  void record_response(const Response& resp) {
-    recorded_responses_.push_back(resp);
-  }
+  void record_response(const Response& resp) { recorded_responses_.push_back(resp); }
 
   Response playback(size_t index) {
     if (index < recorded_responses_.size()) {
@@ -135,13 +127,11 @@ TEST(ProgrammableMockBehavior, FlexibleMockConfiguration) {
 
   // Test 1.2: Multiple behaviors
   {
-    mock.set_behavior("success", [](const std::string&) {
-      return ProgrammableMock::Response{"ok", 200, 0};
-    });
+    mock.set_behavior("success",
+                      [](const std::string&) { return ProgrammableMock::Response{"ok", 200, 0}; });
 
-    mock.set_behavior("error", [](const std::string&) {
-      return ProgrammableMock::Response{"failed", 500, 0};
-    });
+    mock.set_behavior(
+        "error", [](const std::string&) { return ProgrammableMock::Response{"failed", 500, 0}; });
 
     auto resp1 = mock.execute("success_case");
     ASSERT_EQ(resp1.status_code, 200);
@@ -152,15 +142,13 @@ TEST(ProgrammableMockBehavior, FlexibleMockConfiguration) {
 
   // Test 1.3: Input-based behavior
   {
-    mock.set_behavior("echo", [](const std::string& input) {
-      return ProgrammableMock::Response{input, 200, 0};
-    });
+    mock.set_behavior(
+        "echo", [](const std::string& input) { return ProgrammableMock::Response{input, 200, 0}; });
 
     auto resp = mock.execute("echo_hello");
     EXPECT_NE(std::string::npos, resp.data.find("echo_hello"));
   }
 }
-
 
 // Test 2: State-based mock behavior
 TEST(ProgrammableMockBehavior, StateBasedMockBehavior) {
@@ -320,8 +308,7 @@ TEST(ProgrammableMockBehavior, MockResponsePlayback) {
   {
     ProgrammableMock mock2;  // Use fresh mock to avoid interference
     for (size_t i = 0; i < 5; ++i) {
-      mock2.record_response(
-          ProgrammableMock::Response{"seq_" + std::to_string(i), 200, 0});
+      mock2.record_response(ProgrammableMock::Response{"seq_" + std::to_string(i), 200, 0});
     }
 
     for (size_t i = 0; i < 5; ++i) {

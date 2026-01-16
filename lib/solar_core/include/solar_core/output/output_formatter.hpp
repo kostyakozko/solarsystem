@@ -17,8 +17,8 @@
 #include <string>
 #include <vector>
 
-#include "solar_core/export.hpp"
 #include "solar_core/bodies/body_collection.hpp"
+#include "solar_core/export.hpp"
 #include "solar_core/simulation/simulation_engine.hpp"
 #include "solar_utils/expected.hpp"
 
@@ -28,21 +28,21 @@ namespace SolarSystem::Output {
  * @brief Supported output formats
  */
 enum class OutputFormat {
-  TEXT,       // Human-readable text format (default/legacy)
-  JSON,       // JSON format for programmatic access
-  CSV,        // CSV format for spreadsheet analysis
-  XML,        // XML format for structured data exchange
-  BINARY,     // Binary format for efficient storage
-  MARKDOWN    // Markdown format for documentation
+  TEXT,     // Human-readable text format (default/legacy)
+  JSON,     // JSON format for programmatic access
+  CSV,      // CSV format for spreadsheet analysis
+  XML,      // XML format for structured data exchange
+  BINARY,   // Binary format for efficient storage
+  MARKDOWN  // Markdown format for documentation
 };
 
 /**
  * @brief Output quality levels
  */
 enum class QualityLevel {
-  MINIMAL,     // Minimal output (positions only)
-  STANDARD,    // Standard output (positions + velocities)
-  DETAILED,    // Detailed output (+ energies, momentum)
+  MINIMAL,       // Minimal output (positions only)
+  STANDARD,      // Standard output (positions + velocities)
+  DETAILED,      // Detailed output (+ energies, momentum)
   COMPREHENSIVE  // Comprehensive output (all available data)
 };
 
@@ -50,10 +50,10 @@ enum class QualityLevel {
  * @brief Output compression types
  */
 enum class CompressionType {
-  NONE,    // No compression
-  GZIP,    // GZIP compression
-  ZLIB,    // ZLIB compression
-  CUSTOM   // Custom compression
+  NONE,   // No compression
+  GZIP,   // GZIP compression
+  ZLIB,   // ZLIB compression
+  CUSTOM  // Custom compression
 };
 
 /**
@@ -206,9 +206,8 @@ struct FormattedOutput {
   /**
    * @brief Write to file
    */
-  [[nodiscard]] Utils::Expected<void, std::string> write_to_file(
-      const std::filesystem::path& path,
-      bool create_backup = false) const;
+  [[nodiscard]] Utils::Expected<void, std::string> write_to_file(const std::filesystem::path& path,
+                                                                 bool create_backup = false) const;
 
   /**
    * @brief Get content size
@@ -230,45 +229,38 @@ class SOLAR_CORE_API OutputFormatter {
    * @brief Format simulation results
    */
   [[nodiscard]] static Utils::Expected<FormattedOutput, std::string> format(
-      const Simulation::SimulationEngine& engine,
-      const OutputOptions& options = {});
+      const Simulation::SimulationEngine& engine, const OutputOptions& options = {});
 
   /**
    * @brief Format body collection
    */
   [[nodiscard]] static Utils::Expected<FormattedOutput, std::string> format_bodies(
-      const Bodies::BodyCollection& bodies,
-      std::chrono::system_clock::time_point time_point,
+      const Bodies::BodyCollection& bodies, std::chrono::system_clock::time_point time_point,
       const OutputOptions& options = {});
 
   /**
    * @brief Format simulation state
    */
   [[nodiscard]] static Utils::Expected<FormattedOutput, std::string> format_state(
-      const Simulation::SimulationState& state,
-      const OutputOptions& options = {});
+      const Simulation::SimulationState& state, const OutputOptions& options = {});
 
   /**
    * @brief Validate output data
    */
-  [[nodiscard]] static ValidationResult validate_output(
-      const Bodies::BodyCollection& bodies,
-      const Simulation::SimulationState& state);
+  [[nodiscard]] static ValidationResult validate_output(const Bodies::BodyCollection& bodies,
+                                                        const Simulation::SimulationState& state);
 
   /**
    * @brief Compress output data (returns empty string on failure)
    */
-  [[nodiscard]] static std::string compress(
-      const std::string& data,
-      CompressionType type,
-      int level = 6);
+  [[nodiscard]] static std::string compress(const std::string& data, CompressionType type,
+                                            int level = 6);
 
   /**
    * @brief Decompress output data (returns empty string on failure)
    */
-  [[nodiscard]] static std::string decompress(
-      const std::string& compressed_data,
-      CompressionType type);
+  [[nodiscard]] static std::string decompress(const std::string& compressed_data,
+                                              CompressionType type);
 
   /**
    * @brief Get supported formats
@@ -287,44 +279,36 @@ class SOLAR_CORE_API OutputFormatter {
       const std::string& format_str);
 
   // Helper functions (public for use by OutputMetadata)
-  [[nodiscard]] static std::string format_timestamp(
-      std::chrono::system_clock::time_point tp);
+  [[nodiscard]] static std::string format_timestamp(std::chrono::system_clock::time_point tp);
 
-  [[nodiscard]] static std::string format_vector(
-      const Math::Vector3d& vec,
-      int precision);
+  [[nodiscard]] static std::string format_vector(const Math::Vector3d& vec, int precision);
 
  private:
-  // Format-specific implementations (using int as error code to avoid Expected<string,string> issue)
-  [[nodiscard]] static std::string format_as_text(
-      const Bodies::BodyCollection& bodies,
-      const Simulation::SimulationState& state,
-      const OutputOptions& options);
+  // Format-specific implementations (using int as error code to avoid Expected<string,string>
+  // issue)
+  [[nodiscard]] static std::string format_as_text(const Bodies::BodyCollection& bodies,
+                                                  const Simulation::SimulationState& state,
+                                                  const OutputOptions& options);
 
-  [[nodiscard]] static std::string format_as_json(
-      const Bodies::BodyCollection& bodies,
-      const Simulation::SimulationState& state,
-      const OutputOptions& options);
+  [[nodiscard]] static std::string format_as_json(const Bodies::BodyCollection& bodies,
+                                                  const Simulation::SimulationState& state,
+                                                  const OutputOptions& options);
 
-  [[nodiscard]] static std::string format_as_csv(
-      const Bodies::BodyCollection& bodies,
-      const Simulation::SimulationState& state,
-      const OutputOptions& options);
+  [[nodiscard]] static std::string format_as_csv(const Bodies::BodyCollection& bodies,
+                                                 const Simulation::SimulationState& state,
+                                                 const OutputOptions& options);
 
-  [[nodiscard]] static std::string format_as_xml(
-      const Bodies::BodyCollection& bodies,
-      const Simulation::SimulationState& state,
-      const OutputOptions& options);
+  [[nodiscard]] static std::string format_as_xml(const Bodies::BodyCollection& bodies,
+                                                 const Simulation::SimulationState& state,
+                                                 const OutputOptions& options);
 
-  [[nodiscard]] static std::string format_as_markdown(
-      const Bodies::BodyCollection& bodies,
-      const Simulation::SimulationState& state,
-      const OutputOptions& options);
+  [[nodiscard]] static std::string format_as_markdown(const Bodies::BodyCollection& bodies,
+                                                      const Simulation::SimulationState& state,
+                                                      const OutputOptions& options);
 
   // Private helper functions
-  [[nodiscard]] static Bodies::BodyCollection apply_filter(
-      const Bodies::BodyCollection& bodies,
-      const OutputFilter& filter);
+  [[nodiscard]] static Bodies::BodyCollection apply_filter(const Bodies::BodyCollection& bodies,
+                                                           const OutputFilter& filter);
 };
 
 /**
@@ -336,17 +320,15 @@ class SOLAR_CORE_API OutputArchiver {
    * @brief Create archive from multiple outputs
    */
   [[nodiscard]] static Utils::Expected<void, std::string> create_archive(
-      const std::vector<std::filesystem::path>& files,
-      const std::filesystem::path& archive_path,
+      const std::vector<std::filesystem::path>& files, const std::filesystem::path& archive_path,
       CompressionType compression = CompressionType::GZIP);
 
   /**
    * @brief Extract archive
    */
   [[nodiscard]] static Utils::Expected<std::vector<std::filesystem::path>, std::string>
-  extract_archive(
-      const std::filesystem::path& archive_path,
-      const std::filesystem::path& destination);
+  extract_archive(const std::filesystem::path& archive_path,
+                  const std::filesystem::path& destination);
 
   /**
    * @brief List archive contents

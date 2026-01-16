@@ -67,9 +67,8 @@ class SOLAR_CORE_API InputSanitizer {
   /**
    * @brief Validate password strength
    */
-  [[nodiscard]] static ValidationResult validate_password(
-      const std::string& password,
-      size_t min_length = 8);
+  [[nodiscard]] static ValidationResult validate_password(const std::string& password,
+                                                          size_t min_length = 8);
 
   /**
    * @brief Validate URL
@@ -124,18 +123,14 @@ class SOLAR_CORE_API InputSanitizer {
   /**
    * @brief Validate integer range
    */
-  [[nodiscard]] static ValidationResult validate_integer_range(
-      int value,
-      int min,
-      int max);
+  [[nodiscard]] static ValidationResult validate_integer_range(int value, int min, int max);
 
   /**
    * @brief Validate string length
    */
-  [[nodiscard]] static ValidationResult validate_string_length(
-      const std::string& str,
-      size_t min_length,
-      size_t max_length);
+  [[nodiscard]] static ValidationResult validate_string_length(const std::string& str,
+                                                               size_t min_length,
+                                                               size_t max_length);
 };
 
 /**
@@ -151,9 +146,8 @@ class RequestValidator {
   /**
    * @brief Validate HTTP header
    */
-  [[nodiscard]] static ValidationResult validate_header(
-      const std::string& name,
-      const std::string& value);
+  [[nodiscard]] static ValidationResult validate_header(const std::string& name,
+                                                        const std::string& value);
 
   /**
    * @brief Validate content type
@@ -163,7 +157,8 @@ class RequestValidator {
   /**
    * @brief Validate request size
    */
-  [[nodiscard]] static bool is_valid_request_size(size_t size, size_t max_size = 10485760);  // 10MB default
+  [[nodiscard]] static bool is_valid_request_size(size_t size,
+                                                  size_t max_size = 10485760);  // 10MB default
 
   /**
    * @brief Sanitize query parameters

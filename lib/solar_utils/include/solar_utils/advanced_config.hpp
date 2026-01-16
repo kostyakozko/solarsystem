@@ -1,15 +1,14 @@
 #pragma once
 
-#include "solar_utils/export.hpp"
-
 #include <filesystem>
 #include <map>
 #include <optional>
 #include <string>
 #include <vector>
 
-#include "solar_utils/expected.hpp"
 #include "solar_utils/config.hpp"
+#include "solar_utils/expected.hpp"
+#include "solar_utils/export.hpp"
 
 namespace SolarSystem::Utils::Advanced {
 
@@ -93,8 +92,7 @@ class SOLAR_UTILS_API AdvancedConfigManager {
       const Config::AppConfig& config) const;
 
   // Conflict detection
-  [[nodiscard]] std::vector<ConfigConflict> detect_conflicts(
-      const Config::AppConfig& config) const;
+  [[nodiscard]] std::vector<ConfigConflict> detect_conflicts(const Config::AppConfig& config) const;
 
   // Template management
   [[nodiscard]] std::optional<Config::AppConfig> apply_template(const std::string& name) const;

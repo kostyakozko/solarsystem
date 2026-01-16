@@ -11,15 +11,15 @@
 
 #pragma once
 
-#include "solar_core/export.hpp"
-#include "solar_core/ui/accessibility.hpp"
-#include "solar_core/ui/progress_indicator.hpp"
-#include "solar_core/ui/status_display.hpp"
-
 #include <functional>
 #include <memory>
 #include <string>
 #include <vector>
+
+#include "solar_core/export.hpp"
+#include "solar_core/ui/accessibility.hpp"
+#include "solar_core/ui/progress_indicator.hpp"
+#include "solar_core/ui/status_display.hpp"
 
 namespace SolarSystem::UI {
 
@@ -123,7 +123,7 @@ class SOLAR_CORE_API CLIInterface {
    * @brief Prompt user for input
    */
   [[nodiscard]] std::string prompt(const std::string& message,
-                                    const std::string& default_value = "");
+                                   const std::string& default_value = "");
 
   /**
    * @brief Display keyboard shortcuts

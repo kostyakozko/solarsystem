@@ -21,8 +21,8 @@
 #ifndef GTEST_COMPAT_HPP
 #define GTEST_COMPAT_HPP
 
-#include <gtest/gtest.h>
 #include <gmock/gmock.h>
+#include <gtest/gtest.h>
 #include <sys/stat.h>
 
 #include <chrono>
@@ -235,8 +235,7 @@ class GTestCompatSuite {
 // TEST_CASE macro - creates a Google Test that uses the current suite name
 // Note: This uses a unique test name based on line number since the old
 // pattern used string names which aren't valid C++ identifiers
-#define TEST_CASE(name) \
-  TEST(LegacyTests, GTEST_CONCAT_TOKEN_(TestCase_, __LINE__))
+#define TEST_CASE(name) TEST(LegacyTests, GTEST_CONCAT_TOKEN_(TestCase_, __LINE__))
 
 // ============================================================================
 // Test Utilities Namespace
@@ -338,8 +337,8 @@ inline void cleanup_test_files(const std::vector<std::string>& filenames) {
 // Custom matcher for near-equality with relative tolerance
 MATCHER_P2(NearWithRelTolerance, expected, rel_tolerance,
            std::string(negation ? "isn't" : "is") + " approximately " +
-               ::testing::PrintToString(expected) + " (rel_tol=" +
-               ::testing::PrintToString(rel_tolerance) + ")") {
+               ::testing::PrintToString(expected) +
+               " (rel_tol=" + ::testing::PrintToString(rel_tolerance) + ")") {
   return TestUtils::nearly_equal(arg, expected, rel_tolerance);
 }
 

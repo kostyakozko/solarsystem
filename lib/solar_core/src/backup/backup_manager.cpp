@@ -5,15 +5,15 @@
 
 #include "solar_core/backup/backup_manager.hpp"
 
-#include <fstream>
-#include <sstream>
-#include <iomanip>
-#include <algorithm>
-#include <filesystem>
-#include <random>
-
 #include <openssl/evp.h>
 #include <zlib.h>
+
+#include <algorithm>
+#include <filesystem>
+#include <fstream>
+#include <iomanip>
+#include <random>
+#include <sstream>
 
 namespace SolarSystem::Backup {
 
@@ -33,9 +33,7 @@ void BackupManager::set_config(const BackupConfig& config) {
   }
 }
 
-BackupConfig BackupManager::get_config() const {
-  return config_;
-}
+BackupConfig BackupManager::get_config() const { return config_; }
 
 std::string BackupManager::generate_backup_id() const {
   auto now = std::chrono::system_clock::now();
@@ -46,8 +44,7 @@ std::string BackupManager::generate_backup_id() const {
   std::uniform_int_distribution<> dis(1000, 9999);
 
   std::ostringstream oss;
-  oss << "backup_" << std::put_time(std::localtime(&time_t), "%Y%m%d_%H%M%S")
-      << "_" << dis(gen);
+  oss << "backup_" << std::put_time(std::localtime(&time_t), "%Y%m%d_%H%M%S") << "_" << dis(gen);
 
   return oss.str();
 }
@@ -90,15 +87,13 @@ std::string BackupManager::calculate_checksum(const std::string& file_path) cons
 
   std::ostringstream oss;
   for (unsigned int i = 0; i < hash_len; ++i) {
-    oss << std::hex << std::setfill('0') << std::setw(2)
-        << static_cast<int>(hash[i]);
+    oss << std::hex << std::setfill('0') << std::setw(2) << static_cast<int>(hash[i]);
   }
 
   return oss.str();
 }
 
-bool BackupManager::compress_file(const std::string& source,
-                                  const std::string& dest) const {
+bool BackupManager::compress_file(const std::string& source, const std::string& dest) const {
   gzFile out_file = gzopen(dest.c_str(), "wb");
   if (!out_file) {
     return false;
@@ -124,8 +119,7 @@ bool BackupManager::compress_file(const std::string& source,
   return true;
 }
 
-bool BackupManager::decompress_file(const std::string& source,
-                                   const std::string& dest) const {
+bool BackupManager::decompress_file(const std::string& source, const std::string& dest) const {
   gzFile in_file = gzopen(source.c_str(), "rb");
   if (!in_file) {
     return false;
@@ -150,7 +144,7 @@ bool BackupManager::decompress_file(const std::string& source,
 }
 
 BackupResult BackupManager::create_backup(const std::string& source_path,
-                                         const std::string& backup_name) {
+                                          const std::string& backup_name) {
   if (!fs::exists(source_path)) {
     return BackupResult{false, "Source path does not exist", std::nullopt};
   }
@@ -217,15 +211,12 @@ BackupResult BackupManager::create_backup(const std::string& source_path,
   return BackupResult{true, "Backup created successfully", info};
 }
 
-BackupResult BackupManager::create_incremental_backup(
-    const std::string& source_path,
-    const std::string& base_backup_id) {
-
+BackupResult BackupManager::create_incremental_backup(const std::string& source_path,
+                                                      const std::string& base_backup_id) {
   // Find base backup
-  auto it = std::find_if(backups_.begin(), backups_.end(),
-                        [&base_backup_id](const BackupInfo& info) {
-                          return info.backup_id == base_backup_id;
-                        });
+  auto it = std::find_if(
+      backups_.begin(), backups_.end(),
+      [&base_backup_id](const BackupInfo& info) { return info.backup_id == base_backup_id; });
 
   if (it == backups_.end()) {
     return BackupResult{false, "Base backup not found", std::nullopt};
@@ -296,12 +287,11 @@ BackupResult BackupManager::create_incremental_backup(
 }
 
 RecoveryResult BackupManager::restore_backup(const std::string& backup_id,
-                                            const std::string& destination_path) {
+                                             const std::string& destination_path) {
   // Find backup
-  auto it = std::find_if(backups_.begin(), backups_.end(),
-                        [&backup_id](const BackupInfo& info) {
-                          return info.backup_id == backup_id;
-                        });
+  auto it = std::find_if(backups_.begin(), backups_.end(), [&backup_id](const BackupInfo& info) {
+    return info.backup_id == backup_id;
+  });
 
   if (it == backups_.end()) {
     return RecoveryResult{false, "Backup not found", ""};
@@ -321,8 +311,7 @@ RecoveryResult BackupManager::restore_backup(const std::string& backup_id,
     success = decompress_file(info.backup_path, destination_path);
   } else {
     try {
-      fs::copy_file(info.backup_path, destination_path,
-                   fs::copy_options::overwrite_existing);
+      fs::copy_file(info.backup_path, destination_path, fs::copy_options::overwrite_existing);
       success = true;
     } catch (const std::exception&) {
       success = false;
@@ -337,7 +326,7 @@ RecoveryResult BackupManager::restore_backup(const std::string& backup_id,
 }
 
 RecoveryResult BackupManager::restore_latest(const std::string& source_path,
-                                            const std::string& destination_path) {
+                                             const std::string& destination_path) {
   auto latest = get_latest_backup(source_path);
   if (!latest) {
     return RecoveryResult{false, "No backup found for source path", ""};
@@ -353,18 +342,15 @@ std::vector<BackupInfo> BackupManager::list_backups(const std::string& source_pa
 
   std::vector<BackupInfo> filtered;
   std::copy_if(backups_.begin(), backups_.end(), std::back_inserter(filtered),
-              [&source_path](const BackupInfo& info) {
-                return info.source_path == source_path;
-              });
+               [&source_path](const BackupInfo& info) { return info.source_path == source_path; });
 
   return filtered;
 }
 
 bool BackupManager::delete_backup(const std::string& backup_id) {
-  auto it = std::find_if(backups_.begin(), backups_.end(),
-                        [&backup_id](const BackupInfo& info) {
-                          return info.backup_id == backup_id;
-                        });
+  auto it = std::find_if(backups_.begin(), backups_.end(), [&backup_id](const BackupInfo& info) {
+    return info.backup_id == backup_id;
+  });
 
   if (it == backups_.end()) {
     return false;
@@ -384,10 +370,9 @@ bool BackupManager::delete_backup(const std::string& backup_id) {
 }
 
 bool BackupManager::verify_backup(const std::string& backup_id) {
-  auto it = std::find_if(backups_.begin(), backups_.end(),
-                        [&backup_id](const BackupInfo& info) {
-                          return info.backup_id == backup_id;
-                        });
+  auto it = std::find_if(backups_.begin(), backups_.end(), [&backup_id](const BackupInfo& info) {
+    return info.backup_id == backup_id;
+  });
 
   if (it == backups_.end()) {
     return false;
@@ -401,22 +386,19 @@ void BackupManager::cleanup_old_backups() {
   auto now = std::chrono::system_clock::now();
 
   // Remove backups older than retention period
-  backups_.erase(
-      std::remove_if(backups_.begin(), backups_.end(),
-                    [this, now](const BackupInfo& info) {
-                      auto age = std::chrono::duration_cast<std::chrono::hours>(
-                          now - info.timestamp);
-                      return age > config_.retention_period;
-                    }),
-      backups_.end());
+  backups_.erase(std::remove_if(backups_.begin(), backups_.end(),
+                                [this, now](const BackupInfo& info) {
+                                  auto age = std::chrono::duration_cast<std::chrono::hours>(
+                                      now - info.timestamp);
+                                  return age > config_.retention_period;
+                                }),
+                 backups_.end());
 
   // Remove excess backups if over max count
   if (backups_.size() > config_.max_backups) {
     // Sort by timestamp (oldest first)
     std::sort(backups_.begin(), backups_.end(),
-             [](const BackupInfo& a, const BackupInfo& b) {
-               return a.timestamp < b.timestamp;
-             });
+              [](const BackupInfo& a, const BackupInfo& b) { return a.timestamp < b.timestamp; });
 
     // Remove oldest backups
     size_t to_remove = backups_.size() - config_.max_backups;
@@ -433,13 +415,14 @@ void BackupManager::cleanup_old_backups() {
 }
 
 void BackupManager::enable_auto_backup(const std::string& source_path,
-                                      std::chrono::minutes interval) {
+                                       std::chrono::minutes interval) {
   if (!fs::exists(source_path) || interval.count() <= 0) {
     return;
   }
 
   // Create initial backup with interval information in the name
-  std::string backup_name = "auto_" + std::to_string(interval.count()) + "min_" + generate_backup_id();
+  std::string backup_name =
+      "auto_" + std::to_string(interval.count()) + "min_" + generate_backup_id();
   create_backup(source_path, backup_name);
 
   // Auto-backup configuration is stored and validated
@@ -453,13 +436,12 @@ void BackupManager::disable_auto_backup(const std::string& source_path) {
   }
 
   // Remove all auto-backups for this source path
-  backups_.erase(
-      std::remove_if(backups_.begin(), backups_.end(),
-                    [&source_path](const BackupInfo& info) {
-                      return info.source_path == source_path &&
-                             info.backup_id.find("auto_") == 0;
-                    }),
-      backups_.end());
+  backups_.erase(std::remove_if(backups_.begin(), backups_.end(),
+                                [&source_path](const BackupInfo& info) {
+                                  return info.source_path == source_path &&
+                                         info.backup_id.find("auto_") == 0;
+                                }),
+                 backups_.end());
 }
 
 size_t BackupManager::get_total_backup_size() const {
@@ -470,22 +452,17 @@ size_t BackupManager::get_total_backup_size() const {
   return total;
 }
 
-size_t BackupManager::get_backup_count() const {
-  return backups_.size();
-}
+size_t BackupManager::get_backup_count() const { return backups_.size(); }
 
-std::optional<BackupInfo> BackupManager::get_latest_backup(
-    const std::string& source_path) const {
-
+std::optional<BackupInfo> BackupManager::get_latest_backup(const std::string& source_path) const {
   auto filtered = list_backups(source_path);
   if (filtered.empty()) {
     return std::nullopt;
   }
 
-  auto latest = std::max_element(filtered.begin(), filtered.end(),
-                                [](const BackupInfo& a, const BackupInfo& b) {
-                                  return a.timestamp < b.timestamp;
-                                });
+  auto latest = std::max_element(
+      filtered.begin(), filtered.end(),
+      [](const BackupInfo& a, const BackupInfo& b) { return a.timestamp < b.timestamp; });
 
   return *latest;
 }

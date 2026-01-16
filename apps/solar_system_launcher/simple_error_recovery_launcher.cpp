@@ -47,23 +47,12 @@ enum class SimpleErrorType {
 /**
  * @brief Simple error severity levels
  */
-enum class SimpleErrorSeverity {
-  Info,
-  Warning,
-  Error,
-  Critical
-};
+enum class SimpleErrorSeverity { Info, Warning, Error, Critical };
 
 /**
  * @brief Simple recovery strategy
  */
-enum class SimpleRecoveryStrategy {
-  None,
-  Retry,
-  Fallback,
-  UserGuidance,
-  Automatic
-};
+enum class SimpleRecoveryStrategy { None, Retry, Fallback, UserGuidance, Automatic };
 
 /**
  * @brief Simple error information
@@ -76,15 +65,16 @@ struct SimpleError {
   std::vector<std::string> suggestions;
   SimpleRecoveryStrategy recommended_strategy = SimpleRecoveryStrategy::None;
 
-  SimpleError(SimpleErrorType t, const std::string& msg, SimpleErrorSeverity sev = SimpleErrorSeverity::Error)
-    : type(t), severity(sev), message(msg) {}
+  SimpleError(SimpleErrorType t, const std::string& msg,
+              SimpleErrorSeverity sev = SimpleErrorSeverity::Error)
+      : type(t), severity(sev), message(msg) {}
 };
 
 /**
  * @brief Simple error recovery system
  */
 class SimpleErrorRecoverySystem {
-public:
+ public:
   /**
    * @brief Handle error with simple recovery
    */
@@ -130,7 +120,7 @@ public:
     // Test 1: Network error
     std::cout << "Test 1: Network Error Recovery\n";
     SimpleError network_error(SimpleErrorType::NetworkError,
-                             "Failed to connect to JPL HORIZONS API");
+                              "Failed to connect to JPL HORIZONS API");
     network_error.context = "Data fetching operation";
     network_error.suggestions = {"Check network connectivity", "Enable offline mode"};
     handle_error(network_error);
@@ -139,8 +129,7 @@ public:
 
     // Test 2: Cache error
     std::cout << "Test 2: Cache Error Recovery\n";
-    SimpleError cache_error(SimpleErrorType::CacheError,
-                           "Cache file is corrupted or missing");
+    SimpleError cache_error(SimpleErrorType::CacheError, "Cache file is corrupted or missing");
     cache_error.context = "Cache validation";
     cache_error.suggestions = {"Rebuild cache from JSON", "Re-download data"};
     handle_error(cache_error);
@@ -150,7 +139,7 @@ public:
     // Test 3: Configuration error
     std::cout << "Test 3: Configuration Error Recovery\n";
     SimpleError config_error(SimpleErrorType::ConfigurationError,
-                            "Invalid date format in configuration");
+                             "Invalid date format in configuration");
     config_error.context = "Argument parsing";
     config_error.suggestions = {"Use YYYY-MM-DD format", "Check configuration file"};
     handle_error(config_error);
@@ -160,7 +149,7 @@ public:
     // Test 4: Simulation error
     std::cout << "Test 4: Simulation Error Recovery\n";
     SimpleError sim_error(SimpleErrorType::SimulationError,
-                         "Insufficient memory for large simulation");
+                          "Insufficient memory for large simulation");
     sim_error.severity = SimpleErrorSeverity::Critical;
     sim_error.context = "Simulation initialization";
     sim_error.suggestions = {"Reduce number of bodies", "Use smaller timestep"};
@@ -169,7 +158,7 @@ public:
     std::cout << "\n✅ Error recovery testing completed\n";
   }
 
-private:
+ private:
   /**
    * @brief Determine recovery strategy for error
    */
@@ -182,8 +171,9 @@ private:
       case SimpleErrorType::ConfigurationError:
         return SimpleRecoveryStrategy::UserGuidance;
       case SimpleErrorType::SimulationError:
-        return error.severity == SimpleErrorSeverity::Critical ?
-               SimpleRecoveryStrategy::UserGuidance : SimpleRecoveryStrategy::Retry;
+        return error.severity == SimpleErrorSeverity::Critical
+                   ? SimpleRecoveryStrategy::UserGuidance
+                   : SimpleRecoveryStrategy::Retry;
       case SimpleErrorType::ValidationError:
         return SimpleRecoveryStrategy::UserGuidance;
       default:
@@ -199,21 +189,22 @@ private:
       case SimpleRecoveryStrategy::Automatic:
         std::cout << "  🔄 Attempting automatic recovery...\n";
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
-        return true; // Simulate successful automatic recovery
+        return true;  // Simulate successful automatic recovery
 
       case SimpleRecoveryStrategy::Fallback:
         std::cout << "  🔄 Switching to fallback mode...\n";
         std::this_thread::sleep_for(std::chrono::milliseconds(300));
-        return true; // Simulate successful fallback
+        return true;  // Simulate successful fallback
 
       case SimpleRecoveryStrategy::Retry:
         std::cout << "  🔄 Retrying operation...\n";
         std::this_thread::sleep_for(std::chrono::milliseconds(400));
-        return error.severity != SimpleErrorSeverity::Critical; // Retry success depends on severity
+        return error.severity !=
+               SimpleErrorSeverity::Critical;  // Retry success depends on severity
 
       case SimpleRecoveryStrategy::UserGuidance:
         std::cout << "  👤 User guidance required for recovery\n";
-        return false; // Requires user intervention
+        return false;  // Requires user intervention
 
       default:
         return false;
@@ -225,12 +216,18 @@ private:
    */
   static std::string error_type_to_string(SimpleErrorType type) {
     switch (type) {
-      case SimpleErrorType::NetworkError: return "Network Error";
-      case SimpleErrorType::CacheError: return "Cache Error";
-      case SimpleErrorType::ConfigurationError: return "Configuration Error";
-      case SimpleErrorType::SimulationError: return "Simulation Error";
-      case SimpleErrorType::ValidationError: return "Validation Error";
-      default: return "Unknown Error";
+      case SimpleErrorType::NetworkError:
+        return "Network Error";
+      case SimpleErrorType::CacheError:
+        return "Cache Error";
+      case SimpleErrorType::ConfigurationError:
+        return "Configuration Error";
+      case SimpleErrorType::SimulationError:
+        return "Simulation Error";
+      case SimpleErrorType::ValidationError:
+        return "Validation Error";
+      default:
+        return "Unknown Error";
     }
   }
 
@@ -239,11 +236,16 @@ private:
    */
   static std::string severity_to_string(SimpleErrorSeverity severity) {
     switch (severity) {
-      case SimpleErrorSeverity::Info: return "Info";
-      case SimpleErrorSeverity::Warning: return "Warning";
-      case SimpleErrorSeverity::Error: return "Error";
-      case SimpleErrorSeverity::Critical: return "Critical";
-      default: return "Unknown";
+      case SimpleErrorSeverity::Info:
+        return "Info";
+      case SimpleErrorSeverity::Warning:
+        return "Warning";
+      case SimpleErrorSeverity::Error:
+        return "Error";
+      case SimpleErrorSeverity::Critical:
+        return "Critical";
+      default:
+        return "Unknown";
     }
   }
 
@@ -252,12 +254,18 @@ private:
    */
   static std::string strategy_to_string(SimpleRecoveryStrategy strategy) {
     switch (strategy) {
-      case SimpleRecoveryStrategy::None: return "None";
-      case SimpleRecoveryStrategy::Retry: return "Retry";
-      case SimpleRecoveryStrategy::Fallback: return "Fallback";
-      case SimpleRecoveryStrategy::UserGuidance: return "User Guidance";
-      case SimpleRecoveryStrategy::Automatic: return "Automatic";
-      default: return "Unknown";
+      case SimpleRecoveryStrategy::None:
+        return "None";
+      case SimpleRecoveryStrategy::Retry:
+        return "Retry";
+      case SimpleRecoveryStrategy::Fallback:
+        return "Fallback";
+      case SimpleRecoveryStrategy::UserGuidance:
+        return "User Guidance";
+      case SimpleRecoveryStrategy::Automatic:
+        return "Automatic";
+      default:
+        return "Unknown";
     }
   }
 };
@@ -303,7 +311,7 @@ struct SimpleErrorRecoveryConfig {
  * @brief Simple error prevention system
  */
 class SimpleErrorPrevention {
-public:
+ public:
   /**
    * @brief Check for potential issues and prevent errors
    */
@@ -353,11 +361,11 @@ public:
     std::cout << "\n✅ Error prevention checks completed\n";
   }
 
-private:
+ private:
   static bool check_network_connectivity() {
     // Simulate network check
     std::this_thread::sleep_for(std::chrono::milliseconds(200));
-    return true; // Assume network is OK for demo
+    return true;  // Assume network is OK for demo
   }
 
   static bool check_cache_integrity() {
@@ -371,36 +379,30 @@ private:
   static bool check_system_resources() {
     // Simulate resource check
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    return true; // Assume resources are OK for demo
+    return true;  // Assume resources are OK for demo
   }
 
   static bool check_configuration() {
     // Simulate configuration check
-    return true; // Assume config is OK for demo
+    return true;  // Assume config is OK for demo
   }
 
-  static void enable_offline_mode() {
-    std::cout << "    📴 Offline mode enabled\n";
-  }
+  static void enable_offline_mode() { std::cout << "    📴 Offline mode enabled\n"; }
 
-  static void prepare_cache_rebuild() {
-    std::cout << "    🔧 Cache rebuild prepared\n";
-  }
+  static void prepare_cache_rebuild() { std::cout << "    🔧 Cache rebuild prepared\n"; }
 
   static void optimize_for_limited_resources() {
     std::cout << "    ⚡ Resource optimization enabled\n";
   }
 
-  static void use_safe_defaults() {
-    std::cout << "    🛡️  Safe defaults applied\n";
-  }
+  static void use_safe_defaults() { std::cout << "    🛡️  Safe defaults applied\n"; }
 };
 
 /**
  * @brief Enhanced launcher UI with simple error recovery
  */
 class SimpleErrorRecoveryUI {
-public:
+ public:
   /**
    * @brief Print main header
    */
@@ -453,7 +455,7 @@ public:
  * @brief Simple argument parser
  */
 class SimpleArgumentParser {
-public:
+ public:
   [[nodiscard]] static std::optional<SimpleErrorRecoveryConfig> parse(int argc, char* argv[]) {
     SimpleErrorRecoveryConfig config;
 
@@ -513,7 +515,7 @@ public:
           } else {
             // Demonstrate error recovery for invalid date
             SimpleError date_error(SimpleErrorType::ValidationError,
-                                 "Invalid date format: " + date_str);
+                                   "Invalid date format: " + date_str);
             date_error.context = "Date argument parsing";
             date_error.suggestions = validation_result.suggestions;
 
@@ -524,7 +526,7 @@ public:
       } else {
         // Demonstrate error recovery for unknown argument
         SimpleError arg_error(SimpleErrorType::ConfigurationError,
-                             "Unknown argument: " + std::string(arg));
+                              "Unknown argument: " + std::string(arg));
         arg_error.context = "Command line parsing";
         arg_error.suggestions = {"Use --help to see available options"};
 
@@ -637,7 +639,6 @@ int main(int argc, char* argv[]) {
     // Handle data operations with error recovery
     if (config->fetch_data || config->update_data || config->validate_cache ||
         config->clean_cache || config->rebuild_cache) {
-
       std::cout << "🔄 Executing data operations with error recovery\n\n";
 
       try {
@@ -651,7 +652,7 @@ int main(int argc, char* argv[]) {
 
             // Simulate network issue
             SimpleError network_error(SimpleErrorType::NetworkError,
-                                    "JPL HORIZONS API temporarily unavailable");
+                                      "JPL HORIZONS API temporarily unavailable");
             network_error.context = "Data fetching";
             network_error.suggestions = {"Switching to cached data", "Retry in offline mode"};
 
@@ -672,13 +673,13 @@ int main(int argc, char* argv[]) {
           // Check actual cache files
           std::filesystem::path cache_dir = "./cache";
           bool cache_exists = std::filesystem::exists(cache_dir / "ephemeris_cache.bin") ||
-                             std::filesystem::exists(cache_dir / "ephemeris_data.json");
+                              std::filesystem::exists(cache_dir / "ephemeris_data.json");
 
           if (!cache_exists) {
-            SimpleError cache_error(SimpleErrorType::CacheError,
-                                  "Cache files not found");
+            SimpleError cache_error(SimpleErrorType::CacheError, "Cache files not found");
             cache_error.context = "Cache validation";
-            cache_error.suggestions = {"Run --fetch to download data", "Check cache directory permissions"};
+            cache_error.suggestions = {"Run --fetch to download data",
+                                       "Check cache directory permissions"};
 
             SimpleErrorRecoverySystem::handle_error(cache_error);
           } else {
@@ -699,8 +700,9 @@ int main(int argc, char* argv[]) {
         }
 
       } catch (const std::exception& e) {
-        SimpleError exception_error(SimpleErrorType::UnknownError,
-                                  "Unexpected error during data operations: " + std::string(e.what()));
+        SimpleError exception_error(
+            SimpleErrorType::UnknownError,
+            "Unexpected error during data operations: " + std::string(e.what()));
         exception_error.context = "Data operations";
         SimpleErrorRecoverySystem::handle_error(exception_error);
         return 1;
@@ -727,7 +729,7 @@ int main(int argc, char* argv[]) {
           auto body_collection_result = selector.build();
           if (!body_collection_result.has_value()) {
             SimpleError body_error(SimpleErrorType::SimulationError,
-                                 "Failed to build body collection");
+                                   "Failed to build body collection");
             body_error.context = "Simulation initialization";
             body_error.suggestions = {"Check data availability", "Try with fewer bodies"};
 
@@ -748,7 +750,7 @@ int main(int argc, char* argv[]) {
 
             if (!simulation) {
               SimpleError sim_error(SimpleErrorType::SimulationError,
-                                  "Failed to create simulation: " + error_message);
+                                    "Failed to create simulation: " + error_message);
               sim_error.context = "Simulation creation";
               sim_error.suggestions = {"Reduce timestep", "Decrease iteration count"};
 
@@ -763,7 +765,7 @@ int main(int argc, char* argv[]) {
           }
         } catch (const std::exception& e) {
           SimpleError sim_exception(SimpleErrorType::SimulationError,
-                                  "Simulation error: " + std::string(e.what()));
+                                    "Simulation error: " + std::string(e.what()));
           sim_exception.context = "Simulation execution";
           SimpleErrorRecoverySystem::handle_error(sim_exception);
           return 1;
@@ -771,7 +773,7 @@ int main(int argc, char* argv[]) {
 
       } catch (const std::exception& e) {
         SimpleError exception_error(SimpleErrorType::UnknownError,
-                                  "Unexpected error during simulation: " + std::string(e.what()));
+                                    "Unexpected error during simulation: " + std::string(e.what()));
         exception_error.context = "Simulation execution";
         SimpleErrorRecoverySystem::handle_error(exception_error);
         return 1;
@@ -795,7 +797,7 @@ int main(int argc, char* argv[]) {
 
     // Final error recovery attempt
     SimpleError fatal_error(SimpleErrorType::UnknownError,
-                           "Fatal application error: " + std::string(e.what()));
+                            "Fatal application error: " + std::string(e.what()));
     fatal_error.severity = SimpleErrorSeverity::Critical;
     fatal_error.context = "Application main";
     SimpleErrorRecoverySystem::handle_error(fatal_error);

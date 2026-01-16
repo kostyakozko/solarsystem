@@ -8,14 +8,14 @@
 #include <cstring>
 
 #ifdef _WIN32
-#include <windows.h>
 #include <lmcons.h>
 #include <sddl.h>
+#include <windows.h>
 #else
+#include <grp.h>
+#include <pwd.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#include <pwd.h>
-#include <grp.h>
 #endif
 
 namespace SolarSystem::Utils::Platform {
@@ -130,8 +130,7 @@ std::optional<FilePermissions> PlatformSecurity::get_file_permissions(
 /**
  * @brief Set file permissions
  */
-bool PlatformSecurity::set_file_permissions(
-    const std::filesystem::path& path, int mode) {
+bool PlatformSecurity::set_file_permissions(const std::filesystem::path& path, int mode) {
 #ifdef _WIN32
   return set_file_permissions_windows(path, mode);
 #else
@@ -199,7 +198,6 @@ SecurityInfo PlatformSecurity::get_security_info_windows() {
 
 std::optional<FilePermissions> PlatformSecurity::get_file_permissions_windows(
     const std::filesystem::path& path) {
-
   FilePermissions perms;
   perms.can_read = false;
   perms.can_write = false;
@@ -223,8 +221,7 @@ std::optional<FilePermissions> PlatformSecurity::get_file_permissions_windows(
   return perms;
 }
 
-bool PlatformSecurity::set_file_permissions_windows(
-    const std::filesystem::path& path, int mode) {
+bool PlatformSecurity::set_file_permissions_windows(const std::filesystem::path& path, int mode) {
   // Windows doesn't use Unix-style permissions
   // Set read-only attribute based on write permission
   DWORD attrs = GetFileAttributesW(path.wstring().c_str());
@@ -254,7 +251,6 @@ SecurityInfo PlatformSecurity::get_security_info_posix() {
 
 std::optional<FilePermissions> PlatformSecurity::get_file_permissions_posix(
     const std::filesystem::path& path) {
-
   struct stat st;
   if (stat(path.c_str(), &st) != 0) {
     return std::nullopt;
@@ -294,8 +290,7 @@ std::optional<FilePermissions> PlatformSecurity::get_file_permissions_posix(
   return perms;
 }
 
-bool PlatformSecurity::set_file_permissions_posix(
-    const std::filesystem::path& path, int mode) {
+bool PlatformSecurity::set_file_permissions_posix(const std::filesystem::path& path, int mode) {
   return chmod(path.c_str(), mode) == 0;
 }
 

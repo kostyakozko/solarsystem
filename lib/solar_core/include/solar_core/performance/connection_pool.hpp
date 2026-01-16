@@ -21,12 +21,7 @@ namespace SolarSystem::Performance {
 /**
  * @brief Connection state
  */
-enum class ConnectionState {
-  IDLE,
-  ACTIVE,
-  CLOSING,
-  CLOSED
-};
+enum class ConnectionState { IDLE, ACTIVE, CLOSING, CLOSED };
 
 /**
  * @brief HTTP connection

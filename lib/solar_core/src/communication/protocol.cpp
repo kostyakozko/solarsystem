@@ -74,8 +74,7 @@ SolarSystem::Utils::Expected<Message, ProtocolError> InProcessProtocol::receive(
 
   std::unique_lock<std::mutex> lock(impl_->queue_mutex);
 
-  if (!impl_->queue_cv.wait_for(lock, timeout,
-                                [this] { return !impl_->message_queue.empty(); })) {
+  if (!impl_->queue_cv.wait_for(lock, timeout, [this] { return !impl_->message_queue.empty(); })) {
     return ProtocolError::TIMEOUT;
   }
 
@@ -98,7 +97,7 @@ SolarSystem::Utils::Expected<Message, ProtocolError> InProcessProtocol::request(
   auto start = std::chrono::steady_clock::now();
   while (true) {
     auto remaining = timeout - std::chrono::duration_cast<std::chrono::milliseconds>(
-                                  std::chrono::steady_clock::now() - start);
+                                   std::chrono::steady_clock::now() - start);
     if (remaining <= std::chrono::milliseconds(0)) {
       return ProtocolError::TIMEOUT;
     }
@@ -116,14 +115,13 @@ SolarSystem::Utils::Expected<Message, ProtocolError> InProcessProtocol::request(
     }
 
     // Wait for new messages with timeout
-    if (!impl_->queue_cv.wait_for(lock, std::chrono::milliseconds(100),
-                                  [this, &request] {
-                                    return impl_->pending_responses.find(request.header.message_id) !=
-                                           impl_->pending_responses.end();
-                                  })) {
+    if (!impl_->queue_cv.wait_for(lock, std::chrono::milliseconds(100), [this, &request] {
+          return impl_->pending_responses.find(request.header.message_id) !=
+                 impl_->pending_responses.end();
+        })) {
       // Check if we've exceeded total timeout
-      if (std::chrono::duration_cast<std::chrono::milliseconds>(
-              std::chrono::steady_clock::now() - start) >= timeout) {
+      if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() -
+                                                                start) >= timeout) {
         return ProtocolError::TIMEOUT;
       }
     }
@@ -191,7 +189,8 @@ SolarSystem::Utils::Expected<void, ProtocolError> FileProtocol::send(const Messa
     file.write(reinterpret_cast<const char*>(&message_length), sizeof(message_length));
 
     // Write serialized message data
-    file.write(reinterpret_cast<const char*>(data.data()), static_cast<std::streamsize>(data.size()));
+    file.write(reinterpret_cast<const char*>(data.data()),
+               static_cast<std::streamsize>(data.size()));
 
     if (!file) {
       return ProtocolError::SEND_FAILED;
@@ -235,7 +234,8 @@ SolarSystem::Utils::Expected<Message, ProtocolError> FileProtocol::receive(
 
           // Read serialized message data
           std::vector<uint8_t> data(message_length);
-          file.read(reinterpret_cast<char*>(data.data()), static_cast<std::streamsize>(message_length));
+          file.read(reinterpret_cast<char*>(data.data()),
+                    static_cast<std::streamsize>(message_length));
           if (!file) {
             std::filesystem::remove(entry.path());  // Remove corrupted file
             continue;
@@ -327,9 +327,9 @@ SolarSystem::Utils::Expected<void, ProtocolError> RetryProtocol::send(const Mess
     attempt++;
     if (attempt < impl_->config.max_retries) {
       std::this_thread::sleep_for(delay);
-      delay = std::min(
-          std::chrono::milliseconds(static_cast<int64_t>(static_cast<double>(delay.count()) * impl_->config.backoff_multiplier)),
-          impl_->config.max_delay);
+      delay = std::min(std::chrono::milliseconds(static_cast<int64_t>(
+                           static_cast<double>(delay.count()) * impl_->config.backoff_multiplier)),
+                       impl_->config.max_delay);
     }
   }
 
@@ -356,9 +356,9 @@ SolarSystem::Utils::Expected<Message, ProtocolError> RetryProtocol::request(
     attempt++;
     if (attempt < impl_->config.max_retries) {
       std::this_thread::sleep_for(delay);
-      delay = std::min(
-          std::chrono::milliseconds(static_cast<int64_t>(static_cast<double>(delay.count()) * impl_->config.backoff_multiplier)),
-          impl_->config.max_delay);
+      delay = std::min(std::chrono::milliseconds(static_cast<int64_t>(
+                           static_cast<double>(delay.count()) * impl_->config.backoff_multiplier)),
+                       impl_->config.max_delay);
     }
   }
 
@@ -408,7 +408,7 @@ std::vector<Message> ProtocolMonitor::get_message_history(size_t max_count) cons
   std::lock_guard<std::mutex> lock(impl_->history_mutex);
   size_t count = std::min(max_count, impl_->message_history.size());
   return std::vector<Message>(impl_->message_history.begin(),
-                             impl_->message_history.begin() + static_cast<long>(count));
+                              impl_->message_history.begin() + static_cast<long>(count));
 }
 
 std::vector<std::pair<ProtocolError, std::string>> ProtocolMonitor::get_error_history(

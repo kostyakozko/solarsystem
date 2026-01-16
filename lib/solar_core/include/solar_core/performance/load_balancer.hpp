@@ -22,12 +22,7 @@ namespace SolarSystem::Performance {
 /**
  * @brief Load balancing algorithm
  */
-enum class LoadBalancingAlgorithm {
-  ROUND_ROBIN,
-  LEAST_CONNECTIONS,
-  RANDOM,
-  WEIGHTED_ROUND_ROBIN
-};
+enum class LoadBalancingAlgorithm { ROUND_ROBIN, LEAST_CONNECTIONS, RANDOM, WEIGHTED_ROUND_ROBIN };
 
 /**
  * @brief Backend server

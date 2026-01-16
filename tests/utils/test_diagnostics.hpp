@@ -237,19 +237,26 @@ class PlatformMemoryMonitor {
    * @brief Memory usage information
    */
   struct MemoryInfo {
-    size_t resident_set_size;      // RSS - Physical memory currently used
-    size_t virtual_memory_size;    // Virtual memory size
-    size_t peak_resident_set_size; // Peak RSS during process lifetime
-    size_t heap_size;              // Heap memory allocated
-    size_t stack_size;             // Stack memory used
-    size_t shared_memory;          // Shared memory segments
-    size_t private_memory;         // Private memory (not shared)
-    double memory_usage_percent;   // Percentage of system memory used
+    size_t resident_set_size;       // RSS - Physical memory currently used
+    size_t virtual_memory_size;     // Virtual memory size
+    size_t peak_resident_set_size;  // Peak RSS during process lifetime
+    size_t heap_size;               // Heap memory allocated
+    size_t stack_size;              // Stack memory used
+    size_t shared_memory;           // Shared memory segments
+    size_t private_memory;          // Private memory (not shared)
+    double memory_usage_percent;    // Percentage of system memory used
     std::chrono::system_clock::time_point measurement_time;
 
-    MemoryInfo() : resident_set_size(0), virtual_memory_size(0), peak_resident_set_size(0),
-                   heap_size(0), stack_size(0), shared_memory(0), private_memory(0),
-                   memory_usage_percent(0.0), measurement_time(std::chrono::system_clock::now()) {}
+    MemoryInfo()
+        : resident_set_size(0),
+          virtual_memory_size(0),
+          peak_resident_set_size(0),
+          heap_size(0),
+          stack_size(0),
+          shared_memory(0),
+          private_memory(0),
+          memory_usage_percent(0.0),
+          measurement_time(std::chrono::system_clock::now()) {}
   };
 
   /**
@@ -262,17 +269,24 @@ class PlatformMemoryMonitor {
     size_t total_virtual_memory;
     size_t available_virtual_memory;
     size_t used_virtual_memory;
-    double memory_pressure;        // 0.0 to 1.0, higher means more pressure
+    double memory_pressure;  // 0.0 to 1.0, higher means more pressure
     size_t page_size;
     size_t cache_memory;
     size_t buffer_memory;
     std::chrono::system_clock::time_point measurement_time;
 
-    SystemMemoryInfo() : total_physical_memory(0), available_physical_memory(0),
-                        used_physical_memory(0), total_virtual_memory(0),
-                        available_virtual_memory(0), used_virtual_memory(0),
-                        memory_pressure(0.0), page_size(0), cache_memory(0),
-                        buffer_memory(0), measurement_time(std::chrono::system_clock::now()) {}
+    SystemMemoryInfo()
+        : total_physical_memory(0),
+          available_physical_memory(0),
+          used_physical_memory(0),
+          total_virtual_memory(0),
+          available_virtual_memory(0),
+          used_virtual_memory(0),
+          memory_pressure(0.0),
+          page_size(0),
+          cache_memory(0),
+          buffer_memory(0),
+          measurement_time(std::chrono::system_clock::now()) {}
   };
 
   /**
@@ -288,8 +302,11 @@ class PlatformMemoryMonitor {
     bool leak_detected;
     std::chrono::system_clock::time_point detection_time;
 
-    MemoryLeakInfo() : leaked_bytes(0), leak_rate_per_second(0.0), leak_detected(false),
-                      detection_time(std::chrono::system_clock::now()) {}
+    MemoryLeakInfo()
+        : leaked_bytes(0),
+          leak_rate_per_second(0.0),
+          leak_detected(false),
+          detection_time(std::chrono::system_clock::now()) {}
   };
 
   // Platform-specific memory measurement
@@ -352,8 +369,8 @@ class TestPerformanceMonitor {
     PlatformMemoryMonitor::MemoryInfo start_memory;
     PlatformMemoryMonitor::MemoryInfo end_memory;
     PlatformMemoryMonitor::MemoryInfo peak_memory;
-    size_t peak_memory_usage;        // Legacy field for compatibility
-    size_t average_memory_usage;     // Legacy field for compatibility
+    size_t peak_memory_usage;     // Legacy field for compatibility
+    size_t average_memory_usage;  // Legacy field for compatibility
     double cpu_usage_percent;
     size_t disk_io_bytes;
     size_t network_io_bytes;

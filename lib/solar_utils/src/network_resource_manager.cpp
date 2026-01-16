@@ -5,17 +5,18 @@
 
 #include "solar_utils/network_resource_manager.hpp"
 
+#include <arpa/inet.h>
+#include <curl/curl.h>
+#include <netdb.h>
+#include <netinet/in.h>
+#include <sys/socket.h>
+#include <unistd.h>
+
 #include <algorithm>
 #include <cstdio>
 #include <cstring>
 #include <random>
 #include <sstream>
-#include <curl/curl.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <netdb.h>
-#include <unistd.h>
 
 #include "solar_utils/file_resource_manager.hpp"
 
@@ -23,12 +24,8 @@ namespace {
 // RAII wrapper for CURL global initialization
 class CurlGlobalInit {
  public:
-  CurlGlobalInit() {
-    curl_global_init(CURL_GLOBAL_ALL);
-  }
-  ~CurlGlobalInit() {
-    curl_global_cleanup();
-  }
+  CurlGlobalInit() { curl_global_init(CURL_GLOBAL_ALL); }
+  ~CurlGlobalInit() { curl_global_cleanup(); }
 };
 
 // Ensure curl is initialized once

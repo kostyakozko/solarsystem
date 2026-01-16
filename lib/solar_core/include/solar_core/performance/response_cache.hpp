@@ -37,7 +37,7 @@ struct CacheEntry {
 struct CacheConfig {
   size_t max_entries = 1000;
   size_t max_memory_bytes = 100 * 1024 * 1024;  // 100 MB
-  std::chrono::seconds default_ttl{300};  // 5 minutes
+  std::chrono::seconds default_ttl{300};        // 5 minutes
   bool enable_compression = false;
   bool enable_statistics = true;
 };
@@ -134,16 +134,13 @@ class CacheKeyGenerator {
   /**
    * @brief Generate cache key from request components
    */
-  [[nodiscard]] static std::string generate(
-      const std::string& method,
-      const std::string& path,
-      const std::string& query_string = "");
+  [[nodiscard]] static std::string generate(const std::string& method, const std::string& path,
+                                            const std::string& query_string = "");
 
   /**
    * @brief Generate cache key with custom components
    */
-  [[nodiscard]] static std::string generate_custom(
-      const std::vector<std::string>& components);
+  [[nodiscard]] static std::string generate_custom(const std::vector<std::string>& components);
 };
 
 }  // namespace SolarSystem::Performance

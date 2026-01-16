@@ -5,28 +5,29 @@
 
 #include "solar_utils/platform_apis.hpp"
 
-#include <fstream>
-#include <sstream>
-#include <cstdlib>
-#include <algorithm>
 #include <sys/stat.h>
 
+#include <algorithm>
+#include <cstdlib>
+#include <fstream>
+#include <sstream>
+
 #ifdef _WIN32
-#include <windows.h>
 #include <psapi.h>
 #include <tlhelp32.h>
+#include <windows.h>
 #elif defined(__APPLE__)
+#include <mach/mach.h>
+#include <pwd.h>
 #include <sys/sysctl.h>
 #include <sys/types.h>
-#include <mach/mach.h>
 #include <unistd.h>
-#include <pwd.h>
 #else
-#include <sys/sysinfo.h>
-#include <sys/statvfs.h>
-#include <unistd.h>
 #include <pwd.h>
 #include <signal.h>
+#include <sys/statvfs.h>
+#include <sys/sysinfo.h>
+#include <unistd.h>
 #endif
 
 namespace SolarSystem::Utils::Platform {
@@ -200,7 +201,7 @@ SystemResources SystemAPIs::get_system_resources() {
   int64_t physical_memory;
   size_t length
 
-  mib[0] = CTL_HW;
+      mib[0] = CTL_HW;
   mib[1] = HW_MEMSIZE;
   length = sizeof(int64_t);
   sysctl(mib, 2, &physical_memory, &length, nullptr, 0);
@@ -213,8 +214,8 @@ SystemResources SystemAPIs::get_system_resources() {
   vm_statistics_data_t vm_stats;
 
   if (host_page_size(mach_port, &page_size) == KERN_SUCCESS &&
-      host_statistics(mach_port, HOST_VM_INFO,
-                     reinterpret_cast<host_info_t>(&vm_stats), &count) == KERN_SUCCESS) {
+      host_statistics(mach_port, HOST_VM_INFO, reinterpret_cast<host_info_t>(&vm_stats), &count) ==
+          KERN_SUCCESS) {
     int64_t free_memory = static_cast<int64_t>(vm_stats.free_count) * page_size;
     resources.available_memory_mb = free_memory / (1024 * 1024);
     resources.used_memory_mb = resources.total_memory_mb - resources.available_memory_mb;
@@ -241,7 +242,7 @@ uint64_t SystemAPIs::get_system_uptime() {
 #elif defined(__APPLE__)
   struct timeval boottime;
   size_t len = sizeof(boottime);
-  int mib[2] = { CTL_KERN, KERN_BOOTTIME };
+  int mib[2] = {CTL_KERN, KERN_BOOTTIME};
 
   if (sysctl(mib, 2, &boottime, &len, nullptr, 0) == 0) {
     time_t now = time(nullptr);
@@ -355,11 +356,8 @@ bool MacOSAPIs::is_apple_silicon() {
 std::optional<std::string> MacOSAPIs::get_bundle_identifier() {
   // Get bundle identifier from Info.plist
   // First try to find the main bundle's Info.plist
-  const char* paths[] = {
-    "../Resources/Info.plist",
-    "../../Resources/Info.plist",
-    "../../../Resources/Info.plist"
-  };
+  const char* paths[] = {"../Resources/Info.plist", "../../Resources/Info.plist",
+                         "../../../Resources/Info.plist"};
 
   for (const char* path : paths) {
     std::ifstream plist(path);
@@ -464,8 +462,8 @@ bool LinuxAPIs::is_running_in_container() {
 
   // Check cgroup
   auto cgroup = read_proc_file("/proc/1/cgroup");
-  if (cgroup && (cgroup->find("docker") != std::string::npos ||
-                 cgroup->find("lxc") != std::string::npos)) {
+  if (cgroup &&
+      (cgroup->find("docker") != std::string::npos || cgroup->find("lxc") != std::string::npos)) {
     return true;
   }
 

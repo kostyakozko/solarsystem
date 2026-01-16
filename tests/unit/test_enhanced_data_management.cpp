@@ -3,28 +3,28 @@
  * @brief Simplified tests for enhanced test data management system
  */
 
-#include "../test_framework_enhanced.hpp"
-#include "solar_test/framework/enhanced_test_data_manager.hpp"
 #include <chrono>
 #include <thread>
+
+#include "../test_framework_enhanced.hpp"
+#include "solar_test/framework/enhanced_test_data_manager.hpp"
 
 using namespace solar_test;
 using namespace SolarSystem::Testing;
 
 class EnhancedDataManagementTests {
-public:
+ public:
   static void run_all_tests() {
     auto& framework = EnhancedTestFramework::instance();
 
     framework.load_performance_baselines("enhanced_data_management_baselines.txt");
 
     std::vector<std::pair<std::string, std::function<void()>>> tests = {
-      {"BasicJPLValidation", test_basic_jpl_validation},
-      {"DataGeneration", test_data_generation},
-      {"IsolatedEnvironment", test_isolated_environment},
-      {"IntegrityChecking", test_integrity_checking},
-      {"PerformanceMonitoring", test_performance_monitoring}
-    };
+        {"BasicJPLValidation", test_basic_jpl_validation},
+        {"DataGeneration", test_data_generation},
+        {"IsolatedEnvironment", test_isolated_environment},
+        {"IntegrityChecking", test_integrity_checking},
+        {"PerformanceMonitoring", test_performance_monitoring}};
 
     framework.run_test_suite("EnhancedDataManagement", tests);
 
@@ -32,7 +32,7 @@ public:
     framework.generate_report("enhanced_data_management_report.html");
   }
 
-private:
+ private:
   static void test_basic_jpl_validation() {
     // Test basic JPL response validation (Requirement 6.1)
 
@@ -40,7 +40,10 @@ private:
     std::string valid_response = TestDataGenerator::generate_valid_jpl_response("Earth");
     ASSERT_TRUE(!valid_response.empty());
     ASSERT_TRUE(valid_response.find("EPHEMERIS") != std::string::npos);
-    ASSERT_TRUE(valid_response.find("*******************************************************************************") != std::string::npos);
+    ASSERT_TRUE(
+        valid_response.find(
+            "*******************************************************************************") !=
+        std::string::npos);
 
     // Test validation function exists and runs
     auto validation_result = TestDataValidator::validate_jpl_response_comprehensive(valid_response);
@@ -69,9 +72,10 @@ private:
     ASSERT_TRUE(ephemeris_json.find("ephemeris_json") != std::string::npos);
 
     // Test data mutation
-    std::string mutated = TestDataGenerator::mutate_data(jpl_response, MutationStrategy::CORRUPT_HEADER);
+    std::string mutated =
+        TestDataGenerator::mutate_data(jpl_response, MutationStrategy::CORRUPT_HEADER);
     ASSERT_TRUE(!mutated.empty());
-    ASSERT_NE(mutated, jpl_response); // Should be different from original
+    ASSERT_NE(mutated, jpl_response);  // Should be different from original
   }
 
   static void test_isolated_environment() {
@@ -131,7 +135,7 @@ private:
 
     // Check if performance metrics were recorded
     auto metrics = EnhancedTestDataManager::get_performance_metrics();
-    ASSERT_TRUE(true); // Test completed without exception
+    ASSERT_TRUE(true);  // Test completed without exception
 
     // Test metrics reset
     EnhancedTestDataManager::reset_performance_metrics();
@@ -155,8 +159,9 @@ int main() {
     std::cout << "Passed: " << framework.get_passed_tests() << std::endl;
     std::cout << "Failed: " << framework.get_failed_tests() << std::endl;
     std::cout << "Success rate: " << std::fixed << std::setprecision(1)
-              << (framework.get_total_tests() > 0 ?
-                  (framework.get_passed_tests() * 100.0 / framework.get_total_tests()) : 0.0)
+              << (framework.get_total_tests() > 0
+                      ? (framework.get_passed_tests() * 100.0 / framework.get_total_tests())
+                      : 0.0)
               << "%" << std::endl;
 
     return framework.get_failed_tests() == 0 ? 0 : 1;

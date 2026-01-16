@@ -12,8 +12,7 @@ namespace SolarSystem::Connection {
 using namespace SolarSystem::Utils;
 
 StreamingConnection::StreamingConnection(
-    std::string id,
-    std::shared_ptr<SolarSystem::Streaming::RealtimeStream> stream)
+    std::string id, std::shared_ptr<SolarSystem::Streaming::RealtimeStream> stream)
     : id_(std::move(id)), stream_(std::move(stream)) {
   health_.state = ConnectionState::DISCONNECTED;
 }
@@ -68,8 +67,7 @@ void StreamingConnection::disconnect() {
 
 bool StreamingConnection::is_connected() const {
   std::lock_guard<std::mutex> lock(health_mutex_);
-  return health_.state == ConnectionState::CONNECTED &&
-         stream_->is_running();
+  return health_.state == ConnectionState::CONNECTED && stream_->is_running();
 }
 
 bool StreamingConnection::health_check() {
@@ -118,8 +116,6 @@ ConnectionHealth StreamingConnection::get_health() const {
   return health_;
 }
 
-std::string StreamingConnection::get_id() const {
-  return id_;
-}
+std::string StreamingConnection::get_id() const { return id_; }
 
 }  // namespace SolarSystem::Connection

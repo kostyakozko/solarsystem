@@ -298,11 +298,9 @@ QualityTrends QualityMonitor::analyze_trends(std::chrono::milliseconds window) c
   auto cutoff_time = trends.analysis_time - window;
   std::vector<SnapshotQuality> recent_history;
 
-  std::copy_if(quality_history_.begin(), quality_history_.end(),
-               std::back_inserter(recent_history),
-               [cutoff_time](const SnapshotQuality& quality) {
-                 return quality.timestamp >= cutoff_time;
-               });
+  std::copy_if(
+      quality_history_.begin(), quality_history_.end(), std::back_inserter(recent_history),
+      [cutoff_time](const SnapshotQuality& quality) { return quality.timestamp >= cutoff_time; });
 
   trends.total_snapshots_analyzed = recent_history.size();
 
@@ -319,7 +317,8 @@ QualityTrends QualityMonitor::analyze_trends(std::chrono::milliseconds window) c
     timestamps.push_back(quality.timestamp);
   }
 
-  trends.avg_quality_score = std::accumulate(quality_scores.begin(), quality_scores.end(), 0.0) / static_cast<double>(quality_scores.size());
+  trends.avg_quality_score = std::accumulate(quality_scores.begin(), quality_scores.end(), 0.0) /
+                             static_cast<double>(quality_scores.size());
   trends.min_quality_score = *std::min_element(quality_scores.begin(), quality_scores.end());
   trends.max_quality_score = *std::max_element(quality_scores.begin(), quality_scores.end());
 
@@ -344,8 +343,10 @@ QualityTrends QualityMonitor::analyze_trends(std::chrono::milliseconds window) c
     total_warnings += quality.bodies_with_warnings;
   }
 
-  trends.error_rate = static_cast<double>(total_errors) / static_cast<double>(recent_history.size());
-  trends.warning_rate = static_cast<double>(total_warnings) / static_cast<double>(recent_history.size());
+  trends.error_rate =
+      static_cast<double>(total_errors) / static_cast<double>(recent_history.size());
+  trends.warning_rate =
+      static_cast<double>(total_warnings) / static_cast<double>(recent_history.size());
 
   // Calculate reliability score
   trends.reliability_score = std::max(0.0, 1.0 - trends.error_rate - (trends.warning_rate * 0.5));
@@ -353,14 +354,14 @@ QualityTrends QualityMonitor::analyze_trends(std::chrono::milliseconds window) c
   return trends;
 }
 
-std::vector<SnapshotQuality> QualityMonitor::get_quality_history(std::chrono::milliseconds window) const {
+std::vector<SnapshotQuality> QualityMonitor::get_quality_history(
+    std::chrono::milliseconds window) const {
   auto now = std::chrono::system_clock::now();
   return get_quality_history(now - window, now);
 }
 
 std::vector<SnapshotQuality> QualityMonitor::get_quality_history(
-    std::chrono::system_clock::time_point start,
-    std::chrono::system_clock::time_point end) const {
+    std::chrono::system_clock::time_point start, std::chrono::system_clock::time_point end) const {
   std::lock_guard<std::mutex> lock(history_mutex_);
   return filter_history_by_time(start, end);
 }
@@ -415,7 +416,8 @@ std::string QualityMonitor::get_quality_report() const {
   std::ostringstream oss;
   oss << "Quality Report:\n";
   oss << "  Avg Quality: " << std::fixed << trends.avg_quality_score << "\n";
-  oss << "  Quality Range: " << trends.min_quality_score << " - " << trends.max_quality_score << "\n";
+  oss << "  Quality Range: " << trends.min_quality_score << " - " << trends.max_quality_score
+      << "\n";
   oss << "  Reliability: " << trends.reliability_score << "\n";
   oss << "  Error Rate: " << trends.error_rate << "\n";
   oss << "  Warning Rate: " << trends.warning_rate << "\n";
@@ -440,13 +442,15 @@ double QualityMonitor::calculate_data_freshness(const DataPoint& data_point) con
   // Age scoring with exponential decay
   auto max_acceptable_age = config_.warning_latency * 2;  // Allow 2x warning latency for age
   if (data_age > max_acceptable_age) {
-    double age_ratio = static_cast<double>(data_age.count()) / static_cast<double>(max_acceptable_age.count());
+    double age_ratio =
+        static_cast<double>(data_age.count()) / static_cast<double>(max_acceptable_age.count());
     age_score = std::exp(-age_ratio + 1.0);  // Exponential decay
   }
 
   // Latency scoring with exponential decay
   if (latency > config_.warning_latency) {
-    double latency_ratio = static_cast<double>(latency.count()) / static_cast<double>(config_.warning_latency.count());
+    double latency_ratio =
+        static_cast<double>(latency.count()) / static_cast<double>(config_.warning_latency.count());
     latency_score = std::exp(-latency_ratio + 1.0);  // Exponential decay
   }
 
@@ -498,10 +502,10 @@ double QualityMonitor::calculate_data_accuracy(const DataPoint& data_point) cons
   // 2. Range validation - check if values are within physically reasonable bounds
   // Position should be within solar system bounds (roughly ±100 AU)
   const double MAX_POSITION = 100.0 * 1.496e11;  // 100 AU in meters
-  double position_magnitude = static_cast<double>(std::sqrt(
-      data_point.position.x() * data_point.position.x() +
-      data_point.position.y() * data_point.position.y() +
-      data_point.position.z() * data_point.position.z()));
+  double position_magnitude =
+      static_cast<double>(std::sqrt(data_point.position.x() * data_point.position.x() +
+                                    data_point.position.y() * data_point.position.y() +
+                                    data_point.position.z() * data_point.position.z()));
 
   if (position_magnitude > MAX_POSITION) {
     accuracy *= 0.5;  // Position seems unreasonable
@@ -509,10 +513,10 @@ double QualityMonitor::calculate_data_accuracy(const DataPoint& data_point) cons
 
   // Velocity should be within reasonable bounds (< 100 km/s for solar system objects)
   const double MAX_VELOCITY = 100000.0;  // 100 km/s in m/s
-  double velocity_magnitude = static_cast<double>(std::sqrt(
-      data_point.velocity.x() * data_point.velocity.x() +
-      data_point.velocity.y() * data_point.velocity.y() +
-      data_point.velocity.z() * data_point.velocity.z()));
+  double velocity_magnitude =
+      static_cast<double>(std::sqrt(data_point.velocity.x() * data_point.velocity.x() +
+                                    data_point.velocity.y() * data_point.velocity.y() +
+                                    data_point.velocity.z() * data_point.velocity.z()));
 
   if (velocity_magnitude > MAX_VELOCITY) {
     accuracy *= 0.7;  // Velocity seems high but possible
@@ -624,8 +628,8 @@ double QualityMonitor::calculate_data_completeness(const DataPoint& data_point) 
 
   // Calculate completeness score
   double required_completeness = static_cast<double>(complete_fields) / total_fields;
-  double optional_completeness = optional_fields > 0 ?
-      static_cast<double>(complete_optional) / optional_fields : 1.0;
+  double optional_completeness =
+      optional_fields > 0 ? static_cast<double>(complete_optional) / optional_fields : 1.0;
 
   // Weighted combination (required fields are more important)
   return required_completeness * 0.9 + optional_completeness * 0.1;
@@ -655,8 +659,8 @@ double QualityMonitor::calculate_data_consistency(const DataPoint& data_point) c
     }
 
     // Check for reasonable time gaps
-    auto time_gap = std::chrono::duration_cast<std::chrono::milliseconds>(
-        data_point.timestamp - prev.timestamp);
+    auto time_gap = std::chrono::duration_cast<std::chrono::milliseconds>(data_point.timestamp -
+                                                                          prev.timestamp);
 
     if (time_gap > config_.warning_latency * 10) {
       consistency *= 0.8;  // Large time gap suggests missing data
@@ -676,7 +680,8 @@ double QualityMonitor::calculate_data_consistency(const DataPoint& data_point) c
     }
 
     // Calculate mean and standard deviation
-    double mean = std::accumulate(recent_scores.begin(), recent_scores.end(), 0.0) / static_cast<double>(recent_scores.size());
+    double mean = std::accumulate(recent_scores.begin(), recent_scores.end(), 0.0) /
+                  static_cast<double>(recent_scores.size());
     double sq_sum = 0.0;
     for (double score : recent_scores) {
       sq_sum += (score - mean) * (score - mean);
@@ -706,13 +711,13 @@ double QualityMonitor::calculate_data_consistency(const DataPoint& data_point) c
     std::vector<double> quality_changes;
     for (size_t i = 1; i < std::min(size_t(10), history.size()); ++i) {
       double change = std::abs(history[history.size() - i].overall_score -
-                              history[history.size() - i - 1].overall_score);
+                               history[history.size() - i - 1].overall_score);
       quality_changes.push_back(change);
     }
 
     // Calculate variance of changes
     double mean_change = std::accumulate(quality_changes.begin(), quality_changes.end(), 0.0) /
-                        static_cast<double>(quality_changes.size());
+                         static_cast<double>(quality_changes.size());
     double variance = 0.0;
     for (double change : quality_changes) {
       variance += (change - mean_change) * (change - mean_change);
@@ -730,10 +735,8 @@ double QualityMonitor::calculate_data_consistency(const DataPoint& data_point) c
 
 double QualityMonitor::calculate_overall_score(const DataPointQuality& quality) const {
   // Weighted average of quality metrics
-  return (quality.data_freshness * 0.3 +
-          quality.data_accuracy * 0.4 +
-          quality.data_completeness * 0.2 +
-          quality.data_consistency * 0.1);
+  return (quality.data_freshness * 0.3 + quality.data_accuracy * 0.4 +
+          quality.data_completeness * 0.2 + quality.data_consistency * 0.1);
 }
 
 bool QualityMonitor::detect_anomaly(const DataPoint& data_point) const {
@@ -764,7 +767,8 @@ bool QualityMonitor::detect_anomaly(const DataPoint& data_point) const {
 
   // Method 1: Z-score anomaly detection
   // Calculate mean and standard deviation
-  double mean = std::accumulate(scores.begin(), scores.end(), 0.0) / static_cast<double>(scores.size());
+  double mean =
+      std::accumulate(scores.begin(), scores.end(), 0.0) / static_cast<double>(scores.size());
   double sq_sum = 0.0;
   for (double score : scores) {
     sq_sum += (score - mean) * (score - mean);
@@ -806,14 +810,15 @@ bool QualityMonitor::detect_anomaly(const DataPoint& data_point) const {
   // Method 3: Sudden change detection
   // Check if there's a sudden drop or spike compared to recent average
   if (history.size() >= 3) {
-    double recent_avg = (history[history.size() - 1].overall_score +
-                        history[history.size() - 2].overall_score +
-                        history[history.size() - 3].overall_score) / 3.0;
+    double recent_avg =
+        (history[history.size() - 1].overall_score + history[history.size() - 2].overall_score +
+         history[history.size() - 3].overall_score) /
+        3.0;
 
     double change_ratio = std::abs(current_score - recent_avg) / (recent_avg + 1e-6);
 
     if (change_ratio > 0.5) {  // 50% change is suspicious
-      return true;  // Sudden change detected
+      return true;             // Sudden change detected
     }
   }
 
@@ -903,15 +908,15 @@ bool QualityMonitor::is_outlier(const DataPoint& data_point, const std::string& 
 
   // 6. Check if current value is an outlier
   bool is_outlier = (current_value < lower_fence || current_value > upper_fence);
-  bool is_extreme_outlier = (current_value < lower_extreme_fence || current_value > upper_extreme_fence);
+  bool is_extreme_outlier =
+      (current_value < lower_extreme_fence || current_value > upper_extreme_fence);
 
   // Log extreme outliers
   if (is_extreme_outlier) {
-    LOG_WARN("QualityMonitor",
-             "Extreme outlier detected for " + data_point.body_name +
-             " (" + metric_name + "): " + std::to_string(current_value) +
-             " (Q1=" + std::to_string(q1) + ", Q3=" + std::to_string(q3) +
-             ", IQR=" + std::to_string(iqr) + ")");
+    LOG_WARN("QualityMonitor", "Extreme outlier detected for " + data_point.body_name + " (" +
+                                   metric_name + "): " + std::to_string(current_value) +
+                                   " (Q1=" + std::to_string(q1) + ", Q3=" + std::to_string(q3) +
+                                   ", IQR=" + std::to_string(iqr) + ")");
   }
 
   return is_outlier;
@@ -920,7 +925,6 @@ bool QualityMonitor::is_outlier(const DataPoint& data_point, const std::string& 
 double QualityMonitor::calculate_trend_slope(
     const std::vector<double>& values,
     const std::vector<std::chrono::system_clock::time_point>& times) const {
-
   if (values.size() != times.size() || values.size() < 2) {
     return 0.0;
   }
@@ -932,7 +936,8 @@ double QualityMonitor::calculate_trend_slope(
   auto start_time = times[0];
 
   for (size_t i = 0; i < n; ++i) {
-    double x = static_cast<double>(std::chrono::duration_cast<std::chrono::seconds>(times[i] - start_time).count());
+    double x = static_cast<double>(
+        std::chrono::duration_cast<std::chrono::seconds>(times[i] - start_time).count());
     double y = values[i];
 
     sum_x += x;
@@ -972,7 +977,8 @@ void QualityMonitor::check_quality_alerts(const SnapshotQuality& quality) {
   }
 }
 
-void QualityMonitor::trigger_quality_alert(const std::string& message, const SnapshotQuality& quality) {
+void QualityMonitor::trigger_quality_alert(const std::string& message,
+                                           const SnapshotQuality& quality) {
   if (quality_alert_callback_) {
     quality_alert_callback_(message, quality);
   }
@@ -988,9 +994,8 @@ void QualityMonitor::analysis_loop() {
       std::unique_lock<std::mutex> lock(analysis_mutex_);
 
       // Wait for analysis interval or stop signal
-      if (analysis_cv_.wait_for(lock, config_.analysis_interval, [this] {
-            return stop_analysis_.load();
-          })) {
+      if (analysis_cv_.wait_for(lock, config_.analysis_interval,
+                                [this] { return stop_analysis_.load(); })) {
         break;  // Stop requested
       }
 
@@ -1025,13 +1030,11 @@ void QualityMonitor::perform_trend_analysis() {
   if (std::abs(trends.quality_trend_slope) > 0.01) {  // Significant trend
     std::string direction = trends.quality_trend_slope > 0 ? "improving" : "degrading";
     LOG_INFO("QualityMonitor", "Quality trend detected: " + direction +
-             " (slope: " + std::to_string(trends.quality_trend_slope) + ")");
+                                   " (slope: " + std::to_string(trends.quality_trend_slope) + ")");
   }
 }
 
-void QualityMonitor::cleanup_old_history() {
-  maintain_history_size();
-}
+void QualityMonitor::cleanup_old_history() { maintain_history_size(); }
 
 void QualityMonitor::maintain_history_size() {
   // Remove old entries if history is too large
@@ -1041,13 +1044,10 @@ void QualityMonitor::maintain_history_size() {
 }
 
 std::vector<SnapshotQuality> QualityMonitor::filter_history_by_time(
-    std::chrono::system_clock::time_point start,
-    std::chrono::system_clock::time_point end) const {
-
+    std::chrono::system_clock::time_point start, std::chrono::system_clock::time_point end) const {
   std::vector<SnapshotQuality> filtered;
 
-  std::copy_if(quality_history_.begin(), quality_history_.end(),
-               std::back_inserter(filtered),
+  std::copy_if(quality_history_.begin(), quality_history_.end(), std::back_inserter(filtered),
                [start, end](const SnapshotQuality& quality) {
                  return quality.timestamp >= start && quality.timestamp <= end;
                });

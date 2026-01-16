@@ -6,17 +6,17 @@
 #include "test_diagnostics.hpp"
 
 #include <algorithm>
+#include <iomanip>
 #include <iostream>
 #include <sstream>
-#include <iomanip>
 
 #ifdef __APPLE__
 #include <sys/resource.h>
 #elif __linux__
 #include <unistd.h>
 #elif _WIN32
-#include <windows.h>
 #include <psapi.h>
+#include <windows.h>
 #endif
 
 #include "test_port_manager.hpp"
@@ -425,7 +425,8 @@ TestPerformanceMonitor::PerformanceMetrics TestPerformanceMonitor::stop_monitori
 
   // Set legacy fields for compatibility
   metrics.peak_memory_usage = metrics.peak_memory.resident_set_size;
-  metrics.average_memory_usage = (metrics.start_memory.resident_set_size + metrics.end_memory.resident_set_size) / 2;
+  metrics.average_memory_usage =
+      (metrics.start_memory.resident_set_size + metrics.end_memory.resident_set_size) / 2;
 
   // Stop memory leak detection
   auto leak_info = PlatformMemoryMonitor::stop_leak_detection(test_name);
@@ -486,8 +487,10 @@ bool TestPerformanceMonitor::detect_performance_regression(const std::string& /*
 
 // Static member initialization
 std::map<std::string, PlatformMemoryMonitor::MemoryInfo> PlatformMemoryMonitor::baseline_memory_;
-std::map<std::string, std::vector<PlatformMemoryMonitor::MemoryInfo>> PlatformMemoryMonitor::memory_profiles_;
-std::map<std::string, PlatformMemoryMonitor::MemoryLeakInfo> PlatformMemoryMonitor::leak_detection_state_;
+std::map<std::string, std::vector<PlatformMemoryMonitor::MemoryInfo>>
+    PlatformMemoryMonitor::memory_profiles_;
+std::map<std::string, PlatformMemoryMonitor::MemoryLeakInfo>
+    PlatformMemoryMonitor::leak_detection_state_;
 std::mutex PlatformMemoryMonitor::memory_monitor_mutex_;
 
 PlatformMemoryMonitor::MemoryInfo PlatformMemoryMonitor::get_current_memory_usage() {
@@ -541,7 +544,8 @@ std::string PlatformMemoryMonitor::format_system_memory_info(const SystemMemoryI
   oss << "  Total Physical: " << (info.total_physical_memory / 1024 / 1024) << " MB\n";
   oss << "  Available Physical: " << (info.available_physical_memory / 1024 / 1024) << " MB\n";
   oss << "  Used Physical: " << (info.used_physical_memory / 1024 / 1024) << " MB\n";
-  oss << "  Memory Pressure: " << std::fixed << std::setprecision(2) << (info.memory_pressure * 100) << "%\n";
+  oss << "  Memory Pressure: " << std::fixed << std::setprecision(2) << (info.memory_pressure * 100)
+      << "%\n";
   oss << "  Page Size: " << info.page_size << " bytes\n";
   return oss.str();
 }
@@ -557,7 +561,8 @@ void PlatformMemoryMonitor::start_leak_detection(const std::string& test_name) {
   leak_detection_state_[test_name] = leak_info;
 }
 
-PlatformMemoryMonitor::MemoryLeakInfo PlatformMemoryMonitor::stop_leak_detection(const std::string& test_name) {
+PlatformMemoryMonitor::MemoryLeakInfo PlatformMemoryMonitor::stop_leak_detection(
+    const std::string& test_name) {
   std::lock_guard<std::mutex> lock(memory_monitor_mutex_);
 
   auto it = leak_detection_state_.find(test_name);
@@ -572,14 +577,16 @@ PlatformMemoryMonitor::MemoryLeakInfo PlatformMemoryMonitor::stop_leak_detection
 
   // Calculate leaked bytes
   if (leak_info.final_memory.resident_set_size > leak_info.baseline_memory.resident_set_size) {
-    leak_info.leaked_bytes = leak_info.final_memory.resident_set_size - leak_info.baseline_memory.resident_set_size;
-    leak_info.leak_detected = leak_info.leaked_bytes > (1024 * 1024); // 1MB threshold
+    leak_info.leaked_bytes =
+        leak_info.final_memory.resident_set_size - leak_info.baseline_memory.resident_set_size;
+    leak_info.leak_detected = leak_info.leaked_bytes > (1024 * 1024);  // 1MB threshold
 
     // Calculate leak rate
     auto duration = std::chrono::duration_cast<std::chrono::seconds>(
         leak_info.final_memory.measurement_time - leak_info.baseline_memory.measurement_time);
     if (duration.count() > 0) {
-      leak_info.leak_rate_per_second = static_cast<double>(leak_info.leaked_bytes) / duration.count();
+      leak_info.leak_rate_per_second =
+          static_cast<double>(leak_info.leaked_bytes) / duration.count();
     }
   }
 
@@ -605,7 +612,8 @@ void PlatformMemoryMonitor::start_memory_profiling(const std::string& test_name)
   memory_profiles_[test_name].push_back(get_current_memory_usage());
 }
 
-std::vector<PlatformMemoryMonitor::MemoryInfo> PlatformMemoryMonitor::stop_memory_profiling(const std::string& test_name) {
+std::vector<PlatformMemoryMonitor::MemoryInfo> PlatformMemoryMonitor::stop_memory_profiling(
+    const std::string& test_name) {
   std::lock_guard<std::mutex> lock(memory_monitor_mutex_);
 
   auto it = memory_profiles_.find(test_name);
@@ -652,7 +660,8 @@ void PlatformMemoryMonitor::set_memory_baseline(const std::string& test_name) {
   baseline_memory_[test_name] = get_current_memory_usage();
 }
 
-bool PlatformMemoryMonitor::detect_memory_regression(const std::string& test_name, double threshold) {
+bool PlatformMemoryMonitor::detect_memory_regression(const std::string& test_name,
+                                                     double threshold) {
   std::lock_guard<std::mutex> lock(memory_monitor_mutex_);
 
   auto it = baseline_memory_.find(test_name);
@@ -661,7 +670,8 @@ bool PlatformMemoryMonitor::detect_memory_regression(const std::string& test_nam
   }
 
   auto current_memory = get_current_memory_usage();
-  double increase_ratio = static_cast<double>(current_memory.resident_set_size) / it->second.resident_set_size;
+  double increase_ratio =
+      static_cast<double>(current_memory.resident_set_size) / it->second.resident_set_size;
 
   return increase_ratio > (1.0 + threshold);
 }
@@ -683,9 +693,10 @@ std::string PlatformMemoryMonitor::get_memory_regression_report(const std::strin
 
   if (current_memory.resident_set_size > it->second.resident_set_size) {
     size_t increase = current_memory.resident_set_size - it->second.resident_set_size;
-    double increase_percent = (static_cast<double>(increase) / it->second.resident_set_size) * 100.0;
-    report << "Memory increase: " << (increase / 1024 / 1024) << " MB ("
-           << std::fixed << std::setprecision(2) << increase_percent << "%)\n";
+    double increase_percent =
+        (static_cast<double>(increase) / it->second.resident_set_size) * 100.0;
+    report << "Memory increase: " << (increase / 1024 / 1024) << " MB (" << std::fixed
+           << std::setprecision(2) << increase_percent << "%)\n";
   }
 
   return report.str();
@@ -727,10 +738,10 @@ std::vector<std::string> PlatformMemoryMonitor::get_available_memory_metrics() {
 // Platform-specific implementations
 
 #ifdef __APPLE__
-#include <mach/mach.h>
-#include <mach/task.h>
-#include <mach/mach_init.h>
 #include <mach/host_info.h>
+#include <mach/mach.h>
+#include <mach/mach_init.h>
+#include <mach/task.h>
 #include <sys/sysctl.h>
 
 PlatformMemoryMonitor::MemoryInfo PlatformMemoryMonitor::get_memory_usage_macos() {
@@ -741,7 +752,8 @@ PlatformMemoryMonitor::MemoryInfo PlatformMemoryMonitor::get_memory_usage_macos(
   struct mach_task_basic_info basic_info;
   mach_msg_type_number_t info_count = MACH_TASK_BASIC_INFO_COUNT;
 
-  if (task_info(task, MACH_TASK_BASIC_INFO, reinterpret_cast<task_info_t>(&basic_info), &info_count) == KERN_SUCCESS) {
+  if (task_info(task, MACH_TASK_BASIC_INFO, reinterpret_cast<task_info_t>(&basic_info),
+                &info_count) == KERN_SUCCESS) {
     info.resident_set_size = basic_info.resident_size;
     info.virtual_memory_size = basic_info.virtual_size;
   }
@@ -755,7 +767,8 @@ PlatformMemoryMonitor::MemoryInfo PlatformMemoryMonitor::get_memory_usage_macos(
   // Calculate memory usage percentage
   auto system_info = get_system_memory_macos();
   if (system_info.total_physical_memory > 0) {
-    info.memory_usage_percent = (static_cast<double>(info.resident_set_size) / system_info.total_physical_memory) * 100.0;
+    info.memory_usage_percent =
+        (static_cast<double>(info.resident_set_size) / system_info.total_physical_memory) * 100.0;
   }
 
   return info;
@@ -781,13 +794,15 @@ PlatformMemoryMonitor::SystemMemoryInfo PlatformMemoryMonitor::get_system_memory
   // Get VM statistics
   vm_statistics64_data_t vm_stat;
   mach_msg_type_number_t count = HOST_VM_INFO64_COUNT;
-  if (host_statistics64(mach_host_self(), HOST_VM_INFO64, reinterpret_cast<host_info64_t>(&vm_stat), &count) == KERN_SUCCESS) {
+  if (host_statistics64(mach_host_self(), HOST_VM_INFO64, reinterpret_cast<host_info64_t>(&vm_stat),
+                        &count) == KERN_SUCCESS) {
     info.available_physical_memory = (vm_stat.free_count + vm_stat.inactive_count) * info.page_size;
     info.used_physical_memory = info.total_physical_memory - info.available_physical_memory;
 
     // Calculate memory pressure
     if (info.total_physical_memory > 0) {
-      info.memory_pressure = static_cast<double>(info.used_physical_memory) / info.total_physical_memory;
+      info.memory_pressure =
+          static_cast<double>(info.used_physical_memory) / info.total_physical_memory;
     }
   }
 
@@ -813,6 +828,7 @@ PlatformMemoryMonitor::SystemMemoryInfo PlatformMemoryMonitor::get_system_memory
 
 #ifdef __linux__
 #include <sys/resource.h>
+
 #include <fstream>
 #include <sstream>
 
@@ -829,24 +845,25 @@ PlatformMemoryMonitor::MemoryInfo PlatformMemoryMonitor::get_memory_usage_linux(
       std::istringstream iss(line);
       std::string key, value, unit;
       iss >> key >> value >> unit;
-      info.resident_set_size = std::stoull(value) * 1024; // Convert KB to bytes
+      info.resident_set_size = std::stoull(value) * 1024;  // Convert KB to bytes
     } else if (line.find("VmSize:") == 0) {
       std::istringstream iss(line);
       std::string key, value, unit;
       iss >> key >> value >> unit;
-      info.virtual_memory_size = std::stoull(value) * 1024; // Convert KB to bytes
+      info.virtual_memory_size = std::stoull(value) * 1024;  // Convert KB to bytes
     } else if (line.find("VmPeak:") == 0) {
       std::istringstream iss(line);
       std::string key, value, unit;
       iss >> key >> value >> unit;
-      info.peak_resident_set_size = std::stoull(value) * 1024; // Convert KB to bytes
+      info.peak_resident_set_size = std::stoull(value) * 1024;  // Convert KB to bytes
     }
   }
 
   // Calculate memory usage percentage
   auto system_info = get_system_memory_linux();
   if (system_info.total_physical_memory > 0) {
-    info.memory_usage_percent = (static_cast<double>(info.resident_set_size) / system_info.total_physical_memory) * 100.0;
+    info.memory_usage_percent =
+        (static_cast<double>(info.resident_set_size) / system_info.total_physical_memory) * 100.0;
   }
 
   return info;
@@ -865,12 +882,12 @@ PlatformMemoryMonitor::SystemMemoryInfo PlatformMemoryMonitor::get_system_memory
       std::istringstream iss(line);
       std::string key, value, unit;
       iss >> key >> value >> unit;
-      info.total_physical_memory = std::stoull(value) * 1024; // Convert KB to bytes
+      info.total_physical_memory = std::stoull(value) * 1024;  // Convert KB to bytes
     } else if (line.find("MemAvailable:") == 0) {
       std::istringstream iss(line);
       std::string key, value, unit;
       iss >> key >> value >> unit;
-      info.available_physical_memory = std::stoull(value) * 1024; // Convert KB to bytes
+      info.available_physical_memory = std::stoull(value) * 1024;  // Convert KB to bytes
     }
   }
 
@@ -878,7 +895,8 @@ PlatformMemoryMonitor::SystemMemoryInfo PlatformMemoryMonitor::get_system_memory
 
   // Calculate memory pressure
   if (info.total_physical_memory > 0) {
-    info.memory_pressure = static_cast<double>(info.used_physical_memory) / info.total_physical_memory;
+    info.memory_pressure =
+        static_cast<double>(info.used_physical_memory) / info.total_physical_memory;
   }
 
   // Get page size
@@ -927,8 +945,9 @@ PlatformMemoryMonitor::MemoryInfo PlatformMemoryMonitor::get_memory_usage_window
   memStatus.dwLength = sizeof(memStatus);
   if (GlobalMemoryStatusEx(&memStatus)) {
     if (memStatus.ullTotalPhys > 0) {
-      info.memory_usage_percent =
-          (static_cast<double>(info.resident_set_size) / static_cast<double>(memStatus.ullTotalPhys)) * 100.0;
+      info.memory_usage_percent = (static_cast<double>(info.resident_set_size) /
+                                   static_cast<double>(memStatus.ullTotalPhys)) *
+                                  100.0;
     }
   }
 

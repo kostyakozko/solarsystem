@@ -5,40 +5,31 @@
 
 #include "solar_core/security/network_security.hpp"
 
-#include <algorithm>
-#include <random>
-#include <sstream>
-#include <iomanip>
-#include <cstring>
-
+#include <curl/curl.h>
+#include <openssl/err.h>
 #include <openssl/evp.h>
 #include <openssl/rand.h>
 #include <openssl/sha.h>
-#include <openssl/err.h>
-#include <curl/curl.h>
+
+#include <algorithm>
 #include <cstring>
+#include <iomanip>
+#include <random>
+#include <sstream>
 
 namespace SolarSystem::Security {
 
 // IPFilter implementation
-void IPFilter::add_whitelist(const std::string& ip_pattern) {
-  whitelist_.push_back(ip_pattern);
-}
+void IPFilter::add_whitelist(const std::string& ip_pattern) { whitelist_.push_back(ip_pattern); }
 
-void IPFilter::add_blacklist(const std::string& ip_pattern) {
-  blacklist_.push_back(ip_pattern);
-}
+void IPFilter::add_blacklist(const std::string& ip_pattern) { blacklist_.push_back(ip_pattern); }
 
 void IPFilter::remove_whitelist(const std::string& ip_pattern) {
-  whitelist_.erase(
-      std::remove(whitelist_.begin(), whitelist_.end(), ip_pattern),
-      whitelist_.end());
+  whitelist_.erase(std::remove(whitelist_.begin(), whitelist_.end(), ip_pattern), whitelist_.end());
 }
 
 void IPFilter::remove_blacklist(const std::string& ip_pattern) {
-  blacklist_.erase(
-      std::remove(blacklist_.begin(), blacklist_.end(), ip_pattern),
-      blacklist_.end());
+  blacklist_.erase(std::remove(blacklist_.begin(), blacklist_.end(), ip_pattern), blacklist_.end());
 }
 
 bool IPFilter::is_allowed(const std::string& ip_address) const {
@@ -64,9 +55,7 @@ bool IPFilter::is_allowed(const std::string& ip_address) const {
   return false;
 }
 
-bool IPFilter::is_blocked(const std::string& ip_address) const {
-  return !is_allowed(ip_address);
-}
+bool IPFilter::is_blocked(const std::string& ip_address) const { return !is_allowed(ip_address); }
 
 bool IPFilter::matches_pattern(const std::string& ip, const std::string& pattern) const {
   // Simple pattern matching (supports * wildcard)
@@ -89,10 +78,8 @@ EncryptionManager& EncryptionManager::instance() {
   return instance;
 }
 
-std::optional<std::string> EncryptionManager::encrypt(
-    const std::string& data,
-    const std::string& key) const {
-
+std::optional<std::string> EncryptionManager::encrypt(const std::string& data,
+                                                      const std::string& key) const {
   if (!validate_key(key)) {
     return std::nullopt;
   }
@@ -121,7 +108,8 @@ std::optional<std::string> EncryptionManager::encrypt(
   }
 
   // Allocate output buffer
-  std::vector<unsigned char> ciphertext(data.size() + static_cast<size_t>(EVP_CIPHER_block_size(EVP_aes_256_cbc())));
+  std::vector<unsigned char> ciphertext(
+      data.size() + static_cast<size_t>(EVP_CIPHER_block_size(EVP_aes_256_cbc())));
   int len = 0;
   int ciphertext_len = 0;
 
@@ -151,10 +139,8 @@ std::optional<std::string> EncryptionManager::encrypt(
   return result;
 }
 
-std::optional<std::string> EncryptionManager::decrypt(
-    const std::string& encrypted_data,
-    const std::string& key) const {
-
+std::optional<std::string> EncryptionManager::decrypt(const std::string& encrypted_data,
+                                                      const std::string& key) const {
   if (!validate_key(key) || encrypted_data.size() < EVP_MAX_IV_LENGTH) {
     return std::nullopt;
   }
@@ -180,14 +166,16 @@ std::optional<std::string> EncryptionManager::decrypt(
 
   // Allocate output buffer
   size_t ciphertext_len = encrypted_data.size() - EVP_MAX_IV_LENGTH;
-  std::vector<unsigned char> plaintext(ciphertext_len + static_cast<size_t>(EVP_CIPHER_block_size(EVP_aes_256_cbc())));
+  std::vector<unsigned char> plaintext(
+      ciphertext_len + static_cast<size_t>(EVP_CIPHER_block_size(EVP_aes_256_cbc())));
   int len = 0;
   int plaintext_len = 0;
 
   // Decrypt data
-  if (EVP_DecryptUpdate(ctx, plaintext.data(), &len,
-                        reinterpret_cast<const unsigned char*>(encrypted_data.data() + EVP_MAX_IV_LENGTH),
-                        static_cast<int>(ciphertext_len)) != 1) {
+  if (EVP_DecryptUpdate(
+          ctx, plaintext.data(), &len,
+          reinterpret_cast<const unsigned char*>(encrypted_data.data() + EVP_MAX_IV_LENGTH),
+          static_cast<int>(ciphertext_len)) != 1) {
     EVP_CIPHER_CTX_free(ctx);
     return std::nullopt;
   }
@@ -260,8 +248,7 @@ std::string EncryptionManager::hash(const std::string& data) const {
   return oss.str();
 }
 
-bool EncryptionManager::verify_hash(const std::string& data,
-                                    const std::string& hash_value) const {
+bool EncryptionManager::verify_hash(const std::string& data, const std::string& hash_value) const {
   return hash(data) == hash_value;
 }
 
@@ -271,9 +258,7 @@ NetworkSecurity& NetworkSecurity::instance() {
   return instance;
 }
 
-NetworkSecurityResult NetworkSecurity::validate_connection(
-    const ConnectionInfo& conn_info) const {
-
+NetworkSecurityResult NetworkSecurity::validate_connection(const ConnectionInfo& conn_info) const {
   // Check IP filtering
   if (ip_filter_ && !ip_filter_->is_allowed(conn_info.remote_address)) {
     return NetworkSecurityResult(false, "IP address blocked", SecurityLevel::MAXIMUM);
@@ -282,8 +267,7 @@ NetworkSecurityResult NetworkSecurity::validate_connection(
   // Check protocol security
   if (!is_secure_protocol(conn_info.protocol)) {
     if (min_security_level_ >= SecurityLevel::HIGH) {
-      return NetworkSecurityResult(false, "Insecure protocol not allowed",
-                                  min_security_level_);
+      return NetworkSecurityResult(false, "Insecure protocol not allowed", min_security_level_);
     }
   }
 
@@ -295,17 +279,14 @@ bool NetworkSecurity::is_secure_protocol(NetworkProtocol protocol) const {
 }
 
 bool NetworkSecurity::requires_encryption(const ConnectionInfo& conn_info) const {
-  return min_security_level_ >= SecurityLevel::STANDARD &&
-         !is_secure_protocol(conn_info.protocol);
+  return min_security_level_ >= SecurityLevel::STANDARD && !is_secure_protocol(conn_info.protocol);
 }
 
 void NetworkSecurity::set_ip_filter(std::shared_ptr<IPFilter> filter) {
   ip_filter_ = std::move(filter);
 }
 
-std::shared_ptr<IPFilter> NetworkSecurity::get_ip_filter() const {
-  return ip_filter_;
-}
+std::shared_ptr<IPFilter> NetworkSecurity::get_ip_filter() const { return ip_filter_; }
 
 bool NetworkSecurity::is_ip_allowed(const std::string& ip_address) const {
   if (!ip_filter_) {
@@ -322,9 +303,7 @@ void NetworkSecurity::set_minimum_security_level(SecurityLevel level) {
   min_security_level_ = level;
 }
 
-SecurityLevel NetworkSecurity::get_minimum_security_level() const {
-  return min_security_level_;
-}
+SecurityLevel NetworkSecurity::get_minimum_security_level() const { return min_security_level_; }
 
 void NetworkSecurity::track_connection(const ConnectionInfo& conn_info) {
   active_connections_.push_back(conn_info);
@@ -334,21 +313,15 @@ std::vector<ConnectionInfo> NetworkSecurity::get_active_connections() const {
   return active_connections_;
 }
 
-size_t NetworkSecurity::get_connection_count() const {
-  return active_connections_.size();
-}
+size_t NetworkSecurity::get_connection_count() const { return active_connections_.size(); }
 
-void NetworkSecurity::log_connection(const ConnectionInfo& conn_info,
-                                    bool allowed) const {
-  std::string log_entry = (allowed ? "ALLOWED: " : "DENIED: ") +
-                         conn_info.remote_address + ":" +
-                         std::to_string(conn_info.remote_port);
+void NetworkSecurity::log_connection(const ConnectionInfo& conn_info, bool allowed) const {
+  std::string log_entry = (allowed ? "ALLOWED: " : "DENIED: ") + conn_info.remote_address + ":" +
+                          std::to_string(conn_info.remote_port);
   audit_log_.push_back(log_entry);
 }
 
-std::vector<std::string> NetworkSecurity::get_audit_log() const {
-  return audit_log_;
-}
+std::vector<std::string> NetworkSecurity::get_audit_log() const { return audit_log_; }
 
 // Callback function to write response data
 static size_t WriteCallback(void* contents, size_t size, size_t nmemb, std::string* response) {
@@ -358,18 +331,15 @@ static size_t WriteCallback(void* contents, size_t size, size_t nmemb, std::stri
 }
 
 // SecureNetworkOperations implementation
-std::optional<std::string> SecureNetworkOperations::secure_request(
-    const std::string& url,
-    const std::string& method,
-    const std::string& data) {
-
+std::optional<std::string> SecureNetworkOperations::secure_request(const std::string& url,
+                                                                   const std::string& method,
+                                                                   const std::string& data) {
   if (!validate_url(url)) {
     return std::nullopt;
   }
 
   auto& security = NetworkSecurity::instance();
-  if (security.get_minimum_security_level() >= SecurityLevel::HIGH &&
-      !is_secure_url(url)) {
+  if (security.get_minimum_security_level() >= SecurityLevel::HIGH && !is_secure_url(url)) {
     return std::nullopt;
   }
 
@@ -406,9 +376,9 @@ std::optional<std::string> SecureNetworkOperations::secure_request(
   // GET is default
 
   // Security settings
-  curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);  // Follow redirects
-  curl_easy_setopt(curl, CURLOPT_MAXREDIRS, 5L);       // Max 5 redirects
-  curl_easy_setopt(curl, CURLOPT_TIMEOUT, 30L);        // 30 second timeout
+  curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);   // Follow redirects
+  curl_easy_setopt(curl, CURLOPT_MAXREDIRS, 5L);        // Max 5 redirects
+  curl_easy_setopt(curl, CURLOPT_TIMEOUT, 30L);         // 30 second timeout
   curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 10L);  // 10 second connect timeout
 
   // SSL/TLS settings for HTTPS

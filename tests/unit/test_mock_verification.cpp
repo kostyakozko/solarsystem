@@ -12,13 +12,13 @@
  * Requirements: 4.4
  */
 
+#include <gtest/gtest.h>
+
 #include <algorithm>
 #include <map>
 #include <memory>
 #include <string>
 #include <vector>
-
-#include <gtest/gtest.h>
 
 /**
  * @brief Mock verification system
@@ -58,8 +58,7 @@ class MockVerifier {
 
  public:
   // Record a call
-  void record_call(const std::string& method_name,
-                   const std::vector<std::string>& parameters,
+  void record_call(const std::string& method_name, const std::vector<std::string>& parameters,
                    const std::string& return_value = "") {
     CallRecord record;
     record.method_name = method_name;
@@ -73,8 +72,7 @@ class MockVerifier {
   }
 
   // Verify call count
-  VerificationResult verify_call_count(const std::string& method_name,
-                                       size_t expected_count) {
+  VerificationResult verify_call_count(const std::string& method_name, size_t expected_count) {
     VerificationResult result;
     size_t actual_count = call_counts_[method_name];
 
@@ -85,41 +83,36 @@ class MockVerifier {
                               std::to_string(actual_count));
     }
 
-    result.summary = "Call count verification for '" + method_name + "': " +
-                     (result.passed ? "PASSED" : "FAILED");
+    result.summary = "Call count verification for '" + method_name +
+                     "': " + (result.passed ? "PASSED" : "FAILED");
     return result;
   }
 
   // Verify call count range
-  VerificationResult verify_call_count_range(const std::string& method_name,
-                                             size_t min_calls,
+  VerificationResult verify_call_count_range(const std::string& method_name, size_t min_calls,
                                              size_t max_calls) {
     VerificationResult result;
     size_t actual_count = call_counts_[method_name];
 
     if (actual_count < min_calls || actual_count > max_calls) {
       result.passed = false;
-      result.errors.push_back("Method '" + method_name + "' expected " +
-                              std::to_string(min_calls) + "-" +
-                              std::to_string(max_calls) + " calls, got " +
+      result.errors.push_back("Method '" + method_name + "' expected " + std::to_string(min_calls) +
+                              "-" + std::to_string(max_calls) + " calls, got " +
                               std::to_string(actual_count));
     }
 
-    result.summary = std::string("Call count range verification: ") +
-                     (result.passed ? "PASSED" : "FAILED");
+    result.summary =
+        std::string("Call count range verification: ") + (result.passed ? "PASSED" : "FAILED");
     return result;
   }
 
   // Verify call order
-  VerificationResult verify_call_order(
-      const std::vector<std::string>& expected_order) {
+  VerificationResult verify_call_order(const std::vector<std::string>& expected_order) {
     VerificationResult result;
 
     if (call_history_.size() < expected_order.size()) {
       result.passed = false;
-      result.errors.push_back("Expected " +
-                              std::to_string(expected_order.size()) +
-                              " calls, got " +
+      result.errors.push_back("Expected " + std::to_string(expected_order.size()) + " calls, got " +
                               std::to_string(call_history_.size()));
       result.summary = "Call order verification: FAILED (insufficient calls)";
       return result;
@@ -128,22 +121,20 @@ class MockVerifier {
     for (size_t i = 0; i < expected_order.size(); ++i) {
       if (call_history_[i].method_name != expected_order[i]) {
         result.passed = false;
-        result.errors.push_back("Call order mismatch at position " +
-                                std::to_string(i) + ": expected '" +
-                                expected_order[i] + "', got '" +
+        result.errors.push_back("Call order mismatch at position " + std::to_string(i) +
+                                ": expected '" + expected_order[i] + "', got '" +
                                 call_history_[i].method_name + "'");
       }
     }
 
-    result.summary = std::string("Call order verification: ") +
-                     (result.passed ? "PASSED" : "FAILED");
+    result.summary =
+        std::string("Call order verification: ") + (result.passed ? "PASSED" : "FAILED");
     return result;
   }
 
   // Verify parameters
-  VerificationResult verify_parameters(
-      const std::string& method_name,
-      const std::vector<std::string>& expected_params) {
+  VerificationResult verify_parameters(const std::string& method_name,
+                                       const std::vector<std::string>& expected_params) {
     VerificationResult result;
 
     // Find calls to this method
@@ -156,8 +147,7 @@ class MockVerifier {
 
     if (matching_calls.empty()) {
       result.passed = false;
-      result.errors.push_back("No calls found for method '" + method_name +
-                              "'");
+      result.errors.push_back("No calls found for method '" + method_name + "'");
       result.summary = "Parameter verification: FAILED (no calls)";
       return result;
     }
@@ -173,12 +163,11 @@ class MockVerifier {
 
     if (!found_match) {
       result.passed = false;
-      result.errors.push_back("No call to '" + method_name +
-                              "' found with expected parameters");
+      result.errors.push_back("No call to '" + method_name + "' found with expected parameters");
     }
 
-    result.summary = std::string("Parameter verification: ") +
-                     (result.passed ? "PASSED" : "FAILED");
+    result.summary =
+        std::string("Parameter verification: ") + (result.passed ? "PASSED" : "FAILED");
     return result;
   }
 
@@ -191,8 +180,7 @@ class MockVerifier {
       result.errors.push_back("Method '" + method_name + "' was never called");
     }
 
-    result.summary = std::string("Called verification: ") +
-                     (result.passed ? "PASSED" : "FAILED");
+    result.summary = std::string("Called verification: ") + (result.passed ? "PASSED" : "FAILED");
     return result;
   }
 
@@ -202,21 +190,17 @@ class MockVerifier {
 
     if (call_counts_[method_name] > 0) {
       result.passed = false;
-      result.errors.push_back("Method '" + method_name +
-                              "' was called unexpectedly (" +
-                              std::to_string(call_counts_[method_name]) +
-                              " times)");
+      result.errors.push_back("Method '" + method_name + "' was called unexpectedly (" +
+                              std::to_string(call_counts_[method_name]) + " times)");
     }
 
-    result.summary = std::string("Not called verification: ") +
-                     (result.passed ? "PASSED" : "FAILED");
+    result.summary =
+        std::string("Not called verification: ") + (result.passed ? "PASSED" : "FAILED");
     return result;
   }
 
   // Get call history
-  const std::vector<CallRecord>& get_call_history() const {
-    return call_history_;
-  }
+  const std::vector<CallRecord>& get_call_history() const { return call_history_; }
 
   // Get call count
   size_t get_call_count(const std::string& method_name) const {
@@ -244,8 +228,7 @@ class MockVerifier {
 
     report += "\nCall sequence:\n";
     for (const auto& record : call_history_) {
-      report += "  [" + std::to_string(record.call_index) + "] " +
-                record.method_name;
+      report += "  [" + std::to_string(record.call_index) + "] " + record.method_name;
       if (!record.parameters.empty()) {
         report += "(";
         for (size_t i = 0; i < record.parameters.size(); ++i) {
@@ -517,13 +500,12 @@ TEST(MockVerificationTest, ComplexVerificationScenarios) {
     ASSERT_TRUE(verifier.verify_call_count("logout", 1).passed);
 
     // Verify order
-    std::vector<std::string> expected_order = {
-        "authenticate", "authorize", "access_resource", "logout"};
+    std::vector<std::string> expected_order = {"authenticate", "authorize", "access_resource",
+                                               "logout"};
     ASSERT_TRUE(verifier.verify_call_order(expected_order).passed);
 
     // Verify parameters
-    ASSERT_TRUE(
-        verifier.verify_parameters("authenticate", {"user", "pass"}).passed);
+    ASSERT_TRUE(verifier.verify_parameters("authenticate", {"user", "pass"}).passed);
   }
 
   // Test 6.2: Retry mechanism verification
@@ -552,8 +534,7 @@ TEST(MockVerificationTest, ComplexVerificationScenarios) {
     // Verify state transitions
     ASSERT_EQ(verifier.get_call_count("transition"), 3);
 
-    std::vector<std::string> expected_order = {"transition", "transition",
-                                                "transition"};
+    std::vector<std::string> expected_order = {"transition", "transition", "transition"};
     ASSERT_TRUE(verifier.verify_call_order(expected_order).passed);
   }
 

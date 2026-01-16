@@ -207,7 +207,8 @@ class Expected<void, E> {
 
  private:
   bool has_value_;
-  std::aligned_storage_t<sizeof(E), alignof(E)> error_storage_;  // Only valid when has_value_ is false
+  std::aligned_storage_t<sizeof(E), alignof(E)>
+      error_storage_;  // Only valid when has_value_ is false
 };
 
 // Helper function to create success Expected
