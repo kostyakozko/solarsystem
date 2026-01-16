@@ -82,16 +82,6 @@ if(CMAKE_BUILD_TYPE STREQUAL "Release")
     set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
 endif()
 
-# Workaround for GCC 13+ false positive warnings (affects both Debug and Release with -Werror)
-# These occur in standard library and Google Test code
-if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 13.0)
-        message(STATUS "Applying GCC 13+ warning workarounds")
-        add_compile_options(-Wno-null-dereference -Wno-float-conversion -Wno-conversion)
-        add_link_options(-Wno-null-dereference -Wno-float-conversion -Wno-conversion)
-    endif()
-endif()
-
 # Installation configuration
 # Check for environment variable first, then CMake option, then default
 if(DEFINED ENV{SOLAR_SYSTEM_INSTALL_DIR})

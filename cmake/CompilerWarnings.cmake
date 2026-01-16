@@ -59,6 +59,17 @@ function(configure_solar_system_warnings)
             -Wlogical-op # warn about logical operations being used where bitwise were probably wanted
             -Wuseless-cast # warn if you perform a cast to the same type
         )
+        # GCC 13+ has false positives with -Werror for these warnings in standard library and Google Test
+        if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 13.0)
+            list(APPEND PROJECT_WARNINGS_CXX
+                -Wno-null-dereference
+                -Wno-conversion
+                -Wno-float-conversion
+                -Wno-sign-conversion
+            )
+            message(STATUS "GCC 13+ detected: disabling problematic warnings")
+        endif()
+        )
     elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
         set(PROJECT_WARNINGS_CXX ${MSVC_WARNINGS})
     endif()
