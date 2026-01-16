@@ -1,0 +1,87 @@
+# Solar System Suite - Windows Dependencies
+#
+# ============================================================================
+# Option 1: WSL (Windows Subsystem for Linux) - RECOMMENDED
+# ============================================================================
+# WSL provides the easiest and most reliable way to build on Windows.
+# It uses the same Linux toolchain as CI, ensuring consistent builds.
+#
+# Step 1: Install WSL2 with Ubuntu (run in PowerShell as Administrator)
+#   wsl --install -d Ubuntu
+#
+# Step 2: Restart your computer, then open Ubuntu from Start menu
+#
+# Step 3: Install dependencies (inside WSL Ubuntu terminal)
+#   sudo apt-get update
+#   sudo apt-get install -y cmake build-essential pkg-config \
+#       libssl-dev libcurl4-openssl-dev zlib1g-dev libboost-dev \
+#       libcairo2-dev libpng-dev
+#
+# Step 4: Clone and build (inside WSL)
+#   cd /mnt/c/path/to/solarsystem   # or clone fresh
+#   cmake -B build -DCMAKE_BUILD_TYPE=Release -DENABLE_TESTING=ON
+#   cmake --build build -j$(nproc)
+#   cd build && ctest --output-on-failure
+#
+# Tips for WSL:
+#   - Access Windows files via /mnt/c/, /mnt/d/, etc.
+#   - For best performance, clone repo inside WSL filesystem (~/)
+#   - VS Code with "Remote - WSL" extension provides great IDE support
+#   - Run "./run-local-ci.sh" for full CI validation
+#
+# ============================================================================
+# Option 2: Native Windows with vcpkg
+# ============================================================================
+# For native Windows builds (MSVC), use vcpkg for dependency management.
+#
+# Step 1: Install Visual Studio Build Tools
+#   winget install Microsoft.VisualStudio.2022.BuildTools
+#   # Or download from: https://visualstudio.microsoft.com/downloads/
+#   # Select "Desktop development with C++" workload
+#
+# Step 2: Install vcpkg
+#   git clone https://github.com/microsoft/vcpkg.git C:\vcpkg
+#   cd C:\vcpkg
+#   .\bootstrap-vcpkg.bat
+#   .\vcpkg integrate install
+#
+# Step 3: Install dependencies
+#   vcpkg install openssl:x64-windows curl:x64-windows zlib:x64-windows ^
+#       boost:x64-windows cairo:x64-windows libpng:x64-windows
+#
+# Step 4: Build with CMake
+#   cmake -B build -DCMAKE_TOOLCHAIN_FILE=C:\vcpkg\scripts\buildsystems\vcpkg.cmake
+#   cmake --build build --config Release
+#
+# Or use the provided PowerShell script:
+#   .\scripts\build-windows.ps1 -Test
+#
+# ============================================================================
+# Option 3: Chocolatey + vcpkg
+# ============================================================================
+# Install Chocolatey: https://chocolatey.org/install
+# Then in Administrator PowerShell:
+#   choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System'
+#   choco install visualstudio2022buildtools
+#   choco install visualstudio2022-workload-vctools
+#   choco install git
+#
+# Then follow vcpkg steps from Option 2 for C++ libraries.
+#
+# ============================================================================
+# Required Visual Studio Components (for native builds)
+# ============================================================================
+# - MSVC v143 - VS 2022 C++ x64/x86 build tools
+# - Windows 10/11 SDK (latest)
+# - C++ CMake tools for Windows
+#
+# ============================================================================
+# vcpkg Dependencies List (for native builds)
+# ============================================================================
+openssl:x64-windows
+curl:x64-windows
+zlib:x64-windows
+boost:x64-windows
+cairo:x64-windows
+libpng:x64-windows
+

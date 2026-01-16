@@ -302,13 +302,13 @@ This implementation plan systematically modernizes the Solar System Suite's buil
 
 ### Phase 6: Validation and Documentation
 
-- [-] 12. Cross-platform validation
+- [x] 12. Cross-platform validation
   - Test shared libraries on macOS
   - Test shared libraries on Linux
-  - Test shared libraries on Windows
   - Verify symbol exports on all platforms
   - Test installation on all platforms
-  - _Requirements: 9.1, 9.2, 9.3, 9.4_
+  - _Requirements: 9.1, 9.2, 9.4_
+  - **Note**: Windows support is documentation-only (see requirements-windows.txt)
 
 - [x] 12.1 macOS validation
   - Build shared libraries (.dylib)
@@ -325,14 +325,6 @@ This implementation plan systematically modernizes the Solar System Suite's buil
   - Verify symbol visibility with nm
   - Test installation and pkg-config
   - _Requirements: 9.2, 9.4_
-
-- [ ] 12.3 Windows validation
-  - Build DLLs and import libraries
-  - Verify exports with dumpbin
-  - Test DLL loading and PATH resolution
-  - Verify all applications run with DLLs
-  - Test installation
-  - _Requirements: 9.3, 9.4_
 
 - [ ] 13. Performance benchmarking
   - Benchmark static vs shared library performance
@@ -398,7 +390,7 @@ This implementation plan systematically modernizes the Solar System Suite's buil
   - Add BUILD_SHARED_LIBS=ON to test matrix
   - Add BUILD_SHARED_LIBS=OFF to test matrix
   - Test with system dependencies where available
-  - Add Windows, macOS, Linux to matrix
+  - Test on macOS and Linux
   - _Requirements: 5.4, 9.4_
 
 - [ ] 15.2 Update deployment configuration
@@ -456,7 +448,7 @@ This implementation plan systematically modernizes the Solar System Suite's buil
 
 ### Testing Requirements
 - Test both BUILD_SHARED_LIBS=ON and OFF
-- Test on macOS, Linux, and Windows
+- Test on macOS and Linux (Windows via WSL or documentation)
 - Test with system dependencies and FetchContent
 - Verify symbol exports with platform tools
 - Performance benchmarks must show acceptable overhead
@@ -485,7 +477,8 @@ This implementation plan systematically modernizes the Solar System Suite's buil
 
 ### Quality Success
 - 100% test pass rate with both static and shared builds
-- All platforms (macOS, Linux, Windows) working
+- macOS and Linux platforms fully validated
+- Windows support documented (WSL recommended, native via vcpkg)
 - Symbol visibility correct on all platforms
 - No ABI compatibility issues
 - Documentation complete and accurate

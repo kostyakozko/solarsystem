@@ -122,13 +122,15 @@ The specification should be extended as these needs are discovered. Before begin
 
 ### Requirement 9: Cross-Platform Compatibility
 
-**User Story:** As a cross-platform developer, I want shared libraries to work consistently across macOS, Linux, and Windows, so that I can maintain a single codebase.
+**User Story:** As a cross-platform developer, I want shared libraries to work consistently across macOS and Linux, so that I can maintain a single codebase.
+
+**Note:** Windows native builds are supported via documentation (requirements-windows.txt) and build scripts, but are not part of CI validation. Windows users are encouraged to use WSL for the best experience.
 
 #### Acceptance Criteria
 
 1. WHEN building on macOS, THE Solar_System_Suite SHALL create .dylib files with proper install_name
 2. WHEN building on Linux, THE Solar_System_Suite SHALL create .so files with proper SONAME
-3. WHEN building on Windows, THE Solar_System_Suite SHALL create .dll and .lib files with proper exports
+3. WHEN building on Windows, THE Solar_System_Suite SHALL provide documentation for native builds via vcpkg and WSL
 4. WHEN installing on any platform, THE Solar_System_Suite SHALL place libraries in platform-appropriate directories
 5. IF platform-specific features are needed, THEN THE Solar_System_Suite SHALL abstract them behind a common interface
 

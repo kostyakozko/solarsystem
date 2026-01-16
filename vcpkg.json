@@ -1,0 +1,18 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+  "name": "solar-system-suite",
+  "version": "4.0.0",
+  "description": "High-performance N-body gravitational simulation suite with JPL HORIZONS integration",
+  "homepage": "https://github.com/your-org/solarsystem",
+  "license": "MIT",
+  "supports": "windows | linux | osx",
+  "dependencies": [
+    "openssl",
+    "curl",
+    "zlib",
+    "boost",
+    "cairo",
+    "libpng"
+  ],
+  "builtin-baseline": "2024.01.12"
+}

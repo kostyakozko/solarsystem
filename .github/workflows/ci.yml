@@ -27,24 +27,24 @@ jobs:
           - os: macos-latest
             cc: clang
             cxx: clang++
-    
+
     runs-on: ${{ matrix.os }}
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      
+
     - name: Install dependencies (Ubuntu)
       if: matrix.os == 'ubuntu-latest'
       run: |
         sudo apt-get update
         sudo apt-get install -y cmake build-essential curl doxygen graphviz lcov
-        
+
     - name: Install dependencies (macOS)
       if: matrix.os == 'macos-latest'
       run: |
         brew install cmake curl doxygen graphviz coreutils
-        
+
     - name: Configure CMake
       env:
         CC: ${{ matrix.cc }}
@@ -57,40 +57,40 @@ jobs:
           -DCMAKE_INSTALL_PREFIX=${{ env.INSTALL_PREFIX }} \
           -DENABLE_TESTING=ON \
           -DENABLE_PROFILING=OFF
-          
+
     - name: Build
       run: cmake --build build --config ${{ matrix.build_type }} -j"$(nproc)"
-      
+
     - name: Install
       run: cmake --build build --target install
-      
+
     - name: Run Unit Tests
       working-directory: build
       run: ctest -L "unit" --output-on-failure --timeout 60
-      
+
     - name: Run Integration Tests
       working-directory: build
       run: ctest -L "integration" --output-on-failure --timeout 180
-      
+
     - name: Run Performance Benchmarks
       working-directory: build
       run: ctest -L "benchmark" --output-on-failure --timeout 300
       continue-on-error: true  # Benchmarks may vary by system
-      
+
     - name: Test Installation
       working-directory: ${{ env.INSTALL_PREFIX }}
       run: |
         ./solar_system_launcher --status
         ./bin/solar_system --help
         ./bin/solar_system_fetch --test-storage
-        
+
     - name: Generate Documentation
       if: matrix.os == 'ubuntu-latest' && matrix.build_type == 'Release'
       run: |
         cd docs
         mkdir -p api
         doxygen Doxyfile
-        
+
     - name: Upload Test Results
       uses: actions/upload-artifact@v4
       if: always()
@@ -99,7 +99,7 @@ jobs:
         path: |
           build/Testing/
           build/tests/benchmark_results/
-          
+
     - name: Upload Documentation
       uses: actions/upload-artifact@v4
       if: matrix.os == 'ubuntu-latest' && matrix.build_type == 'Release'
@@ -110,20 +110,20 @@ jobs:
   # Code quality checks
   code-quality:
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      
+
     - name: Install dependencies
       run: |
         sudo apt-get update
         sudo apt-get install -y clang-format cppcheck
-        
+
     - name: Check code formatting
       run: |
         find lib apps \( -name "*.cpp" -o -name "*.h" \) -print0 | xargs -0 clang-format --dry-run --Werror
-        
+
     - name: Run static analysis
       run: |
         # Run cppcheck and capture output
@@ -135,7 +135,7 @@ jobs:
         else
           echo "✅ cppcheck passed - no errors or warnings found"
         fi
-        
+
     - name: Check for TODO/FIXME comments
       run: |
         if grep -r "TODO\|FIXME" lib/ apps/ --include="*.cpp" --include="*.h"; then
@@ -146,11 +146,11 @@ jobs:
   # Security scanning
   security-scan:
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      
+
     - name: Run security scan
       uses: github/super-linter@v5
       env:
@@ -182,24 +182,24 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-and-test
     if: github.event_name == 'pull_request'
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      
+
     - name: Download baseline performance data
       uses: actions/download-artifact@v4
       with:
         name: performance-baseline
         path: baseline/
       continue-on-error: true
-      
+
     - name: Download current performance data
       uses: actions/download-artifact@v4
       with:
         name: test-results-ubuntu-latest-Release
         path: current/
-        
+
     - name: Compare performance
       run: |
         if [ -f baseline/benchmark_results/simulation_performance.csv ]; then
@@ -215,18 +215,18 @@ jobs:
     runs-on: ubuntu-latest
     needs: [build-and-test, code-quality, security-scan]
     if: github.ref == 'refs/heads/modern-cpp-architecture'
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      
+
     - name: Create release package
       run: |
         mkdir -p release/solar_system_suite
         cp -r lib apps cmake docs CMakeLists.txt README.md release/solar_system_suite/
         cd release
         tar -czf solar_system_suite.tar.gz solar_system_suite/
-        
+
     - name: Upload release package
       uses: actions/upload-artifact@v4
       with:
@@ -237,18 +237,18 @@ jobs:
   update-baseline:
     runs-on: ubuntu-latest
     if: github.event_name == 'schedule'
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      
+
     - name: Build and benchmark
       run: |
         cmake -B build -DCMAKE_BUILD_TYPE=Release -DENABLE_TESTING=ON
         cmake --build build -j"$(nproc)"
         cd build
         ctest -L "benchmark" --output-on-failure
-        
+
     - name: Upload new baseline
       uses: actions/upload-artifact@v4
       with:
@@ -261,32 +261,32 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-and-test
     if: github.ref == 'refs/heads/modern-cpp-architecture'
-    
+
     # Required permissions for GitHub Pages deployment
     permissions:
       pages: write
       id-token: write
-    
+
     # Deploy to the github-pages environment
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    
+
     steps:
     - name: Download documentation
       uses: actions/download-artifact@v4
       with:
         name: documentation
         path: docs/
-        
+
     - name: Setup Pages
       uses: actions/configure-pages@v4
-      
+
     - name: Upload to GitHub Pages
       uses: actions/upload-pages-artifact@v3
       with:
         path: docs/api/html/
-        
+
     - name: Deploy to GitHub Pages
       id: deployment
       uses: actions/deploy-pages@v4
