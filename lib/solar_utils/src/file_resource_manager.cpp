@@ -603,10 +603,9 @@ void FileResourceManager::generate_file_usage_report(std::ostream& output) const
     auto age = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now() -
                                                                 info.opened_at);
 
-    output << "  " << path << " (" << static_cast<int>(info.access_mode) << "): "
-           << "age " << age.count() << "s, "
-           << "read " << info.bytes_read << " bytes, "
-           << "written " << info.bytes_written << " bytes\n";
+    output << "  " << path << " (" << static_cast<int>(info.access_mode) << "): " << "age "
+           << age.count() << "s, " << "read " << info.bytes_read << " bytes, " << "written "
+           << info.bytes_written << " bytes\n";
   }
 
   output << "\nTemporary Files: " << temp_files_.size() << "\n";

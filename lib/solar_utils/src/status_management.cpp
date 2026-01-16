@@ -816,8 +816,7 @@ void StatusDashboard::display_alert_table(const std::vector<StatusAlert>& alerts
 
   // Table header
   std::cout << std::left << std::setw(10) << "Severity" << std::setw(20) << "Component"
-            << std::setw(25) << "Title" << std::setw(12) << "Age"
-            << "Description\n";
+            << std::setw(25) << "Title" << std::setw(12) << "Age" << "Description\n";
   std::cout << std::string(80, '-') << "\n";
 
   // Table rows

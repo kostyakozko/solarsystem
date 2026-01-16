@@ -954,10 +954,8 @@ void NetworkResourceManager::generate_network_usage_report(std::ostream& output)
     auto age = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now() -
                                                                 info.created_at);
 
-    output << "  " << id << " (" << info.endpoint << "): "
-           << "age " << age.count() << "s, "
-           << "requests " << info.request_count << ", "
-           << "errors " << info.error_count << "\n";
+    output << "  " << id << " (" << info.endpoint << "): " << "age " << age.count() << "s, "
+           << "requests " << info.request_count << ", " << "errors " << info.error_count << "\n";
   }
 
   output << "\nCircuit Breakers: " << circuit_breakers_.size() << "\n";

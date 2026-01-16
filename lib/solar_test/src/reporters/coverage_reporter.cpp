@@ -214,8 +214,7 @@ void CoverageReporter::write_file_coverage_details() {
   std::sort(sorted_files.begin(), sorted_files.end(),
             [](const auto& a, const auto& b) { return a.second < b.second; });
 
-  output_file_ << std::left << std::setw(50) << "File" << std::setw(12) << "Coverage"
-               << "Status\n";
+  output_file_ << std::left << std::setw(50) << "File" << std::setw(12) << "Coverage" << "Status\n";
   output_file_ << std::string(70, '-') << "\n";
 
   for (const auto& [file_path, coverage] : sorted_files) {

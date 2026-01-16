@@ -70,13 +70,11 @@ void XmlReporter::write_testsuite_element(const TestSuiteResult& result) {
       std::chrono::duration_cast<std::chrono::milliseconds>(suite_end_time - suite_start_time_);
 
   write_indented("<testsuite", 1);
-  output_file_ << " name=\"" << xml_escape(result.suite_name) << "\""
-               << " tests=\"" << result.test_results.size() << "\""
-               << " failures=\"" << result.failed_count << "\""
-               << " errors=\"0\""  // We don't distinguish errors from failures in our model
-               << " skipped=\"" << result.skipped_count << "\""
-               << " time=\"" << format_duration_seconds(suite_duration) << "\""
-               << ">\n";
+  output_file_ << " name=\"" << xml_escape(result.suite_name) << "\"" << " tests=\""
+               << result.test_results.size() << "\"" << " failures=\"" << result.failed_count
+               << "\"" << " errors=\"0\""  // We don't distinguish errors from failures in our model
+               << " skipped=\"" << result.skipped_count << "\"" << " time=\""
+               << format_duration_seconds(suite_duration) << "\"" << ">\n";
 
   // Write individual test cases
   for (const auto& test_result : result.test_results) {
@@ -88,9 +86,9 @@ void XmlReporter::write_testsuite_element(const TestSuiteResult& result) {
 
 void XmlReporter::write_testcase_element(const TestResult& result) {
   write_indented("<testcase", 2);
-  output_file_ << " name=\"" << xml_escape(result.test_name) << "\""
-               << " classname=\"" << xml_escape(current_suite_name_) << "\""
-               << " time=\"" << format_duration_seconds(result.execution_time) << "\"";
+  output_file_ << " name=\"" << xml_escape(result.test_name) << "\"" << " classname=\""
+               << xml_escape(current_suite_name_) << "\"" << " time=\""
+               << format_duration_seconds(result.execution_time) << "\"";
 
   // Check if test has failure, error, or is skipped
   bool has_content = false;
@@ -140,8 +138,8 @@ void XmlReporter::write_failure_element(const TestResult& result) {
   }
 
   write_indented("<failure", 3);
-  output_file_ << " type=\"" << failure_type << "\""
-               << " message=\"" << xml_escape(result.error_message) << "\"";
+  output_file_ << " type=\"" << failure_type << "\"" << " message=\""
+               << xml_escape(result.error_message) << "\"";
 
   if (!result.assertion_failures.empty()) {
     output_file_ << ">\n";
@@ -161,8 +159,8 @@ void XmlReporter::write_failure_element(const TestResult& result) {
 
 void XmlReporter::write_error_element(const TestResult& result) {
   write_indented("<error", 3);
-  output_file_ << " type=\"TestError\""
-               << " message=\"" << xml_escape(result.error_message) << "\" />\n";
+  output_file_ << " type=\"TestError\"" << " message=\"" << xml_escape(result.error_message)
+               << "\" />\n";
 }
 
 void XmlReporter::write_skipped_element(const TestResult& result) {

@@ -423,8 +423,7 @@ std::string RegressionDetector::generate_regression_report(
     oss << severity << " Regressions (" << group.size() << "):\n";
     for (const auto& analysis : group) {
       oss << "  - " << analysis.benchmark_name << " (Time: " << analysis.time_regression_percentage
-          << "%"
-          << ", Memory: " << analysis.memory_regression_percentage << "%"
+          << "%" << ", Memory: " << analysis.memory_regression_percentage << "%"
           << ", Ops: " << analysis.ops_regression_percentage << "%)\n";
     }
     oss << "\n";

@@ -17,9 +17,8 @@ std::string LogEntry::to_string() const {
       std::chrono::duration_cast<std::chrono::milliseconds>(timestamp.time_since_epoch()) % 1000;
 
   oss << std::put_time(std::localtime(&time_t), "%Y-%m-%d %H:%M:%S") << '.' << std::setfill('0')
-      << std::setw(3) << ms.count() << " [" << static_cast<int>(level) << "]"
-      << " [" << component << "]"
-      << " " << message;
+      << std::setw(3) << ms.count() << " [" << static_cast<int>(level) << "]" << " [" << component
+      << "]" << " " << message;
 
   if (!metadata.empty()) {
     oss << " {";
@@ -66,14 +65,11 @@ std::string LogEntry::to_xml() const {
   std::ostringstream oss;
   auto time_t = std::chrono::system_clock::to_time_t(timestamp);
 
-  oss << "<log>"
-      << "<timestamp>" << std::put_time(std::gmtime(&time_t), "%Y-%m-%dT%H:%M:%SZ")
-      << "</timestamp>"
-      << "<level>" << static_cast<int>(level) << "</level>"
-      << "<component>" << component << "</component>"
-      << "<message>" << message << "</message>"
-      << "<thread_id>" << thread_id << "</thread_id>"
-      << "<sequence_number>" << sequence_number << "</sequence_number>";
+  oss << "<log>" << "<timestamp>" << std::put_time(std::gmtime(&time_t), "%Y-%m-%dT%H:%M:%SZ")
+      << "</timestamp>" << "<level>" << static_cast<int>(level) << "</level>" << "<component>"
+      << component << "</component>" << "<message>" << message << "</message>" << "<thread_id>"
+      << thread_id << "</thread_id>" << "<sequence_number>" << sequence_number
+      << "</sequence_number>";
 
   if (!metadata.empty()) {
     oss << "<metadata>";
@@ -92,8 +88,7 @@ std::string LogEntry::to_csv() const {
   auto time_t = std::chrono::system_clock::to_time_t(timestamp);
 
   oss << std::put_time(std::gmtime(&time_t), "%Y-%m-%d %H:%M:%S") << "," << static_cast<int>(level)
-      << "," << component << ","
-      << "\"" << message << "\"," << thread_id << "," << sequence_number;
+      << "," << component << "," << "\"" << message << "\"," << thread_id << "," << sequence_number;
 
   return oss.str();
 }

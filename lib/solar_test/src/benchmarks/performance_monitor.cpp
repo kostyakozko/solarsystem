@@ -352,8 +352,7 @@ std::string PerformanceProfiler::generate_report() const {
 
   oss << std::fixed << std::setprecision(3);
   oss << std::setw(20) << "Profile Point" << std::setw(15) << "Wall Time (ms)" << std::setw(15)
-      << "CPU Usage (%)" << std::setw(15) << "Memory (KB)"
-      << "\n";
+      << "CPU Usage (%)" << std::setw(15) << "Memory (KB)" << "\n";
   oss << std::string(65, '-') << "\n";
 
   auto start_time = profile_points_[0].timestamp;

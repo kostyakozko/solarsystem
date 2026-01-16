@@ -573,8 +573,8 @@ void ErrorLogger::log_to_console(const std::string& message, LogLevel level) {
   auto now = std::chrono::system_clock::now();
   auto time_t = std::chrono::system_clock::to_time_t(now);
 
-  stream << "[" << std::put_time(std::localtime(&time_t), "%Y-%m-%d %H:%M:%S") << "] "
-         << "[" << log_level_to_string(level) << "] " << message << std::endl;
+  stream << "[" << std::put_time(std::localtime(&time_t), "%Y-%m-%d %H:%M:%S") << "] " << "["
+         << log_level_to_string(level) << "] " << message << std::endl;
 }
 
 void ErrorLogger::log_to_file(const std::string& message) {
@@ -679,11 +679,9 @@ void ErrorLogger::log_to_network(const std::string& message) {
     auto now = std::chrono::system_clock::now();
     auto time_t = std::chrono::system_clock::to_time_t(now);
 
-    json_payload << "{"
-                 << "\"timestamp\":\""
+    json_payload << "{" << "\"timestamp\":\""
                  << std::put_time(std::localtime(&time_t), "%Y-%m-%d %H:%M:%S") << "\","
-                 << "\"application\":\"SolarSystemSuite\","
-                 << "\"message\":\"" << message << "\""
+                 << "\"application\":\"SolarSystemSuite\"," << "\"message\":\"" << message << "\""
                  << "}";
 
     // Build HTTP POST request

@@ -468,8 +468,8 @@ class NetworkMock {
    * @brief Execute function with network condition
    */
   template <typename Func>
-  auto execute_with_network_condition(const NetworkCondition& condition, Func&& func)
-      -> decltype(func());
+  auto execute_with_network_condition(const NetworkCondition& condition,
+                                      Func&& func) -> decltype(func());
 
  private:
   NetworkMockConfig config_;

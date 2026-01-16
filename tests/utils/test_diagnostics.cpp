@@ -246,8 +246,8 @@ void TestDiagnosticLogger::write_to_console(const LogEntry& entry) {
       break;  // Bold Red
   }
 
-  std::cout << level_color << "[" << get_log_level_string(entry.level) << "]"
-            << "\033[0m " << entry.test_name << ": " << entry.message << std::endl;
+  std::cout << level_color << "[" << get_log_level_string(entry.level) << "]" << "\033[0m "
+            << entry.test_name << ": " << entry.message << std::endl;
 }
 
 std::string TestDiagnosticLogger::get_log_level_string(LogLevel level) const {

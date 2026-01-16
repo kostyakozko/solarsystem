@@ -211,8 +211,8 @@ LeakDetectionResult ResourceManager::detect_leaks() const {
 
   if (result.has_leaks) {
     std::ostringstream summary;
-    summary << "Detected " << result.leak_count << " potential resource leaks "
-            << "totaling " << result.leaked_bytes << " bytes";
+    summary << "Detected " << result.leak_count << " potential resource leaks " << "totaling "
+            << result.leaked_bytes << " bytes";
     result.summary = summary.str();
 
     // Generate recommendations

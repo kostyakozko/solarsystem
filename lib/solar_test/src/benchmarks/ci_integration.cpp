@@ -269,9 +269,9 @@ void PerformanceAlertSystem::send_batch_alert(const std::vector<RegressionAnalys
   body << "\nDetailed Results:\n";
   for (const auto& analysis : analyses) {
     if (analysis.has_regression) {
-      body << "- " << analysis.benchmark_name << " (" << analysis.severity << "): "
-           << "Time " << analysis.time_regression_percentage << "%, "
-           << "Memory " << analysis.memory_regression_percentage << "%\n";
+      body << "- " << analysis.benchmark_name << " (" << analysis.severity << "): " << "Time "
+           << analysis.time_regression_percentage << "%, " << "Memory "
+           << analysis.memory_regression_percentage << "%\n";
     }
   }
 
@@ -468,11 +468,9 @@ void PerformanceAlertSystem::send_slack_alert(const std::string& message) {
 
   // Build Slack JSON payload
   std::ostringstream json_payload;
-  json_payload << "{"
-               << "\"text\":\"" << escape_json(message) << "\","
+  json_payload << "{" << "\"text\":\"" << escape_json(message) << "\","
                << "\"username\":\"Solar System Performance Monitor\","
-               << "\"icon_emoji\":\":rocket:\""
-               << "}";
+               << "\"icon_emoji\":\":rocket:\"" << "}";
 
   std::string payload = json_payload.str();
 
@@ -561,11 +559,8 @@ void PerformanceAlertSystem::create_github_issue(const std::string& title,
 
   // Build JSON payload
   std::ostringstream json_payload;
-  json_payload << "{"
-               << "\"title\":\"" << escape_json(title) << "\","
-               << "\"body\":\"" << escape_json(body) << "\","
-               << "\"labels\":[\"performance\",\"automated\"]"
-               << "}";
+  json_payload << "{" << "\"title\":\"" << escape_json(title) << "\"," << "\"body\":\""
+               << escape_json(body) << "\"," << "\"labels\":[\"performance\",\"automated\"]" << "}";
 
   std::string payload = json_payload.str();
 
