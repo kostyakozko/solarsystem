@@ -76,11 +76,12 @@ The Solar System Suite was created to provide researchers, educators, and space 
 - **Offline Capability**: Graceful fallback to hardcoded data
 
 ### ⚡ **High-Performance Architecture**
-- **Modular Design**: Clean separation with static libraries
+- **Modular Design**: Clean separation with static or shared libraries
+- **Flexible Builds**: Static (max performance) or shared (smaller binaries)
 - **Optimized Compilation**: Native CPU instructions and LTO
 - **Configurable Parameters**: Flexible simulation settings
-- **Cross-Platform**: macOS, Linux, Windows support
-- **Minimal Dependencies**: Standard library + header-only serialization libraries (nlohmann/json v3.11.3, msgpack-cxx v6.1.0)
+- **Cross-Platform**: macOS, Linux, Windows (via WSL) support
+- **Modern Dependencies**: Google Test, nlohmann/json v3.11.3, msgpack-cxx
 
 ### 🌐 **Interactive Web Visualization**
 - **Time Travel Interface**: Simulate from any historical date
@@ -127,18 +128,31 @@ The Solar System Suite was created to provide researchers, educators, and space 
 git clone <repository-url>
 cd solarsystem
 
-# Default installation (./install/)
+# Default installation (./install/) - Static libraries
 mkdir build && cd build
 cmake ..
 make -j$(nproc)
 make install
 
+# Build with shared libraries (smaller binaries, faster incremental builds)
+cmake -DBUILD_SHARED_LIBS=ON ..
+make -j$(nproc)
+make install
+
 # Custom installation directory
 export SOLAR_SYSTEM_INSTALL_DIR=/opt/solar_system
-mkdir build && cd build
 cmake ..
 make -j$(nproc) && make install
 ```
+
+#### **Build Options**
+| Option | Default | Description |
+|--------|---------|-------------|
+| `BUILD_SHARED_LIBS` | OFF | Build shared libraries (.so/.dylib) instead of static |
+| `ENABLE_TESTING` | OFF | Enable test suite (Google Test) |
+| `CMAKE_BUILD_TYPE` | Release | Build type (Debug/Release/RelWithDebInfo) |
+
+See [Build Options Documentation](docs/BUILD_OPTIONS.md) for complete details.
 
 #### **Installation Layout**
 ```

@@ -351,36 +351,40 @@ This implementation plan systematically modernizes the Solar System Suite's buil
   - _Requirements: 7.1, 8.1, 8.2_
   - **COMPLETED**: Clean builds comparable, incremental ~5% faster, binary sizes 65-89% smaller
 
-- [ ] 14. Update documentation
+- [x] 14. Update documentation
   - Update README.md with build options
   - Create migration guide
   - Update developer documentation
   - Document API stability guarantees
   - Create troubleshooting guide
   - _Requirements: 10.3_
+  - **COMPLETED**: Created BUILD_OPTIONS.md, MIGRATION_GUIDE.md, updated README.md
 
-- [ ] 14.1 Update build documentation
+- [x] 14.1 Update build documentation
   - Document BUILD_SHARED_LIBS option
   - Document external dependency options
   - Add platform-specific build instructions
   - Document RPATH troubleshooting
   - Add examples of using installed libraries
   - _Requirements: 10.3_
+  - **COMPLETED**: docs/BUILD_OPTIONS.md with all options and examples
 
-- [ ] 14.2 Create migration guide
+- [x] 14.2 Create migration guide
   - Document migrating from static to shared builds
   - Document test framework migration
   - Document JSON library migration
   - Provide code examples for common patterns
   - Add FAQ section
   - _Requirements: 10.3_
+  - **COMPLETED**: docs/MIGRATION_GUIDE.md with examples and troubleshooting
 
-- [ ] 14.3 Update API documentation
+- [x] 14.3 Update API documentation
   - Mark exported symbols in Doxygen comments
   - Document ABI stability policy
   - Document versioning scheme
   - Add examples of using public API
   - _Requirements: 6.4_
+  - **COMPLETED**: Export macros documented, pkg-config/CMake usage examples added
 
 - [ ] 15. Update CI/CD pipelines
   - Add shared library builds to CI matrix
