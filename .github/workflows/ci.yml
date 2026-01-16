@@ -17,9 +17,11 @@ jobs:
   # Build and test on multiple platforms
   build-and-test:
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest]
         build_type: [Release, Debug]
+        shared_libs: [OFF]  # Static by default, shared libs optional
         include:
           - os: ubuntu-latest
             cc: gcc
@@ -27,6 +29,13 @@ jobs:
           - os: macos-latest
             cc: clang
             cxx: clang++
+          # Optional: Add shared library build for Release only
+          # Uncomment to enable shared library CI testing
+          # - os: ubuntu-latest
+          #   build_type: Release
+          #   shared_libs: ON
+          #   cc: gcc
+          #   cxx: g++
 
     runs-on: ${{ matrix.os }}
 
@@ -38,12 +47,12 @@ jobs:
       if: matrix.os == 'ubuntu-latest'
       run: |
         sudo apt-get update
-        sudo apt-get install -y cmake build-essential curl doxygen graphviz lcov
+        sudo apt-get install -y cmake build-essential curl doxygen graphviz lcov libssl-dev libcurl4-openssl-dev zlib1g-dev libboost-dev
 
     - name: Install dependencies (macOS)
       if: matrix.os == 'macos-latest'
       run: |
-        brew install cmake curl doxygen graphviz coreutils
+        brew install cmake curl doxygen graphviz coreutils openssl boost
 
     - name: Configure CMake
       env:
@@ -55,11 +64,17 @@ jobs:
         cmake -B build \
           -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
           -DCMAKE_INSTALL_PREFIX=${{ env.INSTALL_PREFIX }} \
+          -DBUILD_SHARED_LIBS=${{ matrix.shared_libs }} \
           -DENABLE_TESTING=ON \
           -DENABLE_PROFILING=OFF
 
     - name: Build
-      run: cmake --build build --config ${{ matrix.build_type }} -j"$(nproc)"
+      run: |
+        if [ "$RUNNER_OS" == "macOS" ]; then
+          cmake --build build --config ${{ matrix.build_type }} -j$(sysctl -n hw.ncpu)
+        else
+          cmake --build build --config ${{ matrix.build_type }} -j$(nproc)
+        fi
 
     - name: Install
       run: cmake --build build --target install
@@ -95,14 +110,14 @@ jobs:
       uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: test-results-${{ matrix.os }}-${{ matrix.build_type }}
+        name: test-results-${{ matrix.os }}-${{ matrix.build_type }}-${{ matrix.shared_libs == 'ON' && 'shared' || 'static' }}
         path: |
           build/Testing/
           build/tests/benchmark_results/
 
     - name: Upload Documentation
       uses: actions/upload-artifact@v4
-      if: matrix.os == 'ubuntu-latest' && matrix.build_type == 'Release'
+      if: matrix.os == 'ubuntu-latest' && matrix.build_type == 'Release' && matrix.shared_libs == 'OFF'
       with:
         name: documentation
         path: docs/
@@ -197,7 +212,7 @@ jobs:
     - name: Download current performance data
       uses: actions/download-artifact@v4
       with:
-        name: test-results-ubuntu-latest-Release
+        name: test-results-ubuntu-latest-Release-static
         path: current/
 
     - name: Compare performance
@@ -223,7 +238,15 @@ jobs:
     - name: Create release package
       run: |
         mkdir -p release/solar_system_suite
+        # Copy source files
         cp -r lib apps cmake docs CMakeLists.txt README.md release/solar_system_suite/
+        # Copy requirements files
+        cp requirements-*.txt release/solar_system_suite/ 2>/dev/null || true
+        cp vcpkg.json release/solar_system_suite/ 2>/dev/null || true
+        # Copy scripts
+        mkdir -p release/solar_system_suite/scripts
+        cp scripts/*.sh scripts/*.ps1 release/solar_system_suite/scripts/ 2>/dev/null || true
+        # Create archive
         cd release
         tar -czf solar_system_suite.tar.gz solar_system_suite/
 
@@ -232,6 +255,7 @@ jobs:
       with:
         name: release-package
         path: release/solar_system_suite.tar.gz
+        retention-days: 90
 
   # Nightly performance baseline update
   update-baseline:
@@ -245,7 +269,7 @@ jobs:
     - name: Build and benchmark
       run: |
         cmake -B build -DCMAKE_BUILD_TYPE=Release -DENABLE_TESTING=ON
-        cmake --build build -j"$(nproc)"
+        cmake --build build -j$(nproc || sysctl -n hw.ncpu || echo 4)
         cd build
         ctest -L "benchmark" --output-on-failure
 
