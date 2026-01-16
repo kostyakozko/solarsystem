@@ -50,6 +50,8 @@ function(configure_solar_system_warnings)
 
     if(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
         set(PROJECT_WARNINGS_CXX ${CLANG_WARNINGS})
+        # Clang-specific: disable unused lambda capture warning in tests
+        list(APPEND PROJECT_WARNINGS_CXX -Wno-unused-lambda-capture)
     elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
         set(PROJECT_WARNINGS_CXX ${CLANG_WARNINGS})
         list(APPEND PROJECT_WARNINGS_CXX

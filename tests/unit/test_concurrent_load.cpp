@@ -13,8 +13,6 @@
  */
 
 // Suppress unused lambda capture warnings for test clarity
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunused-lambda-capture"
 
 #include <gtest/gtest.h>
 
@@ -489,4 +487,3 @@ TEST(ConcurrentLoadTest, ContentionTest) {
   ASSERT_GT(store.get_write_count(), 0);
 }
 
-#pragma clang diagnostic pop

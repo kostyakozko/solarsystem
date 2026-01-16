@@ -13,8 +13,6 @@
  */
 
 // Suppress unused lambda capture warnings for test clarity
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunused-lambda-capture"
 
 #include <gtest/gtest.h>
 
@@ -593,4 +591,3 @@ TEST(ThreadSafetyTest, ConditionVariableSynchronization) {
   waiter.join();
 }
 
-#pragma clang diagnostic pop

@@ -13,8 +13,6 @@
  */
 
 // Suppress unused lambda capture warnings for test clarity
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunused-lambda-capture"
 
 #include <gtest/gtest.h>
 
@@ -591,4 +589,3 @@ TEST(ConcurrencyAnalysisTest, RaceConditionReproduction) {
   ASSERT_LE(unsafe_counter, num_threads * increments);
 }
 
-#pragma clang diagnostic pop
