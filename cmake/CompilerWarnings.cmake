@@ -67,6 +67,7 @@ function(configure_solar_system_warnings)
                 -Wno-float-conversion
                 -Wno-sign-conversion
                 -Wno-useless-cast
+                -Wno-type-limits
             )
             message(STATUS "GCC 13+ detected: disabling problematic warnings")
         endif()
