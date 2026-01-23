@@ -241,6 +241,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y cmake build-essential curl libssl-dev libcurl4-openssl-dev zlib1g-dev libboost-dev
+
     - name: Build and benchmark
       run: |
         cmake -B build -DCMAKE_BUILD_TYPE=Release -DENABLE_TESTING=ON
