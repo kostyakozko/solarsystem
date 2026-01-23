@@ -26,6 +26,7 @@ target_link_libraries(solar_system_launcher PRIVATE
     solar_jpl       # JPL data integration
     solar_utils     # Configuration and logging
     Threads::Threads
+    nlohmann_json::nlohmann_json
 )
 
 # Link required libraries for status-enhanced launcher

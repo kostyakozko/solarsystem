@@ -443,7 +443,7 @@ This implementation plan systematically modernizes the Solar System Suite's buil
   - _Requirements: 10.5_
   - **COMPLETED**: Removed gtest_compat.hpp, replaced ASSERT_NOT_NULL with ASSERT_NE
 
-- [ ] 17. Remove custom JSON utilities
+- [x] 17. Remove custom JSON utilities
   - Remove custom JSON parsing code
   - Remove manual JSON building utilities
   - Verify all code uses nlohmann/json

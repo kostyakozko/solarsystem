@@ -17,8 +17,8 @@
 #include <iostream>
 #include <map>
 #include <memory>
+#include <nlohmann/json.hpp>
 #include <optional>
-#include <regex>
 #include <sstream>
 #include <string>
 #include <string_view>
@@ -125,153 +125,103 @@ class ConfigurationParser {
                                 std::string* error = nullptr) {
     using namespace SolarSystem::Utils::Validation;
 
-    // First, validate JSON syntax using comprehensive validator
-    auto json_validation = StringValidator::validate_json(json_content);
-    if (!json_validation.is_valid) {
-      if (error) {
-        *error = "JSON validation failed: " + json_validation.error_message;
-        if (!json_validation.suggestions.empty()) {
-          *error += "\nSuggestions: ";
-          for (size_t i = 0; i < json_validation.suggestions.size(); ++i) {
-            if (i > 0) *error += ", ";
-            *error += json_validation.suggestions[i];
-          }
-        }
-        if (!json_validation.expected_formats.empty()) {
-          *error += "\nExpected format: " + json_validation.expected_formats[0];
-        }
-      }
-      return false;
-    }
+    try {
+      auto j = nlohmann::json::parse(json_content);
 
-    // Use the validated JSON content
-    std::string json = json_validation.normalized_value;
-
-    // Parse boolean options
-    if (json.find("\"verbose\"") != std::string::npos) {
-      if (json.find("\"verbose\":\\s*true") != std::string::npos ||
-          json.find("\"verbose\":true") != std::string::npos) {
-        config.verbose_output = true;
-      } else if (json.find("\"verbose\":\\s*false") != std::string::npos ||
-                 json.find("\"verbose\":false") != std::string::npos) {
-        config.verbose_output = false;
-      }
-    }
-
-    if (json.find("\"quiet\"") != std::string::npos) {
-      if (json.find("\"quiet\":\\s*true") != std::string::npos ||
-          json.find("\"quiet\":true") != std::string::npos) {
-        config.quiet_mode = true;
-      } else if (json.find("\"quiet\":\\s*false") != std::string::npos ||
-                 json.find("\"quiet\":false") != std::string::npos) {
-        config.quiet_mode = false;
-      }
-    }
-
-    if (json.find("\"batch_mode\"") != std::string::npos) {
-      if (json.find("\"batch_mode\":\\s*true") != std::string::npos ||
-          json.find("\"batch_mode\":true") != std::string::npos) {
-        config.batch_mode = true;
-      }
-    }
-
-    if (json.find("\"continue_on_error\"") != std::string::npos) {
-      if (json.find("\"continue_on_error\":\\s*true") != std::string::npos ||
-          json.find("\"continue_on_error\":true") != std::string::npos) {
-        config.continue_on_error = true;
-      }
-    }
-
-    if (json.find("\"show_progress\"") != std::string::npos) {
-      if (json.find("\"show_progress\":\\s*false") != std::string::npos ||
-          json.find("\"show_progress\":false") != std::string::npos) {
-        config.show_progress = false;
-      }
-    }
-
-    if (json.find("\"auto_fetch\"") != std::string::npos) {
-      if (json.find("\"auto_fetch\":\\s*true") != std::string::npos ||
-          json.find("\"auto_fetch\":true") != std::string::npos) {
-        config.auto_fetch = true;
-      }
-    }
-
-    // Parse string options
-    std::regex date_pattern("\"target_date\"\\s*:\\s*\"([^\"]+)\"");
-    std::smatch date_match;
-    if (std::regex_search(json, date_match, date_pattern)) {
-      std::string date_str = date_match[1].str();
-      // Validate the date using our shared validation
-      auto date_validation = DateTimeValidator::validate_date(date_str);
-      if (date_validation.is_valid) {
-        config.target_date = date_validation.normalized_value;
-        config.use_current_date = false;
-      } else {
-        if (error) {
-          *error = "Invalid date in configuration: " + date_validation.error_message;
-        }
+      // Validate it's an object
+      if (!j.is_object()) {
+        if (error) *error = "JSON configuration must be an object";
         return false;
       }
-    }
 
-    // Parse timeout with better validation
-    std::regex timeout_pattern("\"timeout_seconds\"\\s*:\\s*(-?\\d+)");
-    std::smatch timeout_match;
-    if (std::regex_search(json, timeout_match, timeout_pattern)) {
-      try {
-        int timeout_seconds = std::stoi(timeout_match[1].str());
+      // Known keys for validation
+      static const std::vector<std::string> known_keys = {
+          "verbose",       "quiet",      "batch_mode",  "continue_on_error",
+          "show_progress", "auto_fetch", "target_date", "timeout_seconds"};
+
+      // Check for unknown keys
+      for (auto& [key, value] : j.items()) {
+        bool is_known = std::find(known_keys.begin(), known_keys.end(), key) != known_keys.end();
+        if (!is_known) {
+          if (error) {
+            *error = "Unknown configuration key: \"" + key + "\". Known keys are: ";
+            for (size_t i = 0; i < known_keys.size(); ++i) {
+              if (i > 0) *error += ", ";
+              *error += "\"" + known_keys[i] + "\"";
+            }
+          }
+          return false;
+        }
+      }
+
+      // Parse boolean options
+      if (j.contains("verbose") && j["verbose"].is_boolean()) {
+        config.verbose_output = j["verbose"].get<bool>();
+      }
+      if (j.contains("quiet") && j["quiet"].is_boolean()) {
+        config.quiet_mode = j["quiet"].get<bool>();
+      }
+      if (j.contains("batch_mode") && j["batch_mode"].is_boolean()) {
+        config.batch_mode = j["batch_mode"].get<bool>();
+      }
+      if (j.contains("continue_on_error") && j["continue_on_error"].is_boolean()) {
+        config.continue_on_error = j["continue_on_error"].get<bool>();
+      }
+      if (j.contains("show_progress") && j["show_progress"].is_boolean()) {
+        config.show_progress = j["show_progress"].get<bool>();
+      }
+      if (j.contains("auto_fetch") && j["auto_fetch"].is_boolean()) {
+        config.auto_fetch = j["auto_fetch"].get<bool>();
+      }
+
+      // Parse target_date
+      if (j.contains("target_date") && j["target_date"].is_string()) {
+        std::string date_str = j["target_date"].get<std::string>();
+        auto date_validation = DateTimeValidator::validate_date(date_str);
+        if (date_validation.is_valid) {
+          config.target_date = date_validation.normalized_value;
+          config.use_current_date = false;
+        } else {
+          if (error) {
+            *error = "Invalid date in configuration: " + date_validation.error_message;
+          }
+          return false;
+        }
+      }
+
+      // Parse timeout_seconds
+      if (j.contains("timeout_seconds")) {
+        if (!j["timeout_seconds"].is_number_integer()) {
+          if (error) *error = "timeout_seconds must be an integer";
+          return false;
+        }
+        int timeout_seconds = j["timeout_seconds"].get<int>();
         if (timeout_seconds <= 0) {
           if (error)
             *error = "Invalid timeout_seconds: must be a positive integer (got " +
                      std::to_string(timeout_seconds) + ")";
           return false;
         }
-        if (timeout_seconds > 86400) {  // 24 hours max
+        if (timeout_seconds > 86400) {
           if (error)
             *error = "Invalid timeout_seconds: maximum allowed is 86400 seconds (24 hours), got " +
                      std::to_string(timeout_seconds);
           return false;
         }
         config.timeout = std::chrono::seconds(timeout_seconds);
-      } catch (const std::exception& e) {
-        if (error)
-          *error = "Invalid timeout_seconds value in configuration: " + std::string(e.what());
-        return false;
       }
+
+      return true;
+    } catch (const nlohmann::json::parse_error& e) {
+      if (error) *error = "JSON parse error: " + std::string(e.what());
+      return false;
+    } catch (const nlohmann::json::type_error& e) {
+      if (error) *error = "JSON type error: " + std::string(e.what());
+      return false;
+    } catch (const std::exception& e) {
+      if (error) *error = "Error parsing configuration: " + std::string(e.what());
+      return false;
     }
-
-    // Validate that we don't have unknown keys (basic check)
-    std::vector<std::string> known_keys = {"verbose",           "quiet",          "batch_mode",
-                                           "continue_on_error", "show_progress",  "auto_fetch",
-                                           "target_date",       "timeout_seconds"};
-
-    // Simple check for unknown keys by looking for quoted strings that might be keys
-    std::regex key_pattern("\"([^\"]+)\"\\s*:");
-    std::sregex_iterator iter(json.begin(), json.end(), key_pattern);
-    std::sregex_iterator end;
-
-    for (; iter != end; ++iter) {
-      std::string found_key = (*iter)[1].str();
-      bool is_known = false;
-      for (const auto& known_key : known_keys) {
-        if (found_key == known_key) {
-          is_known = true;
-          break;
-        }
-      }
-      if (!is_known) {
-        if (error) {
-          *error = "Unknown configuration key: \"" + found_key + "\". Known keys are: ";
-          for (size_t i = 0; i < known_keys.size(); ++i) {
-            if (i > 0) *error += ", ";
-            *error += "\"" + known_keys[i] + "\"";
-          }
-        }
-        return false;
-      }
-    }
-
-    return true;
   }
 
   /**

@@ -445,11 +445,6 @@ class SOLAR_JPL_API JPLClient {
   [[nodiscard]] JPLResult<std::vector<EphemerisData>> load_json_cache() const;
 
   /**
-   * @brief JSON parsing helper
-   */
-  [[nodiscard]] double parse_json_double(const std::string& json, size_t field_pos) const;
-
-  /**
    * @brief Cache corruption detection and recovery
    */
   [[nodiscard]] JPLResult<bool> detect_and_recover_cache_corruption();

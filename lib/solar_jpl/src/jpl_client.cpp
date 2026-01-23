@@ -12,6 +12,7 @@
 #include <iomanip>
 #include <iostream>
 #include <mutex>
+#include <nlohmann/json.hpp>
 #include <random>
 #include <regex>
 #include <sstream>
@@ -417,23 +418,30 @@ JPLResult<EphemerisData> JPLClient::parse_jpl_response(const std::string& respon
     return JPLError::ParseError;
   }
 
-  // Enhanced JSON error response detection with detailed error mapping
-  if (response.find("{\"code\":") != std::string::npos) {
-    if (response.find("\"code\":\"400\"") != std::string::npos) {
-      if (response.find("invalid") != std::string::npos) {
-        return JPLError::InvalidBody;
-      } else if (response.find("date") != std::string::npos) {
-        return JPLError::InvalidDate;
-      } else {
+  // Try to parse as JSON error response
+  try {
+    auto j = nlohmann::json::parse(response);
+    if (j.contains("code")) {
+      std::string code = j["code"].is_string() ? j["code"].get<std::string>()
+                                               : std::to_string(j["code"].get<int>());
+      std::string message = j.contains("message") ? j["message"].get<std::string>() : "";
+
+      if (code == "400") {
+        if (message.find("invalid") != std::string::npos) {
+          return JPLError::InvalidBody;
+        } else if (message.find("date") != std::string::npos) {
+          return JPLError::InvalidDate;
+        }
         return JPLError::ParseError;
+      } else if (code == "500") {
+        return JPLError::ServerError;
+      } else if (code == "429") {
+        return JPLError::RateLimited;
       }
-    } else if (response.find("\"code\":\"500\"") != std::string::npos) {
-      return JPLError::ServerError;
-    } else if (response.find("\"code\":\"429\"") != std::string::npos) {
-      return JPLError::RateLimited;
-    } else {
       return JPLError::ParseError;
     }
+  } catch (const nlohmann::json::exception&) {
+    // Not a JSON response, continue with text-based error detection
   }
 
   // Comprehensive error pattern detection with detailed categorization
@@ -832,106 +840,37 @@ std::optional<CacheMetadata> JPLClient::load_cache_metadata() const {
       return std::nullopt;
     }
 
-    std::string line;
-    std::string json_content;
-    while (std::getline(file, line)) {
-      json_content += line + "\n";
-    }
-
-    // Simple JSON parsing for metadata
+    auto j = nlohmann::json::parse(file);
     CacheMetadata metadata;
 
-    // Parse created_at timestamp
-    auto created_pos = json_content.find("\"created_at\":");
-    if (created_pos != std::string::npos) {
-      auto start = json_content.find(":", created_pos) + 1;
-      auto end = json_content.find(",", start);
-      if (end == std::string::npos) end = json_content.find("}", start);
-
-      std::string timestamp_str = json_content.substr(start, end - start);
-      // Remove quotes and whitespace
-      timestamp_str.erase(std::remove_if(timestamp_str.begin(), timestamp_str.end(),
-                                         [](char c) { return c == '"' || c == ' ' || c == '\t'; }),
-                          timestamp_str.end());
-
-      try {
-        auto timestamp = std::stoll(timestamp_str);
-        metadata.created_at = std::chrono::system_clock::from_time_t(timestamp);
-      } catch (const std::exception&) {
-        metadata.created_at = std::chrono::system_clock::now();
-      }
+    if (j.contains("created_at") && j["created_at"].is_number()) {
+      metadata.created_at = std::chrono::system_clock::from_time_t(j["created_at"].get<int64_t>());
+    } else {
+      metadata.created_at = std::chrono::system_clock::now();
     }
 
-    // Parse epoch timestamp
-    auto epoch_pos = json_content.find("\"epoch\":");
-    if (epoch_pos != std::string::npos) {
-      auto start = json_content.find(":", epoch_pos) + 1;
-      auto end = json_content.find(",", start);
-      if (end == std::string::npos) end = json_content.find("}", start);
-
-      std::string timestamp_str = json_content.substr(start, end - start);
-      timestamp_str.erase(std::remove_if(timestamp_str.begin(), timestamp_str.end(),
-                                         [](char c) { return c == '"' || c == ' ' || c == '\t'; }),
-                          timestamp_str.end());
-
-      try {
-        auto timestamp = std::stoll(timestamp_str);
-        metadata.epoch = std::chrono::system_clock::from_time_t(timestamp);
-      } catch (const std::exception&) {
-        metadata.epoch = Utils::get_current_year_epoch();
-      }
+    if (j.contains("epoch") && j["epoch"].is_number()) {
+      metadata.epoch = std::chrono::system_clock::from_time_t(j["epoch"].get<int64_t>());
+    } else {
+      metadata.epoch = Utils::get_current_year_epoch();
     }
 
-    // Parse source
-    auto source_pos = json_content.find("\"source\":");
-    if (source_pos != std::string::npos) {
-      auto start = json_content.find("\"", source_pos + 9) + 1;
-      auto end = json_content.find("\"", start);
-      if (end != std::string::npos) {
-        metadata.source = json_content.substr(start, end - start);
-      } else {
-        metadata.source = "JPL_HORIZONS";
-      }
+    if (j.contains("source") && j["source"].is_string()) {
+      metadata.source = j["source"].get<std::string>();
     } else {
       metadata.source = "JPL_HORIZONS";
     }
 
-    // Parse body_count
-    auto count_pos = json_content.find("\"body_count\":");
-    if (count_pos != std::string::npos) {
-      auto start = json_content.find(":", count_pos) + 1;
-      auto end = json_content.find(",", start);
-      if (end == std::string::npos) end = json_content.find("}", start);
-
-      std::string count_str = json_content.substr(start, end - start);
-      count_str.erase(std::remove_if(count_str.begin(), count_str.end(),
-                                     [](char c) { return c == ' ' || c == '\t'; }),
-                      count_str.end());
-
-      try {
-        metadata.body_count = std::stoull(count_str);
-      } catch (const std::exception&) {
-        metadata.body_count = 0;
-      }
+    if (j.contains("body_count") && j["body_count"].is_number()) {
+      metadata.body_count = j["body_count"].get<size_t>();
+    } else {
+      metadata.body_count = 0;
     }
 
-    // Parse checksum
-    auto checksum_pos = json_content.find("\"checksum\":");
-    if (checksum_pos != std::string::npos) {
-      auto start = json_content.find(":", checksum_pos) + 1;
-      auto end = json_content.find(",", start);
-      if (end == std::string::npos) end = json_content.find("}", start);
-
-      std::string checksum_str = json_content.substr(start, end - start);
-      checksum_str.erase(std::remove_if(checksum_str.begin(), checksum_str.end(),
-                                        [](char c) { return c == ' ' || c == '\t'; }),
-                         checksum_str.end());
-
-      try {
-        metadata.checksum = std::stoull(checksum_str);
-      } catch (const std::exception&) {
-        metadata.checksum = 0;
-      }
+    if (j.contains("checksum") && j["checksum"].is_number()) {
+      metadata.checksum = j["checksum"].get<uint64_t>();
+    } else {
+      metadata.checksum = 0;
     }
 
     return metadata;
@@ -1030,151 +969,51 @@ JPLResult<std::vector<EphemerisData>> JPLClient::load_from_cache() {
         return JPLError::CacheError;
       }
 
-      std::string json_content;
-      std::string line;
-      while (std::getline(file, line)) {
-        json_content += line + "\n";
+      auto j = nlohmann::json::parse(file);
+
+      if (!j.contains("bodies") || !j["bodies"].is_array()) {
+        return JPLError::ParseError;
       }
 
       std::vector<EphemerisData> data;
 
-      // Simple JSON parsing for ephemeris data
-      // Look for "bodies" array
-      auto bodies_pos = json_content.find("\"bodies\":");
-      if (bodies_pos == std::string::npos) {
-        return JPLError::ParseError;
-      }
-
-      auto array_start = json_content.find("[", bodies_pos);
-      auto array_end = json_content.rfind("]");
-
-      if (array_start == std::string::npos || array_end == std::string::npos) {
-        return JPLError::ParseError;
-      }
-
-      std::string bodies_json = json_content.substr(array_start + 1, array_end - array_start - 1);
-
-      // Parse each body object
-      size_t pos = 0;
-      while (pos < bodies_json.length()) {
-        auto obj_start = bodies_json.find("{", pos);
-        if (obj_start == std::string::npos) break;
-
-        auto obj_end = bodies_json.find("}", obj_start);
-        if (obj_end == std::string::npos) break;
-
-        std::string body_json = bodies_json.substr(obj_start, obj_end - obj_start + 1);
-
+      for (const auto& body_json : j["bodies"]) {
         EphemerisData body_data;
 
-        // Parse JPL ID
-        auto jpl_id_pos = body_json.find("\"jpl_id\":");
-        if (jpl_id_pos != std::string::npos) {
-          auto start = body_json.find(":", jpl_id_pos) + 1;
-          auto end = body_json.find(",", start);
-          if (end == std::string::npos) end = body_json.find("}", start);
+        if (body_json.contains("jpl_id") && body_json["jpl_id"].is_number()) {
+          body_data.jpl_id = body_json["jpl_id"].get<int>();
+        }
 
-          std::string id_str = body_json.substr(start, end - start);
-          id_str.erase(std::remove_if(id_str.begin(), id_str.end(),
-                                      [](char c) { return c == ' ' || c == '\t'; }),
-                       id_str.end());
+        if (body_json.contains("body_name") && body_json["body_name"].is_string()) {
+          body_data.body_name = body_json["body_name"].get<std::string>();
+        }
 
-          try {
-            body_data.jpl_id = std::stoi(id_str);
-          } catch (const std::exception&) {
-            body_data.jpl_id = 0;
+        // Parse position (array format)
+        if (body_json.contains("position") && body_json["position"].is_array()) {
+          auto& pos = body_json["position"];
+          if (pos.size() >= 3) {
+            body_data.position = SolarSystem::Math::Vector3d{
+                pos[0].get<double>(), pos[1].get<double>(), pos[2].get<double>()};
           }
         }
 
-        // Parse body name
-        auto name_pos = body_json.find("\"body_name\":");
-        if (name_pos != std::string::npos) {
-          auto start = body_json.find("\"", name_pos + 12) + 1;
-          auto end = body_json.find("\"", start);
-          if (end != std::string::npos) {
-            body_data.body_name = body_json.substr(start, end - start);
+        // Parse velocity (array format)
+        if (body_json.contains("velocity") && body_json["velocity"].is_array()) {
+          auto& vel = body_json["velocity"];
+          if (vel.size() >= 3) {
+            body_data.velocity = SolarSystem::Math::Vector3d{
+                vel[0].get<double>(), vel[1].get<double>(), vel[2].get<double>()};
           }
         }
 
-        // Parse position
-        auto pos_pos = body_json.find("\"position\":");
-        if (pos_pos != std::string::npos) {
-          auto arr_start = body_json.find("[", pos_pos);
-          auto arr_end = body_json.find("]", arr_start);
-          if (arr_start != std::string::npos && arr_end != std::string::npos) {
-            std::string pos_str = body_json.substr(arr_start + 1, arr_end - arr_start - 1);
-            std::istringstream pos_stream(pos_str);
-            std::string token;
-            std::vector<double> coords;
-
-            while (std::getline(pos_stream, token, ',')) {
-              token.erase(std::remove_if(token.begin(), token.end(),
-                                         [](char c) { return c == ' ' || c == '\t'; }),
-                          token.end());
-              try {
-                coords.push_back(std::stod(token));
-              } catch (const std::exception&) {
-                coords.push_back(0.0);
-              }
-            }
-
-            if (coords.size() >= 3) {
-              body_data.position = SolarSystem::Math::Vector3d{coords[0], coords[1], coords[2]};
-            }
-          }
-        }
-
-        // Parse velocity
-        auto vel_pos = body_json.find("\"velocity\":");
-        if (vel_pos != std::string::npos) {
-          auto arr_start = body_json.find("[", vel_pos);
-          auto arr_end = body_json.find("]", arr_start);
-          if (arr_start != std::string::npos && arr_end != std::string::npos) {
-            std::string vel_str = body_json.substr(arr_start + 1, arr_end - arr_start - 1);
-            std::istringstream vel_stream(vel_str);
-            std::string token;
-            std::vector<double> coords;
-
-            while (std::getline(vel_stream, token, ',')) {
-              token.erase(std::remove_if(token.begin(), token.end(),
-                                         [](char c) { return c == ' ' || c == '\t'; }),
-                          token.end());
-              try {
-                coords.push_back(std::stod(token));
-              } catch (const std::exception&) {
-                coords.push_back(0.0);
-              }
-            }
-
-            if (coords.size() >= 3) {
-              body_data.velocity = SolarSystem::Math::Vector3d{coords[0], coords[1], coords[2]};
-            }
-          }
-        }
-
-        // Parse mass
-        auto mass_pos = body_json.find("\"mass\":");
-        if (mass_pos != std::string::npos) {
-          auto start = body_json.find(":", mass_pos) + 1;
-          auto end = body_json.find(",", start);
-          if (end == std::string::npos) end = body_json.find("}", start);
-
-          std::string mass_str = body_json.substr(start, end - start);
-          mass_str.erase(std::remove_if(mass_str.begin(), mass_str.end(),
-                                        [](char c) { return c == ' ' || c == '\t'; }),
-                         mass_str.end());
-
-          try {
-            body_data.mass = std::stold(mass_str);
-          } catch (const std::exception&) {
-            body_data.mass = 1.0e24;
-          }
+        if (body_json.contains("mass") && body_json["mass"].is_number()) {
+          body_data.mass = body_json["mass"].get<double>();
+        } else {
+          body_data.mass = 1.0e24;
         }
 
         body_data.epoch = std::chrono::system_clock::now();
         data.push_back(std::move(body_data));
-
-        pos = obj_end + 1;
       }
 
       return data;
@@ -1952,53 +1791,20 @@ JPLResult<bool> JPLClient::validate_json_cache_format(
       return JPLError::ValidationError;
     }
 
-    std::string content;
-    std::string line;
-    while (std::getline(file, line)) {
-      content += line + "\n";
-    }
-
-    // Basic JSON structure validation
-    if (content.empty()) {
-      return JPLError::ValidationError;
-    }
-
-    // Trim whitespace from the end
-    while (!content.empty() && std::isspace(content.back())) {
-      content.pop_back();
-    }
-
-    // Check for basic JSON structure
-    if (content.empty() || (content.front() != '{' || content.back() != '}')) {
-      return JPLError::ValidationError;
-    }
+    auto j = nlohmann::json::parse(file);
 
     // Check for required fields
-    bool has_bodies = content.find("\"bodies\"") != std::string::npos;
-    bool has_metadata = content.find("\"metadata\"") != std::string::npos;
-
-    if (!has_bodies) {
+    if (!j.contains("bodies") || !j["bodies"].is_array()) {
       return JPLError::ValidationError;
     }
 
-    if (!has_metadata) {
+    if (!j.contains("metadata") || !j["metadata"].is_object()) {
       return JPLError::ValidationError;
-    }
-
-    // Count opening and closing braces for basic structure validation
-    int brace_count = 0;
-    for (char c : content) {
-      if (c == '{')
-        brace_count++;
-      else if (c == '}')
-        brace_count--;
-    }
-
-    if (brace_count != 0) {
-      return JPLError::ValidationError;  // Unbalanced braces
     }
 
     return true;
+  } catch (const nlohmann::json::exception&) {
+    return JPLError::ValidationError;
   } catch (const std::exception&) {
     return JPLError::ValidationError;
   }
@@ -2270,135 +2076,66 @@ JPLResult<std::vector<EphemerisData>> JPLClient::load_json_cache() const {
       return JPLError::CacheError;
     }
 
-    std::string content;
-    std::string line;
-    while (std::getline(file, line)) {
-      content += line + "\n";
+    auto j = nlohmann::json::parse(file);
+
+    if (!j.contains("bodies") || !j["bodies"].is_array()) {
+      return JPLError::ValidationError;
     }
 
     std::vector<EphemerisData> bodies;
 
-    // Simple JSON parsing for validation (basic implementation)
-    auto bodies_start = content.find("\"bodies\":");
-    if (bodies_start == std::string::npos) {
-      return JPLError::ValidationError;
-    }
-
-    auto array_start = content.find("[", bodies_start);
-    auto array_end = content.find("]", array_start);
-
-    if (array_start == std::string::npos || array_end == std::string::npos) {
-      return JPLError::ValidationError;
-    }
-
-    std::string bodies_section = content.substr(array_start + 1, array_end - array_start - 1);
-
-    // Parse individual body objects (simplified parsing)
-    size_t pos = 0;
-    while (pos < bodies_section.length()) {
-      auto obj_start = bodies_section.find("{", pos);
-      if (obj_start == std::string::npos) break;
-
-      auto obj_end = bodies_section.find("}", obj_start);
-      if (obj_end == std::string::npos) break;
-
-      std::string body_json = bodies_section.substr(obj_start, obj_end - obj_start + 1);
-
+    for (const auto& body_json : j["bodies"]) {
       EphemerisData body_data;
 
-      // Parse JPL ID
-      auto jpl_id_pos = body_json.find("\"jpl_id\":");
-      if (jpl_id_pos != std::string::npos) {
-        auto value_start = body_json.find(":", jpl_id_pos) + 1;
-        auto value_end = body_json.find(",", value_start);
-        if (value_end == std::string::npos) value_end = body_json.find("}", value_start);
-
-        std::string jpl_id_str = body_json.substr(value_start, value_end - value_start);
-        jpl_id_str.erase(std::remove_if(jpl_id_str.begin(), jpl_id_str.end(), ::isspace),
-                         jpl_id_str.end());
-        body_data.jpl_id = std::stoi(jpl_id_str);
+      if (body_json.contains("jpl_id") && body_json["jpl_id"].is_number()) {
+        body_data.jpl_id = body_json["jpl_id"].get<int>();
       }
 
-      // Parse body name
-      auto name_pos = body_json.find("\"body_name\":");
-      if (name_pos != std::string::npos) {
-        auto quote_start = body_json.find("\"", name_pos + 12);
-        auto quote_end = body_json.find("\"", quote_start + 1);
-        if (quote_start != std::string::npos && quote_end != std::string::npos) {
-          body_data.body_name = body_json.substr(quote_start + 1, quote_end - quote_start - 1);
-        }
+      if (body_json.contains("body_name") && body_json["body_name"].is_string()) {
+        body_data.body_name = body_json["body_name"].get<std::string>();
       }
 
-      // Parse position (simplified)
-      auto pos_x = body_json.find("\"position_x\":");
-      auto pos_y = body_json.find("\"position_y\":");
-      auto pos_z = body_json.find("\"position_z\":");
-
-      if (pos_x != std::string::npos && pos_y != std::string::npos && pos_z != std::string::npos) {
+      // Parse position
+      if (body_json.contains("position_x") && body_json.contains("position_y") &&
+          body_json.contains("position_z")) {
         try {
-          double x = parse_json_double(body_json, pos_x);
-          double y = parse_json_double(body_json, pos_y);
-          double z = parse_json_double(body_json, pos_z);
+          double x = body_json["position_x"].get<double>();
+          double y = body_json["position_y"].get<double>();
+          double z = body_json["position_z"].get<double>();
           body_data.position = SolarSystem::Math::Vector3d{x, y, z};
         } catch (const std::exception&) {
-          // Skip this body if parsing fails
-          pos = obj_end + 1;
-          continue;
+          continue;  // Skip this body if parsing fails
         }
       }
 
-      // Parse velocity (simplified)
-      auto vel_x = body_json.find("\"velocity_x\":");
-      auto vel_y = body_json.find("\"velocity_y\":");
-      auto vel_z = body_json.find("\"velocity_z\":");
-
-      if (vel_x != std::string::npos && vel_y != std::string::npos && vel_z != std::string::npos) {
+      // Parse velocity
+      if (body_json.contains("velocity_x") && body_json.contains("velocity_y") &&
+          body_json.contains("velocity_z")) {
         try {
-          double vx = parse_json_double(body_json, vel_x);
-          double vy = parse_json_double(body_json, vel_y);
-          double vz = parse_json_double(body_json, vel_z);
+          double vx = body_json["velocity_x"].get<double>();
+          double vy = body_json["velocity_y"].get<double>();
+          double vz = body_json["velocity_z"].get<double>();
           body_data.velocity = SolarSystem::Math::Vector3d{vx, vy, vz};
         } catch (const std::exception&) {
-          // Use zero velocity if parsing fails
           body_data.velocity = SolarSystem::Math::Vector3d{0.0, 0.0, 0.0};
         }
       }
 
       // Parse mass
-      auto mass_pos = body_json.find("\"mass\":");
-      if (mass_pos != std::string::npos) {
-        try {
-          body_data.mass = parse_json_double(body_json, mass_pos);
-        } catch (const std::exception&) {
-          body_data.mass = 1.0e24;  // Default mass
-        }
+      if (body_json.contains("mass") && body_json["mass"].is_number()) {
+        body_data.mass = body_json["mass"].get<double>();
+      } else {
+        body_data.mass = 1.0e24;  // Default mass
       }
 
-      // Set epoch
       body_data.epoch = std::chrono::system_clock::now();
-
       bodies.push_back(body_data);
-      pos = obj_end + 1;
     }
 
     return bodies;
   } catch (const std::exception&) {
     return JPLError::CacheError;
   }
-}
-
-/**
- * @brief Parse double value from JSON string
- */
-double JPLClient::parse_json_double(const std::string& json, size_t field_pos) const {
-  auto value_start = json.find(":", field_pos) + 1;
-  auto value_end = json.find(",", value_start);
-  if (value_end == std::string::npos) value_end = json.find("}", value_start);
-
-  std::string value_str = json.substr(value_start, value_end - value_start);
-  value_str.erase(std::remove_if(value_str.begin(), value_str.end(), ::isspace), value_str.end());
-
-  return std::stod(value_str);
 }
 
 /**
@@ -2795,35 +2532,46 @@ JPLResult<std::string> JPLClient::execute_request_with_circuit_breaker(const std
 
     // Enhanced error detection
     if (!response.empty()) {
-      // Check for JSON error responses
-      if (response.find("\"code\":\"400\"") != std::string::npos ||
-          response.find("\"code\":\"500\"") != std::string::npos) {
-        // This is a server error, continue to retry
-        if (attempt < config_.max_retries - 1) {
-          auto delay = calculate_backoff_delay(attempt);
-          std::this_thread::sleep_for(delay);
-          continue;
+      // Try to parse as JSON error response
+      bool is_json_error = false;
+      try {
+        auto j = nlohmann::json::parse(response);
+        if (j.contains("code")) {
+          std::string code = j["code"].is_string() ? j["code"].get<std::string>()
+                                                   : std::to_string(j["code"].get<int>());
+          if (code == "400" || code == "500") {
+            is_json_error = true;
+            if (attempt < config_.max_retries - 1) {
+              auto delay = calculate_backoff_delay(attempt);
+              std::this_thread::sleep_for(delay);
+              continue;
+            }
+            circuit_breaker_.record_failure(config_);
+            result = JPLError::ServerError;
+            break;
+          }
         }
-        circuit_breaker_.record_failure(config_);
-        result = JPLError::ServerError;
-        break;
+      } catch (const nlohmann::json::exception&) {
+        // Not a JSON response, continue with text-based detection
       }
 
-      // Check for specific JPL error messages
-      if (response.find("Bad dates") != std::string::npos) {
-        result = JPLError::InvalidDate;
-        break;  // Don't retry for invalid dates
-      }
+      if (!is_json_error) {
+        // Check for specific JPL error messages in text responses
+        if (response.find("Bad dates") != std::string::npos) {
+          result = JPLError::InvalidDate;
+          break;  // Don't retry for invalid dates
+        }
 
-      // Check for other error indicators
-      if (response.find("ERROR") == std::string::npos &&
-          response.find("invalid") == std::string::npos &&
-          response.find("Cannot") == std::string::npos &&
-          response.find("Bad dates") == std::string::npos) {
-        // Success!
-        circuit_breaker_.record_success();
-        result = response;
-        break;
+        // Check for other error indicators
+        if (response.find("ERROR") == std::string::npos &&
+            response.find("invalid") == std::string::npos &&
+            response.find("Cannot") == std::string::npos &&
+            response.find("Bad dates") == std::string::npos) {
+          // Success!
+          circuit_breaker_.record_success();
+          result = response;
+          break;
+        }
       }
     }
 
