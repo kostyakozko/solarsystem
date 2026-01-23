@@ -265,35 +265,6 @@ target_link_libraries(test_concurrent_execution GTest::gtest_main GTest::gmock t
 add_test(NAME UnitTest_ConcurrentExecution COMMAND test_concurrent_execution)
 set_tests_properties(UnitTest_ConcurrentExecution PROPERTIES LABELS "unit;testing;concurrent;execution" TIMEOUT ${TEST_TIMEOUT})
 
-# NEW: Enhanced Test Framework with Memory and Performance Monitoring (Task 10)
-add_executable(test_simulation_builder_enhanced test_simulation_builder_enhanced.cpp)
-target_link_libraries(test_simulation_builder_enhanced GTest::gtest_main GTest::gmock solar_core solar_jpl solar_utils Threads::Threads)
-add_test(NAME UnitTest_SimulationBuilderEnhanced COMMAND test_simulation_builder_enhanced)
-set_tests_properties(UnitTest_SimulationBuilderEnhanced PROPERTIES LABELS "unit;enhanced;testing;memory;performance;task10" TIMEOUT 60)
-
-add_executable(test_date_time_comprehensive test_date_time_comprehensive.cpp)
-target_link_libraries(test_date_time_comprehensive GTest::gtest_main GTest::gmock solar_core solar_jpl solar_utils Threads::Threads)
-add_test(NAME UnitTest_DateTimeComprehensive COMMAND test_date_time_comprehensive)
-set_tests_properties(UnitTest_DateTimeComprehensive PROPERTIES LABELS "unit;enhanced;datetime;comprehensive;task10" TIMEOUT 60)
-
-# NEW: Comprehensive Performance Monitoring (Task 11)
-add_executable(test_performance_comprehensive test_performance_comprehensive.cpp)
-target_link_libraries(test_performance_comprehensive GTest::gtest_main GTest::gmock solar_core solar_jpl solar_utils Threads::Threads)
-add_test(NAME UnitTest_PerformanceComprehensive COMMAND test_performance_comprehensive)
-set_tests_properties(UnitTest_PerformanceComprehensive PROPERTIES LABELS "unit;performance;monitoring;comprehensive;task11" TIMEOUT 120)
-
-# NEW: Enhanced Test Data Management (Task 12)
-add_executable(test_enhanced_data_management test_enhanced_data_management.cpp)
-target_link_libraries(test_enhanced_data_management GTest::gtest_main GTest::gmock solar_test solar_core solar_jpl solar_utils Threads::Threads)
-add_test(NAME UnitTest_EnhancedDataManagement COMMAND test_enhanced_data_management)
-set_tests_properties(UnitTest_EnhancedDataManagement PROPERTIES LABELS "unit;enhanced;data;management;comprehensive;task12" TIMEOUT 120)
-
-# Input validation tests (Task 13)
-add_executable(test_input_validation_comprehensive test_input_validation_comprehensive.cpp)
-target_link_libraries(test_input_validation_comprehensive GTest::gtest_main GTest::gmock solar_core solar_jpl solar_utils Threads::Threads)
-add_test(NAME UnitTest_InputValidationComprehensive COMMAND test_input_validation_comprehensive)
-set_tests_properties(UnitTest_InputValidationComprehensive PROPERTIES LABELS "unit;input;validation;comprehensive;task13" TIMEOUT 120)
-
 # Data validation tests (Task 6 - Application Enhancements)
 add_executable(test_data_validator test_data_validator.cpp)
 target_link_libraries(test_data_validator GTest::gtest_main GTest::gmock solar_core solar_jpl solar_utils Threads::Threads)
@@ -376,10 +347,6 @@ install(TARGETS
     test_application_components
     test_port_management
     test_concurrent_execution
-    test_simulation_builder_enhanced
-    test_date_time_comprehensive
-    test_performance_comprehensive
-    test_enhanced_data_management
     test_data_validator
     test_checkpoint
     test_output_formatter

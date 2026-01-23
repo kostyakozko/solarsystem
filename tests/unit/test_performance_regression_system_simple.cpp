@@ -21,7 +21,8 @@
 // Test framework
 #include <gtest/gtest.h>
 
-#include "../utils/gtest_compat.hpp"
+#include "../utils/test_diagnostics.hpp"
+#include "../utils/test_port_manager.hpp"
 
 using namespace SolarSystem::Testing::Regression;
 
@@ -63,7 +64,7 @@ TEST(SimplePerformanceRegressionSystemTests, Simple_Baseline_Manager) {
 
   // Test getting baseline
   auto* baseline = manager.get_baseline("TestComponent", "fast_test");
-  ASSERT_NOT_NULL(baseline);
+  ASSERT_NE(nullptr, baseline);
 
   ASSERT_EQ(baseline->component_name, "TestComponent");
   ASSERT_EQ(baseline->test_name, "fast_test");
@@ -75,7 +76,7 @@ TEST(SimplePerformanceRegressionSystemTests, Simple_Baseline_Manager) {
   manager.update_baseline("TestComponent", "fast_test", new_metrics);
 
   auto* updated_baseline = manager.get_baseline("TestComponent", "fast_test");
-  ASSERT_NOT_NULL(updated_baseline);
+  ASSERT_NE(nullptr, updated_baseline);
   ASSERT_EQ(updated_baseline->sample_count, static_cast<size_t>(2));
 
   // Test baseline count
@@ -89,7 +90,7 @@ TEST(SimplePerformanceRegressionSystemTests, Simple_Baseline_Manager) {
   ASSERT_EQ(new_manager.get_baseline_count(), static_cast<size_t>(1));
 
   auto* loaded_baseline = new_manager.get_baseline("TestComponent", "fast_test");
-  ASSERT_NOT_NULL(loaded_baseline);
+  ASSERT_NE(nullptr, loaded_baseline);
 
   // Cleanup
   std::remove("test_simple_baselines.txt");
@@ -236,7 +237,7 @@ TEST(SimplePerformanceRegressionSystemTests, Utility_Functions) {
   // Test global system initialization
   initialize_simple_performance_regression_testing("test_global_baselines.txt");
 
-  ASSERT_NOT_NULL(g_simple_performance_system.get());
+  ASSERT_NE(nullptr, g_simple_performance_system.get());
 
   // Test component registration
   std::map<std::string, std::function<SimplePerformanceMetrics()>> tests = {

@@ -10,7 +10,8 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-#include "../utils/gtest_compat.hpp"
+#include "../utils/test_diagnostics.hpp"
+#include "../utils/test_port_manager.hpp"
 
 using namespace TestUtils;
 
