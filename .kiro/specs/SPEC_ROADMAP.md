@@ -4,8 +4,8 @@
 
 | Status | Count | Percentage |
 |--------|-------|------------|
-| ✅ **Completed** | 9 | 69% |
-| 🚧 **In Progress** | 1 | 7% |
+| ✅ **Completed** | 10 | 76% |
+| 🚧 **In Progress** | 0 | 0% |
 | 📋 **Ready to Start** | 3 | 23% |
 | **Total Specs** | **13** | **100%** |
 

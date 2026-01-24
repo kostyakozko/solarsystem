@@ -386,7 +386,7 @@ This implementation plan systematically modernizes the Solar System Suite's buil
   - _Requirements: 6.4_
   - **COMPLETED**: Export macros documented, pkg-config/CMake usage examples added
 
-- [-] 15. Update CI/CD pipelines
+- [x] 15. Update CI/CD pipelines
   - Fix any failing CI jobs based on GitHub Actions results
   - Add shared library builds to CI matrix
   - Test both static and shared builds
