@@ -109,6 +109,12 @@ target_link_libraries(test_performance_monitor GTest::gtest_main GTest::gmock so
 add_test(NAME UnitTest_PerformanceMonitor COMMAND test_performance_monitor)
 set_tests_properties(UnitTest_PerformanceMonitor PROPERTIES LABELS "unit;performance;monitoring;metrics;task22" TIMEOUT ${TEST_TIMEOUT})
 
+# Notification system test
+add_executable(test_notification test_notification.cpp)
+target_link_libraries(test_notification GTest::gtest_main solar_core Threads::Threads)
+add_test(NAME UnitTest_Notification COMMAND test_notification)
+set_tests_properties(UnitTest_Notification PROPERTIES LABELS "unit;performance;notification" TIMEOUT ${TEST_TIMEOUT})
+
 # Diagnostic and troubleshooting system test (Task 23)
 add_executable(test_diagnostic_system test_diagnostic_system.cpp)
 target_link_libraries(test_diagnostic_system GTest::gtest_main GTest::gmock solar_core solar_utils Threads::Threads)

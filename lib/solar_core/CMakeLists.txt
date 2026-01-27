@@ -65,6 +65,7 @@ add_library(solar_core
 
     # Performance monitoring system (Phase 8 - Task 22)
     src/performance/performance_monitor.cpp
+    src/performance/notification.cpp
 
     # Diagnostic and troubleshooting system (Phase 8 - Task 23)
     src/diagnostics/diagnostic_system.cpp
