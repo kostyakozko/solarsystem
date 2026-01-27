@@ -121,6 +121,12 @@ target_link_libraries(test_alert_intelligence GTest::gtest_main solar_core Threa
 add_test(NAME UnitTest_AlertIntelligence COMMAND test_alert_intelligence)
 set_tests_properties(UnitTest_AlertIntelligence PROPERTIES LABELS "unit;performance;alert" TIMEOUT ${TEST_TIMEOUT})
 
+# Component monitors test
+add_executable(test_component_monitors test_component_monitors.cpp)
+target_link_libraries(test_component_monitors GTest::gtest_main solar_core Threads::Threads)
+add_test(NAME UnitTest_ComponentMonitors COMMAND test_component_monitors)
+set_tests_properties(UnitTest_ComponentMonitors PROPERTIES LABELS "unit;performance;monitoring" TIMEOUT ${TEST_TIMEOUT})
+
 # Diagnostic and troubleshooting system test (Task 23)
 add_executable(test_diagnostic_system test_diagnostic_system.cpp)
 target_link_libraries(test_diagnostic_system GTest::gtest_main GTest::gmock solar_core solar_utils Threads::Threads)
