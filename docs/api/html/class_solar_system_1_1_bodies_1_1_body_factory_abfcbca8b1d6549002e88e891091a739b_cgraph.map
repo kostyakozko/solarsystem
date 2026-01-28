@@ -1,5 +1,0 @@
-<map id="SolarSystem::Bodies::BodyFactory::is_body_available" name="SolarSystem::Bodies::BodyFactory::is_body_available">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,162,61"/>
-<area shape="rect" id="Node000002" href="$namespace_solar_system_1_1_data.html#a8f2357b503429860476ffda2bf5f16fe" title="Get fallback body definition by name." alt="" coords="210,13,350,54"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="162,30,194,30,194,36,162,36"/>
-</map>

@@ -1,9 +1,0 @@
-<map id="SolarSystem::JPL::JPLClient::save_to_cache" name="SolarSystem::JPL::JPLClient::save_to_cache">
-<area shape="rect" id="Node000001" title="Save ephemeris data to cache." alt="" coords="5,55,198,96"/>
-<area shape="rect" id="Node000002" href="$namespace_solar_system_1_1_j_p_l.html#aa87d1eae6faed2285995bb3f55e8bf4e" title="Helper to create error void result." alt="" coords="257,5,418,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="187,52,266,33,268,38,188,57"/>
-<area shape="rect" id="Node000003" href="$namespace_solar_system_1_1_j_p_l_1_1_utils.html#ac4776373b25f4eeda287227ffc7d6d2c" title="Get current year as time point (January 1st)" alt="" coords="254,55,422,96"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="198,73,238,73,238,78,198,78"/>
-<area shape="rect" id="Node000004" href="$namespace_solar_system_1_1_j_p_l.html#ac75b9c75d52b5dcc91551918f6e7244f" title="Helper to create successful void result." alt="" coords="246,120,430,146"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="188,94,268,113,266,118,187,99"/>
-</map>

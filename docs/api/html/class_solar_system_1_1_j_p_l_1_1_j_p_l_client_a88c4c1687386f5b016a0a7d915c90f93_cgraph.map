@@ -1,7 +1,0 @@
-<map id="SolarSystem::JPL::JPLClient::clear_cache" name="SolarSystem::JPL::JPLClient::clear_cache">
-<area shape="rect" id="Node000001" title="Clear all cached data." alt="" coords="5,23,198,64"/>
-<area shape="rect" id="Node000002" href="$namespace_solar_system_1_1_j_p_l.html#aa87d1eae6faed2285995bb3f55e8bf4e" title="Helper to create error void result." alt="" coords="257,5,418,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="198,31,241,26,242,31,198,36"/>
-<area shape="rect" id="Node000003" href="$namespace_solar_system_1_1_j_p_l.html#ac75b9c75d52b5dcc91551918f6e7244f" title="Helper to create successful void result." alt="" coords="246,55,430,80"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="198,51,230,54,230,59,198,56"/>
-</map>

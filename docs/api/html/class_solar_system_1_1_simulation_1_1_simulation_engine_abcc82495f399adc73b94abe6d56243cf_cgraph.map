@@ -1,7 +1,0 @@
-<map id="SolarSystem::Simulation::SimulationEngine::calculate_total_energy" name="SolarSystem::Simulation::SimulationEngine::calculate_total_energy">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,45,196,101"/>
-<area shape="rect" id="Node000002" href="$class_solar_system_1_1_simulation_1_1_simulation_engine.html#aaa06b113cbc35a3094cf7378a43891b0" title=" " alt="" coords="244,5,434,61"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="196,54,228,49,229,54,197,60"/>
-<area shape="rect" id="Node000003" href="$class_solar_system_1_1_simulation_1_1_simulation_engine.html#abd465c827625b139e3d31d2a47a2b03d" title=" " alt="" coords="244,85,434,141"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="197,87,229,92,228,97,196,92"/>
-</map>

@@ -1,7 +1,0 @@
-<map id="SolarSystem::Testing::MemoryTracker::get_current_usage" name="SolarSystem::Testing::MemoryTracker::get_current_usage">
-<area shape="rect" id="Node000001" title="Get current memory usage." alt="" coords="208,45,354,101"/>
-<area shape="rect" id="Node000002" href="$class_solar_system_1_1_testing_1_1_memory_tracker.html#a326baf81a5f943358647b439c2d4ccf7" title="Start tracking memory allocations." alt="" coords="5,5,160,61"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="192,58,159,51,160,46,193,53"/>
-<area shape="rect" id="Node000003" href="$class_solar_system_1_1_testing_1_1_memory_tracker.html#a9da753aee0cf32ebad64f0727f33bd35" title="Stop tracking and return metrics." alt="" coords="6,85,159,141"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="193,94,160,100,159,95,192,88"/>
-</map>

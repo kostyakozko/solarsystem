@@ -1,5 +1,0 @@
-<map id="SolarSystem::Testing::BenchmarkSuite::generate_csv_report" name="SolarSystem::Testing::BenchmarkSuite::generate_csv_report">
-<area shape="rect" id="Node000001" title="Generate CSV report for all results." alt="" coords="5,5,189,61"/>
-<area shape="rect" id="Node000002" href="$struct_solar_system_1_1_testing_1_1_benchmark_result.html#a3b0d9c956619679fa00cd208f9eefae9" title="Get CSV header for benchmark results." alt="" coords="237,5,399,61"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="189,30,221,30,221,36,189,36"/>
-</map>

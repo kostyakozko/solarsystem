@@ -1,5 +1,0 @@
-<map id="HttpResponse::json_response" name="HttpResponse::json_response">
-<area shape="rect" id="Node000001" title="Create JSON response." alt="" coords="5,5,143,46"/>
-<area shape="rect" id="Node000002" href="$struct_http_response.html#aea837ca194606ed9197c2a4d11ca7296" title="Set JSON content type." alt="" coords="191,13,328,38"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="143,23,175,23,175,28,143,28"/>
-</map>

@@ -1,9 +1,0 @@
-<map id="SolarSystem::Testing::Mocks::TimeMock::operator=" name="SolarSystem::Testing::Mocks::TimeMock::operator=">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,39,206,79"/>
-<area shape="rect" id="Node000002" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock.html#a86e935365ba7b638f668ceda24743bd5" title="Construct time mock with configuration." alt="" coords="254,39,460,79"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="206,56,238,56,238,62,206,62"/>
-<area shape="rect" id="Node000003" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock.html#ad183076b9f8ff58cc5f38d7af3ed058f" title="Get current configuration." alt="" coords="508,5,688,46"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="460,42,492,38,493,43,461,47"/>
-<area shape="rect" id="Node000004" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock.html#aae726ffc5b25d10cdcf232ea25dff40d" title="Get current mock time." alt="" coords="514,71,683,111"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="461,70,498,75,498,80,460,75"/>
-</map>

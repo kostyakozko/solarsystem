@@ -1,8 +1,6 @@
 #!/bin/bash
-"""
-Enhanced documentation generation for Solar System Suite
-Generates comprehensive API documentation with GitHub Pages deployment support
-"""
+# Enhanced documentation generation for Solar System Suite
+# Generates comprehensive API documentation with GitHub Pages deployment support
 
 set -e
 
@@ -154,14 +152,17 @@ generate_api_docs() {
 
     log_info "Running Doxygen..."
 
-    # Run Doxygen with error handling
-    if doxygen "$DOXYGEN_CONFIG" 2>&1 | tee doxygen.log; then
+    # Run Doxygen from docs directory (paths in Doxyfile are relative to docs/)
+    pushd "$DOCS_DIR" > /dev/null
+    if doxygen Doxyfile 2>&1 | tee ../doxygen.log; then
         log_success "Doxygen completed successfully"
     else
         log_error "Doxygen failed"
         log_info "Check doxygen.log for details"
+        popd > /dev/null
         exit 1
     fi
+    popd > /dev/null
 
     # Verify output
     if [ -d "$OUTPUT_DIR" ] && [ -f "$OUTPUT_DIR/index.html" ]; then

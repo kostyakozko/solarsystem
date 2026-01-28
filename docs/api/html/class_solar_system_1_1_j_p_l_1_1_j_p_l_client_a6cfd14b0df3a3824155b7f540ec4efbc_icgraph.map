@@ -1,9 +1,0 @@
-<map id="SolarSystem::JPL::JPLClient::get_cache_metadata" name="SolarSystem::JPL::JPLClient::get_cache_metadata">
-<area shape="rect" id="Node000001" title="Get cache metadata." alt="" coords="486,39,678,79"/>
-<area shape="rect" id="Node000002" href="$class_solar_system_1_1_j_p_l_1_1_j_p_l_client.html#a31f2e55918e2efa76de4c25546592739" title="Check if current year data is available." alt="" coords="246,5,438,46"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="470,46,438,42,439,36,471,41"/>
-<area shape="rect" id="Node000003" href="$class_solar_system_1_1_j_p_l_1_1_j_p_l_client.html#ae5aca8bf9076f444ccc6661acefb007f" title="Validate cache integrity." alt="" coords="246,71,438,111"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="471,76,439,81,438,76,470,71"/>
-<area shape="rect" id="Node000004" href="$class_solar_system_1_1_j_p_l_1_1_j_p_l_client.html#a20c3a5c8255e5e0f8beb69e5a5e41c8a" title=" " alt="" coords="5,71,198,111"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="230,94,198,94,198,88,230,88"/>
-</map>

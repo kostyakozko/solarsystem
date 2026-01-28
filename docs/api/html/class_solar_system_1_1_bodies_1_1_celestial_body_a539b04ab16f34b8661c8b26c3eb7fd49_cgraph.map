@@ -1,7 +1,0 @@
-<map id="SolarSystem::Bodies::CelestialBody::set_state" name="SolarSystem::Bodies::CelestialBody::set_state">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,39,178,79"/>
-<area shape="rect" id="Node000002" href="$class_solar_system_1_1_bodies_1_1_celestial_body.html#a082409044958f3a12355fff96bdaa031" title=" " alt="" coords="226,5,389,46"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="178,43,210,38,211,43,179,48"/>
-<area shape="rect" id="Node000003" href="$class_solar_system_1_1_bodies_1_1_celestial_body.html#a214725d4ecae1e8f62b3bfd5fda0ff06" title=" " alt="" coords="226,71,389,111"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="179,69,211,74,210,79,178,74"/>
-</map>

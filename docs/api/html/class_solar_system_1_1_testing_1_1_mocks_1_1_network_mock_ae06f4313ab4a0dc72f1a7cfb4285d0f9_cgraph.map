@@ -1,5 +1,0 @@
-<map id="SolarSystem::Testing::Mocks::NetworkMock::simulate_unstable_network" name="SolarSystem::Testing::Mocks::NetworkMock::simulate_unstable_network">
-<area shape="rect" id="Node000001" title="Simulate unstable network with packet loss." alt="" coords="5,5,193,61"/>
-<area shape="rect" id="Node000002" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock.html#a380f6663a15b1c8d9d48610697432139" title="Set network condition for all requests." alt="" coords="241,5,400,61"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="193,30,225,30,225,36,193,36"/>
-</map>

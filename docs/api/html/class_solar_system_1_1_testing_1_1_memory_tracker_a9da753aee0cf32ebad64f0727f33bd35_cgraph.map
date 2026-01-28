@@ -1,5 +1,0 @@
-<map id="SolarSystem::Testing::MemoryTracker::stop_tracking" name="SolarSystem::Testing::MemoryTracker::stop_tracking">
-<area shape="rect" id="Node000001" title="Stop tracking and return metrics." alt="" coords="5,5,159,61"/>
-<area shape="rect" id="Node000002" href="$class_solar_system_1_1_testing_1_1_memory_tracker.html#ad7f3a850b82bf59263fade557cade9cb" title="Get current memory usage." alt="" coords="207,5,353,61"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="159,30,191,30,191,36,159,36"/>
-</map>

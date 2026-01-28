@@ -1,5 +1,0 @@
-<map id="SolarSystem::Testing::Mocks::NetworkMock::simulate_satellite_network" name="SolarSystem::Testing::Mocks::NetworkMock::simulate_satellite_network">
-<area shape="rect" id="Node000001" title="Simulate satellite network conditions." alt="" coords="5,5,189,61"/>
-<area shape="rect" id="Node000002" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock.html#a380f6663a15b1c8d9d48610697432139" title="Set network condition for all requests." alt="" coords="237,5,396,61"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="189,30,221,30,221,36,189,36"/>
-</map>

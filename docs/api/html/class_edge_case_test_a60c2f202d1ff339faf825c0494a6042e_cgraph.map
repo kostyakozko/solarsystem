@@ -1,7 +1,0 @@
-<map id="EdgeCaseTest::run" name="EdgeCaseTest::run">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,13,139,38"/>
-<area shape="rect" id="Node000002" href="$class_solar_system_1_1_testing_1_1_test_case.html#ada06a5e5ce50a0d8f22246d826ee1d32" title=" " alt="" coords="187,5,345,46"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="139,23,171,23,171,28,139,28"/>
-<area shape="rect" id="Node000003" href="$class_solar_system_1_1_testing_1_1_assertions.html#ad8de3ef519643fda8d19d8f030a33b1c" title=" " alt="" coords="393,5,557,46"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="345,23,377,23,377,28,345,28"/>
-</map>

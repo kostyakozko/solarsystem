@@ -1,9 +1,0 @@
-<map id="solar_test::create_corrupted_header_cache" name="solar_test::create_corrupted_header_cache">
-<area shape="rect" id="Node000001" title=" " alt="" coords="614,5,785,46"/>
-<area shape="rect" id="Node000002" href="$classsolar__test_1_1_test_data_manager.html#aed5947cf0fb803eba356636e8f839261" title=" " alt="" coords="377,5,566,46"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="598,28,567,28,567,23,598,23"/>
-<area shape="rect" id="Node000003" href="$class_test_data_management_example.html#a6140b53d0c8a1353aa07567086977d1c" title=" " alt="" coords="103,13,329,38"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="361,28,329,28,329,23,361,23"/>
-<area shape="rect" id="Node000004" href="$test__fixture__example_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="5,13,55,38"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="87,28,55,28,55,23,87,23"/>
-</map>

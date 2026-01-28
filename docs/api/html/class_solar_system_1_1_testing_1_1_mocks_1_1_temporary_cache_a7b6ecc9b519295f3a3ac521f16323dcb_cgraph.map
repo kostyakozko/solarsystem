@@ -1,7 +1,0 @@
-<map id="SolarSystem::Testing::Mocks::TemporaryCache::populate_with_corrupted_data" name="SolarSystem::Testing::Mocks::TemporaryCache::populate_with_corrupted_data">
-<area shape="rect" id="Node000001" title="Populate cache with corrupted data." alt="" coords="5,45,208,101"/>
-<area shape="rect" id="Node000002" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_temporary_cache.html#a537fbd973346f2fb5f73ed32413ceb3c" title="Get binary cache file path." alt="" coords="256,5,431,61"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="208,53,240,48,241,53,209,59"/>
-<area shape="rect" id="Node000003" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_temporary_cache.html#adbc4f8eb2b5435c96f0234e5c92123e7" title="Populate cache with valid data." alt="" coords="256,85,431,141"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="209,88,241,93,240,98,208,93"/>
-</map>

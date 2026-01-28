@@ -1,5 +1,0 @@
-<map id="SolarSystem::Testing::PerformanceProfiler::ProfilePoint" name="SolarSystem::Testing::PerformanceProfiler::ProfilePoint">
-<area shape="rect" id="Node000001" title="Profile point data." alt="" coords="5,117,152,173"/>
-<area shape="rect" id="Node000002" href="$struct_solar_system_1_1_testing_1_1_performance_metrics.html" title="System performance metrics." alt="" coords="5,5,152,46"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="81,61,81,116,76,116,76,61"/>
-</map>

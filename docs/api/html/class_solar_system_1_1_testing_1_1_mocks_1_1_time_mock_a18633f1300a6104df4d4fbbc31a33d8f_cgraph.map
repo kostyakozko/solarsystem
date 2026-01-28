@@ -1,5 +1,0 @@
-<map id="SolarSystem::Testing::Mocks::TimeMock::advance_time_days" name="SolarSystem::Testing::Mocks::TimeMock::advance_time_days">
-<area shape="rect" id="Node000001" title="Advance time by days." alt="" coords="5,5,200,61"/>
-<area shape="rect" id="Node000002" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock.html#a0acae586e48d49c3982e439618bd3030" title="Advance time by specified duration." alt="" coords="248,13,474,54"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="200,30,232,30,232,36,200,36"/>
-</map>

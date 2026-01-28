@@ -1,9 +1,0 @@
-<map id="SolarSystem::JPL::JPLClient::operator=" name="SolarSystem::JPL::JPLClient::operator=">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,35,198,75"/>
-<area shape="rect" id="Node000002" href="$class_solar_system_1_1_j_p_l_1_1_j_p_l_client.html#a4c6b2f62b089a00e4eab96bf8c1a4c97" title="Construct JPL client with configuration." alt="" coords="246,35,438,75"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="198,52,230,52,230,58,198,58"/>
-<area shape="rect" id="Node000003" href="$class_solar_system_1_1_j_p_l_1_1_j_p_l_client.html#a75a0f9550a698dd68a2651e526d5b351" title="Get configuration." alt="" coords="486,5,678,46"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="438,41,470,37,471,42,439,46"/>
-<area shape="rect" id="Node000004" href="$namespace_solar_system_1_1_j_p_l.html#aa87d1eae6faed2285995bb3f55e8bf4e" title="Helper to create error void result." alt="" coords="502,70,663,96"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="439,64,487,69,486,75,438,69"/>
-</map>

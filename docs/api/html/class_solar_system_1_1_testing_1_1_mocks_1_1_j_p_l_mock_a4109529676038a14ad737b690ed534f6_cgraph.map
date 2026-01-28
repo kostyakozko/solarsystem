@@ -1,9 +1,0 @@
-<map id="SolarSystem::Testing::Mocks::JPLMock::generate_realistic_response" name="SolarSystem::Testing::Mocks::JPLMock::generate_realistic_response">
-<area shape="rect" id="Node000001" title="Generate realistic JPL HORIZONS response for body." alt="" coords="5,45,195,101"/>
-<area shape="rect" id="Node000002" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock.html#a6f3c92211560b48ad6d7cb996c1de32e" title="Generate body information section." alt="" coords="243,5,432,61"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="195,55,227,49,227,54,196,60"/>
-<area shape="rect" id="Node000004" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock.html#ab8bd6dea35295bf903adad884d9402e1" title="Generate ephemeris data section." alt="" coords="243,85,432,141"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="196,87,227,92,227,97,195,92"/>
-<area shape="rect" id="Node000003" href="$namespace_solar_system_1_1_bodies.html#a643d1f576850135f355e1f960d2ebde4" title="Get BodyType for JPL ID." alt="" coords="480,5,624,61"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="432,30,465,30,465,36,432,36"/>
-</map>

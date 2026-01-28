@@ -1,6 +1,0 @@
-<map id="SolarSystem::Bodies::BodyFactory::create_inner_planets" name="SolarSystem::Bodies::BodyFactory::create_inner_planets">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,29,153,85"/>
-<area shape="rect" id="Node000002" href="$class_solar_system_1_1_bodies_1_1_body_factory.html#a5157d2d796f663861f2f4fef994e41e6" title=" " alt="" coords="201,29,348,85"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="153,54,185,54,185,60,153,60"/>
-<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="236,29,236,19,243,10,256,5,274,3,295,5,308,12,305,17,293,10,274,8,257,10,246,15,241,21,241,29"/>
-</map>

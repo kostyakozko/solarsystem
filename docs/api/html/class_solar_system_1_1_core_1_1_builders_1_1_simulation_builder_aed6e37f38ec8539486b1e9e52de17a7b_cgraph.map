@@ -1,5 +1,0 @@
-<map id="SolarSystem::Core::Builders::SimulationBuilder::with_convergence_threshold" name="SolarSystem::Core::Builders::SimulationBuilder::with_convergence_threshold">
-<area shape="rect" id="Node000001" title="Set convergence threshold for simulation accuracy." alt="" coords="5,5,200,61"/>
-<area shape="rect" id="Node000002" href="$class_solar_system_1_1_core_1_1_builders_1_1_simulation_builder.html#a0b64f40d2336fd50eef6ac3bd5b75558" title="Default constructor with sensible defaults." alt="" coords="248,5,425,61"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="200,30,232,30,232,36,200,36"/>
-</map>

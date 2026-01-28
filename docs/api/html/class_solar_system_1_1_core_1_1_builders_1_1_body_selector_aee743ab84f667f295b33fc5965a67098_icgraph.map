@@ -1,7 +1,0 @@
-<map id="SolarSystem::Core::Builders::BodySelector::important" name="SolarSystem::Core::Builders::BodySelector::important">
-<area shape="rect" id="Node000001" title="Include important bodies (major moons)" alt="" coords="322,5,476,61"/>
-<area shape="rect" id="Node000002" href="$class_launcher_u_i.html#a718fb64eda4f608ea95accf35188ec41" title="Print system status." alt="" coords="103,13,274,54"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="306,36,274,36,274,30,306,30"/>
-<area shape="rect" id="Node000003" href="$launcher_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title="Modern main function with structured workflow execution." alt="" coords="5,20,55,46"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="87,36,55,36,55,30,87,30"/>
-</map>

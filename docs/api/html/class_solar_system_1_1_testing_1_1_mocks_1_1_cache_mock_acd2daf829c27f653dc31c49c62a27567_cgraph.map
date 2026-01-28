@@ -1,5 +1,0 @@
-<map id="SolarSystem::Testing::Mocks::CacheMock::simulate_io_error" name="SolarSystem::Testing::Mocks::CacheMock::simulate_io_error">
-<area shape="rect" id="Node000001" title="Simulate I/O errors for next N operations." alt="" coords="5,5,209,61"/>
-<area shape="rect" id="Node000002" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_cache_mock.html#aae76998553f78b179326a45d282fd395" title="Get total number of operations." alt="" coords="257,13,503,54"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="209,30,241,30,241,36,209,36"/>
-</map>

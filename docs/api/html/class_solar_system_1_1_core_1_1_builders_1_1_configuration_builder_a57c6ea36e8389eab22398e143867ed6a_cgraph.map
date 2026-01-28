@@ -1,6 +1,0 @@
-<map id="SolarSystem::Core::Builders::ConfigurationBuilder::gravitational_constant" name="SolarSystem::Core::Builders::ConfigurationBuilder::gravitational_constant">
-<area shape="rect" id="Node000001" title="Set gravitational constant." alt="" coords="5,29,199,85"/>
-<area shape="poly" id="edge2_Node000001_Node000001" title=" " alt="" coords="55,29,55,19,64,10,80,5,102,3,127,5,143,12,141,17,126,10,102,8,81,10,67,15,60,21,60,29"/>
-<area shape="rect" id="Node000002" href="$class_solar_system_1_1_core_1_1_builders_1_1_configuration_builder.html#a760d23f9c3d58d1d80894a3f7b7ad9e4" title="Start with default configuration." alt="" coords="247,29,440,85"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="199,54,231,54,231,60,199,60"/>
-</map>

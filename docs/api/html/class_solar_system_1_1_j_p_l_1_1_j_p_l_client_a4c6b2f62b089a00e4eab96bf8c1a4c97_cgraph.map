@@ -1,7 +1,0 @@
-<map id="SolarSystem::JPL::JPLClient::JPLClient" name="SolarSystem::JPL::JPLClient::JPLClient">
-<area shape="rect" id="Node000001" title="Construct JPL client with configuration." alt="" coords="5,35,198,75"/>
-<area shape="rect" id="Node000002" href="$class_solar_system_1_1_j_p_l_1_1_j_p_l_client.html#a75a0f9550a698dd68a2651e526d5b351" title="Get configuration." alt="" coords="246,5,438,46"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="198,41,230,37,230,42,198,46"/>
-<area shape="rect" id="Node000003" href="$namespace_solar_system_1_1_j_p_l.html#aa87d1eae6faed2285995bb3f55e8bf4e" title="Helper to create error void result." alt="" coords="261,70,422,96"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="198,64,246,69,246,75,198,69"/>
-</map>

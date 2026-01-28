@@ -1,9 +1,0 @@
-<map id="SolarSystem::Bodies::BodyCollection::center_of_mass" name="SolarSystem::Bodies::BodyCollection::center_of_mass">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,63,167,119"/>
-<area shape="rect" id="Node000002" href="$class_solar_system_1_1_math_1_1_vector3.html#affbe4dbe7d098d0eba57439204e8f136" title=" " alt="" coords="215,5,356,46"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="166,62,206,49,207,54,168,67"/>
-<area shape="rect" id="Node000003" href="$class_solar_system_1_1_math_1_1_vector3.html#ae9806e0dac78233fd5a8da32aa5caa4b" title=" " alt="" coords="215,71,356,111"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="167,88,199,88,199,94,167,94"/>
-<area shape="rect" id="Node000004" href="$class_solar_system_1_1_math_1_1_vector3.html#aa638d4abfe89538237911fb7623e5ae2" title=" " alt="" coords="215,136,356,177"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="168,115,207,128,206,133,166,120"/>
-</map>

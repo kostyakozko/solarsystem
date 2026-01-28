@@ -1,7 +1,0 @@
-<map id="FetchOptions::is_valid" name="FetchOptions::is_valid">
-<area shape="rect" id="Node000001" title="Validate options for consistency." alt="" coords="306,5,457,31"/>
-<area shape="rect" id="Node000002" href="$class_argument_parser.html#af9aac63f65780f58657d18b0bf762cb2" title=" " alt="" coords="103,5,258,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="291,21,259,21,259,16,291,16"/>
-<area shape="rect" id="Node000003" href="$fetch_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title="Modern main function using RAII and structured error handling." alt="" coords="5,5,55,31"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="87,21,55,21,55,16,87,16"/>
-</map>

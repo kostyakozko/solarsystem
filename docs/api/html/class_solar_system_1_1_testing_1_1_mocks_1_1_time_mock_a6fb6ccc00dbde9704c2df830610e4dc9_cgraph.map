@@ -1,7 +1,0 @@
-<map id="SolarSystem::Testing::Mocks::TimeMock::create_test_scenario" name="SolarSystem::Testing::Mocks::TimeMock::create_test_scenario">
-<area shape="rect" id="Node000001" title="Create time&#45;dependent test scenario." alt="" coords="5,34,187,90"/>
-<area shape="rect" id="Node000002" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock.html#af33440b670ac3c3d8017398bc12c8036" title="Set the current mock time." alt="" coords="235,5,430,46"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="187,45,219,40,219,46,187,50"/>
-<area shape="rect" id="Node000003" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_time_mock.html#af9d6467e47adfac2f74095c8c6b1b23f" title="Set time scale (1.0 = normal, 2.0 = 2x speed, 0.5 = half speed)" alt="" coords="251,70,414,126"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="187,73,236,80,235,86,187,78"/>
-</map>

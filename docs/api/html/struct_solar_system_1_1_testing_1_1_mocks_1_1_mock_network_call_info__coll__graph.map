@@ -1,5 +1,0 @@
-<map id="SolarSystem::Testing::Mocks::MockNetworkCallInfo" name="SolarSystem::Testing::Mocks::MockNetworkCallInfo">
-<area shape="rect" id="Node000001" title="Network call information for verification." alt="" coords="5,117,208,158"/>
-<area shape="rect" id="Node000002" href="$struct_solar_system_1_1_testing_1_1_mocks_1_1_mock_http_response.html" title="HTTP response structure." alt="" coords="10,5,203,46"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="109,61,109,117,104,117,104,61"/>
-</map>

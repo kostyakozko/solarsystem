@@ -1,5 +1,0 @@
-<map id="SolarSystem::Bodies::get_priority_for_body_type" name="SolarSystem::Bodies::get_priority_for_body_type">
-<area shape="rect" id="Node000001" title="Get BodyPriority for BodyType." alt="" coords="251,5,433,46"/>
-<area shape="rect" id="Node000002" href="$struct_solar_system_1_1_j_p_l_1_1_ephemeris_data.html#a9ea3098087bde879230c9fc1019a3436" title="Convert to modern CelestialBody." alt="" coords="5,5,203,46"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="235,28,203,28,203,23,235,23"/>
-</map>

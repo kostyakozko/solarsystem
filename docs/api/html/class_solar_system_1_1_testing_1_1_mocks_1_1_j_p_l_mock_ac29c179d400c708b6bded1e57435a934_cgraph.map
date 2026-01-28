@@ -1,7 +1,0 @@
-<map id="SolarSystem::Testing::Mocks::JPLMock::mock_save_to_cache" name="SolarSystem::Testing::Mocks::JPLMock::mock_save_to_cache">
-<area shape="rect" id="Node000001" title="Mock implementation of cache save." alt="" coords="5,16,177,71"/>
-<area shape="rect" id="Node000002" href="$namespace_solar_system_1_1_j_p_l.html#aa87d1eae6faed2285995bb3f55e8bf4e" title="Helper to create error void result." alt="" coords="236,5,398,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="176,31,220,26,221,32,177,37"/>
-<area shape="rect" id="Node000003" href="$namespace_solar_system_1_1_j_p_l.html#ac75b9c75d52b5dcc91551918f6e7244f" title="Helper to create successful void result." alt="" coords="225,55,409,80"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="177,50,209,53,209,59,176,55"/>
-</map>

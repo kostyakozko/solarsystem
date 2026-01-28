@@ -1,5 +1,0 @@
-<map id="SolarSystem::Utils::Date::to_time_t" name="SolarSystem::Utils::Date::to_time_t">
-<area shape="rect" id="Node000001" title="Convert to time_t for legacy compatibility." alt="" coords="185,5,316,46"/>
-<area shape="rect" id="Node000002" href="$class_solar_system_1_1_utils_1_1_date.html#a5cd049a67af76fe27db40cc25c801ba0" title="Convert to ISO string format." alt="" coords="5,5,137,46"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="169,28,137,28,137,23,169,23"/>
-</map>

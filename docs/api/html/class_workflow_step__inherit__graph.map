@@ -1,9 +1,0 @@
-<map id="WorkflowStep" name="WorkflowStep">
-<area shape="rect" id="Node000001" title="Abstract base class for workflow steps." alt="" coords="162,5,264,31"/>
-<area shape="rect" id="Node000002" href="$class_auto_fetch_step.html" title="Auto&#45;fetch workflow step." alt="" coords="5,79,114,105"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="174,40,87,81,85,76,172,36"/>
-<area shape="rect" id="Node000003" href="$class_data_management_step.html" title="Data management workflow step." alt="" coords="137,79,288,105"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="216,46,216,79,210,79,210,46"/>
-<area shape="rect" id="Node000004" href="$class_simulation_step.html" title="Simulation workflow step." alt="" coords="313,79,422,105"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="254,35,342,76,340,81,252,40"/>
-</map>

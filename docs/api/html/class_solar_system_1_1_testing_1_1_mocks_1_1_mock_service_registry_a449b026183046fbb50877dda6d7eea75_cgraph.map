@@ -1,7 +1,0 @@
-<map id="SolarSystem::Testing::Mocks::MockServiceRegistry::instance" name="SolarSystem::Testing::Mocks::MockServiceRegistry::instance">
-<area shape="rect" id="Node000001" title="Get global registry instance." alt="" coords="5,29,207,85"/>
-<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="57,29,58,19,67,10,83,5,106,3,132,5,148,12,146,17,131,10,106,8,84,10,70,15,63,21,63,29"/>
-<area shape="rect" id="Node000002" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_mock_service_registry.html#a2474c9a8aba5cd14aa69f66789e84df2" title=" " alt="" coords="255,29,456,85"/>
-<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="207,54,239,54,239,60,207,60"/>
-<area shape="poly" id="edge3_Node000002_Node000002" title=" " alt="" coords="307,29,307,19,316,10,332,5,355,3,381,5,397,12,395,17,380,10,355,8,333,10,319,15,312,21,312,29"/>
-</map>

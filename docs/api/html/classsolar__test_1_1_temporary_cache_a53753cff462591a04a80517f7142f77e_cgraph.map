@@ -1,9 +1,0 @@
-<map id="solar_test::TemporaryCache::populate_with_valid_data" name="solar_test::TemporaryCache::populate_with_valid_data">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,71,191,111"/>
-<area shape="rect" id="Node000002" href="$namespacesolar__test.html#af522c5a9ac642bd6907f38a5c937d08a" title=" " alt="" coords="258,5,384,46"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="169,68,242,46,244,51,170,73"/>
-<area shape="rect" id="Node000003" href="$namespacesolar__test.html#ac074d86df6ac63c6055fb29fde3dcdcd" title=" " alt="" coords="239,71,403,111"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="191,88,223,88,223,94,191,94"/>
-<area shape="rect" id="Node000004" href="$namespacesolar__test.html#a8b80775dc7b2526911f9b635901b9176" title=" " alt="" coords="260,136,382,177"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="170,109,245,132,244,137,169,114"/>
-</map>

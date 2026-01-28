@@ -1,9 +1,0 @@
-<map id="save_system_state" name="save_system_state">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,55,141,80"/>
-<area shape="rect" id="Node000002" href="$model_8cpp.html#afd242324fd0dcc462ab2cb2969def5f9" title=" " alt="" coords="226,5,300,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="125,51,210,29,211,34,126,57"/>
-<area shape="rect" id="Node000003" href="$model_8cpp.html#a524063ecd9d2eeda438c1e6d7cfe170e" title=" " alt="" coords="206,55,320,80"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="141,65,190,65,190,70,141,70"/>
-<area shape="rect" id="Node000004" href="$jpl__data_8cpp.html#a7a063f0c8b7d1c3c8ccb8f4454278bee" title=" " alt="" coords="189,104,337,130"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="126,78,196,97,195,102,125,84"/>
-</map>

@@ -1,7 +1,0 @@
-<map id="LauncherUI::print_section" name="LauncherUI::print_section">
-<area shape="rect" id="Node000001" title="Print section header." alt="" coords="217,42,387,68"/>
-<area shape="rect" id="Node000002" href="$class_data_management_step.html#a290fff50cbba93e3ec5f50695b4a0fa8" title="Execute the workflow step." alt="" coords="11,5,163,46"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="201,44,163,39,164,33,202,39"/>
-<area shape="rect" id="Node000003" href="$class_simulation_step.html#a1179221d9a08b64d5aba7832972271ca" title="Execute the workflow step." alt="" coords="5,70,169,96"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="201,71,169,75,169,70,201,65"/>
-</map>

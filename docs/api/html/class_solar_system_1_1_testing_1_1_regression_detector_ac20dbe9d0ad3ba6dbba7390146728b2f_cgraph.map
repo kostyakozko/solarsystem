@@ -1,5 +1,0 @@
-<map id="SolarSystem::Testing::RegressionDetector::generate_ci_output" name="SolarSystem::Testing::RegressionDetector::generate_ci_output">
-<area shape="rect" id="Node000001" title="Generate CI&#45;compatible output." alt="" coords="5,5,152,61"/>
-<area shape="rect" id="Node000002" href="$class_solar_system_1_1_testing_1_1_regression_detector.html#a3c737e99861be49b840004cb581eefaf" title="Check if any regressions exceed threshold." alt="" coords="200,5,369,61"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="152,30,184,30,184,36,152,36"/>
-</map>

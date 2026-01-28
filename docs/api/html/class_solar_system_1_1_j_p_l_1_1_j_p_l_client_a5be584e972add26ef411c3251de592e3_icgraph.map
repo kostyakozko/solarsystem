@@ -1,8 +1,0 @@
-<map id="SolarSystem::JPL::JPLClient::load_from_cache" name="SolarSystem::JPL::JPLClient::load_from_cache">
-<area shape="rect" id="Node000001" title="Load ephemeris data from cache." alt="" coords="486,5,678,46"/>
-<area shape="rect" id="Node000002" href="$class_solar_system_1_1_j_p_l_1_1_j_p_l_client.html#a20c3a5c8255e5e0f8beb69e5a5e41c8a" title=" " alt="" coords="5,5,198,46"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="471,25,438,24,246,24,198,25,198,20,246,19,438,19,471,20"/>
-<area shape="rect" id="Node000003" href="$class_solar_system_1_1_j_p_l_1_1_j_p_l_client.html#ae5aca8bf9076f444ccc6661acefb007f" title="Validate cache integrity." alt="" coords="246,33,438,74"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="471,41,439,45,438,40,470,36"/>
-<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="230,43,198,40,198,34,230,38"/>
-</map>

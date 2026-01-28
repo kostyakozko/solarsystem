@@ -1,5 +1,0 @@
-<map id="SolarSystem::JPL::Utils::to_string" name="SolarSystem::JPL::Utils::to_string">
-<area shape="rect" id="Node000001" title="Convert JPL error to string." alt="" coords="5,5,168,46"/>
-<area shape="rect" id="Node000002" href="$namespace_solar_system_1_1_j_p_l.html#aa87d1eae6faed2285995bb3f55e8bf4e" title="Helper to create error void result." alt="" coords="216,13,377,38"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="168,23,200,23,200,28,168,28"/>
-</map>

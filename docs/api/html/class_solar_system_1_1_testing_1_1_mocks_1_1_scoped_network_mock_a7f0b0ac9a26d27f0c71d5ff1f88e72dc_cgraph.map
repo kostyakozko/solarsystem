@@ -1,7 +1,0 @@
-<map id="SolarSystem::Testing::Mocks::ScopedNetworkMock::ScopedNetworkMock" name="SolarSystem::Testing::Mocks::ScopedNetworkMock::ScopedNetworkMock">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,207,61"/>
-<area shape="rect" id="Node000002" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_network_mock.html#ac2565a7acf769d96f5d92ba62c800c15" title=" " alt="" coords="255,5,456,61"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="207,30,239,30,239,36,207,36"/>
-<area shape="rect" id="Node000003" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_scoped_network_mock.html#ab6d938344bb19b8a7b8201bb12fdc4e6" title="Get access to the mock." alt="" coords="504,13,745,54"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="456,30,488,30,488,36,456,36"/>
-</map>

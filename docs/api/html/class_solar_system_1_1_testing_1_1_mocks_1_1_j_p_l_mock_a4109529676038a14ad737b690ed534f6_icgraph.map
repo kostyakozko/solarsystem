@@ -1,5 +1,0 @@
-<map id="SolarSystem::Testing::Mocks::JPLMock::generate_realistic_response" name="SolarSystem::Testing::Mocks::JPLMock::generate_realistic_response">
-<area shape="rect" id="Node000001" title="Generate realistic JPL HORIZONS response for body." alt="" coords="225,5,414,61"/>
-<area shape="rect" id="Node000002" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock.html#aba6cf7d71996ffd9a396a1ae16027d97" title="Mock implementation of JPL API request This is called by the mocked JPL client." alt="" coords="5,5,177,61"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="209,36,177,36,177,30,209,30"/>
-</map>

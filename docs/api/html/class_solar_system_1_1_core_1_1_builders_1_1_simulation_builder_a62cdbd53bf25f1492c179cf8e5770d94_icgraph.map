@@ -1,7 +1,0 @@
-<map id="SolarSystem::Core::Builders::SimulationBuilder::with_max_iterations" name="SolarSystem::Core::Builders::SimulationBuilder::with_max_iterations">
-<area shape="rect" id="Node000001" title="Set the maximum number of iterations." alt="" coords="218,20,395,75"/>
-<area shape="rect" id="Node000002" href="$class_simulation_step.html#a1179221d9a08b64d5aba7832972271ca" title="Execute the workflow step." alt="" coords="6,5,169,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="202,36,169,32,170,26,202,31"/>
-<area shape="rect" id="Node000003" href="$class_solar_system_a_p_i.html#ae62b5c5789c5e2880871005a9d244471" title="Handle simulation request." alt="" coords="5,55,170,96"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="202,63,170,68,170,62,202,58"/>
-</map>

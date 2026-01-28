@@ -1,9 +1,0 @@
-<map id="demonstrate_vector_benchmark" name="demonstrate_vector_benchmark">
-<area shape="rect" id="Node000001" title="Example benchmark for vector operations." alt="" coords="5,71,142,111"/>
-<area shape="rect" id="Node000002" href="$class_solar_system_1_1_testing_1_1_benchmark.html#ae57486b0511b04d2c38b5af0f67e1a47" title="Add metadata to benchmark results." alt="" coords="191,5,376,46"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="140,68,201,49,202,54,142,73"/>
-<area shape="rect" id="Node000003" href="$class_solar_system_1_1_testing_1_1_benchmark.html#abaf4832f07880851220e70685f31ae51" title="Measure execution time of a function." alt="" coords="207,71,360,111"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="142,88,192,88,192,94,142,94"/>
-<area shape="rect" id="Node000004" href="$class_solar_system_1_1_testing_1_1_benchmark.html#a9a0fca86748d9e311a948c2bbe927b2d" title="Set performance thresholds for validation." alt="" coords="190,136,378,177"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="142,109,202,128,201,133,140,114"/>
-</map>

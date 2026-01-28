@@ -1,7 +1,0 @@
-<map id="SolarSystem::Bodies::BodyFactory::get_available_bodies" name="SolarSystem::Bodies::BodyFactory::get_available_bodies">
-<area shape="rect" id="Node000001" title=" " alt="" coords="315,5,502,61"/>
-<area shape="rect" id="Node000002" href="$class_solar_system_a_p_i.html#a0f903ec3a89281e8e8bcb1b100774ca6" title="Get system status." alt="" coords="103,13,267,54"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="300,36,267,36,267,30,300,30"/>
-<area shape="rect" id="Node000003" href="$web__server_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title="Modern main function with structured error handling." alt="" coords="5,20,55,46"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="87,36,55,36,55,30,87,30"/>
-</map>

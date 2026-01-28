@@ -1,7 +1,0 @@
-<map id="save_current_data_for_testing" name="save_current_data_for_testing">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,23,156,64"/>
-<area shape="rect" id="Node000002" href="$jpl__data_8cpp.html#a7224072a5ff059844819f585a3fd6b25" title=" " alt="" coords="204,5,380,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="156,32,188,28,188,33,156,37"/>
-<area shape="rect" id="Node000003" href="$jpl__data_8cpp.html#a5ba5f9d1761cc31952b6e2171f62aad0" title=" " alt="" coords="209,55,374,80"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="156,49,194,54,194,59,156,55"/>
-</map>

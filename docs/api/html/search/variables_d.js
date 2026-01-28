@@ -1,6 +1,0 @@
-var searchData=
-[
-  ['name_0',['name',['../struct_solar_system_1_1_bodies_1_1_celestial_body_1_1_properties.html#a9acc3d58f0e8cdcc3a157ff901e60edc',1,'SolarSystem::Bodies::CelestialBody::Properties::name'],['../struct_solar_system_1_1_data_1_1_body_definition.html#a6aed5f096bec4fcc52409dbceaee0bd6',1,'SolarSystem::Data::BodyDefinition::name'],['../struct_solar_system_1_1_testing_1_1_benchmark_result.html#aedbc7a1f9f2351b594d9d484fc1aea70',1,'SolarSystem::Testing::BenchmarkResult::name'],['../struct_solar_system_1_1_testing_1_1_performance_profiler_1_1_profile_point.html#a034c74f91d563793a838cc2eae276c4e',1,'SolarSystem::Testing::PerformanceProfiler::ProfilePoint::name'],['../struct_solar_system_1_1_testing_1_1_test_case_1_1_test_info.html#a97d18a22958d3a576e873cd2aa322a6a',1,'SolarSystem::Testing::TestCase::TestInfo::name'],['../structsolar__test_1_1_test_data_set.html#a4c8a3c42989ca62de70f1f47adac1828',1,'solar_test::TestDataSet::name']]],
-  ['network_5ffailure_5frate_1',['network_failure_rate',['../struct_solar_system_1_1_testing_1_1_mocks_1_1_j_p_l_mock_config.html#a76d2a7d4866e599b705374847480fe7a',1,'SolarSystem::Testing::Mocks::JPLMockConfig']]],
-  ['network_5ftimeout_2',['network_timeout',['../struct_solar_system_1_1_utils_1_1_config_1_1_data_config.html#a1f20e3adfeb0aa33e9511560a14472f1',1,'SolarSystem::Utils::Config::DataConfig']]]
-];

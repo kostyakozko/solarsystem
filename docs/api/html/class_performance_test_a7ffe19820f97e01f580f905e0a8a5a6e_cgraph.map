@@ -1,9 +1,0 @@
-<map id="PerformanceTest::run" name="PerformanceTest::run">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,56,152,82"/>
-<area shape="rect" id="Node000002" href="$class_solar_system_1_1_testing_1_1_test_case.html#a3ef33096a74f5c82a8a63f20762904a5" title=" " alt="" coords="200,5,392,61"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="151,54,184,49,185,54,152,60"/>
-<area shape="rect" id="Node000003" href="$class_solar_system_1_1_testing_1_1_test_case.html#ada06a5e5ce50a0d8f22246d826ee1d32" title=" " alt="" coords="217,85,375,126"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="152,79,202,87,201,92,151,84"/>
-<area shape="rect" id="Node000004" href="$class_solar_system_1_1_testing_1_1_assertions.html#ad8de3ef519643fda8d19d8f030a33b1c" title=" " alt="" coords="440,85,604,126"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="375,102,425,102,425,108,375,108"/>
-</map>

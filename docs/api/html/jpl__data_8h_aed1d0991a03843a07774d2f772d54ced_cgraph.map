@@ -1,9 +1,0 @@
-<map id="test_storage_system" name="test_storage_system">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,31,149,56"/>
-<area shape="rect" id="Node000002" href="$jpl__data_8cpp.html#a75974d8710a63afb06a4df82b85f50f1" title=" " alt="" coords="197,23,347,64"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="149,41,181,41,181,46,149,46"/>
-<area shape="rect" id="Node000003" href="$jpl__data_8cpp.html#a7224072a5ff059844819f585a3fd6b25" title=" " alt="" coords="395,5,571,31"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="347,32,379,28,380,33,348,37"/>
-<area shape="rect" id="Node000004" href="$jpl__data_8cpp.html#a5ba5f9d1761cc31952b6e2171f62aad0" title=" " alt="" coords="400,55,566,80"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="348,49,386,54,385,59,347,55"/>
-</map>

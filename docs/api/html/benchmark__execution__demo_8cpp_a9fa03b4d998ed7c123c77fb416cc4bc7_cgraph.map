@@ -1,9 +1,0 @@
-<map id="demonstrate_performance_monitoring" name="demonstrate_performance_monitoring">
-<area shape="rect" id="Node000001" title="Example performance monitoring." alt="" coords="5,53,178,94"/>
-<area shape="rect" id="Node000002" href="$class_solar_system_1_1_testing_1_1_performance_monitor.html#a53398b391bf2964aa2bcd92f2be30406" title="Monitor function execution and return metrics." alt="" coords="226,45,372,101"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="178,70,210,70,210,76,178,76"/>
-<area shape="rect" id="Node000003" href="$class_solar_system_1_1_testing_1_1_performance_monitor.html#a570589b1cedb062be31465d8144b285d" title="Start monitoring performance." alt="" coords="420,5,566,61"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="372,55,405,49,406,54,373,61"/>
-<area shape="rect" id="Node000004" href="$class_solar_system_1_1_testing_1_1_performance_monitor.html#a8adfdc6cd3f2d22484783e857deff2df" title="Stop monitoring and return metrics." alt="" coords="420,85,566,141"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="373,86,406,92,405,98,372,91"/>
-</map>

@@ -1,5 +1,0 @@
-<map id="SolarSystem::Testing::RegressionDetector::set_baseline" name="SolarSystem::Testing::RegressionDetector::set_baseline">
-<area shape="rect" id="Node000001" title="Set baseline for a benchmark." alt="" coords="5,5,152,61"/>
-<area shape="rect" id="Node000002" href="$class_solar_system_1_1_testing_1_1_regression_detector.html#a5749878607dd588ad869bef6a06475e3" title="Save baseline data to storage." alt="" coords="200,5,346,61"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="152,30,185,30,185,36,152,36"/>
-</map>

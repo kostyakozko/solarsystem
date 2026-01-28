@@ -1,7 +1,0 @@
-<map id="SampleSkippedTest::run" name="SampleSkippedTest::run">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,13,169,38"/>
-<area shape="rect" id="Node000002" href="$class_solar_system_1_1_testing_1_1_test_case.html#ada06a5e5ce50a0d8f22246d826ee1d32" title=" " alt="" coords="217,5,375,46"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="169,23,201,23,201,28,169,28"/>
-<area shape="rect" id="Node000003" href="$class_solar_system_1_1_testing_1_1_assertions.html#ad8de3ef519643fda8d19d8f030a33b1c" title=" " alt="" coords="423,5,587,46"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="375,23,407,23,407,28,375,28"/>
-</map>

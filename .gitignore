@@ -44,6 +44,10 @@ Makefile
 *.prof
 *.gprof
 
+# Generated documentation (deployed via CI)
+docs/api/
+doxygen.log
+
 # Debug and temporary files
 debug_*.cpp
 test_*_verification.cpp

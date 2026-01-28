@@ -1,5 +1,0 @@
-<map id="SolarSystem::Testing::Mocks::NetworkMock::simulate_mobile_network" name="SolarSystem::Testing::Mocks::NetworkMock::simulate_mobile_network">
-<area shape="rect" id="Node000001" title="Simulate mobile network conditions." alt="" coords="5,5,182,61"/>
-<area shape="rect" id="Node000002" href="$class_solar_system_1_1_testing_1_1_mocks_1_1_network_mock.html#a380f6663a15b1c8d9d48610697432139" title="Set network condition for all requests." alt="" coords="230,5,389,61"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="182,30,214,30,214,36,182,36"/>
-</map>

@@ -1,9 +1,0 @@
-<map id="SolarSystem::Utils::Option::Option" name="SolarSystem::Utils::Option::Option">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,71,137,111"/>
-<area shape="rect" id="Node000002" href="$class_solar_system_1_1_utils_1_1_option.html#aee65f5afe989806f5a7c9bbdf88487b3" title=" " alt="" coords="187,5,326,46"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="130,68,182,49,183,54,132,73"/>
-<area shape="rect" id="Node000003" href="$class_solar_system_1_1_utils_1_1_option.html#aa71998f77ea680ad960d1caa3639beb2" title=" " alt="" coords="187,71,326,111"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="137,88,172,88,172,94,137,94"/>
-<area shape="rect" id="Node000004" href="$class_solar_system_1_1_utils_1_1_option.html#a8edf092376bb3cf219090c20b131650a" title=" " alt="" coords="185,136,328,177"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="132,109,183,128,182,133,130,114"/>
-</map>

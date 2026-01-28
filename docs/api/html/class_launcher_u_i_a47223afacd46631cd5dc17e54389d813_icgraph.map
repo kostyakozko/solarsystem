@@ -1,9 +1,0 @@
-<map id="LauncherUI::print_progress" name="LauncherUI::print_progress">
-<area shape="rect" id="Node000001" title="Print progress indicator." alt="" coords="217,63,395,88"/>
-<area shape="rect" id="Node000002" href="$class_auto_fetch_step.html#ad0c203ea5f21d311667deadbeeb3bb79" title="Execute the workflow step." alt="" coords="6,5,168,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="238,61,138,34,140,29,240,56"/>
-<area shape="rect" id="Node000003" href="$class_data_management_step.html#a290fff50cbba93e3ec5f50695b4a0fa8" title="Execute the workflow step." alt="" coords="11,55,163,96"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="201,78,163,78,163,73,201,73"/>
-<area shape="rect" id="Node000004" href="$class_simulation_step.html#a1179221d9a08b64d5aba7832972271ca" title="Execute the workflow step." alt="" coords="5,120,169,146"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="240,95,140,122,138,117,238,90"/>
-</map>

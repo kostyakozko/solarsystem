@@ -1,7 +1,0 @@
-<map id="WorkTest3::run" name="WorkTest3::run">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,13,115,38"/>
-<area shape="rect" id="Node000002" href="$class_solar_system_1_1_testing_1_1_test_case.html#ada06a5e5ce50a0d8f22246d826ee1d32" title=" " alt="" coords="163,5,321,46"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="115,23,147,23,147,28,115,28"/>
-<area shape="rect" id="Node000003" href="$class_solar_system_1_1_testing_1_1_assertions.html#ad8de3ef519643fda8d19d8f030a33b1c" title=" " alt="" coords="369,5,533,46"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="321,23,353,23,353,28,321,28"/>
-</map>

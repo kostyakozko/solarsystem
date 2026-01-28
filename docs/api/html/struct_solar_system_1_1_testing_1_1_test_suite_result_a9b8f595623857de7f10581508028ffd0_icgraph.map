@@ -1,7 +1,0 @@
-<map id="SolarSystem::Testing::TestSuiteResult::add_result" name="SolarSystem::Testing::TestSuiteResult::add_result">
-<area shape="rect" id="Node000001" title=" " alt="" coords="297,5,448,61"/>
-<area shape="rect" id="Node000002" href="$namespace_solar_system_1_1_testing.html#af2d7fb6d3690aa5cd0d212035adc45e7" title="Main entry point for running tests." alt="" coords="103,13,249,54"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="282,36,249,36,249,30,282,30"/>
-<area shape="rect" id="Node000003" href="$example__tests_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="5,20,55,46"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="87,36,55,36,55,30,87,30"/>
-</map>

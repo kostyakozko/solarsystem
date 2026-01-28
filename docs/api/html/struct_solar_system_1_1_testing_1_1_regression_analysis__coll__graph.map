@@ -1,7 +1,0 @@
-<map id="SolarSystem::Testing::RegressionAnalysis" name="SolarSystem::Testing::RegressionAnalysis">
-<area shape="rect" id="Node000001" title="Performance regression analysis result." alt="" coords="96,117,242,158"/>
-<area shape="rect" id="Node000002" href="$struct_solar_system_1_1_testing_1_1_performance_baseline.html" title="Performance baseline data." alt="" coords="5,5,159,46"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="109,56,155,115,151,118,105,60"/>
-<area shape="rect" id="Node000003" href="$struct_solar_system_1_1_testing_1_1_benchmark_result.html" title="Result of a single benchmark execution." alt="" coords="182,5,328,46"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="233,60,186,118,182,115,229,56"/>
-</map>

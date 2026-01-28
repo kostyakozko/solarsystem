@@ -1,7 +1,0 @@
-<map id="SolarSystem::Utils::RealtimeArgumentParser::print_usage" name="SolarSystem::Utils::RealtimeArgumentParser::print_usage">
-<area shape="rect" id="Node000001" title="Print usage information with beautiful formatting." alt="" coords="229,24,404,79"/>
-<area shape="rect" id="Node000002" href="$realtime_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title="Modern main function with structured error handling." alt="" coords="68,5,118,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="213,39,118,24,118,19,214,34"/>
-<area shape="rect" id="Node000003" href="$class_solar_system_1_1_utils_1_1_realtime_argument_parser.html#a9d27cffa3617f67515a6bdf5c087a9eb" title=" " alt="" coords="5,56,181,111"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="214,69,181,74,181,68,213,64"/>
-</map>

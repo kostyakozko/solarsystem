@@ -1,5 +1,0 @@
-<map id="SolarSystem::Testing::TestDependencyManager::has_circular_dependency" name="SolarSystem::Testing::TestDependencyManager::has_circular_dependency">
-<area shape="rect" id="Node000001" title=" " alt="" coords="231,5,408,61"/>
-<area shape="rect" id="Node000002" href="$class_solar_system_1_1_testing_1_1_test_dependency_manager.html#aed3cef28352ff1228bf9a42cf8ef4fbc" title=" " alt="" coords="5,5,183,61"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="215,36,183,36,183,30,215,30"/>
-</map>

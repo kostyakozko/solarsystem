@@ -1,8 +1,0 @@
-<map id="SolarSystem::Simulation::SimulationEngine::simulate_to_date" name="SolarSystem::Simulation::SimulationEngine::simulate_to_date">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,22,193,78"/>
-<area shape="rect" id="Node000002" href="$class_solar_system_1_1_simulation_1_1_simulation_engine.html#abf8dbd9fe2203efda4b188be2d42947c" title=" " alt="" coords="241,22,428,78"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="193,47,225,47,225,52,193,52"/>
-<area shape="rect" id="Node000003" href="$class_solar_system_1_1_simulation_1_1_simulation_engine.html#a21013fa743097d8d68c9453e33ae3335" title=" " alt="" coords="476,29,641,70"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="428,47,460,47,460,52,428,52"/>
-<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="516,29,514,19,521,10,536,5,559,3,583,5,597,11,595,16,582,10,559,8,537,10,524,15,519,21,522,28"/>
-</map>

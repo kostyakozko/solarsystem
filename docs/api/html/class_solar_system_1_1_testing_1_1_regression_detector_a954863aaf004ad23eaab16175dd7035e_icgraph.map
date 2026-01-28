@@ -1,7 +1,0 @@
-<map id="SolarSystem::Testing::RegressionDetector::generate_regression_report" name="SolarSystem::Testing::RegressionDetector::generate_regression_report">
-<area shape="rect" id="Node000001" title="Generate comprehensive regression report." alt="" coords="311,5,457,76"/>
-<area shape="rect" id="Node000002" href="$regression__detection__demo_8cpp.html#a4f784b266172b5e58c3d262b9250a81a" title="Demonstrate regression detection." alt="" coords="103,20,263,61"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="295,43,263,43,263,38,295,38"/>
-<area shape="rect" id="Node000003" href="$regression__detection__demo_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title="Main demonstration function." alt="" coords="5,28,55,54"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="87,43,55,43,55,38,87,38"/>
-</map>

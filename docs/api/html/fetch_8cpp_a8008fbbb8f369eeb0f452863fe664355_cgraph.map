@@ -1,9 +1,0 @@
-<map id="print_status" name="print_status">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,55,95,80"/>
-<area shape="rect" id="Node000002" href="$jpl__data_8cpp.html#a7a063f0c8b7d1c3c8ccb8f4454278bee" title=" " alt="" coords="163,5,311,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="94,53,142,40,168,33,169,38,143,45,96,58"/>
-<area shape="rect" id="Node000003" href="$jpl__data_8cpp.html#a086604a991756be3769cb70a063aa17f" title=" " alt="" coords="161,55,313,80"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="95,65,145,65,145,70,95,70"/>
-<area shape="rect" id="Node000004" href="$jpl__data_8cpp.html#a59f69cf29c0ec41bae3cb8030f8e78b3" title=" " alt="" coords="143,104,331,130"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="96,77,143,90,169,97,168,102,142,95,94,82"/>
-</map>

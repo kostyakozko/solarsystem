@@ -1,5 +1,0 @@
-<map id="SolarSystem::Utils::Config::merge" name="SolarSystem::Utils::Config::merge">
-<area shape="rect" id="Node000001" title="Merge configurations (higher priority overwrites lower)" alt="" coords="5,5,137,46"/>
-<area shape="rect" id="Node000002" href="$class_solar_system_1_1_utils_1_1_config.html#acdc32eab0eba535679d3ce0d8aef0c56" title="Get default configuration." alt="" coords="185,5,324,46"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="137,23,169,23,169,28,137,28"/>
-</map>
