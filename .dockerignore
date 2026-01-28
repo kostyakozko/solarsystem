@@ -3,6 +3,7 @@
 
 # Build artifacts
 build/
+build-*/
 install/
 *.o
 *.a
@@ -30,8 +31,7 @@ ephemeris_data.json
 .gitattributes
 
 # Documentation build artifacts
-docs/api/html/
-docs/api/latex/
+docs/api/
 
 # Test results and reports
 Testing/

@@ -1,15 +1,27 @@
 # Solar System Suite - Fedora/RHEL/CentOS Dependencies
 # Install with: xargs -a requirements-fedora.txt sudo dnf install -y
 
+# Build essentials
 cmake
 gcc-c++
 pkgconf-pkg-config
+
+# Core dependencies
 openssl-devel
 libcurl-devel
 zlib-devel
+
+# Optional: Enhanced features
 boost-devel
 cairo-devel
 libpng-devel
 grpc-devel
 protobuf-devel
 protobuf-compiler
+
+# Optional: Documentation
+doxygen
+graphviz
+
+# Optional: Deployment (install helm from https://helm.sh/docs/intro/install/)
+# docker

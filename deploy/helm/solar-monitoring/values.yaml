@@ -1,0 +1,37 @@
+replicaCount: 1
+
+image:
+  repository: solar-system/monitoring
+  tag: "4.0.0"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 8080
+
+ingress:
+  enabled: false
+  className: ""
+  hosts:
+    - host: solar-monitoring.local
+      paths:
+        - path: /
+          pathType: Prefix
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 256Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+persistence:
+  enabled: true
+  size: 1Gi
+  storageClass: ""
+
+backup:
+  enabled: false
+  schedule: "0 2 * * *"
+  retention: 7

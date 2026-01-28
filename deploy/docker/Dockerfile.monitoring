@@ -1,0 +1,22 @@
+# Solar System Suite - Performance Monitoring Container
+FROM ubuntu:22.04 AS builder
+
+RUN apt-get update && apt-get install -y \
+    cmake g++ curl git libcurl4-openssl-dev libssl-dev zlib1g-dev libboost-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /src
+COPY . .
+
+RUN cmake -B build -DCMAKE_BUILD_TYPE=Release -DENABLE_TESTING=OFF \
+    && cmake --build build -j$(nproc)
+
+FROM ubuntu:22.04
+RUN apt-get update && apt-get install -y libcurl4 && rm -rf /var/lib/apt/lists/*
+
+COPY --from=builder /src/build/apps/solar_system_web/solar_system_web /usr/local/bin/
+COPY --from=builder /src/apps/solar_system_web/web /usr/local/share/solar_system/web
+
+EXPOSE 8080
+ENTRYPOINT ["solar_system_web"]
+CMD ["--port", "8080", "--web-root", "/usr/local/share/solar_system/web"]

@@ -1,13 +1,24 @@
 # Solar System Suite - macOS Dependencies
 # Install with: xargs -a requirements-macos.txt brew install
 
+# Build essentials
 cmake
 pkg-config
+
+# Core dependencies
 openssl@3
 curl
 zlib
+
+# Optional: Enhanced features
 boost
 cairo
 libpng
 grpc
 protobuf
+
+# Optional: Deployment tools
+# docker (install Docker Desktop from docker.com)
+helm
+doxygen
+graphviz

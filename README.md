@@ -119,9 +119,47 @@ The Solar System Suite was created to provide researchers, educators, and space 
 ### **Installation**
 
 #### **Prerequisites**
-- **C++ compiler** with C++17 support (GCC 7+/Clang 5+)
+- **C++ compiler** with C++20 support (GCC 10+/Clang 12+/MSVC 2019+)
 - **CMake** 3.15 or higher
 - **curl** for JPL HORIZONS API access
+- **OpenSSL** for secure communications
+- **pkg-config** for dependency detection
+
+Platform-specific installation:
+```bash
+# macOS
+brew install cmake pkg-config openssl@3 curl
+
+# Ubuntu/Debian
+sudo apt-get install cmake build-essential pkg-config libssl-dev libcurl4-openssl-dev
+
+# Fedora/RHEL
+sudo dnf install cmake gcc-c++ pkgconf-pkg-config openssl-devel libcurl-devel
+```
+
+#### **Optional (for enhanced features)**
+- **zlib** for compression support
+- **Boost** for additional utilities
+- **Cairo** for graphics rendering
+
+```bash
+# macOS
+brew install zlib boost cairo
+
+# Ubuntu/Debian
+sudo apt-get install zlib1g-dev libboost-dev libcairo2-dev
+
+# Fedora/RHEL
+sudo dnf install zlib-devel boost-devel cairo-devel
+```
+
+#### **Optional (for deployment)**
+- **Docker** for containerized deployment
+- **Helm** for Kubernetes deployment (`brew install helm` on macOS)
+
+#### **Optional (for documentation)**
+- **Doxygen** for API documentation generation
+- **Graphviz** for call graphs (`brew install doxygen graphviz` on macOS)
 
 #### **Build and Install**
 ```bash
