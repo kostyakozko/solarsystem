@@ -46,6 +46,7 @@ Makefile
 
 # Generated documentation (deployed via CI)
 docs/api/
+docs/project_stats.md
 doxygen.log
 
 # Debug and temporary files
