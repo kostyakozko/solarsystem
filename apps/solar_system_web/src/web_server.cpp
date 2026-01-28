@@ -41,6 +41,7 @@
 // Modern Solar System Suite APIs
 #include "solar_core/bodies/body_factory.hpp"
 #include "solar_core/builders/simulation_builder.hpp"
+#include "solar_core/performance/monitoring_integration.hpp"
 #include "solar_utils/logging.hpp"
 #include "solar_utils/validation/input_validator.hpp"
 
@@ -1222,6 +1223,62 @@ class SolarSystemAPI {
       return HttpResponse::error(500, "Simulation failed: " + std::string(e.what()));
     }
   }
+
+  /**
+   * @brief Get system metrics (CPU, memory, disk)
+   */
+  static HttpResponse handle_metrics(const HttpRequest&, SolarSystem::Bodies::BodyFactory&) {
+    try {
+      auto& monitor = SolarSystem::Performance::SystemMonitor::instance();
+      monitor.record_sample();  // Collect fresh sample
+      auto history = monitor.get_history(1);
+
+      nlohmann::json j;
+      if (!history.empty()) {
+        const auto& resources = history.back();
+        j["cpu_usage_percent"] = resources.cpu_usage_percent;
+        j["memory_usage_percent"] = resources.memory_usage_percent;
+        j["memory_used_bytes"] = resources.memory_used_bytes;
+        j["memory_available_bytes"] = resources.memory_available_bytes;
+        j["disk_usage_percent"] = resources.disk_usage_percent;
+        j["disk_used_bytes"] = resources.disk_used_bytes;
+        j["disk_available_bytes"] = resources.disk_available_bytes;
+      }
+
+      auto now = std::chrono::system_clock::now();
+      j["timestamp"] =
+          std::chrono::duration_cast<std::chrono::seconds>(now.time_since_epoch()).count();
+
+      return HttpResponse::json_response(j.dump(2));
+    } catch (const std::exception& e) {
+      return HttpResponse::error(500, "Metrics collection failed: " + std::string(e.what()));
+    }
+  }
+
+  /**
+   * @brief Get system alerts
+   */
+  static HttpResponse handle_alerts(const HttpRequest&, SolarSystem::Bodies::BodyFactory&) {
+    try {
+      auto& monitor = SolarSystem::Performance::SystemMonitor::instance();
+      monitor.record_sample();  // Ensure fresh data
+      auto alerts = monitor.check_thresholds();
+
+      nlohmann::json j = nlohmann::json::array();
+      for (const auto& alert : alerts) {
+        j.push_back({{"resource", alert.resource},
+                     {"current_value", alert.current_value},
+                     {"threshold", alert.threshold},
+                     {"timestamp", std::chrono::duration_cast<std::chrono::seconds>(
+                                       alert.timestamp.time_since_epoch())
+                                       .count()}});
+      }
+
+      return HttpResponse::json_response(j.dump(2));
+    } catch (const std::exception& e) {
+      return HttpResponse::error(500, "Alert check failed: " + std::string(e.what()));
+    }
+  }
 };
 
 /**
@@ -1439,8 +1496,16 @@ int main(int argc, char* argv[]) {
                 [factory](const HttpRequest& req) {
                   return SolarSystemAPI::handle_simulate(req, *factory);
                 })
-        .handle("/api/simulate", [factory](const HttpRequest& req) {
-          return SolarSystemAPI::handle_simulate(req, *factory);
+        .handle("/api/simulate",
+                [factory](const HttpRequest& req) {
+                  return SolarSystemAPI::handle_simulate(req, *factory);
+                })
+        .handle("/api/metrics",
+                [factory](const HttpRequest& req) {
+                  return SolarSystemAPI::handle_metrics(req, *factory);
+                })
+        .handle("/api/alerts", [factory](const HttpRequest& req) {
+          return SolarSystemAPI::handle_alerts(req, *factory);
         });
 
     // Start server
