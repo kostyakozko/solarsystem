@@ -145,6 +145,12 @@ target_link_libraries(test_monitoring_integration GTest::gtest_main solar_core T
 add_test(NAME UnitTest_MonitoringIntegration COMMAND test_monitoring_integration)
 set_tests_properties(UnitTest_MonitoringIntegration PROPERTIES LABELS "unit;performance;integration" TIMEOUT ${TEST_TIMEOUT})
 
+# Analytics test
+add_executable(test_analytics test_analytics.cpp)
+target_link_libraries(test_analytics GTest::gtest_main solar_core nlohmann_json::nlohmann_json Threads::Threads)
+add_test(NAME UnitTest_Analytics COMMAND test_analytics)
+set_tests_properties(UnitTest_Analytics PROPERTIES LABELS "unit;performance;analytics" TIMEOUT ${TEST_TIMEOUT})
+
 # Diagnostic and troubleshooting system test (Task 23)
 add_executable(test_diagnostic_system test_diagnostic_system.cpp)
 target_link_libraries(test_diagnostic_system GTest::gtest_main GTest::gmock solar_core solar_utils Threads::Threads)
