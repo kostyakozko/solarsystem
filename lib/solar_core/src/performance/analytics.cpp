@@ -91,9 +91,10 @@ PerformanceReport ReportingEngine::generate_report(
     summary.sample_count = values.size();
     summary.min = values.front();
     summary.max = values.back();
-    summary.avg = std::accumulate(values.begin(), values.end(), 0.0) / values.size();
-    summary.p95 = values[static_cast<size_t>(values.size() * 0.95)];
-    summary.p99 = values[static_cast<size_t>(values.size() * 0.99)];
+    summary.avg =
+        std::accumulate(values.begin(), values.end(), 0.0) / static_cast<double>(values.size());
+    summary.p95 = values[static_cast<size_t>(static_cast<double>(values.size()) * 0.95)];
+    summary.p99 = values[static_cast<size_t>(static_cast<double>(values.size()) * 0.99)];
     report.metrics.push_back(summary);
   }
 
@@ -193,13 +194,14 @@ void PredictiveAnalytics::record_sample(const std::string& metric, double value)
 
 double PredictiveAnalytics::calculate_trend(const std::vector<double>& values) const {
   if (values.size() < 2) return 0;
-  size_t n = values.size();
+  auto n = static_cast<double>(values.size());
   double sum_x = 0, sum_y = 0, sum_xy = 0, sum_xx = 0;
-  for (size_t i = 0; i < n; ++i) {
-    sum_x += i;
+  for (size_t i = 0; i < values.size(); ++i) {
+    auto di = static_cast<double>(i);
+    sum_x += di;
     sum_y += values[i];
-    sum_xy += i * values[i];
-    sum_xx += i * i;
+    sum_xy += di * values[i];
+    sum_xx += di * di;
   }
   double denom = n * sum_xx - sum_x * sum_x;
   return denom != 0 ? (n * sum_xy - sum_x * sum_y) / denom : 0;
@@ -207,7 +209,7 @@ double PredictiveAnalytics::calculate_trend(const std::vector<double>& values) c
 
 double PredictiveAnalytics::calculate_growth_rate(const std::vector<double>& values) const {
   if (values.size() < 2 || values.front() == 0) return 0;
-  return (values.back() - values.front()) / values.front() / values.size();
+  return (values.back() - values.front()) / values.front() / static_cast<double>(values.size());
 }
 
 Forecast PredictiveAnalytics::forecast(const std::string& metric,
@@ -231,7 +233,7 @@ Forecast PredictiveAnalytics::forecast(const std::string& metric,
 
   result.current_value = values.back();
   double trend = calculate_trend(values);
-  double steps = horizon.count() / 60.0;  // Assume 1-minute sample intervals
+  double steps = static_cast<double>(horizon.count()) / 60.0;  // Assume 1-minute sample intervals
   result.predicted_value = result.current_value + trend * steps;
   result.confidence = std::min(1.0, static_cast<double>(values.size()) / 100.0);
 
@@ -331,9 +333,10 @@ std::vector<PredictiveAnalytics::PotentialIssue> PredictiveAnalytics::detect_pot
     }
 
     double trend = calculate_trend(values);
-    double avg = std::accumulate(values.begin(), values.end(), 0.0) / values.size();
+    double avg =
+        std::accumulate(values.begin(), values.end(), 0.0) / static_cast<double>(values.size());
     double recent_avg =
-        values.size() > 10 ? std::accumulate(values.end() - 10, values.end(), 0.0) / 10 : avg;
+        values.size() > 10 ? std::accumulate(values.end() - 10, values.end(), 0.0) / 10.0 : avg;
 
     // Detect rapid increase
     if (trend > 0.1 && recent_avg > avg * 1.2) {

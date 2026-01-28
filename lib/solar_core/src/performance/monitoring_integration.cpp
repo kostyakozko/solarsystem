@@ -68,7 +68,7 @@ ApplicationMonitor::Stats ApplicationMonitor::get_stats() const {
   stats.startup_time_s = startup_time_;
   stats.total_operations = op_count_;
   stats.error_count = error_count_;
-  stats.avg_operation_time_ms = op_count_ > 0 ? total_op_time_ / op_count_ : 0;
+  stats.avg_operation_time_ms = op_count_ > 0 ? total_op_time_ / static_cast<double>(op_count_) : 0;
   stats.start_time = start_time_;
   if (running_.load()) {
     stats.uptime = std::chrono::steady_clock::now() - start_steady_;
@@ -128,7 +128,10 @@ SystemResources SystemMonitor::collect_resources() const {
   }
   res.memory_available_bytes = mem_available * 1024;
   res.memory_used_bytes = (mem_total - mem_available) * 1024;
-  res.memory_usage_percent = mem_total > 0 ? 100.0 * (mem_total - mem_available) / mem_total : 0;
+  res.memory_usage_percent =
+      mem_total > 0
+          ? 100.0 * static_cast<double>(mem_total - mem_available) / static_cast<double>(mem_total)
+          : 0;
 
   // Disk
   struct statvfs fs;
@@ -136,7 +139,9 @@ SystemResources SystemMonitor::collect_resources() const {
     res.disk_available_bytes = fs.f_bavail * fs.f_frsize;
     res.disk_used_bytes = (fs.f_blocks - fs.f_bfree) * fs.f_frsize;
     size_t total = fs.f_blocks * fs.f_frsize;
-    res.disk_usage_percent = total > 0 ? 100.0 * res.disk_used_bytes / total : 0;
+    res.disk_usage_percent =
+        total > 0 ? 100.0 * static_cast<double>(res.disk_used_bytes) / static_cast<double>(total)
+                  : 0;
   }
 
   res.cpu_usage_percent = 0;

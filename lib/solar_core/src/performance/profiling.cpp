@@ -175,7 +175,7 @@ void BottleneckAnalyzer::record_operation(const std::string& operation,
   stats.component = component;
   stats.total_time_ms += duration_ms;
   stats.count++;
-  stats.avg_time_ms = stats.total_time_ms / stats.count;
+  stats.avg_time_ms = stats.total_time_ms / static_cast<double>(stats.count);
   if (duration_ms > stats.max_time_ms) stats.max_time_ms = duration_ms;
   if (cpu_intensive) stats.cpu_intensive = true;
   if (io_intensive) stats.io_intensive = true;
@@ -231,7 +231,7 @@ std::vector<Bottleneck> BottleneckAnalyzer::identify_bottlenecks() const {
   // Identify contention bottlenecks
   for (const auto& [resource, data] : contentions_) {
     auto [total_wait, count] = data;
-    double avg_wait = total_wait / count;
+    double avg_wait = total_wait / static_cast<double>(count);
     if (avg_wait < 1) continue;
 
     Bottleneck b;
