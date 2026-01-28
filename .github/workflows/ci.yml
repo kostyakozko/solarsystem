@@ -153,7 +153,7 @@ jobs:
       env:
         DEFAULT_BRANCH: modern-cpp-architecture
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        FILTER_REGEX_EXCLUDE: docs/.*
+        FILTER_REGEX_EXCLUDE: (docs/.*|deploy/helm/.*/templates/.*)
         VALIDATE_MARKDOWN: false
         VALIDATE_YAML: false
         VALIDATE_JSCPD: false
