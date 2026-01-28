@@ -21,5 +21,5 @@ if [ -d "/var/lib/solar_system/metrics" ]; then
 fi
 
 # Cleanup old backups
-find "$BACKUP_DIR" -name "*.tar.gz" -mtime +$RETENTION_DAYS -delete
+find "$BACKUP_DIR" -name "*.tar.gz" -mtime +"$RETENTION_DAYS" -delete
 echo "Cleaned backups older than $RETENTION_DAYS days"
