@@ -139,6 +139,12 @@ target_link_libraries(test_profiling GTest::gtest_main solar_core Threads::Threa
 add_test(NAME UnitTest_Profiling COMMAND test_profiling)
 set_tests_properties(UnitTest_Profiling PROPERTIES LABELS "unit;performance;profiling" TIMEOUT ${TEST_TIMEOUT})
 
+# Monitoring integration test
+add_executable(test_monitoring_integration test_monitoring_integration.cpp)
+target_link_libraries(test_monitoring_integration GTest::gtest_main solar_core Threads::Threads)
+add_test(NAME UnitTest_MonitoringIntegration COMMAND test_monitoring_integration)
+set_tests_properties(UnitTest_MonitoringIntegration PROPERTIES LABELS "unit;performance;integration" TIMEOUT ${TEST_TIMEOUT})
+
 # Diagnostic and troubleshooting system test (Task 23)
 add_executable(test_diagnostic_system test_diagnostic_system.cpp)
 target_link_libraries(test_diagnostic_system GTest::gtest_main GTest::gmock solar_core solar_utils Threads::Threads)
