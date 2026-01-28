@@ -133,6 +133,12 @@ target_link_libraries(test_dashboard GTest::gtest_main solar_core nlohmann_json:
 add_test(NAME UnitTest_Dashboard COMMAND test_dashboard)
 set_tests_properties(UnitTest_Dashboard PROPERTIES LABELS "unit;performance;dashboard" TIMEOUT ${TEST_TIMEOUT})
 
+# Profiling test
+add_executable(test_profiling test_profiling.cpp)
+target_link_libraries(test_profiling GTest::gtest_main solar_core Threads::Threads)
+add_test(NAME UnitTest_Profiling COMMAND test_profiling)
+set_tests_properties(UnitTest_Profiling PROPERTIES LABELS "unit;performance;profiling" TIMEOUT ${TEST_TIMEOUT})
+
 # Diagnostic and troubleshooting system test (Task 23)
 add_executable(test_diagnostic_system test_diagnostic_system.cpp)
 target_link_libraries(test_diagnostic_system GTest::gtest_main GTest::gmock solar_core solar_utils Threads::Threads)
