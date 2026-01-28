@@ -56,6 +56,7 @@ All required documentation for Task 32 (Create comprehensive user documentation)
 #### API and Examples
 - **[API Documentation](api/html/index.html)** - Complete API reference (Doxygen)
 - **[Enhanced APIs](api/ENHANCED_APIS.md)** - Modern API enhancements
+- **[Performance Monitoring API](PERFORMANCE_MONITORING.md)** - Performance monitoring system API
 - **[Examples](examples/EXAMPLES.md)** - Practical usage examples
 - **[Enhanced API Examples](examples/ENHANCED_API_EXAMPLES.md)** - Modern API examples
 - **[Testing Examples](examples/TESTING_EXAMPLES.md)** - Testing code examples
@@ -73,6 +74,7 @@ All required documentation for Task 32 (Create comprehensive user documentation)
 - **[Web Server Configuration](../README.md#web-server-configuration)** - Web server setup
 - **[Cache System Configuration](../README.md#cache-system)** - Cache management
 - **[Performance Optimization](../README.md#performance-optimization)** - Performance tuning
+- **[Performance Monitoring](PERFORMANCE_MONITORING.md)** - Comprehensive performance monitoring system
 
 ---
 

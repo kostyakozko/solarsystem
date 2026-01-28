@@ -45,6 +45,7 @@ The Solar System Suite was created to provide researchers, educators, and space 
 - **👨‍💻 [Developer Guide](docs/developer/DEVELOPER_GUIDE.md)**: Development setup, coding standards, and contribution guidelines
 - **🔧 [Installation Guide](docs/INSTALLATION.md)**: Detailed installation instructions for all platforms
 - **📋 [API Documentation](docs/api/html/index.html)**: Complete API reference with call graphs (generated with Doxygen)
+- **📊 [Performance Monitoring](docs/PERFORMANCE_MONITORING.md)**: Performance monitoring system with metrics, alerts, and analytics
 - **💡 [Examples](docs/examples/EXAMPLES.md)**: Practical usage examples and integration patterns
 
 ### **Quick Links**
