@@ -114,6 +114,9 @@ if(BUILD_SHARED_LIBS)
             ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
         )
     endif()
+else()
+    # Static library: define STATIC_DEFINE for export headers
+    target_compile_definitions(solar_jpl PUBLIC SOLAR_JPL_STATIC_DEFINE)
 endif()
 
 # Install library

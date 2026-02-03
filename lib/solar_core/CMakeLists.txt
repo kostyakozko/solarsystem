@@ -243,8 +243,13 @@ if(BUILD_SHARED_LIBS)
             VISIBILITY_INLINES_HIDDEN NO
         )
     endif()
+else()
+    # Static library: define STATIC_DEFINE for export headers
+    target_compile_definitions(solar_core PUBLIC SOLAR_CORE_STATIC_DEFINE)
+endif()
 
-    # Platform-specific settings
+# Platform-specific settings for shared libraries
+if(BUILD_SHARED_LIBS)
     if(APPLE)
         # macOS: Set install_name for dylib
         set_target_properties(solar_core PROPERTIES
