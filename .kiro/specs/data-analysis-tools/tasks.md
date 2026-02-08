@@ -95,15 +95,15 @@
     - Build export validation and integrity checking
     - _Requirements: 3.4, 5.1_
 
-- [ ] 6. Build batch processing and automation
-  - [ ] 6.1 Create batch processing engine
+- [x] 6. Build batch processing and automation
+  - [x] 6.1 Create batch processing engine
     - Implement BatchProcessor class for automated analysis workflows
     - Add job scheduling and queue management
     - Create progress monitoring and status reporting
     - Build error handling and recovery mechanisms
     - _Requirements: 5.1, 5.2_
 
-  - [ ] 6.2 Add configuration and workflow management
+  - [x] 6.2 Add configuration and workflow management
     - Create batch job configuration system with YAML/JSON support
     - Implement workflow templates for common analysis patterns
     - Add dependency management between analysis tasks
