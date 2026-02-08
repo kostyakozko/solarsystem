@@ -7,6 +7,7 @@ set(SOLAR_ANALYSIS_SOURCES
     src/data_models.cpp
     src/orbital_calculator.cpp
     src/statistical_analyzer.cpp
+    src/data_exporter.cpp
 )
 
 set(SOLAR_ANALYSIS_HEADERS
@@ -15,6 +16,7 @@ set(SOLAR_ANALYSIS_HEADERS
     include/solar_analysis/data_models.hpp
     include/solar_analysis/orbital_calculator.hpp
     include/solar_analysis/statistical_analyzer.hpp
+    include/solar_analysis/data_exporter.hpp
     include/solar_analysis/export.hpp
 )
 
