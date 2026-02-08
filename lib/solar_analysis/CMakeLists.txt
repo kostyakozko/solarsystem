@@ -4,11 +4,13 @@
 set(SOLAR_ANALYSIS_SOURCES
     src/analysis_engine.cpp
     src/data_processor.cpp
+    src/data_models.cpp
 )
 
 set(SOLAR_ANALYSIS_HEADERS
     include/solar_analysis/analysis_engine.hpp
     include/solar_analysis/data_processor.hpp
+    include/solar_analysis/data_models.hpp
     include/solar_analysis/export.hpp
 )
 
