@@ -587,3 +587,22 @@ if(GTEST_AVAILABLE)
 
   message(STATUS "  - NEW: Google Test Native Example Tests")
 endif()
+
+# ============================================================================
+# Solar Analysis Library Tests
+# ============================================================================
+
+# Solar Analysis Unit Tests
+add_executable(test_solar_analysis test_solar_analysis.cpp)
+target_link_libraries(test_solar_analysis
+  GTest::gtest_main
+  solar_analysis
+  solar_core
+  solar_jpl
+  solar_utils
+  Threads::Threads
+)
+gtest_discover_tests(test_solar_analysis
+  PROPERTIES LABELS "unit;analysis;orbital;statistical"
+  DISCOVERY_TIMEOUT 30
+)
