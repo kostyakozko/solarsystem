@@ -10,6 +10,7 @@ set(SOLAR_ANALYSIS_SOURCES
     src/data_exporter.cpp
     src/batch_processor.cpp
     src/analysis_cli.cpp
+    src/historical_analyzer.cpp
 )
 
 set(SOLAR_ANALYSIS_HEADERS
@@ -21,6 +22,7 @@ set(SOLAR_ANALYSIS_HEADERS
     include/solar_analysis/data_exporter.hpp
     include/solar_analysis/batch_processor.hpp
     include/solar_analysis/analysis_cli.hpp
+    include/solar_analysis/historical_analyzer.hpp
     include/solar_analysis/export.hpp
 )
 
