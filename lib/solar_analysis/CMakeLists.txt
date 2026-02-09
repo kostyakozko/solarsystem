@@ -13,6 +13,7 @@ set(SOLAR_ANALYSIS_SOURCES
     src/historical_analyzer.cpp
     src/mission_analyzer.cpp
     src/advanced_analyzer.cpp
+    src/jpl_integration.cpp
 )
 
 set(SOLAR_ANALYSIS_HEADERS
@@ -27,6 +28,7 @@ set(SOLAR_ANALYSIS_HEADERS
     include/solar_analysis/historical_analyzer.hpp
     include/solar_analysis/mission_analyzer.hpp
     include/solar_analysis/advanced_analyzer.hpp
+    include/solar_analysis/jpl_integration.hpp
     include/solar_analysis/export.hpp
 )
 
