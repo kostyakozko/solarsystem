@@ -11,6 +11,7 @@
  */
 
 #include <chrono>
+#include <cstdlib>
 #include <filesystem>
 #include <fstream>
 #include <future>
@@ -61,6 +62,13 @@ struct LauncherConfig {
   bool use_current_date = true;
   bool auto_fetch = false;
 
+  // Analysis operations
+  bool run_analysis = false;
+  bool orbital_analysis = false;
+  bool statistical_analysis = false;
+  bool interactive_analysis = false;
+  std::vector<std::string> analysis_bodies;
+
   // Workflow options
   bool batch_mode = false;
   bool continue_on_error = false;
@@ -93,6 +101,7 @@ struct LauncherConfig {
     if (show_status) operation_count++;
     if (fetch_data || update_data || force_update) operation_count++;
     if (run_simulation) operation_count++;
+    if (run_analysis) operation_count++;
 
     if (operation_count == 0 && !show_help && !show_version) {
       // Default to status if no operations specified
@@ -1004,6 +1013,21 @@ class ArgumentParser {
         config.test_storage = true;
       } else if (arg == "--simulate") {
         config.run_simulation = true;
+      } else if (arg == "--analyze") {
+        config.run_analysis = true;
+      } else if (arg == "--orbital") {
+        config.orbital_analysis = true;
+        config.run_analysis = true;
+      } else if (arg == "--stats") {
+        config.statistical_analysis = true;
+        config.run_analysis = true;
+      } else if (arg == "--interactive") {
+        config.interactive_analysis = true;
+        config.run_analysis = true;
+      } else if (arg == "-b" || arg == "--body") {
+        if (i + 1 < argc) {
+          config.analysis_bodies.push_back(argv[++i]);
+        }
       } else if (arg == "--auto-fetch") {
         config.auto_fetch = true;
       } else if (arg == "--current-date") {
@@ -1101,7 +1125,14 @@ class ArgumentParser {
     std::cout << "🌟 Primary Operations:\n";
     std::cout << "  --status           Show system status and information\n";
     std::cout << "  --simulate         Run solar system simulation\n";
-    std::cout << "  --fetch            Perform data management operations\n\n";
+    std::cout << "  --fetch            Perform data management operations\n";
+    std::cout << "  --analyze          Run data analysis\n\n";
+
+    std::cout << "📊 Analysis Options:\n";
+    std::cout << "  --orbital          Perform orbital parameter analysis\n";
+    std::cout << "  --stats            Perform statistical analysis\n";
+    std::cout << "  --interactive      Start interactive analysis CLI\n";
+    std::cout << "  -b, --body NAME    Add body to analyze (can be repeated)\n\n";
 
     std::cout << "📡 Data Management:\n";
     std::cout << "  --update           Update ephemeris data from NASA JPL\n";
@@ -1139,7 +1170,10 @@ class ArgumentParser {
     std::cout << "  " << program_name << " --simulate --auto-fetch   # Auto-fetch and simulate\n";
     std::cout << "  " << program_name << " --fetch --force --simulate # Complete workflow\n";
     std::cout << "  " << program_name
-              << " --validate --verbose      # Validate with detailed output\n\n";
+              << " --validate --verbose      # Validate with detailed output\n";
+    std::cout << "  " << program_name << " --analyze -b Earth -b Mars  # Analyze planets\n";
+    std::cout << "  " << program_name << " --analyze --orbital --stats # Full analysis\n";
+    std::cout << "  " << program_name << " --analyze --interactive    # Interactive CLI\n\n";
 
     std::cout << "🌟 Modern Features:\n";
     std::cout << "  • Workflow orchestration with progress monitoring\n";
@@ -1286,6 +1320,7 @@ int main(int argc, char* argv[]) {
                         config->test_storage;
 
     bool has_sim_ops = config->run_simulation;
+    bool has_analysis_ops = config->run_analysis;
 
     std::string workflow_id;
     std::unordered_map<std::string, std::string> workflow_variables;
@@ -1310,6 +1345,39 @@ int main(int argc, char* argv[]) {
       // Simulation only with cache validation
       workflow_id = "simulation_execution";
       LOG_INFO("Main", "Executing enhanced simulation workflow");
+    } else if (has_analysis_ops) {
+      // Analysis workflow
+      LOG_INFO("Main", "Executing analysis workflow");
+
+      // Get the directory where the launcher is located and find analyzer
+      std::filesystem::path launcher_path = std::filesystem::canonical(argv[0]);
+      std::filesystem::path apps_dir = launcher_path.parent_path().parent_path();
+      std::filesystem::path analyzer_path =
+          apps_dir / "solar_system_analyzer" / "solar_system_analyzer";
+
+      // Build command for analyzer
+      std::string cmd = analyzer_path.string();
+      if (config->interactive_analysis) {
+        cmd += " --interactive";
+      } else {
+        if (config->orbital_analysis) cmd += " --orbital";
+        if (config->statistical_analysis) cmd += " --stats";
+        for (const auto& body : config->analysis_bodies) {
+          cmd += " -b " + body;
+        }
+        if (config->analysis_bodies.empty() && !config->orbital_analysis &&
+            !config->statistical_analysis) {
+          // Default bodies if no specific analysis requested
+          cmd += " -b Earth -b Mars -b Jupiter";
+        }
+      }
+
+      if (!config->quiet_mode) {
+        std::cout << "📊 Running analysis...\n\n";
+      }
+
+      int result = std::system(cmd.c_str());
+      return result == 0 ? 0 : 1;
     } else {
       // Default: show status with system health
       if (!config->quiet_mode) {
