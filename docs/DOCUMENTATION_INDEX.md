@@ -26,6 +26,7 @@ All required documentation for Task 32 (Create comprehensive user documentation)
 - **[solar_system Guide](../README.md#-solar_system---high-performance-simulation)** - High-performance batch simulation
 - **[solar_system_realtime Guide](../README.md#-solar_system_realtime---live-tracking)** - Live real-time tracking
 - **[solar_system_web Guide](../README.md#-solar_system_web---interactive-time-travel-visualization)** - Interactive web visualization
+- **[solar_system_analyzer Guide](ANALYSIS_LIBRARY.md)** - Data analysis and scientific research tools
 
 #### Configuration and Troubleshooting
 - **[Configuration Guide](../README.md#-advanced-configuration)** - Advanced configuration options
@@ -60,6 +61,7 @@ All required documentation for Task 32 (Create comprehensive user documentation)
 - **[Examples](examples/EXAMPLES.md)** - Practical usage examples
 - **[Enhanced API Examples](examples/ENHANCED_API_EXAMPLES.md)** - Modern API examples
 - **[Testing Examples](examples/TESTING_EXAMPLES.md)** - Testing code examples
+- **[Analysis Examples](examples/ANALYSIS_EXAMPLES.md)** - Data analysis workflow examples
 
 ### For System Administrators
 
