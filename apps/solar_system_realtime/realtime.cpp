@@ -164,7 +164,7 @@ class TerminalStateGuard {
 
  private:
 #ifndef _WIN32
-  struct termios original_termios_{};
+  struct termios original_termios_ = {};
   bool has_tty_ = false;
 #endif
 };
@@ -1006,7 +1006,7 @@ class RealtimeMonitor {
     if (!::isatty(STDIN_FILENO)) return;
 
     fd_set fds;
-    struct timeval tv{};  // zero timeout = non-blocking poll
+    struct timeval tv = {};  // zero timeout = non-blocking poll
 
     while (true) {
       FD_ZERO(&fds);
@@ -1024,7 +1024,7 @@ class RealtimeMonitor {
       if (ch == '\033') {
         // Escape sequence (arrow keys, etc.) — drain remaining bytes and skip
         char seq[8];
-        ::read(STDIN_FILENO, seq, sizeof(seq));
+        (void)::read(STDIN_FILENO, seq, sizeof(seq));
         continue;
       }
 

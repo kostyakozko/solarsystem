@@ -1666,7 +1666,7 @@ void SolarSystem::Testing::TestRunner::generate_ci_artifacts(const TestSuiteResu
 }
 
 size_t SolarSystem::Testing::TestRunner::get_memory_usage_mb() const {
-  struct rusage usage{};
+  struct rusage usage = {};
   if (getrusage(RUSAGE_SELF, &usage) != 0) return 0;
 #ifdef __APPLE__
   return static_cast<size_t>(usage.ru_maxrss) / (1024UL * 1024UL);
