@@ -10,6 +10,7 @@
 #ifdef __APPLE__
 #include <mach/mach.h>
 #include <sys/mount.h>
+#include <sys/resource.h>
 #include <sys/sysctl.h>
 #elif defined(__linux__)
 #include <sys/statvfs.h>
@@ -111,8 +112,24 @@ SystemResources SystemMonitor::collect_resources() const {
     res.disk_usage_percent = total > 0 ? 100.0 * res.disk_used_bytes / total : 0;
   }
 
-  // CPU - simplified (would need sampling for accurate usage)
-  res.cpu_usage_percent = 0;  // Requires sampling over time
+  // CPU usage via getrusage (process-level user + system time since last sample)
+  {
+    struct rusage usage;
+    if (getrusage(RUSAGE_SELF, &usage) == 0) {
+      double user_sec = static_cast<double>(usage.ru_utime.tv_sec) + usage.ru_utime.tv_usec / 1e6;
+      double sys_sec = static_cast<double>(usage.ru_stime.tv_sec) + usage.ru_stime.tv_usec / 1e6;
+      double total_cpu_sec = user_sec + sys_sec;
+      auto now = std::chrono::steady_clock::now();
+      static auto last_time = now;
+      static double last_cpu_sec = total_cpu_sec;
+      double wall_elapsed = std::chrono::duration<double>(now - last_time).count();
+      if (wall_elapsed > 0.01) {
+        res.cpu_usage_percent = 100.0 * (total_cpu_sec - last_cpu_sec) / wall_elapsed;
+      }
+      last_time = now;
+      last_cpu_sec = total_cpu_sec;
+    }
+  }
 
 #elif defined(__linux__)
   // Memory from /proc/meminfo
@@ -144,7 +161,27 @@ SystemResources SystemMonitor::collect_resources() const {
                   : 0;
   }
 
-  res.cpu_usage_percent = 0;
+  // CPU usage from /proc/stat
+  {
+    std::ifstream stat_file("/proc/stat");
+    std::string cpu_line;
+    if (std::getline(stat_file, cpu_line) && cpu_line.substr(0, 3) == "cpu") {
+      unsigned long long user, nice, system, idle, iowait, irq, softirq;
+      sscanf(cpu_line.c_str(), "cpu %llu %llu %llu %llu %llu %llu %llu", &user, &nice, &system,
+             &idle, &iowait, &irq, &softirq);
+      unsigned long long total = user + nice + system + idle + iowait + irq + softirq;
+      unsigned long long busy = user + nice + system + irq + softirq;
+      static unsigned long long last_total = total;
+      static unsigned long long last_busy = busy;
+      unsigned long long dtotal = total - last_total;
+      if (dtotal > 0) {
+        res.cpu_usage_percent =
+            100.0 * static_cast<double>(busy - last_busy) / static_cast<double>(dtotal);
+      }
+      last_total = total;
+      last_busy = busy;
+    }
+  }
 #endif
 
   return res;

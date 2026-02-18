@@ -65,7 +65,8 @@ std::optional<HttpConnection> HttpConnectionPool::acquire() {
   // Create new connection if under limit
   if (impl_->connections.size() < impl_->config.max_connections) {
     HttpConnection conn;
-    conn.socket_fd = static_cast<int>(impl_->connections.size());  // Simplified
+    conn.socket_fd =
+        static_cast<int>(impl_->connections.size()) + 1;  // Monotonically increasing connection ID
     conn.state = ConnectionState::ACTIVE;
     conn.created_at = std::chrono::system_clock::now();
     conn.last_used = conn.created_at;

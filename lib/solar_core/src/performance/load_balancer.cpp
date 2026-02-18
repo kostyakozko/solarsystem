@@ -216,12 +216,20 @@ void LoadBalancer::start_health_checks() {
     while (impl_->running.load()) {
       std::this_thread::sleep_for(impl_->config.health_check_interval);
 
-      // Simplified health check - in production would ping backends
       std::lock_guard<std::mutex> lock(impl_->mutex);
+      size_t healthy_count = 0;
       for (auto& backend : impl_->backends) {
+        // Mark backend unhealthy if connections exceed capacity threshold
+        if (backend.active_connections > static_cast<size_t>(backend.weight) * 100) {
+          backend.healthy = false;
+        } else if (!backend.healthy && backend.active_connections == 0) {
+          backend.healthy = true;
+        }
+
         backend.last_health_check = std::chrono::system_clock::now();
-        // In production: perform actual health check here
+        if (backend.healthy) healthy_count++;
       }
+      impl_->stats.healthy_backends = healthy_count;
     }
   });
 }

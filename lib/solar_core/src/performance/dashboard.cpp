@@ -286,8 +286,8 @@ std::string DashboardRenderer::render_summary_cards(const MetricsSnapshot& snaps
 }
 
 std::string DashboardRenderer::render_html_dashboard(const DashboardData& /* data */) {
-  // HTML is now served from dashboard.html template file
-  // This method returns a redirect or placeholder
+  // HTML dashboard is served from the dashboard.html template file via the web server.
+  // This API method returns a JSON redirect to the static HTML resource.
   return R"({"redirect":"/dashboard.html"})";
 }
 
