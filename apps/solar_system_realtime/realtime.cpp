@@ -1024,7 +1024,8 @@ class RealtimeMonitor {
       if (ch == '\033') {
         // Escape sequence (arrow keys, etc.) — drain remaining bytes and skip
         char seq[8];
-        (void)::read(STDIN_FILENO, seq, sizeof(seq));
+        ssize_t discard = ::read(STDIN_FILENO, seq, sizeof(seq));
+        (void)discard;
         continue;
       }
 
