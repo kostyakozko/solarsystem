@@ -5,6 +5,7 @@
   - Install exact dependency versions used in GitHub Actions
   - Set up environment variables to match CI environment
   - Configure compiler settings (gcc/g++) to match CI
+  - **Deliverable**: `docker/Dockerfile.local-ci`
   - _Requirements: 1.1, 1.2, 1.3, 2.1, 2.2_
 
 - [x] 2. Implement test execution framework
@@ -13,6 +14,7 @@
   - Add unit test execution with same timeouts as CI
   - Add integration test execution with proper environment setup
   - Add benchmark execution with error tolerance
+  - **Deliverables**: `docker/test-runner.sh`, `tests/utils/ci_utilities.cpp`
   - _Requirements: 2.3, 2.4, 2.5, 3.3_
 
 - [x] 3. Create main CI runner script
@@ -21,6 +23,7 @@
   - Implement container execution with proper volume mounting
   - Add error handling and user-friendly output
   - Create cleanup mechanisms for Docker resources
+  - **Deliverable**: `run-local-ci.sh`
   - _Requirements: 3.1, 3.2, 3.4, 4.3, 5.5_
 
 - [x] 4. Set up development integration
@@ -29,6 +32,7 @@
   - Implement source code mounting without modification
   - Create result artifact collection system
   - Ensure host environment isolation
+  - **Deliverable**: `.dockerignore`
   - _Requirements: 4.1, 4.2, 4.4, 4.5_
 
 - [x] 5. Optimize performance and caching
@@ -37,6 +41,7 @@
   - Optimize container startup and execution time
   - Implement proper resource cleanup
   - Add build artifact caching where appropriate
+  - **Note**: Dockerfile uses layer caching via `--no-install-recommends` and dependency-first ordering. `run-local-ci.sh` supports `--clean` for full rebuilds or caches by default.
   - _Requirements: 5.1, 5.2, 5.3, 5.4_
 
 - [x] 6. Add debugging and diagnostic capabilities
@@ -45,6 +50,7 @@
   - Add build and test log collection
   - Implement artifact preservation for analysis
   - Create troubleshooting documentation and error guides
+  - **Note**: `run-local-ci.sh --interactive` provides debugging shell. `tests/utils/ci_utilities.cpp` provides JUnit XML, coverage reports, and resource usage monitoring.
   - _Requirements: 6.1, 6.2, 6.3, 6.4, 6.5_
 
 - [x] 7. Validate CI environment parity
@@ -53,4 +59,5 @@
   - Validate environment variables and build settings
   - Test with both passing and failing test scenarios
   - Ensure consistent results across multiple runs
+  - **Note**: CI/CD integration classes (`CIResourceCleanup`, `ContainerEnvironment`, `CISystemIntegration`) in `test_runner.cpp` now have full implementations with real container/CI detection, resource tracking, and JUnit XML artifact generation.
   - _Requirements: 1.3, 2.3, 3.5_

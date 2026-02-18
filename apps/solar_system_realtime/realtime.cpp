@@ -27,6 +27,14 @@
 #include <thread>
 #include <vector>
 
+#ifdef _WIN32
+#include <conio.h>
+#else
+#include <sys/select.h>
+#include <termios.h>
+#include <unistd.h>
+#endif
+
 // Modern Solar System Suite APIs
 #include "solar_core/bodies/body_factory.hpp"
 #include "solar_core/builders/simulation_builder.hpp"
@@ -116,12 +124,34 @@ class TerminalUI {
 
 /**
  * @brief RAII-based terminal state manager
+ *
+ * On POSIX systems, switches the terminal to non-canonical mode so that
+ * individual key presses can be read without waiting for Enter.
+ * Restores the original terminal state on destruction.
  */
 class TerminalStateGuard {
  public:
-  TerminalStateGuard() { TerminalUI::hide_cursor(); }
+  TerminalStateGuard() {
+    TerminalUI::hide_cursor();
+#ifndef _WIN32
+    if (::isatty(STDIN_FILENO)) {
+      has_tty_ = true;
+      ::tcgetattr(STDIN_FILENO, &original_termios_);
+      struct termios raw = original_termios_;
+      raw.c_lflag &= ~static_cast<tcflag_t>(ICANON | ECHO);
+      raw.c_cc[VMIN] = 0;
+      raw.c_cc[VTIME] = 0;
+      ::tcsetattr(STDIN_FILENO, TCSANOW, &raw);
+    }
+#endif
+  }
 
   ~TerminalStateGuard() {
+#ifndef _WIN32
+    if (has_tty_) {
+      ::tcsetattr(STDIN_FILENO, TCSANOW, &original_termios_);
+    }
+#endif
     TerminalUI::show_cursor();
     std::cout << "\n";
   }
@@ -131,6 +161,12 @@ class TerminalStateGuard {
   TerminalStateGuard& operator=(const TerminalStateGuard&) = delete;
   TerminalStateGuard(TerminalStateGuard&&) = delete;
   TerminalStateGuard& operator=(TerminalStateGuard&&) = delete;
+
+ private:
+#ifndef _WIN32
+  struct termios original_termios_{};
+  bool has_tty_ = false;
+#endif
 };
 
 /**
@@ -952,15 +988,49 @@ class RealtimeMonitor {
 
   /**
    * @brief Handle keyboard input for interactive controls
+   *
+   * Uses non-blocking reads: POSIX select()+read() in non-canonical mode
+   * (set up by TerminalStateGuard), or _kbhit()/_getch() on Windows.
    */
   void handle_keyboard_input() {
-    // Note: This is a simplified implementation for demonstration.
-    // A production implementation would use proper non-blocking terminal input
-    // or integrate with a terminal UI library like ncurses.
+#ifdef _WIN32
+    while (_kbhit()) {
+      int ch = _getch();
+      if (ch == 0 || ch == 0xE0) {
+        _getch();  // consume extended key second byte
+        continue;
+      }
+      process_keyboard_command(static_cast<char>(ch));
+    }
+#else
+    if (!::isatty(STDIN_FILENO)) return;
 
-    // For now, we'll just document the available controls in the display
-    // The actual keyboard handling would be implemented by the calling application
-    // or through a proper terminal UI framework.
+    fd_set fds;
+    struct timeval tv{};  // zero timeout = non-blocking poll
+
+    while (true) {
+      FD_ZERO(&fds);
+      FD_SET(STDIN_FILENO, &fds);
+      tv.tv_sec = 0;
+      tv.tv_usec = 0;
+
+      int ready = ::select(STDIN_FILENO + 1, &fds, nullptr, nullptr, &tv);
+      if (ready <= 0) break;
+
+      char ch = 0;
+      ssize_t n = ::read(STDIN_FILENO, &ch, 1);
+      if (n <= 0) break;
+
+      if (ch == '\033') {
+        // Escape sequence (arrow keys, etc.) — drain remaining bytes and skip
+        char seq[8];
+        ::read(STDIN_FILENO, seq, sizeof(seq));
+        continue;
+      }
+
+      process_keyboard_command(ch);
+    }
+#endif
   }
 
   /**
@@ -968,6 +1038,10 @@ class RealtimeMonitor {
    */
   void process_keyboard_command(char key) {
     switch (key) {
+      case 'q':
+      case 'Q':
+        g_shutdown_requested.store(true);
+        break;
       case 'v':
       case 'V':
         cycle_visualization_mode();

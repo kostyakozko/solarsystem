@@ -2,6 +2,7 @@
 
 #include <signal.h>
 #include <sys/resource.h>
+#include <unistd.h>
 
 #include <algorithm>
 #include <atomic>
@@ -1238,58 +1239,370 @@ void TestRunner::cleanup_test_isolation() {
 }
 
 }  // namespace SolarSystem::Testing
-// CI/CD Integration implementations - stub implementations for now
 
-// CIResourceCleanup stub implementation
-SolarSystem::Testing::CIResourceCleanup::CIResourceCleanup() {}
-SolarSystem::Testing::CIResourceCleanup::~CIResourceCleanup() {}
-void SolarSystem::Testing::CIResourceCleanup::register_temp_directory(const std::string&) {}
-void SolarSystem::Testing::CIResourceCleanup::register_temp_file(const std::string&) {}
-void SolarSystem::Testing::CIResourceCleanup::register_process(int) {}
-void SolarSystem::Testing::CIResourceCleanup::register_network_port(int) {}
-void SolarSystem::Testing::CIResourceCleanup::cleanup_all() {}
-void SolarSystem::Testing::CIResourceCleanup::cleanup_temp_files() {}
-void SolarSystem::Testing::CIResourceCleanup::cleanup_processes() {}
-void SolarSystem::Testing::CIResourceCleanup::cleanup_network_resources() {}
-void SolarSystem::Testing::CIResourceCleanup::cleanup_for_github_actions() {}
-void SolarSystem::Testing::CIResourceCleanup::cleanup_for_jenkins() {}
-void SolarSystem::Testing::CIResourceCleanup::cleanup_for_docker() {}
-void SolarSystem::Testing::CIResourceCleanup::emergency_cleanup() {}
+// ---------------------------------------------------------------------------
+// CI/CD Integration implementations
+// ---------------------------------------------------------------------------
 
-// ContainerEnvironment stub implementation
-bool SolarSystem::Testing::ContainerEnvironment::is_running_in_container() { return false; }
-bool SolarSystem::Testing::ContainerEnvironment::is_docker_container() { return false; }
-bool SolarSystem::Testing::ContainerEnvironment::is_kubernetes_pod() { return false; }
-std::string SolarSystem::Testing::ContainerEnvironment::get_container_runtime() { return "none"; }
-size_t SolarSystem::Testing::ContainerEnvironment::get_optimal_thread_count() {
-  return std::thread::hardware_concurrency();
+SolarSystem::Testing::CIResourceCleanup* SolarSystem::Testing::CIResourceCleanup::instance_ =
+    nullptr;
+
+SolarSystem::Testing::CIResourceCleanup::CIResourceCleanup() { instance_ = this; }
+
+SolarSystem::Testing::CIResourceCleanup::~CIResourceCleanup() {
+  cleanup_all();
+  if (instance_ == this) instance_ = nullptr;
 }
-size_t SolarSystem::Testing::ContainerEnvironment::get_available_memory_mb() { return 1024; }
+
+void SolarSystem::Testing::CIResourceCleanup::register_temp_directory(const std::string& path) {
+  std::lock_guard<std::mutex> lock(cleanup_mutex_);
+  temp_directories_.push_back(path);
+}
+
+void SolarSystem::Testing::CIResourceCleanup::register_temp_file(const std::string& path) {
+  std::lock_guard<std::mutex> lock(cleanup_mutex_);
+  temp_files_.push_back(path);
+}
+
+void SolarSystem::Testing::CIResourceCleanup::register_process(int pid) {
+  std::lock_guard<std::mutex> lock(cleanup_mutex_);
+  processes_.push_back(pid);
+}
+
+void SolarSystem::Testing::CIResourceCleanup::register_network_port(int port) {
+  std::lock_guard<std::mutex> lock(cleanup_mutex_);
+  network_ports_.push_back(port);
+}
+
+void SolarSystem::Testing::CIResourceCleanup::cleanup_all() {
+  cleanup_temp_files();
+  cleanup_processes();
+  cleanup_network_resources();
+}
+
+void SolarSystem::Testing::CIResourceCleanup::cleanup_temp_files() {
+  std::lock_guard<std::mutex> lock(cleanup_mutex_);
+  namespace fs = std::filesystem;
+
+  for (const auto& f : temp_files_) {
+    std::error_code ec;
+    fs::remove(f, ec);
+  }
+  temp_files_.clear();
+
+  for (const auto& d : temp_directories_) {
+    std::error_code ec;
+    fs::remove_all(d, ec);
+  }
+  temp_directories_.clear();
+}
+
+void SolarSystem::Testing::CIResourceCleanup::cleanup_processes() {
+  std::lock_guard<std::mutex> lock(cleanup_mutex_);
+  for (int pid : processes_) {
+    if (pid > 0) {
+      ::kill(pid, SIGTERM);
+    }
+  }
+  processes_.clear();
+}
+
+void SolarSystem::Testing::CIResourceCleanup::cleanup_network_resources() {
+  std::lock_guard<std::mutex> lock(cleanup_mutex_);
+  network_ports_.clear();
+}
+
+void SolarSystem::Testing::CIResourceCleanup::cleanup_for_github_actions() {
+  cleanup_all();
+  // Remove GitHub Actions-specific temp paths
+  std::error_code ec;
+  std::filesystem::remove_all("/tmp/solar_test_artifacts", ec);
+}
+
+void SolarSystem::Testing::CIResourceCleanup::cleanup_for_jenkins() {
+  cleanup_all();
+  std::error_code ec;
+  std::filesystem::remove_all("/tmp/solar_jenkins_artifacts", ec);
+}
+
+void SolarSystem::Testing::CIResourceCleanup::cleanup_for_docker() {
+  cleanup_all();
+  // In Docker containers, temp files under /tmp are cleaned on container exit
+  // but we still clean workspace artifacts
+  std::error_code ec;
+  std::filesystem::remove_all("/workspace/test_artifacts", ec);
+}
+
+void SolarSystem::Testing::CIResourceCleanup::emergency_cleanup() {
+  if (instance_) {
+    instance_->cleanup_all();
+  }
+}
+
+// ---------------------------------------------------------------------------
+// ContainerEnvironment implementation
+// ---------------------------------------------------------------------------
+
+bool SolarSystem::Testing::ContainerEnvironment::is_docker_container() {
+  if (std::filesystem::exists("/.dockerenv")) return true;
+
+  std::ifstream cgroup("/proc/1/cgroup");
+  if (cgroup.is_open()) {
+    std::string line;
+    while (std::getline(cgroup, line)) {
+      if (line.find("docker") != std::string::npos ||
+          line.find("containerd") != std::string::npos) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+bool SolarSystem::Testing::ContainerEnvironment::is_kubernetes_pod() {
+  return std::getenv("KUBERNETES_SERVICE_HOST") != nullptr &&
+         std::getenv("KUBERNETES_SERVICE_PORT") != nullptr;
+}
+
+bool SolarSystem::Testing::ContainerEnvironment::is_running_in_container() {
+  return is_docker_container() || is_kubernetes_pod();
+}
+
+std::string SolarSystem::Testing::ContainerEnvironment::get_container_runtime() {
+  if (is_kubernetes_pod()) return "kubernetes";
+  if (is_docker_container()) return "docker";
+  return "none";
+}
+
+size_t SolarSystem::Testing::ContainerEnvironment::get_optimal_thread_count() {
+  if (has_cpu_limit()) {
+    double limit = get_cpu_limit();
+    size_t threads = static_cast<size_t>(limit);
+    return threads > 0 ? threads : 1;
+  }
+  unsigned int hw = std::thread::hardware_concurrency();
+  return hw > 0 ? hw : 2;
+}
+
+size_t SolarSystem::Testing::ContainerEnvironment::get_available_memory_mb() {
+  if (has_memory_limit()) {
+    return get_memory_limit_mb();
+  }
+#ifdef __linux__
+  long pages = sysconf(_SC_AVPHYS_PAGES);
+  long page_size = sysconf(_SC_PAGE_SIZE);
+  if (pages > 0 && page_size > 0) {
+    return static_cast<size_t>(pages) * static_cast<size_t>(page_size) / (1024UL * 1024UL);
+  }
+#elif defined(__APPLE__)
+  long page_size = sysconf(_SC_PAGE_SIZE);
+  long pages = sysconf(_SC_PHYS_PAGES);
+  if (pages > 0 && page_size > 0) {
+    return static_cast<size_t>(pages) * static_cast<size_t>(page_size) / (1024UL * 1024UL);
+  }
+#endif
+  return 1024;
+}
+
 std::chrono::milliseconds SolarSystem::Testing::ContainerEnvironment::get_optimal_timeout() {
+  if (is_running_in_container()) {
+    return std::chrono::minutes(10);
+  }
   return std::chrono::minutes(5);
 }
-bool SolarSystem::Testing::ContainerEnvironment::has_memory_limit() { return false; }
-bool SolarSystem::Testing::ContainerEnvironment::has_cpu_limit() { return false; }
-size_t SolarSystem::Testing::ContainerEnvironment::get_memory_limit_mb() { return 0; }
-double SolarSystem::Testing::ContainerEnvironment::get_cpu_limit() { return 0.0; }
 
-// CISystemIntegration stub implementation
+bool SolarSystem::Testing::ContainerEnvironment::has_memory_limit() {
+  return get_memory_limit_mb() > 0;
+}
+
+bool SolarSystem::Testing::ContainerEnvironment::has_cpu_limit() { return get_cpu_limit() > 0.0; }
+
+size_t SolarSystem::Testing::ContainerEnvironment::get_memory_limit_mb() {
+  // cgroup v2
+  {
+    std::ifstream f("/sys/fs/cgroup/memory.max");
+    if (f.is_open()) {
+      std::string val;
+      f >> val;
+      if (val != "max") {
+        try {
+          size_t bytes = std::stoull(val);
+          if (bytes < (1ULL << 62)) return bytes / (1024UL * 1024UL);
+        } catch (...) {
+        }
+      }
+    }
+  }
+  // cgroup v1
+  {
+    std::ifstream f("/sys/fs/cgroup/memory/memory.limit_in_bytes");
+    if (f.is_open()) {
+      size_t bytes = 0;
+      f >> bytes;
+      if (bytes > 0 && bytes < (1ULL << 62)) return bytes / (1024UL * 1024UL);
+    }
+  }
+  return 0;
+}
+
+double SolarSystem::Testing::ContainerEnvironment::get_cpu_limit() {
+  // cgroup v2
+  {
+    std::ifstream f("/sys/fs/cgroup/cpu.max");
+    if (f.is_open()) {
+      std::string quota_str, period_str;
+      f >> quota_str >> period_str;
+      if (quota_str != "max") {
+        try {
+          double quota = std::stod(quota_str);
+          double period = std::stod(period_str);
+          if (period > 0) return quota / period;
+        } catch (...) {
+        }
+      }
+    }
+  }
+  // cgroup v1
+  {
+    std::ifstream fq("/sys/fs/cgroup/cpu/cpu.cfs_quota_us");
+    std::ifstream fp("/sys/fs/cgroup/cpu/cpu.cfs_period_us");
+    if (fq.is_open() && fp.is_open()) {
+      long long quota = -1, period = 100000;
+      fq >> quota;
+      fp >> period;
+      if (quota > 0 && period > 0) {
+        return static_cast<double>(quota) / static_cast<double>(period);
+      }
+    }
+  }
+  return 0.0;
+}
+
+// ---------------------------------------------------------------------------
+// CISystemIntegration implementation
+// ---------------------------------------------------------------------------
+
 SolarSystem::Testing::CISystemIntegration::CISystem
 SolarSystem::Testing::CISystemIntegration::detect_ci_system() {
+  if (std::getenv("GITHUB_ACTIONS")) return CISystem::GitHubActions;
+  if (std::getenv("JENKINS_URL") || std::getenv("JENKINS_HOME")) return CISystem::Jenkins;
+  if (std::getenv("GITLAB_CI")) return CISystem::GitLabCI;
+  if (std::getenv("CIRCLECI")) return CISystem::CircleCI;
+  if (std::getenv("TRAVIS")) return CISystem::TravisCI;
+  if (std::getenv("TF_BUILD")) return CISystem::AzurePipelines;
   return CISystem::Unknown;
 }
-std::string SolarSystem::Testing::CISystemIntegration::get_ci_system_name(CISystem) {
-  return "Unknown";
+
+std::string SolarSystem::Testing::CISystemIntegration::get_ci_system_name(CISystem system) {
+  switch (system) {
+    case CISystem::GitHubActions:
+      return "GitHub Actions";
+    case CISystem::Jenkins:
+      return "Jenkins";
+    case CISystem::GitLabCI:
+      return "GitLab CI";
+    case CISystem::CircleCI:
+      return "CircleCI";
+    case CISystem::TravisCI:
+      return "Travis CI";
+    case CISystem::AzurePipelines:
+      return "Azure Pipelines";
+    default:
+      return "Unknown";
+  }
 }
-void SolarSystem::Testing::CISystemIntegration::configure_for_github_actions(TestRunner&) {}
-void SolarSystem::Testing::CISystemIntegration::configure_for_jenkins(TestRunner&) {}
-void SolarSystem::Testing::CISystemIntegration::configure_for_gitlab_ci(TestRunner&) {}
+
+void SolarSystem::Testing::CISystemIntegration::configure_for_github_actions(TestRunner& runner) {
+  runner.enable_ci_mode("github");
+  runner.set_containerized_mode(ContainerEnvironment::is_running_in_container());
+  const char* workspace = std::getenv("GITHUB_WORKSPACE");
+  if (workspace) {
+    runner.set_artifact_directory(std::string(workspace) + "/test-results");
+  }
+}
+
+void SolarSystem::Testing::CISystemIntegration::configure_for_jenkins(TestRunner& runner) {
+  runner.enable_ci_mode("jenkins");
+  runner.set_containerized_mode(ContainerEnvironment::is_running_in_container());
+  const char* ws = std::getenv("WORKSPACE");
+  if (ws) {
+    runner.set_artifact_directory(std::string(ws) + "/test-results");
+  }
+}
+
+void SolarSystem::Testing::CISystemIntegration::configure_for_gitlab_ci(TestRunner& runner) {
+  runner.enable_ci_mode("gitlab");
+  runner.set_containerized_mode(ContainerEnvironment::is_running_in_container());
+  const char* project_dir = std::getenv("CI_PROJECT_DIR");
+  if (project_dir) {
+    runner.set_artifact_directory(std::string(project_dir) + "/test-results");
+  }
+}
+
 void SolarSystem::Testing::CISystemIntegration::generate_github_actions_artifacts(
-    const TestSuiteResult&, const std::string&) {}
-void SolarSystem::Testing::CISystemIntegration::generate_jenkins_artifacts(const TestSuiteResult&,
-                                                                           const std::string&) {}
-void SolarSystem::Testing::CISystemIntegration::generate_junit_xml(const TestSuiteResult&,
-                                                                   const std::string&) {}
+    const TestSuiteResult& result, const std::string& directory) {
+  namespace fs = std::filesystem;
+  fs::create_directories(directory);
+
+  generate_junit_xml(result, directory + "/junit-results.xml");
+
+  // Summary markdown for GitHub Actions job summary
+  std::ofstream summary(directory + "/test-summary.md");
+  if (summary.is_open()) {
+    summary << "## Test Results\n\n";
+    summary << "| Metric | Value |\n|---|---|\n";
+    summary << "| Passed | " << result.passed_count << " |\n";
+    summary << "| Failed | " << result.failed_count << " |\n";
+    summary << "| Skipped | " << result.skipped_count << " |\n";
+    summary << "| Duration | " << result.total_execution_time.count() << " ms |\n";
+    summary << "| Status | " << (result.all_passed() ? "PASS" : "FAIL") << " |\n";
+  }
+}
+
+void SolarSystem::Testing::CISystemIntegration::generate_jenkins_artifacts(
+    const TestSuiteResult& result, const std::string& directory) {
+  namespace fs = std::filesystem;
+  fs::create_directories(directory);
+
+  generate_junit_xml(result, directory + "/junit-results.xml");
+}
+
+void SolarSystem::Testing::CISystemIntegration::generate_junit_xml(const TestSuiteResult& result,
+                                                                   const std::string& file_path) {
+  namespace fs = std::filesystem;
+  auto parent = fs::path(file_path).parent_path();
+  if (!parent.empty()) fs::create_directories(parent);
+
+  std::ofstream out(file_path);
+  if (!out.is_open()) return;
+
+  size_t total = result.passed_count + result.failed_count + result.skipped_count;
+  double time_sec = static_cast<double>(result.total_execution_time.count()) / 1000.0;
+
+  out << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+  out << "<testsuites>\n";
+  out << "  <testsuite name=\"" << result.suite_name << "\" tests=\"" << total << "\" failures=\""
+      << result.failed_count << "\" skipped=\"" << result.skipped_count << "\" time=\""
+      << std::fixed << std::setprecision(3) << time_sec << "\">\n";
+
+  for (const auto& tr : result.test_results) {
+    double case_time = static_cast<double>(tr.execution_time.count()) / 1000.0;
+    out << "    <testcase name=\"" << tr.test_name << "\" classname=\"" << result.suite_name
+        << "\" time=\"" << std::fixed << std::setprecision(3) << case_time << "\">\n";
+
+    if (tr.status == TestResult::Status::Failed || tr.status == TestResult::Status::Error) {
+      out << "      <failure message=\"" << tr.error_message << "\">" << tr.error_message
+          << "</failure>\n";
+    } else if (tr.status == TestResult::Status::Skipped) {
+      out << "      <skipped/>\n";
+    }
+    out << "    </testcase>\n";
+  }
+
+  out << "  </testsuite>\n";
+  out << "</testsuites>\n";
+}
+
 int SolarSystem::Testing::CISystemIntegration::get_standard_exit_code(
     const TestSuiteResult& result) {
   return result.failed_count > 0 ? 1 : 0;
@@ -1334,14 +1647,35 @@ bool SolarSystem::Testing::TestRunner::is_ci_timeout_exceeded(
   return elapsed > config_.ci_timeout;
 }
 
-void SolarSystem::Testing::TestRunner::generate_ci_artifacts(const TestSuiteResult&) {
-  // Stub implementation
+void SolarSystem::Testing::TestRunner::generate_ci_artifacts(const TestSuiteResult& result) {
+  if (!config_.ci_mode || config_.artifact_directory.empty()) return;
+
+  auto ci = CISystemIntegration::detect_ci_system();
+  switch (ci) {
+    case CISystemIntegration::CISystem::GitHubActions:
+      CISystemIntegration::generate_github_actions_artifacts(result, config_.artifact_directory);
+      break;
+    case CISystemIntegration::CISystem::Jenkins:
+      CISystemIntegration::generate_jenkins_artifacts(result, config_.artifact_directory);
+      break;
+    default:
+      CISystemIntegration::generate_junit_xml(result,
+                                              config_.artifact_directory + "/junit-results.xml");
+      break;
+  }
 }
 
 size_t SolarSystem::Testing::TestRunner::get_memory_usage_mb() const {
-  return 0;  // Stub implementation
+  struct rusage usage{};
+  if (getrusage(RUSAGE_SELF, &usage) != 0) return 0;
+#ifdef __APPLE__
+  return static_cast<size_t>(usage.ru_maxrss) / (1024UL * 1024UL);
+#else
+  return static_cast<size_t>(usage.ru_maxrss) / 1024UL;
+#endif
 }
 
 bool SolarSystem::Testing::TestRunner::is_memory_limit_exceeded() const {
-  return false;  // Stub implementation
+  if (config_.max_memory_mb == 0) return false;
+  return get_memory_usage_mb() > config_.max_memory_mb;
 }

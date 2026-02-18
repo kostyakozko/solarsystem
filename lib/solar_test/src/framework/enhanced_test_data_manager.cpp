@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <chrono>
 #include <cstdlib>
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <random>
@@ -653,32 +654,219 @@ ValidationResult TestDataValidator::validate_jpl_response_content(const std::str
   return result;
 }
 
-ValidationResult TestDataValidator::validate_ephemeris_data_comprehensive(
-    const std::string& /*data*/) {
+ValidationResult TestDataValidator::validate_ephemeris_data_comprehensive(const std::string& data) {
   ValidationResult result;
   result.validation_type = "Ephemeris Data Comprehensive";
   result.validated_at = std::chrono::system_clock::now();
-  result.is_valid = true;  // Placeholder implementation
+
+  if (data.empty()) {
+    result.add_error("Ephemeris data is empty");
+    return result;
+  }
+
+  std::istringstream iss(data);
+  std::string line;
+  int data_lines = 0;
+  bool found_header = false;
+  bool found_data_section = false;
+
+  while (std::getline(iss, line)) {
+    if (line.find("$$SOE") != std::string::npos) {
+      found_data_section = true;
+      continue;
+    }
+    if (line.find("$$EOE") != std::string::npos) {
+      found_data_section = false;
+      continue;
+    }
+    if (line.find("JDTDB") != std::string::npos || line.find("Julian") != std::string::npos) {
+      found_header = true;
+    }
+
+    if (found_data_section) {
+      data_lines++;
+      std::istringstream ls(line);
+      double val;
+      int count = 0;
+      while (ls >> val && count < 10) {
+        count++;
+        if (std::isnan(val) || std::isinf(val)) {
+          result.add_error("NaN/Inf value found in ephemeris data line " +
+                           std::to_string(data_lines));
+        }
+        if (std::abs(val) > 1e20) {
+          result.add_warning("Extremely large value in ephemeris: " + std::to_string(val));
+        }
+      }
+    }
+  }
+
+  if (!found_header) {
+    result.add_warning("No ephemeris header markers found (JDTDB/Julian)");
+  }
+  if (data_lines == 0) {
+    result.add_error("No ephemeris data points found between $$SOE/$$EOE markers");
+  } else if (data_lines < 3) {
+    result.add_warning("Very few ephemeris data points: " + std::to_string(data_lines));
+  }
+
+  result.is_valid = result.errors.empty();
   return result;
 }
 
 ValidationResult TestDataValidator::validate_cache_file_comprehensive(
-    const std::string& /*cache_path*/) {
+    const std::string& cache_path) {
   ValidationResult result;
   result.validation_type = "Cache File Comprehensive";
   result.validated_at = std::chrono::system_clock::now();
-  result.is_valid = true;  // Placeholder implementation
+
+  if (cache_path.empty()) {
+    result.add_error("Cache path is empty");
+    return result;
+  }
+
+  namespace fs = std::filesystem;
+  std::error_code ec;
+
+  if (!fs::exists(cache_path, ec)) {
+    result.add_error("Cache file does not exist: " + cache_path);
+    return result;
+  }
+
+  auto file_size = fs::file_size(cache_path, ec);
+  if (ec) {
+    result.add_error("Cannot read cache file size: " + ec.message());
+    return result;
+  }
+
+  if (file_size == 0) {
+    result.add_error("Cache file is empty");
+    return result;
+  }
+
+  if (file_size < 16) {
+    result.add_warning("Cache file is suspiciously small (" + std::to_string(file_size) +
+                       " bytes)");
+  }
+
+  // Attempt to read and validate contents
+  std::ifstream f(cache_path, std::ios::binary);
+  if (!f.is_open()) {
+    result.add_error("Cannot open cache file for reading");
+    return result;
+  }
+
+  // Check for valid content by reading first bytes
+  char header[4] = {};
+  f.read(header, sizeof(header));
+  if (!f) {
+    result.add_error("Cannot read cache file header");
+    return result;
+  }
+
+  // Check write time / staleness
+  auto last_write = fs::last_write_time(cache_path, ec);
+  if (!ec) {
+    auto age = fs::file_time_type::clock::now() - last_write;
+    auto age_hours = std::chrono::duration_cast<std::chrono::hours>(age).count();
+    if (age_hours > 24 * 30) {
+      result.add_warning("Cache file is older than 30 days (" + std::to_string(age_hours / 24) +
+                         " days)");
+    }
+  }
+
+  result.is_valid = result.errors.empty();
   return result;
 }
 
 std::optional<std::string> TestDataValidator::attempt_data_recovery(
-    const std::string& /*corrupted_data*/, const std::string& /*data_type*/) {
-  return std::nullopt;  // Placeholder implementation
+    const std::string& corrupted_data, const std::string& data_type) {
+  if (corrupted_data.empty()) return std::nullopt;
+
+  if (data_type == "jpl_response" || data_type == "ephemeris") {
+    // Try to extract usable data between standard JPL markers
+    auto soe = corrupted_data.find("$$SOE");
+    auto eoe = corrupted_data.find("$$EOE");
+    if (soe != std::string::npos && eoe != std::string::npos && eoe > soe) {
+      return corrupted_data.substr(soe, eoe - soe + 5);
+    }
+    // Try to salvage lines that look like numerical data
+    std::ostringstream recovered;
+    std::istringstream iss(corrupted_data);
+    std::string line;
+    int recovered_lines = 0;
+    while (std::getline(iss, line)) {
+      bool has_number = false;
+      for (char c : line) {
+        if (std::isdigit(c) || c == '.' || c == '-' || c == 'E' || c == 'e') {
+          has_number = true;
+          break;
+        }
+      }
+      if (has_number && line.find("*") == std::string::npos) {
+        recovered << line << "\n";
+        recovered_lines++;
+      }
+    }
+    if (recovered_lines > 0) return recovered.str();
+  }
+
+  if (data_type == "json") {
+    // Attempt to find a valid JSON object or array
+    auto first_brace = corrupted_data.find_first_of("{[");
+    auto last_brace = corrupted_data.find_last_of("}]");
+    if (first_brace != std::string::npos && last_brace != std::string::npos &&
+        last_brace > first_brace) {
+      return corrupted_data.substr(first_brace, last_brace - first_brace + 1);
+    }
+  }
+
+  return std::nullopt;
 }
 
 std::vector<std::string> TestDataValidator::suggest_recovery_actions(
-    const ValidationResult& /*validation_result*/) {
-  return {};  // Placeholder implementation
+    const ValidationResult& validation_result) {
+  std::vector<std::string> actions;
+
+  if (validation_result.is_valid) return actions;
+
+  for (const auto& error : validation_result.errors) {
+    if (error.find("empty") != std::string::npos) {
+      actions.push_back("Re-fetch data from the source (data is empty or missing)");
+    } else if (error.find("does not exist") != std::string::npos) {
+      actions.push_back("Ensure the file path is correct and the file has been created");
+      actions.push_back("Run the data fetch/generation step before validation");
+    } else if (error.find("format") != std::string::npos ||
+               error.find("pattern") != std::string::npos) {
+      actions.push_back("Verify the data source is returning the expected format");
+      actions.push_back("Check for API changes or version mismatches");
+    } else if (error.find("NaN") != std::string::npos || error.find("Inf") != std::string::npos) {
+      actions.push_back("Check for corrupted numerical values in the data");
+      actions.push_back("Re-fetch from the original source to replace corrupted data");
+    } else if (error.find("Cannot open") != std::string::npos ||
+               error.find("Cannot read") != std::string::npos) {
+      actions.push_back("Check file permissions and ensure the file is not locked");
+    } else if (error.find("header") != std::string::npos) {
+      actions.push_back("Validate that the file was not truncated during download");
+    }
+  }
+
+  for (const auto& warning : validation_result.warnings) {
+    if (warning.find("older than") != std::string::npos) {
+      actions.push_back("Consider refreshing stale cache data");
+    } else if (warning.find("small") != std::string::npos) {
+      actions.push_back("Verify the data source returned a complete response");
+    } else if (warning.find("few") != std::string::npos) {
+      actions.push_back("Check if the requested time range is too narrow");
+    }
+  }
+
+  if (actions.empty()) {
+    actions.push_back("Delete and regenerate the data from the original source");
+    actions.push_back("Check system logs for underlying I/O or network errors");
+  }
+
+  return actions;
 }
 
 // EnhancedTestDataManager implementation
@@ -757,16 +945,81 @@ void EnhancedTestDataManager::cleanup_all_test_environments() { active_environme
 
 DataVersion EnhancedTestDataManager::get_current_data_version() { return current_version_; }
 
-bool EnhancedTestDataManager::migrate_data_set(EnhancedTestDataSet& /*dataset*/,
-                                               const DataVersion& /*target_version*/) {
-  return true;  // Placeholder implementation
+bool EnhancedTestDataManager::migrate_data_set(EnhancedTestDataSet& dataset,
+                                               const DataVersion& target_version) {
+  if (dataset.version.is_compatible_with(target_version)) {
+    dataset.version = target_version;
+    return true;
+  }
+
+  // Major version mismatch requires re-validation
+  if (dataset.version.major != target_version.major) {
+    auto validation = TestDataValidator::validate_data_consistency(dataset);
+    if (!validation.is_valid) return false;
+  }
+
+  // Re-validate all files and update checksums
+  for (const auto& [filename, content] : dataset.files) {
+    dataset.update_checksum(filename, content);
+  }
+
+  dataset.version = target_version;
+  dataset.last_validated_at = std::chrono::system_clock::now();
+  return true;
 }
 
 ValidationResult EnhancedTestDataManager::validate_test_environment() {
   ValidationResult result;
   result.validation_type = "Test Environment";
   result.validated_at = std::chrono::system_clock::now();
-  result.is_valid = true;  // Placeholder implementation
+
+  namespace fs = std::filesystem;
+  std::error_code ec;
+
+  // Check current working directory is accessible
+  auto cwd = fs::current_path(ec);
+  if (ec) {
+    result.add_error("Cannot determine current working directory: " + ec.message());
+  }
+
+  // Check that /tmp (or system temp) is writable
+  auto temp = fs::temp_directory_path(ec);
+  if (ec) {
+    result.add_error("Cannot access temporary directory: " + ec.message());
+  } else {
+    auto test_file = temp / "solar_test_env_check";
+    std::ofstream f(test_file);
+    if (!f.is_open()) {
+      result.add_error("Cannot write to temporary directory: " + temp.string());
+    } else {
+      f.close();
+      fs::remove(test_file, ec);
+    }
+  }
+
+  // Verify data directory exists if set
+  const char* data_dir = std::getenv("SOLAR_TEST_DATA_DIR");
+  if (data_dir) {
+    if (!fs::exists(data_dir, ec)) {
+      result.add_warning("SOLAR_TEST_DATA_DIR is set but path does not exist: " +
+                         std::string(data_dir));
+    }
+  }
+
+  // Check available memory
+#ifdef __linux__
+  long pages = sysconf(_SC_AVPHYS_PAGES);
+  long page_size = sysconf(_SC_PAGE_SIZE);
+  if (pages > 0 && page_size > 0) {
+    size_t avail_mb =
+        static_cast<size_t>(pages) * static_cast<size_t>(page_size) / (1024UL * 1024UL);
+    if (avail_mb < 64) {
+      result.add_warning("Low available memory: " + std::to_string(avail_mb) + " MB");
+    }
+  }
+#endif
+
+  result.is_valid = result.errors.empty();
   return result;
 }
 
@@ -774,7 +1027,40 @@ ValidationResult EnhancedTestDataManager::validate_all_test_data() {
   ValidationResult result;
   result.validation_type = "All Test Data";
   result.validated_at = std::chrono::system_clock::now();
-  result.is_valid = true;  // Placeholder implementation
+
+  // Validate each active environment's integrity
+  for (const auto& env : active_environments_) {
+    if (env && !env->is_clean()) {
+      result.add_warning("Active environment '" + env->get_test_name() +
+                         "' is not in a clean state");
+    }
+  }
+
+  // Validate standard test data scenarios
+  const std::vector<std::string> scenarios = {"default", "earth", "mars"};
+  for (const auto& scenario : scenarios) {
+    try {
+      auto dataset = load_validated_jpl_responses(scenario);
+      if (!dataset.validation_result.is_valid) {
+        for (const auto& err : dataset.validation_result.errors) {
+          result.add_error("Scenario '" + scenario + "': " + err);
+        }
+      }
+      for (const auto& warn : dataset.validation_result.warnings) {
+        result.add_warning("Scenario '" + scenario + "': " + warn);
+      }
+    } catch (const std::exception& e) {
+      result.add_warning("Could not validate scenario '" + scenario + "': " + e.what());
+    }
+  }
+
+  // Check data version compatibility
+  auto version = get_current_data_version();
+  if (version.major < 1) {
+    result.add_error("Data version is too old: " + version.to_string());
+  }
+
+  result.is_valid = result.errors.empty();
   return result;
 }
 
@@ -785,13 +1071,99 @@ std::vector<ValidationResult> EnhancedTestDataManager::run_comprehensive_validat
   return results;
 }
 
-bool EnhancedTestDataManager::attempt_automatic_recovery(const std::string& /*data_path*/) {
-  return false;  // Placeholder implementation
+bool EnhancedTestDataManager::attempt_automatic_recovery(const std::string& data_path) {
+  namespace fs = std::filesystem;
+  std::error_code ec;
+
+  if (data_path.empty()) return false;
+
+  // If file doesn't exist, nothing to recover
+  if (!fs::exists(data_path, ec)) return false;
+
+  // Try to read the file
+  std::ifstream f(data_path);
+  if (!f.is_open()) return false;
+
+  std::string content((std::istreambuf_iterator<char>(f)), std::istreambuf_iterator<char>());
+  f.close();
+
+  if (content.empty()) return false;
+
+  // Determine data type from extension
+  std::string data_type;
+  auto ext = fs::path(data_path).extension().string();
+  if (ext == ".json") {
+    data_type = "json";
+  } else if (ext == ".bin" || ext == ".dat") {
+    data_type = "ephemeris";
+  } else {
+    data_type = "jpl_response";
+  }
+
+  // Attempt recovery
+  auto recovered = TestDataValidator::attempt_data_recovery(content, data_type);
+  if (!recovered.has_value()) return false;
+
+  // Backup original
+  std::string backup_path = data_path + ".bak";
+  fs::copy_file(data_path, backup_path, fs::copy_options::overwrite_existing, ec);
+
+  // Write recovered data
+  std::ofstream out(data_path, std::ios::trunc);
+  if (!out.is_open()) return false;
+
+  out << recovered.value();
+  return out.good();
 }
 
 std::vector<std::string> EnhancedTestDataManager::generate_recovery_report(
-    const std::vector<ValidationResult>& /*validation_results*/) {
-  return {};  // Placeholder implementation
+    const std::vector<ValidationResult>& validation_results) {
+  std::vector<std::string> report;
+
+  if (validation_results.empty()) {
+    report.push_back("No validation results to report.");
+    return report;
+  }
+
+  int total = 0, passed = 0, failed = 0;
+  for (const auto& vr : validation_results) {
+    total++;
+    if (vr.is_valid)
+      passed++;
+    else
+      failed++;
+  }
+
+  report.push_back("=== Validation Recovery Report ===");
+  report.push_back("Total validations: " + std::to_string(total));
+  report.push_back("Passed: " + std::to_string(passed));
+  report.push_back("Failed: " + std::to_string(failed));
+  report.push_back("");
+
+  for (const auto& vr : validation_results) {
+    report.push_back("[" + std::string(vr.is_valid ? "PASS" : "FAIL") + "] " + vr.validation_type);
+
+    for (const auto& error : vr.errors) {
+      report.push_back("  ERROR: " + error);
+    }
+    for (const auto& warning : vr.warnings) {
+      report.push_back("  WARN:  " + warning);
+    }
+
+    if (!vr.is_valid) {
+      auto actions = TestDataValidator::suggest_recovery_actions(vr);
+      if (!actions.empty()) {
+        report.push_back("  Suggested actions:");
+        for (const auto& action : actions) {
+          report.push_back("    - " + action);
+        }
+      }
+    }
+  }
+
+  report.push_back("");
+  report.push_back("=== End of Report ===");
+  return report;
 }
 
 void EnhancedTestDataManager::enable_performance_monitoring(bool enable) {

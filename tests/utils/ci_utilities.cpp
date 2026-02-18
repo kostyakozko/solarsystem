@@ -34,7 +34,7 @@ bool CIArtifactGenerator::generate_junit_xml(const std::vector<TestSuiteResult>&
   for (const auto& suite : suites) {
     file << "  <testsuite name=\"" << suite.name << "\" tests=\"" << suite.tests << "\" failures=\""
          << suite.failures << "\" errors=\"" << suite.errors << "\" skipped=\"" << suite.skipped
-         << "\" time=\"" << std::fixed << std::setpr << suite.time_seconds << "\">\n";
+         << "\" time=\"" << std::fixed << std::setprecision(3) << suite.time_seconds << "\">\n";
 
     // Write each test case
     for (const auto& test_case : suite.test_cases) {
@@ -299,8 +299,12 @@ EnhancedMemoryMonitor::MemoryUsage EnhancedMemoryMonitor::get_current_usage() {
 
   // Get system memory info
   long pages = sysconf(_SC_PHYS_PAGES);
-  long avail_pages = sysconf(_SC_AVPHYS_PAGES);
   long page_size = sysconf(_SC_PAGE_SIZE);
+#ifdef _SC_AVPHYS_PAGES
+  long avail_pages = sysconf(_SC_AVPHYS_PAGES);
+#else
+  long avail_pages = pages;
+#endif
 
   if (pages > 0 && page_size > 0) {
     size_t total_memory = static_cast<size_t>(pages) * static_cast<size_t>(page_size);
