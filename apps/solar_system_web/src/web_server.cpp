@@ -506,7 +506,7 @@ class HttpServer {
       static std::map<std::string, std::pair<int, std::chrono::steady_clock::time_point>> rate_map;
 
       // Extract client IP
-      struct sockaddr_in peer_addr{};
+      struct sockaddr_in peer_addr = {};
       socklen_t peer_len = sizeof(peer_addr);
       std::string client_ip = "unknown";
       if (getpeername(client_socket, reinterpret_cast<sockaddr*>(&peer_addr), &peer_len) == 0) {
