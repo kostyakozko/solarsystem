@@ -144,6 +144,32 @@ class FormattingUtils {
   static std::string underline(const std::string& text);
 };
 
+/**
+ * @brief Feedback entry from a user
+ */
+struct FeedbackEntry {
+  int rating;
+  std::string comment;
+  std::string feature_area;
+  std::chrono::system_clock::time_point timestamp;
+};
+
+/**
+ * @brief Collects, stores, and persists user feedback
+ */
+class UserFeedbackCollector {
+ public:
+  void submit_feedback(int rating, const std::string& comment, const std::string& area);
+  size_t get_feedback_count() const;
+  const std::vector<FeedbackEntry>& get_entries() const;
+
+  bool save_to_file(const std::string& path) const;
+  bool load_from_file(const std::string& path);
+
+ private:
+  std::vector<FeedbackEntry> entries_;
+};
+
 }  // namespace SolarSystem::UI
 
 #endif  // SOLAR_CORE_UI_USER_INTERFACE_HPP

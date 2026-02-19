@@ -633,8 +633,22 @@ std::vector<CrossAppConflict> ConfigurationManager::detect_cross_app_conflicts(
     // Assuming web server uses a port (this would need to be extended for actual port config)
     // This is a placeholder for demonstration
     if (app_name == "web_server") {
-      // Check if port is already assigned
-      // In a real implementation, you'd extract port from config
+      int port = config.network.default_port;
+      if (port > 0) {
+        auto it = port_assignments.find(port);
+        if (it != port_assignments.end()) {
+          CrossAppConflict conflict;
+          conflict.application1 = it->second;
+          conflict.application2 = app_name;
+          conflict.parameter = "network.port";
+          conflict.conflict_description = "Port " + std::to_string(port) + " is used by both " +
+                                          it->second + " and " + app_name;
+          conflict.resolution_suggestions.push_back("Use different ports for each application");
+          conflicts.push_back(conflict);
+        } else {
+          port_assignments[port] = app_name;
+        }
+      }
     }
   }
 

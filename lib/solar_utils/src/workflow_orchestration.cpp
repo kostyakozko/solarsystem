@@ -13,6 +13,8 @@
 #include <sstream>
 #include <thread>
 
+#include "solar_utils/network_resource_manager.hpp"
+
 namespace SolarSystem::Utils::Workflow {
 
 // JPLConnectivityManager Implementation
@@ -131,27 +133,19 @@ bool JPLConnectivityManager::is_fallback_mode_active() const {
 }
 
 bool JPLConnectivityManager::test_jpl_endpoint(const std::string& endpoint) const {
-  // Simplified connectivity test - in production this would make an actual HTTP request
-  // For now, we'll simulate based on endpoint availability
-
-  // Simulate network check with timeout
   try {
-    // This is a placeholder - in real implementation would use curl or similar
-    // to make actual HTTP request to JPL endpoint
-
-    // For demonstration, we'll simulate occasional failures
-    static std::random_device rd;
-    static std::mt19937 gen(rd());
-    static std::uniform_real_distribution<> dis(0.0, 1.0);
-
-    // Simulate 80% success rate for primary endpoint
-    if (endpoint.find("ssd.jpl.nasa.gov") != std::string::npos) {
-      return dis(gen) < 0.8;
+    // Extract hostname from endpoint URL
+    std::string host = endpoint;
+    auto proto_pos = host.find("://");
+    if (proto_pos != std::string::npos) {
+      host = host.substr(proto_pos + 3);
+    }
+    auto slash_pos = host.find('/');
+    if (slash_pos != std::string::npos) {
+      host = host.substr(0, slash_pos);
     }
 
-    // Simulate 60% success rate for fallback endpoints
-    return dis(gen) < 0.6;
-
+    return NetworkUtils::is_endpoint_reachable(host, std::chrono::seconds(5));
   } catch (const std::exception& e) {
     LOG_ERROR("JPLConnectivityManager", "Exception testing endpoint " + endpoint + ": " + e.what());
     return false;

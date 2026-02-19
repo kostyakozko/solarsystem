@@ -1934,7 +1934,6 @@ JPLResult<bool> JPLClient::validate_cache_consistency() const {
   // If both formats exist, validate they contain the same data
   if (has_binary && has_json) {
     try {
-      // For now, just verify both files exist and have reasonable sizes
       auto binary_size = std::filesystem::file_size(binary_path);
       auto json_size = std::filesystem::file_size(json_path);
 
@@ -1942,7 +1941,34 @@ JPLResult<bool> JPLClient::validate_cache_consistency() const {
         return JPLError::ValidationError;
       }
 
-      // TODO: Implement full cross-validation when JSON parser is more robust
+      // Cross-validate by loading both caches and comparing body data
+      auto binary_result = load_binary_cache();
+      auto json_result = load_json_cache();
+
+      if (is_success(binary_result) && is_success(json_result)) {
+        const auto& binary_bodies = get_value(binary_result);
+        const auto& json_bodies = get_value(json_result);
+
+        if (binary_bodies.size() != json_bodies.size()) {
+          return JPLError::ValidationError;
+        }
+
+        for (size_t i = 0; i < binary_bodies.size(); ++i) {
+          bool found = false;
+          for (size_t j = 0; j < json_bodies.size(); ++j) {
+            if (binary_bodies[i].jpl_id == json_bodies[j].jpl_id) {
+              if (!compare_body_data(binary_bodies[i], json_bodies[j])) {
+                return JPLError::ValidationError;
+              }
+              found = true;
+              break;
+            }
+          }
+          if (!found) {
+            return JPLError::ValidationError;
+          }
+        }
+      }
 
     } catch (const std::exception&) {
       return JPLError::ValidationError;

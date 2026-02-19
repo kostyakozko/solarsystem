@@ -12,7 +12,12 @@
 #include <sstream>
 #include <thread>
 
+#ifdef __linux__
+#include <malloc.h>
+#endif
+
 #include "solar_utils/file_resource_manager.hpp"
+#include "solar_utils/logging.hpp"
 #include "solar_utils/network_resource_manager.hpp"
 #include "solar_utils/resource_manager.hpp"
 
@@ -854,8 +859,7 @@ void MLErrorPatternAnalyzer::save_model(const std::string& file_path) const {
     return;
   }
 
-  // Save model data (simplified format)
-  file << "# ML Error Pattern Analyzer Model\n";
+  file << "# ML Error Pattern Analyzer Model v1\n";
   file << "training_data_size=" << training_data_.size() << "\n";
   file << "correct_predictions=" << correct_predictions_ << "\n";
   file << "total_predictions=" << total_predictions_ << "\n";
@@ -873,23 +877,32 @@ void MLErrorPatternAnalyzer::load_model(const std::string& file_path) {
     return;
   }
 
+  pattern_weights_.clear();
+
   std::string line;
   while (std::getline(file, line)) {
     if (line.empty() || line[0] == '#') {
       continue;
     }
 
-    // Parse model data (simplified implementation)
-    if (line.find("pattern_weight,") == 0) {
-      // Parse pattern weight line
-      size_t first_comma = line.find(',');
-      size_t second_comma = line.find(',', first_comma + 1);
+    try {
+      if (line.find("correct_predictions=") == 0) {
+        correct_predictions_ = std::stoull(line.substr(20));
+      } else if (line.find("total_predictions=") == 0) {
+        total_predictions_ = std::stoull(line.substr(18));
+      } else if (line.find("pattern_weight,") == 0) {
+        size_t first_comma = line.find(',');
+        size_t second_comma = line.find(',', first_comma + 1);
 
-      if (first_comma != std::string::npos && second_comma != std::string::npos) {
-        std::string pattern_id = line.substr(first_comma + 1, second_comma - first_comma - 1);
-        double weight = std::stod(line.substr(second_comma + 1));
-        pattern_weights_[pattern_id] = weight;
+        if (first_comma != std::string::npos && second_comma != std::string::npos) {
+          std::string pattern_id = line.substr(first_comma + 1, second_comma - first_comma - 1);
+          double weight = std::stod(line.substr(second_comma + 1));
+          weight = std::clamp(weight, 0.1, 1.0);
+          pattern_weights_[pattern_id] = weight;
+        }
       }
+    } catch (const std::exception&) {
+      // Skip malformed lines
     }
   }
 }
@@ -1217,8 +1230,13 @@ RecoveryWorkflow create_network_recovery_workflow() {
   retry_step.step_id = "retry_operation";
   retry_step.description = "Retry the failed network operation";
   retry_step.action = []() {
-    // This would retry the original operation
-    return true;  // Placeholder
+    LOG_INFO("ErrorRecovery", "Retrying failed network operation with backoff...");
+    std::this_thread::sleep_for(std::chrono::seconds(2));
+    bool reachable =
+        NetworkUtils::is_endpoint_reachable("ssd.jpl.nasa.gov", std::chrono::seconds(10));
+    LOG_INFO("ErrorRecovery", reachable ? "Network retry: endpoint reachable"
+                                        : "Network retry: endpoint still unreachable");
+    return reachable;
   };
   retry_step.timeout = std::chrono::seconds(30);
   retry_step.max_retries = 3;
@@ -1229,8 +1247,12 @@ RecoveryWorkflow create_network_recovery_workflow() {
   fallback_step.step_id = "use_fallback";
   fallback_step.description = "Use fallback network endpoint";
   fallback_step.action = []() {
-    // Switch to fallback endpoint
-    return true;  // Placeholder
+    LOG_INFO("ErrorRecovery", "Attempting fallback endpoint: ssd-api.jpl.nasa.gov");
+    bool reachable =
+        NetworkUtils::is_endpoint_reachable("ssd-api.jpl.nasa.gov", std::chrono::seconds(10));
+    LOG_INFO("ErrorRecovery",
+             reachable ? "Fallback endpoint available" : "Fallback endpoint also unreachable");
+    return reachable;
   };
   fallback_step.timeout = std::chrono::seconds(20);
   fallback_step.max_retries = 1;
@@ -1277,8 +1299,13 @@ RecoveryWorkflow create_filesystem_recovery_workflow() {
   retry_step.step_id = "retry_file_operation";
   retry_step.description = "Retry the failed file operation";
   retry_step.action = []() {
-    // Retry the original file operation
-    return true;  // Placeholder
+    LOG_INFO("ErrorRecovery", "Retrying file operation after cleanup...");
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+    auto space = std::filesystem::space("/");
+    bool has_space = space.available > 1024 * 1024 * 10;  // 10MB minimum
+    LOG_INFO("ErrorRecovery", has_space ? "Filesystem has space, retry should succeed"
+                                        : "Filesystem still low on space");
+    return has_space;
   };
   retry_step.timeout = std::chrono::seconds(60);
   retry_step.max_retries = 2;
@@ -1313,8 +1340,14 @@ RecoveryWorkflow create_memory_recovery_workflow() {
   reduce_step.step_id = "reduce_memory";
   reduce_step.description = "Reduce memory usage";
   reduce_step.action = []() {
-    // Reduce memory usage by clearing caches
-    return true;  // Placeholder
+    LOG_INFO("ErrorRecovery", "Reducing memory usage by clearing caches...");
+    ResourceManager::instance().cleanup_expired_resources();
+    FileResourceManager::instance().cleanup_temp_files();
+#ifdef __linux__
+    malloc_trim(0);
+#endif
+    LOG_INFO("ErrorRecovery", "Memory reduction complete");
+    return true;
   };
   reduce_step.timeout = std::chrono::seconds(15);
   reduce_step.max_retries = 1;
@@ -1336,8 +1369,30 @@ RecoveryWorkflow create_configuration_recovery_workflow() {
   validate_step.step_id = "validate_config";
   validate_step.description = "Validate configuration files";
   validate_step.action = []() {
-    // Validate configuration
-    return true;  // Placeholder
+    LOG_INFO("ErrorRecovery", "Validating configuration files...");
+    namespace fs = std::filesystem;
+    std::vector<std::string> config_paths = {"config.json", "solar_config.json",
+                                             ".solar/config.json"};
+    for (const auto& path : config_paths) {
+      if (fs::exists(path)) {
+        std::ifstream f(path);
+        if (!f.is_open()) {
+          LOG_WARN("ErrorRecovery", "Cannot open config file: " + path);
+          return false;
+        }
+        std::string content((std::istreambuf_iterator<char>(f)), std::istreambuf_iterator<char>());
+        if (content.empty()) {
+          LOG_WARN("ErrorRecovery", "Config file is empty: " + path);
+          return false;
+        }
+        if (content.front() != '{' && content.front() != '[') {
+          LOG_WARN("ErrorRecovery", "Config file does not appear to be valid JSON: " + path);
+          return false;
+        }
+      }
+    }
+    LOG_INFO("ErrorRecovery", "Configuration validation passed");
+    return true;
   };
   validate_step.timeout = std::chrono::seconds(10);
   validate_step.max_retries = 1;

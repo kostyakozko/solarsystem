@@ -13,6 +13,7 @@
 #include <atomic>
 #include <cerrno>
 #include <chrono>
+#include <condition_variable>
 #include <csignal>
 #include <cstring>
 #include <filesystem>
@@ -25,6 +26,7 @@
 #include <mutex>
 #include <nlohmann/json.hpp>
 #include <optional>
+#include <queue>
 #include <sstream>
 #include <string>
 #include <string_view>
@@ -91,6 +93,7 @@ struct WebServerConfig {
   bool enable_logging = true;
   std::chrono::seconds request_timeout = 30s;
   size_t max_connections = 100;
+  std::string auth_token;  // If non-empty, require Bearer token for API endpoints
 
   /**
    * @brief Validate configuration
@@ -430,6 +433,29 @@ class HttpServer {
    * @brief Main server loop
    */
   [[nodiscard]] bool run_server_loop() {
+    std::queue<int> client_queue;
+    std::mutex queue_mutex;
+    std::condition_variable queue_cv;
+    std::vector<std::thread> worker_threads;
+    bool stopping = false;
+
+    size_t pool_size = std::min(config_.max_connections, size_t{16});
+    for (size_t i = 0; i < pool_size; ++i) {
+      worker_threads.emplace_back([this, &client_queue, &queue_mutex, &queue_cv, &stopping]() {
+        while (true) {
+          int client_socket;
+          {
+            std::unique_lock<std::mutex> lock(queue_mutex);
+            queue_cv.wait(lock, [&]() { return stopping || !client_queue.empty(); });
+            if (stopping && client_queue.empty()) return;
+            client_socket = client_queue.front();
+            client_queue.pop();
+          }
+          handle_client(client_socket);
+        }
+      });
+    }
+
     while (g_server_running.load()) {
       sockaddr_in client_address{};
       socklen_t client_len = sizeof(client_address);
@@ -450,8 +476,20 @@ class HttpServer {
         continue;
       }
 
-      // Handle request in separate thread for better performance
-      std::thread([this, client_socket]() { handle_client(client_socket); }).detach();
+      {
+        std::lock_guard<std::mutex> lock(queue_mutex);
+        client_queue.push(client_socket);
+      }
+      queue_cv.notify_one();
+    }
+
+    {
+      std::lock_guard<std::mutex> lock(queue_mutex);
+      stopping = true;
+    }
+    queue_cv.notify_all();
+    for (auto& t : worker_threads) {
+      if (t.joinable()) t.join();
     }
 
     VERBOSE_LOG_INFO("HttpServer", "Server loop exiting gracefully");
@@ -463,6 +501,38 @@ class HttpServer {
    */
   void handle_client(int client_socket) {
     try {
+      // Rate limiting
+      static std::mutex rate_mutex;
+      static std::map<std::string, std::pair<int, std::chrono::steady_clock::time_point>> rate_map;
+
+      // Extract client IP
+      struct sockaddr_in peer_addr{};
+      socklen_t peer_len = sizeof(peer_addr);
+      std::string client_ip = "unknown";
+      if (getpeername(client_socket, reinterpret_cast<sockaddr*>(&peer_addr), &peer_len) == 0) {
+        char ip_buf[INET_ADDRSTRLEN];
+        inet_ntop(AF_INET, &peer_addr.sin_addr, ip_buf, sizeof(ip_buf));
+        client_ip = ip_buf;
+      }
+
+      {
+        std::lock_guard<std::mutex> lock(rate_mutex);
+        auto now = std::chrono::steady_clock::now();
+        auto& entry = rate_map[client_ip];
+        if (now - entry.second > std::chrono::seconds(60)) {
+          entry = {1, now};
+        } else {
+          entry.first++;
+          if (entry.first > 100) {
+            auto response = HttpResponse::error(429, "Too Many Requests");
+            send_response(client_socket, response);
+            LOG_INFO("WebServer", "GET " + client_ip + " 429 rate limited");
+            close(client_socket);
+            return;
+          }
+        }
+      }
+
       // Set socket timeout
       struct timeval timeout;
       timeout.tv_sec = config_.request_timeout.count();
@@ -480,11 +550,27 @@ class HttpServer {
         VERBOSE_LOG_DEBUG("HttpServer", "Request: " + request->method + " " + request->path);
       }
 
+      // Bearer token auth for API endpoints
+      if (!config_.auth_token.empty() && request->path.starts_with("/api/")) {
+        auto auth_it = request->headers.find("Authorization");
+        std::string expected = "Bearer " + config_.auth_token;
+        if (auth_it == request->headers.end() || auth_it->second != expected) {
+          auto response = HttpResponse::error(401, "Unauthorized");
+          send_response(client_socket, response);
+          LOG_INFO("WebServer", request->method + " " + request->path + " 401 " + client_ip);
+          close(client_socket);
+          return;
+        }
+      }
+
       // Generate response
       auto response = handle_request(*request);
 
       // Send response
       send_response(client_socket, response);
+
+      LOG_INFO("WebServer", request->method + " " + request->path + " " +
+                                std::to_string(response.status_code) + " " + client_ip);
 
       close(client_socket);
 
@@ -498,18 +584,21 @@ class HttpServer {
    * @brief Read HTTP request from socket
    */
   [[nodiscard]] std::optional<HttpRequest> read_request(int socket) {
-    char buffer[4096];
-    ssize_t bytes_read = recv(socket, buffer, sizeof(buffer) - 1, 0);
-
-    if (bytes_read <= 0) {
-      return std::nullopt;
+    std::string request_data;
+    request_data.reserve(8192);
+    char chunk[4096];
+    while (true) {
+      ssize_t bytes_read = recv(socket, chunk, sizeof(chunk) - 1, 0);
+      if (bytes_read <= 0) break;
+      chunk[bytes_read] = '\0';
+      request_data.append(chunk, static_cast<size_t>(bytes_read));
+      if (request_data.find("\r\n\r\n") != std::string::npos) break;
+      if (request_data.size() > 65536) break;
     }
-
-    buffer[bytes_read] = '\0';
-    std::string request_str(buffer);
+    if (request_data.empty()) return std::nullopt;
 
     // Parse request line
-    std::istringstream iss(request_str);
+    std::istringstream iss(request_data);
     std::string line;
 
     if (!std::getline(iss, line)) {
@@ -1474,38 +1563,80 @@ int main(int argc, char* argv[]) {
     // Create and configure HTTP server
     HttpServer server(*config, factory);
 
-    // Register API endpoints
+    // Register API v1 endpoints
     server
-        .handle("/api/health",
+        .handle("/api/v1/health",
                 [factory](const HttpRequest& req) {
                   return SolarSystemAPI::handle_health(req, *factory);
                 })
-        .handle("/api/status",
+        .handle("/api/v1/status",
                 [factory](const HttpRequest& req) {
                   return SolarSystemAPI::handle_status(req, *factory);
                 })
-        .handle("/api/bodies",
+        .handle("/api/v1/bodies",
                 [factory](const HttpRequest& req) {
                   return SolarSystemAPI::handle_bodies(req, *factory);
                 })
-        .handle("/api/solar_system",
+        .handle("/api/v1/solar_system",
                 [factory](const HttpRequest& req) {
                   return SolarSystemAPI::handle_solar_system(req, *factory);
                 })
-        .handle("/api/simulation",
+        .handle("/api/v1/simulation",
                 [factory](const HttpRequest& req) {
                   return SolarSystemAPI::handle_simulate(req, *factory);
                 })
-        .handle("/api/simulate",
+        .handle("/api/v1/simulate",
                 [factory](const HttpRequest& req) {
                   return SolarSystemAPI::handle_simulate(req, *factory);
                 })
-        .handle("/api/metrics",
+        .handle("/api/v1/metrics",
                 [factory](const HttpRequest& req) {
                   return SolarSystemAPI::handle_metrics(req, *factory);
                 })
-        .handle("/api/alerts", [factory](const HttpRequest& req) {
+        .handle("/api/v1/alerts", [factory](const HttpRequest& req) {
           return SolarSystemAPI::handle_alerts(req, *factory);
+        });
+
+    // Backward-compatible redirects from old /api/ paths to /api/v1/
+    server
+        .handle("/api/health",
+                [factory](const HttpRequest& req) {
+                  auto new_req = req;
+                  return SolarSystemAPI::handle_health(new_req, *factory);
+                })
+        .handle("/api/status",
+                [factory](const HttpRequest& req) {
+                  auto new_req = req;
+                  return SolarSystemAPI::handle_status(new_req, *factory);
+                })
+        .handle("/api/bodies",
+                [factory](const HttpRequest& req) {
+                  auto new_req = req;
+                  return SolarSystemAPI::handle_bodies(new_req, *factory);
+                })
+        .handle("/api/solar_system",
+                [factory](const HttpRequest& req) {
+                  auto new_req = req;
+                  return SolarSystemAPI::handle_solar_system(new_req, *factory);
+                })
+        .handle("/api/simulation",
+                [factory](const HttpRequest& req) {
+                  auto new_req = req;
+                  return SolarSystemAPI::handle_simulate(new_req, *factory);
+                })
+        .handle("/api/simulate",
+                [factory](const HttpRequest& req) {
+                  auto new_req = req;
+                  return SolarSystemAPI::handle_simulate(new_req, *factory);
+                })
+        .handle("/api/metrics",
+                [factory](const HttpRequest& req) {
+                  auto new_req = req;
+                  return SolarSystemAPI::handle_metrics(new_req, *factory);
+                })
+        .handle("/api/alerts", [factory](const HttpRequest& req) {
+          auto new_req = req;
+          return SolarSystemAPI::handle_alerts(new_req, *factory);
         });
 
     // Start server

@@ -719,8 +719,6 @@ class SimulationStep : public WorkflowStep {
         if (!config.quiet_mode) {
           std::cout << "🎯 Target Date: " << *config.target_date << "\n";
         }
-        // Use modern SimulationBuilder with date parsing
-        // Note: Full date parsing would be implemented here in production
       } else if (config.use_current_date) {
         if (!config.quiet_mode) {
           std::cout << "🕒 Using current date\n";
@@ -761,10 +759,15 @@ class SimulationStep : public WorkflowStep {
         // Create and configure simulation
         SimulationBuilder sim_builder;
         std::string error_message;
-        auto simulation = sim_builder.with_bodies(std::move(body_collection_result.value()))
-                              .with_timestep(3600.0)  // 1 hour timestep
-                              .with_max_iterations(1000)
-                              .build(&error_message);
+        sim_builder.with_bodies(std::move(body_collection_result.value()))
+            .with_timestep(3600.0)  // 1 hour timestep
+            .with_max_iterations(1000);
+
+        if (config.target_date.has_value()) {
+          sim_builder.with_target_date(*config.target_date);
+        }
+
+        auto simulation = sim_builder.build(&error_message);
 
         if (!simulation) {
           LOG_ERROR("Launcher", "Failed to build simulation: " + error_message);
@@ -781,9 +784,13 @@ class SimulationStep : public WorkflowStep {
           LauncherUI::print_progress("Running simulation", 0.8);
         }
 
-        // Execute simulation (modern approach)
-        // In a full implementation, we would run the simulation here
-        // For now, we'll just validate that it was created successfully
+        // Run the simulation
+        {
+          auto sim_result = simulation->simulate_duration(3600.0 * 24);
+          if (!sim_result.has_value()) {
+            LOG_WARN("Launcher", "Simulation run note: " + sim_result.error());
+          }
+        }
 
         if (config.show_progress && !config.quiet_mode) {
           LauncherUI::print_progress("Running simulation", 1.0);

@@ -9,6 +9,8 @@
  * - Direct memory access patterns
  */
 
+#include <sys/resource.h>
+
 #include <chrono>
 #include <iomanip>
 #include <iostream>
@@ -238,6 +240,18 @@ bool run_optimized_simulation(Bodies::BodyFactory& factory,
 
   // Print final results in legacy format
   print_all_bodies(engine.get_bodies(), target_time);
+
+  // Resource usage summary
+  struct rusage usage;
+  if (getrusage(RUSAGE_SELF, &usage) == 0) {
+#ifdef __APPLE__
+    size_t mem_mb = static_cast<size_t>(usage.ru_maxrss) / (1024UL * 1024UL);
+#else
+    size_t mem_mb = static_cast<size_t>(usage.ru_maxrss) / 1024UL;
+#endif
+    std::cout << "\nResource Usage:\n";
+    std::cout << "  Peak Memory: " << mem_mb << " MB\n";
+  }
 
   return true;
 }

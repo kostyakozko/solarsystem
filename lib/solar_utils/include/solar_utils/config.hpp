@@ -72,6 +72,7 @@ struct NetworkConfig {
   int max_retries = 3;
   bool enable_caching = true;
   std::chrono::hours cache_expiry{24};
+  int default_port = 0;
 };
 
 /**

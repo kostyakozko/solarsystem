@@ -11,6 +11,7 @@ target_link_libraries(solar_system_web PRIVATE
     solar_jpl       # JPL data integration
     solar_utils     # Configuration and logging
     Threads::Threads
+    OpenSSL::SSL OpenSSL::Crypto
 )
 
 # Link nlohmann/json (required for JSON operations)

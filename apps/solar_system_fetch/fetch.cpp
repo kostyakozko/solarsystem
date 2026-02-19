@@ -11,6 +11,7 @@
  */
 
 #include <chrono>
+#include <filesystem>
 #include <iostream>
 #include <memory>
 #include <optional>
@@ -171,17 +172,23 @@ class DataFetcher {
       }
     };
 
-    // Simulate progress during fetch operation
-    if (config_.enable_progress) {
-      std::cout << "📈 Progress: 0% complete\n";
-      progress_callback(0.3);
-      std::this_thread::sleep_for(std::chrono::milliseconds(100));
-      progress_callback(0.6);
-      std::this_thread::sleep_for(std::chrono::milliseconds(100));
-      progress_callback(0.9);
+    auto result = factory.fetch_current_ephemeris_data();
+
+    size_t attempt = 1;
+    while (!result.has_value() && attempt < config_.max_retries) {
+      attempt++;
+      if (config_.verbose_output) {
+        std::cout << "Retrying fetch (attempt " << attempt << "/" << config_.max_retries
+                  << ")...\n";
+      }
+      std::this_thread::sleep_for(std::chrono::seconds(attempt * 2));
+      result = factory.fetch_current_ephemeris_data();
     }
 
-    auto result = factory.fetch_current_ephemeris_data();  // Force update
+    if (config_.enable_progress) {
+      progress_callback(1.0);
+    }
+
     bool success = result.has_value();
 
     if (success) {
@@ -302,10 +309,12 @@ class DataFetcher {
     std::cout << "🧹 Cleaning ephemeris cache files...\n";
 
     try {
-      // Modern file removal (could be improved with std::filesystem)
-      int result = std::system("rm -f ephemeris_cache.bin ephemeris_data.json");
+      namespace fs = std::filesystem;
+      std::error_code ec;
+      fs::remove(fs::path(config_.cache_directory) / "ephemeris_cache.bin", ec);
+      fs::remove(fs::path(config_.cache_directory) / "ephemeris_data.json", ec);
 
-      if (result == 0) {
+      if (!ec) {
         std::cout << "✅ Cache files removed successfully\n";
         LOG_INFO("Clean", "Cache cleanup completed successfully");
         return true;

@@ -7,8 +7,10 @@
 
 #include <algorithm>
 #include <cmath>
+#include <fstream>
 #include <iomanip>
 #include <iostream>
+#include <nlohmann/json.hpp>
 #include <sstream>
 
 namespace SolarSystem::UI {
@@ -418,6 +420,66 @@ std::string FormattingUtils::italic(const std::string& text) {
 
 std::string FormattingUtils::underline(const std::string& text) {
   return "\033[4m" + text + "\033[0m";
+}
+
+// UserFeedbackCollector implementation
+
+void UserFeedbackCollector::submit_feedback(int rating, const std::string& comment,
+                                            const std::string& area) {
+  FeedbackEntry entry;
+  entry.rating = std::max(1, std::min(5, rating));
+  entry.comment = comment;
+  entry.feature_area = area;
+  entry.timestamp = std::chrono::system_clock::now();
+  entries_.push_back(entry);
+}
+
+size_t UserFeedbackCollector::get_feedback_count() const { return entries_.size(); }
+
+const std::vector<FeedbackEntry>& UserFeedbackCollector::get_entries() const { return entries_; }
+
+bool UserFeedbackCollector::save_to_file(const std::string& path) const {
+  nlohmann::json j = nlohmann::json::array();
+  for (const auto& entry : entries_) {
+    nlohmann::json item;
+    item["rating"] = entry.rating;
+    item["comment"] = entry.comment;
+    item["feature_area"] = entry.feature_area;
+    item["timestamp"] =
+        std::chrono::duration_cast<std::chrono::seconds>(entry.timestamp.time_since_epoch())
+            .count();
+    j.push_back(item);
+  }
+  std::ofstream ofs(path);
+  if (!ofs.is_open()) {
+    return false;
+  }
+  ofs << j.dump(2);
+  return ofs.good();
+}
+
+bool UserFeedbackCollector::load_from_file(const std::string& path) {
+  std::ifstream ifs(path);
+  if (!ifs.is_open()) {
+    return false;
+  }
+  nlohmann::json j;
+  try {
+    ifs >> j;
+  } catch (...) {
+    return false;
+  }
+  entries_.clear();
+  for (const auto& item : j) {
+    FeedbackEntry entry;
+    entry.rating = item.value("rating", 0);
+    entry.comment = item.value("comment", "");
+    entry.feature_area = item.value("feature_area", "");
+    auto secs = item.value("timestamp", int64_t{0});
+    entry.timestamp = std::chrono::system_clock::time_point(std::chrono::seconds(secs));
+    entries_.push_back(entry);
+  }
+  return true;
 }
 
 }  // namespace SolarSystem::UI

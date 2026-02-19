@@ -313,6 +313,9 @@ class RealtimeMonitor {
   AggregateSnapshot latest_aggregate_;
   bool has_streaming_data_ = false;
 
+  size_t reconnect_attempts_ = 0;
+  static constexpr size_t max_reconnect_attempts_ = 5;
+
   /**
    * @brief Create body collection using modern BodySelector
    */
@@ -714,9 +717,13 @@ class RealtimeMonitor {
                 << (latest_aggregate_.overall_avg_quality * 100.0) << "%\n";
       std::cout << "    Avg Latency: " << latest_aggregate_.overall_avg_latency.count() << "ms\n";
 
-      // Note: system_warnings not implemented in simplified version
-      if (latest_aggregate_.total_samples > 0) {
-        std::cout << "    📊 Total Samples: " << latest_aggregate_.total_samples << "\n";
+      // Display system warnings based on quality thresholds
+      if (current_quality_score_.load() < 0.5) {
+        std::cout << "    ⚠️  Low quality score - data may be unreliable\n";
+      }
+      if (latest_aggregate_.overall_avg_latency.count() > 5000) {
+        std::cout << "    ⚠️  High latency detected ("
+                  << latest_aggregate_.overall_avg_latency.count() << "ms)\n";
       }
     }
 
@@ -961,6 +968,23 @@ class RealtimeMonitor {
     LOG_ERROR("RealtimeMonitor", "Streaming error: " + error);
     if (config_.verbose_output && !config_.quiet_mode) {
       std::cout << "⚠️  Streaming error: " << error << "\n";
+    }
+
+    if (reconnect_attempts_ < max_reconnect_attempts_) {
+      reconnect_attempts_++;
+      LOG_INFO("RealtimeMonitor", "Attempting reconnection (" +
+                                      std::to_string(reconnect_attempts_) + "/" +
+                                      std::to_string(max_reconnect_attempts_) + ")...");
+      std::this_thread::sleep_for(std::chrono::seconds(reconnect_attempts_ * 2));
+      try {
+        if (realtime_stream_) {
+          (void)realtime_stream_->stop();
+          (void)start_streaming();
+          reconnect_attempts_ = 0;
+        }
+      } catch (const std::exception& e) {
+        LOG_ERROR("RealtimeMonitor", "Reconnection failed: " + std::string(e.what()));
+      }
     }
   }
 

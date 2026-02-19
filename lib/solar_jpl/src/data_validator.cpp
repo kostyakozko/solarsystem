@@ -408,10 +408,23 @@ JPLResult<DataQualityMetrics> DataValidator::assess_data_quality(
     metrics.accuracy_score = (pos_accuracy + vel_accuracy + mass_accuracy) / 3.0;
   }
 
-  // Consistency assessment (placeholder - would need multiple data sources)
-  metrics.consistent_cross_format_bodies = data_collection.size();
+  // Consistency assessment: verify internal data coherence
+  size_t consistent_count = 0;
+  for (const auto& data : data_collection) {
+    bool consistent = true;
+    double pos_mag = static_cast<double>(data.position.magnitude());
+    double vel_mag = static_cast<double>(data.velocity.magnitude());
+    if (pos_mag < 1e3 || pos_mag > 1e16) consistent = false;
+    if (vel_mag > 1e6) consistent = false;
+    if (data.mass <= 0 || std::isnan(static_cast<double>(data.mass))) consistent = false;
+    if (consistent) consistent_count++;
+  }
+  metrics.consistent_cross_format_bodies = consistent_count;
   metrics.total_cross_format_comparisons = data_collection.size();
-  metrics.consistency_score = 1.0;  // Assume consistent for single source
+  metrics.consistency_score =
+      data_collection.empty()
+          ? 1.0
+          : static_cast<double>(consistent_count) / static_cast<double>(data_collection.size());
 
   // Freshness assessment
   if (!data_collection.empty()) {

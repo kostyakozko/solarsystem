@@ -299,9 +299,26 @@ std::unique_ptr<Simulation::SimulationEngine> SimulationBuilder::build(std::stri
   // Create simulation engine
   auto engine = std::make_unique<Simulation::SimulationEngine>(engine_config);
 
-  // Initialize with bodies (simplified for now)
+  // Initialize with bodies
   if (bodies_.has_value()) {
-    // For now, just create the engine - initialization will be done separately
+    auto reference_time = target_date_.value_or(std::chrono::system_clock::now());
+    auto init_result = engine->initialize(*bodies_, reference_time);
+    if (!init_result.has_value()) {
+      if (error_message) *error_message = "Failed to initialize simulation: " + init_result.error();
+      return nullptr;
+    }
+
+    // Adapt builder progress callback to engine callback if set
+    if (progress_callback_.has_value() && enable_progress_) {
+      auto user_cb = *progress_callback_;
+      double total_steps = static_cast<double>(max_iterations_);
+      engine->set_progress_callback([user_cb,
+                                     total_steps](const Simulation::SimulationState& state) {
+        double progress = std::min(1.0, static_cast<double>(state.iteration_count) / total_steps);
+        user_cb(progress);
+      });
+    }
+
     LOG_INFO("SimulationBuilder",
              "Built simulation engine with " + std::to_string(bodies_->size()) + " bodies");
   }
@@ -319,14 +336,27 @@ std::optional<Bodies::BodyCollection> SimulationBuilder::build_and_run(std::stri
     return std::nullopt;
   }
 
-  // For now, just return the original bodies
-  if (bodies_.has_value()) {
-    LOG_INFO("SimulationBuilder", "Simulation completed successfully");
-    return *bodies_;
-  } else {
+  if (!engine->is_initialized()) {
     if (error_message) *error_message = "No bodies to simulate";
     return std::nullopt;
   }
+
+  // Run the simulation
+  Utils::Expected<void, std::string> sim_result;
+  if (target_date_.has_value()) {
+    sim_result = engine->simulate_to_date(*target_date_);
+  } else {
+    double duration = timestep_ * static_cast<double>(max_iterations_);
+    sim_result = engine->simulate_duration(duration);
+  }
+
+  if (!sim_result.has_value()) {
+    if (error_message) *error_message = "Simulation failed: " + sim_result.error();
+    return std::nullopt;
+  }
+
+  LOG_INFO("SimulationBuilder", "Simulation completed successfully");
+  return engine->get_bodies();
 }
 
 std::string SimulationBuilder::get_config_summary() const {
