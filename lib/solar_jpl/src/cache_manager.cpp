@@ -5,6 +5,8 @@
 
 #include "solar_jpl/cache_manager.hpp"
 
+#include <zlib.h>
+
 #include <algorithm>
 #include <cmath>
 #include <fstream>
@@ -808,9 +810,59 @@ JPLVoidResult CacheManager::optimize_cache() {
  */
 JPLVoidResult CacheManager::compress_cache(CompressionAlgorithm) {
   try {
-    // Placeholder implementation
-    statistics_.compressed_cache_size = statistics_.binary_cache_size / 2;
-    statistics_.compression_ratio = 0.5;
+    auto binary_path = config_.cache_directory / "ephemeris_cache.bin";
+
+    if (!std::filesystem::exists(binary_path)) {
+      return error(JPLError::CacheError);
+    }
+
+    std::ifstream input(binary_path, std::ios::binary | std::ios::ate);
+    if (!input.is_open()) {
+      return error(JPLError::CacheError);
+    }
+
+    auto input_size = static_cast<size_t>(input.tellg());
+    input.seekg(0, std::ios::beg);
+
+    std::vector<char> input_data(input_size);
+    input.read(input_data.data(), static_cast<std::streamsize>(input_size));
+    input.close();
+
+    uLongf compressed_size = compressBound(static_cast<uLong>(input_size));
+    std::vector<Bytef> compressed_data(compressed_size);
+
+    int result = compress2(compressed_data.data(), &compressed_size,
+                           reinterpret_cast<const Bytef*>(input_data.data()),
+                           static_cast<uLong>(input_size), Z_DEFAULT_COMPRESSION);
+
+    if (result != Z_OK) {
+      return error(JPLError::CacheError);
+    }
+
+    auto gz_path = config_.cache_directory / "ephemeris_cache.bin.gz";
+    std::ofstream output(gz_path, std::ios::binary);
+    if (!output.is_open()) {
+      return error(JPLError::CacheError);
+    }
+
+    uint64_t original_size = input_size;
+    output.write(reinterpret_cast<const char*>(&original_size), sizeof(original_size));
+    output.write(reinterpret_cast<const char*>(compressed_data.data()),
+                 static_cast<std::streamsize>(compressed_size));
+    output.close();
+
+    statistics_.binary_cache_size = input_size;
+    statistics_.compressed_cache_size =
+        static_cast<size_t>(compressed_size) + sizeof(original_size);
+    statistics_.compression_ratio = (input_size > 0)
+                                        ? static_cast<double>(statistics_.compressed_cache_size) /
+                                              static_cast<double>(input_size)
+                                        : 1.0;
+
+    if (entry_metadata_) {
+      entry_metadata_->is_compressed = true;
+      entry_metadata_->compression_algorithm = CompressionAlgorithm::GZIP;
+    }
 
     return success();
   } catch (const std::exception&) {

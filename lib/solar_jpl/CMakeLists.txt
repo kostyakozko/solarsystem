@@ -38,6 +38,10 @@ else()
     message(FATAL_ERROR "solar_jpl: nlohmann/json is required but not available")
 endif()
 
+# Link zlib (required for cache compression)
+find_package(ZLIB REQUIRED)
+target_link_libraries(solar_jpl PRIVATE ZLIB::ZLIB)
+
 # Modern C++20 optimization flags
 target_compile_options(solar_jpl PRIVATE
     $<$<CONFIG:Release>:-O3 -march=native -mtune=native -flto>

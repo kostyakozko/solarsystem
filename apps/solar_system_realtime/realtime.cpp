@@ -629,7 +629,7 @@ class RealtimeMonitor {
   }
 
   /**
-   * @brief Display celestial bodies with streaming data (legacy method)
+   * @brief Display celestial bodies with streaming data
    */
   void display_streaming_bodies() const {
     if (config_.quiet_mode) return;

@@ -6,6 +6,7 @@
 #include "solar_analysis/data_models.hpp"
 
 #include <cmath>
+#include <nlohmann/json.hpp>
 #include <sstream>
 
 namespace SolarSystem::Analysis {
@@ -63,42 +64,42 @@ Math::Vector3d CoordinateConverter::equatorial_to_ecliptic(const Math::Vector3d&
 }
 
 std::string DataSerializer::to_json(const OrbitalElements& e) {
-  std::ostringstream oss;
-  oss << "{\"semi_major_axis\":" << e.semi_major_axis << ",\"eccentricity\":" << e.eccentricity
-      << ",\"inclination\":" << e.inclination << ",\"longitude_asc_node\":" << e.longitude_asc_node
-      << ",\"argument_periapsis\":" << e.argument_periapsis
-      << ",\"true_anomaly\":" << e.true_anomaly << ",\"mean_anomaly\":" << e.mean_anomaly
-      << ",\"orbital_period\":" << e.orbital_period << ",\"periapsis\":" << e.periapsis
-      << ",\"apoapsis\":" << e.apoapsis << "}";
-  return oss.str();
+  nlohmann::json j;
+  j["semi_major_axis"] = e.semi_major_axis;
+  j["eccentricity"] = e.eccentricity;
+  j["inclination"] = e.inclination;
+  j["longitude_asc_node"] = e.longitude_asc_node;
+  j["argument_periapsis"] = e.argument_periapsis;
+  j["true_anomaly"] = e.true_anomaly;
+  j["mean_anomaly"] = e.mean_anomaly;
+  j["orbital_period"] = e.orbital_period;
+  j["periapsis"] = e.periapsis;
+  j["apoapsis"] = e.apoapsis;
+  return j.dump();
 }
 
 std::optional<OrbitalElements> DataSerializer::orbital_elements_from_json(const std::string& json) {
-  // Simplified parsing - production would use nlohmann/json
-  OrbitalElements e;
-  if (json.find("semi_major_axis") == std::string::npos) {
+  try {
+    auto j = nlohmann::json::parse(json);
+    if (!j.contains("semi_major_axis")) {
+      return std::nullopt;
+    }
+
+    OrbitalElements e;
+    e.semi_major_axis = j.value("semi_major_axis", 0.0);
+    e.eccentricity = j.value("eccentricity", 0.0);
+    e.inclination = j.value("inclination", 0.0);
+    e.longitude_asc_node = j.value("longitude_asc_node", 0.0);
+    e.argument_periapsis = j.value("argument_periapsis", 0.0);
+    e.true_anomaly = j.value("true_anomaly", 0.0);
+    e.mean_anomaly = j.value("mean_anomaly", 0.0);
+    e.orbital_period = j.value("orbital_period", 0.0);
+    e.periapsis = j.value("periapsis", 0.0);
+    e.apoapsis = j.value("apoapsis", 0.0);
+    return e;
+  } catch (const nlohmann::json::exception&) {
     return std::nullopt;
   }
-
-  auto parse_value = [&json](const std::string& key) -> double {
-    auto pos = json.find("\"" + key + "\":");
-    if (pos == std::string::npos) return 0.0;
-    pos += key.length() + 3;
-    return std::stod(json.substr(pos));
-  };
-
-  e.semi_major_axis = parse_value("semi_major_axis");
-  e.eccentricity = parse_value("eccentricity");
-  e.inclination = parse_value("inclination");
-  e.longitude_asc_node = parse_value("longitude_asc_node");
-  e.argument_periapsis = parse_value("argument_periapsis");
-  e.true_anomaly = parse_value("true_anomaly");
-  e.mean_anomaly = parse_value("mean_anomaly");
-  e.orbital_period = parse_value("orbital_period");
-  e.periapsis = parse_value("periapsis");
-  e.apoapsis = parse_value("apoapsis");
-
-  return e;
 }
 
 std::string DataSerializer::to_csv_header() {

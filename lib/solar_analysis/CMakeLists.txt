@@ -48,6 +48,14 @@ target_link_libraries(solar_analysis
         solar_utils
 )
 
+# Link nlohmann/json (required for JSON operations)
+if(TARGET nlohmann_json::nlohmann_json)
+    target_link_libraries(solar_analysis PRIVATE nlohmann_json::nlohmann_json)
+    message(STATUS "solar_analysis: nlohmann/json linked for JSON operations")
+else()
+    message(FATAL_ERROR "solar_analysis: nlohmann/json is required but not available")
+endif()
+
 # Set library properties
 set_target_properties(solar_analysis PROPERTIES
     VERSION ${PROJECT_VERSION}

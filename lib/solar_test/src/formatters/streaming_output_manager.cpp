@@ -88,8 +88,7 @@ void StreamingOutputManager::flush_buffer() {
 }
 
 void StreamingOutputManager::optimize_memory_usage() {
-  // Clear any internal buffers in the formatter if possible
-  // This is a placeholder for more sophisticated memory management
+  // Clear oversized buffers and reclaim memory
 
   // Force garbage collection of any cached data
   if (static_cast<size_t>(buffer_.tellp()) > config_.buffer_size) {

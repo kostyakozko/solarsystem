@@ -420,23 +420,206 @@ bool CacheRecoveryManager::has_available_backups() const {
 }
 
 JPLResult<std::vector<EphemerisData>> CacheRecoveryManager::load_binary_cache() const {
-  // Simplified implementation - would use actual binary loading
-  return JPLError::CacheError;
+  auto binary_path = cache_directory_ / "ephemeris_cache.bin";
+
+  if (!std::filesystem::exists(binary_path)) {
+    return JPLError::CacheError;
+  }
+
+  try {
+    std::ifstream file(binary_path, std::ios::binary);
+    if (!file.is_open()) {
+      return JPLError::CacheError;
+    }
+
+    uint32_t magic_number, version, body_count;
+    file.read(reinterpret_cast<char*>(&magic_number), sizeof(magic_number));
+    file.read(reinterpret_cast<char*>(&version), sizeof(version));
+    file.read(reinterpret_cast<char*>(&body_count), sizeof(body_count));
+
+    if (magic_number != 0x4A504C42 || version != 1) {
+      return JPLError::ValidationError;
+    }
+
+    std::vector<EphemerisData> bodies;
+    bodies.reserve(body_count);
+
+    for (uint32_t i = 0; i < body_count; ++i) {
+      EphemerisData body_data;
+
+      file.read(reinterpret_cast<char*>(&body_data.jpl_id), sizeof(body_data.jpl_id));
+
+      double pos[3];
+      file.read(reinterpret_cast<char*>(pos), sizeof(pos));
+      body_data.position = SolarSystem::Math::Vector3d{pos[0], pos[1], pos[2]};
+
+      double vel[3];
+      file.read(reinterpret_cast<char*>(vel), sizeof(vel));
+      body_data.velocity = SolarSystem::Math::Vector3d{vel[0], vel[1], vel[2]};
+
+      file.read(reinterpret_cast<char*>(&body_data.mass), sizeof(body_data.mass));
+
+      uint32_t name_length;
+      file.read(reinterpret_cast<char*>(&name_length), sizeof(name_length));
+
+      if (name_length > 0 && name_length < 1000) {
+        body_data.body_name.resize(name_length);
+        file.read(&body_data.body_name[0], name_length);
+      }
+
+      body_data.epoch = std::chrono::system_clock::now();
+      bodies.push_back(std::move(body_data));
+    }
+
+    return bodies;
+  } catch (const std::exception&) {
+    return JPLError::CacheError;
+  }
 }
 
 JPLResult<std::vector<EphemerisData>> CacheRecoveryManager::load_json_cache() const {
-  // Simplified implementation - would use actual JSON loading
-  return JPLError::CacheError;
+  auto json_path = cache_directory_ / "ephemeris_data.json";
+
+  if (!std::filesystem::exists(json_path)) {
+    return JPLError::CacheError;
+  }
+
+  try {
+    std::ifstream file(json_path);
+    if (!file.is_open()) {
+      return JPLError::CacheError;
+    }
+
+    auto j = nlohmann::json::parse(file);
+
+    if (!j.contains("bodies") || !j["bodies"].is_array()) {
+      return JPLError::ValidationError;
+    }
+
+    std::vector<EphemerisData> bodies;
+
+    for (const auto& body_json : j["bodies"]) {
+      EphemerisData body_data;
+
+      if (body_json.contains("jpl_id") && body_json["jpl_id"].is_number()) {
+        body_data.jpl_id = body_json["jpl_id"].get<int>();
+      }
+
+      if (body_json.contains("body_name") && body_json["body_name"].is_string()) {
+        body_data.body_name = body_json["body_name"].get<std::string>();
+      }
+
+      if (body_json.contains("position_x") && body_json.contains("position_y") &&
+          body_json.contains("position_z")) {
+        body_data.position = SolarSystem::Math::Vector3d{body_json["position_x"].get<double>(),
+                                                         body_json["position_y"].get<double>(),
+                                                         body_json["position_z"].get<double>()};
+      }
+
+      if (body_json.contains("velocity_x") && body_json.contains("velocity_y") &&
+          body_json.contains("velocity_z")) {
+        body_data.velocity = SolarSystem::Math::Vector3d{body_json["velocity_x"].get<double>(),
+                                                         body_json["velocity_y"].get<double>(),
+                                                         body_json["velocity_z"].get<double>()};
+      }
+
+      if (body_json.contains("mass") && body_json["mass"].is_number()) {
+        body_data.mass = body_json["mass"].get<double>();
+      } else {
+        body_data.mass = 1.0e24;
+      }
+
+      body_data.epoch = std::chrono::system_clock::now();
+      bodies.push_back(std::move(body_data));
+    }
+
+    return bodies;
+  } catch (const std::exception&) {
+    return JPLError::CacheError;
+  }
 }
 
-JPLVoidResult CacheRecoveryManager::save_binary_cache(const std::vector<EphemerisData>&) const {
-  // Simplified implementation - would use actual binary saving
-  return success();
+JPLVoidResult CacheRecoveryManager::save_binary_cache(
+    const std::vector<EphemerisData>& data) const {
+  try {
+    std::filesystem::create_directories(cache_directory_);
+
+    auto binary_path = cache_directory_ / "ephemeris_cache.bin";
+    std::ofstream file(binary_path, std::ios::binary);
+
+    if (!file.is_open()) {
+      return error(JPLError::CacheError);
+    }
+
+    uint32_t magic_number = 0x4A504C42;
+    uint32_t version = 1;
+    uint32_t body_count = static_cast<uint32_t>(data.size());
+
+    file.write(reinterpret_cast<const char*>(&magic_number), sizeof(magic_number));
+    file.write(reinterpret_cast<const char*>(&version), sizeof(version));
+    file.write(reinterpret_cast<const char*>(&body_count), sizeof(body_count));
+
+    for (const auto& body_data : data) {
+      file.write(reinterpret_cast<const char*>(&body_data.jpl_id), sizeof(body_data.jpl_id));
+
+      double pos[3] = {static_cast<double>(body_data.position.x()),
+                       static_cast<double>(body_data.position.y()),
+                       static_cast<double>(body_data.position.z())};
+      file.write(reinterpret_cast<const char*>(pos), sizeof(pos));
+
+      double vel[3] = {static_cast<double>(body_data.velocity.x()),
+                       static_cast<double>(body_data.velocity.y()),
+                       static_cast<double>(body_data.velocity.z())};
+      file.write(reinterpret_cast<const char*>(vel), sizeof(vel));
+
+      file.write(reinterpret_cast<const char*>(&body_data.mass), sizeof(body_data.mass));
+
+      uint32_t name_length = static_cast<uint32_t>(body_data.body_name.length());
+      file.write(reinterpret_cast<const char*>(&name_length), sizeof(name_length));
+      file.write(body_data.body_name.c_str(), name_length);
+    }
+
+    return success();
+  } catch (const std::exception&) {
+    return error(JPLError::CacheError);
+  }
 }
 
-JPLVoidResult CacheRecoveryManager::save_json_cache(const std::vector<EphemerisData>&) const {
-  // Simplified implementation - would use actual JSON saving
-  return success();
+JPLVoidResult CacheRecoveryManager::save_json_cache(const std::vector<EphemerisData>& data) const {
+  try {
+    std::filesystem::create_directories(cache_directory_);
+
+    auto json_path = cache_directory_ / "ephemeris_data.json";
+    std::ofstream file(json_path);
+
+    if (!file.is_open()) {
+      return error(JPLError::CacheError);
+    }
+
+    nlohmann::json j;
+    nlohmann::json bodies_array = nlohmann::json::array();
+
+    for (const auto& body_data : data) {
+      nlohmann::json body_json;
+      body_json["jpl_id"] = body_data.jpl_id;
+      body_json["body_name"] = body_data.body_name;
+      body_json["position_x"] = static_cast<double>(body_data.position.x());
+      body_json["position_y"] = static_cast<double>(body_data.position.y());
+      body_json["position_z"] = static_cast<double>(body_data.position.z());
+      body_json["velocity_x"] = static_cast<double>(body_data.velocity.x());
+      body_json["velocity_y"] = static_cast<double>(body_data.velocity.y());
+      body_json["velocity_z"] = static_cast<double>(body_data.velocity.z());
+      body_json["mass"] = static_cast<double>(body_data.mass);
+      bodies_array.push_back(body_json);
+    }
+
+    j["bodies"] = bodies_array;
+    file << j.dump(2);
+
+    return success();
+  } catch (const std::exception&) {
+    return error(JPLError::CacheError);
+  }
 }
 
 uint64_t CacheRecoveryManager::calculate_checksum(const std::vector<EphemerisData>& data) const {
