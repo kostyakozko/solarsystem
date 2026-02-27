@@ -20,8 +20,8 @@ OrbitalElements OrbitalCalculator::calculate_elements(const Math::Vector3d& pos,
                                                       const Math::Vector3d& vel) const {
   OrbitalElements e;
 
-  double r = pos.magnitude();
-  double v = vel.magnitude();
+  double r = static_cast<double>(pos.magnitude());
+  double v = static_cast<double>(vel.magnitude());
 
   // Specific orbital energy
   double energy = (v * v / 2.0) - (gm_ / r);
@@ -31,22 +31,22 @@ OrbitalElements OrbitalCalculator::calculate_elements(const Math::Vector3d& pos,
 
   // Angular momentum vector
   Math::Vector3d h = pos.cross(vel);
-  double h_mag = h.magnitude();
+  double h_mag = static_cast<double>(h.magnitude());
 
   // Eccentricity vector
   Math::Vector3d e_vec = (vel.cross(h) / gm_) - (pos / r);
-  e.eccentricity = e_vec.magnitude();
+  e.eccentricity = static_cast<double>(e_vec.magnitude());
 
   // Inclination
-  e.inclination = std::acos(h.z() / h_mag);
+  e.inclination = static_cast<double>(std::acos(h.z() / h_mag));
 
   // Node vector (z-axis cross h)
   Math::Vector3d n(-h.y(), h.x(), 0.0);
-  double n_mag = n.magnitude();
+  double n_mag = static_cast<double>(n.magnitude());
 
   // Longitude of ascending node
   if (n_mag > 1e-10) {
-    e.longitude_asc_node = std::acos(n.x() / n_mag);
+    e.longitude_asc_node = static_cast<double>(std::acos(n.x() / n_mag));
     if (n.y() < 0) {
       e.longitude_asc_node = 2.0 * M_PI - e.longitude_asc_node;
     }
@@ -54,7 +54,7 @@ OrbitalElements OrbitalCalculator::calculate_elements(const Math::Vector3d& pos,
 
   // Argument of periapsis
   if (n_mag > 1e-10 && e.eccentricity > 1e-10) {
-    e.argument_periapsis = std::acos(n.dot(e_vec) / (n_mag * e.eccentricity));
+    e.argument_periapsis = static_cast<double>(std::acos(n.dot(e_vec) / (n_mag * e.eccentricity)));
     if (e_vec.z() < 0) {
       e.argument_periapsis = 2.0 * M_PI - e.argument_periapsis;
     }
@@ -62,7 +62,7 @@ OrbitalElements OrbitalCalculator::calculate_elements(const Math::Vector3d& pos,
 
   // True anomaly
   if (e.eccentricity > 1e-10) {
-    double cos_nu = e_vec.dot(pos) / (e.eccentricity * r);
+    double cos_nu = static_cast<double>(e_vec.dot(pos)) / (e.eccentricity * r);
     cos_nu = std::clamp(cos_nu, -1.0, 1.0);
     e.true_anomaly = std::acos(cos_nu);
     if (pos.dot(vel) < 0) {
@@ -204,7 +204,7 @@ std::vector<TrajectoryAnalyzer::CloseApproach> TrajectoryAnalyzer::find_close_ap
 
   for (const auto& s1 : t1) {
     for (const auto& s2 : t2) {
-      double dist = (s1.position - s2.position).magnitude();
+      double dist = static_cast<double>((s1.position - s2.position).magnitude());
       if (dist < threshold) {
         approaches.push_back({s1.timestamp, dist, "", ""});
       }

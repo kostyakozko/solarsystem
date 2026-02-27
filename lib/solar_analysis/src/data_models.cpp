@@ -12,19 +12,20 @@
 namespace SolarSystem::Analysis {
 
 Math::Vector3d CoordinateConverter::cartesian_to_spherical(const Math::Vector3d& cart) {
-  double r = cart.magnitude();
+  double r = static_cast<double>(cart.magnitude());
   if (r < 1e-10) {
     return Math::Vector3d(0, 0, 0);
   }
-  double theta = std::acos(cart.z() / r);       // polar angle
-  double phi = std::atan2(cart.y(), cart.x());  // azimuthal angle
+  double theta = std::acos(static_cast<double>(cart.z()) / r);  // polar angle
+  double phi =
+      std::atan2(static_cast<double>(cart.y()), static_cast<double>(cart.x()));  // azimuthal angle
   return Math::Vector3d(r, theta, phi);
 }
 
 Math::Vector3d CoordinateConverter::spherical_to_cartesian(const Math::Vector3d& sph) {
-  double r = sph.x();
-  double theta = sph.y();
-  double phi = sph.z();
+  double r = static_cast<double>(sph.x());
+  double theta = static_cast<double>(sph.y());
+  double phi = static_cast<double>(sph.z());
   return Math::Vector3d(r * std::sin(theta) * std::cos(phi), r * std::sin(theta) * std::sin(phi),
                         r * std::cos(theta));
 }

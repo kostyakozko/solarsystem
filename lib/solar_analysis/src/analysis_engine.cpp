@@ -51,8 +51,8 @@ bool AnalysisEngine::load_data(const std::string& body_name) {
   BodyData bd;
   bd.name = body_name;
   bd.mass = static_cast<double>(body.mass());
-  bd.distance_from_origin = body.position().magnitude();
-  bd.velocity_magnitude = body.velocity().magnitude();
+  bd.distance_from_origin = static_cast<double>(body.position().magnitude());
+  bd.velocity_magnitude = static_cast<double>(body.velocity().magnitude());
 
   impl_->loaded_bodies.push_back(body_name);
   impl_->body_data.push_back(bd);

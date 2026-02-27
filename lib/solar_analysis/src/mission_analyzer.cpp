@@ -103,7 +103,7 @@ EncounterAnalysis MissionAnalyzer::analyze_single_encounter(
       // Approach angle (angle between relative position and velocity)
       auto rel_pos = spacecraft[i].position - target[i].position;
       auto rel_vel = spacecraft[i].velocity - target[i].velocity;
-      double dot = rel_pos.dot(rel_vel);
+      double dot = static_cast<double>(rel_pos.dot(rel_vel));
       double mag = static_cast<double>(rel_pos.magnitude() * rel_vel.magnitude());
       result.approach_angle = (mag > 1e-10) ? std::acos(dot / mag) : 0.0;
     }

@@ -179,7 +179,7 @@ std::vector<size_t> AdvancedAnalyzer::classify_anomalies(const std::vector<Anoma
 
   for (size_t i = 0; i < anomalies.size(); ++i) {
     double normalized = (scores[i] - min_score) / range;
-    categories[i] = static_cast<size_t>(normalized * (num_categories - 1));
+    categories[i] = static_cast<size_t>(normalized * static_cast<double>(num_categories - 1));
   }
 
   return categories;

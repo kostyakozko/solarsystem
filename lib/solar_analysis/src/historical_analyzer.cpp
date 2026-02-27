@@ -25,11 +25,11 @@ std::vector<double> HistoricalAnalyzer::extract_parameter(const std::vector<Stat
     } else if (parameter == "velocity" || parameter == "v") {
       values.push_back(static_cast<double>(sv.velocity.magnitude()));
     } else if (parameter == "x") {
-      values.push_back(sv.position.x());
+      values.push_back(static_cast<double>(sv.position.x()));
     } else if (parameter == "y") {
-      values.push_back(sv.position.y());
+      values.push_back(static_cast<double>(sv.position.y()));
     } else if (parameter == "z") {
-      values.push_back(sv.position.z());
+      values.push_back(static_cast<double>(sv.position.z()));
     }
   }
   return values;

@@ -828,12 +828,12 @@ JPLVoidResult CacheManager::compress_cache(CompressionAlgorithm) {
     input.read(input_data.data(), static_cast<std::streamsize>(input_size));
     input.close();
 
-    uLongf compressed_size = compressBound(static_cast<uLong>(input_size));
+    uLongf compressed_size = compressBound(input_size);
     std::vector<Bytef> compressed_data(compressed_size);
 
     int result = compress2(compressed_data.data(), &compressed_size,
-                           reinterpret_cast<const Bytef*>(input_data.data()),
-                           static_cast<uLong>(input_size), Z_DEFAULT_COMPRESSION);
+                           reinterpret_cast<const Bytef*>(input_data.data()), input_size,
+                           Z_DEFAULT_COMPRESSION);
 
     if (result != Z_OK) {
       return error(JPLError::CacheError);
@@ -852,8 +852,7 @@ JPLVoidResult CacheManager::compress_cache(CompressionAlgorithm) {
     output.close();
 
     statistics_.binary_cache_size = input_size;
-    statistics_.compressed_cache_size =
-        static_cast<size_t>(compressed_size) + sizeof(original_size);
+    statistics_.compressed_cache_size = compressed_size + sizeof(original_size);
     statistics_.compression_ratio = (input_size > 0)
                                         ? static_cast<double>(statistics_.compressed_cache_size) /
                                               static_cast<double>(input_size)
