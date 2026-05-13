@@ -62,3 +62,4 @@ local-ci/
 docker-compose.override.yml
 baseline_performance/*.csv
 build/tests/benchmarks/benchmark_results/*.csv
+.cache/
